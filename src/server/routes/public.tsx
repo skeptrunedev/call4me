@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie';
-import { field, origin, type AppContext, type AppEnv } from '../lib/context';
+import { field, origin, stripeFor, type AppContext, type AppEnv } from '../lib/context';
 import { newToken, now } from '../lib/ids';
 import { sha256Hex } from '../lib/keys';
 import { consoleMessenger, makeMessenger } from '../lib/messaging';
@@ -36,7 +36,7 @@ pub.post('/buy', async (c) => {
     c.html(<HomePage origin={origin(c)} pricePerMinuteCents={pricePerMinute(c.env)} signedIn={signedIn(c)} installPrompt={installPrompt(origin(c), null)} error={error} email={email} amount={amount} />, 400);
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return again('enter a valid email');
   try {
-    const url = await topups(c.env.DB, c.get('stripe')).checkout({ amountCents: parseAmountCents(amount), origin: origin(c), email });
+    const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: parseAmountCents(amount), origin: origin(c), email });
     return c.redirect(url, 303);
   } catch (err) {
     if (err instanceof TopupError) return again(err.message);
@@ -47,7 +47,7 @@ pub.post('/buy', async (c) => {
 pub.get('/welcome', async (c) => {
   const sessionId = c.req.query('session_id');
   if (!sessionId) return c.redirect('/', 302);
-  const t = topups(c.env.DB, c.get('stripe'));
+  const t = topups(c.env.DB, stripeFor(c));
   const done = await t.fulfill(sessionId);
   if (!done) return c.html(<WelcomePage pending key={null} installPrompt="" balanceCents={0} email="" />);
   const key = await t.revealFirstKey(done.topup.id, done.account);
@@ -87,7 +87,7 @@ pub.post('/account/funds', async (c) => {
   const account = c.get('account');
   if (!account) return c.redirect('/login', 302);
   try {
-    const url = await topups(c.env.DB, c.get('stripe')).checkout({ amountCents: parseAmountCents(field(await c.req.formData(), 'amount', 20)), origin: origin(c), account });
+    const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: parseAmountCents(field(await c.req.formData(), 'amount', 20)), origin: origin(c), account });
     return c.redirect(url, 303);
   } catch (err) {
     if (!(err instanceof TopupError)) throw err;

@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { createMcpHandler } from '@modelcontextprotocol/server';
-import { origin, type AppContext, type AppEnv } from '../lib/context';
+import { origin, stripeFor, type AppContext, type AppEnv } from '../lib/context';
 import { installPrompt } from '../lib/prompts';
 import { accounts } from '../services/accounts';
 import { createCallbayServer } from '../mcp/server';
@@ -18,7 +18,7 @@ async function serve(c: AppContext, key: string | undefined): Promise<Response> 
   if (!account) {
     return c.json({ jsonrpc: '2.0', error: { code: -32001, message: `callbay: missing or invalid key. Get one at ${origin(c)} and use ${origin(c)}/mcp/<your key> as the server URL.` }, id: null }, 401);
   }
-  const handler = createMcpHandler(() => createCallbayServer({ env: c.env, origin: origin(c), account, stripe: c.get('stripe') }), {
+  const handler = createMcpHandler(() => createCallbayServer({ env: c.env, origin: origin(c), account, stripe: stripeFor(c) }), {
     legacy: 'stateless',
     onerror: (err) => console.warn('mcp', String(err)),
   });

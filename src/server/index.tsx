@@ -4,7 +4,6 @@ import { hmacHex, safeEqual } from './lib/keys';
 import { mcp } from './routes/mcp';
 import { accountFromCookie, pub } from './routes/public';
 import { webhooks } from './routes/webhooks';
-import { makeStripe } from './services/topups';
 import { MessagePage } from './views/public';
 import { sessionFor } from './voice/session';
 
@@ -21,11 +20,6 @@ app.get('/voice/stream/:callId/:sig', async (c) => {
   const { callId, sig } = c.req.param();
   if (!safeEqual(sig, await hmacHex(c.env.STREAM_SECRET, callId))) return c.text('forbidden', 403);
   return sessionFor(c.env, callId).fetch(new Request('https://session/stream', c.req.raw));
-});
-
-app.use('*', async (c, next) => {
-  c.set('stripe', makeStripe(c.env.STRIPE_SECRET_KEY));
-  await next();
 });
 
 app.route('/webhooks', webhooks);

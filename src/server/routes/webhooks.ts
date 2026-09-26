@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import type Stripe from 'stripe';
-import type { AppEnv } from '../lib/context';
+import { stripeFor, type AppEnv } from '../lib/context';
 import { now } from '../lib/ids';
 import { readClientState, verifyTelnyxSignature } from '../lib/telnyx';
 import { calls, type CallStatus } from '../services/calls';
@@ -22,13 +22,13 @@ webhooks.post('/stripe', async (c) => {
   if (!sig) return c.text('missing signature', 400);
   let event: Stripe.Event;
   try {
-    event = await verifyWebhook(c.get('stripe'), await c.req.text(), sig, c.env.STRIPE_WEBHOOK_SECRET);
+    event = await verifyWebhook(stripeFor(c), await c.req.text(), sig, c.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
     console.warn('stripe webhook rejected', String(err));
     return c.text('bad signature', 400);
   }
   if (await seen(c.env.DB, event)) return c.text('duplicate', 200);
-  const t = topups(c.env.DB, c.get('stripe'));
+  const t = topups(c.env.DB, stripeFor(c));
   switch (event.type) {
     case 'checkout.session.completed':
     case 'checkout.session.async_payment_succeeded':
