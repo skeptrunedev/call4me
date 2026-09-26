@@ -1,0 +1,144 @@
+/**
+ * The few Telnyx Call Control and Numbers endpoints callbay uses.
+ * Docs: developers.telnyx.com/api-reference (dial, hangup, send_dtmf, answer,
+ * available_phone_numbers, number_orders) and .../receiving-webhooks for signatures.
+ */
+
+const API = 'https://api.telnyx.com/v2';
+
+type TelnyxEnv = Pick<Env, 'TELNYX_API_KEY' | 'TELNYX_CONNECTION_ID'>;
+
+export class TelnyxError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+  ) {
+    super(message);
+  }
+}
+
+async function call<T>(env: TelnyxEnv, method: string, path: string, body?: unknown): Promise<T> {
+  const res = await fetch(`${API}${path}`, {
+    method,
+    headers: { authorization: `Bearer ${env.TELNYX_API_KEY}`, 'content-type': 'application/json', accept: 'application/json' },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  const text = await res.text();
+  if (!res.ok) {
+    let detail = text.slice(0, 500);
+    try {
+      const j = JSON.parse(text) as { errors?: { title?: string; detail?: string }[] };
+      detail = j.errors?.map((e) => e.detail ?? e.title).join('; ') || detail;
+    } catch {
+      // not JSON; keep the raw text
+    }
+    throw new TelnyxError(`telnyx ${method} ${path}: ${res.status} ${detail}`, res.status);
+  }
+  return (text ? JSON.parse(text) : {}) as T;
+}
+
+/** Bidirectional G.711 u-law over RTP both ways: the same format GPT-Live speaks, so no transcoding. */
+const STREAM = {
+  stream_track: 'inbound_track',
+  stream_codec: 'PCMU',
+  stream_bidirectional_mode: 'rtp',
+  stream_bidirectional_codec: 'PCMU',
+} as const;
+
+export const clientState = (callId: string) => btoa(callId);
+export const readClientState = (s: string | undefined | null) => {
+  if (!s) return null;
+  try {
+    return atob(s);
+  } catch {
+    return null;
+  }
+};
+
+export function telnyx(env: TelnyxEnv) {
+  return {
+    /** Place an outbound call. Recording stays off (it is only on when `record` is passed). */
+    async dial(opts: { to: string; from: string; webhookUrl: string; streamUrl: string; callId: string; timeLimitSecs: number }): Promise<string> {
+      const r = await call<{ data: { call_control_id: string } }>(env, 'POST', '/calls', {
+        connection_id: env.TELNYX_CONNECTION_ID,
+        to: opts.to,
+        from: opts.from,
+        webhook_url: opts.webhookUrl,
+        client_state: clientState(opts.callId),
+        timeout_secs: 40,
+        time_limit_secs: opts.timeLimitSecs,
+        stream_url: opts.streamUrl,
+        ...STREAM,
+      });
+      return r.data.call_control_id;
+    },
+
+    /** Answer an inbound call and stream it the same way. */
+    async answer(callControlId: string, opts: { webhookUrl: string; streamUrl: string; callId: string; timeLimitSecs: number }): Promise<void> {
+      await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/answer`, {
+        webhook_url: opts.webhookUrl,
+        client_state: clientState(opts.callId),
+        time_limit_secs: opts.timeLimitSecs,
+        stream_url: opts.streamUrl,
+        ...STREAM,
+      });
+    },
+
+    async reject(callControlId: string): Promise<void> {
+      await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/reject`, { cause: 'USER_BUSY' });
+    },
+
+    async hangup(callControlId: string): Promise<void> {
+      try {
+        await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/hangup`, {});
+      } catch (err) {
+        // 422 means the call already ended, which is the state we wanted.
+        if (!(err instanceof TelnyxError && err.status === 422)) throw err;
+      }
+    },
+
+    async sendDtmf(callControlId: string, digits: string): Promise<void> {
+      await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/send_dtmf`, { digits, duration_millis: 250 });
+    },
+
+    /** Buy a local voice number, preferably in `areaCode`, attached to our Call Control connection. */
+    async buyNumber(areaCode: string | null): Promise<string> {
+      const search = async (ndc: string | null) => {
+        const q = new URLSearchParams({ 'filter[country_code]': 'US', 'filter[phone_number_type]': 'local', 'filter[features][]': 'voice', 'filter[limit]': '1' });
+        if (ndc) {
+          q.set('filter[national_destination_code]', ndc);
+          q.set('filter[best_effort]', 'true');
+        }
+        const r = await call<{ data: { phone_number: string }[] }>(env, 'GET', `/available_phone_numbers?${q}`);
+        return r.data[0]?.phone_number ?? null;
+      };
+      const number = (await search(areaCode)) ?? (await search(null));
+      if (!number) throw new TelnyxError('no phone numbers available to buy', 503);
+      await call(env, 'POST', '/number_orders', { phone_numbers: [{ phone_number: number }], connection_id: env.TELNYX_CONNECTION_ID });
+      return number;
+    },
+  };
+}
+
+/**
+ * Telnyx signs `${timestamp}|${rawBody}` with Ed25519; the public key is on the portal's
+ * API keys page. Stale timestamps are rejected so a captured webhook cannot be replayed.
+ */
+export async function verifyTelnyxSignature(opts: { publicKeyB64: string; signatureB64: string | undefined; timestamp: string | undefined; body: string; toleranceSecs?: number; nowMs?: number }): Promise<boolean> {
+  if (!opts.signatureB64 || !opts.timestamp) return false;
+  const ts = Number(opts.timestamp);
+  if (!Number.isFinite(ts) || Math.abs((opts.nowMs ?? Date.now()) / 1000 - ts) > (opts.toleranceSecs ?? 300)) return false;
+  try {
+    const key = await crypto.subtle.importKey('raw', b64bytes(opts.publicKeyB64), { name: 'Ed25519' }, false, ['verify']);
+    return await crypto.subtle.verify('Ed25519', key, b64bytes(opts.signatureB64), new TextEncoder().encode(`${opts.timestamp}|${opts.body}`));
+  } catch {
+    return false;
+  }
+}
+
+function b64bytes(b64: string): Uint8Array<ArrayBuffer> {
+  const bin = atob(b64);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}

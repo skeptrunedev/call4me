@@ -1,0 +1,27 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "callbay",
+  "main": "src/server/index.tsx",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "public",
+    "binding": "ASSETS",
+    // Everything is server-rendered; only /static/* and the favicon are real assets.
+    "run_worker_first": true
+  },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "callbay", "database_id": "34bce7a3-4d5d-46cf-af21-bddecf0c1f93", "migrations_dir": "migrations" }
+  ],
+  "durable_objects": {
+    "bindings": [{ "name": "CALL_SESSION", "class_name": "CallSession" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CallSession"] }],
+  "vars": {
+    // US cents per started minute of talk time.
+    "PRICE_PER_MINUTE_CENTS": "25",
+    "VOICE_MODEL": "gpt-live-1",
+    "BACK_OFFICE_MODEL": "gpt-5.5"
+  },
+  "observability": { "enabled": true }
+}

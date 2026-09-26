@@ -1,0 +1,146 @@
+import type { FC } from 'hono/jsx';
+import { dollars } from '../services/accounts';
+import { MIN_TOPUP_CENTS } from '../services/topups';
+import { CopyBlock, Layout } from './layout';
+
+export const BuyForm: FC<{ error?: string; email?: string; amount?: string }> = ({ error, email = '', amount = String(MIN_TOPUP_CENTS / 100) }) => (
+  <form method="post" action="/buy" class="buy" id="buy">
+    {error && <p class="err">{error}</p>}
+    <label for="email">email (receipts, and a new key if you lose yours)</label>
+    <input type="email" id="email" name="email" required value={email} autocomplete="email" />
+    <label for="amount">amount in dollars (min ${MIN_TOPUP_CENTS / 100})</label>
+    <input type="text" id="amount" name="amount" class="amount" inputmode="decimal" required value={amount} /> <button type="submit">pay with card</button>
+  </form>
+);
+
+export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; error?: string; email?: string; amount?: string }> = (p) => (
+  <Layout signedIn={p.signedIn}>
+    <p>
+      your coding agent (claude code, codex, claude desktop, chatgpt) gets one new tool: <b>make a phone call</b>. it calls the restaurant, the doctor's office,
+      the dealership, sounds like a normal person, gets it done, and tells your agent what happened.
+    </p>
+    <div class="cols">
+      <div>
+        <h3>how it works</h3>
+        <ol class="steps">
+          <li>
+            put in money (<span class="price">from {dollars(MIN_TOPUP_CENTS)}</span>). calls cost <span class="price">{dollars(p.pricePerMinuteCents)}/min</span> of talk time.
+          </li>
+          <li>you get a key and one prompt. paste the prompt into your agent. it installs callbay itself.</li>
+          <li>
+            ask for things like normal. <span class="sample">"book me a table for 4 at nopa tomorrow around 7."</span>
+          </li>
+        </ol>
+        <h3>add funds</h3>
+        <BuyForm error={p.error} email={p.email} amount={p.amount} />
+        <p class="small">already have a key? top up from <a href="/account">my account</a> or ask your agent (callbay_add_funds).</p>
+      </div>
+      <div>
+        <h3>what it's good at</h3>
+        <ul>
+          <li>dinner reservations, including "anything between 6:30 and 8"</li>
+          <li>doctor, dentist, vet, and salon appointments</li>
+          <li>asking a dealership about a car, price, or service slot</li>
+          <li>store hours, stock checks, quotes, "do you do X"</li>
+          <li>sitting through phone menus and hold music</li>
+        </ul>
+        <h3>how it sounds</h3>
+        <ul>
+          <li>short, casual turns. no "certainly!", no support-bot voice.</li>
+          <li>no recap at the end. it says "perfect, thanks!" and hangs up. your agent gets the recap.</li>
+          <li>asks your agent mid-call when the business needs something it wasn't given.</li>
+          <li>
+            it doesn't announce itself. if someone sincerely asks whether it's an AI, it says yes and carries on. see <a href="/rules">rules</a>.
+          </li>
+        </ul>
+      </div>
+    </div>
+    <h3>the prompt</h3>
+    <p class="small">this is what you paste into your agent after paying (your key goes where the placeholder is).</p>
+    <CopyBlock id="install-prompt" text={p.installPrompt} rows={12} />
+  </Layout>
+);
+
+export const WelcomePage: FC<{ key: string | null; installPrompt: string; balanceCents: number; email: string; pending?: boolean }> = (p) => (
+  <Layout title="you're in" signedIn={Boolean(p.key)}>
+    {p.pending ? (
+      <>
+        <h1>waiting for the payment to clear</h1>
+        <p>refresh this page in a few seconds.</p>
+      </>
+    ) : (
+      <>
+        <h1>
+          paid. balance: <span class="price">{dollars(p.balanceCents)}</span>
+        </h1>
+        {p.key ? (
+          <>
+            <p>
+              your key (shown once, keep it somewhere safe): <span class="key">{p.key}</span>
+            </p>
+            <p>copy this prompt into claude code, codex, claude desktop, or chatgpt. it installs callbay and tells your agent how to use it.</p>
+            <CopyBlock id="install-prompt" text={p.installPrompt} rows={16} />
+          </>
+        ) : (
+          <p>
+            funds added to {p.email}. your existing key keeps working. lost it? <a href="/key">get a new key by email</a>.
+          </p>
+        )}
+        <p>
+          <a href="/account">my account</a> shows your balance and every call with its transcript.
+        </p>
+      </>
+    )}
+  </Layout>
+);
+
+export const MessagePage: FC<{ title: string; message: string; signedIn?: boolean; status?: number }> = ({ title, message, signedIn }) => (
+  <Layout title={title} signedIn={signedIn}>
+    <h1>{title}</h1>
+    <p>{message}</p>
+    <p>
+      <a href="/">back to callbay</a>
+    </p>
+  </Layout>
+);
+
+export const RulesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
+  <Layout title="rules" signedIn={signedIn}>
+    <h1>rules</h1>
+    <p>callbay places calls a person would make themselves: bookings, appointments, questions for a business. it is not for anything else.</p>
+    <ul>
+      <li>US and Canadian numbers only. no emergency numbers, no premium-rate numbers.</li>
+      <li>no telemarketing, sales, surveys, debt collection, political calls, or calls to people who didn't expect to hear from you.</li>
+      <li>no harassment, threats, pranks, or pretending to be someone else. the caller always calls <i>for</i> you; it never claims to be you.</li>
+      <li>the same number can be called a few times a day, not more. anyone who asks not to be called again is never called by callbay again.</li>
+      <li>the caller does not open by announcing it's an AI, the same way you don't open a call by explaining who you are. if someone sincerely asks, it tells the truth.</li>
+      <li>calls are not recorded. a text transcript is kept on your account so your agent can tell you what happened.</li>
+      <li>the caller never reads out card numbers, bank details, or passwords.</li>
+    </ul>
+    <p>break these and the account is closed without a refund of the remaining balance.</p>
+  </Layout>
+);
+
+export const PrivacyPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
+  <Layout title="privacy" signedIn={signedIn}>
+    <h1>privacy</h1>
+    <ul>
+      <li>we store your email, your balance history, and for each call: the number, the brief your agent sent, the outcome, and a text transcript.</li>
+      <li>we don't record call audio. audio passes through our phone carrier (Telnyx) and speech model provider (OpenAI) while the call is live.</li>
+      <li>payments are handled by Stripe; we never see your card.</li>
+      <li>email us to delete your account and its call history.</li>
+    </ul>
+  </Layout>
+);
+
+export const TermsPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
+  <Layout title="terms" signedIn={signedIn}>
+    <h1>terms</h1>
+    <ul>
+      <li>balances are prepaid and don't expire. calls are billed per second of talk time, rounded up to the minute, from when the other side picks up.</li>
+      <li>unanswered, busy, and failed calls are free.</li>
+      <li>you're responsible for the calls you ask for and must follow the <a href="/rules">rules</a>.</li>
+      <li>the service is provided as is. a call can fail, get something wrong, or end without a result; check anything important.</li>
+    </ul>
+  </Layout>
+);
