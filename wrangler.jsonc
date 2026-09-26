@@ -4,6 +4,7 @@
   "main": "src/server/index.tsx",
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat"],
+  "routes": [{ "pattern": "callbay.skeptrune.com", "custom_domain": true }],
   "assets": {
     "directory": "public",
     "binding": "ASSETS",
@@ -18,6 +19,7 @@
   },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CallSession"] }],
   "vars": {
+    "CANONICAL_HOST": "callbay.skeptrune.com",
     // US cents per started minute of talk time.
     "PRICE_PER_MINUTE_CENTS": "25",
     "VOICE_MODEL": "gpt-live-1",

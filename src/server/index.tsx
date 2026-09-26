@@ -11,6 +11,19 @@ export { CallSession } from './voice/session';
 
 const app = new Hono<AppEnv>();
 
+// Everything answers on the canonical host; workers.dev redirects there.
+app.use('*', async (c, next) => {
+  const url = new URL(c.req.url);
+  const canonical = c.env.CANONICAL_HOST;
+  if (canonical && url.hostname !== canonical && url.hostname !== 'localhost') {
+    url.hostname = canonical;
+    url.protocol = 'https:';
+    url.port = '';
+    return c.redirect(url.toString(), 301);
+  }
+  await next();
+});
+
 app.get('/static/*', (c) => c.env.ASSETS.fetch(c.req.raw));
 app.get('/favicon.svg', (c) => c.env.ASSETS.fetch(c.req.raw));
 

@@ -1,5 +1,7 @@
 # callbay
 
+https://callbay.skeptrune.com
+
 Your coding agent (Claude Code, Codex, Claude Desktop, ChatGPT) gets one new tool: make a phone call.
 Prepaid from $20 via Stripe Checkout; one MCP URL with the key in it.
 
@@ -32,4 +34,12 @@ Audio is never recorded: Telnyx recording is off unless `record` is passed, and 
    `checkout.session.async_payment_succeeded`, `charge.refunded`.
 4. Secrets (`wrangler secret put`): see `src/server/env.d.ts`.
 
+## Self-hosting
+
+Fork it, create your own D1 database (`wrangler d1 create callbay`) and put its id and your own hostname in `wrangler.jsonc`.
+
 Local: `npm run db:migrate:local && npm run dev` with a `.dev.vars` holding the same secrets.
+
+## License
+
+MIT
