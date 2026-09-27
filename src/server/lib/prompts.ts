@@ -14,7 +14,7 @@ export function installPrompt(origin: string, key: string | null): string {
    - Claude Code:  claude mcp add --scope user --transport http callbay ${url}
    - Codex:        codex mcp add callbay --url ${url}
    - Claude Desktop, claude.ai, or ChatGPT: I'll add a custom connector with the URL ${url} (tell me to do this if you can't).
-   The URL contains my secret key. Don't paste it anywhere else.${key ? '' : `\n   I don't have a key yet: get one at ${origin} (prepaid, from $20).`}
+   The URL contains my secret key. Don't paste it anywhere else.${key ? '' : `\n   I don't have a key yet: get one at ${origin} (prepaid credits, from $10).`}
 
 2. Restart or reload MCP servers if needed, then call callbay_get_balance to check it works.
 

@@ -1,6 +1,7 @@
 import type { FC } from 'hono/jsx';
 import { dollars } from '../services/accounts';
 import { MIN_TOPUP_CENTS } from '../services/topups';
+import { MonthlyBox } from './account';
 import { CopyBlock, Layout } from './layout';
 
 export const BuyForm: FC<{ error?: string; email?: string; amount?: string }> = ({ error, email = '', amount = String(MIN_TOPUP_CENTS / 100) }) => (
@@ -10,6 +11,7 @@ export const BuyForm: FC<{ error?: string; email?: string; amount?: string }> = 
     <input type="email" id="email" name="email" required value={email} autocomplete="email" />
     <label for="amount">amount in dollars (min ${MIN_TOPUP_CENTS / 100})</label>
     <input type="text" id="amount" name="amount" class="amount" inputmode="decimal" required value={amount} /> <button type="submit">pay with card</button>
+    <MonthlyBox />
   </form>
 );
 
@@ -24,14 +26,14 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
         <h3>how it works</h3>
         <ol class="steps">
           <li>
-            put in money (<span class="price">from {dollars(MIN_TOPUP_CENTS)}</span>). calls cost <span class="price">{dollars(p.pricePerMinuteCents)}/min</span> of talk time.
+            load credits (<span class="price">from {dollars(MIN_TOPUP_CENTS)}</span>, reloads monthly unless you untick it). calls cost <span class="price">{dollars(p.pricePerMinuteCents)}/min</span> of talk time, held up front and settled when the call ends.
           </li>
           <li>you get a key and one prompt. paste the prompt into your agent. it installs callbay itself.</li>
           <li>
             ask for things like normal. <span class="sample">"book me a table for 4 at nopa tomorrow around 7."</span>
           </li>
         </ol>
-        <h3>add funds</h3>
+        <h3>add credits</h3>
         <BuyForm error={p.error} email={p.email} amount={p.amount} />
         <p class="small">already have a key? top up from <a href="/account">my account</a> or ask your agent (callbay_add_funds).</p>
       </div>
@@ -61,8 +63,8 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
   </Layout>
 );
 
-export const WelcomePage: FC<{ key: string | null; installPrompt: string; balanceCents: number; email: string; pending?: boolean }> = (p) => (
-  <Layout title="you're in" signedIn={Boolean(p.key)}>
+export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; balanceCents: number; email: string; pending?: boolean }> = (p) => (
+  <Layout title="you're in" signedIn={Boolean(p.apiKey)}>
     {p.pending ? (
       <>
         <h1>waiting for the payment to clear</h1>
@@ -73,10 +75,10 @@ export const WelcomePage: FC<{ key: string | null; installPrompt: string; balanc
         <h1>
           paid. balance: <span class="price">{dollars(p.balanceCents)}</span>
         </h1>
-        {p.key ? (
+        {p.apiKey ? (
           <>
             <p>
-              your key (shown once, keep it somewhere safe): <span class="key">{p.key}</span>
+              your key (shown once, keep it somewhere safe): <span class="key">{p.apiKey}</span>
             </p>
             <p>copy this prompt into claude code, codex, claude desktop, or chatgpt. it installs callbay and tells your agent how to use it.</p>
             <CopyBlock id="install-prompt" text={p.installPrompt} rows={16} />
@@ -137,7 +139,8 @@ export const TermsPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
   <Layout title="terms" signedIn={signedIn}>
     <h1>terms</h1>
     <ul>
-      <li>balances are prepaid and don't expire. calls are billed per second of talk time, rounded up to the minute, from when the other side picks up.</li>
+      <li>credits are prepaid and don't expire. a call holds its maximum cost from your balance before it dials and settles when it ends: talk time from pickup, rounded up to the minute. the rest of the hold comes back.</li>
+      <li>by default, what you load reloads every month: the same amount is charged to your card and added as credits. stop it anytime from your account or your agent (callbay_stop_reload); credits already loaded stay.</li>
       <li>unanswered, busy, and failed calls are free.</li>
       <li>you're responsible for the calls you ask for and must follow the <a href="/rules">rules</a>.</li>
       <li>the service is provided as is. a call can fail, get something wrong, or end without a result; check anything important.</li>

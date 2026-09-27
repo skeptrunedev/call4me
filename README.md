@@ -3,7 +3,7 @@
 https://callbay.skeptrune.com
 
 Your coding agent (Claude Code, Codex, Claude Desktop, ChatGPT) gets one new tool: make a phone call.
-Prepaid from $20 via Stripe Checkout; one MCP URL with the key in it.
+Prepaid credits from $10 via Stripe Checkout, reloading monthly by default; one MCP URL with the key in it.
 
 ## How a call works
 
@@ -31,7 +31,14 @@ Audio is never recorded: Telnyx recording is off unless `record` is passed, and 
    Each account's number is bought on its first call and attached to that application.
 2. OpenAI: an API key with GPT-Live access.
 3. Stripe: webhook endpoint `https://<host>/webhooks/stripe` for `checkout.session.completed`,
-   `checkout.session.async_payment_succeeded`, `charge.refunded`.
+   `checkout.session.async_payment_succeeded`, `invoice.paid`, `customer.subscription.updated`,
+   `customer.subscription.deleted`, `charge.refunded`.
+
+## Credits
+
+Everything is prepaid. Loads start at $10 and, by default, the same amount reloads monthly (a Stripe
+subscription; `invoice.paid` adds the credits). A call holds its maximum cost before it dials, in one
+conditional insert so parallel calls can't overspend, and settles to the real talk time when it ends.
 4. Secrets (`wrangler secret put`): see `src/server/env.d.ts`.
 
 ## Self-hosting

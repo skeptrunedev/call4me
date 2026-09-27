@@ -9,7 +9,7 @@ export interface Account {
   created_at: number;
 }
 
-export type LedgerKind = 'topup' | 'call' | 'refund' | 'adjustment';
+export type LedgerKind = 'topup' | 'reload' | 'hold' | 'release' | 'call' | 'refund' | 'adjustment';
 
 export function accounts(db: D1Database) {
   return {
@@ -53,6 +53,22 @@ export function accounts(db: D1Database) {
       const r = await db
         .prepare(`INSERT OR IGNORE INTO ledger (id, account_id, amount_cents, kind, ref, note, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)`)
         .bind(newId(), accountId, amountCents, kind, ref, note ?? null, now())
+        .run();
+      return (r.meta.changes ?? 0) > 0;
+    },
+
+    /**
+     * Take `cents` out of the balance only if the balance covers it, in one statement so two
+     * concurrent calls cannot both spend the same credits. False when the balance is short.
+     */
+    async hold(accountId: string, cents: number, ref: string, note: string): Promise<boolean> {
+      const r = await db
+        .prepare(
+          `INSERT INTO ledger (id, account_id, amount_cents, kind, ref, note, created_at)
+           SELECT ?1, ?2, -?3, 'hold', ?4, ?5, ?6
+           WHERE (SELECT COALESCE(SUM(amount_cents), 0) FROM ledger WHERE account_id = ?2) >= ?3`,
+        )
+        .bind(newId(), accountId, cents, ref, note, now())
         .run();
       return (r.meta.changes ?? 0) > 0;
     },

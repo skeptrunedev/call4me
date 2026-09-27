@@ -196,6 +196,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
       guard(async () => {
         const balance = await accounts(env.DB).balanceCents(account.id);
         const price = pricePerMinute(env);
+        const reload = await topups(env.DB, deps.stripe).reload(account.id);
         const number = await env.DB.prepare(`SELECT phone_number FROM accounts WHERE id = ?`).bind(account.id).first<{ phone_number: string | null }>();
         const out = {
           balance: dollars(balance),
@@ -204,8 +205,10 @@ export function createCallbayServer(deps: McpDeps): McpServer {
           minutes_left: Math.floor(balance / price),
           phone_number: number?.phone_number ? formatPhone(number.phone_number) : null,
           email: account.email,
+          monthly_reload: reload ? { amount: dollars(reload.cents), status: reload.status, next: reload.renewsAt ? new Date(reload.renewsAt).toISOString().slice(0, 10) : null } : null,
         };
-        return ok(`balance ${out.balance} (~${out.minutes_left} min at ${out.price_per_minute}/min). number: ${out.phone_number ?? 'assigned on the first call'}.`, out);
+        const reloadText = out.monthly_reload ? `reloads ${out.monthly_reload.amount} monthly${out.monthly_reload.next ? ` (next ${out.monthly_reload.next})` : ''}` : 'no monthly reload';
+        return ok(`balance ${out.balance} (~${out.minutes_left} min at ${out.price_per_minute}/min), ${reloadText}. number: ${out.phone_number ?? 'assigned on the first call'}.`, out);
       })()) as never,
   );
 
@@ -213,14 +216,33 @@ export function createCallbayServer(deps: McpDeps): McpServer {
     'callbay_add_funds',
     {
       title: 'Add funds',
-      description: 'A Stripe checkout link that adds funds to this account. Give the link to the user to open; nothing is charged until they pay.',
-      inputSchema: z.object({ amount_dollars: z.number().min(20).max(500).default(20) }),
+      description:
+        'A Stripe checkout link that adds credits. By default the same amount reloads every month (replacing any current monthly reload); pass monthly: false for a one-time load. Give the link to the user to open; nothing is charged until they pay.',
+      inputSchema: z.object({
+        amount_dollars: z.number().min(10).max(500).default(10),
+        monthly: z.boolean().default(true).describe('reload this amount every month (default true)'),
+      }),
       annotations: { ...OPEN, openWorldHint: false },
     },
-    (async (args: { amount_dollars: number }) =>
+    (async (args: { amount_dollars: number; monthly: boolean }) =>
       guard(async () => {
-        const url = await topups(env.DB, deps.stripe).checkout({ amountCents: parseAmountCents(args.amount_dollars), origin: deps.origin, account });
-        return ok(`open this to pay: ${url}`, { url });
+        const url = await topups(env.DB, deps.stripe).checkout({ amountCents: parseAmountCents(args.amount_dollars), monthly: args.monthly, origin: deps.origin, account });
+        return ok(`open this to pay${args.monthly ? ' (reloads monthly; stop anytime)' : ''}: ${url}`, { url, monthly: args.monthly });
+      })()) as never,
+  );
+
+  server.registerTool(
+    'callbay_stop_reload',
+    {
+      title: 'Stop the monthly reload',
+      description: 'Cancel the monthly reload. Credits already loaded stay on the account. Only do this when the user asks.',
+      inputSchema: z.object({}),
+      annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+    },
+    (async () =>
+      guard(async () => {
+        await topups(env.DB, deps.stripe).stopReload(account.id);
+        return ok('monthly reload stopped. credits already loaded stay.', { stopped: true });
       })()) as never,
   );
 

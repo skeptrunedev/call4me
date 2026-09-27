@@ -6,7 +6,7 @@ import { sha256Hex } from '../lib/keys';
 import { consoleMessenger, makeMessenger } from '../lib/messaging';
 import { installPrompt } from '../lib/prompts';
 import { callView } from '../mcp/server';
-import { accounts } from '../services/accounts';
+import { accounts, type Account } from '../services/accounts';
 import { calls, CallError } from '../services/calls';
 import { pricePerMinute } from '../services/dialer';
 import { parseAmountCents, topups, TopupError } from '../services/topups';
@@ -32,11 +32,12 @@ pub.post('/buy', async (c) => {
   const form = await c.req.formData();
   const email = field(form, 'email', 200);
   const amount = field(form, 'amount', 20);
+  const monthly = form.get('monthly') === 'on';
   const again = (error: string) =>
     c.html(<HomePage origin={origin(c)} pricePerMinuteCents={pricePerMinute(c.env)} signedIn={signedIn(c)} installPrompt={installPrompt(origin(c), null)} error={error} email={email} amount={amount} />, 400);
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return again('enter a valid email');
   try {
-    const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: parseAmountCents(amount), origin: origin(c), email });
+    const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: parseAmountCents(amount), monthly, origin: origin(c), email });
     return c.redirect(url, 303);
   } catch (err) {
     if (err instanceof TopupError) return again(err.message);
@@ -49,11 +50,11 @@ pub.get('/welcome', async (c) => {
   if (!sessionId) return c.redirect('/', 302);
   const t = topups(c.env.DB, stripeFor(c));
   const done = await t.fulfill(sessionId);
-  if (!done) return c.html(<WelcomePage pending key={null} installPrompt="" balanceCents={0} email="" />);
+  if (!done) return c.html(<WelcomePage pending apiKey={null} installPrompt="" balanceCents={0} email="" />);
   const key = await t.revealFirstKey(done.topup.id, done.account);
   if (key) setKeyCookie(c, key);
   const balance = await accounts(c.env.DB).balanceCents(done.account.id);
-  return c.html(<WelcomePage key={key} installPrompt={installPrompt(origin(c), key)} balanceCents={balance} email={done.account.email} />);
+  return c.html(<WelcomePage apiKey={key} installPrompt={installPrompt(origin(c), key)} balanceCents={balance} email={done.account.email} />);
 });
 
 // ---- account
@@ -72,28 +73,42 @@ pub.get('/logout', (c) => {
   return c.redirect('/', 302);
 });
 
-pub.get('/account', async (c) => {
-  const account = c.get('account');
-  if (!account) return c.redirect('/login', 302);
-  const [balance, rows, number] = await Promise.all([
+async function accountPage(c: AppContext, account: Account, error?: string) {
+  const [balance, rows, number, reload] = await Promise.all([
     accounts(c.env.DB).balanceCents(account.id),
     calls(c.env.DB).list(account.id, 50),
     c.env.DB.prepare(`SELECT phone_number FROM accounts WHERE id = ?`).bind(account.id).first<{ phone_number: string | null }>(),
+    topups(c.env.DB, stripeFor(c)).reload(account.id),
   ]);
-  return c.html(<AccountPage account={account} balanceCents={balance} pricePerMinuteCents={pricePerMinute(c.env)} phoneNumber={number?.phone_number ?? null} calls={rows.map((r) => callView(r, []))} />);
+  return c.html(
+    <AccountPage account={account} balanceCents={balance} pricePerMinuteCents={pricePerMinute(c.env)} phoneNumber={number?.phone_number ?? null} reload={reload} calls={rows.map((r) => callView(r, []))} error={error} />,
+    error ? 400 : 200,
+  );
+}
+
+pub.get('/account', (c) => {
+  const account = c.get('account');
+  return account ? accountPage(c, account) : c.redirect('/login', 302);
 });
 
 pub.post('/account/funds', async (c) => {
   const account = c.get('account');
   if (!account) return c.redirect('/login', 302);
+  const form = await c.req.formData();
   try {
-    const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: parseAmountCents(field(await c.req.formData(), 'amount', 20)), origin: origin(c), account });
+    const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: parseAmountCents(field(form, 'amount', 20)), monthly: form.get('monthly') === 'on', origin: origin(c), account });
     return c.redirect(url, 303);
   } catch (err) {
-    if (!(err instanceof TopupError)) throw err;
-    const [balance, rows] = await Promise.all([accounts(c.env.DB).balanceCents(account.id), calls(c.env.DB).list(account.id, 50)]);
-    return c.html(<AccountPage account={account} balanceCents={balance} pricePerMinuteCents={pricePerMinute(c.env)} phoneNumber={null} calls={rows.map((r) => callView(r, []))} error={err.message} />, 400);
+    if (err instanceof TopupError) return accountPage(c, account, err.message);
+    throw err;
   }
+});
+
+pub.post('/account/reload/stop', async (c) => {
+  const account = c.get('account');
+  if (!account) return c.redirect('/login', 302);
+  await topups(c.env.DB, stripeFor(c)).stopReload(account.id);
+  return c.redirect('/account', 303);
 });
 
 pub.get('/account/calls/:id', async (c) => {
@@ -139,7 +154,7 @@ pub.get('/key/reset', async (c) => {
   if (!r) return c.html(<MessagePage title="link expired" message="that link was already used or is more than an hour old. ask for a new one." />, 400);
   const key = await accounts(c.env.DB).rotateKey(r.account_id);
   setKeyCookie(c, key);
-  return c.html(<NewKeyPage key={key} installPrompt={installPrompt(origin(c), key)} />);
+  return c.html(<NewKeyPage apiKey={key} installPrompt={installPrompt(origin(c), key)} />);
 });
 
 pub.get('/rules', (c) => c.html(<RulesPage signedIn={signedIn(c)} />));

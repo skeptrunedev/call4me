@@ -96,3 +96,5 @@ ol.steps li { margin: 4px 0; }
   .rows tr { border-bottom: 1px solid #ddd; padding: 6px 0; }
   .rows td { padding: 1px 0; text-align: left !important; }
 }
+.check { display: block; margin: 6px 0; font-size: 14px; }
+form.inline { margin: 6px 0; }

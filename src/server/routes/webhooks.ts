@@ -32,7 +32,14 @@ webhooks.post('/stripe', async (c) => {
   switch (event.type) {
     case 'checkout.session.completed':
     case 'checkout.session.async_payment_succeeded':
-      if (event.data.object.payment_status === 'paid') await t.fulfill(event.data.object.id);
+      await t.fulfill(event.data.object.id);
+      break;
+    case 'invoice.paid':
+      await t.invoicePaid(event.data.object);
+      break;
+    case 'customer.subscription.updated':
+    case 'customer.subscription.deleted':
+      await t.syncSubscription(event.data.object);
       break;
     case 'charge.refunded': {
       const ch = event.data.object;

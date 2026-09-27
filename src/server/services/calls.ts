@@ -41,6 +41,7 @@ export interface CallRow {
   ended_at: number | null;
   billed_seconds: number | null;
   cost_cents: number | null;
+  hold_cents: number | null;
   outcome: string | null;
   transcript: string | null;
   hangup_cause: string | null;
@@ -120,10 +121,12 @@ export function calls(db: D1Database) {
       if (counts && counts.mine >= LIMITS.sameNumberPerAccountPerDay) throw new CallError(`this number was already called ${counts.mine} times in the last 24 hours`, 429);
       if (counts && counts.everyone >= LIMITS.sameNumberAllAccountsPerDay) throw new CallError('this number has been called too often today; try tomorrow', 429);
 
+      // Credits up front: the call holds its maximum cost now and settles when it ends.
       const balance = await accounts(db).balanceCents(account.id);
-      if (balance < pricePerMinuteCents) throw new CallError(`balance is $${(balance / 100).toFixed(2)}; add funds with callbay_add_funds`, 402);
+      if (balance < pricePerMinuteCents) throw new CallError(`balance is $${(balance / 100).toFixed(2)}; add credits with callbay_add_funds`, 402);
       const affordable = Math.floor(balance / pricePerMinuteCents);
       const maxMinutes = Math.max(1, Math.min(input.max_minutes ?? LIMITS.defaultMaxMinutes, LIMITS.maxMinutes, affordable));
+      const holdCents = maxMinutes * pricePerMinuteCents;
 
       const brief: Brief = {
         on_behalf_of: input.on_behalf_of.trim(),
@@ -134,9 +137,12 @@ export function calls(db: D1Database) {
         max_minutes: maxMinutes,
       };
       const id = `call_${newId()}`;
+      if (!(await accounts(db).hold(account.id, holdCents, `hold:${id}`, `up to ${maxMinutes} min to ${input.business.trim()}`))) {
+        throw new CallError('another call is using those credits; wait for it to finish or add credits', 402);
+      }
       await db
-        .prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at) VALUES (?, ?, ?, ?, ?, ?, 'queued', ?)`)
-        .bind(id, account.id, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(brief), now())
+        .prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, hold_cents, created_at) VALUES (?, ?, ?, ?, ?, ?, 'queued', ?, ?)`)
+        .bind(id, account.id, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(brief), holdCents, now())
         .run();
       return (await this.byId(id))!;
     },
@@ -195,8 +201,10 @@ export function calls(db: D1Database) {
         )
         .bind(status, endedAt, talkSeconds, cost, opts.hangupCause ?? null, opts.error ?? null, id)
         .run();
-      if ((r.meta.changes ?? 0) > 0 && cost > 0) {
-        await accounts(db).post(row.account_id, -cost, 'call', `call:${id}`, `${Math.ceil(talkSeconds / 60)} min to ${row.business}`);
+      if ((r.meta.changes ?? 0) > 0) {
+        const ledger = accounts(db);
+        if (row.hold_cents) await ledger.post(row.account_id, row.hold_cents, 'release', `release:${id}`, 'hold released');
+        if (cost > 0) await ledger.post(row.account_id, -cost, 'call', `call:${id}`, `${Math.ceil(talkSeconds / 60)} min to ${row.business}`);
       }
       return this.byId(id);
     },

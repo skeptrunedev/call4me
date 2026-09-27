@@ -2,7 +2,7 @@ import type { FC } from 'hono/jsx';
 import { formatPhone } from '../lib/phone';
 import type { callView } from '../mcp/server';
 import { dollars, type Account } from '../services/accounts';
-import { MIN_TOPUP_CENTS } from '../services/topups';
+import { MIN_TOPUP_CENTS, type Reload } from '../services/topups';
 import { CopyBlock, Layout } from './layout';
 
 type CallView = ReturnType<typeof callView>;
@@ -36,18 +36,18 @@ export const KeyRequestPage: FC<{ sent?: boolean; error?: string }> = ({ sent, e
   </Layout>
 );
 
-export const NewKeyPage: FC<{ key: string; installPrompt: string }> = ({ key, installPrompt }) => (
+export const NewKeyPage: FC<{ apiKey: string; installPrompt: string }> = ({ apiKey, installPrompt }) => (
   <Layout title="new key" signedIn>
     <h1>your new key</h1>
     <p>
-      shown once: <span class="key">{key}</span>
+      shown once: <span class="key">{apiKey}</span>
     </p>
     <p>the old key no longer works. paste this into your agent to reinstall with the new one:</p>
     <CopyBlock id="install-prompt" text={installPrompt} rows={16} />
   </Layout>
 );
 
-export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerMinuteCents: number; phoneNumber: string | null; calls: CallView[]; error?: string }> = (p) => (
+export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerMinuteCents: number; phoneNumber: string | null; reload: Reload | null; calls: CallView[]; error?: string }> = (p) => (
   <Layout title="my account" signedIn>
     <h1>
       balance: <span class="price">{dollars(p.balanceCents)}</span>
@@ -56,10 +56,20 @@ export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerM
       {p.account.email} · {dollars(p.pricePerMinuteCents)}/min · about {Math.floor(p.balanceCents / p.pricePerMinuteCents)} minutes left · your number:{' '}
       {p.phoneNumber ? formatPhone(p.phoneNumber) : 'assigned on your first call'} · key {p.account.key_prefix}
     </p>
+    {p.reload ? (
+      <form method="post" action="/account/reload/stop" class="inline">
+        reloads <span class="price">{dollars(p.reload.cents)}</span> every month
+        {p.reload.renewsAt && <> (next {new Date(p.reload.renewsAt).toISOString().slice(0, 10)})</>}
+        {p.reload.status !== 'active' && <span class="err"> · {p.reload.status.replace('_', ' ')}</span>} · <button type="submit" class="linkbutton">stop reloading</button>
+      </form>
+    ) : (
+      <p class="small muted">no monthly reload.</p>
+    )}
     <form method="post" action="/account/funds" class="buy">
       {p.error && <p class="err">{p.error}</p>}
-      <label for="amount">add funds (dollars, min ${MIN_TOPUP_CENTS / 100})</label>
-      <input type="text" id="amount" name="amount" class="amount" inputmode="decimal" value={String(MIN_TOPUP_CENTS / 100)} /> <button type="submit">pay with card</button>
+      <label for="amount">add credits (dollars, min ${MIN_TOPUP_CENTS / 100})</label>
+      <input type="text" id="amount" name="amount" class="amount" inputmode="decimal" value={String(p.reload ? p.reload.cents / 100 : MIN_TOPUP_CENTS / 100)} /> <button type="submit">pay with card</button>
+      <MonthlyBox replacing={Boolean(p.reload)} />
     </form>
     <h2>calls</h2>
     {p.calls.length === 0 ? (
@@ -96,6 +106,13 @@ export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerM
       <a href="/key">rotate key</a> · <a href="/logout">log out</a>
     </p>
   </Layout>
+);
+
+/** Monthly reload is the default: whatever you load comes back every month until you stop it. */
+export const MonthlyBox: FC<{ replacing?: boolean }> = ({ replacing }) => (
+  <label class="check">
+    <input type="checkbox" name="monthly" checked /> reload this amount every month{replacing ? ' (replaces your current reload)' : ''}. stop anytime.
+  </label>
 );
 
 export const CallPage: FC<{ call: CallView }> = ({ call }) => (

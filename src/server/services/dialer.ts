@@ -1,4 +1,4 @@
-import { now } from '../lib/ids';
+import { newId, now } from '../lib/ids';
 import { hmacHex } from '../lib/keys';
 import { telnyx } from '../lib/telnyx';
 import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions, inboundInstructions } from '../voice/prompt';
@@ -84,7 +84,8 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
   const account = await env.DB.prepare(`SELECT id, email, display_name, key_prefix, created_at FROM accounts WHERE phone_number = ?`).bind(opts.to).first<Account>();
   const blocked = await env.DB.prepare(`SELECT 1 FROM blocked_numbers WHERE number = ?`).bind(opts.from).first();
   const price = pricePerMinute(env);
-  if (!account || blocked || (await accounts(env.DB).balanceCents(account.id)) < price) {
+  const balance = account ? await accounts(env.DB).balanceCents(account.id) : 0;
+  if (!account || blocked || balance < price) {
     await telnyx(env).reject(opts.controlId);
     return;
   }
@@ -96,13 +97,19 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     .all<{ business: string; goal: string; outcome: string | null; created_at: number }>();
   const earlier = await env.DB.prepare(`SELECT business FROM calls WHERE account_id = ? AND to_number = ? ORDER BY created_at DESC LIMIT 1`).bind(account.id, opts.from).first<{ business: string }>();
 
-  const id = `call_${crypto.randomUUID().replace(/-/g, '').slice(0, 16)}`;
-  const maxMinutes = 10;
+  const id = `call_${newId()}`;
+  // Credits up front here too: the callback holds what it may cost before it is answered.
+  const maxMinutes = Math.min(10, Math.floor(balance / price));
+  const holdCents = maxMinutes * price;
+  if (!(await accounts(env.DB).hold(account.id, holdCents, `hold:${id}`, `up to ${maxMinutes} min callback`))) {
+    await telnyx(env).reject(opts.controlId);
+    return;
+  }
   const brief: Brief = { on_behalf_of: owner, facts: '', flexibility: '', callback_number: null, timezone: null, max_minutes: maxMinutes };
   await env.DB.prepare(
-    `INSERT INTO calls (id, account_id, direction, to_number, from_number, business, goal, brief, status, telnyx_call_control_id, created_at) VALUES (?, ?, 'inbound', ?, ?, ?, ?, ?, 'dialing', ?, ?)`,
+    `INSERT INTO calls (id, account_id, direction, to_number, from_number, business, goal, brief, status, telnyx_call_control_id, hold_cents, created_at) VALUES (?, ?, 'inbound', ?, ?, ?, ?, ?, 'dialing', ?, ?, ?)`,
   )
-    .bind(id, account.id, opts.from, opts.to, earlier?.business ?? 'incoming call', 'take the call and a message', JSON.stringify(brief), opts.controlId, now())
+    .bind(id, account.id, opts.from, opts.to, earlier?.business ?? 'incoming call', 'take the call and a message', JSON.stringify(brief), opts.controlId, holdCents, now())
     .run();
 
   const setup: SessionSetup = {

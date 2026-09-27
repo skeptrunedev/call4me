@@ -1,10 +1,14 @@
-import { newId } from './ids';
-
 /** API keys look like `cb_live_<32 chars>`; only the SHA-256 hash is stored. */
 export const KEY_PREFIX = 'cb_live_';
 
+/** No look-alikes (0/o, 1/l/i), since people read keys off screens. 31 symbols x 32 ≈ 158 bits. */
+const KEY_ALPHABET = 'abcdefghjkmnpqrstuvwxyz23456789';
+
 export function newApiKey(): string {
-  return `${KEY_PREFIX}${newId(32)}`;
+  const bytes = crypto.getRandomValues(new Uint8Array(32));
+  let out = '';
+  for (const b of bytes) out += KEY_ALPHABET[b % KEY_ALPHABET.length];
+  return `${KEY_PREFIX}${out}`;
 }
 
 export async function sha256Hex(input: string): Promise<string> {
