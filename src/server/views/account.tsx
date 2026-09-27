@@ -7,32 +7,44 @@ import { CopyBlock, Layout } from './layout';
 
 type CallView = ReturnType<typeof callView>;
 
-export const LoginPage: FC<{ error?: string }> = ({ error }) => (
-  <Layout title="my account">
-    <h1>my account</h1>
-    <form method="post" action="/login">
-      {error && <p class="err">{error}</p>}
-      <label for="key">your key</label>
-      <input type="text" id="key" name="key" required autocomplete="off" spellcheck={false} style="width:420px" placeholder="cb_live_..." /> <button type="submit">open</button>
-    </form>
-    <p class="small">
-      lost it? <a href="/key">get a new key by email</a>. no key yet? <a href="/#buy">add funds</a> to get one.
-    </p>
+export const LoginPage: FC<{ next: string; error?: string; providers: { google: boolean; x: boolean } }> = ({ next, error, providers }) => (
+  <Layout title="sign in">
+    <h1>sign in</h1>
+    {error && <p class="err">{error}</p>}
+    {providers.google && (
+      <form method="post" action="/login/google" class="inline">
+        <input type="hidden" name="next" value={next} />
+        <button type="submit">continue with google</button>
+      </form>
+    )}
+    {providers.x && (
+      <form method="post" action="/login/x" class="inline">
+        <input type="hidden" name="next" value={next} />
+        <button type="submit">continue with x</button>
+      </form>
+    )}
+    {!providers.google && !providers.x && <p class="muted">sign-in is being set up. check back shortly.</p>}
+    <p class="small">your credits, calls, and calling profile belong to the account you sign in with. an account you paid for before sign-in existed is linked by its email.</p>
   </Layout>
 );
 
-export const KeyRequestPage: FC<{ sent?: boolean; error?: string }> = ({ sent, error }) => (
-  <Layout title="new key">
-    <h1>get a new key</h1>
-    {sent ? (
-      <p>if that email has a callbay account, a link is on its way. it works once, for an hour. your old key stops working when you open it.</p>
-    ) : (
-      <form method="post" action="/key">
-        {error && <p class="err">{error}</p>}
-        <label for="email">the email you paid with</label>
-        <input type="email" id="email" name="email" required autocomplete="email" /> <button type="submit">email me a link</button>
-      </form>
-    )}
+export const ConsentPage: FC<{ client: string; query: string; error?: string }> = ({ client, query, error }) => (
+  <Layout title="connect" signedIn>
+    <h1>connect {client} to callbay?</h1>
+    {error && <p class="err">{error}</p>}
+    <p>
+      {client} will be able to place phone calls for you, read your calls and calling profile, and spend your callbay credits. you can reconnect or revoke it
+      anytime by signing out of the client.
+    </p>
+    <form method="post" action="/oauth/consent" class="inline">
+      <input type="hidden" name="oauth_query" value={query} />
+      <button type="submit" name="decision" value="allow">
+        allow
+      </button>{' '}
+      <button type="submit" name="decision" value="deny" class="linkbutton">
+        deny
+      </button>
+    </form>
   </Layout>
 );
 
@@ -102,9 +114,17 @@ export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerM
         </tbody>
       </table>
     )}
+    <h2>connect your agent</h2>
     <p class="small">
-      <a href="/key">rotate key</a> · <a href="/logout">log out</a>
+      clients that sign in through the browser (claude desktop, claude.ai, claude code via /mcp) just need <code>/mcp</code>. clients that can't sign in use a key
+      in the URL. {p.account.key_prefix ? <>current key: {p.account.key_prefix}. </> : <>no key yet. </>}
     </p>
+    <form method="post" action="/account/key" class="inline">
+      <button type="submit">{p.account.key_prefix ? 'replace my key (the old one stops working)' : 'create a key'}</button>
+    </form>
+    <form method="post" action="/logout" class="inline">
+      <button type="submit" class="linkbutton">sign out</button>
+    </form>
   </Layout>
 );
 
@@ -170,19 +190,19 @@ export const CallPage: FC<{ call: CallView }> = ({ call }) => (
   </Layout>
 );
 
-export const McpPage: FC<{ signedIn: boolean; installPrompt: string }> = ({ signedIn, installPrompt }) => (
+export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: string }> = ({ signedIn, installPrompt, origin }) => (
   <Layout title="install mcp" signedIn={signedIn}>
     <h1>install the callbay mcp</h1>
     <p>
-      one URL with your key in it: <code>https://callbay…/mcp/&lt;your key&gt;</code>. the easiest way is to paste this prompt into your agent and let it do the setup:
+      the server is <code>{origin}/mcp</code>. your agent signs you in through the browser (google or x). the easiest way is to paste this prompt into your agent:
     </p>
     <CopyBlock id="install-prompt" text={installPrompt} rows={14} />
     <h3>by hand</h3>
     <pre class="wrap">
-      {`claude code:     claude mcp add --scope user --transport http callbay <URL>
-codex:           codex mcp add callbay --url <URL>
-claude desktop / claude.ai / chatgpt:  settings → connectors → add custom connector → <URL>
-anything else:   streamable HTTP at <URL>, or POST /mcp with "Authorization: Bearer <key>"`}
+      {`claude code:     claude mcp add --scope user --transport http callbay ${origin}/mcp   then /mcp → callbay → authenticate
+codex:           codex mcp add callbay --url ${origin}/mcp   then   codex mcp login callbay
+claude desktop / claude.ai / chatgpt:  settings → connectors → add custom connector → ${origin}/mcp
+can't sign in?   create a key at ${origin}/account and use ${origin}/mcp/<key>, or send "Authorization: Bearer <key>" to /mcp`}
     </pre>
     <h3>tools</h3>
     <ul>

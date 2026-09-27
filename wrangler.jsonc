@@ -20,6 +20,7 @@
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CallSession"] }],
   "vars": {
     "CANONICAL_HOST": "callbay.skeptrune.com",
+    "APP_NAME": "callbay",
     // US cents per started minute of talk time.
     "PRICE_PER_MINUTE_CENTS": "25",
     "VOICE_MODEL": "gpt-live-1",

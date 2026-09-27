@@ -4,18 +4,21 @@ import { MIN_TOPUP_CENTS } from '../services/topups';
 import { MonthlyBox } from './account';
 import { CopyBlock, Layout } from './layout';
 
-export const BuyForm: FC<{ error?: string; email?: string; amount?: string }> = ({ error, email = '', amount = String(MIN_TOPUP_CENTS / 100) }) => (
-  <form method="post" action="/buy" class="buy" id="buy">
-    {error && <p class="err">{error}</p>}
-    <label for="email">email (receipts, and a new key if you lose yours)</label>
-    <input type="email" id="email" name="email" required value={email} autocomplete="email" />
-    <label for="amount">amount in dollars (min ${MIN_TOPUP_CENTS / 100})</label>
-    <input type="text" id="amount" name="amount" class="amount" inputmode="decimal" required value={amount} /> <button type="submit">pay with card</button>
-    <MonthlyBox />
-  </form>
-);
+export const BuyForm: FC<{ signedIn: boolean; error?: string; amount?: string }> = ({ signedIn, error, amount = String(MIN_TOPUP_CENTS / 100) }) =>
+  signedIn ? (
+    <form method="post" action="/buy" class="buy" id="buy">
+      {error && <p class="err">{error}</p>}
+      <label for="amount">amount in dollars (min ${MIN_TOPUP_CENTS / 100})</label>
+      <input type="text" id="amount" name="amount" class="amount" inputmode="decimal" required value={amount} /> <button type="submit">pay with card</button>
+      <MonthlyBox />
+    </form>
+  ) : (
+    <p id="buy">
+      <a href="/login?next=/">sign in with google or x</a> to load credits.
+    </p>
+  );
 
-export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; error?: string; email?: string; amount?: string }> = (p) => (
+export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; error?: string; amount?: string }> = (p) => (
   <Layout signedIn={p.signedIn}>
     <p>
       your coding agent (claude code, codex, claude desktop, chatgpt) gets one new tool: <b>make a phone call</b>. it calls the restaurant, the doctor's office,
@@ -34,8 +37,8 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
           </li>
         </ol>
         <h3>add credits</h3>
-        <BuyForm error={p.error} email={p.email} amount={p.amount} />
-        <p class="small">already have a key? top up from <a href="/account">my account</a> or ask your agent (callbay_add_funds).</p>
+        <BuyForm signedIn={p.signedIn} error={p.error} amount={p.amount} />
+        <p class="small">top up anytime from <a href="/account">my account</a> or ask your agent (callbay_add_funds).</p>
       </div>
       <div>
         <h3>what it's good at</h3>
@@ -87,7 +90,7 @@ export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; bal
           </>
         ) : (
           <p>
-            funds added to {p.email}. your existing key keeps working. lost it? <a href="/key">get a new key by email</a>.
+            credits added. your existing key and connected agents keep working. need a new key? <a href="/account">my account</a>.
           </p>
         )}
         <p>

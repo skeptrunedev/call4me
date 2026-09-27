@@ -13,9 +13,9 @@ interface Env {
   TELNYX_CONNECTION_ID: string;
   /** Random secret for signing media stream URLs. */
   STREAM_SECRET: string;
-  SMTP_HOST?: string;
-  SMTP_PORT?: string;
-  SMTP_USER: string;
-  SMTP_PASS: string;
-  EMAIL_FROM: string;
+  BETTER_AUTH_SECRET: string;
+  GOOGLE_CLIENT_ID?: string;
+  GOOGLE_CLIENT_SECRET?: string;
+  X_CLIENT_ID?: string;
+  X_CLIENT_SECRET?: string;
 }

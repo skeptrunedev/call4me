@@ -53,7 +53,7 @@ export const Layout: FC<{ title?: string; signedIn?: boolean; children?: Child }
           <a href="/">home</a>
           <a href="/#buy">add funds</a>
           <a href="/mcp">install mcp</a>
-          {signedIn ? <a href="/account">my account</a> : <a href="/login">my account</a>}
+          {signedIn ? <a href="/account">my account</a> : <a href="/login">sign in</a>}
           <a href="/rules">rules</a>
         </div>
         <hr />

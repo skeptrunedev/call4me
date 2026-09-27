@@ -1,8 +1,12 @@
+// Must stay the first import: see zod-first.ts.
+import './zod-first';
 import { Hono } from 'hono';
 import type { AppEnv } from './lib/context';
 import { hmacHex, safeEqual } from './lib/keys';
 import { mcp } from './routes/mcp';
-import { accountFromCookie, pub } from './routes/public';
+import { pub } from './routes/public';
+import { authRoutes } from './routes/auth';
+import { mountAuth, sessionAccount } from './lib/auth';
 import { webhooks } from './routes/webhooks';
 import { MessagePage } from './views/public';
 import { sessionFor } from './voice/session';
@@ -36,13 +40,18 @@ app.get('/voice/stream/:callId/:sig', async (c) => {
 });
 
 app.route('/webhooks', webhooks);
+// better-auth's endpoints and the OAuth discovery documents need no account.
+mountAuth(app);
+
+// The MCP endpoint authenticates each request itself (OAuth token or key), not by cookie.
+app.route('/mcp', mcp);
 
 app.use('*', async (c, next) => {
-  c.set('account', await accountFromCookie(c));
+  c.set('account', await sessionAccount(c));
   await next();
 });
 
-app.route('/mcp', mcp);
+app.route('/', authRoutes);
 app.route('/', pub);
 
 app.notFound((c) => c.html(<MessagePage title="not found" message="that page does not exist." signedIn={Boolean(c.get('account'))} />, 404));

@@ -7,14 +7,19 @@
 export const mcpUrl = (origin: string, key: string) => `${origin}/mcp/${key}`;
 
 export function installPrompt(origin: string, key: string | null): string {
-  const url = key ? mcpUrl(origin, key) : `${origin}/mcp/<YOUR_CALLBAY_KEY>`;
+  const step1 = key
+    ? `1. Add the callbay MCP server. This URL contains my secret key, so don't paste it anywhere else. Use whichever matches you:
+   - Claude Code:  claude mcp add --scope user --transport http callbay ${mcpUrl(origin, key)}
+   - Codex:        codex mcp add callbay --url ${mcpUrl(origin, key)}
+   - Claude Desktop, claude.ai, or ChatGPT: I'll add a custom connector with the URL ${mcpUrl(origin, key)} (tell me to do this if you can't).`
+    : `1. Add the callbay MCP server and sign me in. Use whichever matches you:
+   - Claude Code:  claude mcp add --scope user --transport http callbay ${origin}/mcp  (then I run /mcp, pick callbay, and choose authenticate)
+   - Codex:        codex mcp add callbay --url ${origin}/mcp  then  codex mcp login callbay
+   - Claude Desktop, claude.ai, or ChatGPT: I'll add a custom connector with the URL ${origin}/mcp and sign in when it asks.
+   I sign in with Google or X. If I have no credits yet, I load some at ${origin} (from $10).`;
   return `Set up callbay so you can make phone calls for me (book restaurants, doctor's appointments, call businesses for info).
 
-1. Add the callbay MCP server. Use whichever matches you:
-   - Claude Code:  claude mcp add --scope user --transport http callbay ${url}
-   - Codex:        codex mcp add callbay --url ${url}
-   - Claude Desktop, claude.ai, or ChatGPT: I'll add a custom connector with the URL ${url} (tell me to do this if you can't).
-   The URL contains my secret key. Don't paste it anywhere else.${key ? '' : `\n   I don't have a key yet: get one at ${origin} (prepaid credits, from $10).`}
+${step1}
 
 2. Restart or reload MCP servers if needed, then call callbay_get_balance to check it works.
 

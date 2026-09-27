@@ -23,3 +23,9 @@ export function field(form: FormData, name: string, max = 10_000): string {
 
 /** Stripe, built on first use: only the routes that move money need its key. */
 export const stripeFor = (c: AppContext): Stripe => makeStripe(c.env.STRIPE_SECRET_KEY);
+
+/** Only same-site relative redirects from `next` params. */
+export function safeNext(next: string | undefined | null, fallback = '/'): string {
+  if (!next || !next.startsWith('/') || next.startsWith('//')) return fallback;
+  return next;
+}

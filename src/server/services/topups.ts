@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { newId, now } from '../lib/ids';
 import { accounts, type Account } from './accounts';
+import { realEmail } from '../lib/auth-options';
 
 export const MIN_TOPUP_CENTS = 1000;
 export const MAX_TOPUP_CENTS = 50_000;
@@ -94,7 +95,8 @@ export function topups(db: D1Database, stripe: Stripe) {
      */
     async checkout(opts: { amountCents: number; monthly: boolean; origin: string; email?: string; account?: Account }): Promise<string> {
       const id = newId();
-      const email = opts.account?.email ?? opts.email?.trim().toLowerCase();
+      // X sign-ins may have only a placeholder address; then Checkout asks for one.
+      const email = realEmail(opts.account?.email ?? opts.email?.trim().toLowerCase()) ?? undefined;
       const customer = opts.account ? (await db.prepare(`SELECT stripe_customer_id FROM accounts WHERE id = ?`).bind(opts.account.id).first<{ stripe_customer_id: string | null }>())?.stripe_customer_id : null;
       const price_data = { currency: 'usd', unit_amount: opts.amountCents, product_data: PRODUCT };
       const session = await stripe.checkout.sessions.create({
@@ -136,6 +138,9 @@ export function topups(db: D1Database, stripe: Stripe) {
       const account = topup.account_id ? await ledger.byId(topup.account_id) : email ? await ledger.ensure(email) : null;
       if (!account) return null;
       await attach(account, typeof session.customer === 'string' ? session.customer : (session.customer?.id ?? null));
+      // An account known only by an X placeholder learns its real email from Checkout.
+      const paidEmail = session.customer_details?.email?.toLowerCase();
+      if (paidEmail && !realEmail(account.email)) await db.prepare(`UPDATE OR IGNORE accounts SET email = ? WHERE id = ?`).bind(paidEmail, account.id).run();
       await db.prepare(`UPDATE topups SET account_id = ?, status = 'paid', paid_at = COALESCE(paid_at, ?) WHERE id = ?`).bind(account.id, now(), topup.id).run();
 
       if (session.mode === 'subscription') {
