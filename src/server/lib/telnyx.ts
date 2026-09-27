@@ -114,7 +114,14 @@ export function telnyx(env: TelnyxEnv) {
       };
       const number = (await search(areaCode)) ?? (await search(null));
       if (!number) throw new TelnyxError('no phone numbers available to buy', 503);
-      await call(env, 'POST', '/number_orders', { phone_numbers: [{ phone_number: number }], connection_id: env.TELNYX_CONNECTION_ID });
+      // Orders complete asynchronously; a number can't place calls until its order succeeds.
+      const order = await call<{ data: { id: string; status: string } }>(env, 'POST', '/number_orders', { phone_numbers: [{ phone_number: number }], connection_id: env.TELNYX_CONNECTION_ID });
+      let status = order.data.status;
+      for (let i = 0; i < 20 && status === 'pending'; i++) {
+        await new Promise((r) => setTimeout(r, 1500));
+        status = (await call<{ data: { status: string } }>(env, 'GET', `/number_orders/${order.data.id}`)).data.status;
+      }
+      if (status !== 'success') throw new TelnyxError(`number order ${order.data.id} for ${number} is ${status}`, 503);
       return number;
     },
   };
