@@ -50,3 +50,61 @@ describe('missingMessage', () => {
     expect(m).toContain('callbay_save_profile');
   });
 });
+
+describe('anyOf groups and secrets', () => {
+  const cat = {
+    slug: 't',
+    name: 'Test',
+    examples: '',
+    fields: [
+      { key: 'confirmation_code', label: 'confirmation code', ask: 'code?', required: true, anyOf: 'booking' },
+      { key: 'ticket_number', label: 'ticket number', ask: 'ticket?', required: true, anyOf: 'booking' },
+      { key: 'account_pin', label: 'account PIN', ask: 'pin?', required: false, sensitive: true },
+    ],
+  };
+
+  it('reports a missing group once, naming the alternatives', () => {
+    const r = resolveIntake(cat, {}, {});
+    expect(r.missing.map((f) => f.key)).toEqual(['confirmation_code']);
+    expect(missingMessage(cat, r)).toContain('confirmation_code (or instead: ticket_number): code?');
+  });
+
+  it('any member satisfies the group', () => expect(resolveIntake(cat, { ticket_number: '0161234567890' }, {}).missing).toEqual([]));
+
+  it('flags secrets', () => expect(resolveIntake(cat, { ticket_number: 'x', account_pin: '4821' }, {}).known.find((k) => k.key === 'account_pin')?.sensitive).toBe(true));
+});
+
+describe('home internet and flights', () => {
+  const profile = { full_name: 'Nick Khami', date_of_birth: '1990-03-14', phone: '4155550123', email: 'n@example.com', address: '1 Main St Apt 4, SF CA 94110' };
+
+  it('existing internet account: the PIN is required and secret; address can stand in for the account number', () => {
+    const cat = categoryBySlug('internet_existing_account')!;
+    const r = resolveIntake(cat, { request: 'outage since 9am, restarted', limits: 'none' }, profile);
+    expect(r.missing.map((f) => f.key)).toEqual(['account_pin']);
+    const ok = resolveIntake(cat, { request: 'outage', limits: 'none', account_pin: '4821' }, profile);
+    expect(ok.missing).toEqual([]);
+    expect(ok.known.find((k) => k.key === 'account_pin')?.sensitive).toBe(true);
+    expect(ok.known.find((k) => k.key === 'limits')?.grants).toBe(true);
+  });
+
+  it('new internet service must settle the credit check route up front', () => {
+    const r = resolveIntake(categoryBySlug('internet_new_service')!, { plan: '500 Mbps', start: 'Oct 1, self-install' }, profile);
+    expect(r.missing.map((f) => f.key)).toEqual(['credit_check']);
+  });
+
+  it('flight change needs a booking reference, the refund decision, and acceptable alternatives', () => {
+    const cat = categoryBySlug('flight_change')!;
+    const r = resolveIntake(cat, { airline: 'United, booked direct', current_flight: 'UA 123 Oct 3 SFO-EWR', situation: 'cancelled' }, profile);
+    expect(r.missing.map((f) => f.key)).toEqual(['confirmation_code', 'refund_or_rebook', 'acceptable']);
+    const bad = resolveIntake(cat, { confirmation_code: 'ABC' }, profile);
+    expect(bad.invalid.map((i) => i.field.key)).toEqual(['confirmation_code']);
+  });
+});
+
+describe('decisions reach the caller as allowances', () => {
+  it('marks the refund decision and credit-check route as grants', () => {
+    for (const [slug, key] of [['flight_change', 'refund_or_rebook'], ['internet_new_service', 'credit_check']]) {
+      expect(categoryBySlug(slug)!.fields.find((f) => f.key === key)?.grants).toBe(true);
+    }
+  });
+});

@@ -43,6 +43,8 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
           <li>dinner reservations, including "anything between 6:30 and 8"</li>
           <li>doctor, dentist, vet, and salon appointments</li>
           <li>asking a dealership about a car, price, or service slot</li>
+          <li>home internet: new service, outages and credits, lowering the bill, moving, cancelling</li>
+          <li>flight rebooking after a cancellation or delay, date changes, refunds</li>
           <li>store hours, stock checks, quotes, "do you do X"</li>
           <li>sitting through phone menus and hold music</li>
         </ul>

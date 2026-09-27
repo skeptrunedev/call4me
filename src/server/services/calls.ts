@@ -95,13 +95,25 @@ export interface PlaceCallInput {
   max_minutes?: number;
 }
 
+/** What a per-call secret looks like wherever the call is stored. */
+export const SECRET_MASK = '(given for this call only; not stored)';
+
+/** Mask each secret's literal value in a line of transcript (speech-to-text may still spell it differently). */
+export function redact(text: string, secrets: string[]): string {
+  return secrets.reduce((t, s) => (s.length >= 3 ? t.split(s).join('••••') : t), text);
+}
+
 export const billedCents = (talkSeconds: number, pricePerMinuteCents: number) => Math.ceil(talkSeconds / 60) * pricePerMinuteCents;
 
 export function calls(db: D1Database) {
   const DAY = 24 * 60 * 60 * 1000;
   return {
     /** Validate, check money and limits, and record the call as queued. Dialing is the caller's next step. */
-    async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number): Promise<CallRow> {
+    /**
+     * Returns the call plus its per-call secrets (account PINs): those reach the caller's
+     * instructions but are never written to the database.
+     */
+    async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number): Promise<{ call: CallRow; secrets: { label: string; value: string }[] }> {
       const category = categoryBySlug(input.category);
       if (!category) throw new CallError(`category must be one of: ${CATEGORY_SLUGS.join(', ')}`);
       const intake = resolveIntake(category, input.details ?? {}, await profiles(db).get(account.id));
@@ -143,11 +155,11 @@ export function calls(db: D1Database) {
       const maxMinutes = Math.max(1, Math.min(input.max_minutes ?? LIMITS.defaultMaxMinutes, LIMITS.maxMinutes, affordable));
       const holdCents = maxMinutes * pricePerMinuteCents;
 
-      const whenFields = intake.known.filter((k) => k.key === 'availability' || k.key === 'time_window');
+      const whenFields = intake.known.filter((k) => k.grants);
       const brief: Brief = {
         category: category.slug,
         on_behalf_of: onBehalfOf,
-        facts: [...intake.known.map((k) => `${k.label}: ${k.value}`), input.facts?.trim() ?? ''].filter(Boolean).join('\n'),
+        facts: [...intake.known.map((k) => `${k.label}: ${k.sensitive ? SECRET_MASK : k.value}`), input.facts?.trim() ?? ''].filter(Boolean).join('\n'),
         flexibility: [...whenFields.map((k) => `${k.label}: ${k.value}`), input.flexibility?.trim() ?? ''].filter(Boolean).join('\n'),
         callback_number: callback,
         timezone: input.timezone ?? null,
@@ -161,7 +173,8 @@ export function calls(db: D1Database) {
         .prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, category, status, hold_cents, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?)`)
         .bind(id, account.id, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(brief), category.slug, holdCents, now())
         .run();
-      return (await this.byId(id))!;
+      const secrets = intake.known.filter((k) => k.sensitive).map((k) => ({ label: k.label, value: k.value }));
+      return { call: (await this.byId(id))!, secrets };
     },
 
     byId(id: string): Promise<CallRow | null> {

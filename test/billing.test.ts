@@ -31,3 +31,9 @@ describe('newApiKey', async () => {
     }
   });
 });
+
+describe('redact', async () => {
+  const { redact } = await import('../src/server/services/calls');
+  it('masks secret values', () => expect(redact('sure, the PIN is 4821', ['4821'])).toBe('sure, the PIN is ••••'));
+  it('ignores very short values', () => expect(redact('a b', ['a'])).toBe('a b'));
+});

@@ -4,7 +4,7 @@ import { telnyx } from '../lib/telnyx';
 import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions, inboundInstructions } from '../voice/prompt';
 import { sessionFor, type SessionSetup } from '../voice/session';
 import { accounts, type Account } from './accounts';
-import { calls, CallError, localTimeIn, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
+import { calls, CallError, localTimeIn, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 
 /** GPT-Live voices that read as a North American caller. marin is the model default. */
 export const VOICES = ['marin', 'cedar', 'gleam', 'meridian'] as const;
@@ -31,7 +31,7 @@ export async function ensureNumber(env: Env, account: Account, nearE164: string)
 export async function placeCall(env: Env, origin: string, account: Account, input: PlaceCallInput & { voice?: Voice }): Promise<CallRow> {
   const price = pricePerMinute(env);
   const db = calls(env.DB);
-  const call = await db.create(account, input, price);
+  const { call, secrets } = await db.create(account, input, price);
   const brief = JSON.parse(call.brief) as Brief;
   if (!account.display_name) await accounts(env.DB).setDisplayName(account.id, brief.on_behalf_of);
 
@@ -42,7 +42,8 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       onBehalfOf: brief.on_behalf_of,
       business: call.business,
       goal: call.goal,
-      facts: brief.facts,
+      // Secrets were masked in the stored brief; the caller gets the real values.
+      facts: secrets.reduce((f, sec) => f.replace(`${sec.label}: ${SECRET_MASK}`, `${sec.label}: ${sec.value} (share only when they ask to verify the account)`), brief.facts),
       flexibility: brief.flexibility,
       callbackNumber: brief.callback_number ?? from,
       localTime: localTimeIn(brief.timezone),
@@ -54,6 +55,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       voice: input.voice ?? 'marin',
       maxSeconds: brief.max_minutes * 60,
       pricePerMinuteCents: price,
+      redact: secrets.map((sec) => sec.value),
     };
     const session = sessionFor(env, call.id);
     await session.fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });

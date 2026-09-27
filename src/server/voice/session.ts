@@ -1,5 +1,5 @@
 import { DurableObject } from 'cloudflare:workers';
-import { calls, type CallRow, type TranscriptLine } from '../services/calls';
+import { calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
 import { BACK_OFFICE_TOOLS } from './prompt';
 
@@ -36,6 +36,8 @@ export interface SessionSetup {
   pricePerMinuteCents: number;
   /** Telnyx's id for the phone leg: known up front for inbound calls, after dialing for outbound. */
   controlId?: string;
+  /** Per-call secrets (account PINs) to mask in the stored transcript. */
+  redact?: string[];
 }
 
 type Stored = SessionSetup;
@@ -343,7 +345,7 @@ export class CallSession extends DurableObject<Env> {
     if (this.flushTimer) clearTimeout(this.flushTimer);
     this.flushTimer = null;
     const s = await this.load();
-    if (s && this.transcript.length) await calls(this.env.DB).saveTranscript(s.callId, this.transcript.map((l) => ({ ...l, text: l.text.trim() })));
+    if (s && this.transcript.length) await calls(this.env.DB).saveTranscript(s.callId, this.transcript.map((l) => ({ ...l, text: redact(l.text.trim(), s.redact ?? []) })));
   }
 
   // ---- time limit

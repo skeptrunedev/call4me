@@ -18,7 +18,7 @@ export function installPrompt(origin: string, key: string | null): string {
 
 2. Restart or reload MCP servers if needed, then call callbay_get_balance to check it works.
 
-3. Set up my calling profile now, so calls never stall on missing details: call callbay_get_profile, then ask me in ONE message for whatever is missing (full legal name, date of birth, phone, home address, health insurance carrier + member ID + group number or self-pay, dental insurance, and my car's year/make/model/mileage/VIN if I have one). Save my answers with callbay_save_profile. Skip anything I decline.
+3. Set up my calling profile now, so calls never stall on missing details: call callbay_get_profile, then ask me in ONE message for whatever is missing (full legal name as on my ID, date of birth, phone, email, home address, health insurance carrier + member ID + group number or self-pay, dental insurance, my car's year/make/model/mileage/VIN if I have one, frequent flyer numbers and status, and TSA PreCheck/Global Entry Known Traveler Number). Never ask for or save my Social Security number, card numbers, or passwords. Save my answers with callbay_save_profile. Skip anything I decline.
 
 4. From now on, when I ask you to call somewhere:
    - Pick the category and call callbay_get_requirements. Ask me for every required detail you don't already have in one message before dialing (reason for the visit, new or existing patient, which days/times work, party size...). The caller can only say what you give it.
