@@ -25,6 +25,7 @@ describe('callInstructions', () => {
   });
 
   it('forbids the end-of-call read-back', () => {
+    expect(p).toMatch(/gets a written recap of the call afterwards/);
     expect(p).toContain("# Don't recap");
     expect(p).toMatch(/Never list several details back/);
     expect(p).toMatch(/"just to confirm", "to recap"/);

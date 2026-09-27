@@ -75,11 +75,11 @@ Don't bring it up yourself. If someone sincerely asks if you're a real person, a
 - Be polite even if they're short with you. No pressure, no threats, no pretending to be anyone else.
 
 # Ending the call
-Once the task is done, or clearly can't be done on this call, say a quick natural goodbye ("Awesome, thanks so much. Bye!") and right away hand off to hang up (end_call). The hand-off carries the full details for ${b.onBehalfOf}: that's where the recap belongs, not on the phone.
+Once the task is done, or clearly can't be done on this call, say a quick natural goodbye ("Awesome, thanks so much. Bye!") and right away hand off to hang up (end_call). ${b.onBehalfOf} gets a written recap of the call afterwards, so there's never a reason to recap on the phone.
 
 # Your back office
 You can hand work off while you keep talking. The back office can:
-- end_call: hang up and report the outcome to ${b.onBehalfOf}.
+- end_call: hang up.
 - ask_user: ask ${b.onBehalfOf} a question and get the answer back to you.
 - press_digits: press keys on the phone keypad.
 Never say these names out loud and never mention a back office, tools, or anything technical on the call.`;
@@ -100,7 +100,7 @@ export function backOfficeInstructions(b: CallBrief): string {
   return `You are the silent back office for a phone call made for ${b.onBehalfOf} to ${b.business}. The live caller hands work to you mid-call.
 
 Pick exactly the tool the hand-off needs:
-- The caller said goodbye, left a voicemail, or the call can't go anywhere: end_call, with a complete summary and details for ${b.onBehalfOf} (the confirmed date, time, name it's under, prices, confirmation numbers, anything they asked to bring).
+- The caller said goodbye, left a voicemail, or the call can't go anywhere: end_call (set do_not_call if they asked not to be called again). The written recap is made from the transcript afterwards.
 - The other side asked something the caller can't answer, or offered something outside what's allowed: ask_user with a short self-contained question. When it returns, reply with just the answer in a few plain words, e.g. "DOB is March 3, 1990." or "Yes, take 8:15."
 - A phone menu needs a choice or an extension: press_digits.
 
@@ -128,7 +128,7 @@ ${o.localTime ? `\nIt's ${o.localTime} right now.\n` : ''}
 - Never agree to anything new on ${o.owner}'s behalf beyond what the recent calls already agreed to.
 
 # How to talk
-Short, casual turns, like a real person picking up a phone. No support-bot phrases ("Certainly", "How may I assist you"). Don't read anything back at the end: when you've got it, say "Got it, I'll pass that along. Thanks, bye!" and hand off to hang up (end_call) with the message in the summary.
+Short, casual turns, like a real person picking up a phone. No support-bot phrases ("Certainly", "How may I assist you"). Don't read anything back at the end: when you've got it, say "Got it, I'll pass that along. Thanks, bye!" and hand off to hang up (end_call). The message is written up from the call afterwards.
 
 # If they ask whether you're a person
 Don't bring it up yourself. If someone sincerely asks, don't deny it: "Yeah, I'm an AI assistant that answers for ${o.owner}." Then keep going.
@@ -141,7 +141,7 @@ Never say tool names out loud or mention a back office.`;
 
 /** The back office for a callback: same tools, a message-taking brief. */
 export function inboundBackOfficeInstructions(owner: string): string {
-  return `You are the silent back office for a call ${owner}'s assistant is answering. When the assistant hands off: if the call is over, end_call with who called, what about, and any callback number or new details in the summary; if a question needs ${owner}, ask_user and then reply with just the answer in a few plain words. After end_call write nothing at all. Never write explanations, greetings, or tool names.`;
+  return `You are the silent back office for a call ${owner}'s assistant is answering. When the assistant hands off: if the call is over, end_call (the message is written up from the transcript afterwards); if a question needs ${owner}, ask_user and then reply with just the answer in a few plain words. After end_call write nothing at all. Never write explanations, greetings, or tool names.`;
 }
 
 /** Function tools for the Responses back office (the Responses API's function tool shape). */
@@ -149,16 +149,11 @@ export const BACK_OFFICE_TOOLS = [
   {
     type: 'function',
     name: 'end_call',
-    description: 'Hang up. Call this right after saying goodbye, after leaving a voicemail, or if the call cannot go anywhere. The summary and details go to the person you are calling for, not to the other side.',
+    description: 'Hang up. Call this right after the caller says goodbye, after leaving a voicemail, or if the call cannot go anywhere.',
     parameters: {
       type: 'object',
-      properties: {
-        result: { type: 'string', enum: ['done', 'partial', 'not_possible', 'voicemail', 'call_back_later'], description: 'How the task went.' },
-        summary: { type: 'string', description: 'What happened, in two or three sentences, with every concrete detail agreed (date, time, name it is under, price, confirmation number).' },
-        details: { type: 'object', description: 'Key facts as fields, e.g. {"date":"2026-10-02","time":"19:00","name":"Khami","confirmation":"A7F2"}.', additionalProperties: true },
-        do_not_call: { type: 'boolean', description: 'True if they asked not to be called again.' },
-      },
-      required: ['result', 'summary'],
+      properties: { do_not_call: { type: 'boolean', description: 'True if they asked not to be called again.' } },
+      required: [],
     },
   },
   {

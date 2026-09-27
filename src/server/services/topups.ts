@@ -44,6 +44,16 @@ const subscriptionOf = (invoice: Stripe.Invoice): string | null => {
   return typeof sub === 'string' ? sub : (sub?.id ?? null);
 };
 
+/** The account's live monthly reload, from our own records (no Stripe call). */
+export async function reloadOf(db: D1Database, accountId: string): Promise<Reload | null> {
+  const r = await db
+    .prepare(`SELECT reload_cents, reload_status, reload_renews_at FROM accounts WHERE id = ? AND reload_subscription_id IS NOT NULL`)
+    .bind(accountId)
+    .first<{ reload_cents: number | null; reload_status: string | null; reload_renews_at: number | null }>();
+  if (!r || !r.reload_cents || !r.reload_status || r.reload_status === 'canceled' || r.reload_status === 'incomplete_expired') return null;
+  return { cents: r.reload_cents, status: r.reload_status, renewsAt: r.reload_renews_at };
+}
+
 export function topups(db: D1Database, stripe: Stripe) {
   const ledger = accounts(db);
 
@@ -149,12 +159,6 @@ export function topups(db: D1Database, stripe: Stripe) {
     },
 
     syncSubscription: (sub: Stripe.Subscription) => syncSubscription(sub),
-
-    async reload(accountId: string): Promise<Reload | null> {
-      const r = await db.prepare(`SELECT reload_cents, reload_status, reload_renews_at FROM accounts WHERE id = ? AND reload_subscription_id IS NOT NULL`).bind(accountId).first<{ reload_cents: number | null; reload_status: string | null; reload_renews_at: number | null }>();
-      if (!r || !r.reload_cents || !r.reload_status || r.reload_status === 'canceled' || r.reload_status === 'incomplete_expired') return null;
-      return { cents: r.reload_cents, status: r.reload_status, renewsAt: r.reload_renews_at };
-    },
 
     /** Stop the monthly reload now. Credits already loaded stay. */
     async stopReload(accountId: string): Promise<void> {

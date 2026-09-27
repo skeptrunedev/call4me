@@ -6,7 +6,7 @@ import { formatPhone } from '../lib/phone';
 import { accounts, dollars, type Account } from '../services/accounts';
 import { ACTIVE, CallError, calls, LIMITS, type CallRow, type Outcome, type Question, type TranscriptLine } from '../services/calls';
 import { placeCall, pricePerMinute, VOICES } from '../services/dialer';
-import { parseAmountCents, topups, TopupError } from '../services/topups';
+import { parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
 
 /**
  * The callbay MCP server: the handful of tools a coding agent needs to make a phone call
@@ -48,10 +48,13 @@ function fail(message: string): CallToolResult {
 export function callView(row: CallRow, questions: Question[]) {
   const outcome = row.outcome ? (JSON.parse(row.outcome) as Outcome) : null;
   const transcript = row.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [];
+  // An answered call is finished once its recap is written (seconds after hangup), or if that failed.
+  const ended = !ACTIVE.includes(row.status);
+  const recapPending = ended && Boolean(row.answered_at) && !outcome && !row.error && Date.now() - (row.ended_at ?? 0) < 60_000;
   return {
     id: row.id,
     status: row.status,
-    finished: !ACTIVE.includes(row.status),
+    finished: ended && !recapPending,
     direction: row.direction,
     business: row.business,
     number: formatPhone(row.to_number),
@@ -69,7 +72,7 @@ export function callView(row: CallRow, questions: Question[]) {
 }
 
 function callText(v: ReturnType<typeof callView>): string {
-  const lines = [`${v.id} · ${v.status}${v.finished ? '' : ' (in progress)'} · ${v.business} ${v.number}`];
+  const lines = [`${v.id} · ${v.status}${v.finished ? '' : v.status === 'completed' ? ' (writing the recap)' : ' (in progress)'} · ${v.business} ${v.number}`];
   if (v.open_questions.length) {
     lines.push('', 'OPEN QUESTION (the business is waiting on the line; answer now with callbay_answer_question):');
     for (const q of v.open_questions) lines.push(`- [${q.id}] ${q.question}`);
@@ -141,7 +144,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
         let row = await db.forAccount(account.id, args.call_id);
         let qs = await db.questions(row.id);
         const openAtStart = qs.filter((q) => !q.answer).length;
-        while (Date.now() < deadline && ACTIVE.includes(row.status) && qs.filter((q) => !q.answer).length <= openAtStart) {
+        while (Date.now() < deadline && !callView(row, qs).finished && qs.filter((q) => !q.answer).length <= openAtStart) {
           await new Promise((r) => setTimeout(r, 1500));
           row = await db.forAccount(account.id, args.call_id);
           qs = await db.questions(row.id);
@@ -197,7 +200,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
       guard(async () => {
         const balance = await accounts(env.DB).balanceCents(account.id);
         const price = pricePerMinute(env);
-        const reload = await topups(env.DB, deps.stripe()).reload(account.id);
+        const reload = await reloadOf(env.DB, account.id);
         const number = await env.DB.prepare(`SELECT phone_number FROM accounts WHERE id = ?`).bind(account.id).first<{ phone_number: string | null }>();
         const out = {
           balance: dollars(balance),

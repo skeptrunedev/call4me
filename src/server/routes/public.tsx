@@ -9,7 +9,7 @@ import { callView } from '../mcp/server';
 import { accounts, type Account } from '../services/accounts';
 import { calls, CallError } from '../services/calls';
 import { pricePerMinute } from '../services/dialer';
-import { parseAmountCents, topups, TopupError } from '../services/topups';
+import { parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
 import { AccountPage, CallPage, KeyRequestPage, LoginPage, NewKeyPage } from '../views/account';
 import { HomePage, MessagePage, PrivacyPage, RulesPage, TermsPage, WelcomePage } from '../views/public';
 
@@ -78,7 +78,7 @@ async function accountPage(c: AppContext, account: Account, error?: string) {
     accounts(c.env.DB).balanceCents(account.id),
     calls(c.env.DB).list(account.id, 50),
     c.env.DB.prepare(`SELECT phone_number FROM accounts WHERE id = ?`).bind(account.id).first<{ phone_number: string | null }>(),
-    topups(c.env.DB, stripeFor(c)).reload(account.id),
+    reloadOf(c.env.DB, account.id),
   ]);
   return c.html(
     <AccountPage account={account} balanceCents={balance} pricePerMinuteCents={pricePerMinute(c.env)} phoneNumber={number?.phone_number ?? null} reload={reload} calls={rows.map((r) => callView(r, []))} error={error} />,

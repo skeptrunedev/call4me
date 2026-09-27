@@ -3,12 +3,27 @@ import type Stripe from 'stripe';
 import { stripeFor, type AppEnv } from '../lib/context';
 import { now } from '../lib/ids';
 import { readClientState, verifyTelnyxSignature } from '../lib/telnyx';
-import { calls, type CallStatus } from '../services/calls';
+import { calls, type Brief, type CallStatus, type TranscriptLine } from '../services/calls';
+import { summarizeCall, summaryPrompt } from '../services/summary';
 import { answerInbound, pricePerMinute } from '../services/dialer';
 import { topups, verifyWebhook } from '../services/topups';
 import { sessionFor } from '../voice/session';
 
 export const webhooks = new Hono<AppEnv>();
+
+/** The written outcome of an answered call, from its final transcript. */
+async function writeRecap(env: Env, callId: string): Promise<void> {
+  const db = calls(env.DB);
+  const row = await db.byId(callId);
+  if (!row || row.outcome) return;
+  const transcript = row.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [];
+  try {
+    await db.saveOutcome(callId, await summarizeCall(env, summaryPrompt(row, JSON.parse(row.brief) as Brief, transcript)));
+  } catch (err) {
+    console.error('recap failed', callId, err);
+    await env.DB.prepare(`UPDATE calls SET error = COALESCE(error, ?) WHERE id = ?`).bind(`recap failed: ${String(err).slice(0, 300)}`, callId).run();
+  }
+}
 
 // ---- Stripe: card top-ups
 
@@ -106,7 +121,9 @@ webhooks.post('/telnyx', async (c) => {
       const row = await db.byId(callId);
       const status: CallStatus = row?.answered_at ? 'completed' : unansweredStatus(p.hangup_cause);
       await db.finish(callId, { status, hangupCause: p.hangup_cause ?? null, pricePerMinuteCents: pricePerMinute(c.env) });
+      // Returns once the session has written the final transcript.
       await sessionFor(c.env, callId).fetch('https://session/ended', { method: 'POST' });
+      if (row?.answered_at) c.executionCtx.waitUntil(writeRecap(c.env, callId));
       break;
     }
     case 'streaming.failed':

@@ -1,5 +1,5 @@
 import { DurableObject } from 'cloudflare:workers';
-import { calls, type CallRow, type Outcome, type TranscriptLine } from '../services/calls';
+import { calls, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
 import { BACK_OFFICE_TOOLS } from './prompt';
 
@@ -74,6 +74,8 @@ export class CallSession extends DurableObject<Env> {
   private playbackEndsAt = 0;
   private lastOutputAt = 0;
   private endingCall = false;
+  /** The teardown in progress, so the hangup webhook can wait for the final transcript write. */
+  private closing: Promise<void> | null = null;
 
   async fetch(req: Request): Promise<Response> {
     const url = new URL(req.url);
@@ -237,9 +239,17 @@ export class CallSession extends DurableObject<Env> {
       case 'session.output_transcript.delta':
         this.appendTranscript('caller', (ev as { delta: string }).delta);
         break;
+      case 'session.delegation.created':
+        console.log('delegation', JSON.stringify((ev as { delegation: unknown }).delegation));
+        break;
       case 'response.event': {
         const e = ev as { delegation_id: string; event: { type: string; item?: { type: string; call_id: string; name: string; arguments: string } } };
-        if (e.event.type === 'response.output_item.done' && e.event.item?.type === 'function_call') await this.runTool(e.event.item);
+        if (e.event.type === 'response.output_item.done' && e.event.item?.type === 'function_call') {
+          console.log('back office call', e.event.item.name, e.event.item.arguments);
+          await this.runTool(e.event.item);
+        } else if (e.event.type === 'response.completed' || e.event.type === 'response.failed' || e.event.type === 'error') {
+          console.log('back office', e.event.type);
+        }
         break;
       }
       case 'error': {
@@ -288,20 +298,12 @@ export class CallSession extends DurableObject<Env> {
   private async endCall(s: Stored, args: Record<string, unknown>): Promise<string> {
     if (this.endingCall) return 'already hanging up';
     this.endingCall = true;
-    const results = ['done', 'partial', 'not_possible', 'voicemail', 'call_back_later'] as const;
-    const outcome: Outcome = {
-      result: results.includes(args.result as Outcome['result']) ? (args.result as Outcome['result']) : 'partial',
-      summary: String(args.summary ?? '').slice(0, 4000),
-      details: typeof args.details === 'object' && args.details ? (args.details as Record<string, unknown>) : undefined,
-    };
-    const db = calls(this.env.DB);
-    await db.saveOutcome(s.callId, outcome);
     if (args.do_not_call === true) {
+      const db = calls(this.env.DB);
       const row = await db.byId(s.callId);
       if (row) await db.block(row.to_number, `asked not to be called (${s.callId})`);
     }
-    await this.flushTranscript();
-    // Let the goodbye finish, then hang up. The hangup webhook does the billing.
+    // Let the goodbye finish, then hang up. The hangup webhook bills and writes the recap.
     const wait = Math.max(0, this.playbackEndsAt - Date.now()) + HANGUP_GRACE_MS;
     setTimeout(() => void this.hangup(), wait);
     return 'hanging up';
@@ -364,8 +366,12 @@ export class CallSession extends DurableObject<Env> {
   }
 
   /** Close both sockets and make sure the phone leg is down too (a no-op if it already is). */
-  private async shutdown(reason: string): Promise<void> {
-    if (this.ended) return;
+  private shutdown(reason: string): Promise<void> {
+    this.closing ??= this.teardown(reason);
+    return this.closing;
+  }
+
+  private async teardown(reason: string): Promise<void> {
     this.ended = true;
     console.log('call session ending:', reason);
     const s = await this.load();
