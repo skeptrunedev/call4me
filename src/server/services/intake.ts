@@ -102,7 +102,7 @@ export const CATEGORIES: Category[] = [
     name: 'Restaurant reservation',
     examples: 'book, change, or cancel a table; ask about a private room or waitlist',
     fields: [
-      fromProfile('full_name', true, { key: 'reservation_name', label: 'name for the reservation' }),
+      fromProfile('full_name', true, { key: 'reservation_name', label: 'name for the reservation', ask: 'What name should the reservation be under?' }),
       req('party_size', 'party size', 'How many people?'),
       req('date', 'date', 'Which day?'),
       req('time_window', 'acceptable time window', 'What time, and what range is acceptable (e.g. 7pm, anything 6:30-8)?'),
@@ -116,7 +116,7 @@ export const CATEGORIES: Category[] = [
     name: 'Vet, groomer, boarding',
     examples: 'vet visit, vaccines, grooming, boarding',
     fields: [
-      fromProfile('full_name', true, { key: 'owner_full_name', label: "owner's full name" }),
+      fromProfile('full_name', true, { key: 'owner_full_name', label: "owner's full name", ask: "What's the pet owner's full name?" }),
       fromProfile('phone'),
       req('pet', 'pet name, species/breed, age', "What's your pet's name, species/breed, and age?"),
       req('client_status', 'new or existing client', 'Have you been to this clinic before?'),
@@ -167,13 +167,13 @@ export const CATEGORIES: Category[] = [
     slug: 'personal_care',
     name: 'Salon, barber, spa, fitness',
     examples: 'haircut, color, nails, massage, personal training',
-    fields: [fromProfile('full_name'), fromProfile('phone'), req('service', 'service', 'Which service?'), WHEN, opt('provider', 'preferred stylist or provider', 'Anyone specific you want?')],
+    fields: [fromProfile('full_name', true, { ask: 'What name should the appointment be under?' }), fromProfile('phone'), req('service', 'service', 'Which service?'), WHEN, opt('provider', 'preferred stylist or provider', 'Anyone specific you want?')],
   },
   {
     slug: 'general',
     name: 'Questions for a business',
     examples: 'hours, stock checks, quotes, "do you do X", order status',
-    fields: [req('questions', 'what to find out', 'What exactly should the caller find out?'), fromProfile('full_name', false), fromProfile('phone', false), opt('order_number', 'order or account number', 'Is there an order or account number?')],
+    fields: [req('questions', 'what to find out', 'What exactly should the caller find out?'), fromProfile('full_name', false, { ask: 'What name should the caller give if asked?' }), fromProfile('phone', false), opt('order_number', 'order or account number', 'Is there an order or account number?')],
   },
 ];
 
