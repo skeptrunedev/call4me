@@ -7,6 +7,8 @@ import { accounts, dollars, type Account } from '../services/accounts';
 import { ACTIVE, CallError, calls, LIMITS, type CallRow, type Outcome, type Question, type TranscriptLine } from '../services/calls';
 import { placeCall, pricePerMinute, VOICES } from '../services/dialer';
 import { parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
+import { CATEGORIES, categoryBySlug, CATEGORY_SLUGS, PROFILE_FIELDS, type ProfileKey } from '../services/intake';
+import { ProfileError, profiles } from '../services/profiles';
 
 /**
  * The callbay MCP server: the handful of tools a coding agent needs to make a phone call
@@ -21,16 +23,17 @@ export interface McpDeps {
   stripe: () => Stripe;
 }
 
-const INSTRUCTIONS = `callbay places real phone calls for the user: restaurant bookings, doctor/dentist/vet appointments, questions for a car dealership or parts counter, store hours and stock, quotes.
+const INSTRUCTIONS = `callbay places real phone calls for the user: doctor/dentist/vet appointments, restaurant bookings, car service and dealership questions, home services, salons, and questions for any business.
 
-How to use it well:
-1. Find the right number (search the web if needed; check it is the right location).
-2. Collect everything the caller may need before calling, and ask the user for what's missing: the name the booking goes under, party size, dates and time windows, date of birth and insurance for medical offices, year/make/model/VIN for cars. The caller can only share facts you put in "facts", and can only accept what "flexibility" allows.
-3. callbay_place_call, then call callbay_get_call with wait_seconds until the status is final. Calls take 1-5 minutes.
-4. If callbay_get_call shows an open question, the business is waiting on the line: answer it right away with callbay_answer_question (ask the user only if you truly don't know).
-5. Report the outcome to the user in a line or two.
+The caller can only say what you give it, so everything is collected BEFORE dialing:
+1. Once, up front: callbay_get_profile. If it's missing things, ask the user in one message for their full legal name, date of birth, phone, home address, health and dental insurance (carrier + member ID, or self-pay), and car (year/make/model/mileage, VIN) if they have one, and save them with callbay_save_profile. Skip what they decline.
+2. For each call: pick the category and call callbay_get_requirements(category). Ask the user for every required field that isn't already known (one message, not one question at a time), plus the per-call details (reason, dates and times that work, party size...).
+3. Find the right number (search the web if needed; check it is the right location).
+4. callbay_place_call with the category and details. If it answers "Not calling yet", ask the user exactly what it lists and try again.
+5. Poll callbay_get_call with wait_seconds until finished. If it shows an open question, the business is waiting on the line: answer right away with callbay_answer_question.
+6. Tell the user the outcome in a line or two.
 
-The caller sounds like a normal person calling on the user's behalf. It keeps turns short and does not read the booking back at the end; the full recap comes back to you in the outcome.
+The caller sounds like a normal person calling for the user. It keeps turns short and does not read the booking back at the end; the recap comes back to you.
 Only call businesses and services the user wants to reach, never personal numbers they don't expect a call from.`;
 
 const RO: ToolAnnotations = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
@@ -95,7 +98,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
     try {
       return await fn();
     } catch (err) {
-      if (err instanceof CallError || err instanceof TopupError) return fail(err.message);
+      if (err instanceof CallError || err instanceof TopupError || err instanceof ProfileError) return fail(err.message);
       console.error('mcp tool failed', err);
       return fail('something broke on the server; try again in a moment.');
     }
@@ -106,13 +109,15 @@ export function createCallbayServer(deps: McpDeps): McpServer {
     {
       title: 'Place a phone call',
       description:
-        'Call a US or Canadian business for the user and have a natural conversation to get something done (book, reschedule, cancel, ask). Returns right away with a call id; follow it with callbay_get_call. Billed per minute of talk time; unanswered calls are free.',
+        'Call a US or Canadian business for the user and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category\'s required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with callbay_get_call. Credits for the maximum length are held up front; billed per minute of talk time; unanswered calls are free.',
       inputSchema: z.object({
         to: z.string().min(3).max(40).describe('the number to call, e.g. "+14155550123" or "(415) 555-0123"'),
         business: z.string().min(1).max(120).describe('who you are calling, as a person would say it: "Nopa", "Dr. Chen\'s office", "Toyota of Berkeley service"'),
         goal: z.string().min(5).max(1500).describe('what the call should achieve, in plain words: "Book a table for 4 tomorrow (Sat Oct 3) around 7pm under Khami."'),
-        on_behalf_of: z.string().min(1).max(80).describe('the user\'s name as the caller should say it: "Nick Khami". The caller calls FOR this person; it never claims to be them.'),
-        facts: z.string().max(3000).optional().describe('everything the caller may share if asked, one per line: name spelling, phone, DOB, insurer and member id, party size, car year/make/model/VIN, prior appointment details'),
+        category: z.enum(CATEGORY_SLUGS).describe('the kind of call; decides what must be known first (see callbay_get_requirements)'),
+        details: z.record(z.string(), z.string().max(1000)).optional().describe('answers to the category\'s fields by key, e.g. {"reason":"annual physical","patient_status":"existing","availability":"weekday mornings next week"}. Profile fields (name, DOB, phone, insurance...) are filled from the saved profile unless given here, e.g. to book for a family member.'),
+        on_behalf_of: z.string().min(1).max(80).optional().describe('who the call is for, as the caller should say it (default: the profile\'s full_name). The caller calls FOR this person; it never claims to be them.'),
+        facts: z.string().max(3000).optional().describe('anything else the caller may share beyond the category\'s fields, one per line'),
         flexibility: z.string().max(1500).optional().describe('what the caller may accept without asking: "any time 6:30-8pm", "a different day this week is fine", "up to $300". Anything outside this becomes a question to you.'),
         callback_number: z.string().max(40).optional().describe('a number the business can call back; defaults to the account\'s own callbay number, which answers and takes messages'),
         timezone: z.string().max(60).optional().describe('IANA time zone of the business, e.g. "America/Los_Angeles", so "tomorrow" is unambiguous'),
@@ -213,6 +218,74 @@ export function createCallbayServer(deps: McpDeps): McpServer {
         };
         const reloadText = out.monthly_reload ? `reloads ${out.monthly_reload.amount} monthly${out.monthly_reload.next ? ` (next ${out.monthly_reload.next})` : ''}` : 'no monthly reload';
         return ok(`balance ${out.balance} (~${out.minutes_left} min at ${out.price_per_minute}/min), ${reloadText}. number: ${out.phone_number ?? 'assigned on the first call'}.`, out);
+      })()) as never,
+  );
+
+  server.registerTool(
+    'callbay_get_requirements',
+    {
+      title: 'What a call needs',
+      description: 'The information a kind of call needs before dialing, and which of it the saved profile already has. Without a category, lists the categories.',
+      inputSchema: z.object({ category: z.enum(CATEGORY_SLUGS).optional() }),
+      annotations: RO,
+    },
+    (async (args: { category?: string }) =>
+      guard(async () => {
+        if (!args.category) {
+          const text = CATEGORIES.map((c) => `${c.slug}: ${c.name} (${c.examples})`).join('\n');
+          return ok(text, { categories: CATEGORIES.map((c) => ({ slug: c.slug, name: c.name, examples: c.examples })) });
+        }
+        const category = categoryBySlug(args.category)!;
+        const profile = await profiles(env.DB).get(account.id);
+        const fields = category.fields.map((f) => ({
+          key: f.key,
+          label: f.label,
+          required: f.required,
+          ask: f.ask,
+          from_profile: f.profile ?? null,
+          known: Boolean(f.profile && profile[f.profile]),
+        }));
+        const text = [
+          `${category.name}. Before calling, make sure you have:`,
+          ...fields.map((f) => `- ${f.key}${f.required ? '' : ' (optional)'}: ${f.known ? `have it (profile ${f.from_profile})` : f.ask}`),
+          'Pass per-call answers in place_call "details" by key. Missing profile fields: ask once and save with callbay_save_profile.',
+        ].join('\n');
+        return ok(text, { category: category.slug, fields });
+      })()) as never,
+  );
+
+  server.registerTool(
+    'callbay_get_profile',
+    {
+      title: 'Saved caller profile',
+      description: 'The facts saved for every call (name, DOB, phone, address, insurance, car) and which are still missing.',
+      inputSchema: z.object({}),
+      annotations: RO,
+    },
+    (async () =>
+      guard(async () => {
+        const profile = await profiles(env.DB).get(account.id);
+        const missing = (Object.keys(PROFILE_FIELDS) as ProfileKey[]).filter((k) => !profile[k]);
+        const text = [
+          ...Object.entries(profile).map(([k, v]) => `${k}: ${v}`),
+          missing.length ? `missing: ${missing.map((k) => `${k} (${PROFILE_FIELDS[k].ask})`).join('; ')}` : 'complete',
+        ].join('\n');
+        return ok(text, { profile, missing });
+      })()) as never,
+  );
+
+  server.registerTool(
+    'callbay_save_profile',
+    {
+      title: 'Save caller profile',
+      description: 'Save facts that are the same on every call, so they never have to be asked again. Merges into what is saved; an empty string removes a field. Only save what the user gave you.',
+      inputSchema: z.object(Object.fromEntries((Object.keys(PROFILE_FIELDS) as ProfileKey[]).map((k) => [k, z.string().max(500).optional().describe(PROFILE_FIELDS[k].label)]))),
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    },
+    (async (args: Record<string, string | undefined>) =>
+      guard(async () => {
+        const saved = await profiles(env.DB).update(account.id, Object.fromEntries(Object.entries(args).filter(([, v]) => v !== undefined)) as Record<string, string>);
+        return ok(`saved. profile now has: ${Object.keys(saved).join(', ') || 'nothing'}`, { profile: saved });
       })()) as never,
   );
 

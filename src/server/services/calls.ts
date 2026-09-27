@@ -1,11 +1,14 @@
 import { newId, now } from '../lib/ids';
 import { checkDialable } from '../lib/phone';
 import { accounts, type Account } from './accounts';
+import { categoryBySlug, CATEGORY_SLUGS, missingMessage, resolveIntake } from './intake';
+import { profiles } from './profiles';
 
 export type CallStatus = 'queued' | 'dialing' | 'in_progress' | 'completed' | 'no_answer' | 'busy' | 'failed' | 'canceled';
 export const ACTIVE: CallStatus[] = ['queued', 'dialing', 'in_progress'];
 
 export interface Brief {
+  category?: string;
   on_behalf_of: string;
   facts: string;
   flexibility: string;
@@ -79,7 +82,12 @@ export interface PlaceCallInput {
   to: string;
   business: string;
   goal: string;
-  on_behalf_of: string;
+  /** Which intake applies (see intake.ts); it decides what must be known before dialing. */
+  category: string;
+  /** Per-call answers to the category's fields, by field key. Profile fields fill the rest. */
+  details?: Record<string, string>;
+  on_behalf_of?: string;
+  /** Anything else the caller may share, beyond the category's fields. */
   facts?: string;
   flexibility?: string;
   callback_number?: string;
@@ -94,6 +102,13 @@ export function calls(db: D1Database) {
   return {
     /** Validate, check money and limits, and record the call as queued. Dialing is the caller's next step. */
     async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number): Promise<CallRow> {
+      const category = categoryBySlug(input.category);
+      if (!category) throw new CallError(`category must be one of: ${CATEGORY_SLUGS.join(', ')}`);
+      const intake = resolveIntake(category, input.details ?? {}, await profiles(db).get(account.id));
+      if (intake.missing.length || intake.invalid.length) throw new CallError(missingMessage(category, intake), 422);
+      const onBehalfOf = input.on_behalf_of?.trim() || (await profiles(db).get(account.id)).full_name || account.display_name;
+      if (!onBehalfOf) throw new CallError('on_behalf_of: who is this call for? Pass their name, or save full_name with callbay_save_profile.', 422);
+
       const to = checkDialable(input.to);
       if (!to.ok) throw new CallError(to.reason);
       let callback: string | null = null;
@@ -128,10 +143,12 @@ export function calls(db: D1Database) {
       const maxMinutes = Math.max(1, Math.min(input.max_minutes ?? LIMITS.defaultMaxMinutes, LIMITS.maxMinutes, affordable));
       const holdCents = maxMinutes * pricePerMinuteCents;
 
+      const whenFields = intake.known.filter((k) => k.key === 'availability' || k.key === 'time_window');
       const brief: Brief = {
-        on_behalf_of: input.on_behalf_of.trim(),
-        facts: input.facts?.trim() ?? '',
-        flexibility: input.flexibility?.trim() ?? '',
+        category: category.slug,
+        on_behalf_of: onBehalfOf,
+        facts: [...intake.known.map((k) => `${k.label}: ${k.value}`), input.facts?.trim() ?? ''].filter(Boolean).join('\n'),
+        flexibility: [...whenFields.map((k) => `${k.label}: ${k.value}`), input.flexibility?.trim() ?? ''].filter(Boolean).join('\n'),
         callback_number: callback,
         timezone: input.timezone ?? null,
         max_minutes: maxMinutes,
@@ -141,8 +158,8 @@ export function calls(db: D1Database) {
         throw new CallError('another call is using those credits; wait for it to finish or add credits', 402);
       }
       await db
-        .prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, hold_cents, created_at) VALUES (?, ?, ?, ?, ?, ?, 'queued', ?, ?)`)
-        .bind(id, account.id, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(brief), holdCents, now())
+        .prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, category, status, hold_cents, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?)`)
+        .bind(id, account.id, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(brief), category.slug, holdCents, now())
         .run();
       return (await this.byId(id))!;
     },

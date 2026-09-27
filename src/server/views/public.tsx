@@ -128,6 +128,7 @@ export const PrivacyPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
     <h1>privacy</h1>
     <ul>
       <li>we store your email, your balance history, and for each call: the number, the brief your agent sent, the outcome, and a text transcript.</li>
+      <li>if you save a calling profile (name, date of birth, phone, address, insurance, car), we store it so your agent doesn't have to ask before every call. the caller only shares it with the place it's calling, and only when asked. your agent can remove any of it with callbay_save_profile.</li>
       <li>we don't record call audio. audio passes through our phone carrier (Telnyx) and speech model provider (OpenAI) while the call is live.</li>
       <li>payments are handled by Stripe; we never see your card.</li>
       <li>email us to delete your account and its call history.</li>

@@ -18,9 +18,11 @@ export function installPrompt(origin: string, key: string | null): string {
 
 2. Restart or reload MCP servers if needed, then call callbay_get_balance to check it works.
 
-3. From now on, when I ask you to call somewhere:
+3. Set up my calling profile now, so calls never stall on missing details: call callbay_get_profile, then ask me in ONE message for whatever is missing (full legal name, date of birth, phone, home address, health insurance carrier + member ID + group number or self-pay, dental insurance, and my car's year/make/model/mileage/VIN if I have one). Save my answers with callbay_save_profile. Skip anything I decline.
+
+4. From now on, when I ask you to call somewhere:
+   - Pick the category and call callbay_get_requirements. Ask me for every required detail you don't already have in one message before dialing (reason for the visit, new or existing patient, which days/times work, party size...). The caller can only say what you give it.
    - Find the number (web search if needed) and make sure it's the right location.
-   - Gather what the caller may need to say: my name as it should be given, party size, dates, times I can do, DOB or insurance for medical offices, car details, a callback number. Ask me for anything missing before calling, since the caller can only share what you give it.
    - Place the call with callbay_place_call, then keep calling callbay_get_call until it finishes. If the caller asks a question mid-call, answer it quickly with callbay_answer_question; the business is waiting on the line.
    - Tell me the result in one or two lines.`;
 }
