@@ -18,7 +18,7 @@ async function serve(c: AppContext, key: string | undefined): Promise<Response> 
   if (!account) {
     return c.json({ jsonrpc: '2.0', error: { code: -32001, message: `callbay: missing or invalid key. Get one at ${origin(c)} and use ${origin(c)}/mcp/<your key> as the server URL.` }, id: null }, 401);
   }
-  const handler = createMcpHandler(() => createCallbayServer({ env: c.env, origin: origin(c), account, stripe: stripeFor(c) }), {
+  const handler = createMcpHandler(() => createCallbayServer({ env: c.env, origin: origin(c), account, stripe: () => stripeFor(c) }), {
     legacy: 'stateless',
     onerror: (err) => console.warn('mcp', String(err)),
   });

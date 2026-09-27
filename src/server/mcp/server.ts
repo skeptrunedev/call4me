@@ -17,7 +17,8 @@ export interface McpDeps {
   env: Env;
   origin: string;
   account: Account;
-  stripe: Stripe;
+  /** Built on first use: only the credit tools need Stripe. */
+  stripe: () => Stripe;
 }
 
 const INSTRUCTIONS = `callbay places real phone calls for the user: restaurant bookings, doctor/dentist/vet appointments, questions for a car dealership or parts counter, store hours and stock, quotes.
@@ -196,7 +197,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
       guard(async () => {
         const balance = await accounts(env.DB).balanceCents(account.id);
         const price = pricePerMinute(env);
-        const reload = await topups(env.DB, deps.stripe).reload(account.id);
+        const reload = await topups(env.DB, deps.stripe()).reload(account.id);
         const number = await env.DB.prepare(`SELECT phone_number FROM accounts WHERE id = ?`).bind(account.id).first<{ phone_number: string | null }>();
         const out = {
           balance: dollars(balance),
@@ -226,7 +227,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
     },
     (async (args: { amount_dollars: number; monthly: boolean }) =>
       guard(async () => {
-        const url = await topups(env.DB, deps.stripe).checkout({ amountCents: parseAmountCents(args.amount_dollars), monthly: args.monthly, origin: deps.origin, account });
+        const url = await topups(env.DB, deps.stripe()).checkout({ amountCents: parseAmountCents(args.amount_dollars), monthly: args.monthly, origin: deps.origin, account });
         return ok(`open this to pay${args.monthly ? ' (reloads monthly; stop anytime)' : ''}: ${url}`, { url, monthly: args.monthly });
       })()) as never,
   );
@@ -241,7 +242,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
     },
     (async () =>
       guard(async () => {
-        await topups(env.DB, deps.stripe).stopReload(account.id);
+        await topups(env.DB, deps.stripe()).stopReload(account.id);
         return ok('monthly reload stopped. credits already loaded stay.', { stopped: true });
       })()) as never,
   );
