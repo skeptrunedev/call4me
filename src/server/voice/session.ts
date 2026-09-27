@@ -216,6 +216,9 @@ export class CallSession extends DurableObject<Env> {
         break;
       }
       case 'session.output_audio.delta': {
+        // After the hang-up hand-off the goodbye has already been said; anything more is
+        // the model filling the silence before the line drops, so it never reaches the phone.
+        if (this.endingCall) break;
         const e = ev as { delta: string; start_ms: number; end_ms: number };
         this.sendPhone({ event: 'media', media: { payload: e.delta } });
         const now = Date.now();
@@ -237,7 +240,7 @@ export class CallSession extends DurableObject<Env> {
         break;
       }
       case 'session.output_transcript.delta':
-        this.appendTranscript('caller', (ev as { delta: string }).delta);
+        if (!this.endingCall) this.appendTranscript('caller', (ev as { delta: string }).delta);
         break;
       case 'session.delegation.created':
         console.log('delegation', JSON.stringify((ev as { delegation: unknown }).delegation));
