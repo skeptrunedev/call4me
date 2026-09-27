@@ -99,15 +99,16 @@ export function topups(db: D1Database, stripe: Stripe) {
       const price_data = { currency: 'usd', unit_amount: opts.amountCents, product_data: PRODUCT };
       const session = await stripe.checkout.sessions.create({
         ...(customer ? { customer } : { customer_email: email }),
-        client_reference_id: id,
+        // No client_reference_id: other apps on this Stripe account (skillbay) treat any session
+        // carrying one as theirs. Ours are found by session id and tagged app=callbay.
         success_url: `${opts.origin}/welcome?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${opts.origin}/`,
-        metadata: { topup_id: id },
+        metadata: { app: 'callbay', topup_id: id },
         ...(opts.monthly
           ? {
               mode: 'subscription' as const,
               line_items: [{ quantity: 1, price_data: { ...price_data, recurring: { interval: 'month' as const } } }],
-              subscription_data: { metadata: { topup_id: id } },
+              subscription_data: { metadata: { app: 'callbay', topup_id: id } },
             }
           : {
               mode: 'payment' as const,
