@@ -1,6 +1,6 @@
 import type { Child, FC } from 'hono/jsx';
 import { raw } from 'hono/html';
-import { PAGES, SITE, type PageKey } from '../lib/pages';
+import { PAGES, SITE, type PageKey, type PageOverride } from '../lib/pages';
 
 export { SITE_DESCRIPTION } from '../lib/pages';
 
@@ -37,10 +37,10 @@ const COPY_SCRIPT = `
 const WEBMCP_SCRIPT = `
 (function () {
   var mc = (document.modelContext || navigator.modelContext); if (!mc || typeof mc.registerTool !== 'function') return;
-  var PAGES = { home: '/', mcp: '/mcp', rules: '/rules', privacy: '/privacy', terms: '/terms', account: '/account' };
-  var pageArg = { type: 'object', properties: { page: { type: 'string', enum: Object.keys(PAGES), description: 'home, mcp (install), rules, privacy, terms, or account (signed in)' } }, required: ['page'] };
+  var PAGES = { home: '/', mcp: '/mcp', blog: '/blog', rules: '/rules', privacy: '/privacy', terms: '/terms', account: '/account' };
+  var pageArg = { type: 'object', properties: { page: { type: 'string', enum: Object.keys(PAGES), description: 'home, mcp (install), blog, rules, privacy, terms, or account (signed in)' } }, required: ['page'] };
   var tools = [
-    { name: 'callbay_read_page', description: 'Read a callbay page as markdown: home (what callbay does and pricing), mcp (how to install), rules, privacy, terms, or account (balance and calls; needs the person signed in).',
+    { name: 'callbay_read_page', description: 'Read a callbay page as markdown: home (what callbay does and pricing), mcp (how to install), blog (posts and the newsletter), rules, privacy, terms, or account (balance and calls; needs the person signed in).',
       inputSchema: pageArg,
       execute: function (a) { return fetch(PAGES[a.page] || '/', { headers: { accept: 'text/markdown' } }).then(function (r) { return r.text(); }); } },
     { name: 'callbay_get_install_prompt', description: 'The prompt that installs the callbay MCP server in Claude Code, Codex, Claude Desktop, claude.ai, or ChatGPT and signs the person in; the agent then gets tools to place phone calls.',
@@ -63,13 +63,16 @@ export const Layout: FC<{
   page?: PageKey;
   /** Overrides the page's canonical path, for pages with an id in the URL. */
   path?: string;
+  /** Overrides for pages whose preview depends on their content (blog posts). */
+  meta?: PageOverride;
   children?: Child;
-}> = ({ title, signedIn = false, page = 'message', path, children }) => {
+}> = ({ title, signedIn = false, page = 'message', path, meta: override, children }) => {
   const meta = PAGES[page];
   const fullTitle = title ? `${title} - callbay` : 'callbay: your AI agent makes phone calls for you';
+  const description = override?.description ?? meta.description;
   const url = `${SITE}${path ?? meta.path}`;
-  const image = `${SITE}/og/${meta.card}.png`;
-  const alt = `callbay: ${title ?? 'your AI agent makes phone calls for you'}`;
+  const image = `${SITE}${override?.image ?? `/og/${meta.card}.png`}`;
+  const alt = override?.imageAlt ?? `callbay: ${title ?? 'your AI agent makes phone calls for you'}`;
   return (
   <>
     {raw('<!DOCTYPE html>')}
@@ -78,18 +81,23 @@ export const Layout: FC<{
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{fullTitle}</title>
-        <meta name="description" content={meta.description} />
+        <meta name="description" content={description} />
         <meta name="theme-color" content="#551a8b" />
         <link rel="canonical" href={url} />
+        <link rel="alternate" type="application/atom+xml" href="/blog/feed.xml" title="callbay blog" />
+        {override?.published && <meta property="article:published_time" content={override.published} />}
+        {override?.modified && <meta property="article:modified_time" content={override.modified} />}
+        {override?.type === 'article' && <meta property="article:author" content="https://x.com/skeptrune" />}
+        {override?.jsonLd && <script type="application/ld+json">{raw(JSON.stringify(override.jsonLd).replace(/</g, '\\u003c'))}</script>}
         <link rel="ai-catalog" href="/.well-known/ai-catalog.json" type="application/ai-catalog+json" />
         <link rel="ard" href="/.well-known/ard.json" />
         <link rel="alternate" type="text/markdown" href={path ?? meta.path} title="markdown version (Accept: text/markdown)" />
         {/* Open Graph: Slack, Discord, Signal, iMessage, Facebook, LinkedIn read these. */}
         <meta property="og:site_name" content="callbay" />
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content={override?.type ?? 'website'} />
         <meta property="og:locale" content="en_US" />
         <meta property="og:title" content={fullTitle} />
-        <meta property="og:description" content={meta.description} />
+        <meta property="og:description" content={description} />
         <meta property="og:url" content={url} />
         <meta property="og:image" content={image} />
         <meta property="og:image:secure_url" content={image} />
@@ -102,7 +110,7 @@ export const Layout: FC<{
         <meta name="twitter:site" content="@skeptrune" />
         <meta name="twitter:creator" content="@skeptrune" />
         <meta name="twitter:title" content={fullTitle} />
-        <meta name="twitter:description" content={meta.description} />
+        <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={image} />
         <meta name="twitter:image:alt" content={alt} />
         <link rel="stylesheet" href="/static/style.css" />
@@ -120,6 +128,7 @@ export const Layout: FC<{
             <button type="submit" class="linkbutton">add funds</button>
           </form>
           <a href="/mcp">install mcp</a>
+          <a href="/blog">blog</a>
           {signedIn ? <a href="/account">my account</a> : <a href="/login">sign in</a>}
           <a href="/rules">rules</a>
         </div>
@@ -129,6 +138,7 @@ export const Layout: FC<{
           <a href="/rules">rules</a>
           <a href="/privacy">privacy</a>
           <a href="/terms">terms</a>
+          <a href="/blog">blog</a>
           <span> · © callbay</span>
         </footer>
         <script>{raw(COPY_SCRIPT)}</script>

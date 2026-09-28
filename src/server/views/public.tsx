@@ -2,7 +2,17 @@ import type { FC } from 'hono/jsx';
 import { dollars } from '../services/accounts';
 import { MIN_TOPUP_CENTS } from '../services/topups';
 import { MonthlyBox } from './account';
+import { SITE, SITE_DESCRIPTION } from '../lib/pages';
 import { CopyBlock, Layout } from './layout';
+
+/** Who runs the site and what it is, for search and answer engines (schema.org). */
+const HOME_LD = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'Organization', '@id': `${SITE}/#org`, name: 'callbay', url: SITE, logo: `${SITE}/favicon.svg`, email: 'me@call4.me', founder: { '@type': 'Person', name: 'Nick Khami', url: 'https://x.com/skeptrune' }, sameAs: ['https://x.com/skeptrune'] },
+    { '@type': 'WebSite', '@id': `${SITE}/#site`, name: 'callbay', url: SITE, description: SITE_DESCRIPTION, publisher: { '@id': `${SITE}/#org` } },
+  ],
+};
 
 /** No sign-in needed: signed out, Stripe asks for an email and the credits wait on that email's account. */
 export const BuyForm: FC<{ signedIn: boolean; error?: string; amount?: string }> = ({ signedIn, error, amount = String(MIN_TOPUP_CENTS / 100) }) => (
@@ -16,7 +26,7 @@ export const BuyForm: FC<{ signedIn: boolean; error?: string; amount?: string }>
 );
 
 export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; error?: string; amount?: string }> = (p) => (
-  <Layout page="home" signedIn={p.signedIn}>
+  <Layout page="home" signedIn={p.signedIn} meta={{ jsonLd: HOME_LD }}>
     <p>
       your coding agent (claude code, codex, claude desktop, chatgpt) gets one new tool: <b>make a phone call</b>. it calls the restaurant, the doctor's office,
       the airline, the hotel, sounds like a normal person, gets it done, and tells your agent what happened.
@@ -156,6 +166,7 @@ export const PrivacyPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ si
       <li>if you save a calling profile (name, date of birth, phone, address, insurance, car), we store it so your agent doesn't have to ask before every call. the caller only shares it with the place it's calling, and only when asked. your agent can remove any of it with callbay_save_profile.</li>
       <li>we don't record call audio. audio passes through our phone carrier (Telnyx) and speech model provider (OpenAI) while the call is live.</li>
       <li>payments are handled by Stripe; we never see your card.</li>
+      <li>on the blog, a cookie remembers which posts you liked. a comment stores the name and email you give (the email is never shown), and the newsletter stores your email until you unsubscribe.</li>
       <li>email us to delete your account and its call history.</li>
     </ul>
   </Layout>

@@ -1,4 +1,8 @@
+import type { Post } from './blog';
 import { PAGES, type PageKey } from './pages';
+
+/** What the sitemap and llms.txt need from a blog post. */
+export type PostEntry = Pick<Post, 'slug' | 'title' | 'description' | 'date' | 'updated'>;
 
 /**
  * The documents a crawler or an agent reads to find its way around callbay: robots.txt with
@@ -22,7 +26,11 @@ export const AI_CRAWLERS = [
  * Paths that are per-user, side-effecting, or carry a secret; nothing a crawler should walk.
  * /mcp/ (with the slash) is the key-in-URL form of the MCP endpoint; the /mcp page stays open.
  */
-export const DISALLOW = ['/account', '/welcome', '/login', '/logout', '/oauth/', '/add-funds', '/buy', '/unsubscribe', '/mcp/', '/api/auth/', '/webhooks/', '/voice/'];
+export const DISALLOW = [
+  '/account', '/welcome', '/login', '/logout', '/oauth/', '/add-funds', '/buy', '/unsubscribe', '/mcp/', '/api/auth/', '/webhooks/', '/voice/',
+  // The blog's checkout, emailed-link pages, and back office; the posts themselves are open.
+  '/blog/support', '/blog/subscribe/', '/blog/unsubscribe', '/admin/',
+];
 
 /** Content Signals (contentsignals.org): search and answer engines may use the content; training is not granted. */
 export const CONTENT_SIGNAL = 'search=yes, ai-input=yes, ai-train=no';
@@ -50,6 +58,7 @@ export function robotsTxt(site: string): string {
 export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: string }[] = [
   { page: 'home', changefreq: 'weekly', priority: '1.0' },
   { page: 'mcp', changefreq: 'monthly', priority: '0.9' },
+  { page: 'blog', changefreq: 'weekly', priority: '0.7' },
   { page: 'rules', changefreq: 'monthly' },
   { page: 'privacy', changefreq: 'yearly' },
   { page: 'terms', changefreq: 'yearly' },
@@ -57,12 +66,17 @@ export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: stri
 
 const xml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-export function sitemapXml(site: string): string {
+/** The public pages, then every blog post with its last-modified date. */
+export function sitemapXml(site: string, posts: PostEntry[] = []): string {
+  const entries: { loc: string; lastmod?: string; changefreq: string; priority?: string }[] = [
+    ...SITEMAP_PAGES.map((e) => ({ loc: `${site}${PAGES[e.page].path}`, changefreq: e.changefreq, priority: e.priority })),
+    ...posts.map((p) => ({ loc: `${site}/blog/${p.slug}`, lastmod: `${p.updated ?? p.date}T00:00:00Z`, changefreq: 'monthly', priority: '0.7' })),
+  ];
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...SITEMAP_PAGES.map((e) =>
-      [`<url><loc>${xml(`${site}${PAGES[e.page].path}`)}</loc>`, `<changefreq>${e.changefreq}</changefreq>`, e.priority ? `<priority>${e.priority}</priority>` : '', '</url>'].join(''),
+    ...entries.map((e) =>
+      [`<url><loc>${xml(e.loc)}</loc>`, e.lastmod ? `<lastmod>${e.lastmod}</lastmod>` : '', `<changefreq>${e.changefreq}</changefreq>`, e.priority ? `<priority>${e.priority}</priority>` : '', '</url>'].join(''),
     ),
     '</urlset>',
     '',
@@ -70,7 +84,7 @@ export function sitemapXml(site: string): string {
 }
 
 /** llms.txt (llmstxt.org): a short map of the site for language models, markdown, links first. */
-export function llmsTxt(site: string, pricePerMinuteCents: number): string {
+export function llmsTxt(site: string, pricePerMinuteCents: number, posts: PostEntry[] = []): string {
   const price = `$${(pricePerMinuteCents / 100).toFixed(2)}`;
   return [
     '# callbay',
@@ -93,6 +107,8 @@ export function llmsTxt(site: string, pricePerMinuteCents: number): string {
     `- [Home](${site}/): what callbay does, pricing, and the install prompt`,
     `- [Install MCP](${site}/mcp): one prompt for Claude Code, Codex, Claude Desktop, claude.ai, and ChatGPT`,
     `- [Rules](${site}/rules): what callbay will and will not call for`,
+    `- [Blog](${site}/blog): notes on AI agents that make phone calls, what callbay is good at, what changed (Atom feed at ${site}/blog/feed.xml)`,
+    ...posts.map((p) => `  - [${p.title}](${site}/blog/${p.slug}): ${p.description}`),
     '',
     '## Optional',
     '',
@@ -147,6 +163,7 @@ export function aiCatalog(site: string) {
         'install the callbay skill', 'how does an agent place a phone call with callbay',
       ]),
       entry('doc', 'llms', 'llms.txt', 'text/markdown', `${site}/llms.txt`, 'A short map of the site for language models.', ['what is callbay', 'how do agents use callbay']),
+      entry('doc', 'blog', 'callbay blog', 'application/atom+xml', `${site}/blog/feed.xml`, 'Atom feed of the callbay blog: notes on AI agents that make phone calls for you. Every post also answers Accept: text/markdown.', ['callbay blog', 'what is new at callbay']),
       entry('auth', 'oauth', 'OAuth protected resource metadata', 'application/json', `${site}/.well-known/oauth-protected-resource`, 'How agents obtain OAuth 2.1 tokens for callbay (PKCE, dynamic client registration); prose version at /auth.md.', ['how does an agent sign in to callbay', 'register an oauth client for callbay']),
     ],
   };

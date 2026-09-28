@@ -17,6 +17,23 @@ export interface PageMeta {
   path: string;
 }
 
+/**
+ * Per-render overrides for pages whose preview depends on their content (blog posts): the
+ * description, a site-relative preview image, and the article tags and structured data.
+ */
+export interface PageOverride {
+  description?: string;
+  /** Site-relative preview image, e.g. /og/blog/<slug>.png; defaults to the page's card. */
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  /** ISO timestamps for article:published_time / modified_time. */
+  published?: string;
+  modified?: string;
+  /** schema.org structured data, serialized as application/ld+json. */
+  jsonLd?: Record<string, unknown>;
+}
+
 export const PAGES = {
   home: { description: SITE_DESCRIPTION, card: 'site', path: '/' },
   mcp: { description: 'install callbay in claude code, codex, claude desktop, claude.ai, or chatgpt with one prompt. your agent gets a tool that makes phone calls.', card: 'mcp', path: '/mcp' },
@@ -29,6 +46,8 @@ export const PAGES = {
   rules: { description: 'what callbay will and will not call for: bookings, appointments, questions for a business. no telemarketing, no pretending to be you.', card: 'rules', path: '/rules' },
   privacy: { description: 'what callbay stores (your email, balance history, call briefs, outcomes, transcripts) and what it never records.', card: 'privacy', path: '/privacy' },
   terms: { description: 'callbay terms: prepaid credits that never expire, talk time billed from pickup, unanswered calls free, monthly reload you can stop anytime.', card: 'terms', path: '/terms' },
+  blog: { description: 'notes from callbay on AI agents that make phone calls for you: what they are good at, how they sound, and what changed.', card: 'blog', path: '/blog' },
+  blogArchive: { description: 'every post on the callbay blog, by month, from the first one to the latest.', card: 'blog', path: '/blog/archive' },
   message: { description: SITE_DESCRIPTION, card: 'site', path: '/' },
 } satisfies Record<string, PageMeta>;
 
@@ -47,4 +66,5 @@ export const CARDS: Record<string, OgCard> = {
   rules: { title: 'rules', subtitle: 'bookings, appointments, questions for a business. nothing else.', footer: 'the caller calls for you; it never claims to be you' },
   privacy: { title: 'privacy', subtitle: 'what callbay stores, and why it never records call audio', footer: 'payments handled by stripe' },
   terms: { title: 'terms', subtitle: 'prepaid credits that never expire. unanswered calls are free.', footer: 'talk time billed from pickup' },
+  blog: { title: 'callbay blog', subtitle: 'notes on AI agents that make phone calls for you', footer: 'by @skeptrune · new posts by email or atom feed' },
 };

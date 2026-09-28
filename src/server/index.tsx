@@ -20,6 +20,9 @@ import { MessagePage } from './views/public';
 import { sessionFor } from './voice/session';
 import { makeMessenger } from './lib/messaging';
 import { runDrip } from './services/drip';
+import { blog } from './routes/blog';
+import { admin } from './routes/admin';
+import { BlogError } from './services/blog';
 
 export { CallSession } from './voice/session';
 
@@ -95,11 +98,15 @@ app.use('/', async (c, next) => {
 });
 
 app.route('/', authRoutes);
+app.route('/blog', blog);
+app.route('/admin', admin);
 app.route('/', pub);
 
 app.notFound((c) => c.html(<MessagePage title="not found" message="that page does not exist." signedIn={Boolean(c.get('account'))} />, 404));
 
 app.onError((err, c) => {
+  // The blog's own refusals (no such post, a used link, already a supporter) are shown as they are.
+  if (err instanceof BlogError) return c.html(<MessagePage title={err.status === 404 ? 'not found' : 'that did not work'} message={err.message} signedIn={Boolean(c.get('account'))} />, err.status);
   console.error('unhandled', err);
   return c.html(<MessagePage title="something broke" message="try again in a moment." />, 500);
 });

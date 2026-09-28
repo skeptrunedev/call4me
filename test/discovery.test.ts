@@ -12,7 +12,10 @@ const SITE = 'https://call4.me';
 const TOOLS = new Set([...readFileSync('src/server/mcp/server.ts', 'utf8').matchAll(/registerTool\(\s*'([a-z_]+)'/g)].map((m) => m[1]!));
 
 /** Private pages: never in the sitemap, always disallowed for crawlers. */
-const PRIVATE = ['/account', '/account/calls/c1', '/welcome', '/login', '/logout', '/oauth/consent', '/add-funds', '/buy', '/unsubscribe', '/mcp/cb_live_abc'];
+const PRIVATE = [
+  '/account', '/account/calls/c1', '/welcome', '/login', '/logout', '/oauth/consent', '/add-funds', '/buy', '/unsubscribe', '/mcp/cb_live_abc',
+  '/blog/support', '/blog/support/done', '/blog/subscribe/confirm', '/blog/unsubscribe', '/admin/blog',
+];
 const disallowed = (path: string) => DISALLOW.some((p) => path.startsWith(p));
 
 describe('robots.txt', () => {
@@ -26,7 +29,7 @@ describe('robots.txt', () => {
   });
   it('keeps crawlers out of private pages but not the public ones', () => {
     for (const p of PRIVATE) expect(disallowed(p), p).toBe(true);
-    for (const p of ['/', '/mcp', '/rules', '/privacy', '/terms', '/llms.txt', '/auth.md', '/.well-known/api-catalog']) expect(disallowed(p), p).toBe(false);
+    for (const p of ['/', '/mcp', '/rules', '/privacy', '/terms', '/llms.txt', '/auth.md', '/.well-known/api-catalog', '/blog', '/blog/archive', '/blog/feed.xml', '/blog/some-post']) expect(disallowed(p), p).toBe(false);
   });
 });
 

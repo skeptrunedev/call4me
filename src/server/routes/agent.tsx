@@ -5,6 +5,7 @@ import { origin, type AppContext, type AppEnv } from '../lib/context';
 import { agentAuth, aiCatalog, authMd, llmsTxt, robotsTxt, serverCard, siteProtectedResource, sitemapXml, webBotAuthDirectory } from '../lib/discovery';
 import { SERVER_NAME, SERVER_VERSION } from '../mcp/server';
 import { pricePerMinute } from '../services/dialer';
+import { posts } from './blog';
 
 /**
  * What a crawler or an agent needs to find its way around: robots.txt, the sitemap, llms.txt,
@@ -19,9 +20,9 @@ const site = (c: AppContext) => siteUrl(origin(c));
 
 agent.get('/robots.txt', (c) => c.text(robotsTxt(site(c)), 200, { 'content-type': 'text/plain; charset=utf-8', ...CACHE }));
 
-agent.get('/sitemap.xml', (c) => c.body(sitemapXml(site(c)), 200, { 'content-type': 'application/xml; charset=utf-8', ...CACHE }));
+agent.get('/sitemap.xml', (c) => c.body(sitemapXml(site(c), posts()), 200, { 'content-type': 'application/xml; charset=utf-8', ...CACHE }));
 
-agent.get('/llms.txt', (c) => c.body(llmsTxt(site(c), pricePerMinute(c.env)), 200, { 'content-type': 'text/markdown; charset=utf-8', ...CACHE }));
+agent.get('/llms.txt', (c) => c.body(llmsTxt(site(c), pricePerMinute(c.env), posts()), 200, { 'content-type': 'text/markdown; charset=utf-8', ...CACHE }));
 
 for (const path of ['/.well-known/mcp/server-card.json', '/.well-known/mcp.json']) {
   agent.get(path, (c) =>

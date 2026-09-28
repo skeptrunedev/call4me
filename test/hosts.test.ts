@@ -15,6 +15,9 @@ describe('canonical host redirects', () => {
     expect(at('https://callbay.skeptrune.com/')).toBe('https://call4.me/');
     expect(at('https://callbay.skeptrune.com/account/calls/c1?x=1')).toBe('https://call4.me/account/calls/c1?x=1');
     expect(at('https://callbay.skeptrune.com/rules')).toBe('https://call4.me/rules');
+    expect(at('https://callbay.skeptrune.com/blog')).toBe('https://call4.me/blog');
+    expect(at('https://callbay.skeptrune.com/blog/some-post?subscribed=sent')).toBe('https://call4.me/blog/some-post?subscribed=sent');
+    expect(at('https://callbay.skeptrune.com/blog/feed.xml')).toBe('https://call4.me/blog/feed.xml');
   });
 
   it('keeps machine endpoints answering on a legacy host', () => {
