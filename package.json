@@ -13,7 +13,8 @@
     "cf-typegen": "wrangler types",
     "db:migrate:local": "wrangler d1 migrations apply callbay --local",
     "db:migrate:remote": "wrangler d1 migrations apply callbay --remote",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "grant": "node scripts/grant-credits.mjs"
   },
   "dependencies": {
     "@better-auth/mcp": "^1.7.6",
