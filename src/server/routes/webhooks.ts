@@ -6,6 +6,7 @@ import { readClientState, verifyTelnyxSignature } from '../lib/telnyx';
 import { calls, type Brief, type CallStatus, type TranscriptLine } from '../services/calls';
 import { summarizeCall, summaryPrompt } from '../services/summary';
 import { answerInbound, pricePerMinute } from '../services/dialer';
+import { isSupporterObject, supporters } from '../services/supporters';
 import { topups, verifyWebhook } from '../services/topups';
 import { sessionFor } from '../voice/session';
 
@@ -25,7 +26,13 @@ async function writeRecap(env: Env, callId: string): Promise<void> {
   }
 }
 
-// ---- Stripe: card top-ups
+// ---- Stripe: card top-ups and the blog's supporter tier
+
+/**
+ * Supporter subscriptions (services/supporters.ts) are tagged app=callbay, kind=supporter and
+ * go to the supporter tier; everything else is credits. Neither path touches the other's
+ * rows, and events from skillbay (same Stripe account) match neither.
+ */
 
 async function seen(db: D1Database, event: Stripe.Event): Promise<boolean> {
   const r = await db.prepare(`INSERT OR IGNORE INTO stripe_events (id, type, received_at) VALUES (?, ?, ?)`).bind(event.id, event.type, now()).run();
@@ -44,18 +51,29 @@ webhooks.post('/stripe', async (c) => {
   }
   if (await seen(c.env.DB, event)) return c.text('duplicate', 200);
   const t = topups(c.env.DB, stripeFor(c));
+  const s = () => supporters(c.env.DB, stripeFor(c), c.env);
   switch (event.type) {
     case 'checkout.session.completed':
-    case 'checkout.session.async_payment_succeeded':
-      await t.fulfill(event.data.object.id);
+    case 'checkout.session.async_payment_succeeded': {
+      const session = event.data.object;
+      if (isSupporterObject(session.metadata)) await s().completeSession(session.id);
+      else await t.fulfill(session.id);
       break;
-    case 'invoice.paid':
-      await t.invoicePaid(event.data.object);
+    }
+    case 'invoice.paid': {
+      const invoice = event.data.object;
+      // A supporter renewal buys no credits; the subscription events keep its status.
+      if (!isSupporterObject(invoice.parent?.subscription_details?.metadata)) await t.invoicePaid(invoice);
       break;
+    }
+    case 'customer.subscription.created':
     case 'customer.subscription.updated':
-    case 'customer.subscription.deleted':
-      await t.syncSubscription(event.data.object);
+    case 'customer.subscription.deleted': {
+      const sub = event.data.object;
+      if (isSupporterObject(sub.metadata)) await s().syncSubscription(sub);
+      else if (event.type !== 'customer.subscription.created') await t.syncSubscription(sub);
       break;
+    }
     case 'charge.refunded': {
       const ch = event.data.object;
       if (ch.refunded && typeof ch.payment_intent === 'string') await t.refunded(ch.payment_intent);

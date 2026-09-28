@@ -36,4 +36,8 @@ interface Env {
   CDP_API_KEY_SECRET?: string;
   /** x402: override for the payTo address. Unset means the Stripe crypto deposit address the worker mints and caches. */
   X402_PAY_TO?: string;
+  /** Blog supporter subscription, US cents per month (default 500). Read once: the Stripe price is created on first use and cached. */
+  SUPPORTER_PRICE_CENTS?: string;
+  /** Comma-separated emails of callbay accounts that may use /admin/blog (newsletter sends, comment moderation) and read paid posts. Unset: nobody. */
+  ADMIN_EMAILS?: string;
 }

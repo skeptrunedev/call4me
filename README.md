@@ -32,7 +32,8 @@ Audio is never recorded: Telnyx recording is off unless `record` is passed, and 
 2. OpenAI: an API key with GPT-Live access.
 3. Stripe: webhook endpoint `https://<host>/webhooks/stripe` for `checkout.session.completed`,
    `checkout.session.async_payment_succeeded`, `invoice.paid`, `customer.subscription.updated`,
-   `customer.subscription.deleted`, `charge.refunded`.
+   `customer.subscription.deleted`, `charge.refunded`. The blog's supporter subscriptions arrive on
+   the same endpoint, tagged `app=callbay, kind=supporter` (see `src/server/services/supporters.ts`).
 
 ## Credits
 
@@ -40,6 +41,12 @@ Everything is prepaid. Loads start at $10 and, by default, the same amount reloa
 subscription; `invoice.paid` adds the credits). A call holds its maximum cost before it dials, in one
 conditional insert so parallel calls can't overspend, and settles to the real talk time when it ends.
 4. Secrets (`wrangler secret put`): see `src/server/env.d.ts`.
+
+## Blog
+
+`/blog` is markdown files in `src/content/blog` (one per post, listed in `index.ts`, headline image at
+`public/static/blog/<slug>.svg`), with an Atom feed, likes, comments, an email newsletter (sent from
+`/admin/blog`, for the `ADMIN_EMAILS` accounts), and paid posts for monthly supporters.
 
 ## Self-hosting
 

@@ -44,3 +44,8 @@ export const consoleMessenger: Messenger = {
     console.log(`[email] to=${to} subject=${subject}\n${text}`);
   },
 };
+
+/** SMTP when it is configured, the console otherwise (local dev without a password). */
+export function messengerFor(env: MessagingEnv): Messenger {
+  return env.SMTP_PASS ? makeMessenger(env) : consoleMessenger;
+}

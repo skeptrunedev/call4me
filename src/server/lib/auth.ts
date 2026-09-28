@@ -124,3 +124,19 @@ export function challenge(c: AppContext, message: string, error?: string): Respo
     headers: { 'content-type': 'application/json', 'www-authenticate': `Bearer ${params.join(', ')}` },
   });
 }
+
+/**
+ * Nick's accounts (ADMIN_EMAILS): they run the blog at /admin/blog and read paid posts. Checked
+ * against the signed-in user's verified email, not the account's: an account's email can be
+ * set from what a buyer typed into Checkout (services/topups.ts), which nobody verified.
+ */
+export async function isAdmin(env: Pick<Env, 'ADMIN_EMAILS' | 'DB'>, account: Account | null): Promise<boolean> {
+  const admins = (env.ADMIN_EMAILS ?? '')
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+  if (!account || admins.length === 0) return false;
+  const u = await env.DB.prepare(`SELECT u.email FROM accounts a JOIN "user" u ON u.id = a.user_id WHERE a.id = ? AND u.emailVerified = 1`).bind(account.id).first<{ email: string }>();
+  const email = realEmail(u?.email)?.toLowerCase();
+  return Boolean(email && admins.includes(email));
+}

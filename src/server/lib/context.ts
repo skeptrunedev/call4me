@@ -56,3 +56,8 @@ export function safeNext(next: string | undefined | null, fallback = '/'): strin
   if (!next || !next.startsWith('/') || next.startsWith('//')) return fallback;
   return next;
 }
+
+/** The caller's address, for rate limits on anonymous writes (blog comments, sign-ups). */
+export function clientIp(c: AppContext): string | null {
+  return c.req.header('cf-connecting-ip') ?? c.req.header('x-forwarded-for')?.split(',')[0]?.trim() ?? null;
+}
