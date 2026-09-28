@@ -1,121 +1,35 @@
 /**
- * Signup drip: short plain-text emails from Nick after someone signs up, picked by what they
- * have done so far (loaded credits, connected an agent, made a call). Runs on the cron in
- * wrangler.jsonc; each step goes to an account at most once (drip_sends primary key).
+ * Signup drip: emails from Nick after someone signs up. Runs on the cron in wrangler.jsonc;
+ * each step goes to an account at most once (drip_sends primary key).
  */
 import { hmacHex, safeEqual } from '../lib/keys';
 import type { Messenger } from '../lib/messaging';
 import { now } from '../lib/ids';
 
-const HOUR = 3600 * 1000;
-
-/** What someone has done so far, which decides what the next email says. */
-export interface DripState {
-  funded: boolean;
-  connected: boolean;
-  calls: number;
-}
-
 export interface DripEmail {
   subject: string;
+  /** Plain text; blank lines separate paragraphs. */
   body: string;
 }
 
 interface Step {
-  id: 'welcome' | 'day1' | 'day4';
-  /** How long after signup the step is due. */
+  id: string;
+  /** How long after signup the step is due, in ms. */
   after: number;
-  /** The email for this person, or null to skip the step for them. */
-  email: (s: DripState, ctx: { origin: string; pricePerMinuteCents: number }) => DripEmail | null;
+  email: (ctx: { origin: string }) => DripEmail;
 }
 
-const dollars = (cents: number) => `$${(cents / 100).toFixed(2).replace(/\.00$/, '')}`;
-
+/** The emails, in Nick's words. Add a step here to extend the drip. */
 export const STEPS: Step[] = [
   {
     id: 'welcome',
     after: 0,
-    email: (s, { origin }) => ({
-      subject: 'welcome to callbay',
-      body: `hey, it's nick. i built callbay.
+    email: ({ origin }) => ({
+      subject: 'welcome to Call for Me',
+      body: `hey, I'm Nick. I built Call for Me because I was trying to book some doctors' appointments and realized how silly it was that I still had to call into everything manually when AI was fully capable. I went to go and try to find another service that could do this, but there was nothing that just worked out of the box. Call for Me does.
 
-thanks for signing up. the short version: your agent (claude code, codex, claude desktop, chatgpt) gets one tool that makes real phone calls. ask it to book a table or get you a dentist appointment, it calls, and it tells you what happened.
-
-${s.funded ? '' : `to make calls, load some credits (from $10): ${origin}/#buy\n`}then paste the install prompt into your agent and it sets itself up: ${origin}/mcp
-
-what's the first call you want it to make? just reply, i read every email.
-
-nick`,
+Hotels, airlines, restaurants, or anything else where it's easiest to just make a phone call. You can now have Call for Me do that on your behalf. It's really easy to use. Just visit the website (${origin}), load up some credits, and then copy the prompt into your coding agent of choice. It's compatible with Claude Code, Codex, ChatGPT, Claude Desktop, T3 Code, and anything else you might use. If you reply and send me feedback, I'm happy to give you $25 in credits. Anything about your experience would be useful, including how you found it and why you decided to sign up.`,
     }),
-  },
-  {
-    id: 'day1',
-    after: 24 * HOUR,
-    email: (s, { origin, pricePerMinuteCents }) => {
-      if (s.calls > 0) return null;
-      if (!s.funded)
-        return {
-          subject: 'your first call',
-          body: `hey, nick again.
-
-you signed up yesterday but haven't loaded credits yet. calls are ${dollars(pricePerMinuteCents)} a minute of talk time, unanswered calls are free, and $10 covers about ${Math.floor(1000 / pricePerMinuteCents)} minutes.
-
-${origin}/#buy
-
-if something stopped you, reply and tell me. i'll fix it.
-
-nick`,
-        };
-      if (!s.connected)
-        return {
-          subject: 'one step left',
-          body: `hey, nick again.
-
-your credits are in, but no agent is connected yet. copy the prompt at ${origin}/mcp and paste it into claude code, codex, claude desktop, or chatgpt. it installs callbay itself.
-
-stuck anywhere? reply and i'll help.
-
-nick`,
-        };
-      return {
-        subject: 'try your first call',
-        body: `hey, nick again.
-
-you're all set up. a few things to try, word for word:
-
-- "call the pizza place near me and ask how late they deliver tonight"
-- "book me a haircut this week after 5pm"
-- "call my dentist and move my cleaning to next week"
-
-your agent asks you for anything it needs before it dials.
-
-nick`,
-      };
-    },
-  },
-  {
-    id: 'day4',
-    after: 96 * HOUR,
-    email: (s) =>
-      s.calls > 0
-        ? {
-            subject: 'how did it go?',
-            body: `hey, it's nick.
-
-you've made ${s.calls === 1 ? 'a call' : `${s.calls} calls`} with callbay. how did it go? anything it got wrong, or anything you wish it could call about?
-
-reply and tell me. i read and answer every one.
-
-nick`,
-          }
-        : {
-            subject: 'anything in the way?',
-            body: `hey, it's nick.
-
-you signed up a few days ago but haven't made a call yet. is something in the way? reply with what you wanted to call about and i'll help you get it done, or fix whatever broke.
-
-nick`,
-          },
   },
 ];
 
@@ -128,30 +42,25 @@ export async function validUnsubscribe(secret: string, accountId: string, sig: s
   return safeEqual(sig, await hmacHex(secret, `unsubscribe:${accountId}`));
 }
 
-export function withFooter(email: DripEmail, unsubscribe: string): DripEmail {
-  return { ...email, body: `${email.body}\n\n--\nnot useful? unsubscribe: ${unsubscribe}` };
+const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+/**
+ * The email as sent: plain text plus an HTML version, where the unsubscribe link is just
+ * the word "unsubscribe" (plain text can't hide a URL behind a word, so it shows it).
+ */
+export function render(email: DripEmail, unsubscribe: string): { subject: string; text: string; html: string } {
+  const paragraphs = email.body.split(/\n\s*\n/).map((p) => `<p>${esc(p).replace(/https:\/\/[^\s)<]+/g, (u) => `<a href="${u}">${u}</a>`).replace(/\n/g, '<br>')}</p>`);
+  return {
+    subject: email.subject,
+    text: `${email.body}\n\nunsubscribe: ${unsubscribe}`,
+    html: `${paragraphs.join('\n')}\n<p style="font-size:12px;color:#888"><a href="${esc(unsubscribe)}" style="color:#888">unsubscribe</a></p>`,
+  };
 }
 
 interface Candidate {
   id: string;
   email: string;
-  user_id: string | null;
-  key_prefix: string | null;
   created_at: number;
-}
-
-async function stateOf(db: D1Database, a: Candidate): Promise<DripState> {
-  const row = await db
-    .prepare(
-      `SELECT
-         EXISTS (SELECT 1 FROM ledger WHERE account_id = ?1 AND kind IN ('topup', 'reload')) AS funded,
-         (SELECT COUNT(*) FROM calls WHERE account_id = ?1 AND direction = 'outbound') AS calls,
-         EXISTS (SELECT 1 FROM "oauthAccessToken" WHERE "userId" = ?2) AS oauth`,
-    )
-    .bind(a.id, a.user_id)
-    .first<{ funded: number; calls: number; oauth: number }>();
-  const calls = row?.calls ?? 0;
-  return { funded: Boolean(row?.funded), calls, connected: Boolean(row?.oauth) || a.key_prefix !== null || calls > 0 };
 }
 
 /**
@@ -164,15 +73,14 @@ export async function runDrip(opts: {
   origin: string;
   secret: string;
   start: number;
-  pricePerMinuteCents: number;
   limit?: number;
-}): Promise<{ sent: number; skipped: number; failed: number }> {
+}): Promise<{ sent: number; failed: number }> {
   const t = now();
-  const tally = { sent: 0, skipped: 0, failed: 0 };
+  const tally = { sent: 0, failed: 0 };
   for (const step of STEPS) {
     const { results } = await opts.db
       .prepare(
-        `SELECT id, email, user_id, key_prefix, created_at FROM accounts
+        `SELECT id, email, created_at FROM accounts
          WHERE created_at >= ?1 AND created_at <= ?2 AND email_opt_out = 0
            AND email NOT LIKE '%.invalid'
            AND NOT EXISTS (SELECT 1 FROM drip_sends d WHERE d.account_id = accounts.id AND d.step = ?3)
@@ -183,14 +91,9 @@ export async function runDrip(opts: {
     for (const a of results) {
       const claim = await opts.db.prepare(`INSERT OR IGNORE INTO drip_sends (account_id, step, sent_at) VALUES (?, ?, ?)`).bind(a.id, step.id, t).run();
       if (!claim.meta.changes) continue;
-      const email = step.email(await stateOf(opts.db, a), { origin: opts.origin, pricePerMinuteCents: opts.pricePerMinuteCents });
-      if (!email) {
-        tally.skipped++;
-        continue;
-      }
       try {
-        const { subject, body } = withFooter(email, await unsubscribeUrl(opts.origin, opts.secret, a.id));
-        await opts.messenger.sendEmail(a.email, subject, body);
+        const { subject, text, html } = render(step.email({ origin: opts.origin }), await unsubscribeUrl(opts.origin, opts.secret, a.id));
+        await opts.messenger.sendEmail(a.email, subject, text, html);
         tally.sent++;
       } catch (err) {
         console.error('drip send failed', step.id, a.id, String(err));

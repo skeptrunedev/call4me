@@ -4,7 +4,7 @@
  */
 
 export interface Messenger {
-  sendEmail(to: string, subject: string, text: string): Promise<void>;
+  sendEmail(to: string, subject: string, text: string, html?: string): Promise<void>;
 }
 
 type MessagingEnv = Pick<Env, 'SMTP_HOST' | 'SMTP_PORT' | 'SMTP_USER' | 'SMTP_PASS' | 'EMAIL_FROM'>;
@@ -18,7 +18,7 @@ function parseFrom(raw: string): { name?: string; email: string } {
 
 export function makeMessenger(env: MessagingEnv): Messenger {
   return {
-    async sendEmail(to, subject, text) {
+    async sendEmail(to, subject, text, html) {
       // Imported lazily: worker-mailer needs `cloudflare:sockets`, which does not exist when
       // the same modules are loaded under Node to generate the OpenAPI artifact.
       const { WorkerMailer } = await import('worker-mailer');
@@ -30,7 +30,7 @@ export function makeMessenger(env: MessagingEnv): Messenger {
         credentials: { username: env.SMTP_USER, password: env.SMTP_PASS },
       });
       try {
-        await mailer.send({ from: parseFrom(env.EMAIL_FROM), to: { email: to }, subject, text });
+        await mailer.send({ from: parseFrom(env.EMAIL_FROM), to: { email: to }, subject, text, html });
       } finally {
         await mailer.close();
       }

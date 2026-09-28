@@ -13,7 +13,6 @@ import { MessagePage } from './views/public';
 import { sessionFor } from './voice/session';
 import { makeMessenger } from './lib/messaging';
 import { runDrip } from './services/drip';
-import { pricePerMinute } from './services/dialer';
 
 export { CallSession } from './voice/session';
 
@@ -68,7 +67,7 @@ export default {
     const start = Number(env.DRIP_START);
     if (!env.DRIP_START || !Number.isFinite(start)) return;
     ctx.waitUntil(
-      runDrip({ db: env.DB, messenger: makeMessenger(env), origin: `https://${env.CANONICAL_HOST}`, secret: env.BETTER_AUTH_SECRET, start, pricePerMinuteCents: pricePerMinute(env) }).then((r) => console.log('drip', JSON.stringify(r))),
+      runDrip({ db: env.DB, messenger: makeMessenger(env), origin: `https://${env.CANONICAL_HOST}`, secret: env.BETTER_AUTH_SECRET, start }).then((r) => console.log('drip', JSON.stringify(r))),
     );
   },
 } satisfies ExportedHandler<Env>;
