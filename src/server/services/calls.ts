@@ -128,6 +128,12 @@ export function calls(db: D1Database) {
         const cb = checkDialable(input.callback_number);
         if (!cb.ok) throw new CallError(`callback_number: ${cb.reason}`);
         callback = cb.e164;
+      } else {
+        // The person's own phone (from the call or their profile) is the number to leave on a
+        // voicemail; the account's callbay number is only the fallback when none is known.
+        const own = intake.known.find((k) => k.key === 'phone')?.value;
+        const cb = own ? checkDialable(own) : null;
+        if (cb?.ok) callback = cb.e164;
       }
       if (input.timezone && !validTimeZone(input.timezone)) throw new CallError(`timezone: "${input.timezone}" is not an IANA time zone like America/New_York`);
 
