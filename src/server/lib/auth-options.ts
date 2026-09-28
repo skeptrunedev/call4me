@@ -58,8 +58,12 @@ export function authOptions(deps: AuthDeps) {
         resource: mcpResource(deps.baseURL),
         // A week: clients that did not ask for offline_access get no refresh token, and signing
         // in every hour would make the connector useless. Consent can be revoked.
-        resources: [{ identifier: mcpResource(deps.baseURL), name: `${deps.appName} MCP`, accessTokenTtl: 7 * 24 * 3600 }],
-        clientRegistrationDefaultResources: [mcpResource(deps.baseURL)],
+        resources: [
+          { identifier: mcpResource(deps.baseURL), name: `${deps.appName} MCP`, accessTokenTtl: 7 * 24 * 3600 },
+          // The site itself (GET /api, credits over x402) accepts the same tokens, so agents can hold one token for both.
+          { identifier: siteResource(deps.baseURL), name: `${deps.appName} API`, accessTokenTtl: 7 * 24 * 3600 },
+        ],
+        clientRegistrationDefaultResources: [mcpResource(deps.baseURL), siteResource(deps.baseURL)],
         loginPage: '/login',
         consentPage: '/oauth/consent',
         allowDynamicClientRegistration: true,
@@ -77,7 +81,19 @@ export function authOptions(deps: AuthDeps) {
  * so the scheme is forced there to keep the identifier equal to the real one.
  */
 export function mcpResource(baseURL: string): string {
-  const url = new URL('/mcp', baseURL);
+  return canonicalUrl('/mcp', baseURL);
+}
+
+/** The site itself as a resource identifier (RFC 9728 root document; the audience of GET /api). */
+export function siteResource(baseURL: string): string {
+  return canonicalUrl('/', baseURL);
+}
+
+/** The site's origin as agents should see it (https, no trailing slash), for links in discovery documents. */
+export const siteUrl = (baseURL: string): string => siteResource(baseURL).replace(/\/$/, '');
+
+function canonicalUrl(path: string, baseURL: string): string {
+  const url = new URL(path, baseURL);
   if (url.protocol === 'http:' && url.hostname !== 'localhost' && !url.hostname.startsWith('127.')) url.protocol = 'https:';
   return url.toString();
 }

@@ -2,9 +2,9 @@ import { betterAuth } from 'better-auth';
 import type { Hono } from 'hono';
 import { createLocalJWKSet, jwtVerify, type JWTPayload } from 'jose';
 import { newId, now } from './ids';
-import { authOptions, mcpResource, realEmail } from './auth-options';
+import { authOptions, mcpResource, realEmail, siteResource } from './auth-options';
 import { origin, type AppContext, type AppEnv } from './context';
-import type { Account } from '../services/accounts';
+import { accounts, type Account } from '../services/accounts';
 
 /**
  * A better-auth instance per request. Module-scope construction is unreliable on
@@ -76,20 +76,43 @@ export function bearerToken(c: AppContext): string {
 export const looksLikeJwt = (token: string) => /^[\w-]+\.[\w-]+\.[\w-]+$/.test(token);
 
 /**
- * Verify an access token from our own provider. Verified locally against the keys in our
- * database: the plugin's helper would fetch our JWKS over HTTP, and a Worker cannot fetch itself.
+ * Verify an access token from our own provider for one of the given resources. Verified locally
+ * against the keys in our database: the plugin's helper would fetch our JWKS over HTTP, and a
+ * Worker cannot fetch itself.
  */
-export async function verifyMcpToken(c: AppContext, token: string): Promise<JWTPayload> {
+export async function verifyAccessToken(c: AppContext, token: string, audience: string | string[]): Promise<JWTPayload> {
   const jwks = await createAuth(c).api.getJwks();
-  const { payload } = await jwtVerify(token, createLocalJWKSet(jwks), { issuer: `${origin(c)}/api/auth`, audience: mcpResource(origin(c)), typ: 'at+jwt' });
+  const { payload } = await jwtVerify(token, createLocalJWKSet(jwks), { issuer: `${origin(c)}/api/auth`, audience, typ: 'at+jwt' });
   return payload;
 }
+
+export const verifyMcpToken = (c: AppContext, token: string) => verifyAccessToken(c, token, mcpResource(origin(c)));
+
+/** Audiences the site's own endpoints honour: the site resource and the MCP server's (one token serves both). */
+export const siteAudiences = (c: AppContext) => [siteResource(origin(c)), mcpResource(origin(c))];
 
 /** The account behind a verified token's user (`sub`). */
 export async function accountForToken(c: AppContext, claims: JWTPayload): Promise<Account | null> {
   if (typeof claims.sub !== 'string') return null;
   const u = await c.env.DB.prepare(`SELECT id, email, name FROM "user" WHERE id = ?`).bind(claims.sub).first<{ id: string; email: string | null; name: string | null }>();
   return u ? accountForUser(c.env.DB, u) : null;
+}
+
+/**
+ * The account behind a request's Bearer credential for the site's own endpoints (GET /api):
+ * an OAuth access token for the site or MCP resource, or a callbay API key. Null when there
+ * is none or it does not verify.
+ */
+export async function bearerAccount(c: AppContext): Promise<Account | null> {
+  const token = bearerToken(c);
+  if (!token) return null;
+  if (!looksLikeJwt(token)) return accounts(c.env.DB).byKey(token);
+  try {
+    return await accountForToken(c, await verifyAccessToken(c, token, siteAudiences(c)));
+  } catch (err) {
+    console.warn('site token rejected', String(err));
+    return null;
+  }
 }
 
 /** The RFC 9728 challenge: 401 + WWW-Authenticate so MCP clients start (or repeat) the OAuth flow. */
