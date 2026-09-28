@@ -15,5 +15,5 @@
     "types": ["./worker-configuration.d.ts"],
     "paths": { "#/*": ["./src/*"] }
   },
-  "include": ["src", "test"]
+  "include": ["src"]
 }

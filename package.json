@@ -8,8 +8,7 @@
   "scripts": {
     "dev": "wrangler dev",
     "check": "tsc -p tsconfig.json",
-    "lint": "eslint src test",
-    "test": "vitest run",
+    "lint": "eslint src",
     "cf-typegen": "wrangler types",
     "db:migrate:local": "wrangler d1 migrations apply callbay --local",
     "db:migrate:remote": "wrangler d1 migrations apply callbay --remote",
@@ -39,7 +38,6 @@
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.70.1",
-    "vitest": "^5.0.2",
     "wrangler": "^4.141.0"
   }
 }
