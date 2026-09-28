@@ -26,9 +26,15 @@ export const STEPS: Step[] = [
     after: 0,
     email: ({ origin }) => ({
       subject: 'welcome to Call for Me',
-      body: `hey, I'm Nick. I built Call for Me because I was trying to book some doctors' appointments and realized how silly it was that I still had to call into everything manually when AI was fully capable. I went to go and try to find another service that could do this, but there was nothing that just worked out of the box. Call for Me does.
+      body: `hey, I'm Nick. I built Call for Me because I was trying to book some doctors' appointments and realized how silly it was that I still had to call into everything manually when AI was fully capable.
 
-Hotels, airlines, restaurants, or anything else where it's easiest to just make a phone call. You can now have Call for Me do that on your behalf. It's really easy to use. Just visit the website (${origin}), load up some credits, and then copy the prompt into your coding agent of choice. It's compatible with Claude Code, Codex, ChatGPT, Claude Desktop, T3 Code, and anything else you might use. If you reply and send me feedback, I'm happy to give you $25 in credits. Anything about your experience would be useful, including how you found it and why you decided to sign up.`,
+I went to go and try to find another service that could do this, but there was nothing that just worked out of the box. Call for Me does.
+
+Hotels, airlines, restaurants, or anything else where it's easiest to just make a phone call. You can now have Call for Me do that on your behalf. It's really easy to use. Just visit the website (${origin}), load up some credits, and then copy the prompt into your coding agent of choice.
+
+If you reply and send me feedback, I'm happy to give you $25 in credits. Anything about your experience would be useful, including how you found it and why you decided to sign up.
+
+- Nick`,
     }),
   },
 ];

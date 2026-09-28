@@ -17,7 +17,7 @@ describe('signup drip', () => {
     expect(out.html).toContain(`<a href="${url.replace(/&/g, '&amp;')}" style="color:#888">unsubscribe</a>`);
     expect(out.html).toContain('<a href="https://call4.me">https://call4.me</a>');
     expect(out.html).toContain("doctors' appointments");
-    expect(out.html.match(/<p>/g)!.length).toBe(2);
+    expect(out.html.match(/<p>/g)!.length).toBe(5);
   });
 
   it('escapes HTML in the body', () => {
