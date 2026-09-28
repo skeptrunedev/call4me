@@ -24,6 +24,9 @@ const QUESTION_POLL_MS = 1_000;
 /** The other side usually speaks first ("Hi, thanks for calling..."). If they don't, nudge. */
 const SILENT_PICKUP_MS = 5_000;
 const TRANSCRIPT_FLUSH_MS = 2_000;
+/** Pickup-to-session-start budget, and how long a call may stay silent both ways before it is abandoned. */
+const SESSION_START_LIMIT_MS = 10_000;
+const SILENCE_LIMIT_MS = 30_000;
 /** After end_call, let the goodbye finish playing before hanging up. */
 const HANGUP_GRACE_MS = 700;
 
@@ -67,6 +70,11 @@ export class CallSession extends DurableObject<Env> {
   private live: WebSocket | null = null;
   private liveReady = false;
   private answered = false;
+  /** When each milestone happened, logged as one line per step so a broken call shows where it stopped. */
+  private answeredAt = 0;
+  private liveStartedAt = 0;
+  private framesIn = 0;
+  private framesOut = 0;
   private ended = false;
   private pendingAudio: string[] = [];
   private transcript: TranscriptLine[] = [];
@@ -100,6 +108,9 @@ export class CallSession extends DurableObject<Env> {
         return this.acceptStream(req);
       case '/answered': {
         this.answered = true;
+        this.answeredAt = Date.now();
+        this.mark('answered');
+        this.startWatchdog();
         await this.startLive();
         return new Response('ok');
       }
@@ -142,6 +153,7 @@ export class CallSession extends DurableObject<Env> {
     if (frame.event === 'media') {
       const payload = (frame as { media: { payload: string } }).media.payload;
       if (!this.answered) return; // ringback and early media are not the other person
+      if (this.framesIn++ === 0) this.mark('first audio from phone');
       if (this.liveReady) this.sendLive({ type: 'session.input_audio.append', audio: payload });
       else if (this.pendingAudio.length < 250) this.pendingAudio.push(payload); // ~5s at 20ms frames
     } else if (frame.event === 'stop') {
@@ -158,7 +170,9 @@ export class CallSession extends DurableObject<Env> {
   private async startLive(): Promise<void> {
     const s = await this.load();
     if (!s || this.live || this.ended || !this.phone) return;
+    this.mark('live connecting');
     const res = await fetch(OPENAI_LIVE_URL, { headers: { upgrade: 'websocket', authorization: `Bearer ${this.env.OPENAI_API_KEY}` } });
+    this.mark(`live connect ${res.status}`);
     const ws = res.webSocket;
     if (!ws) {
       const why = `could not open GPT-Live: ${res.status} ${(await res.text()).slice(0, 300)}`;
@@ -210,6 +224,8 @@ export class CallSession extends DurableObject<Env> {
     switch (ev.type) {
       case 'session.started': {
         this.liveReady = true;
+        this.liveStartedAt = Date.now();
+        this.mark(`live session started, flushing ${this.pendingAudio.length} buffered frames`);
         for (const a of this.pendingAudio) this.sendLive({ type: 'session.input_audio.append', audio: a });
         this.pendingAudio = [];
         setTimeout(() => {
@@ -222,6 +238,7 @@ export class CallSession extends DurableObject<Env> {
         // the model filling the silence before the line drops, so it never reaches the phone.
         if (this.endingCall) break;
         const e = ev as { delta: string; start_ms: number; end_ms: number };
+        if (this.framesOut++ === 0) this.mark('first caller audio');
         this.sendPhone({ event: 'media', media: { payload: e.delta } });
         const now = Date.now();
         this.playbackEndsAt = Math.max(this.playbackEndsAt, now) + Math.max(0, e.end_ms - e.start_ms);
@@ -229,6 +246,7 @@ export class CallSession extends DurableObject<Env> {
         break;
       }
       case 'session.input_transcript.delta': {
+        if (!this.heardThem) this.mark('first words from them');
         this.heardThem = true;
         this.appendTranscript('them', (ev as { delta: string }).delta);
         // Barge-in: GPT-Live stops generating when talked over, but audio already queued at
@@ -266,6 +284,27 @@ export class CallSession extends DurableObject<Env> {
         await this.shutdown(`live session closed: ${(ev as { reason: string }).reason}`);
         break;
     }
+  }
+
+  // ---- health
+
+  private mark(step: string): void {
+    const since = this.answeredAt ? `+${Date.now() - this.answeredAt}ms after answer` : 'before answer';
+    console.log(`call ${this.setup?.callId ?? '?'}: ${step} (${since})`);
+  }
+
+  /**
+   * A call must never sit silent on someone's line. If the voice session hasn't started soon
+   * after pickup, or nothing has been said in either direction a while later, hang up and mark
+   * the call failed (failed calls are not billed).
+   */
+  private startWatchdog(): void {
+    setTimeout(() => {
+      if (!this.ended && !this.liveStartedAt) void this.fail(`voice session did not start within ${SESSION_START_LIMIT_MS / 1000}s of pickup (frames from phone: ${this.framesIn})`);
+    }, SESSION_START_LIMIT_MS);
+    setTimeout(() => {
+      if (!this.ended && this.framesOut === 0 && !this.heardThem) void this.fail(`no audio either way ${SILENCE_LIMIT_MS / 1000}s after pickup (frames from phone: ${this.framesIn}, session started: ${Boolean(this.liveStartedAt)})`);
+    }, SILENCE_LIMIT_MS);
   }
 
   // ---- back-office functions
