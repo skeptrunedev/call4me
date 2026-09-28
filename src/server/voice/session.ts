@@ -17,11 +17,12 @@ import { BACK_OFFICE_TOOLS } from './prompt';
  *
  * GPT-Live's back office (a Responses model with end_call / ask_user / press_digits)
  * runs our functions; we answer them over the same socket.
+ *   /answer     callbay_answer_question; the answer goes straight to the voice model
  */
 
 const OPENAI_LIVE_URL = 'https://api.openai.com/v1/live/sessions';
-const QUESTION_WAIT_MS = 60_000;
-const QUESTION_POLL_MS = 1_000;
+/** How long ask_user holds the back office for an answer. One that comes later still reaches the caller. */
+const QUESTION_WAIT_MS = 120_000;
 /** The other side usually speaks first ("Hi, thanks for calling..."). If they don't, nudge. */
 const SILENT_PICKUP_MS = 5_000;
 const TRANSCRIPT_FLUSH_MS = 2_000;
@@ -97,6 +98,10 @@ export class CallSession extends DurableObject<Env> {
   private lastHandoffAt = 0;
   private forcedHandoffs = new Set<number>();
   private handoffTimer: ReturnType<typeof setTimeout> | null = null;
+  /** Back-office functions still running (an ask_user waits on the person). Its response already reported completed. */
+  private toolsRunning = 0;
+  /** ask_user calls waiting on the person, by question id. */
+  private waiting = new Map<string, (answer: string) => void>();
   /** The person's own phone leg while it rings or is on the call; the caller stays silent while they talk. */
   private personLeg: string | null = null;
   private personOn = false;
@@ -147,6 +152,11 @@ export class CallSession extends DurableObject<Env> {
       case '/person-left':
         this.personLeft();
         return new Response('ok');
+      case '/answer': {
+        const { id, question, answer } = (await req.json()) as { id: string; question: string; answer: string };
+        this.answerCameIn(id, question, answer);
+        return new Response('ok');
+      }
       default:
         return new Response('not found', { status: 404 });
     }
@@ -304,7 +314,12 @@ export class CallSession extends DurableObject<Env> {
         const e = ev as { delegation_id: string; event: { type: string; item?: { type: string; call_id: string; name: string; arguments: string } } };
         if (e.event.type === 'response.output_item.done' && e.event.item?.type === 'function_call') {
           console.log('back office call', e.event.item.name, e.event.item.arguments);
-          await this.runTool(e.event.item);
+          this.toolsRunning++;
+          try {
+            await this.runTool(e.event.item);
+          } finally {
+            this.toolsRunning--;
+          }
         } else if (e.event.type === 'response.completed' || e.event.type === 'response.failed' || e.event.type === 'error') {
           this.backOfficeBusy = false;
           console.log('back office', e.event.type);
@@ -353,7 +368,8 @@ export class CallSession extends DurableObject<Env> {
   private checkMissedHandoff(): void {
     this.handoffTimer = null;
     if (this.ended || this.endingCall || this.personLeg || this.forcedHandoffs.size >= MAX_FORCED_HANDOFFS) return;
-    if (this.backOfficeBusy && Date.now() - this.lastHandoffAt < BACK_OFFICE_STALE_MS) return;
+    // A running function still owes the back office its output; GPT-Live rejects a new response until then.
+    if (this.toolsRunning || (this.backOfficeBusy && Date.now() - this.lastHandoffAt < BACK_OFFICE_STALE_MS)) return;
     const miss = missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs);
     if (!miss) {
       this.checkConnectCondition();
@@ -491,13 +507,31 @@ export class CallSession extends DurableObject<Env> {
     if (!question) return 'no question given';
     const db = calls(this.env.DB);
     const qid = await db.ask(s.callId, question);
-    const deadline = Date.now() + QUESTION_WAIT_MS;
-    while (Date.now() < deadline && !this.ended) {
-      await new Promise((r) => setTimeout(r, QUESTION_POLL_MS));
-      const q = (await db.questions(s.callId)).find((x) => x.id === qid);
-      if (q?.answer) return `Answer: ${q.answer}`;
+    const answer = await new Promise<string | null>((resolve) => {
+      const timer = setTimeout(() => resolve(null), QUESTION_WAIT_MS);
+      this.waiting.set(qid, (a) => {
+        clearTimeout(timer);
+        resolve(a);
+      });
+    });
+    this.waiting.delete(qid);
+    return answer === null
+      ? 'No answer came in time. Tell them you will check and call back about that, and carry on with anything else. If it comes in later, the caller is told directly.'
+      : `Answer: ${answer} (the caller has already been given it to say)`;
+  }
+
+  /**
+   * The person answered an ask_user question. The back office only hears it as a function result,
+   * and only while ask_user is still waiting (a one-time code answered at 65s was dropped while the
+   * caller kept saying "I don't see it yet"). So the answer goes to the voice model itself as
+   * commentary, GPT-Live's channel for information the model should speak aloud, whenever it lands.
+   */
+  private answerCameIn(id: string, question: string, answer: string): void {
+    if (this.ended) return;
+    if (!this.personOn) {
+      this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: `The answer came back for "${question.slice(0, 300)}": ${answer}. Say it to them now.` });
     }
-    return 'No answer came in time. Tell them you will check and call back about that, and carry on with anything else.';
+    this.waiting.get(id)?.(answer);
   }
 
   private hangup(): Promise<void> {

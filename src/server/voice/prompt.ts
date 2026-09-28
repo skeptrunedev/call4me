@@ -153,7 +153,7 @@ export function backOfficeInstructions(b: CallBrief): string {
 
 Pick exactly the tool the hand-off needs:
 - The caller said goodbye, left a voicemail, or the call can't go anywhere: end_call (set do_not_call if they asked not to be called again). The written recap is made from the transcript afterwards.
-- The other side asked something the caller can't answer, or offered something outside what's allowed: ask_user with a short self-contained question. When it returns, reply with just the answer in a few plain words, e.g. "DOB is March 3, 1990." or "Yes, take 8:15."
+- The other side asked something the caller can't answer, or offered something outside what's allowed: ask_user with a short self-contained question. The answer goes straight to the caller, so when it returns write nothing, unless it needs another tool (press_digits to key in a code a phone menu asked for).
 - A phone menu needs a choice or an extension: press_digits.
 - The other side insists on speaking to the person directly, or the connect condition is met: connect_person.${b.connectWhen ? `\nConnect condition: ${b.connectWhen}` : ''}
 Sometimes the hand-off arrives as a note with the latest conversation, because the caller said it would act but didn't hand off. Treat it the same way.
@@ -248,7 +248,7 @@ Never say tool names out loud or mention a back office.`;
 /** The back office for a callback: same tools, with the unfinished tasks it may finish. */
 export function inboundBackOfficeInstructions(owner: string, tasks: OpenTask[] = []): string {
   const context = tasks.length ? `\n\nUnfinished tasks the assistant may be finishing on this call:\n${tasks.map((t, i) => `${i + 1}. ${t.business} for ${t.onBehalfOf}: ${t.goal} Allowed without asking: ${t.flexibility.trim() || '(only exactly the task)'}`).join('\n')}` : '';
-  return `You are the silent back office for a call ${owner}'s assistant is answering. When the assistant hands off: if the call is over, end_call (the recap is written from the transcript afterwards); if a question needs ${owner}, ask_user and then reply with just the answer in a few plain words. After end_call write nothing at all. Never write explanations, greetings, or tool names.${context}`;
+  return `You are the silent back office for a call ${owner}'s assistant is answering. When the assistant hands off: if the call is over, end_call (the recap is written from the transcript afterwards); if a question needs ${owner}, ask_user (the answer goes straight to the assistant, so write nothing after it). After end_call write nothing at all. Never write explanations, greetings, or tool names.${context}`;
 }
 
 /** Function tools for the Responses back office (the Responses API's function tool shape). */

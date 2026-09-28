@@ -208,6 +208,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
     (async (args: { call_id: string; question_id: string; answer: string }) =>
       guard(async () => {
         const q = await db.answer(account.id, args.call_id, args.question_id, args.answer.trim());
+        await sessionFor(env, args.call_id).fetch('https://session/answer', { method: 'POST', body: JSON.stringify({ id: q.id, question: q.question, answer: q.answer }) });
         return ok(`sent to the caller: "${q.answer}"`, { id: q.id, question: q.question, answer: q.answer });
       })()) as never,
   );
