@@ -6,7 +6,7 @@ import { hmacHex, safeEqual } from './lib/keys';
 import { mcp } from './routes/mcp';
 import { pub } from './routes/public';
 import { authRoutes } from './routes/auth';
-import { mountAuth, sessionAccount } from './lib/auth';
+import { adminEmails, mountAuth, sessionAccount } from './lib/auth';
 import { approxTokens, htmlToMarkdown, prefersMarkdown } from './lib/markdown';
 import { webhooks } from './routes/webhooks';
 import { og } from './routes/og';
@@ -20,6 +20,7 @@ import { MessagePage } from './views/public';
 import { sessionFor } from './voice/session';
 import { makeMessenger } from './lib/messaging';
 import { runDrip } from './services/drip';
+import { notifySignups } from './services/signups';
 import { blog } from './routes/blog';
 import { admin } from './routes/admin';
 import { BlogError } from './services/blog';
@@ -115,10 +116,11 @@ export default {
   fetch: app.fetch,
   // Signup drip (services/drip.ts), off while DRIP_START is empty.
   async scheduled(_event, env, ctx) {
+    const origin = `https://${env.CANONICAL_HOST}`;
+    const messenger = makeMessenger(env);
+    ctx.waitUntil(notifySignups({ db: env.DB, messenger, to: adminEmails(env), origin }).then((r) => console.log('signup notices', JSON.stringify(r))));
     const start = Number(env.DRIP_START);
     if (!env.DRIP_START || !Number.isFinite(start)) return;
-    ctx.waitUntil(
-      runDrip({ db: env.DB, messenger: makeMessenger(env), origin: `https://${env.CANONICAL_HOST}`, secret: env.BETTER_AUTH_SECRET, start }).then((r) => console.log('drip', JSON.stringify(r))),
-    );
+    ctx.waitUntil(runDrip({ db: env.DB, messenger, origin, secret: env.BETTER_AUTH_SECRET, start }).then((r) => console.log('drip', JSON.stringify(r))));
   },
 } satisfies ExportedHandler<Env>;
