@@ -25,9 +25,10 @@ export const legacyHosts = (env: Pick<Env, 'LEGACY_HOSTS'>): string[] =>
 /**
  * Machine endpoints that keep answering on a legacy host: MCP clients, OAuth (tokens are
  * bound to the issuer origin they were minted on, and a sign-in started there must finish
- * there), provider webhooks, and call audio. None of these follow redirects.
+ * there, so its docs at /auth.md and /.well-known/ describe that host), credits over x402
+ * (/api), A2A, provider webhooks, and call audio. None of these follow redirects.
  */
-const LEGACY_PASSTHROUGH = ['/mcp', '/api/', '/.well-known/', '/oauth/', '/login', '/logout', '/webhooks/', '/voice/'];
+const LEGACY_PASSTHROUGH = ['/mcp', '/api', '/.well-known/', '/auth.md', '/a2a', '/oauth/', '/login', '/logout', '/webhooks/', '/voice/'];
 
 /** Where a request belongs if it's on the wrong host, or null to serve it here. */
 export function canonicalRedirect(url: URL, env: Pick<Env, 'CANONICAL_HOST' | 'LEGACY_HOSTS'>): string | null {

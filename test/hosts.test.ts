@@ -18,9 +18,18 @@ describe('canonical host redirects', () => {
   });
 
   it('keeps machine endpoints answering on a legacy host', () => {
-    for (const path of ['/mcp', '/mcp/cb_live_abc', '/api/auth/oauth2/token', '/.well-known/oauth-authorization-server', '/oauth/consent', '/login?client_id=a&sig=b', '/webhooks/stripe', '/webhooks/telnyx', '/voice/stream/c1/sig']) {
+    for (const path of [
+      '/mcp', '/mcp/cb_live_abc', '/api/auth/oauth2/token', '/.well-known/oauth-authorization-server', '/oauth/consent', '/login?client_id=a&sig=b', '/webhooks/stripe', '/webhooks/telnyx', '/voice/stream/c1/sig',
+      '/api', '/api?amount=25', '/a2a', '/auth.md', '/.well-known/agent-card.json', '/.well-known/mcp/server-card.json', '/.well-known/http-message-signatures-directory',
+    ]) {
       expect(at('https://callbay.skeptrune.com' + path), path).toBeNull();
     }
+  });
+
+  it('sends crawler files on a legacy host to the canonical ones', () => {
+    expect(at('https://callbay.skeptrune.com/robots.txt')).toBe('https://call4.me/robots.txt');
+    expect(at('https://callbay.skeptrune.com/sitemap.xml')).toBe('https://call4.me/sitemap.xml');
+    expect(at('https://callbay.skeptrune.com/llms.txt')).toBe('https://call4.me/llms.txt');
   });
 
   it('still redirects unknown hosts such as workers.dev, even on machine paths', () => {

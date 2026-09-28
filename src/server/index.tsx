@@ -10,6 +10,12 @@ import { mountAuth, sessionAccount } from './lib/auth';
 import { approxTokens, htmlToMarkdown, prefersMarkdown } from './lib/markdown';
 import { webhooks } from './routes/webhooks';
 import { og } from './routes/og';
+import { agent } from './routes/agent';
+import { a2a } from './routes/a2a';
+import { apiRoot } from './routes/api-root';
+import { discovery } from './routes/discovery';
+import { siteUrl } from './lib/auth-options';
+import { API_CATALOG_LINK, API_CATALOG_MEDIA_TYPE, buildApiCatalog } from './lib/discovery';
 import { MessagePage } from './views/public';
 import { sessionFor } from './voice/session';
 import { makeMessenger } from './lib/messaging';
@@ -40,7 +46,23 @@ app.get('/voice/stream/:callId/:sig', async (c) => {
 });
 
 app.route('/webhooks', webhooks);
-// better-auth's endpoints and the OAuth discovery documents need no account.
+// robots.txt, sitemap, llms.txt, auth.md, agent cards, and the root-level OAuth discovery
+// documents; ahead of mountAuth so the root documents are ours, not the auth plugin's.
+app.route('/', agent);
+app.route('/', a2a);
+app.route('/', apiRoot);
+app.route('/.well-known', discovery);
+// RFC 9727 API catalog, advertised from the home page's Link header (below).
+app.on(['GET', 'HEAD'], '/.well-known/api-catalog', (c) =>
+  c.body(JSON.stringify(buildApiCatalog(siteUrl(new URL(c.req.url).origin)), null, 2) + '\n', 200, {
+    'content-type': API_CATALOG_MEDIA_TYPE,
+    'cache-control': 'public, max-age=300',
+    'access-control-allow-origin': '*',
+    'x-content-type-options': 'nosniff',
+    link: API_CATALOG_LINK,
+  }),
+);
+// better-auth's endpoints and the other OAuth discovery documents need no account.
 mountAuth(app);
 
 // Markdown for agents: a page requested with `Accept: text/markdown` comes back as markdown.
@@ -64,6 +86,12 @@ app.route('/mcp', mcp);
 app.use('*', async (c, next) => {
   c.set('account', await sessionAccount(c));
   await next();
+});
+
+// Advertise the API catalog from the site root, as RFC 9727 section 3 suggests.
+app.use('/', async (c, next) => {
+  await next();
+  c.header('link', API_CATALOG_LINK);
 });
 
 app.route('/', authRoutes);

@@ -29,6 +29,33 @@ const COPY_SCRIPT = `
 })();
 `;
 
+/**
+ * WebMCP (webmachinelearning.github.io/webmcp): the site's key actions as in-page tools for
+ * browser agents. Placing calls needs the MCP server (signed in); these read the site, hand
+ * over the install prompt, and open pages or the add-funds checkout for the person at the keyboard.
+ */
+const WEBMCP_SCRIPT = `
+(function () {
+  var mc = (document.modelContext || navigator.modelContext); if (!mc || typeof mc.registerTool !== 'function') return;
+  var PAGES = { home: '/', mcp: '/mcp', rules: '/rules', privacy: '/privacy', terms: '/terms', account: '/account' };
+  var pageArg = { type: 'object', properties: { page: { type: 'string', enum: Object.keys(PAGES), description: 'home, mcp (install), rules, privacy, terms, or account (signed in)' } }, required: ['page'] };
+  var tools = [
+    { name: 'callbay_read_page', description: 'Read a callbay page as markdown: home (what callbay does and pricing), mcp (how to install), rules, privacy, terms, or account (balance and calls; needs the person signed in).',
+      inputSchema: pageArg,
+      execute: function (a) { return fetch(PAGES[a.page] || '/', { headers: { accept: 'text/markdown' } }).then(function (r) { return r.text(); }); } },
+    { name: 'callbay_get_install_prompt', description: 'The prompt that installs the callbay MCP server in Claude Code, Codex, Claude Desktop, claude.ai, or ChatGPT and signs the person in; the agent then gets tools to place phone calls.',
+      inputSchema: { type: 'object', properties: {} },
+      execute: function () { return fetch('/mcp').then(function (r) { return r.text(); }).then(function (h) { var t = new DOMParser().parseFromString(h, 'text/html').getElementById('install-prompt'); return { prompt: t ? t.textContent : '' }; }); } },
+    { name: 'callbay_open_page', description: 'Navigate this tab to a callbay page.', inputSchema: pageArg,
+      execute: function (a) { location.href = PAGES[a.page] || '/'; return { ok: true }; } },
+    { name: 'callbay_add_funds', description: 'Open the Stripe checkout for callbay credits in this tab ($10 units, the person picks how many; reloads monthly unless they untick it). Nothing is charged until the person pays on Stripe.',
+      inputSchema: { type: 'object', properties: {} },
+      execute: function () { var f = document.createElement('form'); f.method = 'post'; f.action = '/add-funds'; document.body.appendChild(f); f.submit(); return { ok: true }; } }
+  ];
+  for (var i = 0; i < tools.length; i++) { try { tools[i].annotations = { readOnlyHint: tools[i].name === 'callbay_read_page' || tools[i].name === 'callbay_get_install_prompt' }; var p = mc.registerTool(tools[i]); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
+})();
+`;
+
 export const Layout: FC<{
   title?: string;
   signedIn?: boolean;
@@ -54,6 +81,9 @@ export const Layout: FC<{
         <meta name="description" content={meta.description} />
         <meta name="theme-color" content="#551a8b" />
         <link rel="canonical" href={url} />
+        <link rel="ai-catalog" href="/.well-known/ai-catalog.json" type="application/ai-catalog+json" />
+        <link rel="ard" href="/.well-known/ard.json" />
+        <link rel="alternate" type="text/markdown" href={path ?? meta.path} title="markdown version (Accept: text/markdown)" />
         {/* Open Graph: Slack, Discord, Signal, iMessage, Facebook, LinkedIn read these. */}
         <meta property="og:site_name" content="callbay" />
         <meta property="og:type" content="website" />
@@ -102,6 +132,7 @@ export const Layout: FC<{
           <span> · © callbay</span>
         </footer>
         <script>{raw(COPY_SCRIPT)}</script>
+        <script>{raw(WEBMCP_SCRIPT)}</script>
       </body>
     </html>
   </>
