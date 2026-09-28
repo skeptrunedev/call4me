@@ -15,6 +15,9 @@ import { ProfileError, profiles } from '../services/profiles';
  * for its user and follow it to the end. Stateless: a fresh server per request.
  */
 
+export const SERVER_NAME = 'callbay';
+export const SERVER_VERSION = '1.0.0';
+
 export interface McpDeps {
   env: Env;
   origin: string;
@@ -91,7 +94,7 @@ const callIdArg = z.string().min(1).max(40).describe('the call id from callbay_p
 
 export function createCallbayServer(deps: McpDeps): McpServer {
   const { env, account } = deps;
-  const server = new McpServer({ name: 'callbay', version: '1.0.0', title: 'callbay', websiteUrl: deps.origin }, { instructions: INSTRUCTIONS, jsonSchemaValidator: new CfWorkerJsonSchemaValidator() });
+  const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION, title: 'callbay', websiteUrl: deps.origin }, { instructions: INSTRUCTIONS, jsonSchemaValidator: new CfWorkerJsonSchemaValidator() });
   const db = calls(env.DB);
 
   const guard = (fn: () => Promise<CallToolResult>) => async (): Promise<CallToolResult> => {
