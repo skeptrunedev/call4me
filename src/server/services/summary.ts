@@ -20,12 +20,14 @@ const SCHEMA = {
   additionalProperties: false,
 } as const;
 
-export function summaryPrompt(row: Pick<CallRow, 'direction' | 'business' | 'goal'>, brief: Pick<Brief, 'on_behalf_of' | 'facts' | 'flexibility'>, transcript: TranscriptLine[]): string {
+export function summaryPrompt(row: Pick<CallRow, 'direction' | 'business' | 'goal' | 'callback_for'>, brief: Pick<Brief, 'on_behalf_of' | 'facts' | 'flexibility'>, transcript: TranscriptLine[]): string {
   const lines = transcript.map((l) => `${l.role === 'caller' ? 'caller' : 'them'}: ${l.text}`).join('\n');
   const task =
-    row.direction === 'inbound'
-      ? `This was an incoming call to ${brief.on_behalf_of}'s number, answered by their assistant, who took a message.`
-      : `The caller phoned ${row.business} for ${brief.on_behalf_of}. The task: ${row.goal}\nAllowed without asking: ${brief.flexibility || '(only exactly the task)'}`;
+    row.direction === 'inbound' && row.callback_for
+      ? `This was ${row.business} calling back ${brief.on_behalf_of}'s number about an unfinished task, answered by their assistant, who tried to finish it. The task: ${row.goal}\nAllowed without asking: ${brief.flexibility || '(only exactly the task)'}`
+      : row.direction === 'inbound'
+        ? `This was an incoming call to ${brief.on_behalf_of}'s number, answered by their assistant. If the caller was following up on an earlier task, it tried to finish it; otherwise it took a message.`
+        : `The caller phoned ${row.business} for ${brief.on_behalf_of}. The task: ${row.goal}\nAllowed without asking: ${brief.flexibility || '(only exactly the task)'}`;
   return `${task}
 
 Report what happened to ${brief.on_behalf_of}, based only on the transcript below (speech-to-text, so allow for small transcription errors in names and numbers).

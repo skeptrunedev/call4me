@@ -41,6 +41,7 @@ The caller can only say what you give it. Call \`callbay_get_profile\`, then ask
 3. \`callbay_place_call\` with \`to\`, \`business\`, \`goal\`, \`category\`, and \`details\` (answers by field key). Add \`flexibility\` for what the caller may accept without asking. If it answers "Not calling yet", ask the user exactly what it lists and try again.
 4. Poll \`callbay_get_call\` with \`wait_seconds: 30\` until \`finished\`. If it lists \`open_questions\`, the business is waiting on the line: answer right away with \`callbay_answer_question\`.
 5. Tell the user the result in a line or two, including anything they need to note (a confirmation number, a time to show up).
+6. Voicemail or "we'll call you back" is not a dead end: the callback number left is always the account's callbay number, and when the business calls it back within 14 days callbay answers and finishes the task. Check \`callbay_get_call\` on the original call later; it lists the callbacks and their outcomes.
 
 Categories:
 
@@ -48,7 +49,7 @@ ${CATEGORIES.map((c) => `- \`${c.slug}\`: ${c.name} (${c.examples})`).join('\n')
 
 ## Account
 
-- \`callbay_get_balance\`: balance, price per minute, minutes left, the account's own callbay number (callbacks to it are answered and taken as messages), and the monthly reload.
+- \`callbay_get_balance\`: balance, price per minute, minutes left, the account's own callbay number (the callback number left on every call; callbacks to it finish the unfinished task or take a message), and the monthly reload.
 - \`callbay_list_calls\`: recent calls, newest first; \`callbay_get_call\` for any one's outcome and transcript.
 - \`callbay_add_funds\`: a Stripe checkout link ($10 to $500; reloads monthly unless \`monthly: false\`). Give the link to the user; nothing is charged until they pay.
 - \`callbay_stop_reload\`: cancel the monthly reload, only when the user asks.

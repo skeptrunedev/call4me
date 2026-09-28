@@ -1,10 +1,10 @@
 import { newId, now } from '../lib/ids';
 import { hmacHex } from '../lib/keys';
 import { telnyx } from '../lib/telnyx';
-import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions, inboundInstructions } from '../voice/prompt';
+import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions, inboundInstructions, type OpenTask } from '../voice/prompt';
 import { sessionFor, type SessionSetup } from '../voice/session';
 import { accounts, type Account } from './accounts';
-import { calls, CallError, localTimeIn, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
+import { calls, CallError, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 
 /** GPT-Live voices that read as a North American caller. marin is the model default. */
 export const VOICES = ['marin', 'cedar', 'gleam', 'meridian'] as const;
@@ -93,12 +93,28 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     return;
   }
   const owner = account.display_name || 'the person you reached';
+  const db = calls(env.DB);
   const { results: recent } = await env.DB.prepare(
     `SELECT business, goal, outcome, created_at FROM calls WHERE account_id = ? AND direction = 'outbound' AND answered_at IS NOT NULL ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 5`,
   )
     .bind(account.id, opts.from)
     .all<{ business: string; goal: string; outcome: string | null; created_at: number }>();
   const earlier = await env.DB.prepare(`SELECT business FROM calls WHERE account_id = ? AND to_number = ? ORDER BY created_at DESC LIMIT 1`).bind(account.id, opts.from).first<{ business: string }>();
+  // A business calling back after a voicemail gets the original task finished, not a message taken.
+  const tasks = openTasks(await db.unfinished(account.id), opts.from).slice(0, 3);
+  const likely = likelyTask(tasks, opts.from);
+  const openTask = (r: CallRow): OpenTask => {
+    const b = JSON.parse(r.brief) as Brief;
+    return {
+      business: r.business,
+      goal: r.goal,
+      onBehalfOf: b.on_behalf_of,
+      facts: b.facts,
+      flexibility: b.flexibility,
+      when: new Date(r.created_at).toISOString().slice(0, 10),
+      lastResult: r.outcome ? (JSON.parse(r.outcome) as Outcome).summary : null,
+    };
+  };
 
   const id = `call_${newId()}`;
   // Credits up front here too: the callback holds what it may cost before it is answered.
@@ -108,18 +124,35 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     await telnyx(env).reject(opts.controlId);
     return;
   }
-  const brief: Brief = { on_behalf_of: owner, facts: '', flexibility: '', timezone: null, max_minutes: maxMinutes };
+  // A callback on a known task carries that task's brief, so its recap is judged against the goal.
+  const likelyBrief = likely ? (JSON.parse(likely.brief) as Brief) : null;
+  const brief: Brief = likelyBrief ? { ...likelyBrief, max_minutes: maxMinutes } : { on_behalf_of: owner, facts: '', flexibility: '', timezone: null, max_minutes: maxMinutes };
   await env.DB.prepare(
-    `INSERT INTO calls (id, account_id, direction, to_number, from_number, business, goal, brief, status, telnyx_call_control_id, hold_cents, created_at) VALUES (?, ?, 'inbound', ?, ?, ?, ?, ?, 'dialing', ?, ?, ?)`,
+    `INSERT INTO calls (id, account_id, direction, to_number, from_number, business, goal, brief, status, telnyx_call_control_id, hold_cents, callback_for, created_at) VALUES (?, ?, 'inbound', ?, ?, ?, ?, ?, 'dialing', ?, ?, ?, ?)`,
   )
-    .bind(id, account.id, opts.from, opts.to, earlier?.business ?? 'incoming call', 'take the call and a message', JSON.stringify(brief), opts.controlId, holdCents, now())
+    .bind(
+      id,
+      account.id,
+      opts.from,
+      opts.to,
+      likely?.business ?? earlier?.business ?? 'incoming call',
+      likely?.goal ?? (tasks.length ? 'finish an unfinished task, or take a message' : 'take the call and a message'),
+      JSON.stringify(brief),
+      opts.controlId,
+      holdCents,
+      likely?.id ?? null,
+      now(),
+    )
     .run();
 
+  const ordered = likely ? [likely, ...tasks.filter((t) => t !== likely)] : tasks;
   const setup: SessionSetup = {
     callId: id,
     instructions: inboundInstructions({
       owner,
-      localTime: null,
+      tasks: ordered.map(openTask),
+      likely: Boolean(likely),
+      localTime: localTimeIn(likelyBrief?.timezone ?? null),
       recent: recent.map((r) => ({
         business: r.business,
         goal: r.goal,
@@ -127,7 +160,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
         when: new Date(r.created_at).toISOString().slice(0, 10),
       })),
     }),
-    backOffice: inboundBackOfficeInstructions(owner),
+    backOffice: inboundBackOfficeInstructions(owner, ordered.map(openTask)),
     voice: 'marin',
     maxSeconds: maxMinutes * 60,
     pricePerMinuteCents: price,

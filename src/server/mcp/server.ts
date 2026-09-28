@@ -36,6 +36,8 @@ The caller can only say what you give it, so everything is collected BEFORE dial
 5. Poll callbay_get_call with wait_seconds until finished. If it shows an open question, the business is waiting on the line: answer right away with callbay_answer_question.
 6. Tell the user the outcome in a line or two.
 
+Every call leaves the account's own callbay number as the callback. If a call ends in voicemail or "we'll call you back", callbay remembers the task for 14 days: when the business calls that number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (callbay_get_call lists its callbacks) and in callbay_list_calls.
+
 The caller sounds like a normal person calling for the user. It keeps turns short and does not read the booking back at the end; the recap comes back to you.
 Only call businesses and services the user wants to reach, never personal numbers they don't expect a call from.`;
 
@@ -51,7 +53,7 @@ function fail(message: string): CallToolResult {
 }
 
 /** The shape every call tool returns: what an agent needs to decide its next step. */
-export function callView(row: CallRow, questions: Question[]) {
+export function callView(row: CallRow, questions: Question[], callbacks: CallRow[] = []) {
   const outcome = row.outcome ? (JSON.parse(row.outcome) as Outcome) : null;
   const transcript = row.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [];
   // An answered call is finished once its recap is written (seconds after hangup), or if that failed.
@@ -66,6 +68,8 @@ export function callView(row: CallRow, questions: Question[]) {
     number: formatPhone(row.to_number),
     goal: row.goal,
     outcome,
+    callback_for: row.callback_for,
+    callbacks: callbacks.map((c) => ({ id: c.id, created_at: new Date(c.created_at).toISOString(), outcome: c.outcome ? (JSON.parse(c.outcome) as Outcome) : null })),
     open_questions: questions.filter((q) => !q.answer).map((q) => ({ id: q.id, question: q.question })),
     answered_questions: questions.filter((q) => q.answer).map((q) => ({ question: q.question, answer: q.answer })),
     talk_minutes: row.billed_seconds ? Math.ceil(row.billed_seconds / 60) : 0,
@@ -84,6 +88,8 @@ function callText(v: ReturnType<typeof callView>): string {
     for (const q of v.open_questions) lines.push(`- [${q.id}] ${q.question}`);
   }
   if (v.outcome) lines.push('', `outcome: ${v.outcome.result}`, v.outcome.summary, v.outcome.details ? JSON.stringify(v.outcome.details) : '');
+  if (v.callback_for) lines.push('', `callback that picked up the unfinished task of ${v.callback_for}`);
+  for (const c of v.callbacks) lines.push('', `they called back (${c.id}, ${c.created_at.slice(0, 16).replace('T', ' ')}): ${c.outcome ? `${c.outcome.result}. ${c.outcome.summary}` : 'in progress'}`);
   if (v.error) lines.push('', `error: ${v.error}`);
   if (v.finished) lines.push('', `talk time ${v.talk_minutes} min, cost ${v.cost}${v.hangup_cause ? `, ended: ${v.hangup_cause}` : ''}`);
   if (v.transcript.length) lines.push('', 'transcript:', ...v.transcript);
@@ -156,7 +162,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
           row = await db.forAccount(account.id, args.call_id);
           qs = await db.questions(row.id);
         }
-        const v = callView(row, qs);
+        const v = callView(row, qs, await db.callbacksFor(row.id));
         return ok(callText(v), v);
       })()) as never,
   );
@@ -180,7 +186,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
     'callbay_list_calls',
     {
       title: 'List recent calls',
-      description: 'Recent calls on this account, newest first, including callbacks the account\'s number answered (direction "inbound") with the message taken.',
+      description: 'Recent calls on this account, newest first, including callbacks the account\'s number answered (direction "inbound"): a callback about an unfinished task (callback_for) tried to finish it, anything else took a message.',
       inputSchema: z.object({ limit: z.number().int().min(1).max(50).default(10) }),
       annotations: RO,
     },
@@ -189,7 +195,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
         const rows = await db.list(account.id, args.limit);
         const views = rows.map((r) => callView(r, []));
         const text = views.length
-          ? views.map((v) => `${v.id} · ${v.created_at.slice(0, 16).replace('T', ' ')} · ${v.direction} · ${v.status} · ${v.business} ${v.number}${v.outcome ? ` · ${v.outcome.summary}` : ''}`).join('\n')
+          ? views.map((v) => `${v.id} · ${v.created_at.slice(0, 16).replace('T', ' ')} · ${v.direction} · ${v.status} · ${v.business} ${v.number}${v.callback_for ? ` · callback for ${v.callback_for}` : ''}${v.outcome ? ` · ${v.outcome.summary}` : ''}`).join('\n')
           : 'no calls yet';
         return ok(text, { calls: views.map((v) => ({ ...v, transcript: undefined })) });
       })()) as never,
@@ -199,7 +205,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
     'callbay_get_balance',
     {
       title: 'Balance and phone number',
-      description: 'The prepaid balance, the per-minute price, and the account\'s own callbay phone number (calls go out from it; callbacks to it are answered and turned into messages).',
+      description: 'The prepaid balance, the per-minute price, and the account\'s own callbay phone number (calls go out from it and it is the callback number left on every call; callbacks to it finish the unfinished task or take a message).',
       inputSchema: z.object({}),
       annotations: RO,
     },

@@ -114,24 +114,71 @@ Allowed without asking: ${b.flexibility.trim() || '(only exactly the task)'}
 Your text is fed straight back into the live call, so after end_call and press_digits write nothing at all, and never write explanations, greetings, or tool names.`;
 }
 
+/** An earlier outbound call's unfinished task, which a callback can finish. */
+export interface OpenTask {
+  business: string;
+  goal: string;
+  onBehalfOf: string;
+  facts: string;
+  flexibility: string;
+  /** "2026-09-28" */
+  when: string;
+  /** What happened last time, e.g. the voicemail that was left. */
+  lastResult: string | null;
+}
+
+export interface InboundBrief {
+  owner: string;
+  /** Unfinished tasks, the one this caller is most likely about first. */
+  tasks: OpenTask[];
+  /** True when the first task is known to be this call's (the caller's number matches, or it's the only one). */
+  likely: boolean;
+  recent: { business: string; goal: string; summary: string | null; when: string }[];
+  localTime: string | null;
+}
+
+function taskBlock(t: OpenTask, i: number): string {
+  return `## Task ${i + 1}: ${t.business}, for ${t.onBehalfOf} (called ${t.when})
+Task: ${t.goal}
+${t.lastResult ? `Last time: ${t.lastResult}\n` : ''}What you can share if it comes up:
+${t.facts.trim() || '(nothing beyond the task itself)'}
+What you can agree to without checking:
+${t.flexibility.trim() || '(only exactly what the task says)'}`;
+}
+
 /** Callbacks: someone rings the account's own number, usually a business we called earlier. */
-export function inboundInstructions(o: { owner: string; recent: { business: string; goal: string; summary: string | null; when: string }[]; localTime: string | null }): string {
+export function inboundInstructions(o: InboundBrief): string {
   const recent = o.recent.length
     ? o.recent.map((r) => `- ${r.when}: called ${r.business} to ${r.goal}${r.summary ? `. Result: ${r.summary}` : ''}`).join('\n')
     : '(no recent calls)';
-  return `You're answering the phone for ${o.owner}. This is ${o.owner}'s number; they can't come to the phone, so you're picking up for them.
+  const tasks = o.tasks.length
+    ? `# Unfinished tasks
+${o.likely ? `This caller is almost certainly calling back about task 1.` : 'The caller is probably calling back about one of these; work out which from what they say.'}
 
-Recent calls made from this number (the caller may be calling back about one of these):
-${recent}
+${o.tasks.map(taskBlock).join('\n\n')}
+
+# Finish the task on this call
+- When they say who they are, pick it up right away: "Oh great, thanks for calling back! Yeah, I called about ${o.tasks.length === 1 ? `${o.tasks[0].goal.replace(/\.$/, '')}` : 'getting that set up'}."
+- Then do the task exactly as you would have on the first call: answer their questions from the facts, and accept anything within what you can agree to.
+- If they need something you don't have, or offer something outside what you can agree to, hand off a question (ask_user) and say "Let me check on that real quick." If no answer comes back, say ${o.owner} will call back to confirm.
+- A fact marked as not stored (an account PIN) is not available: ask_user for it.
+- Once it's settled (booked, answered, or clearly not possible), say a quick thanks and bye and hand off to hang up (end_call). Don't read the details back; the recap is written from the call afterwards.
+`
+    : '';
+  return `You're answering the phone for ${o.owner}. This is ${o.owner}'s number; they can't come to the phone, so you're picking up for them.
 ${o.localTime ? `\nIt's ${o.localTime} right now.\n` : ''}
+${tasks}
+# Recent calls made from this number
+${recent}
+
 # What to do
-- Answer with a simple "Hello?" or "Hi, this is ${o.owner}'s phone." and let them say why they're calling.
-- If it's about one of the calls above, handle it the way a helpful assistant would: note the new time or detail, answer only with what the recent calls say, and if they need a decision, hand off a question (ask_user) or say ${o.owner} will call them back.
+- Answer with a simple "Hello?" and let them say why they're calling.
+${o.tasks.length ? '- If it\'s about one of the unfinished tasks, finish it (see above).\n' : ''}- If it's about one of the recent calls, note any new time or detail and answer only with what those calls say; if they need a decision, hand off a question (ask_user) or say ${o.owner} will call them back.
 - Otherwise take a message: who's calling, what it's about, and a good number to reach them.
-- Never agree to anything new on ${o.owner}'s behalf beyond what the recent calls already agreed to.
+- Never agree to anything beyond what a task allows or what the recent calls already agreed to.
 
 # How to talk
-Short, casual turns, like a real person picking up a phone. No support-bot phrases ("Certainly", "How may I assist you"). Don't read anything back at the end: when you've got it, say "Got it, I'll pass that along. Thanks, bye!" and hand off to hang up (end_call). The message is written up from the call afterwards.
+Short, casual turns, like a real person picking up a phone. No support-bot phrases ("Certainly", "How may I assist you"). Don't read anything back at the end: when you've got it, say "Got it, thanks, bye!" and hand off to hang up (end_call).
 
 # If they ask whether you're a person
 Don't bring it up yourself. If someone sincerely asks, don't deny it: "Yeah, I'm an AI assistant that answers for ${o.owner}." Then keep going.
@@ -142,9 +189,10 @@ Say "Okay, thanks," and hand off to hang up (end_call) with do_not_call set if t
 Never say tool names out loud or mention a back office.`;
 }
 
-/** The back office for a callback: same tools, a message-taking brief. */
-export function inboundBackOfficeInstructions(owner: string): string {
-  return `You are the silent back office for a call ${owner}'s assistant is answering. When the assistant hands off: if the call is over, end_call (the message is written up from the transcript afterwards); if a question needs ${owner}, ask_user and then reply with just the answer in a few plain words. After end_call write nothing at all. Never write explanations, greetings, or tool names.`;
+/** The back office for a callback: same tools, with the unfinished tasks it may finish. */
+export function inboundBackOfficeInstructions(owner: string, tasks: OpenTask[] = []): string {
+  const context = tasks.length ? `\n\nUnfinished tasks the assistant may be finishing on this call:\n${tasks.map((t, i) => `${i + 1}. ${t.business} for ${t.onBehalfOf}: ${t.goal} Allowed without asking: ${t.flexibility.trim() || '(only exactly the task)'}`).join('\n')}` : '';
+  return `You are the silent back office for a call ${owner}'s assistant is answering. When the assistant hands off: if the call is over, end_call (the recap is written from the transcript afterwards); if a question needs ${owner}, ask_user and then reply with just the answer in a few plain words. After end_call write nothing at all. Never write explanations, greetings, or tool names.${context}`;
 }
 
 /** Function tools for the Responses back office (the Responses API's function tool shape). */

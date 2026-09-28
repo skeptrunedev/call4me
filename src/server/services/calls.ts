@@ -48,7 +48,29 @@ export interface CallRow {
   transcript: string | null;
   hangup_cause: string | null;
   error: string | null;
+  /** Inbound only: the outbound call whose unfinished task this callback picked up. */
+  callback_for: string | null;
   created_at: number;
+}
+
+/** Results that leave a task open: a callback to the account's number can still finish it. */
+export const OPEN_RESULTS: Outcome['result'][] = ['voicemail', 'call_back_later', 'partial'];
+/** How long an unfinished task waits for a callback. */
+export const CALLBACK_WINDOW_MS = 14 * 24 * 60 * 60 * 1000;
+
+/**
+ * The unfinished tasks an incoming call may be about, newest first, one per business number
+ * (three voicemails to one office are one task). The caller's own number goes first.
+ */
+export function openTasks<T extends Pick<CallRow, 'to_number' | 'created_at'>>(rows: T[], from: string): T[] {
+  const seen = new Set<string>();
+  const unique = [...rows].sort((a, b) => b.created_at - a.created_at).filter((r) => !seen.has(r.to_number) && seen.add(r.to_number));
+  return [...unique.filter((r) => r.to_number === from), ...unique.filter((r) => r.to_number !== from)];
+}
+
+/** The task a callback is about when it's clear up front: the caller's number matches, or only one is open. */
+export function likelyTask<T extends Pick<CallRow, 'to_number'>>(tasks: T[], from: string): T | null {
+  return tasks.find((t) => t.to_number === from) ?? (tasks.length === 1 ? tasks[0] : null);
 }
 
 export interface Question {
@@ -180,6 +202,31 @@ export function calls(db: D1Database) {
 
     byControlId(controlId: string): Promise<CallRow | null> {
       return db.prepare(`SELECT * FROM calls WHERE telnyx_call_control_id = ?`).bind(controlId).first<CallRow>();
+    },
+
+    /** Outbound calls whose task is still open (see OPEN_RESULTS) and that nothing later finished. */
+    async unfinished(accountId: string, at = now()): Promise<CallRow[]> {
+      const { results } = await db
+        .prepare(
+          `SELECT c.* FROM calls c
+           WHERE c.account_id = ?1 AND c.direction = 'outbound' AND c.created_at > ?2
+             AND json_extract(c.outcome, '$.result') IN (${OPEN_RESULTS.map((r) => `'${r}'`).join(', ')})
+             AND NOT EXISTS (
+               SELECT 1 FROM calls d
+               WHERE d.account_id = c.account_id AND d.created_at > c.created_at
+                 AND json_extract(d.outcome, '$.result') = 'done'
+                 AND (d.callback_for = c.id OR (d.direction = 'outbound' AND d.to_number = c.to_number)))
+           ORDER BY c.created_at DESC LIMIT 20`,
+        )
+        .bind(accountId, at - CALLBACK_WINDOW_MS)
+        .all<CallRow>();
+      return results;
+    },
+
+    /** Callbacks that picked up this call's task. */
+    async callbacksFor(id: string): Promise<CallRow[]> {
+      const { results } = await db.prepare(`SELECT * FROM calls WHERE callback_for = ? ORDER BY created_at`).bind(id).all<CallRow>();
+      return results;
     },
 
     async list(accountId: string, limit = 20): Promise<CallRow[]> {
