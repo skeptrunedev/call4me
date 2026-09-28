@@ -308,10 +308,14 @@ function alternatives(category: Category, f: IntakeField): string {
 }
 
 /** The message an agent gets back when it tried to call too early: exactly what to ask. */
-export function missingMessage(category: Category, r: Resolved): string {
+export function missingMessage(category: Category, r: Resolved, forSomeoneElse: string | null = null): string {
   const lines = [`Not calling yet: a ${category.name.toLowerCase()} call needs more information from the user. Ask them (in one message), then call callbay_place_call again with the answers in "details":`];
   for (const f of r.missing) lines.push(`- ${f.key}${alternatives(category, f)}: ${f.ask}`);
   for (const { field, problem } of r.invalid) lines.push(`- ${field.key}: ${problem}`);
+  if (forSomeoneElse) {
+    lines.push(`This call is for ${forSomeoneElse}, not the profile's owner, so nothing from the saved profile is used: ask for ${forSomeoneElse}'s own details. Don't save them to the profile. (If the call is for the user, pass on_behalf_of exactly as their profile full_name.)`);
+    return lines.join('\n');
+  }
   const profileKeys = [...r.missing, ...r.invalid.map((i) => i.field)].map((f) => f.profile).filter(Boolean);
   if (profileKeys.length) lines.push(`Save the ones that don't change (${[...new Set(profileKeys)].join(', ')}) with callbay_save_profile so you never have to ask again.`);
   return lines.join('\n');

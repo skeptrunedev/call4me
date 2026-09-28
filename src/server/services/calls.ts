@@ -144,9 +144,13 @@ export function calls(db: D1Database) {
     async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number): Promise<{ call: CallRow; secrets: { label: string; value: string }[] }> {
       const category = categoryBySlug(input.category);
       if (!category) throw new CallError(`category must be one of: ${CATEGORY_SLUGS.join(', ')}`);
-      const intake = resolveIntake(category, input.details ?? {}, await profiles(db).get(account.id));
-      if (intake.missing.length || intake.invalid.length) throw new CallError(missingMessage(category, intake), 422);
-      const onBehalfOf = input.on_behalf_of?.trim() || (await profiles(db).get(account.id)).full_name || account.display_name;
+      const profile = await profiles(db).get(account.id);
+      // The saved profile is the account owner's. A call for someone else (a friend's appointment)
+      // must never borrow the owner's address, insurance or date of birth to fill that person's gaps.
+      const forSomeoneElse = isSomeoneElse(input.on_behalf_of, profile.full_name);
+      const intake = resolveIntake(category, input.details ?? {}, forSomeoneElse ? {} : profile);
+      if (intake.missing.length || intake.invalid.length) throw new CallError(missingMessage(category, intake, forSomeoneElse ? input.on_behalf_of!.trim() : null), 422);
+      const onBehalfOf = input.on_behalf_of?.trim() || profile.full_name || account.display_name;
       if (!onBehalfOf) throw new CallError('on_behalf_of: who is this call for? Pass their name, or save full_name with callbay_save_profile.', 422);
 
       const to = checkDialable(input.to);
@@ -312,6 +316,12 @@ export function calls(db: D1Database) {
       return (await db.prepare(`SELECT id, question, answer, asked_at, answered_at FROM call_questions WHERE id = ?`).bind(questionId).first<Question>())!;
     },
   };
+}
+
+/** True when a call names someone other than the profile's owner (case and spacing aside). */
+export function isSomeoneElse(onBehalfOf: string | undefined, profileName: string | undefined): boolean {
+  const norm = (v: string) => v.trim().toLowerCase().replace(/\s+/g, ' ');
+  return Boolean(onBehalfOf?.trim() && profileName?.trim() && norm(onBehalfOf) !== norm(profileName));
 }
 
 function validTimeZone(tz: string): boolean {

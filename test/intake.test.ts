@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { isSomeoneElse } from '../src/server/services/calls';
 import { categoryBySlug, missingMessage, resolveIntake } from '../src/server/services/intake';
 
 const medical = categoryBySlug('medical')!;
@@ -106,5 +107,26 @@ describe('decisions reach the caller as allowances', () => {
     for (const [slug, key] of [['flight_change', 'refund_or_rebook'], ['internet_new_service', 'credit_check']]) {
       expect(categoryBySlug(slug)!.fields.find((f) => f.key === key)?.grants).toBe(true);
     }
+  });
+});
+
+describe('calls for someone else', () => {
+  it('tells the owner from someone else', () => {
+    expect(isSomeoneElse('Nick Hughes', 'Nick Khami')).toBe(true);
+    expect(isSomeoneElse(' nick  khami ', 'Nick Khami')).toBe(false);
+    expect(isSomeoneElse(undefined, 'Nick Khami')).toBe(false);
+    expect(isSomeoneElse('Nick Hughes', undefined)).toBe(false);
+  });
+
+  it("never fills a friend's call from the owner's profile", () => {
+    const owner = { full_name: 'Nick Khami', address: '399 Arguello Blvd, San Francisco, CA', date_of_birth: '01/20/2002', phone: '7379832612' };
+    const details = { patient_full_name: 'Nick Hughes', reason: 'routine eye exam' };
+    const r = resolveIntake(medical, details, {});
+    expect(r.known.map((k) => k.value).join(' ')).not.toContain('Arguello');
+    expect(r.missing.map((f) => f.key)).toContain('patient_date_of_birth');
+    expect(resolveIntake(medical, details, owner).known.map((k) => k.value).join(' ')).toContain('Arguello');
+    const msg = missingMessage(medical, r, 'Nick Hughes');
+    expect(msg).toContain("ask for Nick Hughes's own details");
+    expect(msg).not.toContain('callbay_save_profile');
   });
 });
