@@ -19,7 +19,7 @@ export const BuyForm: FC<{ signedIn: boolean; error?: string; amount?: string }>
   );
 
 export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; error?: string; amount?: string }> = (p) => (
-  <Layout signedIn={p.signedIn}>
+  <Layout page="home" signedIn={p.signedIn}>
     <p>
       your coding agent (claude code, codex, claude desktop, chatgpt) gets one new tool: <b>make a phone call</b>. it calls the restaurant, the doctor's office,
       the dealership, sounds like a normal person, gets it done, and tells your agent what happened.
@@ -69,7 +69,7 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
 );
 
 export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; balanceCents: number; email: string; pending?: boolean }> = (p) => (
-  <Layout title="you're in" signedIn={Boolean(p.apiKey)}>
+  <Layout title="you're in" page="welcome" signedIn={Boolean(p.apiKey)}>
     {p.pending ? (
       <>
         <h1>waiting for the payment to clear</h1>
@@ -112,7 +112,7 @@ export const MessagePage: FC<{ title: string; message: string; signedIn?: boolea
 );
 
 export const RulesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
-  <Layout title="rules" signedIn={signedIn}>
+  <Layout title="rules" page="rules" signedIn={signedIn}>
     <h1>rules</h1>
     <p>callbay places calls a person would make themselves: bookings, appointments, questions for a business. it is not for anything else.</p>
     <ul>
@@ -128,9 +128,10 @@ export const RulesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
   </Layout>
 );
 
-export const PrivacyPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
-  <Layout title="privacy" signedIn={signedIn}>
+export const PrivacyPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ signedIn, agentPrompt }) => (
+  <Layout title="privacy" page="privacy" signedIn={signedIn}>
     <h1>privacy</h1>
+    <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
     <ul>
       <li>we store your email, your balance history, and for each call: the number, the brief your agent sent, the outcome, and a text transcript.</li>
       <li>if you save a calling profile (name, date of birth, phone, address, insurance, car), we store it so your agent doesn't have to ask before every call. the caller only shares it with the place it's calling, and only when asked. your agent can remove any of it with callbay_save_profile.</li>
@@ -142,7 +143,7 @@ export const PrivacyPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
 );
 
 export const TermsPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
-  <Layout title="terms" signedIn={signedIn}>
+  <Layout title="terms" page="terms" signedIn={signedIn}>
     <h1>terms</h1>
     <ul>
       <li>credits are prepaid and don't expire. a call holds its maximum cost from your balance before it dials and settles when it ends: talk time from pickup, rounded up to the minute. the rest of the hold comes back.</li>

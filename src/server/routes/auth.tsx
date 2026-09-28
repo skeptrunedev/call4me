@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { createAuth, withAuthCookies } from '../lib/auth';
 import { field, origin, safeNext, type AppContext, type AppEnv } from '../lib/context';
+import { signInPrompt } from '../lib/prompts';
 import { ConsentPage, LoginPage } from '../views/account';
 
 /** Sign-in with Google or X (better-auth), and the consent step of the MCP OAuth provider. */
@@ -15,7 +16,8 @@ authRoutes.get('/login', (c) => {
   const fromOAuth = url.searchParams.has('client_id') && url.searchParams.has('sig');
   const next = fromOAuth ? `/api/auth/oauth2/authorize?${url.search.slice(1)}` : safeNext(c.req.query('next'));
   if (c.get('account')) return c.redirect(next, 303);
-  return c.html(<LoginPage next={next} error={c.req.query('error')} providers={providers(c)} />);
+  // People signing in for an agent's OAuth flow are already mid-connect; everyone else can have their agent do it.
+  return c.html(<LoginPage next={next} error={c.req.query('error')} providers={providers(c)} agentPrompt={fromOAuth ? undefined : signInPrompt(origin(c))} />);
 });
 
 for (const [path, provider, label] of [

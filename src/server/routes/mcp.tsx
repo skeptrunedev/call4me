@@ -27,7 +27,9 @@ function serve(c: AppContext, account: Account): Promise<Response> | Response {
   return handler.fetch(c.req.raw);
 }
 
-const wantsHtml = (c: AppContext) => (c.req.header('accept') ?? '').includes('text/html');
+// MCP clients always GET with Accept: text/event-stream (the streamable HTTP spec requires
+// it); everyone else, including link unfurlers that send Accept: */*, gets the page.
+const wantsHtml = (c: AppContext) => !(c.req.header('accept') ?? '').includes('text/event-stream');
 
 mcp.get('/', (c) => (wantsHtml(c) ? c.html(<McpPage signedIn={false} installPrompt={installPrompt(origin(c), null)} origin={origin(c)} />) : c.text('POST MCP requests here', 405)));
 

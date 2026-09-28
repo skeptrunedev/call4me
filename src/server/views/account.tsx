@@ -7,9 +7,10 @@ import { CopyBlock, Layout } from './layout';
 
 type CallView = ReturnType<typeof callView>;
 
-export const LoginPage: FC<{ next: string; error?: string; providers: { google: boolean; x: boolean } }> = ({ next, error, providers }) => (
-  <Layout title="sign in">
+export const LoginPage: FC<{ next: string; error?: string; providers: { google: boolean; x: boolean }; agentPrompt?: string }> = ({ next, error, providers, agentPrompt }) => (
+  <Layout title="sign in" page="login">
     <h1>sign in</h1>
+    {agentPrompt && <CopyBlock id="agent-prompt" text={agentPrompt} label="[ or have your agent connect: copy prompt for your agent ]" rows={12} hidden />}
     {error && <p class="err">{error}</p>}
     {providers.google && (
       <form method="post" action="/login/google" class="inline">
@@ -29,7 +30,7 @@ export const LoginPage: FC<{ next: string; error?: string; providers: { google: 
 );
 
 export const ConsentPage: FC<{ client: string; query: string; error?: string }> = ({ client, query, error }) => (
-  <Layout title="connect" signedIn>
+  <Layout title="connect" page="consent" signedIn>
     <h1>connect {client} to callbay?</h1>
     {error && <p class="err">{error}</p>}
     <p>
@@ -49,7 +50,7 @@ export const ConsentPage: FC<{ client: string; query: string; error?: string }> 
 );
 
 export const NewKeyPage: FC<{ apiKey: string; installPrompt: string }> = ({ apiKey, installPrompt }) => (
-  <Layout title="new key" signedIn>
+  <Layout title="new key" page="key" signedIn>
     <h1>your new key</h1>
     <p>
       shown once: <span class="key">{apiKey}</span>
@@ -59,8 +60,8 @@ export const NewKeyPage: FC<{ apiKey: string; installPrompt: string }> = ({ apiK
   </Layout>
 );
 
-export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerMinuteCents: number; phoneNumber: string | null; reload: Reload | null; calls: CallView[]; error?: string }> = (p) => (
-  <Layout title="my account" signedIn>
+export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerMinuteCents: number; phoneNumber: string | null; reload: Reload | null; calls: CallView[]; agentPrompt: string; error?: string }> = (p) => (
+  <Layout title="my account" page="account" signedIn>
     <h1>
       balance: <span class="price">{dollars(p.balanceCents)}</span>
     </h1>
@@ -68,6 +69,7 @@ export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerM
       {p.account.email} · {dollars(p.pricePerMinuteCents)}/min · about {Math.floor(p.balanceCents / p.pricePerMinuteCents)} minutes left · your number:{' '}
       {p.phoneNumber ? formatPhone(p.phoneNumber) : 'assigned on your first call'} · key {p.account.key_prefix}
     </p>
+    <CopyBlock id="agent-prompt" text={p.agentPrompt} rows={12} hidden />
     {p.reload ? (
       <form method="post" action="/account/reload/stop" class="inline">
         reloads <span class="price">{dollars(p.reload.cents)}</span> every month
@@ -135,8 +137,8 @@ export const MonthlyBox: FC<{ replacing?: boolean }> = ({ replacing }) => (
   </label>
 );
 
-export const CallPage: FC<{ call: CallView }> = ({ call }) => (
-  <Layout title={call.business} signedIn>
+export const CallPage: FC<{ call: CallView; agentPrompt: string }> = ({ call, agentPrompt }) => (
+  <Layout title={call.business} page="call" path={`/account/calls/${call.id}`} signedIn>
     <h1>
       {call.business} <span class="small muted">{call.number}</span>
     </h1>
@@ -146,6 +148,7 @@ export const CallPage: FC<{ call: CallView }> = ({ call }) => (
     <p>
       <b>goal:</b> {call.goal}
     </p>
+    <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
     {call.outcome && (
       <div class="box">
         <b>{call.outcome.result.replace(/_/g, ' ')}:</b> {call.outcome.summary}
@@ -191,7 +194,7 @@ export const CallPage: FC<{ call: CallView }> = ({ call }) => (
 );
 
 export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: string }> = ({ signedIn, installPrompt, origin }) => (
-  <Layout title="install mcp" signedIn={signedIn}>
+  <Layout title="install mcp" page="mcp" signedIn={signedIn}>
     <h1>install the callbay mcp</h1>
     <p>
       the server is <code>{origin}/mcp</code>. your agent signs you in through the browser (google or x). the easiest way is to paste this prompt into your agent:

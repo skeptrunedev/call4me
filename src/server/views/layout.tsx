@@ -1,7 +1,8 @@
 import type { Child, FC } from 'hono/jsx';
 import { raw } from 'hono/html';
+import { PAGES, SITE, type PageKey } from '../lib/pages';
 
-export const SITE_DESCRIPTION = 'your AI agent makes phone calls for you. book dinners, doctor appointments, call dealerships. one prompt to install, prepaid credits from $10.';
+export { SITE_DESCRIPTION } from '../lib/pages';
 
 /** Copies the textarea that follows a `.copy-prompt` button: execCommand first (works on any real click), clipboard API second. */
 const COPY_SCRIPT = `
@@ -28,19 +29,52 @@ const COPY_SCRIPT = `
 })();
 `;
 
-export const Layout: FC<{ title?: string; signedIn?: boolean; children?: Child }> = ({ title, signedIn = false, children }) => (
+export const Layout: FC<{
+  title?: string;
+  signedIn?: boolean;
+  /** Which page this is, for its social preview (lib/pages.ts). */
+  page?: PageKey;
+  /** Overrides the page's canonical path, for pages with an id in the URL. */
+  path?: string;
+  children?: Child;
+}> = ({ title, signedIn = false, page = 'message', path, children }) => {
+  const meta = PAGES[page];
+  const fullTitle = title ? `${title} - callbay` : 'callbay: your AI agent makes phone calls for you';
+  const url = `${SITE}${path ?? meta.path}`;
+  const image = `${SITE}/og/${meta.card}.png`;
+  const alt = `callbay: ${title ?? 'your AI agent makes phone calls for you'}`;
+  return (
   <>
     {raw('<!DOCTYPE html>')}
     <html lang="en">
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{title ? `${title} - callbay` : 'callbay: your AI agent makes phone calls for you'}</title>
-        <meta name="description" content={SITE_DESCRIPTION} />
+        <title>{fullTitle}</title>
+        <meta name="description" content={meta.description} />
         <meta name="theme-color" content="#551a8b" />
+        <link rel="canonical" href={url} />
+        {/* Open Graph: Slack, Discord, Signal, iMessage, Facebook, LinkedIn read these. */}
         <meta property="og:site_name" content="callbay" />
-        <meta property="og:title" content={title ? `${title} - callbay` : 'callbay'} />
-        <meta property="og:description" content={SITE_DESCRIPTION} />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:title" content={fullTitle} />
+        <meta property="og:description" content={meta.description} />
+        <meta property="og:url" content={url} />
+        <meta property="og:image" content={image} />
+        <meta property="og:image:secure_url" content={image} />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={alt} />
+        {/* X / Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@skeptrune" />
+        <meta name="twitter:creator" content="@skeptrune" />
+        <meta name="twitter:title" content={fullTitle} />
+        <meta name="twitter:description" content={meta.description} />
+        <meta name="twitter:image" content={image} />
+        <meta name="twitter:image:alt" content={alt} />
         <link rel="stylesheet" href="/static/style.css" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
@@ -68,7 +102,8 @@ export const Layout: FC<{ title?: string; signedIn?: boolean; children?: Child }
       </body>
     </html>
   </>
-);
+  );
+};
 
 /** A button that copies `text`, with the text itself shown underneath for people who prefer to select it. */
 export const CopyBlock: FC<{ id: string; text: string; label?: string; rows?: number; hidden?: boolean }> = ({ id, text, label = '[ copy prompt for your agent ]', rows = 14, hidden = false }) => (

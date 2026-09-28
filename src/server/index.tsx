@@ -8,6 +8,7 @@ import { pub } from './routes/public';
 import { authRoutes } from './routes/auth';
 import { mountAuth, sessionAccount } from './lib/auth';
 import { webhooks } from './routes/webhooks';
+import { og } from './routes/og';
 import { MessagePage } from './views/public';
 import { sessionFor } from './voice/session';
 
@@ -30,6 +31,8 @@ app.use('*', async (c, next) => {
 
 app.get('/static/*', (c) => c.env.ASSETS.fetch(c.req.raw));
 app.get('/favicon.svg', (c) => c.env.ASSETS.fetch(c.req.raw));
+// Link-preview cards (lib/pages.ts).
+app.route('/og', og);
 
 // Telnyx's media stream for a call. The path carries an HMAC of the call id, so only the
 // URL we handed Telnyx when dialing can attach audio to a call.

@@ -4,6 +4,11 @@
   "main": "src/server/index.tsx",
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat"],
+  // Open Graph cards: fonts and the resvg renderer are bundled into the Worker.
+  "rules": [
+    { "type": "Data", "globs": ["**/*.ttf"], "fallthrough": true },
+    { "type": "CompiledWasm", "globs": ["**/*.wasm"], "fallthrough": true }
+  ],
   "routes": [{ "pattern": "callbay.skeptrune.com", "custom_domain": true }],
   "assets": {
     "directory": "public",

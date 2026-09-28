@@ -19,6 +19,7 @@
     "@better-auth/mcp": "^1.7.6",
     "@better-auth/oauth-provider": "^1.7.6",
     "@modelcontextprotocol/server": "^2.1.0",
+    "@resvg/resvg-wasm": "^2.6.2",
     "better-auth": "^1.7.6",
     "hono": "^4.13.9",
     "jose": "^6.2.12",

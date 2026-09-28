@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { field, origin, stripeFor, type AppContext, type AppEnv } from '../lib/context';
-import { installPrompt } from '../lib/prompts';
+import { accountPrompt, callPrompt, installPrompt, privacyPrompt } from '../lib/prompts';
 import { callView } from '../mcp/server';
 import { accounts, type Account } from '../services/accounts';
 import { calls, CallError } from '../services/calls';
@@ -54,7 +54,7 @@ async function accountPage(c: AppContext, account: Account, error?: string) {
     reloadOf(c.env.DB, account.id),
   ]);
   return c.html(
-    <AccountPage account={account} balanceCents={balance} pricePerMinuteCents={pricePerMinute(c.env)} phoneNumber={number?.phone_number ?? null} reload={reload} calls={rows.map((r) => callView(r, []))} error={error} />,
+    <AccountPage account={account} balanceCents={balance} pricePerMinuteCents={pricePerMinute(c.env)} phoneNumber={number?.phone_number ?? null} reload={reload} calls={rows.map((r) => callView(r, []))} agentPrompt={accountPrompt(origin(c))} error={error} />,
     error ? 400 : 200,
   );
 }
@@ -90,7 +90,8 @@ pub.get('/account/calls/:id', async (c) => {
   const db = calls(c.env.DB);
   try {
     const row = await db.forAccount(account.id, c.req.param('id'));
-    return c.html(<CallPage call={callView(row, await db.questions(row.id))} />);
+    const call = callView(row, await db.questions(row.id));
+    return c.html(<CallPage call={call} agentPrompt={callPrompt(origin(c), call.id, call.business)} />);
   } catch (err) {
     if (err instanceof CallError) return c.html(<MessagePage title="not found" message="no such call on this account." signedIn />, 404);
     throw err;
@@ -106,5 +107,5 @@ pub.post('/account/key', async (c) => {
 });
 
 pub.get('/rules', (c) => c.html(<RulesPage signedIn={signedIn(c)} />));
-pub.get('/privacy', (c) => c.html(<PrivacyPage signedIn={signedIn(c)} />));
+pub.get('/privacy', (c) => c.html(<PrivacyPage signedIn={signedIn(c)} agentPrompt={privacyPrompt(origin(c))} />));
 pub.get('/terms', (c) => c.html(<TermsPage signedIn={signedIn(c)} />));
