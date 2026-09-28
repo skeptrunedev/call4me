@@ -11,6 +11,8 @@ import { calls, CallError, likelyTask, localTimeIn, openTasks, SECRET_MASK, type
 /** GPT-Live voices that read as a North American caller. marin is the model default. */
 export const VOICES = ['marin', 'cedar', 'gleam', 'meridian'] as const;
 export type Voice = (typeof VOICES)[number];
+/** The name each voice's caller goes by. The default (female) voice is Sarah Harris for every account; the others stay unnamed. */
+export const ASSISTANT_NAMES: Record<Voice, string | null> = { marin: 'Sarah Harris', cedar: null, gleam: null, meridian: null };
 
 export const pricePerMinute = (env: Env) => Number(env.PRICE_PER_MINUTE_CENTS || 25);
 
@@ -61,6 +63,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       localTime: localTimeIn(brief.timezone),
       owner: person.name,
       connectWhen: brief.connect_when ?? null,
+      assistantName: ASSISTANT_NAMES[input.voice ?? 'marin'],
     };
     const setup: SessionSetup = {
       callId: call.id,
@@ -164,6 +167,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     callId: id,
     instructions: inboundInstructions({
       owner,
+      assistantName: ASSISTANT_NAMES.marin,
       tasks: ordered.map(openTask),
       likely: Boolean(likely),
       localTime: localTimeIn(likelyBrief?.timezone ?? null),
