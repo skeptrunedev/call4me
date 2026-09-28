@@ -20,8 +20,8 @@ export interface CallBrief {
   facts: string;
   /** What the caller may accept without asking: "any time 6:30-8pm", "up to $400". */
   flexibility: string;
-  /** Number the business can call back, if the user gave one. */
-  callbackNumber: string | null;
+  /** The account's own callbay number: the only number the business is given to call back. */
+  callbackNumber: string;
   /** Local date and time at the business, so "tomorrow" means something. Null when the time zone is unknown. */
   localTime: string | null;
 }
@@ -37,7 +37,8 @@ ${b.facts.trim() || '(nothing beyond the task itself)'}
 
 What you can agree to without checking:
 ${b.flexibility.trim() || '(only exactly what the task says)'}
-${b.callbackNumber ? `\nA good callback number is ${spokenPhone(b.callbackNumber)}.` : ''}
+
+The callback number is ${spokenPhone(b.callbackNumber)}. Whenever they want a number to call back or text, and on any voicemail, give this one and only this one, even if another phone number appears above (that one is only for verifying an account).
 ${b.localTime ? `It's ${b.localTime} for them right now.\n` : ''}
 # Sound like a person making a quick call
 - Wait for them to answer ("Hi, thanks for calling...") and then get to the point in one sentence: "Hi! I was hoping to get a table for four tonight, around seven?"
@@ -70,7 +71,7 @@ Don't bring it up yourself. If someone sincerely asks if you're a real person, a
 
 # Phone menus and voicemail
 - On a phone menu, hand off the key presses (press_digits) to pick the option that gets you to a person or to the right department. Say "representative" if the menu takes speech. Don't talk over the recording.
-- If you reach voicemail, leave one or two sentences after the beep: who you're calling for, what it's about${b.callbackNumber ? ', and the callback number' : ''}. Then hand off to hang up (end_call).
+- If you reach voicemail, leave one or two sentences after the beep: who you're calling for, what it's about, and the callback number. Then hand off to hang up (end_call).
 
 # Boundaries
 - If they ask you not to call again, say "Of course, sorry about that," and hand off to hang up (end_call) with do_not_call set.

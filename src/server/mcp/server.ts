@@ -122,7 +122,6 @@ export function createCallbayServer(deps: McpDeps): McpServer {
         on_behalf_of: z.string().min(1).max(80).optional().describe('who the call is for, as the caller should say it (default: the profile\'s full_name). The caller calls FOR this person; it never claims to be them.'),
         facts: z.string().max(3000).optional().describe('anything else the caller may share beyond the category\'s fields, one per line'),
         flexibility: z.string().max(1500).optional().describe('what the caller may accept without asking: "any time 6:30-8pm", "a different day this week is fine", "up to $300". Anything outside this becomes a question to you.'),
-        callback_number: z.string().max(40).optional().describe('a number the business can call back; defaults to the user\'s phone from the profile or details, else the account\'s own callbay number (which answers and takes messages)'),
         timezone: z.string().max(60).optional().describe('IANA time zone of the business, e.g. "America/Los_Angeles", so "tomorrow" is unambiguous'),
         max_minutes: z.number().int().min(1).max(LIMITS.maxMinutes).optional().describe(`hard cap on talk time (default ${LIMITS.defaultMaxMinutes})`),
         voice: z.enum(VOICES).optional().describe('caller voice (default marin)'),

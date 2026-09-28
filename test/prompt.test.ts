@@ -37,6 +37,13 @@ describe('callInstructions', () => {
 
   it('never names tools aloud', () => expect(p).toMatch(/Never say these names out loud/));
 
+  it('gives only the callbay number to call back', () => {
+    const q = callInstructions({ ...brief, facts: 'phone number: 248-761-4355' });
+    expect(q).toContain('The callback number is 415-555-0123');
+    expect(q).toMatch(/give this one and only this one/);
+    expect(q).toMatch(/voicemail[^\n]*the callback number/);
+  });
+
   it('omits the time line when the zone is unknown', () => expect(callInstructions({ ...brief, localTime: null })).not.toContain('for them right now'));
 });
 

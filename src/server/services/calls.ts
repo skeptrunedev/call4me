@@ -12,7 +12,6 @@ export interface Brief {
   on_behalf_of: string;
   facts: string;
   flexibility: string;
-  callback_number: string | null;
   timezone: string | null;
   max_minutes: number;
 }
@@ -90,7 +89,6 @@ export interface PlaceCallInput {
   /** Anything else the caller may share, beyond the category's fields. */
   facts?: string;
   flexibility?: string;
-  callback_number?: string;
   timezone?: string;
   max_minutes?: number;
 }
@@ -123,18 +121,6 @@ export function calls(db: D1Database) {
 
       const to = checkDialable(input.to);
       if (!to.ok) throw new CallError(to.reason);
-      let callback: string | null = null;
-      if (input.callback_number) {
-        const cb = checkDialable(input.callback_number);
-        if (!cb.ok) throw new CallError(`callback_number: ${cb.reason}`);
-        callback = cb.e164;
-      } else {
-        // The person's own phone (from the call or their profile) is the number to leave on a
-        // voicemail; the account's callbay number is only the fallback when none is known.
-        const own = intake.known.find((k) => k.key === 'phone')?.value;
-        const cb = own ? checkDialable(own) : null;
-        if (cb?.ok) callback = cb.e164;
-      }
       if (input.timezone && !validTimeZone(input.timezone)) throw new CallError(`timezone: "${input.timezone}" is not an IANA time zone like America/New_York`);
 
       const blocked = await db.prepare(`SELECT reason FROM blocked_numbers WHERE number = ?`).bind(to.e164).first<{ reason: string }>();
@@ -167,7 +153,6 @@ export function calls(db: D1Database) {
         on_behalf_of: onBehalfOf,
         facts: [...intake.known.map((k) => `${k.label}: ${k.sensitive ? SECRET_MASK : k.value}`), input.facts?.trim() ?? ''].filter(Boolean).join('\n'),
         flexibility: [...whenFields.map((k) => `${k.label}: ${k.value}`), input.flexibility?.trim() ?? ''].filter(Boolean).join('\n'),
-        callback_number: callback,
         timezone: input.timezone ?? null,
         max_minutes: maxMinutes,
       };

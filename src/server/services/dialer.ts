@@ -45,7 +45,8 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       // Secrets were masked in the stored brief; the caller gets the real values.
       facts: secrets.reduce((f, sec) => f.replace(`${sec.label}: ${SECRET_MASK}`, `${sec.label}: ${sec.value} (share only when they ask to verify the account)`), brief.facts),
       flexibility: brief.flexibility,
-      callbackNumber: brief.callback_number ?? from,
+      // Callbacks always come to the account's own number, which answers and takes a message.
+      callbackNumber: from,
       localTime: localTimeIn(brief.timezone),
     };
     const setup: SessionSetup = {
@@ -107,7 +108,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     await telnyx(env).reject(opts.controlId);
     return;
   }
-  const brief: Brief = { on_behalf_of: owner, facts: '', flexibility: '', callback_number: null, timezone: null, max_minutes: maxMinutes };
+  const brief: Brief = { on_behalf_of: owner, facts: '', flexibility: '', timezone: null, max_minutes: maxMinutes };
   await env.DB.prepare(
     `INSERT INTO calls (id, account_id, direction, to_number, from_number, business, goal, brief, status, telnyx_call_control_id, hold_cents, created_at) VALUES (?, ?, 'inbound', ?, ?, ?, ?, ?, 'dialing', ?, ?, ?)`,
   )
