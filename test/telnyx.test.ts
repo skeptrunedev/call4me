@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { clientState, readClientState, verifyTelnyxSignature } from '../src/server/lib/telnyx';
+import { clientState, personClientState, readClientState, verifyTelnyxSignature } from '../src/server/lib/telnyx';
 
 const b64 = (buf: ArrayBuffer | JsonWebKey) => Buffer.from(buf as ArrayBuffer).toString('base64');
 
@@ -18,6 +18,7 @@ describe('verifyTelnyxSignature', async () => {
 });
 
 describe('client state', () => {
-  it('round-trips the call id', () => expect(readClientState(clientState('call_abc'))).toBe('call_abc'));
+  it('round-trips the call id', () => expect(readClientState(clientState('call_abc'))).toEqual({ callId: 'call_abc', personLeg: false }));
+  it("marks the person's own leg so its hang-up never ends the call", () => expect(readClientState(personClientState('call_abc'))).toEqual({ callId: 'call_abc', personLeg: true }));
   it('tolerates junk', () => expect(readClientState('%%%')).toBeNull());
 });

@@ -7,6 +7,8 @@ import { accounts, dollars, type Account } from '../services/accounts';
 import { ACTIVE, CallError, calls, LIMITS, type CallRow, type Outcome, type Question, type TranscriptLine } from '../services/calls';
 import { placeCall, pricePerMinute, VOICES } from '../services/dialer';
 import { parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
+import { checkDialable } from '../lib/phone';
+import { sessionFor } from '../voice/session';
 import { CATEGORIES, categoryBySlug, CATEGORY_SLUGS, PROFILE_FIELDS, type ProfileKey } from '../services/intake';
 import { ProfileError, profiles } from '../services/profiles';
 
@@ -35,6 +37,8 @@ The caller can only say what you give it, so everything is collected BEFORE dial
 4. callbay_place_call with the category and details. If it answers "Not calling yet", ask the user exactly what it lists and try again.
 5. Poll callbay_get_call with wait_seconds until finished. If it shows an open question, the business is waiting on the line: answer right away with callbay_answer_question.
 6. Tell the user the outcome in a line or two.
+
+To put the user on a call themselves: pass connect_when to callbay_place_call (e.g. "as soon as a person picks up", to skip a long hold), or call callbay_connect_me mid-call. Their phone rings and they join the call; the caller goes quiet, and takes over again when they press * or hang up.
 
 Every call leaves the account's own callbay number as the callback. If a call ends in voicemail or "we'll call you back", callbay remembers the task for 14 days: when the business calls that number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (callbay_get_call lists its callbacks) and in callbay_list_calls.
 
@@ -77,7 +81,7 @@ export function callView(row: CallRow, questions: Question[], callbacks: CallRow
     hangup_cause: row.hangup_cause,
     error: row.error,
     created_at: new Date(row.created_at).toISOString(),
-    transcript: transcript.map((l) => `${l.role === 'caller' ? 'caller' : 'them'}: ${l.text}`),
+    transcript: transcript.map((l) => `${l.role}: ${l.text}`),
   };
 }
 
@@ -129,6 +133,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
         facts: z.string().max(3000).optional().describe('anything else the caller may share beyond the category\'s fields, one per line'),
         flexibility: z.string().max(1500).optional().describe('what the caller may accept without asking: "any time 6:30-8pm", "a different day this week is fine", "up to $300". Anything outside this becomes a question to you.'),
         timezone: z.string().max(60).optional().describe('IANA time zone of the business, e.g. "America/Los_Angeles", so "tomorrow" is unambiguous'),
+        connect_when: z.string().max(300).optional().describe('when to ring the user and patch them into the call without being asked, e.g. "as soon as a person picks up" (skip the hold) or "if they need to speak to me". Rings the phone in their profile. They hand the call back to the caller by pressing * or hanging up.'),
         max_minutes: z.number().int().min(1).max(LIMITS.maxMinutes).optional().describe(`hard cap on talk time (default ${LIMITS.defaultMaxMinutes})`),
         voice: z.enum(VOICES).optional().describe('caller voice (default marin)'),
       }),
@@ -164,6 +169,31 @@ export function createCallbayServer(deps: McpDeps): McpServer {
         }
         const v = callView(row, qs, await db.callbacksFor(row.id));
         return ok(callText(v), v);
+      })()) as never,
+  );
+
+  server.registerTool(
+    'callbay_connect_me',
+    {
+      title: 'Patch the user into a live call',
+      description:
+        'Ring the user now and patch them into a call in progress, so they talk to the business directly while the caller goes quiet. Rings the phone in their profile unless phone is given. When they press * or hang up, the caller takes the call back and carries on with the task.',
+      inputSchema: z.object({ call_id: callIdArg, phone: z.string().max(40).optional().describe('a different number to ring, e.g. "(415) 555-0123"') }),
+      annotations: OPEN,
+    },
+    (async (args: { call_id: string; phone?: string }) =>
+      guard(async () => {
+        const row = await db.forAccount(account.id, args.call_id);
+        if (!ACTIVE.includes(row.status) || !row.answered_at) throw new CallError('the call is not live');
+        let phone: string | undefined;
+        if (args.phone) {
+          const p = checkDialable(args.phone);
+          if (!p.ok) throw new CallError(`phone: ${p.reason}`);
+          phone = p.e164;
+        }
+        const res = await sessionFor(env, row.id).fetch('https://session/connect-person', { method: 'POST', body: JSON.stringify({ phone }) });
+        const { message } = (await res.json()) as { message: string };
+        return ok(message, { call_id: row.id, message });
       })()) as never,
   );
 

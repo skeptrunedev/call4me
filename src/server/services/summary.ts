@@ -21,7 +21,7 @@ const SCHEMA = {
 } as const;
 
 export function summaryPrompt(row: Pick<CallRow, 'direction' | 'business' | 'goal' | 'callback_for'>, brief: Pick<Brief, 'on_behalf_of' | 'facts' | 'flexibility'>, transcript: TranscriptLine[]): string {
-  const lines = transcript.map((l) => `${l.role === 'caller' ? 'caller' : 'them'}: ${l.text}`).join('\n');
+  const lines = transcript.map((l) => `${l.role}: ${l.text}`).join('\n');
   const task =
     row.direction === 'inbound' && row.callback_for
       ? `This was ${row.business} calling back ${brief.on_behalf_of}'s number about an unfinished task, answered by their assistant, who tried to finish it. The task: ${row.goal}\nAllowed without asking: ${brief.flexibility || '(only exactly the task)'}`

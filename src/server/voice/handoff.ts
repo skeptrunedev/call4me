@@ -55,7 +55,7 @@ export function missedHandoff(lines: TranscriptLine[], lastHandoffAt: number, fo
 export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[]): string {
   const recent = lines
     .slice(-8)
-    .map((l) => `${l.role === 'caller' ? 'caller' : 'them'}: ${l.text.trim()}`)
+    .map((l) => `${l.role}: ${l.text.trim()}`)
     .join('\n');
   const what =
     miss.reason === 'menu'

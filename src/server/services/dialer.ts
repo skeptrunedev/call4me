@@ -4,6 +4,7 @@ import { telnyx } from '../lib/telnyx';
 import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions, inboundInstructions, type OpenTask } from '../voice/prompt';
 import { sessionFor, type SessionSetup } from '../voice/session';
 import { accounts, type Account } from './accounts';
+import { profiles } from './profiles';
 import { calls, CallError, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 
 /** GPT-Live voices that read as a North American caller. marin is the model default. */
@@ -15,6 +16,12 @@ export const pricePerMinute = (env: Env) => Number(env.PRICE_PER_MINUTE_CENTS ||
 export async function streamUrl(env: Env, origin: string, callId: string): Promise<string> {
   const host = new URL(origin).host;
   return `wss://${host}/voice/stream/${callId}/${await hmacHex(env.STREAM_SECRET, callId)}`;
+}
+
+/** The account's owner, who can be patched into any of its calls: their name and their own phone. */
+async function personFor(env: Env, origin: string, account: Account, from: string): Promise<NonNullable<SessionSetup['person']>> {
+  const profile = await profiles(env.DB).get(account.id);
+  return { name: profile.full_name || account.display_name || 'the account owner', phone: profile.phone || null, from, webhookUrl: `${origin}/webhooks/telnyx` };
 }
 
 /** The account's own number, bought on first use in the area code of the first place it calls. */
@@ -38,6 +45,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
   try {
     const from = await ensureNumber(env, account, call.to_number);
     await env.DB.prepare(`UPDATE calls SET from_number = ? WHERE id = ?`).bind(from, call.id).run();
+    const person = await personFor(env, origin, account, from);
     const cb = {
       onBehalfOf: brief.on_behalf_of,
       business: call.business,
@@ -48,9 +56,12 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       // Callbacks always come to the account's own number, which answers and takes a message.
       callbackNumber: from,
       localTime: localTimeIn(brief.timezone),
+      owner: person.name,
+      connectWhen: brief.connect_when ?? null,
     };
     const setup: SessionSetup = {
       callId: call.id,
+      person,
       instructions: callInstructions(cb),
       backOffice: backOfficeInstructions(cb),
       voice: input.voice ?? 'marin',
@@ -161,6 +172,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
       })),
     }),
     backOffice: inboundBackOfficeInstructions(owner, ordered.map(openTask)),
+    person: await personFor(env, origin, account, opts.to),
     voice: 'marin',
     maxSeconds: maxMinutes * 60,
     pricePerMinuteCents: price,

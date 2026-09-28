@@ -47,6 +47,8 @@ export interface SessionSetup {
   controlId?: string;
   /** Per-call secrets (account PINs) to mask in the stored transcript. */
   redact?: string[];
+  /** Who can be patched into the call (callbay's user), from which number, and where their leg reports. */
+  person?: { name: string; phone: string | null; from: string; webhookUrl: string };
 }
 
 type Stored = SessionSetup;
@@ -95,6 +97,9 @@ export class CallSession extends DurableObject<Env> {
   private lastHandoffAt = 0;
   private forcedHandoffs = new Set<number>();
   private handoffTimer: ReturnType<typeof setTimeout> | null = null;
+  /** The person's own phone leg while it rings or is on the call; the caller stays silent while they talk. */
+  private personLeg: string | null = null;
+  private personOn = false;
   /** The teardown in progress, so the hangup webhook can wait for the final transcript write. */
   private closing: Promise<void> | null = null;
 
@@ -129,6 +134,16 @@ export class CallSession extends DurableObject<Env> {
         await this.shutdown('hangup webhook');
         return new Response('ok');
       }
+      case '/connect-person': {
+        const { phone } = (await req.json()) as { phone?: string };
+        return Response.json({ message: await this.connectPerson(phone) });
+      }
+      case '/person-joined':
+        await this.personJoined();
+        return new Response('ok');
+      case '/person-left':
+        this.personLeft();
+        return new Response('ok');
       default:
         return new Response('not found', { status: 404 });
     }
@@ -247,7 +262,7 @@ export class CallSession extends DurableObject<Env> {
       case 'session.output_audio.delta': {
         // After the hang-up hand-off the goodbye has already been said; anything more is
         // the model filling the silence before the line drops, so it never reaches the phone.
-        if (this.endingCall) break;
+        if (this.endingCall || this.personOn) break;
         const e = ev as { delta: string; start_ms: number; end_ms: number };
         if (this.framesOut++ === 0) this.mark('first caller audio');
         this.sendPhone({ event: 'media', media: { payload: e.delta } });
@@ -272,7 +287,7 @@ export class CallSession extends DurableObject<Env> {
         break;
       }
       case 'session.output_transcript.delta':
-        if (!this.endingCall) {
+        if (!this.endingCall && !this.personOn) {
           this.appendTranscript('caller', (ev as { delta: string }).delta);
           this.scheduleHandoffCheck();
         }
@@ -334,7 +349,7 @@ export class CallSession extends DurableObject<Env> {
 
   private checkMissedHandoff(): void {
     this.handoffTimer = null;
-    if (this.ended || this.endingCall || this.forcedHandoffs.size >= MAX_FORCED_HANDOFFS) return;
+    if (this.ended || this.endingCall || this.personLeg || this.forcedHandoffs.size >= MAX_FORCED_HANDOFFS) return;
     if (this.backOfficeBusy && Date.now() - this.lastHandoffAt < BACK_OFFICE_STALE_MS) return;
     const miss = missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs);
     if (!miss) return;
@@ -344,6 +359,55 @@ export class CallSession extends DurableObject<Env> {
     this.mark(`no hand-off after ${miss.reason === 'menu' ? 'a phone menu' : 'a spoken promise'}; starting the back office`);
     this.sendLive({ type: 'response.item.create', item: { type: 'message', role: 'user', content: [{ type: 'input_text', text: forcedHandoffMessage(miss, this.transcript) }] } });
     this.sendLive({ type: 'response.create' });
+  }
+
+  // ---- patching the person in (and handing back)
+
+  /** Ring the person's phone; they join the call when they answer (person-joined). Returns what happened. */
+  private async connectPerson(phoneOverride?: string): Promise<string> {
+    const s = await this.load();
+    if (!s?.person || !s.controlId || this.ended) return 'the call is not live';
+    if (this.personLeg) return this.personOn ? `${s.person.name} is already on the call` : `already ringing ${s.person.name}`;
+    const phone = phoneOverride || s.person.phone;
+    if (!phone) return `no phone number for ${s.person.name}; save one with callbay_save_profile or pass phone`;
+    const remaining = Math.max(60, s.maxSeconds - Math.round((Date.now() - (this.answeredAt || Date.now())) / 1000));
+    this.personLeg = await telnyx(this.env).dialPerson({ to: phone, from: s.person.from, webhookUrl: s.person.webhookUrl, callId: s.callId, superviseControlId: s.controlId, timeLimitSecs: remaining });
+    this.note(`ringing ${s.person.name} to join the call`);
+    return `ringing ${s.person.name}; they join as soon as they pick up`;
+  }
+
+  private async personJoined(): Promise<void> {
+    const s = await this.load();
+    this.personOn = true;
+    // Anything the caller had queued would play over the person.
+    this.sendPhone({ event: 'clear' });
+    this.playbackEndsAt = Date.now();
+    this.note(`${s?.person?.name ?? 'the person'} joined the call`);
+    this.sendLive({
+      type: 'session.instructions.append',
+      delegation_id: null,
+      content: `${s?.person?.name ?? 'The person'} has joined the call and is talking to them directly. Stay completely silent and don't delegate anything. Keep listening; you'll be told when they hand the call back to you.`,
+    });
+  }
+
+  private personLeft(): void {
+    const wasOn = this.personOn;
+    this.personOn = false;
+    this.personLeg = null;
+    if (this.ended || this.endingCall) return;
+    this.note(wasOn ? `${this.setup?.person?.name ?? 'the person'} handed the call back` : `${this.setup?.person?.name ?? 'the person'} didn't pick up`);
+    this.sendLive({
+      type: 'session.instructions.append',
+      delegation_id: null,
+      content: wasOn
+        ? `${this.setup?.person?.name ?? 'The person'} has left the call and handed it back to you. Pick up where they left off: say something short like "Hi, I'm back on for ${this.setup?.person?.name ?? 'them'}", then keep working on the task. If it's already done, say bye and hand off to hang up.`
+        : `${this.setup?.person?.name ?? 'The person'} didn't pick up. Carry on with the task yourself.`,
+    });
+  }
+
+  private note(text: string): void {
+    this.transcript.push({ role: 'note', text, at: Date.now() });
+    if (!this.flushTimer) this.flushTimer = setTimeout(() => void this.flushTranscript(), TRANSCRIPT_FLUSH_MS);
   }
 
   // ---- back-office functions
@@ -358,7 +422,14 @@ export class CallSession extends DurableObject<Env> {
       // leave empty; each tool validates what it needs
     }
     let output: string;
+    if (this.personOn && item.name !== 'ask_user') {
+      this.sendLive({ type: 'response.item.create', item: { type: 'function_call_output', call_id: item.call_id, output: 'the person is on the call; do nothing until they hand it back' } });
+      return;
+    }
     switch (item.name) {
+      case 'connect_person':
+        output = await this.connectPerson().catch((err) => `could not ring them: ${String(err).slice(0, 200)}`);
+        break;
       case 'end_call':
         output = await this.endCall(s, args);
         break;
@@ -433,7 +504,8 @@ export class CallSession extends DurableObject<Env> {
     if (!s || this.ended) return;
     if (!(await this.ctx.storage.get('warned'))) {
       await this.ctx.storage.put('warned', true);
-      this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'Time is almost up. Wrap up now: get the one thing you still need, say a quick goodbye, and hand off to hang up (end_call).' });
+      // While the person is talking the caller stays quiet; the hard stop still comes.
+      if (!this.personOn) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'Time is almost up. Wrap up now: get the one thing you still need, say a quick goodbye, and hand off to hang up (end_call).' });
       await this.ctx.storage.setAlarm(Date.now() + 40_000);
       return;
     }
@@ -460,6 +532,7 @@ export class CallSession extends DurableObject<Env> {
     console.log('call session ending:', reason);
     const s = await this.load();
     if (s?.controlId && reason !== 'hangup webhook') await telnyx(this.env).hangup(s.controlId).catch((err) => console.warn('hangup', String(err)));
+    if (this.personLeg) await telnyx(this.env).hangup(this.personLeg).catch((err) => console.warn('person hangup', String(err)));
     await this.flushTranscript().catch((err) => console.warn('transcript flush', String(err)));
     if (this.live?.readyState === WebSocket.OPEN) {
       this.sendLive({ type: 'session.close' });

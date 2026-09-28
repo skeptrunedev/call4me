@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import type Stripe from 'stripe';
 import { stripeFor, type AppEnv } from '../lib/context';
 import { now } from '../lib/ids';
-import { readClientState, verifyTelnyxSignature } from '../lib/telnyx';
+import { readClientState, telnyx, verifyTelnyxSignature } from '../lib/telnyx';
 import { calls, type Brief, type CallStatus, type TranscriptLine } from '../services/calls';
 import { summarizeCall, summaryPrompt } from '../services/summary';
 import { answerInbound, pricePerMinute } from '../services/dialer';
@@ -88,7 +88,7 @@ webhooks.post('/stripe', async (c) => {
 interface TelnyxWebhook {
   data?: {
     event_type?: string;
-    payload?: { call_control_id?: string; client_state?: string | null; direction?: string; from?: string; to?: string; hangup_cause?: string };
+    payload?: { call_control_id?: string; client_state?: string | null; direction?: string; from?: string; to?: string; hangup_cause?: string; digit?: string };
   };
 }
 
@@ -127,8 +127,19 @@ webhooks.post('/telnyx', async (c) => {
     return c.text('ok');
   }
 
-  const callId = readClientState(p.client_state) ?? (p.call_control_id ? (await db.byControlId(p.call_control_id))?.id : null);
+  const state = readClientState(p.client_state);
+  const callId = state?.callId ?? (p.call_control_id ? (await db.byControlId(p.call_control_id))?.id : null);
   if (!callId) return c.text('ok'); // not ours, or already gone
+
+  // The person's own phone patched into the call: its events move the call between them and
+  // the caller, and never end or bill the call itself.
+  if (state?.personLeg) {
+    const session = sessionFor(c.env, callId);
+    if (type === 'call.answered') await session.fetch('https://session/person-joined', { method: 'POST' });
+    else if (type === 'call.hangup') await session.fetch('https://session/person-left', { method: 'POST', body: JSON.stringify({ cause: p.hangup_cause ?? null }) });
+    else if (type === 'call.dtmf.received' && p.digit === '*' && p.call_control_id) await telnyx(c.env).hangup(p.call_control_id);
+    return c.text('ok');
+  }
 
   switch (type) {
     case 'call.answered':

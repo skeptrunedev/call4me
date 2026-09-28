@@ -24,6 +24,10 @@ export interface CallBrief {
   callbackNumber: string;
   /** Local date and time at the business, so "tomorrow" means something. Null when the time zone is unknown. */
   localTime: string | null;
+  /** The person callbay works for, who can be patched into the call. */
+  owner: string;
+  /** When to patch them in without being asked, e.g. "as soon as a person picks up". */
+  connectWhen: string | null;
 }
 
 /**
@@ -31,10 +35,11 @@ export interface CallBrief {
  * prompting guide asks for (these three labels). The voice model only decides *when*; the back
  * office picks the tool. Concrete triggers matter: a spoken "2" never reaches a phone menu.
  */
-function delegationPolicy(person: string): string {
+function delegationPolicy(person: string, owner: string, connectWhen: string | null = null): string {
   return `# Delegation policy
-Backend tools: press keys on the phone keypad; ask ${person} a question and get the answer back; hang up the call.
+Backend tools: press keys on the phone keypad; ask ${person} a question and get the answer back; ring ${owner} and patch them into this call; hang up the call.
 Delegate to the backend when:
+- ${connectWhen ? `${connectWhen} (then ${owner} gets patched in), or they` : 'They'} insist on speaking to ${owner} directly. Tell them "one sec, getting ${owner} on the line", then stay quiet until they join.
 - A recording lists options with keys ("press 1 for...", "for appointments, press 2") or asks you to enter something on the keypad. Never say digits out loud to a menu; only the keypad works.
 - They ask for something you don't have, or offer something outside what you can agree to. Delegate instead of saying "let me check".
 - The call is over: you both said bye, you left a voicemail, or they asked you not to call again.
@@ -56,7 +61,7 @@ ${b.flexibility.trim() || '(only exactly what the task says)'}
 
 The callback number is ${spokenPhone(b.callbackNumber)}. Whenever they want a number to call back or text, and on any voicemail, give this one and only this one, even if another phone number appears above (that one is only for verifying an account).
 ${b.localTime ? `It's ${b.localTime} for them right now.\n` : ''}
-${delegationPolicy(b.onBehalfOf)}
+${delegationPolicy(b.onBehalfOf, b.owner, b.connectWhen)}
 
 # Sound like a person making a quick call
 - Wait for them to answer ("Hi, thanks for calling...") and then get to the point in one sentence: "Hi! I was hoping to get a table for four tonight, around seven?"
@@ -125,6 +130,7 @@ Pick exactly the tool the hand-off needs:
 - The caller said goodbye, left a voicemail, or the call can't go anywhere: end_call (set do_not_call if they asked not to be called again). The written recap is made from the transcript afterwards.
 - The other side asked something the caller can't answer, or offered something outside what's allowed: ask_user with a short self-contained question. When it returns, reply with just the answer in a few plain words, e.g. "DOB is March 3, 1990." or "Yes, take 8:15."
 - A phone menu needs a choice or an extension: press_digits.
+- The other side insists on speaking to the person directly, or the connect condition is met: connect_person.${b.connectWhen ? `\nConnect condition: ${b.connectWhen}` : ''}
 Sometimes the hand-off arrives as a note with the latest conversation, because the caller said it would act but didn't hand off. Treat it the same way.
 
 The caller's task: ${b.goal}
@@ -187,7 +193,7 @@ ${o.tasks.map(taskBlock).join('\n\n')}
     : '';
   return `You're answering the phone for ${o.owner}. This is ${o.owner}'s number; they can't come to the phone, so you're picking up for them.
 ${o.localTime ? `\nIt's ${o.localTime} right now.\n` : ''}
-${delegationPolicy(o.owner)}
+${delegationPolicy(o.owner, o.owner)}
 
 ${tasks}
 # Recent calls made from this number
@@ -238,6 +244,12 @@ export const BACK_OFFICE_TOOLS = [
       properties: { question: { type: 'string', description: 'The question, self-contained, e.g. "They only have 8:15, not 7. Take it?"' } },
       required: ['question'],
     },
+  },
+  {
+    type: 'function',
+    name: 'connect_person',
+    description: 'Ring the person callbay works for and patch them into this call, so they talk to the other side directly. Use it when the other side insists on speaking to them, or when the connect condition is met. The caller goes quiet while they are on and takes over again when they hang up or press star.',
+    parameters: { type: 'object', properties: {}, required: [] },
   },
   {
     type: 'function',

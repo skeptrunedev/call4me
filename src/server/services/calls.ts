@@ -14,10 +14,13 @@ export interface Brief {
   flexibility: string;
   timezone: string | null;
   max_minutes: number;
+  /** When to patch the user in without being asked. */
+  connect_when?: string | null;
 }
 
 export interface TranscriptLine {
-  role: 'caller' | 'them';
+  /** 'note' marks what happened on the line rather than what was said (the person joining or leaving). */
+  role: 'caller' | 'them' | 'note';
   text: string;
   at: number;
 }
@@ -121,6 +124,8 @@ export interface PlaceCallInput {
   flexibility?: string;
   timezone?: string;
   max_minutes?: number;
+  /** When to patch the user in without being asked, e.g. "as soon as a person picks up". */
+  connect_when?: string;
 }
 
 /** What a per-call secret looks like wherever the call is stored. */
@@ -191,6 +196,7 @@ export function calls(db: D1Database) {
         flexibility: [...whenFields.map((k) => `${k.label}: ${k.value}`), input.flexibility?.trim() ?? ''].filter(Boolean).join('\n'),
         timezone: input.timezone ?? null,
         max_minutes: maxMinutes,
+        connect_when: input.connect_when?.trim() || null,
       };
       const id = `call_${newId()}`;
       if (!(await accounts(db).hold(account.id, holdCents, `hold:${id}`, `up to ${maxMinutes} min to ${input.business.trim()}`))) {

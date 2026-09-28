@@ -11,6 +11,8 @@ const brief = {
   flexibility: 'any time 6:30-8pm',
   callbackNumber: '+14155550123',
   localTime: 'Friday, October 2, 2026, 3:04 PM',
+  owner: 'Nick Khami',
+  connectWhen: null as string | null,
 };
 
 describe('callInstructions', () => {
@@ -38,6 +40,14 @@ describe('callInstructions', () => {
   });
 
   it('never names tools aloud', () => expect(p).toMatch(/Never say these names out loud/));
+
+  it('can patch the owner in, on request or on a condition', () => {
+    expect(p).toContain('ring Nick Khami and patch them into this call');
+    expect(p).toContain('insist on speaking to Nick Khami directly');
+    const q = callInstructions({ ...brief, connectWhen: 'As soon as a person picks up' });
+    expect(q).toContain('As soon as a person picks up (then Nick Khami gets patched in)');
+    expect(backOfficeInstructions({ ...brief, connectWhen: 'As soon as a person picks up' })).toContain('Connect condition: As soon as a person picks up');
+  });
 
   it('gives only the callbay number to call back', () => {
     const q = callInstructions({ ...brief, facts: 'phone number: 248-761-4355' });

@@ -1,6 +1,6 @@
 /**
  * The few Telnyx Call Control and Numbers endpoints callbay uses.
- * Docs: developers.telnyx.com/api-reference (dial, hangup, send_dtmf, answer,
+ * Docs: developers.telnyx.com/api-reference (dial incl. supervise_call_control_id, hangup, send_dtmf, answer,
  * available_phone_numbers, number_orders) and .../receiving-webhooks for signatures.
  */
 
@@ -45,11 +45,15 @@ const STREAM = {
   stream_bidirectional_codec: 'PCMU',
 } as const;
 
+const PERSON_LEG = '|person';
 export const clientState = (callId: string) => btoa(callId);
-export const readClientState = (s: string | undefined | null) => {
+/** The person's own phone, patched into a call: same call id, marked so its hang-up doesn't end the call. */
+export const personClientState = (callId: string) => btoa(`${callId}${PERSON_LEG}`);
+export const readClientState = (s: string | undefined | null): { callId: string; personLeg: boolean } | null => {
   if (!s) return null;
   try {
-    return atob(s);
+    const raw = atob(s);
+    return raw.endsWith(PERSON_LEG) ? { callId: raw.slice(0, -PERSON_LEG.length), personLeg: true } : { callId: raw, personLeg: false };
   } catch {
     return null;
   }
@@ -95,6 +99,26 @@ export function telnyx(env: TelnyxEnv) {
         // 422 means the call already ended, which is the state we wanted.
         if (!(err instanceof TelnyxError && err.status === 422)) throw err;
       }
+    },
+
+    /**
+     * Ring the person and, once they answer, put them on the call as a "barge" supervisor: they
+     * hear and are heard by both ends, and the business leg (and its media stream) is untouched.
+     * The short ring timeout keeps their own voicemail from answering onto the call.
+     */
+    async dialPerson(opts: { to: string; from: string; webhookUrl: string; callId: string; superviseControlId: string; timeLimitSecs: number }): Promise<string> {
+      const r = await call<{ data: { call_control_id: string } }>(env, 'POST', '/calls', {
+        connection_id: env.TELNYX_CONNECTION_ID,
+        to: opts.to,
+        from: opts.from,
+        webhook_url: opts.webhookUrl,
+        client_state: personClientState(opts.callId),
+        timeout_secs: 20,
+        time_limit_secs: opts.timeLimitSecs,
+        supervise_call_control_id: opts.superviseControlId,
+        supervisor_role: 'barge',
+      });
+      return r.data.call_control_id;
     },
 
     async sendDtmf(callControlId: string, digits: string): Promise<void> {
