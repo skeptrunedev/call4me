@@ -54,6 +54,11 @@ h1 .price { font-family: inherit; }
 #topnav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
 #topnav a::before { content: "[ "; color: #666; }
 #topnav a::after { content: " ]"; color: #666; }
+/* "add funds" is a POST form (it opens a Stripe checkout) dressed as a nav link. */
+#topnav .navform { display: inline; margin: 0; }
+#topnav .navform button { font: inherit; }
+#topnav .navform::before { content: "[ "; color: #666; }
+#topnav .navform::after { content: " ]"; color: #666; }
 .linkbutton { background: none; border: 0; padding: 0; color: #0000ee; cursor: pointer; }
 .linkbutton:hover { text-decoration: underline; }
 .copy { color: #551a8b; }

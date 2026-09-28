@@ -5,7 +5,7 @@ import { callView } from '../mcp/server';
 import { accounts, type Account } from '../services/accounts';
 import { calls, CallError } from '../services/calls';
 import { pricePerMinute } from '../services/dialer';
-import { parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
+import { MIN_TOPUP_CENTS, parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
 import { validUnsubscribe } from '../services/drip';
 import { AccountPage, CallPage, NewKeyPage } from '../views/account';
 import { HomePage, MessagePage, PrivacyPage, RulesPage, TermsPage, UnsubscribePage, WelcomePage } from '../views/public';
@@ -18,14 +18,23 @@ const home = (c: AppContext, extra: { error?: string; amount?: string } = {}, st
 
 pub.get('/', (c) => home(c));
 
-/** Buying needs a signed-in account, so every payment lands on a known person. */
+/**
+ * "add funds": straight to Stripe, signed in or not. Credits come in $10 units (the buyer
+ * picks how many there) and reload monthly by default, like the form. Signed out, Stripe
+ * collects the email; the credits land on the account for that email, which the buyer gets
+ * by signing in with it (or claims from the welcome page under another sign-in).
+ */
+pub.post('/add-funds', async (c) => {
+  const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: MIN_TOPUP_CENTS, monthly: true, adjustable: true, origin: origin(c), account: c.get('account') ?? undefined });
+  return c.redirect(url, 303);
+});
+
+/** The amount form on the home page; works signed out too (see /add-funds). */
 pub.post('/buy', async (c) => {
-  const account = c.get('account');
-  if (!account) return c.redirect('/login?next=/', 303);
   const form = await c.req.formData();
   const amount = field(form, 'amount', 20);
   try {
-    const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: parseAmountCents(amount), monthly: form.get('monthly') === 'on', origin: origin(c), account });
+    const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: parseAmountCents(amount), monthly: form.get('monthly') === 'on', origin: origin(c), account: c.get('account') ?? undefined });
     return c.redirect(url, 303);
   } catch (err) {
     if (err instanceof TopupError) return home(c, { error: err.message, amount }, 400);
@@ -39,10 +48,19 @@ pub.get('/welcome', async (c) => {
   const t = topups(c.env.DB, stripeFor(c));
   const done = await t.fulfill(sessionId);
   if (!done) return c.html(<WelcomePage pending apiKey={null} installPrompt="" balanceCents={0} email="" />);
+  const viewer = c.get('account');
+  // Paid signed out: the credits wait on the account for the checkout email. Signing in with
+  // that email opens it; signing in any other way brings the buyer back here to claim it.
+  if (!viewer) {
+    const balance = await accounts(c.env.DB).balanceCents(done.account.id);
+    return c.html(<WelcomePage signedOut apiKey={null} installPrompt="" balanceCents={balance} email={done.account.email} next={`/welcome?session_id=${encodeURIComponent(sessionId)}`} />);
+  }
+  const owner = viewer.id === done.account.id || (await t.claim(done.account.id, viewer)) ? viewer : null;
+  if (!owner) return c.html(<MessagePage title="already claimed" message={`these credits belong to the account for ${done.account.email}. sign in with that email to use them.`} signedIn />, 409);
   // Only the account's owner sees its first key.
-  const key = c.get('account')?.id === done.account.id ? await t.revealFirstKey(done.topup.id, done.account) : null;
-  const balance = await accounts(c.env.DB).balanceCents(done.account.id);
-  return c.html(<WelcomePage apiKey={key} installPrompt={installPrompt(origin(c), key)} balanceCents={balance} email={done.account.email} />);
+  const key = await t.revealFirstKey(done.topup.id, owner);
+  const balance = await accounts(c.env.DB).balanceCents(owner.id);
+  return c.html(<WelcomePage apiKey={key} installPrompt={installPrompt(origin(c), key)} balanceCents={balance} email={owner.email} />);
 });
 
 // ---- account

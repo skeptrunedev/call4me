@@ -85,7 +85,10 @@ export const Layout: FC<{
         </div>
         <div id="topnav">
           <a href="/">home</a>
-          <a href="/#buy">add funds</a>
+          {/* A form, not a link: it opens a Stripe checkout, which crawlers and link previews must not do. */}
+          <form method="post" action="/add-funds" class="navform">
+            <button type="submit" class="linkbutton">add funds</button>
+          </form>
           <a href="/mcp">install mcp</a>
           {signedIn ? <a href="/account">my account</a> : <a href="/login">sign in</a>}
           <a href="/rules">rules</a>

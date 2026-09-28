@@ -4,19 +4,16 @@ import { MIN_TOPUP_CENTS } from '../services/topups';
 import { MonthlyBox } from './account';
 import { CopyBlock, Layout } from './layout';
 
-export const BuyForm: FC<{ signedIn: boolean; error?: string; amount?: string }> = ({ signedIn, error, amount = String(MIN_TOPUP_CENTS / 100) }) =>
-  signedIn ? (
-    <form method="post" action="/buy" class="buy" id="buy">
-      {error && <p class="err">{error}</p>}
-      <label for="amount">amount in dollars (min ${MIN_TOPUP_CENTS / 100})</label>
-      <input type="text" id="amount" name="amount" class="amount" inputmode="decimal" required value={amount} /> <button type="submit">pay with card</button>
-      <MonthlyBox />
-    </form>
-  ) : (
-    <p id="buy">
-      <a href="/login?next=/">sign in with google or x</a> to load credits.
-    </p>
-  );
+/** No sign-in needed: signed out, Stripe asks for an email and the credits wait on that email's account. */
+export const BuyForm: FC<{ signedIn: boolean; error?: string; amount?: string }> = ({ signedIn, error, amount = String(MIN_TOPUP_CENTS / 100) }) => (
+  <form method="post" action="/buy" class="buy" id="buy">
+    {error && <p class="err">{error}</p>}
+    <label for="amount">amount in dollars (min ${MIN_TOPUP_CENTS / 100})</label>
+    <input type="text" id="amount" name="amount" class="amount" inputmode="decimal" required value={amount} /> <button type="submit">pay with card</button>
+    <MonthlyBox />
+    {!signedIn && <p class="small">no account needed first. after paying, sign in with google or x using the email you paid with and the credits are yours.</p>}
+  </form>
+);
 
 export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; error?: string; amount?: string }> = (p) => (
   <Layout page="home" signedIn={p.signedIn}>
@@ -68,12 +65,22 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
   </Layout>
 );
 
-export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; balanceCents: number; email: string; pending?: boolean }> = (p) => (
-  <Layout title="you're in" page="welcome" signedIn={Boolean(p.apiKey)}>
+export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; balanceCents: number; email: string; pending?: boolean; signedOut?: boolean; next?: string }> = (p) => (
+  <Layout title="you're in" page="welcome" signedIn={!p.signedOut && !p.pending}>
     {p.pending ? (
       <>
         <h1>waiting for the payment to clear</h1>
         <p>refresh this page in a few seconds.</p>
+      </>
+    ) : p.signedOut ? (
+      <>
+        <h1>
+          paid. <span class="price">{dollars(p.balanceCents)}</span> in credits for {p.email}
+        </h1>
+        <p>sign in to use them. with google, use {p.email} and they're already there. signing in any other way (x, or another email) brings you back here and moves them to that account.</p>
+        <p>
+          <a href={`/login?next=${encodeURIComponent(p.next ?? '/account')}`}>sign in with google or x</a>
+        </p>
       </>
     ) : (
       <>
