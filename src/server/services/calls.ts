@@ -55,6 +55,8 @@ export interface CallRow {
 
 /** Results that leave a task open: a callback to the account's number can still finish it. */
 export const OPEN_RESULTS: Outcome['result'][] = ['voicemail', 'call_back_later', 'partial'];
+/** SQL: the call reached someone and settled its task, so another call is a new conversation, not a retry. */
+const FINISHED = `json_extract(outcome, '$.result') IN ('done', 'not_possible')`;
 /** How long an unfinished task waits for a callback. */
 export const CALLBACK_WINDOW_MS = 14 * 24 * 60 * 60 * 1000;
 
@@ -93,7 +95,13 @@ export class CallError extends Error {
 /** Limits that keep one account from turning callbay into a robocaller. */
 export const LIMITS = {
   concurrentPerAccount: 2,
+  /**
+   * Finished conversations with one number per day. A call that left the task open (dropped,
+   * unanswered, voicemail, "call back later", partial) doesn't count: trying again is the job.
+   */
   sameNumberPerAccountPerDay: 3,
+  /** Every attempt counts here, so a runaway agent loop still stops. */
+  sameNumberAttemptsPerAccountPerDay: 10,
   sameNumberAllAccountsPerDay: 8,
   defaultMaxMinutes: 10,
   maxMinutes: 30,
@@ -153,13 +161,15 @@ export function calls(db: D1Database) {
         .prepare(
           `SELECT
              (SELECT COUNT(*) FROM calls WHERE account_id = ?1 AND status IN ('queued','dialing','in_progress')) AS active,
-             (SELECT COUNT(*) FROM calls WHERE account_id = ?1 AND to_number = ?2 AND created_at > ?3) AS mine,
-             (SELECT COUNT(*) FROM calls WHERE to_number = ?2 AND created_at > ?3) AS everyone`,
+             (SELECT COUNT(*) FROM calls WHERE account_id = ?1 AND to_number = ?2 AND created_at > ?3) AS attempts,
+             (SELECT COUNT(*) FROM calls WHERE account_id = ?1 AND to_number = ?2 AND created_at > ?3 AND ${FINISHED}) AS mine,
+             (SELECT COUNT(*) FROM calls WHERE to_number = ?2 AND created_at > ?3 AND ${FINISHED}) AS everyone`,
         )
         .bind(account.id, to.e164, since)
-        .first<{ active: number; mine: number; everyone: number }>();
+        .first<{ active: number; attempts: number; mine: number; everyone: number }>();
       if (counts && counts.active >= LIMITS.concurrentPerAccount) throw new CallError(`at most ${LIMITS.concurrentPerAccount} calls at once; wait for one to finish`, 429);
-      if (counts && counts.mine >= LIMITS.sameNumberPerAccountPerDay) throw new CallError(`this number was already called ${counts.mine} times in the last 24 hours`, 429);
+      if (counts && counts.attempts >= LIMITS.sameNumberAttemptsPerAccountPerDay) throw new CallError(`this number was already called ${counts.attempts} times in the last 24 hours`, 429);
+      if (counts && counts.mine >= LIMITS.sameNumberPerAccountPerDay) throw new CallError(`this number already finished ${counts.mine} conversations with you in the last 24 hours`, 429);
       if (counts && counts.everyone >= LIMITS.sameNumberAllAccountsPerDay) throw new CallError('this number has been called too often today; try tomorrow', 429);
 
       // Credits up front: the call holds its maximum cost now and settles when it ends.
