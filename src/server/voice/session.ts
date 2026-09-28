@@ -1,6 +1,7 @@
 import { DurableObject } from 'cloudflare:workers';
 import { calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
+import { forcedHandoffMessage, missedHandoff } from './handoff';
 import { BACK_OFFICE_TOOLS } from './prompt';
 
 /**
@@ -29,6 +30,11 @@ const SESSION_START_LIMIT_MS = 10_000;
 const SILENCE_LIMIT_MS = 30_000;
 /** After end_call, let the goodbye finish playing before hanging up. */
 const HANGUP_GRACE_MS = 700;
+/** Quiet time after the last words before checking for a hand-off the voice model skipped. */
+const HANDOFF_QUIET_MS = 1_500;
+/** A back-office run that never reports back stops blocking new ones after this long. */
+const BACK_OFFICE_STALE_MS = QUESTION_WAIT_MS + 15_000;
+const MAX_FORCED_HANDOFFS = 12;
 
 export interface SessionSetup {
   callId: string;
@@ -84,6 +90,11 @@ export class CallSession extends DurableObject<Env> {
   private playbackEndsAt = 0;
   private lastOutputAt = 0;
   private endingCall = false;
+  /** Back-office bookkeeping for starting it ourselves when the voice model skips a hand-off (handoff.ts). */
+  private backOfficeBusy = false;
+  private lastHandoffAt = 0;
+  private forcedHandoffs = new Set<number>();
+  private handoffTimer: ReturnType<typeof setTimeout> | null = null;
   /** The teardown in progress, so the hangup webhook can wait for the final transcript write. */
   private closing: Promise<void> | null = null;
 
@@ -249,6 +260,7 @@ export class CallSession extends DurableObject<Env> {
         if (!this.heardThem) this.mark('first words from them');
         this.heardThem = true;
         this.appendTranscript('them', (ev as { delta: string }).delta);
+        this.scheduleHandoffCheck();
         // Barge-in: GPT-Live stops generating when talked over, but audio already queued at
         // Telnyx keeps playing. If the model has gone quiet while playback is still ahead,
         // that queued audio is stale: flush it.
@@ -260,9 +272,14 @@ export class CallSession extends DurableObject<Env> {
         break;
       }
       case 'session.output_transcript.delta':
-        if (!this.endingCall) this.appendTranscript('caller', (ev as { delta: string }).delta);
+        if (!this.endingCall) {
+          this.appendTranscript('caller', (ev as { delta: string }).delta);
+          this.scheduleHandoffCheck();
+        }
         break;
       case 'session.delegation.created':
+        this.backOfficeBusy = true;
+        this.lastHandoffAt = Date.now();
         console.log('delegation', JSON.stringify((ev as { delegation: unknown }).delegation));
         break;
       case 'response.event': {
@@ -271,6 +288,7 @@ export class CallSession extends DurableObject<Env> {
           console.log('back office call', e.event.item.name, e.event.item.arguments);
           await this.runTool(e.event.item);
         } else if (e.event.type === 'response.completed' || e.event.type === 'response.failed' || e.event.type === 'error') {
+          this.backOfficeBusy = false;
           console.log('back office', e.event.type);
         }
         break;
@@ -305,6 +323,27 @@ export class CallSession extends DurableObject<Env> {
     setTimeout(() => {
       if (!this.ended && this.framesOut === 0 && !this.heardThem) void this.fail(`no audio either way ${SILENCE_LIMIT_MS / 1000}s after pickup (frames from phone: ${this.framesIn}, session started: ${Boolean(this.liveStartedAt)})`);
     }, SILENCE_LIMIT_MS);
+  }
+
+  // ---- hand-offs the voice model skipped
+
+  private scheduleHandoffCheck(): void {
+    if (this.handoffTimer) clearTimeout(this.handoffTimer);
+    this.handoffTimer = setTimeout(() => this.checkMissedHandoff(), HANDOFF_QUIET_MS);
+  }
+
+  private checkMissedHandoff(): void {
+    this.handoffTimer = null;
+    if (this.ended || this.endingCall || this.forcedHandoffs.size >= MAX_FORCED_HANDOFFS) return;
+    if (this.backOfficeBusy && Date.now() - this.lastHandoffAt < BACK_OFFICE_STALE_MS) return;
+    const miss = missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs);
+    if (!miss) return;
+    this.forcedHandoffs.add(miss.line.at);
+    this.backOfficeBusy = true;
+    this.lastHandoffAt = Date.now();
+    this.mark(`no hand-off after ${miss.reason === 'menu' ? 'a phone menu' : 'a spoken promise'}; starting the back office`);
+    this.sendLive({ type: 'response.item.create', item: { type: 'message', role: 'user', content: [{ type: 'input_text', text: forcedHandoffMessage(miss, this.transcript) }] } });
+    this.sendLive({ type: 'response.create' });
   }
 
   // ---- back-office functions
@@ -417,6 +456,7 @@ export class CallSession extends DurableObject<Env> {
 
   private async teardown(reason: string): Promise<void> {
     this.ended = true;
+    if (this.handoffTimer) clearTimeout(this.handoffTimer);
     console.log('call session ending:', reason);
     const s = await this.load();
     if (s?.controlId && reason !== 'hangup webhook') await telnyx(this.env).hangup(s.controlId).catch((err) => console.warn('hangup', String(err)));

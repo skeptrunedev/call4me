@@ -26,6 +26,22 @@ export interface CallBrief {
   localTime: string | null;
 }
 
+/**
+ * When the voice model should hand work to the back office, in the shape OpenAI's GPT-Live
+ * prompting guide asks for (these three labels). The voice model only decides *when*; the back
+ * office picks the tool. Concrete triggers matter: a spoken "2" never reaches a phone menu.
+ */
+function delegationPolicy(person: string): string {
+  return `# Delegation policy
+Backend tools: press keys on the phone keypad; ask ${person} a question and get the answer back; hang up the call.
+Delegate to the backend when:
+- A recording lists options with keys ("press 1 for...", "for appointments, press 2") or asks you to enter something on the keypad. Never say digits out loud to a menu; only the keypad works.
+- They ask for something you don't have, or offer something outside what you can agree to. Delegate instead of saying "let me check".
+- The call is over: you both said bye, you left a voicemail, or they asked you not to call again.
+Do not delegate to the backend when: you can answer from what you were given, or they're just talking to you.
+Delegate before giving an answer that depends on backend work. Do not guess the result while waiting.`;
+}
+
 export function callInstructions(b: CallBrief): string {
   return `You're on a live phone call. You are calling ${b.business} for ${b.onBehalfOf}. They picked up the phone; you're the one who called them.
 
@@ -40,6 +56,8 @@ ${b.flexibility.trim() || '(only exactly what the task says)'}
 
 The callback number is ${spokenPhone(b.callbackNumber)}. Whenever they want a number to call back or text, and on any voicemail, give this one and only this one, even if another phone number appears above (that one is only for verifying an account).
 ${b.localTime ? `It's ${b.localTime} for them right now.\n` : ''}
+${delegationPolicy(b.onBehalfOf)}
+
 # Sound like a person making a quick call
 - Wait for them to answer ("Hi, thanks for calling...") and then get to the point in one sentence: "Hi! I was hoping to get a table for four tonight, around seven?"
 - Keep every turn short. One thing at a time. Most of your turns are a single sentence.
@@ -70,7 +88,7 @@ People don't read the whole booking back at the end of a call, so you don't eith
 Don't bring it up yourself. If someone sincerely asks if you're a real person, a robot, or an AI, don't deny it: say it lightly and keep going, e.g. "Ha, yeah, I'm an AI assistant calling for ${b.onBehalfOf}. Just trying to grab that table for four at seven." If they'd rather not deal with an AI, thank them and hand off to hang up (end_call). If they ask your name, you're calling for ${b.onBehalfOf}; you don't need a name of your own.
 
 # Phone menus and voicemail
-- On a phone menu, hand off the key presses (press_digits) to pick the option that gets you to a person or to the right department. Say "representative" if the menu takes speech. Don't talk over the recording.
+- On a phone menu, delegate the key presses (press_digits) to pick the option that gets you to a person or to the right department, and stay quiet. Only speak to a menu if it asks you to say something ("say representative"). Don't talk over the recording.
 - If you reach voicemail, leave one or two sentences after the beep: who you're calling for, what it's about, and the callback number. Then hand off to hang up (end_call).
 
 # Boundaries
@@ -106,6 +124,7 @@ Pick exactly the tool the hand-off needs:
 - The caller said goodbye, left a voicemail, or the call can't go anywhere: end_call (set do_not_call if they asked not to be called again). The written recap is made from the transcript afterwards.
 - The other side asked something the caller can't answer, or offered something outside what's allowed: ask_user with a short self-contained question. When it returns, reply with just the answer in a few plain words, e.g. "DOB is March 3, 1990." or "Yes, take 8:15."
 - A phone menu needs a choice or an extension: press_digits.
+Sometimes the hand-off arrives as a note with the latest conversation, because the caller said it would act but didn't hand off. Treat it the same way.
 
 The caller's task: ${b.goal}
 Facts the caller has: ${b.facts.trim() || '(none)'}
@@ -167,6 +186,8 @@ ${o.tasks.map(taskBlock).join('\n\n')}
     : '';
   return `You're answering the phone for ${o.owner}. This is ${o.owner}'s number; they can't come to the phone, so you're picking up for them.
 ${o.localTime ? `\nIt's ${o.localTime} right now.\n` : ''}
+${delegationPolicy(o.owner)}
+
 ${tasks}
 # Recent calls made from this number
 ${recent}
