@@ -371,7 +371,13 @@ export class CallSession extends DurableObject<Env> {
     const phone = phoneOverride || s.person.phone;
     if (!phone) return `no phone number for ${s.person.name}; save one with callbay_save_profile or pass phone`;
     const remaining = Math.max(60, s.maxSeconds - Math.round((Date.now() - (this.answeredAt || Date.now())) / 1000));
-    this.personLeg = await telnyx(this.env).dialPerson({ to: phone, from: s.person.from, webhookUrl: s.person.webhookUrl, callId: s.callId, superviseControlId: s.controlId, timeLimitSecs: remaining });
+    try {
+      this.personLeg = await telnyx(this.env).dialPerson({ to: phone, from: s.person.from, webhookUrl: s.person.webhookUrl, callId: s.callId, superviseControlId: s.controlId, timeLimitSecs: remaining });
+    } catch (err) {
+      console.warn('connect person failed', s.callId, String(err));
+      this.note(`couldn't ring ${s.person.name}`);
+      return `couldn't ring ${s.person.name}: ${String(err).slice(0, 200)}`;
+    }
     this.note(`ringing ${s.person.name} to join the call`);
     return `ringing ${s.person.name}; they join as soon as they pick up`;
   }
@@ -428,7 +434,7 @@ export class CallSession extends DurableObject<Env> {
     }
     switch (item.name) {
       case 'connect_person':
-        output = await this.connectPerson().catch((err) => `could not ring them: ${String(err).slice(0, 200)}`);
+        output = await this.connectPerson();
         break;
       case 'end_call':
         output = await this.endCall(s, args);

@@ -1,5 +1,6 @@
 import { newId, now } from '../lib/ids';
 import { hmacHex } from '../lib/keys';
+import { checkDialable } from '../lib/phone';
 import { telnyx } from '../lib/telnyx';
 import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions, inboundInstructions, type OpenTask } from '../voice/prompt';
 import { sessionFor, type SessionSetup } from '../voice/session';
@@ -21,7 +22,9 @@ export async function streamUrl(env: Env, origin: string, callId: string): Promi
 /** The account's owner, who can be patched into any of its calls: their name and their own phone. */
 async function personFor(env: Env, origin: string, account: Account, from: string): Promise<NonNullable<SessionSetup['person']>> {
   const profile = await profiles(env.DB).get(account.id);
-  return { name: profile.full_name || account.display_name || 'the account owner', phone: profile.phone || null, from, webhookUrl: `${origin}/webhooks/telnyx` };
+  // Profiles hold numbers as people type them; Telnyx dials E.164 only.
+  const phone = profile.phone ? checkDialable(profile.phone) : null;
+  return { name: profile.full_name || account.display_name || 'the account owner', phone: phone?.ok ? phone.e164 : null, from, webhookUrl: `${origin}/webhooks/telnyx` };
 }
 
 /** The account's own number, bought on first use in the area code of the first place it calls. */
