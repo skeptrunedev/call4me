@@ -11,6 +11,9 @@ import { webhooks } from './routes/webhooks';
 import { og } from './routes/og';
 import { MessagePage } from './views/public';
 import { sessionFor } from './voice/session';
+import { makeMessenger } from './lib/messaging';
+import { runDrip } from './services/drip';
+import { pricePerMinute } from './services/dialer';
 
 export { CallSession } from './voice/session';
 
@@ -58,4 +61,14 @@ app.onError((err, c) => {
   return c.html(<MessagePage title="something broke" message="try again in a moment." />, 500);
 });
 
-export default { fetch: app.fetch } satisfies ExportedHandler<Env>;
+export default {
+  fetch: app.fetch,
+  // Signup drip (services/drip.ts), off while DRIP_START is empty.
+  async scheduled(_event, env, ctx) {
+    const start = Number(env.DRIP_START);
+    if (!env.DRIP_START || !Number.isFinite(start)) return;
+    ctx.waitUntil(
+      runDrip({ db: env.DB, messenger: makeMessenger(env), origin: `https://${env.CANONICAL_HOST}`, secret: env.BETTER_AUTH_SECRET, start, pricePerMinuteCents: pricePerMinute(env) }).then((r) => console.log('drip', JSON.stringify(r))),
+    );
+  },
+} satisfies ExportedHandler<Env>;

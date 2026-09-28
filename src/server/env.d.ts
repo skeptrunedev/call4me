@@ -18,4 +18,11 @@ interface Env {
   GOOGLE_CLIENT_SECRET?: string;
   X_CLIENT_ID?: string;
   X_CLIENT_SECRET?: string;
+  /** Outbound email (the drip) over SMTP, same Fastmail setup as skillbay. */
+  SMTP_HOST?: string;
+  SMTP_PORT?: string;
+  SMTP_USER: string;
+  SMTP_PASS: string;
+  /** e.g. "Nick K <me@call4.me>" */
+  EMAIL_FROM: string;
 }

@@ -111,6 +111,18 @@ export const MessagePage: FC<{ title: string; message: string; signedIn?: boolea
   </Layout>
 );
 
+export const UnsubscribePage: FC<{ accountId: string; sig: string }> = ({ accountId, sig }) => (
+  <Layout title="unsubscribe">
+    <h1>unsubscribe</h1>
+    <p>stop getting emails from nick about callbay? your account and credits stay as they are.</p>
+    <form method="post" action="/unsubscribe" class="inline">
+      <input type="hidden" name="a" value={accountId} />
+      <input type="hidden" name="s" value={sig} />
+      <button type="submit">unsubscribe</button>
+    </form>
+  </Layout>
+);
+
 export const RulesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
   <Layout title="rules" page="rules" signedIn={signedIn}>
     <h1>rules</h1>

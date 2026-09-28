@@ -6,8 +6,9 @@ import { accounts, type Account } from '../services/accounts';
 import { calls, CallError } from '../services/calls';
 import { pricePerMinute } from '../services/dialer';
 import { parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
+import { validUnsubscribe } from '../services/drip';
 import { AccountPage, CallPage, NewKeyPage } from '../views/account';
-import { HomePage, MessagePage, PrivacyPage, RulesPage, TermsPage, WelcomePage } from '../views/public';
+import { HomePage, MessagePage, PrivacyPage, RulesPage, TermsPage, UnsubscribePage, WelcomePage } from '../views/public';
 
 export const pub = new Hono<AppEnv>();
 
@@ -104,6 +105,23 @@ pub.post('/account/key', async (c) => {
   if (!account) return c.redirect('/login?next=/account', 303);
   const key = await accounts(c.env.DB).rotateKey(account.id);
   return c.html(<NewKeyPage apiKey={key} installPrompt={installPrompt(origin(c), key)} />);
+});
+
+// Drip unsubscribe. GET only shows a confirm button: mail scanners open every link in an
+// email, so the opt-out itself is a POST.
+pub.get('/unsubscribe', async (c) => {
+  const a = c.req.query('a') ?? '';
+  const s = c.req.query('s') ?? '';
+  if (!(await validUnsubscribe(c.env.BETTER_AUTH_SECRET, a, s))) return c.html(<MessagePage title="link not valid" message="this unsubscribe link is not valid." />, 400);
+  return c.html(<UnsubscribePage accountId={a} sig={s} />);
+});
+
+pub.post('/unsubscribe', async (c) => {
+  const form = await c.req.formData();
+  const a = field(form, 'a', 100);
+  if (!(await validUnsubscribe(c.env.BETTER_AUTH_SECRET, a, field(form, 's', 200)))) return c.html(<MessagePage title="link not valid" message="this unsubscribe link is not valid." />, 400);
+  await c.env.DB.prepare(`UPDATE accounts SET email_opt_out = 1 WHERE id = ?`).bind(a).run();
+  return c.html(<MessagePage title="unsubscribed" message="you won't get these emails anymore. your account and credits are unchanged." />);
 });
 
 pub.get('/rules', (c) => c.html(<RulesPage signedIn={signedIn(c)} />));

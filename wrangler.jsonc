@@ -20,6 +20,8 @@
     // Everything is server-rendered; only /static/* and the favicon are real assets.
     "run_worker_first": true
   },
+  // Sends due drip emails.
+  "triggers": { "crons": ["*/15 * * * *"] },
   "d1_databases": [
     { "binding": "DB", "database_name": "callbay", "database_id": "34bce7a3-4d5d-46cf-af21-bddecf0c1f93", "migrations_dir": "migrations" }
   ],
@@ -33,6 +35,9 @@
     // CANONICAL_HOST, but MCP, OAuth, webhooks and voice keep answering in place:
     // installed agents, issued tokens and provider webhooks still point there.
     "LEGACY_HOSTS": "callbay.skeptrune.com",
+    // Signup drip (services/drip.ts): accounts created at or after this time (ms since
+    // epoch) get the lifecycle emails. Empty turns the drip off.
+    "DRIP_START": "",
     "APP_NAME": "callbay",
     // US cents per started minute of talk time.
     "PRICE_PER_MINUTE_CENTS": "25",
