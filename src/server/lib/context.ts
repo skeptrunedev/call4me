@@ -15,6 +15,32 @@ export type AppContext = Context<AppEnv>;
 
 export const origin = (c: AppContext) => new URL(c.req.url).origin;
 
+/** Hosts callbay used to live on (LEGACY_HOSTS in wrangler.jsonc). */
+export const legacyHosts = (env: Pick<Env, 'LEGACY_HOSTS'>): string[] =>
+  (env.LEGACY_HOSTS ?? '')
+    .split(',')
+    .map((h) => h.trim())
+    .filter(Boolean);
+
+/**
+ * Machine endpoints that keep answering on a legacy host: MCP clients, OAuth (tokens are
+ * bound to the issuer origin they were minted on, and a sign-in started there must finish
+ * there), provider webhooks, and call audio. None of these follow redirects.
+ */
+const LEGACY_PASSTHROUGH = ['/mcp', '/api/', '/.well-known/', '/oauth/', '/login', '/logout', '/webhooks/', '/voice/'];
+
+/** Where a request belongs if it's on the wrong host, or null to serve it here. */
+export function canonicalRedirect(url: URL, env: Pick<Env, 'CANONICAL_HOST' | 'LEGACY_HOSTS'>): string | null {
+  const canonical = env.CANONICAL_HOST;
+  if (!canonical || url.hostname === canonical || url.hostname === 'localhost') return null;
+  if (legacyHosts(env).includes(url.hostname) && LEGACY_PASSTHROUGH.some((p) => url.pathname.startsWith(p))) return null;
+  const to = new URL(url);
+  to.hostname = canonical;
+  to.protocol = 'https:';
+  to.port = '';
+  return to.toString();
+}
+
 /** Read a string form field, trimmed, with a max length. */
 export function field(form: FormData, name: string, max = 10_000): string {
   const v = form.get(name);

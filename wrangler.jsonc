@@ -25,6 +25,10 @@
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CallSession"] }],
   "vars": {
     "CANONICAL_HOST": "callbay.skeptrune.com",
+    // Hosts callbay used to live on (comma-separated). Pages there redirect to
+    // CANONICAL_HOST, but MCP, OAuth, webhooks and voice keep answering in place:
+    // installed agents, issued tokens and provider webhooks still point there.
+    "LEGACY_HOSTS": "",
     "APP_NAME": "callbay",
     // US cents per started minute of talk time.
     "PRICE_PER_MINUTE_CENTS": "25",

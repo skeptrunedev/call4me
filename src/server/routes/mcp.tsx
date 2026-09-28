@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { createMcpHandler, hostHeaderValidationResponse } from '@modelcontextprotocol/server';
 import { accountForToken, bearerToken, challenge, looksLikeJwt, verifyMcpToken } from '../lib/auth';
-import { origin, stripeFor, type AppContext, type AppEnv } from '../lib/context';
+import { legacyHosts, origin, stripeFor, type AppContext, type AppEnv } from '../lib/context';
 import { installPrompt } from '../lib/prompts';
 import { accounts, type Account } from '../services/accounts';
 import { createCallbayServer } from '../mcp/server';
@@ -15,7 +15,7 @@ import { McpPage } from '../views/account';
 export const mcp = new Hono<AppEnv>();
 
 /** DNS-rebinding guard the MCP spec asks for: only our own hostnames may address the endpoint. */
-const allowedHosts = (c: AppContext) => [c.env.CANONICAL_HOST, 'localhost', '127.0.0.1', '[::1]'].filter(Boolean);
+const allowedHosts = (c: AppContext) => [c.env.CANONICAL_HOST, ...legacyHosts(c.env), 'localhost', '127.0.0.1', '[::1]'].filter(Boolean);
 
 function serve(c: AppContext, account: Account): Promise<Response> | Response {
   const rejected = hostHeaderValidationResponse(c.req.raw, allowedHosts(c));

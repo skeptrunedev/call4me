@@ -1,7 +1,7 @@
 // Must stay the first import: see zod-first.ts.
 import './zod-first';
 import { Hono } from 'hono';
-import type { AppEnv } from './lib/context';
+import { canonicalRedirect, type AppEnv } from './lib/context';
 import { hmacHex, safeEqual } from './lib/keys';
 import { mcp } from './routes/mcp';
 import { pub } from './routes/public';
@@ -16,16 +16,10 @@ export { CallSession } from './voice/session';
 
 const app = new Hono<AppEnv>();
 
-// Everything answers on the canonical host; workers.dev redirects there.
+// Pages answer on the canonical host; workers.dev and legacy hosts redirect there.
 app.use('*', async (c, next) => {
-  const url = new URL(c.req.url);
-  const canonical = c.env.CANONICAL_HOST;
-  if (canonical && url.hostname !== canonical && url.hostname !== 'localhost') {
-    url.hostname = canonical;
-    url.protocol = 'https:';
-    url.port = '';
-    return c.redirect(url.toString(), 301);
-  }
+  const to = canonicalRedirect(new URL(c.req.url), c.env);
+  if (to) return c.redirect(to, 301);
   await next();
 });
 
