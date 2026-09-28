@@ -236,10 +236,16 @@ export function topups(db: D1Database, stripe: Stripe) {
       return ledger.rotateKey(account.id);
     },
 
-    /** A refunded one-time top-up takes its credits back out. */
+    /** A refunded one-time top-up (card, or USDC over x402) takes its credits back out. */
     async refunded(paymentIntentId: string): Promise<void> {
       const s = (await stripe.checkout.sessions.list({ payment_intent: paymentIntentId, limit: 1 })).data[0];
-      if (!s) return;
+      if (!s) {
+        // x402 purchases have no Checkout session; their PaymentIntent names the account and transaction (services/x402.ts).
+        const pi = await stripe.paymentIntents.retrieve(paymentIntentId);
+        const m = pi.metadata ?? {};
+        if (m.app === 'callbay' && m.x402 === '1' && m.account_id && m.transaction) await ledger.post(m.account_id, -pi.amount, 'refund', `refund:x402:${m.transaction}`, 'USDC refund');
+        return;
+      }
       const topup = await db.prepare(`SELECT * FROM topups WHERE stripe_session_id = ?`).bind(s.id).first<TopupRow>();
       if (!topup?.account_id) return;
       await db.prepare(`UPDATE topups SET status = 'refunded' WHERE id = ?`).bind(topup.id).run();
