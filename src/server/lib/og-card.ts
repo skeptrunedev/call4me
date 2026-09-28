@@ -51,6 +51,6 @@ export function cardSvg(card: OgCard): string {
   ${titleLines.map((l, i) => `<text x="72" y="${titleY + i * lineH}" font-family="DejaVu Sans" font-weight="bold" font-size="${titleSize}" fill="#222222">${esc(l)}</text>`).join('\n  ')}
   ${subtitleLines.map((l, i) => `<text x="72" y="${subY + i * 44}" font-family="DejaVu Sans" font-size="34" fill="#444444">${esc(l)}</text>`).join('\n  ')}
   ${card.footer ? `<text x="72" y="${OG_HEIGHT - 60}" font-family="DejaVu Sans" font-size="28" fill="#666666">${esc(card.footer)}</text>` : ''}
-  <text x="${OG_WIDTH - 72}" y="${OG_HEIGHT - 60}" text-anchor="end" font-family="DejaVu Sans" font-size="28" fill="#0000ee">callbay.skeptrune.com</text>
+  <text x="${OG_WIDTH - 72}" y="${OG_HEIGHT - 60}" text-anchor="end" font-family="DejaVu Sans" font-size="28" fill="#0000ee">call4.me</text>
 </svg>`;
 }

@@ -9,7 +9,11 @@
     { "type": "Data", "globs": ["**/*.ttf"], "fallthrough": true },
     { "type": "CompiledWasm", "globs": ["**/*.wasm"], "fallthrough": true }
   ],
-  "routes": [{ "pattern": "callbay.skeptrune.com", "custom_domain": true }],
+  "routes": [
+    { "pattern": "call4.me", "custom_domain": true },
+    { "pattern": "www.call4.me", "custom_domain": true },
+    { "pattern": "callbay.skeptrune.com", "custom_domain": true }
+  ],
   "assets": {
     "directory": "public",
     "binding": "ASSETS",
@@ -24,11 +28,11 @@
   },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CallSession"] }],
   "vars": {
-    "CANONICAL_HOST": "callbay.skeptrune.com",
+    "CANONICAL_HOST": "call4.me",
     // Hosts callbay used to live on (comma-separated). Pages there redirect to
     // CANONICAL_HOST, but MCP, OAuth, webhooks and voice keep answering in place:
     // installed agents, issued tokens and provider webhooks still point there.
-    "LEGACY_HOSTS": "",
+    "LEGACY_HOSTS": "callbay.skeptrune.com",
     "APP_NAME": "callbay",
     // US cents per started minute of talk time.
     "PRICE_PER_MINUTE_CENTS": "25",

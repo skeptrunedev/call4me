@@ -5,7 +5,7 @@
  */
 import type { OgCard } from './og-card';
 
-export const SITE = 'https://callbay.skeptrune.com';
+export const SITE = 'https://call4.me';
 export const SITE_DESCRIPTION = 'your AI agent makes phone calls for you. book dinners, doctor appointments, call dealerships. one prompt to install, prepaid credits from $10.';
 
 export interface PageMeta {

@@ -1,6 +1,6 @@
 # callbay
 
-https://callbay.skeptrune.com
+https://call4.me
 
 Your coding agent (Claude Code, Codex, Claude Desktop, ChatGPT) gets one new tool: make a phone call.
 Prepaid credits from $10 via Stripe Checkout, reloading monthly by default; one MCP URL with the key in it.
