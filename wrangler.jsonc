@@ -4,8 +4,10 @@
   "main": "src/server/index.tsx",
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat"],
-  // Open Graph cards: fonts and the resvg renderer are bundled into the Worker.
+  // Open Graph cards: fonts and the resvg renderer are bundled into the Worker. Blog posts
+  // (src/content/blog/*.md) are bundled as text.
   "rules": [
+    { "type": "Text", "globs": ["**/*.md"], "fallthrough": true },
     { "type": "Data", "globs": ["**/*.ttf"], "fallthrough": true },
     { "type": "CompiledWasm", "globs": ["**/*.wasm"], "fallthrough": true }
   ],
