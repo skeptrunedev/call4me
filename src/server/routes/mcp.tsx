@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { createMcpHandler, hostHeaderValidationResponse } from '@modelcontextprotocol/server';
-import { accountForToken, bearerToken, challenge, looksLikeJwt, verifyMcpToken } from '../lib/auth';
-import { legacyHosts, origin, stripeFor, type AppContext, type AppEnv } from '../lib/context';
+import { accountForToken, bearerToken, challenge, looksLikeJwt, sessionAccount, verifyMcpToken } from '../lib/auth';
+import { legacyHosts, origin, stripeFor, viewerKey, type AppContext, type AppEnv } from '../lib/context';
 import { installPrompt } from '../lib/prompts';
 import { accounts, type Account } from '../services/accounts';
 import { createCallbayServer } from '../mcp/server';
@@ -31,7 +31,14 @@ function serve(c: AppContext, account: Account): Promise<Response> | Response {
 // it); everyone else, including link unfurlers that send Accept: */*, gets the page.
 const wantsHtml = (c: AppContext) => !(c.req.header('accept') ?? '').includes('text/event-stream');
 
-mcp.get('/', (c) => (wantsHtml(c) ? c.html(<McpPage signedIn={false} installPrompt={installPrompt(origin(c), null)} origin={origin(c)} />) : c.text('POST MCP requests here', 405)));
+// The install page. /mcp is mounted ahead of the session middleware (MCP requests carry
+// their own auth), so the page looks up the viewer itself to put their key in the prompt.
+mcp.get('/', async (c) => {
+  if (!wantsHtml(c)) return c.text('POST MCP requests here', 405);
+  const account = await sessionAccount(c);
+  const key = await viewerKey(c, account);
+  return c.html(<McpPage signedIn={Boolean(account)} installPrompt={installPrompt(origin(c), key)} origin={origin(c)} apiKey={key} />);
+});
 
 /**
  * /mcp: an OAuth access token from our provider (clients that sign in through the browser),

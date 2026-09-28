@@ -70,7 +70,7 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
       </div>
     </div>
     <h3>the prompt</h3>
-    <p class="small">this is what you paste into your agent after paying (your key goes where the placeholder is).</p>
+    <p class="small">{p.signedIn ? 'this is what you paste into your agent. your key is already in it.' : 'this is what you paste into your agent. it signs you in; sign in here first and your key comes in the prompt instead.'}</p>
     <CopyBlock id="install-prompt" text={p.installPrompt} rows={12} />
   </Layout>
 );
@@ -100,7 +100,7 @@ export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; bal
         {p.apiKey ? (
           <>
             <p>
-              your key (shown once, keep it somewhere safe): <span class="key">{p.apiKey}</span>
+              your key: <span class="key">{p.apiKey}</span>. it's already in the prompt below, and in the prompts on every page while you're signed in.
             </p>
             <p>copy this prompt into claude code, codex, claude desktop, or chatgpt. it installs callbay and tells your agent how to use it.</p>
             <CopyBlock id="install-prompt" text={p.installPrompt} rows={16} />

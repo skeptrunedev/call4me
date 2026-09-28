@@ -1,5 +1,6 @@
 import type { FC } from 'hono/jsx';
 import { formatPhone } from '../lib/phone';
+import { mcpUrl } from '../lib/prompts';
 import type { callView } from '../mcp/server';
 import { dollars, type Account } from '../services/accounts';
 import { MIN_TOPUP_CENTS, type Reload } from '../services/topups';
@@ -53,21 +54,21 @@ export const NewKeyPage: FC<{ apiKey: string; installPrompt: string }> = ({ apiK
   <Layout title="new key" page="key" signedIn>
     <h1>your new key</h1>
     <p>
-      shown once: <span class="key">{apiKey}</span>
+      <span class="key">{apiKey}</span>
     </p>
-    <p>the old key no longer works. paste this into your agent to reinstall with the new one:</p>
+    <p>the old key no longer works. the prompts on every page now carry this one. paste this into your agent to reinstall with it:</p>
     <CopyBlock id="install-prompt" text={installPrompt} rows={16} />
   </Layout>
 );
 
-export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerMinuteCents: number; phoneNumber: string | null; reload: Reload | null; calls: CallView[]; agentPrompt: string; error?: string }> = (p) => (
+export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerMinuteCents: number; phoneNumber: string | null; reload: Reload | null; calls: CallView[]; apiKey: string; agentPrompt: string; error?: string }> = (p) => (
   <Layout title="my account" page="account" signedIn>
     <h1>
       balance: <span class="price">{dollars(p.balanceCents)}</span>
     </h1>
     <p class="small">
       {p.account.email} · {dollars(p.pricePerMinuteCents)}/min · about {Math.floor(p.balanceCents / p.pricePerMinuteCents)} minutes left · your number:{' '}
-      {p.phoneNumber ? formatPhone(p.phoneNumber) : 'assigned on your first call'} · key {p.account.key_prefix}
+      {p.phoneNumber ? formatPhone(p.phoneNumber) : 'assigned on your first call'}
     </p>
     <CopyBlock id="agent-prompt" text={p.agentPrompt} rows={12} hidden />
     {p.reload ? (
@@ -118,11 +119,11 @@ export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerM
     )}
     <h2>connect your agent</h2>
     <p class="small">
-      clients that sign in through the browser (claude desktop, claude.ai, claude code via /mcp) just need <code>/mcp</code>. clients that can't sign in use a key
-      in the URL. {p.account.key_prefix ? <>current key: {p.account.key_prefix}. </> : <>no key yet. </>}
+      your key is <span class="key">{p.apiKey}</span>. the copy prompts on every page include it while you're signed in, so your agent connects without signing in.
+      clients that sign in through the browser (claude desktop, claude.ai, claude code via /mcp) can use plain <code>/mcp</code> instead.
     </p>
     <form method="post" action="/account/key" class="inline">
-      <button type="submit">{p.account.key_prefix ? 'replace my key (the old one stops working)' : 'create a key'}</button>
+      <button type="submit">replace my key (the old one stops working)</button>
     </form>
     <form method="post" action="/logout" class="inline">
       <button type="submit" class="linkbutton">sign out</button>
@@ -193,16 +194,27 @@ export const CallPage: FC<{ call: CallView; agentPrompt: string }> = ({ call, ag
   </Layout>
 );
 
-export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: string }> = ({ signedIn, installPrompt, origin }) => (
+export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: string; apiKey: string | null }> = ({ signedIn, installPrompt, origin, apiKey }) => (
   <Layout title="install mcp" page="mcp" signedIn={signedIn}>
     <h1>install the callbay mcp</h1>
-    <p>
-      the server is <code>{origin}/mcp</code>. your agent signs you in through the browser (google or x). the easiest way is to paste this prompt into your agent:
-    </p>
+    {apiKey ? (
+      <p>
+        your server URL is <code>{mcpUrl(origin, apiKey)}</code>. it carries your key, so your agent needs no sign-in. the easiest way is to paste this prompt into your agent:
+      </p>
+    ) : (
+      <p>
+        the server is <code>{origin}/mcp</code>. your agent signs you in through the browser (google or x). the easiest way is to paste this prompt into your agent:
+      </p>
+    )}
     <CopyBlock id="install-prompt" text={installPrompt} rows={14} />
     <h3>by hand</h3>
     <pre class="wrap">
-      {`claude code:     claude mcp add --scope user --transport http callbay ${origin}/mcp   then /mcp → callbay → authenticate
+      {apiKey
+        ? `claude code:     claude mcp add --scope user --transport http callbay ${mcpUrl(origin, apiKey)}
+codex:           codex mcp add callbay --url ${mcpUrl(origin, apiKey)}
+claude desktop / claude.ai / chatgpt:  settings → connectors → add custom connector → ${mcpUrl(origin, apiKey)}
+or send "Authorization: Bearer ${apiKey}" to ${origin}/mcp`
+        : `claude code:     claude mcp add --scope user --transport http callbay ${origin}/mcp   then /mcp → callbay → authenticate
 codex:           codex mcp add callbay --url ${origin}/mcp   then   codex mcp login callbay
 claude desktop / claude.ai / chatgpt:  settings → connectors → add custom connector → ${origin}/mcp
 can't sign in?   create a key at ${origin}/account and use ${origin}/mcp/<key>, or send "Authorization: Bearer <key>" to /mcp`}

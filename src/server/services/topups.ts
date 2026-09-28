@@ -225,17 +225,6 @@ export function topups(db: D1Database, stripe: Stripe) {
       await syncSubscription(sub);
     },
 
-    /**
-     * The first API key, shown once on the success page of the purchase that created the
-     * account. Later purchases and a second visit get null (keys are reissued by email).
-     */
-    async revealFirstKey(topupId: string, account: Account): Promise<string | null> {
-      if (account.key_prefix) return null;
-      const r = await db.prepare(`UPDATE topups SET key_revealed = 1 WHERE id = ? AND key_revealed = 0`).bind(topupId).run();
-      if ((r.meta.changes ?? 0) === 0) return null;
-      return ledger.rotateKey(account.id);
-    },
-
     /** A refunded one-time top-up (card, or USDC over x402) takes its credits back out. */
     async refunded(paymentIntentId: string): Promise<void> {
       const s = (await stripe.checkout.sessions.list({ payment_intent: paymentIntentId, limit: 1 })).data[0];

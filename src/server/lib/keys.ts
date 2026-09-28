@@ -33,3 +33,37 @@ export function safeEqual(a: string, b: string): boolean {
   for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return diff === 0;
 }
+
+/** The AES-GCM key that seals API keys at rest, derived from a worker secret. */
+async function sealingKey(secret: string): Promise<CryptoKey> {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), 'HKDF', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name: 'HKDF', hash: 'SHA-256', salt: new Uint8Array(0), info: new TextEncoder().encode('callbay api key seal v1') },
+    base,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['encrypt', 'decrypt'],
+  );
+}
+
+const b64 = (bytes: Uint8Array) => btoa(String.fromCharCode(...bytes));
+const unb64 = (s: string) => Uint8Array.from(atob(s), (ch) => ch.charCodeAt(0));
+
+/** An API key encrypted for storage: `<iv>.<ciphertext>`, both base64. */
+export async function sealKey(secret: string, key: string): Promise<string> {
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, await sealingKey(secret), new TextEncoder().encode(key));
+  return `${b64(iv)}.${b64(new Uint8Array(ct))}`;
+}
+
+/** The key inside a sealed value, or null when it was sealed under another secret or is malformed. */
+export async function unsealKey(secret: string, sealed: string): Promise<string | null> {
+  const [iv, ct] = sealed.split('.');
+  if (!iv || !ct) return null;
+  try {
+    const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(iv) }, await sealingKey(secret), unb64(ct));
+    return new TextDecoder().decode(pt);
+  } catch {
+    return null;
+  }
+}

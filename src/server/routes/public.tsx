@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { field, origin, stripeFor, type AppContext, type AppEnv } from '../lib/context';
+import { field, origin, ownerKey, stripeFor, viewerKey, type AppContext, type AppEnv } from '../lib/context';
 import { accountPrompt, callPrompt, installPrompt, privacyPrompt } from '../lib/prompts';
 import { callView } from '../mcp/server';
 import { accounts, type Account } from '../services/accounts';
@@ -13,8 +13,8 @@ import { HomePage, MessagePage, PrivacyPage, RulesPage, TermsPage, UnsubscribePa
 export const pub = new Hono<AppEnv>();
 
 const signedIn = (c: AppContext) => Boolean(c.get('account'));
-const home = (c: AppContext, extra: { error?: string; amount?: string } = {}, status: 200 | 400 = 200) =>
-  c.html(<HomePage origin={origin(c)} pricePerMinuteCents={pricePerMinute(c.env)} signedIn={signedIn(c)} installPrompt={installPrompt(origin(c), null)} {...extra} />, status);
+const home = async (c: AppContext, extra: { error?: string; amount?: string } = {}, status: 200 | 400 = 200) =>
+  c.html(<HomePage origin={origin(c)} pricePerMinuteCents={pricePerMinute(c.env)} signedIn={signedIn(c)} installPrompt={installPrompt(origin(c), await viewerKey(c))} {...extra} />, status);
 
 pub.get('/', (c) => home(c));
 
@@ -57,8 +57,7 @@ pub.get('/welcome', async (c) => {
   }
   const owner = viewer.id === done.account.id || (await t.claim(done.account.id, viewer)) ? viewer : null;
   if (!owner) return c.html(<MessagePage title="already claimed" message={`these credits belong to the account for ${done.account.email}. sign in with that email to use them.`} signedIn />, 409);
-  // Only the account's owner sees its first key.
-  const key = await t.revealFirstKey(done.topup.id, owner);
+  const key = await ownerKey(c, owner);
   const balance = await accounts(c.env.DB).balanceCents(owner.id);
   return c.html(<WelcomePage apiKey={key} installPrompt={installPrompt(origin(c), key)} balanceCents={balance} email={owner.email} />);
 });
@@ -66,14 +65,15 @@ pub.get('/welcome', async (c) => {
 // ---- account
 
 async function accountPage(c: AppContext, account: Account, error?: string) {
-  const [balance, rows, number, reload] = await Promise.all([
+  const [balance, rows, number, reload, key] = await Promise.all([
     accounts(c.env.DB).balanceCents(account.id),
     calls(c.env.DB).list(account.id, 50),
     c.env.DB.prepare(`SELECT phone_number FROM accounts WHERE id = ?`).bind(account.id).first<{ phone_number: string | null }>(),
     reloadOf(c.env.DB, account.id),
+    ownerKey(c, account),
   ]);
   return c.html(
-    <AccountPage account={account} balanceCents={balance} pricePerMinuteCents={pricePerMinute(c.env)} phoneNumber={number?.phone_number ?? null} reload={reload} calls={rows.map((r) => callView(r, []))} agentPrompt={accountPrompt(origin(c))} error={error} />,
+    <AccountPage account={account} balanceCents={balance} pricePerMinuteCents={pricePerMinute(c.env)} phoneNumber={number?.phone_number ?? null} reload={reload} calls={rows.map((r) => callView(r, []))} apiKey={key} agentPrompt={accountPrompt(origin(c), key)} error={error} />,
     error ? 400 : 200,
   );
 }
@@ -110,7 +110,7 @@ pub.get('/account/calls/:id', async (c) => {
   try {
     const row = await db.forAccount(account.id, c.req.param('id'));
     const call = callView(row, await db.questions(row.id));
-    return c.html(<CallPage call={call} agentPrompt={callPrompt(origin(c), call.id, call.business)} />);
+    return c.html(<CallPage call={call} agentPrompt={callPrompt(origin(c), await ownerKey(c, account), call.id, call.business)} />);
   } catch (err) {
     if (err instanceof CallError) return c.html(<MessagePage title="not found" message="no such call on this account." signedIn />, 404);
     throw err;
@@ -121,7 +121,8 @@ pub.get('/account/calls/:id', async (c) => {
 pub.post('/account/key', async (c) => {
   const account = c.get('account');
   if (!account) return c.redirect('/login?next=/account', 303);
-  const key = await accounts(c.env.DB).rotateKey(account.id);
+  const key = await accounts(c.env.DB).rotateKey(account.id, c.env.BETTER_AUTH_SECRET);
+  c.header('cache-control', 'private, no-store');
   return c.html(<NewKeyPage apiKey={key} installPrompt={installPrompt(origin(c), key)} />);
 });
 
@@ -143,5 +144,5 @@ pub.post('/unsubscribe', async (c) => {
 });
 
 pub.get('/rules', (c) => c.html(<RulesPage signedIn={signedIn(c)} />));
-pub.get('/privacy', (c) => c.html(<PrivacyPage signedIn={signedIn(c)} agentPrompt={privacyPrompt(origin(c))} />));
+pub.get('/privacy', async (c) => c.html(<PrivacyPage signedIn={signedIn(c)} agentPrompt={privacyPrompt(origin(c), await viewerKey(c))} />));
 pub.get('/terms', (c) => c.html(<TermsPage signedIn={signedIn(c)} />));

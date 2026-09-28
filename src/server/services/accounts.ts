@@ -1,5 +1,5 @@
 import { newId, now } from '../lib/ids';
-import { keyHint, newApiKey, sha256Hex } from '../lib/keys';
+import { keyHint, newApiKey, sealKey, sha256Hex, unsealKey } from '../lib/keys';
 
 export interface Account {
   id: string;
@@ -32,11 +32,31 @@ export function accounts(db: D1Database) {
       return (await this.byEmail(normalized))!;
     },
 
-    /** Replace the account's API key. The returned key is the only copy that will ever exist. */
-    async rotateKey(accountId: string): Promise<string> {
+    /** Replace the account's API key; the old one stops working. `secret` seals the stored copy. */
+    async rotateKey(accountId: string, secret: string): Promise<string> {
       const key = newApiKey();
-      await db.prepare(`UPDATE accounts SET key_hash = ?, key_prefix = ? WHERE id = ?`).bind(await sha256Hex(key), keyHint(key), accountId).run();
+      await db
+        .prepare(`UPDATE accounts SET key_hash = ?, key_prefix = ?, key_sealed = ? WHERE id = ?`)
+        .bind(await sha256Hex(key), keyHint(key), await sealKey(secret, key), accountId)
+        .run();
       return key;
+    },
+
+    /**
+     * The key the site puts into this account's copy prompts: its current key, recovered from
+     * the sealed copy. An account without a recoverable key (none yet, or one issued before keys
+     * were sealed) gets a new one; concurrent page loads race on the guard and all show the winner.
+     */
+    async promptKey(accountId: string, secret: string): Promise<string> {
+      const row = await db.prepare(`SELECT key_sealed FROM accounts WHERE id = ?`).bind(accountId).first<{ key_sealed: string | null }>();
+      const current = row?.key_sealed ? await unsealKey(secret, row.key_sealed) : null;
+      if (current) return current;
+      const key = newApiKey();
+      const r = await db
+        .prepare(`UPDATE accounts SET key_hash = ?, key_prefix = ?, key_sealed = ? WHERE id = ? AND key_sealed IS ?`)
+        .bind(await sha256Hex(key), keyHint(key), await sealKey(secret, key), accountId, row?.key_sealed ?? null)
+        .run();
+      return (r.meta.changes ?? 0) > 0 ? key : this.promptKey(accountId, secret);
     },
 
     async setDisplayName(accountId: string, name: string | null): Promise<void> {

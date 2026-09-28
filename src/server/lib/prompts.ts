@@ -6,17 +6,28 @@
 
 export const mcpUrl = (origin: string, key: string) => `${origin}/mcp/${key}`;
 
+/**
+ * How to add the server in each client: the key-in-URL line when the page knows the viewer's
+ * key (signed in), otherwise the sign-in flow.
+ */
+function clientSteps(origin: string, key: string | null): string {
+  return key
+    ? `   - Claude Code:  claude mcp add --scope user --transport http callbay ${mcpUrl(origin, key)}
+   - Codex:        codex mcp add callbay --url ${mcpUrl(origin, key)}
+   - Claude Desktop, claude.ai, or ChatGPT: add a custom connector with the URL ${mcpUrl(origin, key)} (tell me to do this if you can't).
+   This URL contains my secret key, so don't paste it anywhere else.`
+    : `   - Claude Code:  claude mcp add --scope user --transport http callbay ${origin}/mcp  (then I run /mcp, pick callbay, and choose authenticate)
+   - Codex:        codex mcp add callbay --url ${origin}/mcp  then  codex mcp login callbay
+   - Claude Desktop, claude.ai, or ChatGPT: add a custom connector with the URL ${origin}/mcp and sign in when it asks.
+   I sign in with Google or X.`;
+}
+
 export function installPrompt(origin: string, key: string | null): string {
   const step1 = key
-    ? `1. Add the callbay MCP server. This URL contains my secret key, so don't paste it anywhere else. Use whichever matches you:
-   - Claude Code:  claude mcp add --scope user --transport http callbay ${mcpUrl(origin, key)}
-   - Codex:        codex mcp add callbay --url ${mcpUrl(origin, key)}
-   - Claude Desktop, claude.ai, or ChatGPT: I'll add a custom connector with the URL ${mcpUrl(origin, key)} (tell me to do this if you can't).`
+    ? `1. Add the callbay MCP server. Use whichever matches you:
+${clientSteps(origin, key)}`
     : `1. Add the callbay MCP server and sign me in. Use whichever matches you:
-   - Claude Code:  claude mcp add --scope user --transport http callbay ${origin}/mcp  (then I run /mcp, pick callbay, and choose authenticate)
-   - Codex:        codex mcp add callbay --url ${origin}/mcp  then  codex mcp login callbay
-   - Claude Desktop, claude.ai, or ChatGPT: I'll add a custom connector with the URL ${origin}/mcp and sign in when it asks.
-   I sign in with Google or X. If I have no credits yet, I load some at ${origin} (from $10).`;
+${clientSteps(origin, null)} If I have no credits yet, I load some at ${origin} (from $10).`;
   return `Set up callbay so you can make phone calls for me (book restaurants, doctor's appointments, call businesses for info).
 
 ${step1}
@@ -33,12 +44,9 @@ ${step1}
 }
 
 /** Step zero for the page prompts below: get the tools if this agent doesn't have them yet. */
-function connect(origin: string): string {
-  return `If you don't have the callbay tools (callbay_*) yet, add the callbay MCP server first and sign me in:
-   - Claude Code:  claude mcp add --scope user --transport http callbay ${origin}/mcp  (then run /mcp, pick callbay, and choose authenticate)
-   - Codex:        codex mcp add callbay --url ${origin}/mcp  then  codex mcp login callbay
-   - Claude Desktop, claude.ai, or ChatGPT: add a custom connector with the URL ${origin}/mcp and sign in when it asks.
-   I sign in with Google or X.`;
+function connect(origin: string, key: string | null): string {
+  return `If you don't have the callbay tools (callbay_*) yet, add the callbay MCP server first${key ? '' : ' and sign me in'}:
+${clientSteps(origin, key)}`;
 }
 
 /** The sign-in page: connect the agent (it signs in through OAuth) instead of the browser. */
@@ -47,10 +55,10 @@ export function signInPrompt(origin: string): string {
 }
 
 /** My account: everything on the page an agent can do through the tools. */
-export function accountPrompt(origin: string): string {
+export function accountPrompt(origin: string, key: string | null): string {
   return `Help me manage my callbay account (${origin}/account).
 
-${connect(origin)}
+${connect(origin, key)}
 
 Then, depending on what I ask:
 - Balance, price per minute, and my callbay phone number: callbay_get_balance.
@@ -58,14 +66,14 @@ Then, depending on what I ask:
 - Add credits: callbay_add_funds with amount_dollars (10 to 500). It reloads that amount monthly unless you pass monthly: false, so ask me which I want. Give me the checkout link; nothing is charged until I pay.
 - Stop the monthly reload: callbay_stop_reload, only if I ask. Credits already loaded stay.
 - My calling profile (name, date of birth, phone, address, insurance, car): callbay_get_profile to see it, callbay_save_profile to change it (an empty string removes a field).
-- A new API key is only issued on ${origin}/account (the old one stops working); agents signed in through OAuth don't need one.`;
+- Replacing my API key is only done on ${origin}/account (the old one stops working); agents signed in through OAuth don't need one.`;
 }
 
 /** One call's page: follow up on that call. */
-export function callPrompt(origin: string, callId: string, business: string): string {
+export function callPrompt(origin: string, key: string | null, callId: string, business: string): string {
   return `Follow up on the call callbay made to ${business} for me (call id ${callId}).
 
-${connect(origin)}
+${connect(origin, key)}
 
 1. callbay_get_call with call_id "${callId}" gives the status, outcome, and transcript. If it's still in progress, pass wait_seconds (up to 50) and call again until it finishes. If it lists open_questions, answer each right away with callbay_answer_question; the business is waiting on the line.
 2. Tell me the result in one or two lines, and anything I need to do (a confirmation number to note, a time to show up, a callback to expect).
@@ -73,10 +81,10 @@ ${connect(origin)}
 }
 
 /** Privacy: what's stored and how to change it. */
-export function privacyPrompt(origin: string): string {
+export function privacyPrompt(origin: string, key: string | null): string {
   return `Help me review what callbay stores about me (see ${origin}/privacy).
 
-${connect(origin)}
+${connect(origin, key)}
 
 - My saved calling profile: callbay_get_profile. To remove anything, callbay_save_profile with that field set to an empty string; confirm with me first.
 - My calls, each with the brief you sent, the outcome, and a transcript: callbay_list_calls, then callbay_get_call for any one.

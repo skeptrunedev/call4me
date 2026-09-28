@@ -1,6 +1,6 @@
 import type { Context } from 'hono';
 import type Stripe from 'stripe';
-import type { Account } from '../services/accounts';
+import { accounts, type Account } from '../services/accounts';
 import { makeStripe } from '../services/topups';
 
 export type AppEnv = {
@@ -14,6 +14,18 @@ export type AppEnv = {
 export type AppContext = Context<AppEnv>;
 
 export const origin = (c: AppContext) => new URL(c.req.url).origin;
+
+/**
+ * An account's API key for the copy prompts on a page shown to its owner. The page then
+ * carries a secret, so no shared cache may keep it.
+ */
+export async function ownerKey(c: AppContext, account: Account): Promise<string> {
+  c.header('cache-control', 'private, no-store');
+  return accounts(c.env.DB).promptKey(account.id, c.env.BETTER_AUTH_SECRET);
+}
+
+/** The signed-in viewer's key for the page's copy prompts; null signed out. */
+export const viewerKey = async (c: AppContext, account = c.get('account')): Promise<string | null> => (account ? ownerKey(c, account) : null);
 
 /** Hosts callbay used to live on (LEGACY_HOSTS in wrangler.jsonc). */
 export const legacyHosts = (env: Pick<Env, 'LEGACY_HOSTS'>): string[] =>
