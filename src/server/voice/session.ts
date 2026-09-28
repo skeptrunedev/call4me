@@ -1,7 +1,7 @@
 import { DurableObject } from 'cloudflare:workers';
 import { calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
-import { forcedHandoffMessage, missedHandoff } from './handoff';
+import { connectCheckMessage, forcedHandoffMessage, missedHandoff } from './handoff';
 import { BACK_OFFICE_TOOLS } from './prompt';
 
 /**
@@ -48,7 +48,7 @@ export interface SessionSetup {
   /** Per-call secrets (account PINs) to mask in the stored transcript. */
   redact?: string[];
   /** Who can be patched into the call (callbay's user), from which number, and where their leg reports. */
-  person?: { name: string; phone: string | null; from: string; webhookUrl: string };
+  person?: { name: string; phone: string | null; from: string; webhookUrl: string; connectWhen?: string | null };
 }
 
 type Stored = SessionSetup;
@@ -100,6 +100,9 @@ export class CallSession extends DurableObject<Env> {
   /** The person's own phone leg while it rings or is on the call; the caller stays silent while they talk. */
   private personLeg: string | null = null;
   private personOn = false;
+  /** Once they've been rung, the connect condition is settled; lines already checked against it. */
+  private personRung = false;
+  private connectChecked = new Set<number>();
   /** The teardown in progress, so the hangup webhook can wait for the final transcript write. */
   private closing: Promise<void> | null = null;
 
@@ -352,7 +355,10 @@ export class CallSession extends DurableObject<Env> {
     if (this.ended || this.endingCall || this.personLeg || this.forcedHandoffs.size >= MAX_FORCED_HANDOFFS) return;
     if (this.backOfficeBusy && Date.now() - this.lastHandoffAt < BACK_OFFICE_STALE_MS) return;
     const miss = missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs);
-    if (!miss) return;
+    if (!miss) {
+      this.checkConnectCondition();
+      return;
+    }
     this.forcedHandoffs.add(miss.line.at);
     this.backOfficeBusy = true;
     this.lastHandoffAt = Date.now();
@@ -362,6 +368,17 @@ export class CallSession extends DurableObject<Env> {
   }
 
   // ---- patching the person in (and handing back)
+
+  private checkConnectCondition(): void {
+    const person = this.setup?.person;
+    const last = this.transcript[this.transcript.length - 1];
+    if (!person?.connectWhen || this.personRung || last?.role !== 'them' || this.connectChecked.has(last.at)) return;
+    this.connectChecked.add(last.at);
+    this.backOfficeBusy = true;
+    this.lastHandoffAt = Date.now();
+    this.sendLive({ type: 'response.item.create', item: { type: 'message', role: 'user', content: [{ type: 'input_text', text: connectCheckMessage(person.connectWhen, person.name, this.transcript) }] } });
+    this.sendLive({ type: 'response.create' });
+  }
 
   /** Ring the person's phone; they join the call when they answer (person-joined). Returns what happened. */
   private async connectPerson(phoneOverride?: string): Promise<string> {
@@ -378,6 +395,7 @@ export class CallSession extends DurableObject<Env> {
       this.note(`couldn't ring ${s.person.name}`);
       return `couldn't ring ${s.person.name}: ${String(err).slice(0, 200)}`;
     }
+    this.personRung = true;
     this.note(`ringing ${s.person.name} to join the call`);
     return `ringing ${s.person.name}; they join as soon as they pick up`;
   }

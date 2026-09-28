@@ -66,3 +66,19 @@ export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[
 Latest conversation:
 ${recent}`;
 }
+
+/**
+ * When the user asked to be patched in on a condition ("as soon as a person picks up"), the
+ * back office checks each time the other side finishes speaking, rather than trusting the voice
+ * model to notice.
+ */
+export function connectCheckMessage(connectWhen: string, owner: string, lines: TranscriptLine[]): string {
+  const recent = lines
+    .slice(-6)
+    .map((l) => `${l.role}: ${l.text.trim()}`)
+    .join('\n');
+  return `${owner} asked to be patched into this call: ${connectWhen}. If the latest conversation meets that condition, connect_person now. Otherwise write nothing.
+
+Latest conversation:
+${recent}`;
+}

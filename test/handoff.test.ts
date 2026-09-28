@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { forcedHandoffMessage, isPhoneMenu, missedHandoff, promisesAction } from '../src/server/voice/handoff';
+import { connectCheckMessage, forcedHandoffMessage, isPhoneMenu, missedHandoff, promisesAction } from '../src/server/voice/handoff';
 import type { TranscriptLine } from '../src/server/services/calls';
 
 const line = (role: TranscriptLine['role'], text: string, at: number): TranscriptLine => ({ role, text, at });
@@ -53,5 +53,14 @@ describe('forcedHandoffMessage', () => {
     expect(m).toContain('press_digits');
     expect(m).toContain('them: Please listen carefully');
     expect(m).toContain('caller: 2.');
+  });
+});
+
+describe('connectCheckMessage', () => {
+  it('asks the back office to judge the connect condition', () => {
+    const m = connectCheckMessage('As soon as a person picks up', 'Nick Khami', [line('them', 'Hi, this is Tiffany.', 1)]);
+    expect(m).toContain('Nick Khami asked to be patched into this call: As soon as a person picks up.');
+    expect(m).toContain('connect_person now');
+    expect(m).toContain('them: Hi, this is Tiffany.');
   });
 });
