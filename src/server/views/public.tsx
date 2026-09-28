@@ -22,7 +22,7 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
   <Layout page="home" signedIn={p.signedIn}>
     <p>
       your coding agent (claude code, codex, claude desktop, chatgpt) gets one new tool: <b>make a phone call</b>. it calls the restaurant, the doctor's office,
-      the dealership, sounds like a normal person, gets it done, and tells your agent what happened.
+      the airline, the hotel, sounds like a normal person, gets it done, and tells your agent what happened.
     </p>
     <div class="cols">
       <div>
