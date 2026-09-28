@@ -7,6 +7,7 @@ import { mcp } from './routes/mcp';
 import { pub } from './routes/public';
 import { authRoutes } from './routes/auth';
 import { mountAuth, sessionAccount } from './lib/auth';
+import { approxTokens, htmlToMarkdown, prefersMarkdown } from './lib/markdown';
 import { webhooks } from './routes/webhooks';
 import { og } from './routes/og';
 import { MessagePage } from './views/public';
@@ -41,6 +42,21 @@ app.get('/voice/stream/:callId/:sig', async (c) => {
 app.route('/webhooks', webhooks);
 // better-auth's endpoints and the OAuth discovery documents need no account.
 mountAuth(app);
+
+// Markdown for agents: a page requested with `Accept: text/markdown` comes back as markdown.
+app.use('*', async (c, next) => {
+  await next();
+  if (c.req.method !== 'GET' || !prefersMarkdown(c.req.header('accept'))) return;
+  const type = c.res.headers.get('content-type') ?? '';
+  if (!type.includes('text/html') || c.res.status >= 300) return;
+  const md = htmlToMarkdown(await c.res.text(), c.req.url);
+  const headers = new Headers(c.res.headers);
+  headers.set('content-type', 'text/markdown; charset=utf-8');
+  headers.set('x-markdown-tokens', String(approxTokens(md)));
+  headers.set('vary', 'Accept');
+  headers.delete('content-length');
+  c.res = new Response(md, { status: c.res.status, headers });
+});
 
 // The MCP endpoint authenticates each request itself (OAuth token or key), not by cookie.
 app.route('/mcp', mcp);
