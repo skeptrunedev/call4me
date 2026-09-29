@@ -87,6 +87,12 @@ samples. Exports are 1920 by 1080 at 30 frames per second, H.264/AAC MP4, PNG
 still, SRT captions, and preview frames. The audio timer measures only the edited
 excerpt, not the duration of the original call.
 
+Optional music belongs only under the terminal intro and completed result.
+Choose a recognizable phrase from the supplied source, fade fully out before
+the call begins, and fade back in once the call ends. Keep the call at its
+verified level with no music beneath it. An audio revision should preserve the
+approved video stream exactly.
+
 Check the contact sheet and individual preview frames before the full render.
 After rendering, decode the actual MP4, inspect frames at the zooms and caption
 changes, and check the exported audio against the source transcript. Copy final
