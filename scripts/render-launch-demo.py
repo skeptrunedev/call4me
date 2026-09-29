@@ -129,6 +129,58 @@ def prepare_audio(edit, output):
     return audio_path, samples.astype(np.float32) / 32768, rate
 
 
+def prepare_soundtrack(edit, manifest, call_audio, output, total):
+    """Keep the verified call untouched; place music only outside its interval."""
+    rate = 48000
+    intro, result = edit["intro_duration"], edit["result_duration"]
+    call_end = intro + edit["audio_duration"]
+    inputs = ["-i", str(call_audio)]
+    filters = [f"[0:a]pan=stereo|c0=c0|c1=c0,"
+               f"adelay={round(intro * rate)}S:all=1,apad,atrim=duration={total}[call]"]
+    music = edit.get("music")
+    if music:
+        source = (manifest.parent / music["source"]).resolve()
+        if not source.is_file():
+            raise ValueError(f"Music source does not exist: {source}")
+        start = float(music["start"])
+        resume = float(music.get("outro_start", start))
+        fade_out = float(music.get("fade_out", 1.1))
+        fade_in = float(music.get("fade_in", .65))
+        gap = float(music.get("silence_before_call", .15))
+        level = float(music.get("loudness", -19))
+        intro_music = intro - gap
+        if not (min(start, resume) >= 0 and 0 < gap < intro and
+                0 < fade_out < intro_music and 0 < fade_in < result and
+                -30 <= level <= -14):
+            raise ValueError("Invalid music cue, fade, or loudness setting")
+        inputs += ["-i", str(source)]
+        filters += [
+            "[1:a]asplit=2[mi][mo]",
+            f"[mi]atrim=start={start}:duration={intro_music},asetpts=PTS-STARTPTS[ic]",
+            f"[mo]atrim=start={resume}:duration={result},asetpts=PTS-STARTPTS[oc]",
+            "[ic][oc]concat=n=2:v=0:a=1,"
+            f"loudnorm=I={level}:TP=-2:LRA=11,aresample={rate},"
+            "aformat=channel_layouts=stereo,asplit=2[ni][no]",
+            f"[ni]atrim=duration={intro_music},asetpts=PTS-STARTPTS,"
+            "afade=t=in:d=0.03,"
+            f"afade=t=out:st={intro_music - fade_out}:d={fade_out}[opening]",
+            f"[no]atrim=start={intro_music},asetpts=PTS-STARTPTS,"
+            f"afade=t=in:d={fade_in},"
+            f"afade=t=out:st={max(0, result - .8)}:d={min(.8, result)},"
+            f"adelay={round(call_end * rate)}S:all=1[closing]",
+            "[call][opening][closing]amix=inputs=3:normalize=0:dropout_transition=0,"
+            f"atrim=duration={total}[out]",
+        ]
+        mapped = "[out]"
+    else:
+        mapped = "[call]"
+    soundtrack = output / "soundtrack.wav"
+    run(["ffmpeg", "-y", "-loglevel", "error", *inputs,
+         "-filter_complex", ";".join(filters), "-map", mapped,
+         "-ar", str(rate), "-ac", "2", "-c:a", "pcm_s16le", str(soundtrack)])
+    return soundtrack
+
+
 def prepare_terminal(edit, manifest, output):
     """Decode one continuous capture. No assembled terminal images are accepted."""
     capture = (manifest.parent / edit["terminal_capture"]).resolve()
@@ -235,6 +287,8 @@ def main():
     parser.add_argument("manifest", type=Path)
     parser.add_argument("output", type=Path)
     parser.add_argument("--preview-only", action="store_true")
+    parser.add_argument("--reuse-video", type=Path,
+                        help="Copy an approved video stream while replacing only its soundtrack")
     args = parser.parse_args()
     if not shutil.which("ffmpeg") or not REGULAR.exists() or not BOLD.exists():
         parser.error("ffmpeg and the Liberation Serif regular/bold fonts are required")
@@ -264,12 +318,21 @@ def main():
         print(f"Preview ready. Planned duration: {total:.2f}s", flush=True)
         return
     output = args.output / "launch-demo.mp4"
+    soundtrack = prepare_soundtrack(edit, args.manifest.resolve(), audio, args.output, total)
+    if args.reuse_video:
+        if not args.reuse_video.is_file() or args.reuse_video.resolve() == output.resolve():
+            parser.error("--reuse-video must name a separate existing approved video")
+        run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(args.reuse_video),
+             "-i", str(soundtrack), "-map", "0:v:0", "-map", "1:a:0",
+             "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-t", str(total),
+             "-movflags", "+faststart", str(output)])
+        print(f"Updated soundtrack: {output} ({total:.2f}s)", flush=True)
+        return
     command = ["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
-               "-s", f"{W}x{H}", "-r", str(FPS), "-i", "pipe:0", "-i", str(audio),
-               "-filter_complex", f"[1:a]adelay={round(intro * 1000)}:all=1,apad[a]",
-               "-map", "0:v", "-map", "[a]", "-t", str(total), "-c:v", "libx264",
+               "-s", f"{W}x{H}", "-r", str(FPS), "-i", "pipe:0", "-i", str(soundtrack),
+               "-map", "0:v", "-map", "1:a:0", "-t", str(total), "-c:v", "libx264",
                "-preset", "fast", "-crf", "18", "-pix_fmt", "yuv420p", "-c:a", "aac",
-               "-b:a", "160k", "-movflags", "+faststart", str(output)]
+               "-b:a", "192k", "-movflags", "+faststart", str(output)]
     encoder = subprocess.Popen(command, stdin=subprocess.PIPE)
     try:
         for i in range(math.ceil(total * FPS)):

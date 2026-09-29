@@ -93,6 +93,26 @@ the call begins, and fade back in once the call ends. Keep the call at its
 verified level with no music beneath it. An audio revision should preserve the
 approved video stream exactly.
 
+To add music, supply a `music` object in the private edit manifest. `source`
+names the supplied local audio or video file. `start` and `outro_start` select
+the opening and closing cues in source seconds. Defaults are a 1.1 second
+`fade_out`, a 0.65 second `fade_in`, 0.15 seconds of `silence_before_call`, and
+music `loudness` of minus 19 LUFS. The closing cue also fades out at the end.
+The renderer normalizes only the selected music, leaves the verified call
+samples unchanged, and writes a stereo `soundtrack.wav` for verification.
+
+Reuse the approved visual edit for a music revision:
+
+```sh
+uv run scripts/render-launch-demo.py /private/edit-with-music.json /output/music \
+  --reuse-video /output/approved/launch-demo.mp4
+```
+
+The reused video must match the manifest's visual edit and timing. Verify its
+video stream hash matches the new output, the call samples in the master WAV
+match the normalized excerpt in both channels, and music is silent for the
+entire call interval. Keep supplied songs and finished mixes outside git.
+
 Check the contact sheet and individual preview frames before the full render.
 After rendering, decode the actual MP4, inspect frames at the zooms and caption
 changes, and check the exported audio against the source transcript. Copy final
