@@ -4,12 +4,14 @@ The launch asset pairs a terminal replay of a real saved session with the origin
 phone recording. The reference is Brayden Wilmoth's terminal screenshot for the
 Cloudflare CLI: https://x.com/BraydenWilmoth/status/2104593590307479829.
 
-The terminal segment must be captured from Claude Code's native interface. A
-hand-drawn approximation loses the compact spacing, input affordances, and tool
-output that make the recording convincing. Restore a sanitized, abridged copy of
-the actual session for recording; keep the original transcript intact and disable
-tools in the capture session. Audio playback and captions belong in a separate
-editorial scene, not inside an invented terminal player.
+The terminal segment is one continuous screen recording of Claude Code's native
+interface. Capture actual typing, submission, and native tool output. Keep the
+original transcript intact. Run an isolated Claude session connected only to
+`scripts/launch-replay-mcp.mjs`, with built in tools disabled. This offline MCP
+server cannot dial or access credentials. It fails closed unless supplied an
+explicit local fixture with a verified historical result. Label the footage as
+a recorded replay. Audio playback and captions belong in a separate editorial
+scene.
 
 Show the user's request first, focus on the call tool, then play a short captioned
 excerpt that demonstrates the result. Label the terminal as a replay and the
@@ -29,19 +31,41 @@ in this workflow publishes the assets or places a phone call.
 Requires `uv`, `ffmpeg`, and Fira Mono regular/medium fonts. Python dependencies
 are declared in the renderer's script metadata.
 
+Initialize a native Claude Code session in tmux, using `--tools ""`,
+`--strict-mcp-config`, `--setting-sources ""`, and an MCP config containing only
+the offline replay server. A local `--recorded-result` fixture requires
+`call_id`, `business`, `summary`, and `provenance`. The system prompt must identify
+the session as a historical replay and prohibit claiming a new call was made.
+Display the session in a real terminal emulator on an X11 display, then record:
+
+```sh
+python3 scripts/capture-launch-terminal.py \
+  --target capture:terminal --display :118 \
+  --prompt /private/prompt.txt --output /private/terminal.mp4
+```
+
+The capture script records X11 continuously with ffmpeg and saves a timed input
+event log. Use the recorded `SUBMIT` and `EXPAND_TRANSCRIPT` times in the edit
+manifest. Inspect the raw take before rendering, including startup notices.
+
 ```sh
 uv run scripts/render-launch-demo.py /private/edit.json /output/demo --preview-only
 uv run scripts/render-launch-demo.py /private/edit.json /output/demo
 ```
 
-The manifest names a WAV source relative to the manifest, identifies the original
-session in `provenance`, and supplies `prompt`, `business`, `tool_detail`,
-`result_title`, and `result_body`. `intro_duration` defaults to 10 seconds and
-`outro_duration` to 4 seconds. Each entry in `clips` has source `start` and `end`
-seconds plus `captions`. Each caption contains source `start`/`end`, `speaker`,
-and `text`. Caption times must remain inside their selected clip. Prompt and
-result text may be abridged for readability, with that choice documented in the
-manifest provenance.
+The manifest names a WAV `source` and one `terminal_capture` video relative to the
+manifest, identifies the original session in `provenance`, and supplies
+`terminal_submit_at`, `terminal_expand_at`, and `result_title`. Terminal duration
+comes from the captured video. `outro_duration` defaults to 4 seconds. Each entry
+in `clips` has source `start` and `end` seconds plus `captions`. Each caption
+contains source `start`/`end`, `speaker`, and `text`. Caption times must remain
+inside their selected clip. Prompt and result text may be abridged for
+readability, with that choice documented in the manifest provenance.
+
+The renderer decodes consecutive frames from the single capture and displays
+them in order at their original speed. Smooth camera transforms provide the
+zooms. It never substitutes terminal text or action screenshots. The matching
+still comes from a frame of this same recording.
 
 The renderer uses the original audio at its original speed, trims the selected
 ranges, normalizes the excerpt's loudness, and derives the waveform from those
