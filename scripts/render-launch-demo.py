@@ -24,10 +24,10 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 W, H, FPS = 1920, 1080, 30
-BG, PANEL, INK = "#101113", "#191b1e", "#ecebe7"
-MUTED, LINE, ACCENT, GREEN = "#9b9c9e", "#35383c", "#df9b77", "#a8c89b"
-MONO = Path("/usr/share/fonts/opentype/fira/FiraMono-Regular.otf")
-BOLD = Path("/usr/share/fonts/opentype/fira/FiraMono-Medium.otf")
+BG, INK = "#ffffff", "#000000"
+MUTED, LINE, ACCENT = "#666666", "#cccccc", "#0000ff"
+REGULAR = Path("/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf")
+BOLD = Path("/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf")
 
 
 def run(argv):
@@ -36,7 +36,7 @@ def run(argv):
 
 @lru_cache(maxsize=32)
 def font(size, bold=False):
-    return ImageFont.truetype(str(BOLD if bold else MONO), size)
+    return ImageFont.truetype(str(BOLD if bold else REGULAR), size)
 
 
 def ease(a, b, t):
@@ -55,6 +55,13 @@ def text_mask(value, size, bold):
 
 def draw_text(draw, xy, value, size=30, fill=INK, bold=False):
     draw.bitmap(xy, text_mask(value, size, bold), fill=fill)
+
+
+def draw_link(draw, xy, value, size=30):
+    draw_text(draw, xy, value, size, ACCENT)
+    x, y = xy
+    baseline = y + font(size).getbbox(value)[3] + 2
+    draw.line((x, baseline, x + font(size).getlength(value), baseline), fill=ACCENT, width=1)
 
 
 def wrapped(draw, xy, value, size=32, columns=75, fill=INK, gap=14):
@@ -139,8 +146,13 @@ def prepare_terminal(edit, manifest, output):
     if not frames:
         raise ValueError("The terminal recording has no frames")
     edit["native_frames"] = frames
-    edit["intro_duration"] = len(frames) / FPS
+    edit["capture_duration"] = len(frames) / FPS
     edit["capture_sha256"] = digest
+    call_at, result_at = edit["terminal_call_at"], edit["terminal_result_at"]
+    if not 0 < edit["terminal_submit_at"] < call_at < result_at < edit["capture_duration"]:
+        raise ValueError("Expected submit, calling, then completed result within the native capture")
+    edit["intro_duration"] = call_at
+    edit["result_duration"] = edit["capture_duration"] - result_at
 
 
 def native_frame(edit, t):
@@ -175,28 +187,29 @@ def scene(edit, t, samples, rate, poster=False):
     intro = edit["intro_duration"]
     play_t = max(0, min(edit["audio_duration"], t - intro))
     playing = intro <= t < intro + edit["audio_duration"] and not poster
-    ended = t >= intro + edit["audio_duration"] and not poster
-    label = "the result" if ended else "listen to the call" if playing else "ask your agent"
-    draw_text(d, (90, 48), "call4.me", 42, ACCENT, True)
-    draw_text(d, (1330, 66), label, 26, MUTED)
+    finished = t >= intro + edit["audio_duration"] or poster
+    label = "call complete" if finished else "listen to the call" if playing else "ask your agent"
+    draw_link(d, (90, 40), "call4.me", 56)
+    draw_link(d, (1450, 66), label, 30)
+    d.line((80, 120, 1840, 120), fill=LINE, width=1)
 
-    if not playing and not ended:
+    if not playing:
         # Every pixel inside this viewport comes from the continuous X11 capture.
         # The only treatment is camera framing; there is no redrawn terminal text.
-        source_t = intro - .25 if poster else t
+        source_t = (edit["capture_duration"] - .25 if poster else
+                    edit["terminal_result_at"] + t - intro - edit["audio_duration"]
+                    if finished else t)
         source = native_frame(edit, source_t)
         viewport = source.transform((1760, 816), Image.Transform.EXTENT,
-                                    camera(edit, t, poster), Image.Resampling.BICUBIC,
-                                    fillcolor="#141416")
-        mask = Image.new("L", viewport.size)
-        ImageDraw.Draw(mask).rounded_rectangle((0, 0, 1759, 815), radius=16, fill=255)
-        im.paste(viewport, (80, 145), mask)
+                                    camera(edit, source_t, finished), Image.Resampling.BICUBIC,
+                                    fillcolor=BG)
+        im.paste(viewport, (80, 145))
         d = ImageDraw.Draw(im)
-        d.rounded_rectangle((80, 145, 1840, 961), radius=16, outline=LINE, width=2)
+        d.rectangle((80, 145, 1840, 961), outline=LINE, width=1)
     elif playing:
-        draw_text(d, (115, 212), "AMAZON PHARMACY", 26, ACCENT)
-        draw_text(d, (110, 273), "A real conversation.", 62, INK, True)
-        draw_text(d, (114, 362), "Original call recording", 27, MUTED)
+        draw_link(d, (115, 212), "phone calls > pharmacy", 30)
+        draw_text(d, (110, 273), "amazon pharmacy support", 62, INK, True)
+        draw_text(d, (114, 362), "original call recording", 30, MUTED)
         draw_text(d, (1390, 366), f"{stamp(play_t)} / {stamp(edit['audio_duration'])}", 26, MUTED)
         start = int(max(0, play_t - 1.4) * rate)
         for i in range(108):
@@ -206,21 +219,14 @@ def scene(edit, t, samples, rate, poster=False):
             h = min(72, 3 + rms * 270)
             x = 120 + i * 15.4
             d.rounded_rectangle((x, 537 - h, x + 5, 537 + h), 2,
-                                fill=ACCENT if i < 54 else "#484a4f")
+                                fill=ACCENT if i < 54 else "#cccccc")
         cue = next((c for c in edit["cues"] if c["start"] <= play_t < c["end"]), None)
         if cue:
-            draw_text(d, (115, 693), cue["speaker"], 25,
-                      GREEN if cue["speaker"] == "CALL FOR ME" else ACCENT)
-            wrapped(d, (111, 755), cue["text"], 43, 60, gap=16)
+            draw_text(d, (115, 693), cue["speaker"].lower(), 30, ACCENT)
+            wrapped(d, (111, 755), cue["text"], 49, 70, gap=16)
         d.line((115, 948, 1798, 948), fill=LINE, width=3)
         d.line((115, 948, 115 + 1683 * play_t / edit["audio_duration"], 948), fill=ACCENT, width=3)
-    else:
-        draw_text(d, (115, 275), "One prompt. One phone call.", 59, INK, True)
-        wrapped(d, (115, 403), edit["result_title"], 41, 59, GREEN, gap=18)
-        draw_text(d, (115, 667), "give your agent a phone.", 42, MUTED)
-        draw_text(d, (112, 751), "call4.me", 62, ACCENT, True)
-
-    draw_text(d, (91, 1016), "recorded terminal replay · original call audio · edited for length", 21, MUTED)
+    draw_text(d, (91, 1016), "recorded terminal replay · original call audio · edited for length", 25, MUTED)
     return im
 
 
@@ -230,15 +236,16 @@ def main():
     parser.add_argument("output", type=Path)
     parser.add_argument("--preview-only", action="store_true")
     args = parser.parse_args()
-    if not shutil.which("ffmpeg") or not MONO.exists() or not BOLD.exists():
-        parser.error("ffmpeg and the Fira Mono regular/medium fonts are required")
+    if not shutil.which("ffmpeg") or not REGULAR.exists() or not BOLD.exists():
+        parser.error("ffmpeg and the Liberation Serif regular/bold fonts are required")
     edit = load_edit(args.manifest.resolve())
     args.output.mkdir(parents=True, exist_ok=True)
     prepare_terminal(edit, args.manifest.resolve(), args.output)
     audio, samples, rate = prepare_audio(edit, args.output)
-    intro, outro = edit.get("intro_duration", 10.0), edit.get("outro_duration", 4.0)
-    total = intro + edit["audio_duration"] + outro
-    preview_times = [0, 3, edit["terminal_submit_at"] - .2, intro - .25, intro + 1, intro + 8, total - 2]
+    intro = edit["intro_duration"]
+    total = intro + edit["audio_duration"] + edit["result_duration"]
+    preview_times = [0, 3, edit["terminal_submit_at"] - .2, intro - 1 / FPS,
+                     intro + 1, intro + 8, intro + edit["audio_duration"], total - 2]
     frames = [scene(edit, t, samples, rate) for t in preview_times]
     sheet = Image.new("RGB", (960 * 2, 540 * 4), BG)
     for i, frame in enumerate(frames):
@@ -246,7 +253,7 @@ def main():
                     (i % 2 * 960, i // 2 * 540))
     sheet.save(args.output / "contact-sheet.jpg", quality=90)
     scene(edit, total, samples, rate, poster=True).save(args.output / "launch-still.png")
-    for i, t in enumerate([edit["terminal_submit_at"] - .2, intro - .25, intro + 1]):
+    for i, t in enumerate([edit["terminal_submit_at"] - .2, total - .25, intro + 1]):
         scene(edit, t, samples, rate).save(args.output / f"preview-{i + 1}.png")
     captions = []
     for i, cue in enumerate(edit["cues"], 1):

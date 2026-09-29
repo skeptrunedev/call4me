@@ -1,0 +1,13 @@
+{
+  "name": "Call for Me launch",
+  "base": "light",
+  "overrides": {
+    "claude": "#0000ff",
+    "text": "#000000",
+    "inactive": "#666666",
+    "subtle": "#cccccc",
+    "success": "#0000ff",
+    "permission": "#0000ff",
+    "userMessageBackground": "#f2f2f2"
+  }
+}

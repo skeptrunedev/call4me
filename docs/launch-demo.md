@@ -13,8 +13,11 @@ explicit local fixture with a verified historical result. Label the footage as
 a recorded replay. Audio playback and captions belong in a separate editorial
 scene.
 
-Show the user's request first, focus on the call tool, then play a short captioned
-excerpt that demonstrates the result. Label the terminal as a replay and the
+Show the user's request first, cut to the call audio immediately when the native
+terminal says "Calling callbay", then return to the completed native terminal
+result after the audio ends. Use a white page, black serif editorial text,
+default blue underlined links, and simple gray rules. Record the terminal with
+a white background and a light theme to match. Label the terminal as a replay and the
 audio as an edited excerpt. Do not imply that the edited running time is the
 actual time it took to complete the call.
 
@@ -28,8 +31,9 @@ in this workflow publishes the assets or places a phone call.
 
 ## Render
 
-Requires `uv`, `ffmpeg`, and Fira Mono regular/medium fonts. Python dependencies
-are declared in the renderer's script metadata.
+Requires `uv`, `ffmpeg`, and Liberation Serif regular/bold fonts. The captured
+terminal uses Fira Mono. Python dependencies are declared in the renderer's
+script metadata.
 
 Initialize a native Claude Code session in tmux, using `--tools ""`,
 `--strict-mcp-config`, `--setting-sources ""`, and an MCP config containing only
@@ -44,9 +48,16 @@ python3 scripts/capture-launch-terminal.py \
   --prompt /private/prompt.txt --output /private/terminal.mp4
 ```
 
+For the launch theme, copy `scripts/launch-terminal-theme.json` to
+`~/.claude/themes/call4me-launch.json`, and pass
+`--settings '{"theme":"custom:call4me-launch"}'` only to the capture session.
+Set the terminal emulator's own background to white and foreground to black.
+
 The capture script records X11 continuously with ffmpeg and saves a timed input
 event log. Use the recorded `SUBMIT` and `EXPAND_TRANSCRIPT` times in the edit
-manifest. Inspect the raw take before rendering, including startup notices.
+manifest. `CALLING_VISIBLE` records the first observed invocation. Verify its
+exact source frame before selecting the audio cut. Inspect the raw take before
+rendering, including startup notices.
 
 ```sh
 uv run scripts/render-launch-demo.py /private/edit.json /output/demo --preview-only
@@ -55,17 +66,20 @@ uv run scripts/render-launch-demo.py /private/edit.json /output/demo
 
 The manifest names a WAV `source` and one `terminal_capture` video relative to the
 manifest, identifies the original session in `provenance`, and supplies
-`terminal_submit_at`, `terminal_expand_at`, and `result_title`. Terminal duration
-comes from the captured video. `outro_duration` defaults to 4 seconds. Each entry
+`terminal_submit_at`, `terminal_expand_at`, `terminal_call_at`, and
+`terminal_result_at`. `terminal_call_at` cuts from the invocation into the audio;
+`terminal_result_at` selects the completed terminal footage to show after the
+audio. The result runs through the end of the native capture. Each entry
 in `clips` has source `start` and `end` seconds plus `captions`. Each caption
 contains source `start`/`end`, `speaker`, and `text`. Caption times must remain
 inside their selected clip. Prompt and result text may be abridged for
 readability, with that choice documented in the manifest provenance.
 
-The renderer decodes consecutive frames from the single capture and displays
-them in order at their original speed. Smooth camera transforms provide the
-zooms. It never substitutes terminal text or action screenshots. The matching
-still comes from a frame of this same recording.
+The renderer decodes frames from the single capture and displays each selected
+segment in order at its original speed. The audio occupies the middle of the
+edit, between invocation and result. Smooth camera transforms provide the zooms.
+It never substitutes terminal text or action screenshots. The matching still
+comes from a frame of this same recording.
 
 The renderer uses the original audio at its original speed, trims the selected
 ranges, normalizes the excerpt's loudness, and derives the waveform from those

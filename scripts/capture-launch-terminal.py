@@ -20,6 +20,7 @@ def main():
     parser.add_argument('--display', required=True)
     parser.add_argument('--size', default='1580x836')
     parser.add_argument('--until', default='ready to order.')
+    parser.add_argument('--result-hold', type=float, default=7)
     args = parser.parse_args()
     target = args.target
 
@@ -42,7 +43,7 @@ def main():
         str(args.output),
     ], stdin=subprocess.PIPE)
     start = time.monotonic()
-    events, done = [], False
+    events, done, calling = [], False, False
 
     def event(key):
         events.append({'at': round(time.monotonic() - start, 3), 'key': key})
@@ -58,8 +59,11 @@ def main():
         event('SUBMIT')
         deadline = time.monotonic() + 45
         while time.monotonic() < deadline:
-            time.sleep(.4)
+            time.sleep(.05)
             text = ' '.join(screen().split())
+            if not calling and 'Calling callbay' in text:
+                event('CALLING_VISIBLE')
+                calling = True
             if 'Amazon Pharmacy agreed to prioritize' in text and args.until in text:
                 done = True
                 break
@@ -67,7 +71,7 @@ def main():
             time.sleep(.6)
             keys('C-o')
             event('EXPAND_TRANSCRIPT')
-            time.sleep(3.5)
+            time.sleep(args.result_hold)
     finally:
         recorder.stdin.write(b'q')
         recorder.stdin.flush()
