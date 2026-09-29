@@ -4,6 +4,13 @@ The launch asset pairs a terminal replay of a real saved session with the origin
 phone recording. The reference is Brayden Wilmoth's terminal screenshot for the
 Cloudflare CLI: https://x.com/BraydenWilmoth/status/2104593590307479829.
 
+The terminal segment must be captured from Claude Code's native interface. A
+hand-drawn approximation loses the compact spacing, input affordances, and tool
+output that make the recording convincing. Restore a sanitized, abridged copy of
+the actual session for recording; keep the original transcript intact and disable
+tools in the capture session. Audio playback and captions belong in a separate
+editorial scene, not inside an invented terminal player.
+
 Show the user's request first, focus on the call tool, then play a short captioned
 excerpt that demonstrates the result. Label the terminal as a replay and the
 audio as an edited excerpt. Do not imply that the edited running time is the
