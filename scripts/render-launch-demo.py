@@ -275,7 +275,7 @@ def scene(edit, t, samples, rate, poster=False):
         cue = next((c for c in edit["cues"] if c["start"] <= play_t < c["end"]), None)
         if cue:
             draw_text(d, (115, 693), cue["speaker"].lower(), 30, ACCENT)
-            wrapped(d, (111, 755), cue["text"], 49, 70, gap=16)
+            wrapped(d, (111, 755), cue["text"], 49, 80, gap=16)
         d.line((115, 948, 1798, 948), fill=LINE, width=3)
         d.line((115, 948, 115 + 1683 * play_t / edit["audio_duration"], 948), fill=ACCENT, width=3)
     draw_text(d, (91, 1016), "recorded terminal replay · original call audio · edited for length", 25, MUTED)
