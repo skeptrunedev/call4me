@@ -21,6 +21,13 @@ a white background and a light theme to match. Label the terminal as a replay an
 audio as an edited excerpt. Do not imply that the edited running time is the
 actual time it took to complete the call.
 
+The call excerpt should demonstrate navigation of the automated phone menu,
+the handoff to a human representative, and the resulting resolution. Label the
+caller `ai agent`. Distinguish the business's automated assistant from its human
+representative in the speaker labels. Keep authentication and other personal
+details outside the selected cuts; verify new cut boundaries against the
+original WAV rather than assuming timestamps from an earlier export match.
+
 Keep original recordings, private transcripts, editing manifests, and rendered
 files outside the repository. Omit authentication, personal contact details, and
 medical details from the selected audio and captions. Verify captions against
