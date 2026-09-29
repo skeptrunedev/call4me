@@ -16,3 +16,33 @@ both the original recording and the saved call transcript.
 
 Deliver a landscape MP4 and a matching PNG suitable for the launch post. Nothing
 in this workflow publishes the assets or places a phone call.
+
+## Render
+
+Requires `uv`, `ffmpeg`, and Fira Mono regular/medium fonts. Python dependencies
+are declared in the renderer's script metadata.
+
+```sh
+uv run scripts/render-launch-demo.py /private/edit.json /output/demo --preview-only
+uv run scripts/render-launch-demo.py /private/edit.json /output/demo
+```
+
+The manifest names a WAV source relative to the manifest, identifies the original
+session in `provenance`, and supplies `prompt`, `business`, `tool_detail`,
+`result_title`, and `result_body`. `intro_duration` defaults to 10 seconds and
+`outro_duration` to 4 seconds. Each entry in `clips` has source `start` and `end`
+seconds plus `captions`. Each caption contains source `start`/`end`, `speaker`,
+and `text`. Caption times must remain inside their selected clip. Prompt and
+result text may be abridged for readability, with that choice documented in the
+manifest provenance.
+
+The renderer uses the original audio at its original speed, trims the selected
+ranges, normalizes the excerpt's loudness, and derives the waveform from those
+samples. Exports are 1920 by 1080 at 30 frames per second, H.264/AAC MP4, PNG
+still, SRT captions, and preview frames. The audio timer measures only the edited
+excerpt, not the duration of the original call.
+
+Check the contact sheet and individual preview frames before the full render.
+After rendering, decode the actual MP4, inspect frames at the zooms and caption
+changes, and check the exported audio against the source transcript. Copy final
+assets to the user's machine without copying private source transcripts.
