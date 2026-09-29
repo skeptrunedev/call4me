@@ -22,7 +22,25 @@ agent ──MCP──▶ worker ──POST /v2/calls──▶ Telnyx ──PSTN�
 - `src/server/services/dialer.ts`: placing calls, per-account numbers, answering callbacks.
 - `src/server/mcp/server.ts`: the MCP tools.
 
-Audio is never recorded: Telnyx recording is off unless `record` is passed, and GPT-Live's `store` defaults to false.
+The app does not request recording when dialing or answering. Existing recordings stored by Telnyx
+can be retrieved after a call ends using `callbay_get_recordings({ call_id })` over MCP, or
+`GET /api/calls/{call_id}/recordings` with a callbay API key or OAuth token in the Bearer header.
+Both check account ownership before contacting Telnyx and return fresh download links without
+storing them. Empty results can mean processing is pending or no recording was saved. Links may
+expire and should only be shared with the account owner.
+
+Trunk recordings use call leg IDs. A separate provider ID table receives these from verified
+webhooks; existing calls resolve them from an exact control ID match in Telnyx webhook history.
+The app never guesses a match from phone numbers or timestamps. If provider history has expired
+and no mapping was saved, only recordings directly associated with the control ID can be found.
+
+The recording lookup never contacts the voice session or changes prompts, live tools, audio,
+or Telnyx recording settings. Existing call status and transcript responses are unchanged.
+
+The recording API's OpenAPI document is served at `/api/openapi.json`. Run
+`npm run openapi:generate` to regenerate `openapi.json` from the shared MCP and HTTP schemas.
+CI checks the generated artifact for drift. Run `npm test`, `npm run check`, `npm run lint`,
+and `npx wrangler deploy --dry-run` before deploying through git.
 
 ## Setup
 

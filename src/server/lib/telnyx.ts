@@ -37,6 +37,17 @@ async function call<T>(env: TelnyxEnv, method: string, path: string, body?: unkn
   return (text ? JSON.parse(text) : {}) as T;
 }
 
+export interface TelnyxRecording {
+  id: string;
+  call_control_id: string | null;
+  call_leg_id?: string;
+  status: string;
+  download_urls?: { mp3?: string | null; wav?: string | null } | null;
+  duration_millis?: number;
+  recording_started_at?: string;
+  recording_ended_at?: string;
+}
+
 /** Bidirectional G.711 u-law over RTP both ways: the same format GPT-Live speaks, so no transcoding. */
 const STREAM = {
   stream_track: 'inbound_track',
@@ -61,6 +72,41 @@ export const readClientState = (s: string | undefined | null): { callId: string;
 
 export function telnyx(env: TelnyxEnv) {
   return {
+    /** Recover an exact historical association from original provider webhook payloads. */
+    async callLeg(callControlId: string): Promise<string | null> {
+      const legs = new Set<string>();
+      for (let page = 1; page <= 100; page++) {
+        const query = new URLSearchParams({ 'filter[webhook][contains]': callControlId, 'filter[event_type]': 'call.hangup', 'page[number]': String(page), 'page[size]': '100' });
+        const result = await call<{ data: { webhook?: { payload?: { call_control_id?: string; call_leg_id?: string } } }[]; meta: { total_pages: number } }>(env, 'GET', `/webhook_deliveries?${query}`);
+        if (!Array.isArray(result.data) || !Number.isInteger(result.meta?.total_pages) || result.meta.total_pages < 0) throw new TelnyxError('invalid webhook history response', 502);
+        for (const event of result.data) {
+          const p = event.webhook?.payload;
+          if (p?.call_control_id === callControlId && p.call_leg_id) legs.add(p.call_leg_id);
+        }
+        if (legs.size > 1) throw new TelnyxError('conflicting call leg identifiers', 502);
+        if (page >= result.meta.total_pages) return [...legs][0] ?? null;
+      }
+      throw new TelnyxError('too many webhook history pages', 502);
+    },
+
+    /** Fresh download links for one call. Control IDs are not call leg IDs. */
+    async recordings(callControlId: string, callLegId?: string): Promise<TelnyxRecording[]> {
+      const recordings: TelnyxRecording[] = [];
+      for (let page = 1; page <= 100; page++) {
+        const field = callLegId ? 'call_leg_id' : 'call_control_id';
+        const query = new URLSearchParams({ [`filter[${field}]`]: callLegId ?? callControlId, 'page[number]': String(page), 'page[size]': '100' });
+        const result = await call<{ data: TelnyxRecording[]; meta: { total_pages: number } }>(env, 'GET', `/recordings?${query}`);
+        if (!Array.isArray(result.data) || !Number.isInteger(result.meta?.total_pages) || result.meta.total_pages < 0) {
+          throw new TelnyxError('invalid recordings response', 502);
+        }
+        // Fail closed if the provider ever ignores its filter. Never expose another call.
+        if (result.data.some((r) => callLegId ? r.call_leg_id !== callLegId || (r.call_control_id && r.call_control_id !== callControlId) : r.call_control_id !== callControlId)) throw new TelnyxError('recording call mismatch', 502);
+        recordings.push(...result.data);
+        if (page >= result.meta.total_pages) return recordings;
+      }
+      throw new TelnyxError('too many recording pages', 502);
+    },
+
     /** Place an outbound call. Recording stays off (it is only on when `record` is passed). */
     async dial(opts: { to: string; from: string; webhookUrl: string; streamUrl: string; callId: string; timeLimitSecs: number }): Promise<string> {
       const r = await call<{ data: { call_control_id: string } }>(env, 'POST', '/calls', {

@@ -88,7 +88,7 @@ webhooks.post('/stripe', async (c) => {
 interface TelnyxWebhook {
   data?: {
     event_type?: string;
-    payload?: { call_control_id?: string; client_state?: string | null; direction?: string; from?: string; to?: string; hangup_cause?: string; digit?: string };
+    payload?: { call_control_id?: string; call_leg_id?: string; client_state?: string | null; direction?: string; from?: string; to?: string; hangup_cause?: string; digit?: string };
   };
 }
 
@@ -152,6 +152,13 @@ webhooks.post('/telnyx', async (c) => {
       await db.finish(callId, { status, hangupCause: p.hangup_cause ?? null, pricePerMinuteCents: pricePerMinute(c.env) });
       // Returns once the session has written the final transcript.
       await sessionFor(c.env, callId).fetch('https://session/ended', { method: 'POST' });
+      // Store provider identity only after the voice session has ended. Person legs
+      // returned above, and this separate table is never consumed by voice code.
+      if (p.call_control_id && p.call_leg_id) {
+        await c.env.DB.prepare(`INSERT OR IGNORE INTO call_provider_legs (call_control_id, call_leg_id)
+          SELECT telnyx_call_control_id, ? FROM calls WHERE id = ? AND telnyx_call_control_id = ?`)
+          .bind(p.call_leg_id, callId, p.call_control_id).run();
+      }
       if (row?.answered_at) c.executionCtx.waitUntil(writeRecap(c.env, callId));
       break;
     }

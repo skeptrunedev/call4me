@@ -11,6 +11,8 @@ import { checkDialable } from '../lib/phone';
 import { sessionFor } from '../voice/session';
 import { CATEGORIES, categoryBySlug, CATEGORY_SLUGS, PROFILE_FIELDS, type ProfileKey } from '../services/intake';
 import { ProfileError, profiles } from '../services/profiles';
+import { recordingDescription, recordingInput, recordingOutput } from '../lib/recording-schema';
+import { getCallRecordings } from '../services/recordings';
 
 /**
  * The callbay MCP server: the handful of tools a coding agent needs to make a phone call
@@ -116,6 +118,16 @@ export function createCallbayServer(deps: McpDeps): McpServer {
       return fail('something broke on the server; try again in a moment.');
     }
   };
+
+  server.registerTool(
+    'callbay_get_recordings',
+    { title: 'Get call recordings', description: recordingDescription, inputSchema: recordingInput, outputSchema: recordingOutput, annotations: RO },
+    (async (args: { call_id: string }) => guard(async () => {
+      const result = await getCallRecordings(env, account.id, args.call_id);
+      const links = result.recordings.flatMap((r) => Object.entries(r.download_urls).map(([format, url]) => `${r.id} (${format}): ${url}`));
+      return ok([result.message, ...links].join('\n'), result);
+    })()) as never,
+  );
 
   server.registerTool(
     'callbay_place_call',

@@ -13,6 +13,7 @@ import { og } from './routes/og';
 import { agent } from './routes/agent';
 import { a2a } from './routes/a2a';
 import { apiRoot } from './routes/api-root';
+import { recordings } from './routes/recordings';
 import { discovery } from './routes/discovery';
 import { siteUrl } from './lib/auth-options';
 import { API_CATALOG_LINK, API_CATALOG_MEDIA_TYPE, buildApiCatalog } from './lib/discovery';
@@ -55,6 +56,7 @@ app.route('/webhooks', webhooks);
 app.route('/', agent);
 app.route('/', a2a);
 app.route('/', apiRoot);
+app.route('/', recordings);
 app.route('/.well-known', discovery);
 // RFC 9727 API catalog, advertised from the home page's Link header (below).
 app.on(['GET', 'HEAD'], '/.well-known/api-catalog', (c) =>

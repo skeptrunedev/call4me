@@ -262,6 +262,10 @@ export function buildApiCatalog(site: string) {
   return {
     linkset: [
       {
+        anchor: `${site}/api/calls`,
+        'service-desc': [{ href: `${site}/api/openapi.json`, type: 'application/vnd.oai.openapi+json', title: 'callbay recording API' }],
+      },
+      {
         anchor: `${site}/mcp`,
         'service-desc': [{ href: `${site}/.well-known/mcp/server-card.json`, type: 'application/json', title: 'callbay MCP server card' }],
         'service-doc': [{ href: `${site}/mcp`, type: 'text/html' }],

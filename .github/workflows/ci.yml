@@ -23,6 +23,9 @@ jobs:
       - run: npm run cf-typegen
       - run: npm run check
       - run: npm run lint
+      - run: npm test
+      - run: npm run openapi:generate && git diff --exit-code -- openapi.json
+      - run: npx wrangler deploy --dry-run
 
   deploy:
     needs: verify
