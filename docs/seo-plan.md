@@ -81,6 +81,8 @@ Traffic targets are our own estimates, not forecasts. They assume the page count
 
 ### Month 1 (Oct 2026)
 
+The day-by-day schedule, updated after the 2026-09-30 launch, is in [seo-month-1.md](seo-month-1.md). It cuts this month to 60 pages with real call data.
+
 Build the base: a company table in D1 (numbers, hours, menu paths, cancel steps, sources, verified date), the `/cancel` and `/call` templates, sitemap, Search Console, and the tracked list of 1,000 searches. Add a line to the privacy page and terms: anonymous call stats may be published in aggregate. Ship the first 150 pages, ordered by volume.
 
 **Target:** 150 pages indexed; tracked list and scoreboard live.
