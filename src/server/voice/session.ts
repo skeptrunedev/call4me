@@ -36,6 +36,12 @@ const TRANSCRIPT_FLUSH_MS = 2_000;
 /** Pickup-to-session-start budget, and how long a call may stay silent both ways before it is abandoned. */
 const SESSION_START_LIMIT_MS = 10_000;
 const SILENCE_LIMIT_MS = 30_000;
+/**
+ * Audio from the phone normally starts within half a second of pickup. Telnyx sometimes drops the
+ * stream within ~100ms of connecting and never says so (no streaming.started, no close reaching us),
+ * leaving a socket that carries nothing; after this long without a frame it is reattached.
+ */
+const FIRST_AUDIO_LIMIT_MS = 4_000;
 /** After end_call, let the goodbye finish playing before hanging up. */
 const HANGUP_GRACE_MS = 700;
 /** Quiet time after the last words before checking for a hand-off the voice model skipped. */
@@ -567,6 +573,9 @@ export class CallSession extends DurableObject<Env> {
    * the call failed (failed calls are not billed).
    */
   private startWatchdog(): void {
+    setTimeout(() => {
+      if (!this.ended && this.framesIn === 0 && this.phone) void this.phoneLost(this.phone, `no audio from the phone ${FIRST_AUDIO_LIMIT_MS / 1000}s after pickup`);
+    }, FIRST_AUDIO_LIMIT_MS);
     setTimeout(() => {
       if (!this.ended && !this.liveStartedAt) void this.fail(`voice session did not start within ${SESSION_START_LIMIT_MS / 1000}s of pickup (frames from phone: ${this.framesIn})`);
     }, SESSION_START_LIMIT_MS);
