@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import test, { type TestContext } from 'node:test';
-import { personClientState, readClientState, telnyx } from '../src/server/lib/telnyx';
+import { readClientState, telnyx } from '../src/server/lib/telnyx';
 import type { TranscriptLine } from '../src/server/services/calls';
-import { alreadyUnreachable, mergeTranscript, pressedToJoin, unreachableMessage } from '../src/server/voice/person';
+import { alreadyUnreachable, mergeTranscript, unreachableMessage } from '../src/server/voice/person';
 
 const env = { TELNYX_API_KEY: 'test_api_key', TELNYX_CONNECTION_ID: 'test_connection' } as Env;
 
@@ -25,27 +25,10 @@ test('the person is rung listen-only, so a voicemail picking up is never heard o
   assert.deepEqual(readClientState(String(sent[0].body.client_state)), { callId: 'call_x', personLeg: true });
 });
 
-test('the join prompt only accepts a single 1 and keeps the person-leg state', async (t) => {
-  const sent = captureTelnyx(t);
-  await telnyx(env).joinGate('v3:person', { callId: 'call_x', business: 'Xfinity customer service' });
-  assert.equal(sent[0].path, '/v2/calls/v3%3Aperson/actions/gather_using_speak');
-  assert.equal(sent[0].body.valid_digits, '1');
-  assert.equal(sent[0].body.maximum_digits, 1);
-  assert.match(String(sent[0].body.payload), /Xfinity customer service.*Press 1/);
-  assert.equal(sent[0].body.client_state, personClientState('call_x'));
-});
-
 test('pressing 1 switches the person to barge', async (t) => {
   const sent = captureTelnyx(t);
   await telnyx(env).switchSupervisorRole('v3:person', 'barge');
   assert.deepEqual(sent[0], { method: 'POST', path: '/v2/calls/v3%3Aperson/actions/switch_supervisor_role', body: { role: 'barge' } });
-});
-
-test('only a valid 1 joins; voicemail silence, hang-ups and other keys do not', () => {
-  assert.equal(pressedToJoin('valid', '1'), true);
-  for (const [status, digits] of [['timeout', ''], ['invalid', '2'], ['call_hangup', undefined], ['cancelled', undefined], ['valid', '11'], [undefined, undefined]] as const) {
-    assert.equal(pressedToJoin(status, digits), false, `${status} ${digits}`);
-  }
 });
 
 test('an unreachable person is not rung again by the caller', () => {

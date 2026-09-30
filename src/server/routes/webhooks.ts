@@ -152,12 +152,13 @@ webhooks.post('/telnyx', async (c) => {
   if (!callId) return c.text('ok'); // not ours, or already gone
 
   // The person's own phone patched into the call: its events move the call between them and
-  // the caller, and never end or bill the call itself. Answering only starts the press-1 prompt.
+  // the caller, and never end or bill the call itself. Answering leaves them listening; 1 puts
+  // them on the call, * hands it back.
   if (state?.personLeg) {
     const session = sessionFor(c.env, callId);
     if (type === 'call.answered') await session.fetch('https://session/person-answered', { method: 'POST' });
-    else if (type === 'call.gather.ended') await session.fetch('https://session/person-gate', { method: 'POST', body: JSON.stringify({ status: p.status, digits: p.digits }) });
     else if (type === 'call.hangup') await session.fetch('https://session/person-left', { method: 'POST', body: JSON.stringify({ cause: p.hangup_cause ?? null }) });
+    else if (type === 'call.dtmf.received' && p.digit === '1') await session.fetch('https://session/person-join', { method: 'POST' });
     else if (type === 'call.dtmf.received' && p.digit === '*' && p.call_control_id) await telnyx(c.env).hangup(p.call_control_id);
     return c.text('ok');
   }

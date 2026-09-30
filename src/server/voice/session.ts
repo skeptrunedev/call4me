@@ -3,7 +3,7 @@ import { Raindrop, type Interaction } from 'raindrop-ai';
 import { calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
 import { connectCheckMessage, forcedHandoffMessage, MenuRecovery, missedHandoff } from './handoff';
-import { alreadyUnreachable, mergeTranscript, pressedToJoin, unreachableMessage } from './person';
+import { alreadyUnreachable, JOIN_WAIT_MS, mergeTranscript, unreachableMessage } from './person';
 import { BACK_OFFICE_TOOLS } from './prompt';
 
 /**
@@ -22,8 +22,8 @@ import { BACK_OFFICE_TOOLS } from './prompt';
  *   /answer     call4me_answer_question; the answer goes straight to the voice model
  *   /hang-up    call4me_hang_up; the hangup webhook finishes and bills the call as usual
  *
- * The person's own phone (person.ts): /connect-person rings it, /person-answered asks them to
- * press 1, /person-gate puts them on the call if they did, /person-left hands the call back.
+ * The person's own phone (person.ts): /connect-person rings it, /person-answered starts the wait
+ * for their 1, /person-join puts them on the call when they press it, /person-left hands the call back.
  */
 
 const OPENAI_LIVE_URL = 'https://api.openai.com/v1/live/sessions';
@@ -175,13 +175,11 @@ export class CallSession extends DurableObject<Env> {
         return Response.json({ message: await this.connectPerson(phone) });
       }
       case '/person-answered':
-        await this.personAnswered();
+        this.personAnswered();
         return new Response('ok');
-      case '/person-gate': {
-        const { status, digits } = (await req.json()) as { status?: string; digits?: string };
-        await this.personGate(status, digits);
+      case '/person-join':
+        await this.personJoin();
         return new Response('ok');
-      }
       case '/person-left':
         this.personLeft();
         return new Response('ok');
@@ -568,29 +566,25 @@ export class CallSession extends DurableObject<Env> {
     return `ringing ${s.person.name}; they join once they pick up and press 1`;
   }
 
-  /** Their phone answered, which a voicemail also does: they stay listen-only until they press 1. */
-  private async personAnswered(): Promise<void> {
-    const s = await this.load();
-    if (!s?.person || !this.personLeg || this.ended) return;
-    const row = await calls(this.env.DB).byId(s.callId);
-    try {
-      await telnyx(this.env).joinGate(this.personLeg, { callId: s.callId, business: row?.business ?? 'the business' });
-    } catch (err) {
-      console.warn('join prompt failed', s.callId, String(err));
-      await telnyx(this.env).hangup(this.personLeg).catch((e) => console.warn('person hangup', String(e)));
-    }
+  /**
+   * Their phone answered, which a voicemail also does: they stay listen-only until they press 1.
+   * A leg still listening after JOIN_WAIT_MS is taken for voicemail and hung up; person-left tells the caller.
+   */
+  private personAnswered(): void {
+    const leg = this.personLeg;
+    if (!leg || this.ended) return;
+    setTimeout(() => {
+      if (this.personLeg !== leg || this.personOn || this.ended) return;
+      console.log('person leg never pressed 1', this.setup?.callId);
+      void telnyx(this.env).hangup(leg).catch((err) => console.warn('person hangup', String(err)));
+    }, JOIN_WAIT_MS);
   }
 
-  private async personGate(status: string | undefined, digits: string | undefined): Promise<void> {
+  /** They pressed 1: from listening to on the call. */
+  private async personJoin(): Promise<void> {
     const s = await this.load();
     if (!this.personLeg || this.personOn || this.ended) return;
     const leg = this.personLeg;
-    if (!pressedToJoin(status, digits)) {
-      // Voicemail, silence or a wrong key: hang up their leg; person-left tells the caller.
-      console.log('join prompt ended without a 1', s?.callId, status);
-      await telnyx(this.env).hangup(leg).catch((err) => console.warn('person hangup', String(err)));
-      return;
-    }
     try {
       await telnyx(this.env).switchSupervisorRole(leg, 'barge');
     } catch (err) {

@@ -7,10 +7,8 @@ import type { TranscriptLine } from '../services/calls';
  * reached, and doesn't ring again on its own (it used to, patching voicemail in each time).
  */
 
-/** The join prompt's call.gather.ended: only a pressed 1 puts them on the call. */
-export function pressedToJoin(status: string | undefined, digits: string | undefined): boolean {
-  return status === 'valid' && digits === '1';
-}
+/** How long an answered phone may listen without pressing 1 before it is taken for voicemail and hung up. */
+export const JOIN_WAIT_MS = 30_000;
 
 export function unreachableMessage(owner: string): string {
   return `${owner} couldn't be reached (no answer, or their voicemail picked up). Don't try to connect them again on this call. Tell them ${owner} isn't available right now and ask whether they can call ${owner} back, or carry on with whatever you can do without them.`;
