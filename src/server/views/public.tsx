@@ -1,6 +1,6 @@
 import type { FC } from 'hono/jsx';
 import { dollars } from '../services/accounts';
-import type { CountryOffer } from '../services/numbers';
+import { COUNTRIES, type CountryOffer } from '../services/numbers';
 import { MIN_TOPUP_CENTS } from '../services/topups';
 import { MonthlyBox } from './account';
 import { SITE, SITE_DESCRIPTION } from '../lib/pages';
@@ -30,7 +30,8 @@ const names = (cs: CountryOffer[]) => cs.map((c) => c.name.toLowerCase()).join('
 
 export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; countries: CountryOffer[]; error?: string; amount?: string }> = (p) => {
   const live = p.countries.filter((c) => c.available);
-  const soon = p.countries.filter((c) => !c.available);
+  // Only countries held back by regulator paperwork are "coming soon"; a missing quote is not.
+  const soon = p.countries.filter((c) => !c.available && COUNTRIES[c.country]?.requirementGroup);
   return (
   <Layout page="home" signedIn={p.signedIn} meta={{ jsonLd: HOME_LD }}>
     <p>
