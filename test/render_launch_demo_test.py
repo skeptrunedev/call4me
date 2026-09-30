@@ -370,6 +370,127 @@ class CallTimelineTest(unittest.TestCase):
         # Loudness normalization can vary the carrier gain slightly over time.
         self.assertAlmostEqual(closing_rms / opening_rms, 1, delta=.01)
         self.assertLess(np.max(np.abs(mixed)), 32767)
+        # A fractional endpoint must preserve the full isolated verification timeline.
+        edit["result_duration"] = 2.105
+        fractional = self.root / "fractional-score"
+        fractional.mkdir()
+        renderer.prepare_soundtrack(edit, self.root / "edit.json", call_path,
+                                    fractional, 8.105)
+        for name in ["soundtrack.wav", "music-bed.wav"]:
+            with wave.open(str(fractional / name)) as audio:
+                self.assertEqual(audio.getnframes(), round(8.105 * rate))
+
+    def test_ringback_adds_only_selected_original_speed_cue_without_retiming(self):
+        edit = self.load()
+        call_path, _, rate = renderer.prepare_audio(edit, self.root)
+        # A nonperiodic frequency reveals a changed source offset or playback speed.
+        ring = (np.sin(2 * np.pi * 623.7 * np.arange(4 * rate) / rate)
+                * 4000).astype("<i2")
+        music = (np.sin(2 * np.pi * 883.7 * np.arange(12 * rate) / rate)
+                 * 6000).astype("<i2")
+        for name, samples in [("ring.wav", ring), ("music.wav", music)]:
+            with wave.open(str(self.root / name), "wb") as audio:
+                audio.setnchannels(1)
+                audio.setsampwidth(2)
+                audio.setframerate(rate)
+                audio.writeframes(samples.tobytes())
+        edit.update(intro_duration=2, result_duration=2, terminal_submit_at=1)
+
+        def read(path):
+            with wave.open(str(path)) as audio:
+                self.assertEqual(audio.getnframes(), 8 * rate)
+                return np.frombuffer(audio.readframes(audio.getnframes()),
+                                     dtype="<i2").reshape(-1, 2).astype(float)
+
+        for mode in ["none", "separate", "continuous"]:
+            with self.subTest(mode=mode):
+                edit.pop("ringback", None)
+                edit.pop("music", None)
+                if mode != "none":
+                    edit["music"] = {
+                        "source": "music.wav", "start": 0, "fade_out": .5,
+                        "fade_in": .5, "call_background_gain_db": -20,
+                        "continuous": mode == "continuous"}
+                baseline_folder = self.root / (mode + "-baseline")
+                baseline_folder.mkdir()
+                baseline = read(renderer.prepare_soundtrack(
+                    edit, self.root / "edit.json", call_path, baseline_folder, 8))
+                # Exercise the default gain as well as an explicit cue level.
+                gain = -6 if mode == "none" else -9
+                edit["ringback"] = {
+                    "source": "ring.wav", "start": 1.2, "source_start": .2,
+                    "duration": .6, "music_duck_db": 0}
+                if mode != "none":
+                    edit["ringback"]["gain_db"] = gain
+                folder = self.root / (mode + "-ring")
+                folder.mkdir()
+                mixed = read(renderer.prepare_soundtrack(
+                    edit, self.root / "edit.json", call_path, folder, 8))
+                isolated = read(folder / "ringback-bed.wav")
+                start, end = round(1.2 * rate), round(1.8 * rate)
+                self.assertTrue(np.all(isolated[:start] == 0))
+                self.assertTrue(np.all(isolated[end:] == 0))
+                # Between the click prevention fades, samples retain source phase and gain.
+                a, b = start + round(.05 * rate), end - round(.05 * rate)
+                # Match FFmpeg's standard mono to stereo conversion, then the requested gain.
+                expected = (ring[round(.25 * rate):round(.75 * rate)]
+                            * 10 ** (gain / 20) / np.sqrt(2))
+                np.testing.assert_allclose(isolated[a:b, 0], expected, atol=1, rtol=0)
+                np.testing.assert_allclose(mixed - isolated, baseline, atol=1, rtol=0)
+                np.testing.assert_allclose(mixed[:start], baseline[:start], atol=1, rtol=0)
+                np.testing.assert_allclose(mixed[end:], baseline[end:], atol=1, rtol=0)
+                if mode == "continuous":
+                    self.assertEqual((folder / "music-bed.wav").read_bytes(),
+                                     (baseline_folder / "music-bed.wav").read_bytes())
+                self.assertLess(np.max(np.abs(mixed)), 32767)
+
+                if mode == "continuous":
+                    edit["ringback"].pop("music_duck_db")
+                    duck_folder = self.root / "continuous-duck"
+                    duck_folder.mkdir()
+                    ducked = read(renderer.prepare_soundtrack(
+                        edit, self.root / "edit.json", call_path, duck_folder, 8))
+                    score = read(duck_folder / "music-bed.wav")
+                    original_score = read(baseline_folder / "music-bed.wav")
+                    # The song carries on through the ring with a short smooth level dip.
+                    a, b = round(1.3 * rate), round(1.45 * rate)
+                    np.testing.assert_allclose(score[a:b], original_score[a:b]
+                                               * 10 ** (-4 / 20), atol=1, rtol=0)
+                    np.testing.assert_allclose(score[:rate], original_score[:rate],
+                                               atol=1, rtol=0)
+                    np.testing.assert_allclose(score[2 * rate:], original_score[2 * rate:],
+                                               atol=1, rtol=0)
+                    # Isolating the two beds leaves exactly the original call track.
+                    np.testing.assert_allclose(ducked - score - isolated,
+                                               baseline - original_score, atol=2, rtol=0)
+                    self.assertGreater(np.corrcoef(score[a:b, 0],
+                                                  original_score[a:b, 0])[0, 1], .999)
+
+    def test_ringback_rejects_invalid_source_settings_and_cues_outside_intro(self):
+        edit = self.load()
+        edit.update(intro_duration=2, result_duration=2, terminal_submit_at=1)
+        cue = {"source": "source.wav", "start": 1.2, "duration": .6}
+        for key, value in [
+                ("start", float("nan")), ("start", float("inf")),
+                ("source_start", -1), ("source_start", float("nan")),
+                ("duration", 0), ("duration", float("inf")),
+                ("gain_db", float("nan")), ("gain_db", 1),
+                ("music_duck_db", float("inf")), ("music_duck_db", -13),
+                ("source", "missing.wav"), ("source", None),
+                ("start", .9), ("start", 1.5)]:
+            with self.subTest(key=key, value=value):
+                edit["ringback"] = {**cue, key: value}
+                with patch.object(renderer, "run") as execute:
+                    with self.assertRaisesRegex(ValueError, "[Rr]ingback"):
+                        renderer.prepare_soundtrack(edit, self.root / "edit.json",
+                                                    self.root / "source.wav", self.root, 8)
+                    execute.assert_not_called()
+        # Submission is evaluated on the accelerated typing timeline, not source time.
+        edit.update(typing_start=.5, typing_end=1.5, typing_speed=2,
+                    terminal_submit_at=1.75, ringback=cue)
+        with self.assertRaisesRegex(ValueError, "after prompt submission"):
+            renderer.prepare_soundtrack(edit, self.root / "edit.json",
+                                        self.root / "source.wav", self.root, 8)
 
 
 if __name__ == "__main__":

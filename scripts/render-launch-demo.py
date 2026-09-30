@@ -227,11 +227,40 @@ def prepare_audio(edit, output):
     return audio_path, samples.astype(np.float32) / 32768, rate
 
 
+def ringback_settings(edit, manifest):
+    """Validate the private sound cue against the edited prompt and call boundary."""
+    cue = edit.get("ringback")
+    if cue is None:
+        return None
+    if not isinstance(cue, dict) or not isinstance(cue.get("source"), str):
+        raise ValueError("ringback requires a local source file")
+    source = (manifest.parent / cue["source"]).resolve()
+    if not source.is_file():
+        raise ValueError(f"Ringback source does not exist: {source}")
+    try:
+        values = {"start": float(cue["start"]), "duration": float(cue["duration"]),
+                  "source_start": float(cue.get("source_start", 0)),
+                  "gain_db": float(cue.get("gain_db", -6)),
+                  "music_duck_db": float(cue.get("music_duck_db", -4))}
+    except (KeyError, TypeError, ValueError) as error:
+        raise ValueError("Invalid ringback cue, duration, or gain") from error
+    if not (all(math.isfinite(v) for v in values.values()) and
+            values["source_start"] >= 0 and values["duration"] > 0 and
+            -60 <= values["gain_db"] <= 0 and -12 <= values["music_duck_db"] <= 0):
+        raise ValueError("Invalid ringback cue, duration, or gain")
+    submit = intro_time(edit, float(edit["terminal_submit_at"]))
+    end = values["start"] + values["duration"]
+    if not submit <= values["start"] < end <= edit["intro_duration"]:
+        raise ValueError("Ringback must fit after prompt submission and before the call")
+    return {**values, "source_path": source}
+
+
 def prepare_soundtrack(edit, manifest, call_audio, output, total):
     """Preserve voice gain, with an optional quiet music bed during the call."""
     rate = 48000
     intro, result = edit["intro_duration"], edit["result_duration"]
     call_end = intro + edit["audio_duration"]
+    ringback = ringback_settings(edit, manifest)
     inputs = ["-i", str(call_audio)]
     voice_fades = ""
     if edit["call_transition_duration"]:
@@ -275,6 +304,13 @@ def prepare_soundtrack(edit, manifest, call_audio, output, total):
             up = f"clip((t-{call_end})/{fade_in},0,1)"
             gain = (f"1+({low}-1)*({down})^2*(3-2*({down}))"
                     f"+(1-{low})*({up})^2*(3-2*({up}))")
+            if ringback:
+                ring_low = 10 ** (ringback["music_duck_db"] / 20)
+                ring_down = f"clip((t-{ringback['start'] - .12})/.12,0,1)"
+                ring_up = f"clip((t-{ringback['start'] + ringback['duration']})/.18,0,1)"
+                duck = (f"1+({ring_low}-1)*({ring_down})^2*(3-2*({ring_down}))"
+                        f"*(1-({ring_up})^2*(3-2*({ring_up})))")
+                gain = f"({gain})*({duck})"
             filters += [
                 f"[1:a]atrim=start={start}:duration={total},asetpts=PTS-STARTPTS,"
                 f"loudnorm=I={level}:TP=-2:LRA=11,aresample={rate},"
@@ -282,8 +318,8 @@ def prepare_soundtrack(edit, manifest, call_audio, output, total):
                 f"aeval=exprs='val(0)*({gain})|val(1)*({gain})':c=stereo,"
                 "afade=t=in:d=0.03:curve=hsin,"
                 f"afade=t=out:st={max(0, total - .8)}:d={min(.8, total)}:curve=hsin,"
-                "apad,"
-                f"atrim=duration={total},asplit=2[score][score_master]",
+                f"apad=whole_len={round(total * rate)},"
+                f"atrim=end_sample={round(total * rate)},asplit=2[score][score_master]",
                 f"[call][score]amix=inputs=2:normalize=0:dropout_transition=0,"
                 f"atrim=duration={total}[out]",
             ]
@@ -294,6 +330,26 @@ def prepare_soundtrack(edit, manifest, call_audio, output, total):
             mapped = "[out]"
     else:
         mapped = "[call]"
+    ring_master = None
+    if ringback:
+        start, duration = ringback["start"], ringback["duration"]
+        source_start, gain = ringback["source_start"], ringback["gain_db"]
+        input_index = len(inputs) // 2
+        inputs += ["-i", str(ringback["source_path"])]
+        fade = min(.03, duration / 2)
+        filters += [
+            f"[{input_index}:a]atrim=start={source_start}:duration={duration},"
+            f"asetpts=PTS-STARTPTS,aresample={rate},aformat=channel_layouts=stereo,"
+            f"volume={gain}dB,afade=t=in:d={fade}:curve=hsin,"
+            f"afade=t=out:st={duration - fade}:d={fade}:curve=hsin,"
+            f"adelay={round(start * rate)}S:all=1,apad=whole_len={round(total * rate)},"
+            f"atrim=end_sample={round(total * rate)},"
+            "asplit=2[ring][ring_master]",
+            f"{mapped}[ring]amix=inputs=2:normalize=0:dropout_transition=0,"
+            f"atrim=duration={total}[ring_mix]",
+        ]
+        ring_master = output / "ringback-bed.wav"
+        mapped = "[ring_mix]"
     soundtrack = output / "soundtrack.wav"
     command = ["ffmpeg", "-y", "-loglevel", "error", *inputs,
                "-filter_complex", ";".join(filters), "-map", mapped,
@@ -301,6 +357,9 @@ def prepare_soundtrack(edit, manifest, call_audio, output, total):
     if music_master:
         command += ["-map", "[score_master]", "-ar", str(rate), "-ac", "2",
                     "-c:a", "pcm_s16le", str(music_master)]
+    if ring_master:
+        command += ["-map", "[ring_master]", "-ar", str(rate), "-ac", "2",
+                    "-c:a", "pcm_s16le", str(ring_master)]
     run(command)
     return soundtrack
 

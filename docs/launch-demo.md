@@ -28,6 +28,13 @@ representative in the speaker labels. Keep authentication and other personal
 details outside the selected cuts; verify new cut boundaries against the
 original WAV rather than assuming timestamps from an earlier export match.
 
+For a separate human only version, begin with the representative's greeting
+and retain the caller's request, the representative's action and outcome,
+and the closing exchange. Keep the scope chosen by the user: a shorter edit
+can omit holds and redundant turns. Verify that every retained business turn
+is human speech. Save this variant under a separate delivery name so the
+earlier version remains available.
+
 Keep original recordings, private transcripts, editing manifests, and rendered
 files outside the repository. Omit authentication, personal contact details, and
 medical details from the selected audio and captions. Verify captions against
@@ -248,6 +255,23 @@ and ignores `outro_start` and `silence_before_call`. It also writes the isolated
 check voice gain. With visual transitions enabled, short voice fades affect
 only the first 0.08 and last 0.12 seconds. Verify those intervals contain quiet
 margins before applying them to a new recording.
+
+For a ringing introduction, add an optional `ringback` object with a local
+`source`, video timeline `start`, and selected source `duration`. The optional
+`source_start` defaults to zero and `gain_db` defaults to minus 6 dB, with an
+allowed range of minus 60 to zero dB. The whole cue must fit after the edited
+prompt submission and before the call begins. Review the supplied source and
+choose the cue against the song's phrasing. It plays at original speed with
+short 0.03 second edge fades. Ringing adds to the existing mix without moving
+the song, call, captions, or terminal timeline. A continuous song dips by
+`music_duck_db` (default minus 4 dB, allowed minus 12 to zero) during the ring,
+with a 0.12 second attack and 0.18 second release. Omit `ringback` to preserve the
+previous soundtrack. The isolated `ringback-bed.wav` verifies its position and
+level; subtract it and the music bed from the mix to confirm voice gain.
+Keep ringing media and the private cue manifest outside git.
+If the source call has no ringback, identify any separately added or synthesized
+ringing in the private edit provenance; it is a sound design cue rather than
+audio of another call.
 
 Check the contact sheet and individual preview frames before the full render.
 After rendering, decode the actual MP4, inspect frames at the zooms and caption
