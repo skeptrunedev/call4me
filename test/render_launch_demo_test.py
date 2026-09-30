@@ -249,6 +249,44 @@ class CallTimelineTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "verified prompt entry"):
             self.load()
 
+    def test_visual_call_entry_starts_at_ring_without_advancing_voice_captions(self):
+        self.edit.update(typing_speed=2, terminal_typing_start_at=1,
+                         terminal_typing_end_at=5, terminal_submit_at=7,
+                         ring_on_typing_complete=True, call_transition_at_ring=True,
+                         ringback={"source": "source.wav", "start": 3.08, "duration": 1.25})
+        edit = self.load()
+        edit.update(intro_duration=5, result_duration=2, terminal_result_at=9,
+                    call_transition_duration=.45)
+        edit["cues"] = [{"start": 0, "end": 1, "speaker": "human", "text": "First word"}]
+        samples = np.zeros(4 * 48000)
+        source = Image.new("RGB", (1580, 836), "black")
+        with patch.object(renderer, "native_frame", return_value=source):
+            opening = renderer.scene_frame(edit, 3.08, samples, 48000, phase="intro")
+            call = renderer.scene_frame(edit, 3.53, samples, 48000, phase="call")
+            self.assertEqual(renderer.scene(edit, 3.08, samples, 48000).tobytes(), opening.tobytes())
+            for t in [3.10, 3.30]:
+                blended = renderer.scene(edit, t, samples, 48000)
+                self.assertNotEqual(blended.tobytes(), opening.tobytes())
+                self.assertNotEqual(blended.tobytes(), call.tobytes())
+            self.assertEqual(renderer.scene(edit, 3.54, samples, 48000).tobytes(), call.tobytes())
+            with patch.object(renderer, "draw_text", wraps=renderer.draw_text) as draw:
+                renderer.scene(edit, 4, samples, 48000)
+                values = [args.args[2] for args in draw.call_args_list]
+                self.assertIn("ringing…", values)
+                self.assertNotIn("First word", values)
+                draw.reset_mock()
+                renderer.scene(edit, 5, samples, 48000)
+                self.assertIn("First word", [args.args[2] for args in draw.call_args_list])
+
+    def test_visual_ring_entry_requires_boolean_and_a_ring(self):
+        for value in ["true", 1, None]:
+            self.edit["call_transition_at_ring"] = value
+            with self.assertRaisesRegex(ValueError, "boolean"):
+                self.load()
+        self.edit["call_transition_at_ring"] = True
+        with self.assertRaisesRegex(ValueError, "requires a ringback"):
+            self.load()
+
     def test_dissolves_remove_boundary_jump_without_changing_scene_timing(self):
         edit = self.load()
         edit.update(intro_duration=2, result_duration=6, capture_duration=10,

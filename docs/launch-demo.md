@@ -281,6 +281,14 @@ completion instead of submission. It must still finish before call playback.
 Include the hold and added ringing in private provenance. This visual change
 requires a full render and is recorded in `intro-edit.json`.
 
+Set `call_transition_at_ring` to `true` to begin the visual dissolve into the
+call view exactly when the ring starts. The call view shows a ringing state
+without voice captions or a speech waveform until the original recording
+begins. This separates visual scene entry from voice playback. Call audio,
+captions, music, hangup timing and the final zoom remain unchanged. A full
+render is required; the ring's visual entry time is recorded in the reuse
+metadata. Omit this setting to preserve the previous visual transition.
+
 For a disconnect cue, add an optional `hangup` object with the same local
 `source`, video `start`, source `duration`, optional `source_start`, and
 optional `gain_db` fields. The cue must begin after call playback finishes

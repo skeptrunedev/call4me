@@ -139,6 +139,12 @@ def load_edit(path):
                                       edit.get("terminal_submit_at", 0)):
         raise ValueError("Ringing after typing requires a verified prompt entry interval")
     edit["ring_on_typing_complete"] = ring_on_typing_complete
+    transition_at_ring = edit.get("call_transition_at_ring", False)
+    if not isinstance(transition_at_ring, bool):
+        raise ValueError("call_transition_at_ring must be a boolean")
+    if transition_at_ring and not isinstance(edit.get("ringback"), dict):
+        raise ValueError("call_transition_at_ring requires a ringback cue")
+    edit["call_transition_at_ring"] = transition_at_ring
     zoom = {"x": 0, "y": 234, "width": 1580,
             "opening_scale": INTRO_WIDE[2] / INTRO_CLOSE[2],
             "start": ZOOM_DELAY, "duration": ZOOM_DURATION}
@@ -483,6 +489,9 @@ def prepare_terminal(edit, manifest, output):
     if not 0 < edit["terminal_submit_at"] < call_at < result_at < edit["capture_duration"]:
         raise ValueError("Expected submit, calling, then completed result within the native capture")
     edit["intro_duration"] = intro_time(edit, call_at)
+    if edit["call_transition_at_ring"]:
+        cue = ringback_settings(edit, manifest)
+        edit["ringback"]["start"] = cue["start"]
     if edit.get("terminal_result_capture"):
         result_capture = (manifest.parent / edit["terminal_result_capture"]).resolve()
         result_frames, result_digest, result_duration, result_size = decode_terminal(
@@ -548,7 +557,10 @@ def scene_frame(edit, t, samples, rate, poster=False, phase=None):
     d = ImageDraw.Draw(im)
     intro = edit["intro_duration"]
     play_t = max(0, min(edit["audio_duration"], t - intro))
-    playing = (phase == "call" if phase else intro <= t < intro + edit["audio_duration"]) and not poster
+    call_view_start = (edit["ringback"]["start"] if edit.get("call_transition_at_ring", False)
+                       else intro)
+    playing = (phase == "call" if phase else call_view_start <= t < intro + edit["audio_duration"]) and not poster
+    ringing = playing and t < intro and edit.get("call_transition_at_ring", False)
     finished = (phase == "result" if phase else t >= intro + edit["audio_duration"]) or poster
     elapsed = max(0, t - intro - edit["audio_duration"])
     if finished and edit["response_fullscreen"]:
@@ -578,8 +590,8 @@ def scene_frame(edit, t, samples, rate, poster=False, phase=None):
     elif playing:
         draw_link(d, (115, 212), "phone calls > pharmacy", 30)
         draw_text(d, (110, 273), "amazon pharmacy support", 70, INK, True)
-        recording_label = "original call recording"
-        if edit["call_speed"] != 1:
+        recording_label = "ringing…" if ringing else "original call recording"
+        if edit["call_speed"] != 1 and not ringing:
             recording_label += f" · {edit['call_speed']:g}× speed"
         draw_text(d, (114, 362), recording_label, 30, MUTED)
         draw_text(d, (1390, 366), f"{stamp(play_t)} / {stamp(edit['audio_duration'])}", 26, MUTED)
@@ -587,12 +599,13 @@ def scene_frame(edit, t, samples, rate, poster=False, phase=None):
         for i in range(108):
             lo = start + int(i / 108 * 2.8 * rate)
             hi = min(len(samples), lo + int(2.8 * rate / 108))
-            rms = float(np.sqrt(np.mean(samples[lo:hi] ** 2))) if lo < hi else 0
+            rms = float(np.sqrt(np.mean(samples[lo:hi] ** 2))) if lo < hi and not ringing else 0
             h = min(72, 3 + rms * 270)
             x = 120 + i * 15.4
             d.rounded_rectangle((x, 555 - h, x + 5, 555 + h), 2,
                                 fill=ACCENT if i < 54 else "#cccccc")
-        cue = next((c for c in edit["cues"] if c["start"] <= play_t < c["end"]), None)
+        cue = (None if ringing else
+               next((c for c in edit["cues"] if c["start"] <= play_t < c["end"]), None))
         if cue:
             draw_text(d, (115, 724), cue["speaker"].lower(), 32, ACCENT)
             wrapped(d, (111, 790), cue["text"], 55, 70, gap=16)
@@ -604,10 +617,12 @@ def scene_frame(edit, t, samples, rate, poster=False, phase=None):
 def scene(edit, t, samples, rate, poster=False):
     duration = edit["call_transition_duration"]
     if duration and not poster:
-        boundaries = [(edit["intro_duration"], "intro", "call"),
-                      (edit["intro_duration"] + edit["audio_duration"], "call", "result")]
-        for boundary, before, after in boundaries:
-            start = boundary - duration * .4
+        transition_at_ring = edit.get("call_transition_at_ring", False)
+        call_view_start = edit["ringback"]["start"] if transition_at_ring else edit["intro_duration"]
+        boundaries = [(call_view_start, "intro", "call", 0 if transition_at_ring else .4),
+                      (edit["intro_duration"] + edit["audio_duration"], "call", "result", .4)]
+        for boundary, before, after, lead in boundaries:
+            start = boundary - duration * lead
             if start <= t < start + duration:
                 weight = ease(0, 1, (t - start) / duration)
                 return Image.blend(scene_frame(edit, t, samples, rate, phase=before),
@@ -668,6 +683,9 @@ def main():
     }
     if edit["ring_on_typing_complete"]:
         intro_plan["ring_on_typing_complete"] = True
+    if edit["call_transition_at_ring"]:
+        intro_plan["call_transition_at_ring"] = True
+        intro_plan["call_scene_start"] = edit["ringback"]["start"]
     if args.reuse_video:
         previous_intro = args.reuse_video.parent / "intro-edit.json"
         if previous_intro.is_file():
