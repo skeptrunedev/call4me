@@ -3,12 +3,13 @@ import { field, origin, ownerKey, stripeFor, viewerKey, type AppContext, type Ap
 import { accountPrompt, callPrompt, installPrompt, privacyPrompt } from '../lib/prompts';
 import { callView } from '../mcp/server';
 import { accounts, type Account } from '../services/accounts';
-import { calls, CallError } from '../services/calls';
+import { ACTIVE, calls, CallError } from '../services/calls';
 import { pricePerMinute } from '../services/dialer';
 import { NumberError, numbers } from '../services/numbers';
 import { MIN_TOPUP_CENTS, parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
 import { validUnsubscribe } from '../services/drip';
-import { AccountPage, CallPage, NewKeyPage } from '../views/account';
+import { getCallRecordings, recordingUrl } from '../services/recordings';
+import { AccountPage, CallPage, NewKeyPage, type CallRecordings } from '../views/account';
 import { HomePage, MessagePage, PrivacyPage, RulesPage, TermsPage, UnsubscribePage, WelcomePage } from '../views/public';
 import { ExamplesPage } from '../views/examples';
 
@@ -155,10 +156,42 @@ pub.get('/account/calls/:id', async (c) => {
   try {
     const row = await db.forAccount(account.id, c.req.param('id'));
     const call = callView(row, await db.questions(row.id));
-    return c.html(<CallPage call={call} agentPrompt={callPrompt(origin(c), await ownerKey(c, account), call.id, call.business)} />);
+    const recordings = ACTIVE.includes(row.status) ? { state: 'live' as const } : await recordingsFor(c, account, row.id);
+    return c.html(<CallPage call={call} recordings={recordings} agentPrompt={callPrompt(origin(c), await ownerKey(c, account), call.id, call.business)} />);
   } catch (err) {
     if (err instanceof CallError) return c.html(<MessagePage title="not found" message="no such call on this account." signedIn />, 404);
     throw err;
+  }
+});
+
+/** A finished call's recordings for its page. A provider failure is shown on the page, not hidden. */
+async function recordingsFor(c: AppContext, account: Account, callId: string): Promise<CallRecordings> {
+  try {
+    return { state: 'ready', recordings: (await getCallRecordings(c.env, account.id, callId)).recordings };
+  } catch (err) {
+    if (err instanceof CallError) throw err;
+    console.error('recording lookup failed', err instanceof Error ? err.name : 'unknown error');
+    return { state: 'failed' };
+  }
+}
+
+/**
+ * One recording's audio, for the call page's player and links. Provider links expire in minutes,
+ * so each request looks the recording up again (ownership checked first) and redirects to a fresh one.
+ */
+pub.get('/account/calls/:id/recordings/:recording/:format{mp3|wav}', async (c) => {
+  const account = c.get('account');
+  const { id, recording, format } = c.req.param();
+  if (!account) return c.redirect(`/login?next=${encodeURIComponent(`/account/calls/${id}`)}`, 302);
+  c.header('cache-control', 'private, no-store');
+  try {
+    const url = await recordingUrl(c.env, account.id, id, recording, format as 'mp3' | 'wav');
+    if (!url) return c.html(<MessagePage title="not found" message="no such recording on this call." signedIn />, 404);
+    return c.redirect(url, 302);
+  } catch (err) {
+    if (err instanceof CallError) return c.html(<MessagePage title={err.status === 404 ? 'not found' : 'not yet'} message={err.status === 404 ? 'no such call on this account.' : err.message} signedIn />, err.status === 404 ? 404 : 409);
+    console.error('recording lookup failed', err instanceof Error ? err.name : 'unknown error');
+    return c.html(<MessagePage title="try again" message="the recording could not be retrieved right now. try again in a moment." signedIn />, 502);
   }
 });
 

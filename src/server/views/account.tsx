@@ -1,5 +1,7 @@
 import type { FC } from 'hono/jsx';
+import type { z } from 'zod';
 import { mcpUrl } from '../lib/prompts';
+import type { recordingOutput } from '../lib/recording-schema';
 import type { callView } from '../mcp/server';
 import { dollars, type Account } from '../services/accounts';
 import type { CountryOffer, NumberView } from '../services/numbers';
@@ -8,6 +10,10 @@ import { CopyBlock, Layout } from './layout';
 import { CallOnboarding } from './onboarding';
 
 type CallView = ReturnType<typeof callView>;
+type Recording = z.infer<typeof recordingOutput>['recordings'][number];
+
+/** A call's recordings as its page shows them: none while it is live, then the carrier's, or a failed lookup. */
+export type CallRecordings = { state: 'live' } | { state: 'ready'; recordings: Recording[] } | { state: 'failed' };
 
 export const LoginPage: FC<{ next: string; error?: string; providers: { google: boolean; x: boolean }; agentPrompt?: string }> = ({ next, error, providers, agentPrompt }) => (
   <Layout title="sign in" page="login">
@@ -142,6 +148,7 @@ export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerM
       <button type="submit">buy from balance</button>
     </form>
     <h2>calls</h2>
+    <p class="small">calls are recorded by our phone carrier (Telnyx). open a call to play or save its recording.</p>
     {p.calls.length === 0 ? (
       <p class="muted">no calls yet. ask your agent to call somewhere.</p>
     ) : (
@@ -193,7 +200,57 @@ export const MonthlyBox: FC<{ replacing?: boolean }> = ({ replacing }) => (
   </label>
 );
 
-export const CallPage: FC<{ call: CallView; agentPrompt: string }> = ({ call, agentPrompt }) => (
+/** m:ss, for a recording's length. */
+const clock = (millis: number) => {
+  const secs = Math.round(millis / 1000);
+  return `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+};
+
+/**
+ * The call's audio. Players and links point at our own route, which checks the account and
+ * fetches a fresh carrier link on each request, so a page left open never holds a dead link.
+ */
+const RecordingSection: FC<{ callId: string; recordings: CallRecordings }> = ({ callId, recordings }) => (
+  <>
+    <h2>recording</h2>
+    <p class="small">calls are recorded by our phone carrier (Telnyx). only you can play a call's recording, from this page or through your agent.</p>
+    {recordings.state === 'live' && <p class="muted">the recording shows up here once the call ends.</p>}
+    {recordings.state === 'failed' && (
+      <p class="err">
+        the recording could not be retrieved right now. <a href="">refresh</a> to try again.
+      </p>
+    )}
+    {recordings.state === 'ready' && recordings.recordings.length === 0 && (
+      <p class="muted">
+        no recording for this call yet. the carrier can take a minute to save one after hangup. <a href="">refresh</a> to check again.
+      </p>
+    )}
+    {recordings.state === 'ready' &&
+      recordings.recordings.map((r, i) => {
+        const base = `/account/calls/${callId}/recordings/${encodeURIComponent(r.id)}`;
+        const formats = (['mp3', 'wav'] as const).filter((f) => r.download_urls[f]);
+        return (
+          <div class="recording">
+            <audio controls preload="none" src={`${base}/${formats[0]}`} aria-label={`call recording${recordings.recordings.length > 1 ? ` ${i + 1}` : ''}`}>
+              <a href={`${base}/${formats[0]}`}>listen to the recording</a>
+            </audio>
+            <p class="small">
+              {recordings.recordings.length > 1 && <>part {i + 1} · </>}
+              {r.duration_millis !== null && <>{clock(r.duration_millis)} · </>}
+              {formats.map((f, j) => (
+                <>
+                  {j > 0 && ' · '}
+                  <a href={`${base}/${f}`}>open {f}</a>
+                </>
+              ))}
+            </p>
+          </div>
+        );
+      })}
+  </>
+);
+
+export const CallPage: FC<{ call: CallView; recordings: CallRecordings; agentPrompt: string }> = ({ call, recordings, agentPrompt }) => (
   <Layout title={call.business} page="call" path={`/account/calls/${call.id}`} signedIn>
     <h1>
       {call.business} <span class="small muted">{call.number}</span>
@@ -222,6 +279,7 @@ export const CallPage: FC<{ call: CallView; agentPrompt: string }> = ({ call, ag
         ))}
       </>
     )}
+    <RecordingSection callId={call.id} recordings={recordings} />
     <h2>transcript</h2>
     <div class="transcript">
       {call.transcript.length === 0 ? (

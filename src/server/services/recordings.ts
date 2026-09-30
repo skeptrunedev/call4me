@@ -31,3 +31,12 @@ export async function getCallRecordings(env: Env, accountId: string, callId: str
     message: recordings.length ? 'Download links may expire. Request recordings again for fresh links. Only share these links with the user.' : 'No recording is available for this call yet. It may still be processing, or no recording was saved.',
   });
 }
+
+/**
+ * A fresh link to one recording of a call in one format, or null when the call has no such
+ * recording or format. Ownership and the finished check come from getCallRecordings.
+ */
+export async function recordingUrl(env: Env, accountId: string, callId: string, recordingId: string, format: 'mp3' | 'wav'): Promise<string | null> {
+  const { recordings } = await getCallRecordings(env, accountId, callId);
+  return recordings.find((r) => r.id === recordingId)?.download_urls[format] ?? null;
+}

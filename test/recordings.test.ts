@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test, { type TestContext } from 'node:test';
 import { TelnyxError, type TelnyxRecording } from '../src/server/lib/telnyx';
 import { ACTIVE, CallError, type CallRow } from '../src/server/services/calls';
-import { getCallRecordings } from '../src/server/services/recordings';
+import { getCallRecordings, recordingUrl } from '../src/server/services/recordings';
 
 const accountId = 'account_owner';
 const callId = 'call_finished';
@@ -291,4 +291,47 @@ test('malformed history pagination fails without fetching recordings', async (t)
     history: () => Response.json({ data: [], meta: { total_pages: '1' } }),
   });
   await assert.rejects(getCallRecordings(environment(), accountId, callId), (error) => error instanceof TelnyxError && error.status === 502 && /invalid webhook history/.test(error.message));
+});
+
+// ---- one recording's link, behind the signed-in call page's audio route (routes/public.tsx)
+
+test('another account cannot resolve a recording link or contact the provider', async (t) => {
+  const fetch = neverFetch(t);
+  await assert.rejects(recordingUrl(environment(), 'account_other', callId, 'recording_one', 'mp3'), (error) => error instanceof CallError && error.status === 404);
+  assert.equal(fetch.mock.callCount(), 0);
+});
+
+test('a live call resolves no recording link before contacting the provider', async (t) => {
+  const fetch = neverFetch(t);
+  await assert.rejects(recordingUrl(environment({ status: 'in_progress' }), accountId, callId, 'recording_one', 'mp3'), (error) => error instanceof CallError && error.status === 409);
+  assert.equal(fetch.mock.callCount(), 0);
+});
+
+test('the owner gets a fresh link for the requested recording and format', async (t) => {
+  let requests = 0;
+  provider(t, () => {
+    requests++;
+    return Response.json({
+      data: [
+        recording({ id: 'recording_other', download_urls: { mp3: 'https://media.example.test/other.mp3' } }),
+        recording({ download_urls: { mp3: `https://media.example.test/audio.mp3?token=${requests}`, wav: `https://media.example.test/audio.wav?token=${requests}` } }),
+      ],
+      meta: { total_pages: 1 },
+    });
+  });
+  const env = environment();
+  assert.equal(await recordingUrl(env, accountId, callId, 'recording_one', 'mp3'), 'https://media.example.test/audio.mp3?token=1');
+  assert.equal(await recordingUrl(env, accountId, callId, 'recording_one', 'wav'), 'https://media.example.test/audio.wav?token=2');
+});
+
+test('an unknown recording or a missing format resolves to null', async (t) => {
+  provider(t, () => Response.json({ data: [recording()], meta: { total_pages: 1 } }));
+  const env = environment();
+  assert.equal(await recordingUrl(env, accountId, callId, 'recording_missing', 'mp3'), null);
+  assert.equal(await recordingUrl(env, accountId, callId, 'recording_one', 'wav'), null);
+});
+
+test('a provider failure propagates from the link lookup instead of resolving to null', async (t) => {
+  provider(t, () => Response.json({ errors: [{ detail: 'provider unavailable' }] }, { status: 503 }));
+  await assert.rejects(recordingUrl(environment(), accountId, callId, 'recording_one', 'mp3'), (error) => error instanceof TelnyxError && error.status === 503);
 });
