@@ -99,8 +99,6 @@ export class CallError extends Error {
 /** Limits that keep one account from turning call4me into a robocaller. */
 export const LIMITS = {
   concurrentPerAccount: 2,
-  /** Every attempt counts here, so a runaway agent loop still stops. */
-  sameNumberAttemptsPerAccountPerDay: 10,
   defaultMaxMinutes: 10,
   maxMinutes: 30,
 };
@@ -136,7 +134,6 @@ export function redact(text: string, secrets: string[]): string {
 export const billedCents = (talkSeconds: number, pricePerMinuteCents: number) => Math.ceil(talkSeconds / 60) * pricePerMinuteCents;
 
 export function calls(db: D1Database) {
-  const DAY = 24 * 60 * 60 * 1000;
   return {
     /** Validate, check money and limits, and record the call as queued. Dialing is the caller's next step. */
     /**
@@ -171,17 +168,11 @@ export function calls(db: D1Database) {
       const blocked = await db.prepare(`SELECT reason FROM blocked_numbers WHERE number = ?`).bind(to.e164).first<{ reason: string }>();
       if (blocked) throw new CallError('this number asked not to be called by call4me', 403);
 
-      const since = now() - DAY;
       const counts = await db
-        .prepare(
-          `SELECT
-             (SELECT COUNT(*) FROM calls WHERE account_id = ?1 AND status IN ('queued','dialing','in_progress')) AS active,
-             (SELECT COUNT(*) FROM calls WHERE account_id = ?1 AND to_number = ?2 AND created_at > ?3) AS attempts`,
-        )
-        .bind(account.id, to.e164, since)
-        .first<{ active: number; attempts: number }>();
+        .prepare(`SELECT COUNT(*) AS active FROM calls WHERE account_id = ? AND status IN ('queued','dialing','in_progress')`)
+        .bind(account.id)
+        .first<{ active: number }>();
       if (counts && counts.active >= LIMITS.concurrentPerAccount) throw new CallError(`at most ${LIMITS.concurrentPerAccount} calls at once; wait for one to finish`, 429);
-      if (counts && counts.attempts >= LIMITS.sameNumberAttemptsPerAccountPerDay) throw new CallError(`this number was already called ${counts.attempts} times in the last 24 hours`, 429);
 
       // Credits up front: the call holds its maximum cost now and settles when it ends.
       const balance = await accounts(db).balanceCents(account.id);
