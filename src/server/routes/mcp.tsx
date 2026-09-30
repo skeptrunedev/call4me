@@ -5,6 +5,7 @@ import { legacyHosts, origin, stripeFor, viewerKey, type AppContext, type AppEnv
 import { installPrompt } from '../lib/prompts';
 import { accounts, type Account } from '../services/accounts';
 import { createCall4meServer, withCurrentToolNames } from '../mcp/server';
+import { numbers } from '../services/numbers';
 import { McpPage } from '../views/account';
 
 /**
@@ -36,8 +37,8 @@ const wantsHtml = (c: AppContext) => !(c.req.header('accept') ?? '').includes('t
 mcp.get('/', async (c) => {
   if (!wantsHtml(c)) return c.text('POST MCP requests here', 405);
   const account = await sessionAccount(c);
-  const key = await viewerKey(c, account);
-  return c.html(<McpPage signedIn={Boolean(account)} installPrompt={installPrompt(origin(c), key)} origin={origin(c)} apiKey={key} />);
+  const [key, owned] = await Promise.all([viewerKey(c, account), account ? numbers(c.env).views(account.id) : []]);
+  return c.html(<McpPage signedIn={Boolean(account)} installPrompt={installPrompt(origin(c), key)} origin={origin(c)} apiKey={key} numbers={owned} />);
 });
 
 /**

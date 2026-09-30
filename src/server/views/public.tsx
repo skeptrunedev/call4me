@@ -1,10 +1,11 @@
 import type { FC } from 'hono/jsx';
 import { dollars } from '../services/accounts';
-import { COUNTRIES, type CountryOffer } from '../services/numbers';
+import { COUNTRIES, type CountryOffer, type NumberView } from '../services/numbers';
 import { MIN_TOPUP_CENTS } from '../services/topups';
 import { MonthlyBox } from './account';
 import { SITE, SITE_DESCRIPTION } from '../lib/pages';
 import { CopyBlock, Layout } from './layout';
+import { CallOnboarding } from './onboarding';
 
 /** Who runs the site and what it is, for search and answer engines (schema.org). */
 const HOME_LD = {
@@ -122,7 +123,8 @@ const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ p
       <details>
         <summary>do i need my own phone number?</summary>
         <p>
-          no. your first call buys you a free us number, and every call goes out from it. when a business calls that number back, call4me answers, finishes the task
+          no. your first call assigns you a free us number. calls use one of your own call4me numbers, depending on the country you're calling.
+          when a business calls that number back, call4me answers, finishes the task
           if it was left open, or takes a message for your agent.
         </p>
       </details>
@@ -141,8 +143,8 @@ const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ p
       <details>
         <summary>can i jump on the call myself?</summary>
         <p>
-          yes. tell your agent to connect you "as soon as a person picks up" to skip the hold music, or ask mid-call. your phone rings; press 1 to join the call
-          (so your voicemail never ends up on it). press * or hang up to hand it back.
+          yes. tell your agent to connect you "as soon as a person picks up" to skip the hold music, or ask during the call. call4me may also ring you if the business needs
+          you to verify your account. your agent should tell you what number to expect. answer and press 1 to join (so your voicemail never ends up on it); press * or hang up to hand it back.
         </p>
       </details>
       <details>
@@ -161,7 +163,7 @@ const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ p
   );
 };
 
-export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; balanceCents: number; email: string; pending?: boolean; signedOut?: boolean; next?: string }> = (p) => (
+export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; balanceCents: number; email: string; pending?: boolean; signedOut?: boolean; next?: string; numbers?: NumberView[] }> = (p) => (
   <Layout title="you're in" page="welcome" signedIn={!p.signedOut && !p.pending}>
     {p.pending ? (
       <>
@@ -183,6 +185,7 @@ export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; bal
         <h1>
           paid. balance: <span class="price">{dollars(p.balanceCents)}</span>
         </h1>
+        <CallOnboarding numbers={p.numbers} />
         {p.apiKey ? (
           <>
             <p>

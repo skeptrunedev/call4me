@@ -5,6 +5,7 @@ import { dollars, type Account } from '../services/accounts';
 import type { CountryOffer, NumberView } from '../services/numbers';
 import { MIN_TOPUP_CENTS, type Reload } from '../services/topups';
 import { CopyBlock, Layout } from './layout';
+import { CallOnboarding } from './onboarding';
 
 type CallView = ReturnType<typeof callView>;
 
@@ -67,9 +68,9 @@ export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerM
       balance: <span class="price">{dollars(p.balanceCents)}</span>
     </h1>
     <p class="small">
-      {p.account.email} · {dollars(p.pricePerMinuteCents)}/min · about {Math.floor(p.balanceCents / p.pricePerMinuteCents)} minutes left · your number:{' '}
-      {p.numbers[0]?.number ?? 'assigned on your first call'}
+      {p.account.email} · {dollars(p.pricePerMinuteCents)}/min · about {Math.floor(p.balanceCents / p.pricePerMinuteCents)} minutes left
     </p>
+    <CallOnboarding numbers={p.numbers} />
     <CopyBlock id="agent-prompt" text={p.agentPrompt} rows={12} hidden />
     {p.reload ? (
       <form method="post" action="/account/reload/stop" class="inline">
@@ -248,7 +249,7 @@ export const CallPage: FC<{ call: CallView; agentPrompt: string }> = ({ call, ag
   </Layout>
 );
 
-export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: string; apiKey: string | null }> = ({ signedIn, installPrompt, origin, apiKey }) => (
+export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: string; apiKey: string | null; numbers?: NumberView[] }> = ({ signedIn, installPrompt, origin, apiKey, numbers }) => (
   <Layout title="install mcp" page="mcp" signedIn={signedIn}>
     <h1>install the call4me mcp</h1>
     {apiKey ? (
@@ -261,6 +262,7 @@ export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: str
       </p>
     )}
     <CopyBlock id="install-prompt" text={installPrompt} rows={14} />
+    <CallOnboarding numbers={numbers} />
     <h3>by hand</h3>
     <pre class="wrap">
       {apiKey

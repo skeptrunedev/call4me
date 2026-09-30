@@ -64,8 +64,8 @@ pub.get('/welcome', async (c) => {
   const owner = viewer.id === done.account.id || (await t.claim(done.account.id, viewer)) ? viewer : null;
   if (!owner) return c.html(<MessagePage title="already claimed" message={`these credits belong to the account for ${done.account.email}. sign in with that email to use them.`} signedIn />, 409);
   const key = await ownerKey(c, owner);
-  const balance = await accounts(c.env.DB).balanceCents(owner.id);
-  return c.html(<WelcomePage apiKey={key} installPrompt={installPrompt(origin(c), key)} balanceCents={balance} email={owner.email} />);
+  const [balance, owned] = await Promise.all([accounts(c.env.DB).balanceCents(owner.id), numbers(c.env).views(owner.id)]);
+  return c.html(<WelcomePage apiKey={key} installPrompt={installPrompt(origin(c), key)} balanceCents={balance} email={owner.email} numbers={owned} />);
 });
 
 // ---- account

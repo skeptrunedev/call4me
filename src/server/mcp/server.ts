@@ -71,15 +71,17 @@ export interface McpDeps {
 
 const INSTRUCTIONS = `call4me places real phone calls for the user: doctor/dentist/vet appointments, restaurant bookings, car service and dealership questions, home services, salons, and questions for any business.
 
+During setup, call call4me_get_balance and show the user their actual call4me numbers. Suggest saving them as a contact named call4me. These are separate from the user's personal phone in call4me_get_profile: call4me may ring that personal phone when a business needs them to verify their account, or when they ask to join a call. Explain that they answer and press 1 to join, and press * or hang up to hand the call back. If phone_number is null and numbers is empty, explain that the free US number is assigned on the first call; never invent a number or buy an extra number for setup.
+
 The caller can only say what you give it, so everything is collected BEFORE dialing:
 1. Once, up front: call4me_get_profile. If it's missing things, ask the user in one message for their full legal name, date of birth, phone, home address, health and dental insurance (carrier + member ID, or self-pay), and car (year/make/model/mileage, VIN) if they have one, and save them with call4me_save_profile. Skip what they decline.
 2. For each call: pick the category and call call4me_get_requirements(category). Ask the user for every required field that isn't already known (one message, not one question at a time), plus the per-call details (reason, dates and times that work, party size...).
 3. Find the right number (search the web if needed; check it is the right location).
-4. call4me_place_call with the category and details. If it answers "Not calling yet", ask the user exactly what it lists and try again.
+4. call4me_place_call with the category and details. If it answers "Not calling yet", ask the user exactly what it lists and try again. Show its calling_number so the user knows which call4me number may ring them; suggest saving it if this is their first call or a different number than before. It is the call4me number, not number (the business's number).
 5. Poll call4me_get_call with wait_seconds until finished. If it shows an open question, the business is waiting on the line: answer right away with call4me_answer_question.
 6. Tell the user the outcome in a line or two.
 
-To put the user on a call themselves: pass connect_when to call4me_place_call (e.g. "as soon as a person picks up", to skip a long hold), or call call4me_connect_me mid-call. Their phone rings and they join the call by pressing 1; the caller goes quiet, and takes over again when they press * or hang up. To end a call early, use call4me_hang_up.
+To put the user on a call themselves: pass connect_when to call4me_place_call (e.g. "as soon as a person picks up", to skip a long hold), or call call4me_connect_me mid-call. Give the user a heads up before placing a call that may ring them, and before call4me_connect_me. Tell them why and use the actual call's calling_number from call4me_get_call; for a new call, use the selected owned number when known and confirm it from the place_call result. If the first number has not been assigned yet, explain that upfront and show it as soon as place_call returns. Their phone rings and they join the call by pressing 1; the caller goes quiet, and takes over again when they press * or hang up. To end a call early, use call4me_hang_up.
 
 Calls go out from the account's own numbers: its free US number, plus any it bought (call4me_list_numbers, call4me_buy_number). Businesses in the US, Canada and Europe can always be called (Europe from a European number when the account holds one, else from its US number); anywhere else, once the account holds a number in that country, and the call goes out from it.
 
@@ -113,6 +115,8 @@ export function callView(row: CallRow, questions: Question[], callbacks: CallRow
     direction: row.direction,
     business: row.business,
     number: formatPhone(row.to_number),
+    calling_number: row.from_number ? formatPhone(row.from_number) : null,
+    calling_number_e164: row.from_number,
     goal: row.goal,
     outcome,
     callback_for: row.callback_for,
@@ -130,6 +134,7 @@ export function callView(row: CallRow, questions: Question[], callbacks: CallRow
 
 function callText(v: ReturnType<typeof callView>): string {
   const lines = [`${v.id} · ${v.status}${v.finished ? '' : v.status === 'completed' ? ' (writing the recap)' : ' (in progress)'} · ${v.business} ${v.number}`];
+  if (v.calling_number) lines.push(`call4me number: ${v.calling_number} (the number that rings the user when they join)`);
   if (v.open_questions.length) {
     lines.push('', 'OPEN QUESTION (the business is waiting on the line; answer now with call4me_answer_question):');
     for (const q of v.open_questions) lines.push(`- [${q.id}] ${q.question}`);
@@ -197,7 +202,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       guard(async () => {
         const row = await placeCall(env, deps.origin, account, args);
         const v = callView(row, []);
-        return ok(`calling ${v.business} at ${v.number} (${v.id}). Poll call4me_get_call with wait_seconds: 30 until finished, and answer any open question immediately.`, v);
+        return ok(`calling ${v.business} at ${v.number} (${v.id}). Your call4me number is ${v.calling_number}; show it to the user so they recognize a call if they need to join. Poll call4me_get_call with wait_seconds: 30 until finished, and answer any open question immediately.`, v);
       })()) as never,
   );
 
@@ -231,7 +236,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     {
       title: 'Patch the user into a live call',
       description:
-        'Ring the user now and patch them into a call in progress, so they talk to the business directly while the caller goes quiet. Rings the phone in their profile unless phone is given; they join by pressing 1 when they pick up (a voicemail never gets patched in). When they press * or hang up, the caller takes the call back and carries on with the task.',
+        'Ring the user now and patch them into a call in progress, so they talk to the business directly while the caller goes quiet. Before calling this tool, give the user a heads up with the reason and calling_number from call4me_get_call. Rings the phone in their profile unless phone is given; they join by pressing 1 when they pick up (a voicemail never gets patched in). When they press * or hang up, the caller takes the call back and carries on with the task.',
       inputSchema: z.object({ call_id: callIdArg, phone: z.string().max(40).optional().describe('a different number to ring, e.g. "(415) 555-0123"') }),
       annotations: OPEN,
     },
@@ -309,7 +314,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     'call4me_get_balance',
     {
       title: 'Balance and phone numbers',
-      description: 'The prepaid balance, the per-minute price, and the account\'s own call4me phone numbers (calls go out from them and the calling number is the callback left on every call; callbacks to it finish the unfinished task or take a message).',
+      description: 'The prepaid balance, the per-minute price, and the account\'s own call4me phone numbers. During setup, show these numbers and suggest saving them as a contact named call4me. Call4me can ring the user\'s personal phone for account verification or to join a call, from that call\'s calling_number. The free US number is assigned on the first call; a null phone_number is normal before then. Callbacks to the calling number finish the unfinished task or take a message.',
       inputSchema: z.object({}),
       annotations: RO,
     },
@@ -330,7 +335,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
           monthly_reload: reload ? { amount: dollars(reload.cents), status: reload.status, next: reload.renewsAt ? new Date(reload.renewsAt).toISOString().slice(0, 10) : null } : null,
         };
         const reloadText = out.monthly_reload ? `reloads ${out.monthly_reload.amount} monthly${out.monthly_reload.next ? ` (next ${out.monthly_reload.next})` : ''}` : 'no monthly reload';
-        return ok(`balance ${out.balance} (~${out.minutes_left} min at ${out.price_per_minute}/min), ${reloadText}. ${owned.length ? `numbers: ${owned.map(numberText).join('; ')}` : 'number: assigned on the first call'}.`, out);
+        return ok(`balance ${out.balance} (~${out.minutes_left} min at ${out.price_per_minute}/min), ${reloadText}. ${owned.length ? `numbers: ${owned.map(numberText).join('; ')}. Show these to the user and suggest saving them as a contact named call4me` : 'number: assigned on the first call. Explain this during setup, then show calling_number from the first call result'}. Call4me may ring the personal phone in the user's profile if a business needs account verification or the user asks to join. Answer and press 1 to join; press * or hang up to hand the call back. Give a heads up before a call that may ring them and before connecting them.`, out);
       })()) as never,
   );
 

@@ -33,6 +33,10 @@ call4me is an MCP server at ${site}/mcp (Streamable HTTP). Every tool acts for a
 
 The user signs in with Google or X. If they gave you a call4me key instead, use \`${site}/mcp/<key>\` as the URL (the key is a secret; don't paste it anywhere else). No credits yet: they load some at ${site}, or you get a checkout link with \`call4me_add_funds\`. Check the connection with \`call4me_get_balance\`.
 
+Show the user their actual assigned call4me numbers from the returned \`numbers\` list, with their countries, and suggest saving them as a contact named call4me. Those are the numbers call4me calls from and businesses can call back. The user's own \`phone\` saved in their calling profile is where call4me rings them; it is a different number. If \`phone_number\` is null and \`numbers\` is empty, explain that their free US number is assigned on their first call and you will show it then. Never invent a number or promise one has already been assigned. Calls in different countries may use different assigned numbers.
+
+Explain during setup that call4me may ring the user's saved phone if a business needs them to verify their identity or speak directly. They answer and press 1 to join the business call; they press * or hang up to hand the call back to the caller. Give a heads up before arranging to ring them, with the actual call4me number they should recognize.
+
 ## Set up the calling profile once
 
 The caller can only say what you give it. Call \`call4me_get_profile\`, then ask the user in ONE message for whatever is missing (full legal name, date of birth, phone, email, home address, health and dental insurance or self-pay, car year/make/model/mileage and VIN, frequent flyer numbers, Known Traveler Number) and save the answers with \`call4me_save_profile\`. Skip what they decline. Never ask for or save a Social Security number, card numbers, or passwords.
@@ -41,11 +45,11 @@ The caller can only say what you give it. Call \`call4me_get_profile\`, then ask
 
 1. Pick the category and call \`call4me_get_requirements\` with it. Ask the user for every required field you don't already have in one message (reason, new or existing patient, which days and times work, party size...), not one question at a time.
 2. Find the number (search the web if needed) and make sure it is the right location.
-3. \`call4me_place_call\` with \`to\`, \`business\`, \`goal\`, \`category\`, and \`details\` (answers by field key). Add \`flexibility\` for what the caller may accept without asking. If it answers "Not calling yet", ask the user exactly what it lists and try again.
+3. \`call4me_place_call\` with \`to\`, \`business\`, \`goal\`, \`category\`, and \`details\` (answers by field key). Add \`flexibility\` for what the caller may accept without asking. Before passing \`connect_when\`, give the user a heads up that their phone may ring and show the assigned call4me number selected for this call. If no number is assigned yet, explain before dialing that it is assigned on their first call; show the exact returned \`calling_number\` immediately when the tool returns. On the first call, or whenever \`calling_number\` differs from what you already showed them, tell them that exact number and suggest saving it as a call4me contact. Do not assume \`phone_number\` from the balance is the caller number for every country. If the tool answers "Not calling yet", ask the user exactly what it lists and try again.
 4. Poll \`call4me_get_call\` with \`wait_seconds: 30\` until \`finished\`. If it lists \`open_questions\`, the business is waiting on the line: answer right away with \`call4me_answer_question\`.
 5. Tell the user the result in a line or two, including anything they need to note (a confirmation number, a time to show up).
-6. To put the user on the line: pass \`connect_when\` (e.g. "as soon as a person picks up") to skip a hold, or call \`call4me_connect_me\` mid-call. Their phone rings and they join by pressing 1; they press * or hang up to hand the call back to the caller. To end a call early (it's going nowhere, or the user changed their mind), call \`call4me_hang_up\`.
-7. Voicemail or "we'll call you back" is not a dead end: the callback number left is always the account's call4me number, and when the business calls it back within 14 days call4me answers and finishes the task. Check \`call4me_get_call\` on the original call later; it lists the callbacks and their outcomes.
+6. To put the user on the line: pass \`connect_when\` (e.g. "as soon as a person picks up") to skip a hold, or call \`call4me_connect_me\` mid-call. Before \`call4me_connect_me\`, get the call's actual \`calling_number\` from \`call4me_get_call\` and give a heads up with that number. Their own saved phone rings, and they join by pressing 1; remind them they press * or hang up to hand the call back to the caller. This can be needed when the business requires the account holder to verify their identity. Never describe the user's saved profile phone as the number calling them. To end a call early (it's going nowhere, or the user changed their mind), call \`call4me_hang_up\`.
+7. Voicemail or "we'll call you back" is not a dead end: the callback number left is the call's \`calling_number\`, and when the business calls it back within 14 days call4me answers and finishes the task. Check \`call4me_get_call\` on the original call later; it lists the callbacks and their outcomes.
 
 Categories:
 
@@ -53,7 +57,7 @@ ${CATEGORIES.map((c) => `- \`${c.slug}\`: ${c.name} (${c.examples})`).join('\n')
 
 ## Account
 
-- \`call4me_get_balance\`: balance, price per minute, minutes left, the account's own call4me number (the callback number left on every call; callbacks to it finish the unfinished task or take a message), and the monthly reload.
+- \`call4me_get_balance\`: balance, price per minute, minutes left, the account's assigned call4me \`numbers\`, and the monthly reload. \`phone_number\` is null when no number is assigned yet. Show the returned numbers and their countries to the user during setup; calls and verification rings use the \`calling_number\` returned for that particular call, and businesses can call it back to finish the unfinished task or leave a message.
 - \`call4me_list_calls\`: recent calls, newest first; \`call4me_get_call\` for any one's outcome and transcript.
 - \`call4me_add_funds\`: a Stripe checkout link ($10 to $500; reloads monthly unless \`monthly: false\`). Give the link to the user; nothing is charged until they pay.
 - \`call4me_stop_reload\`: cancel the monthly reload, only when the user asks.
