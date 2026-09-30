@@ -28,10 +28,14 @@ export const BuyForm: FC<{ signedIn: boolean; error?: string; amount?: string }>
 
 const names = (cs: CountryOffer[]) => cs.map((c) => c.name.toLowerCase()).join(', ');
 
-export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; countries: CountryOffer[]; error?: string; amount?: string }> = (p) => {
-  const live = p.countries.filter((c) => c.available);
+/** Countries with numbers for sale now, and the ones held back only by regulator paperwork. */
+function offers(countries: CountryOffer[]): { live: CountryOffer[]; soon: CountryOffer[] } {
   // Only countries held back by regulator paperwork are "coming soon"; a missing quote is not.
-  const soon = p.countries.filter((c) => !c.available && COUNTRIES[c.country]?.requirementGroup);
+  return { live: countries.filter((c) => c.available), soon: countries.filter((c) => !c.available && COUNTRIES[c.country]?.requirementGroup) };
+}
+
+export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; countries: CountryOffer[]; error?: string; amount?: string }> = (p) => {
+  const { live, soon } = offers(p.countries);
   return (
   <Layout page="home" signedIn={p.signedIn} meta={{ jsonLd: HOME_LD }}>
     <p>
@@ -87,6 +91,16 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
     <h3>the prompt</h3>
     <p class="small">{p.signedIn ? 'this is what you paste into your agent. your key is already in it.' : 'this is what you paste into your agent. it signs you in; sign in here first and your key comes in the prompt instead.'}</p>
     <CopyBlock id="install-prompt" text={p.installPrompt} rows={12} />
+    <Faq pricePerMinuteCents={p.pricePerMinuteCents} countries={p.countries} />
+  </Layout>
+  );
+};
+
+/** The faq on the home page and the rules page. */
+const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ pricePerMinuteCents, countries }) => {
+  const { live, soon } = offers(countries);
+  return (
+  <>
     <h3 id="faq">faq</h3>
     <div class="faq">
       <details>
@@ -95,13 +109,13 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
           every account can call businesses in the us, canada, and europe. european calls go out from your european call4me number if you have one, otherwise from
           your us number. anywhere else, buy a call4me number in that country and calls there go out from it. a local number also means the business sees a familiar
           number and can call you back cheaply.{live.length > 0 && <> numbers you can buy today: {names(live)}.</>}
-          {soon.length > 0 && <> waiting on regulator approval, usually a few days: {names(soon)}.</>} calls abroad cost the same {dollars(p.pricePerMinuteCents)}/min as calls at home.
+          {soon.length > 0 && <> waiting on regulator approval, usually a few days: {names(soon)}.</>} calls abroad cost the same {dollars(pricePerMinuteCents)}/min as calls at home.
         </p>
       </details>
       <details>
         <summary>what does it cost?</summary>
         <p>
-          {dollars(p.pricePerMinuteCents)} per minute of talk time, prepaid, from {dollars(MIN_TOPUP_CENTS)}. each call holds its maximum cost up front and gives back what it didn't use
+          {dollars(pricePerMinuteCents)} per minute of talk time, prepaid, from {dollars(MIN_TOPUP_CENTS)}. each call holds its maximum cost up front and gives back what it didn't use
           when it ends. unanswered, busy, and failed calls are free.
         </p>
       </details>
@@ -127,8 +141,8 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
       <details>
         <summary>can i jump on the call myself?</summary>
         <p>
-          yes. tell your agent to connect you "as soon as a person picks up" to skip the hold music, or ask mid-call. your phone rings and you're on the line; press *
-          or hang up to hand it back.
+          yes. tell your agent to connect you "as soon as a person picks up" to skip the hold music, or ask mid-call. your phone rings; press 1 to join the call
+          (so your voicemail never ends up on it). press * or hang up to hand it back.
         </p>
       </details>
       <details>
@@ -143,7 +157,7 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
         <p>businesses and services you want to reach. no telemarketing, no surveys, no calling people who don't expect it, no emergency or premium-rate numbers.</p>
       </details>
     </div>
-  </Layout>
+  </>
   );
 };
 
@@ -212,7 +226,7 @@ export const UnsubscribePage: FC<{ accountId: string; sig: string }> = ({ accoun
   </Layout>
 );
 
-export const RulesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
+export const RulesPage: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ signedIn, pricePerMinuteCents, countries }) => (
   <Layout title="rules" page="rules" signedIn={signedIn}>
     <h1>rules</h1>
     <p>call4me places calls a person would make themselves: bookings, appointments, questions for a business. it is not for anything else.</p>
@@ -226,6 +240,7 @@ export const RulesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
       <li>the caller never reads out card numbers, bank details, or passwords.</li>
     </ul>
     <p>break these and the account is closed without a refund of the remaining balance.</p>
+    <Faq pricePerMinuteCents={pricePerMinuteCents} countries={countries} />
   </Layout>
 );
 

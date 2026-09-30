@@ -188,6 +188,6 @@ pub.post('/unsubscribe', async (c) => {
   return c.html(<MessagePage title="unsubscribed" message="you won't get these emails anymore. your account and credits are unchanged." />);
 });
 
-pub.get('/rules', (c) => c.html(<RulesPage signedIn={signedIn(c)} />));
+pub.get('/rules', async (c) => c.html(<RulesPage signedIn={signedIn(c)} pricePerMinuteCents={pricePerMinute(c.env)} countries={await numbers(c.env).offers()} />));
 pub.get('/privacy', async (c) => c.html(<PrivacyPage signedIn={signedIn(c)} agentPrompt={privacyPrompt(origin(c), await viewerKey(c))} />));
 pub.get('/terms', (c) => c.html(<TermsPage signedIn={signedIn(c)} />));
