@@ -33,6 +33,8 @@
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CallSession"] }],
   "vars": {
     "CANONICAL_HOST": "call4.me",
+    // IndexNow key (services/indexnow.ts). Public by design: served at /<key>.txt.
+    "INDEXNOW_KEY": "3d15f1882b0b7931273db1a9e4f5ef35",
     // Hosts callbay used to live on (comma-separated). Pages there redirect to
     // CANONICAL_HOST, but MCP, OAuth, webhooks and voice keep answering in place:
     // installed agents, issued tokens and provider webhooks still point there.

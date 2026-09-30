@@ -67,12 +67,23 @@ export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: stri
 
 const xml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-/** The public pages, then every blog post with its last-modified date. */
-export function sitemapXml(site: string, posts: PostEntry[] = []): string {
-  const entries: { loc: string; lastmod?: string; changefreq: string; priority?: string }[] = [
+export interface SitemapEntry {
+  loc: string;
+  lastmod?: string;
+  changefreq: string;
+  priority?: string;
+}
+
+/** The public pages, then every blog post with its last-modified date. The sitemap and IndexNow (services/indexnow.ts) both read this. */
+export function sitemapEntries(site: string, posts: PostEntry[] = []): SitemapEntry[] {
+  return [
     ...SITEMAP_PAGES.map((e) => ({ loc: `${site}${PAGES[e.page].path}`, changefreq: e.changefreq, priority: e.priority })),
     ...posts.map((p) => ({ loc: `${site}/blog/${p.slug}`, lastmod: `${p.updated ?? p.date}T00:00:00Z`, changefreq: 'monthly', priority: '0.7' })),
   ];
+}
+
+export function sitemapXml(site: string, posts: PostEntry[] = []): string {
+  const entries = sitemapEntries(site, posts);
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',

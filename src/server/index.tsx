@@ -24,7 +24,9 @@ import { makeMessenger } from './lib/messaging';
 import { runDrip } from './services/drip';
 import { numbers } from './services/numbers';
 import { notifySignups } from './services/signups';
-import { blog } from './routes/blog';
+import { submitIndexNow } from './services/indexnow';
+import { sitemapEntries } from './lib/discovery';
+import { blog, posts } from './routes/blog';
 import { admin } from './routes/admin';
 import { BlogError } from './services/blog';
 import { EXAMPLES } from '../content/examples';
@@ -130,8 +132,8 @@ app.onError((err, c) => {
 
 export default {
   fetch: app.fetch,
-  // Number renewals (services/numbers.ts), signup notices, and the signup drip (services/drip.ts),
-  // which is off while DRIP_START is empty.
+  // Number renewals (services/numbers.ts), signup notices, IndexNow pings for new or changed pages
+  // (services/indexnow.ts), and the signup drip (services/drip.ts), which is off while DRIP_START is empty.
   async scheduled(_event, env, ctx) {
     const n = numbers(env);
     ctx.waitUntil(n.renewDue().then((r) => console.log('number renewals', JSON.stringify(r))));
@@ -139,6 +141,9 @@ export default {
     const origin = `https://${env.CANONICAL_HOST}`;
     const messenger = makeMessenger(env);
     ctx.waitUntil(notifySignups({ db: env.DB, messenger, to: adminEmails(env), origin }).then((r) => console.log('signup notices', JSON.stringify(r))));
+    if (env.INDEXNOW_KEY) {
+      ctx.waitUntil(submitIndexNow({ db: env.DB, site: origin, key: env.INDEXNOW_KEY, entries: sitemapEntries(origin, posts()) }).then((r) => console.log('indexnow', JSON.stringify(r))));
+    }
     const start = Number(env.DRIP_START);
     if (!env.DRIP_START || !Number.isFinite(start)) return;
     ctx.waitUntil(runDrip({ db: env.DB, messenger, origin, secret: env.BETTER_AUTH_SECRET, start }).then((r) => console.log('drip', JSON.stringify(r))));

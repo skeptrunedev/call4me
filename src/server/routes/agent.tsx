@@ -22,6 +22,13 @@ agent.get('/robots.txt', (c) => c.text(robotsTxt(site(c)), 200, { 'content-type'
 
 agent.get('/sitemap.xml', (c) => c.body(sitemapXml(site(c), posts()), 200, { 'content-type': 'application/xml; charset=utf-8', ...CACHE }));
 
+/** The IndexNow key file (services/indexnow.ts): search engines fetch it to check that our pings are ours. */
+agent.get('/:file{[0-9a-f]{32}\\.txt}', (c) => {
+  const key = c.env.INDEXNOW_KEY;
+  if (!key || c.req.param('file') !== `${key}.txt`) return c.notFound();
+  return c.text(key, 200, { 'content-type': 'text/plain; charset=utf-8', ...CACHE });
+});
+
 agent.get('/llms.txt', (c) => c.body(llmsTxt(site(c), pricePerMinute(c.env), posts()), 200, { 'content-type': 'text/markdown; charset=utf-8', ...CACHE }));
 
 for (const path of ['/.well-known/mcp/server-card.json', '/.well-known/mcp.json']) {
