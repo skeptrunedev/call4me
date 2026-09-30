@@ -101,11 +101,6 @@ export class CallError extends Error {
 /** Limits that keep one account from turning call4me into a robocaller. */
 export const LIMITS = {
   concurrentPerAccount: 2,
-  /**
-   * Finished conversations with one number per day. A call that left the task open (dropped,
-   * unanswered, voicemail, "call back later", partial) doesn't count: trying again is the job.
-   */
-  sameNumberPerAccountPerDay: 3,
   /** Every attempt counts here, so a runaway agent loop still stops. */
   sameNumberAttemptsPerAccountPerDay: 10,
   sameNumberAllAccountsPerDay: 8,
@@ -185,14 +180,12 @@ export function calls(db: D1Database) {
           `SELECT
              (SELECT COUNT(*) FROM calls WHERE account_id = ?1 AND status IN ('queued','dialing','in_progress')) AS active,
              (SELECT COUNT(*) FROM calls WHERE account_id = ?1 AND to_number = ?2 AND created_at > ?3) AS attempts,
-             (SELECT COUNT(*) FROM calls WHERE account_id = ?1 AND to_number = ?2 AND created_at > ?3 AND ${FINISHED}) AS mine,
              (SELECT COUNT(*) FROM calls WHERE to_number = ?2 AND created_at > ?3 AND ${FINISHED}) AS everyone`,
         )
         .bind(account.id, to.e164, since)
-        .first<{ active: number; attempts: number; mine: number; everyone: number }>();
+        .first<{ active: number; attempts: number; everyone: number }>();
       if (counts && counts.active >= LIMITS.concurrentPerAccount) throw new CallError(`at most ${LIMITS.concurrentPerAccount} calls at once; wait for one to finish`, 429);
       if (counts && counts.attempts >= LIMITS.sameNumberAttemptsPerAccountPerDay) throw new CallError(`this number was already called ${counts.attempts} times in the last 24 hours`, 429);
-      if (counts && counts.mine >= LIMITS.sameNumberPerAccountPerDay) throw new CallError(`this number already finished ${counts.mine} conversations with you in the last 24 hours`, 429);
       if (counts && counts.everyone >= LIMITS.sameNumberAllAccountsPerDay) throw new CallError('this number has been called too often today; try tomorrow', 429);
 
       // Credits up front: the call holds its maximum cost now and settles when it ends.
