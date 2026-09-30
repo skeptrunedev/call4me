@@ -19,6 +19,18 @@ export function alreadyUnreachable(owner: string): string {
 }
 
 /**
+ * What the voice model is told when a restarted session picks the call back up: the call so far,
+ * so it carries on instead of greeting them again.
+ */
+export function resumeNote(transcript: TranscriptLine[]): string {
+  const lines = transcript.slice(-40).map((l) => `${l.role === 'caller' ? 'you' : l.role === 'them' ? 'them' : 'note'}: ${l.text.trim()}`);
+  return [
+    'The audio dropped for a moment on our side and you are back on the SAME call, mid-conversation. Do not greet them or introduce yourself again, and do not repeat what you already said. Carry on from where it left off; if they were in the middle of something, wait for them. If they ask, say the line cut out for a second.',
+    lines.length ? `The call so far:\n${lines.join('\n')}` : '',
+  ].filter(Boolean).join('\n\n');
+}
+
+/**
  * The transcript to store: what is already stored, then what this session instance has heard
  * since. A session instance that restarts mid-call (a deploy) starts with an empty transcript,
  * and writing that alone erased everything said before it.

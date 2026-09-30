@@ -56,8 +56,10 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       connectWhen: brief.connect_when ?? null,
       assistantName: ASSISTANT_NAMES[input.voice ?? 'marin'],
     };
+    const stream = await streamUrl(env, origin, call.id);
     const setup: SessionSetup = {
       callId: call.id,
+      streamUrl: stream,
       person,
       instructions: callInstructions(cb),
       backOffice: backOfficeInstructions(cb),
@@ -72,7 +74,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       to: call.to_number,
       from,
       webhookUrl: `${origin}/webhooks/telnyx`,
-      streamUrl: await streamUrl(env, origin, call.id),
+      streamUrl: stream,
       callId: call.id,
       timeLimitSecs: setup.maxSeconds,
     });
@@ -179,7 +181,8 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     maxSeconds: maxMinutes * 60,
     pricePerMinuteCents: price,
     controlId: opts.controlId,
+    streamUrl: await streamUrl(env, origin, id),
   };
   await sessionFor(env, id).fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
-  await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: await streamUrl(env, origin, id), callId: id, timeLimitSecs: setup.maxSeconds });
+  await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: setup.streamUrl!, callId: id, timeLimitSecs: setup.maxSeconds });
 }
