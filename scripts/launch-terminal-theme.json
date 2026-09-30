@@ -8,7 +8,6 @@
     "subtle": "#cccccc",
     "success": "#0000ff",
     "permission": "#0000ff",
-    "userMessageBackground": "#f2f2f2",
-    "clawd_body": "#0000ff"
+    "userMessageBackground": "#f2f2f2"
   }
 }

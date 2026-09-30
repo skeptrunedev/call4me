@@ -60,7 +60,8 @@ For the launch theme, copy `scripts/launch-terminal-theme.json` to
 `--settings '{"theme":"custom:call4me-launch"}'` only to the capture session.
 Set the terminal emulator's own background to white and foreground to black.
 Unset `NO_COLOR` in the capture process so the native theme remains visible.
-The theme includes `clawd_body` for the logo and `claude` for interface accents.
+The theme uses `claude` for interface accents. Keep the logo's native orange
+color by leaving `clawd_body` out of the overrides.
 
 The capture script records X11 continuously with ffmpeg and saves a timed input
 event log. Use the recorded `SUBMIT` and `EXPAND_TRANSCRIPT` times in the edit
