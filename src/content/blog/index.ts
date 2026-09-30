@@ -1,4 +1,5 @@
 import type { PostSource } from '../../server/lib/blog';
+import cancelPlanetFitness from './cancel-planet-fitness.md';
 import experianPhoneNumber from './experian-phone-number.md';
 
 /**
@@ -6,4 +7,7 @@ import experianPhoneNumber from './experian-phone-number.md';
  * (`import launch from './call4me-is-open.md';`) and a line to the list. Its headline image
  * goes at public/static/blog/<slug>.svg.
  */
-export const POST_SOURCES: PostSource[] = [{ slug: 'experian-phone-number', markdown: experianPhoneNumber }];
+export const POST_SOURCES: PostSource[] = [
+  { slug: 'experian-phone-number', markdown: experianPhoneNumber },
+  { slug: 'cancel-planet-fitness', markdown: cancelPlanetFitness },
+];
