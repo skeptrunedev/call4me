@@ -72,6 +72,38 @@ Fork it, create your own D1 database (`wrangler d1 create callbay`) and put its 
 
 Local: `npm run db:migrate:local && npm run dev` with a `.dev.vars` holding the same secrets.
 
+## AI monitoring
+
+Raindrop monitors the live conversation (`callbay_voice_call`), back office model runs
+(`callbay_back_office`), and the recap after hangup (`callbay_call_recap`). Each event uses
+the account ID as its user ID and the call ID as its conversation ID. Model names, timing,
+status, and back office tool spans are included. No phone audio or recording URLs are uploaded.
+
+Add `RAINDROP_WRITE_KEY` to `.dev.vars` locally and configure the same key as a Cloudflare
+Worker secret with `npx wrangler secret put RAINDROP_WRITE_KEY`. Optional
+`RAINDROP_PROJECT_ID` selects a project slug; unset uses the write key's default project.
+Without a write key, monitoring is disabled. `.dev.vars.example` lists these optional settings.
+
+AI inputs and outputs use Raindrop's PII redaction, with Callbay's existing masking for
+per call secrets applied first. Tool arguments and results appear in redacted back office
+AI output. Tool spans contain names, timing, and generic failure status, keeping sensitive
+payloads out of unredacted trace attributes. Account names and emails are not sent as user traits.
+SDK PII redaction is pattern based and does not guarantee removal of every sensitive detail.
+
+Monitoring runs separately from live audio and tools. Terminal events and queued tool spans
+are flushed within the Worker or Durable Object lifetime. An unfinished back office run at
+hangup is marked interrupted; later tool results do not reopen the closed monitoring client.
+
+After a call, check the three event names in [Raindrop](https://app.raindrop.ai), with actual
+inputs and outputs, the matching account and call IDs, and tool names and durations. A call
+that never invokes a back office model has no back office event. Feedback signals, audio
+attachments, and agent self diagnostics are not instrumented because the current call flow
+has no corresponding feedback controls or diagnostics tools.
+
+For investigation, connect the [Raindrop MCP server](https://mcp.raindrop.ai/mcp) and install
+the investigation skill with `npx skills add raindrop-ai/skills --skill raindrop-investigate`.
+Connect Slack in Raindrop for alerts. Create a [Raindrop account](https://app.raindrop.ai) if needed.
+
 ## License
 
 MIT
