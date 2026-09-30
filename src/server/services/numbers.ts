@@ -128,9 +128,21 @@ export function numberView(r: NumberRow, at = now()): NumberView {
   };
 }
 
-/** Whether the account may reach `country`: any +1 number, or a country it holds a number in. */
+/**
+ * Europe, where any account may call businesses from any of its numbers: from a European number
+ * when it holds one, else from its US number. EU and EEA countries, the UK and Switzerland; calls
+ * there cost the carrier a few cents a minute at most.
+ */
+export const EUROPE = new Set([
+  'AT', 'BE', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HR', 'HU', 'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK',
+]);
+
+/** Every country some account may call: the telephone carrier must allow each of them. */
+export const CALLABLE = [...new Set(['US', 'CA', ...EUROPE, ...Object.keys(COUNTRIES)])];
+
+/** Whether the account may reach `to`: +1 numbers and Europe always, elsewhere a country it holds a number in. */
 export async function mayCall(db: D1Database, accountId: string, to: Extract<PhoneCheck, { ok: true }>): Promise<boolean> {
-  if (to.home) return true;
+  if (to.home || EUROPE.has(to.country)) return true;
   return Boolean(await db.prepare(`SELECT 1 FROM numbers WHERE account_id = ? AND country = ? AND status = 'active'`).bind(accountId, to.country).first());
 }
 
@@ -177,7 +189,7 @@ export function numbers(env: Env) {
     if (!found) throw new NumberError(`no ${c.name} numbers are for sale right now; try again later`, 503);
 
     // Calls to the country must be allowed before anyone pays for a number there.
-    if (!isHome(found.phoneNumber)) await provider.allowDestination(country);
+    if (!isHome(found.phoneNumber)) await provider.allowDestinations([country]);
 
     const id = newId();
     const price = found.upfrontCents + found.monthlyCents;
@@ -235,6 +247,8 @@ export function numbers(env: Env) {
     /** Re-price every country one at a time, gently on the carrier's rate limit. Run by the cron. */
     async refreshOffers(): Promise<{ refreshed: number; failed: number }> {
       const out = { refreshed: 0, failed: 0 };
+      // Keep the carrier's destination whitelist in step with where accounts may call.
+      await provider.allowDestinations(CALLABLE).catch((err) => console.error('destination whitelist update failed', err));
       for (const country of Object.keys(COUNTRIES)) {
         try {
           await refreshOffer(country);
@@ -269,8 +283,8 @@ export function numbers(env: Env) {
 
     /**
      * The number a call to `to` goes out from: `requested` when given (it must be one of the
-     * account's), else one in the callee's country, else (calling a +1 number) any +1 number
-     * the account holds, buying the free one on the first call.
+     * account's), else one in the callee's country, else (calling Europe) a European one, else
+     * (calling a +1 number or Europe) its US number, buying the free one on the first call.
      */
     async callerId(account: Account, to: Extract<PhoneCheck, { ok: true }>, requested?: string | null): Promise<string> {
       const owned = await active(account.id);
@@ -282,15 +296,19 @@ export function numbers(env: Env) {
       }
       const sameCountry = owned.find((n) => n.country === to.country);
       if (sameCountry) return sameCountry.phone_number;
-      if (to.home) return owned.find((n) => isHome(n.phone_number))?.phone_number ?? (await this.ensureIncluded(account, to.e164));
+      if (EUROPE.has(to.country)) {
+        const european = owned.find((n) => EUROPE.has(n.country));
+        if (european) return european.phone_number;
+      }
+      if (to.home || EUROPE.has(to.country)) return owned.find((n) => isHome(n.phone_number))?.phone_number ?? (await this.ensureIncluded(account, to.e164));
       throw new NumberError(`calling ${COUNTRIES[to.country]?.name ?? to.country} needs a number there; buy one with callbay_buy_number`, 422);
     },
 
-    /** The account's free first number: a US local number in the area code of the first place it calls. */
+    /** The account's free first number: a US local number, in the area code of the first place it calls when that is a +1 number. */
     async ensureIncluded(account: Account, nearE164: string): Promise<string> {
       const existing = await db.prepare(`SELECT phone_number FROM numbers WHERE account_id = ? AND included = 1 AND status = 'active'`).bind(account.id).first<{ phone_number: string }>();
       if (existing) return existing.phone_number;
-      const found = await provider.availableNumber({ country: 'US', type: 'local', areaCode: nearE164.slice(2, 5) });
+      const found = await provider.availableNumber({ country: 'US', type: 'local', areaCode: isHome(nearE164) ? nearE164.slice(2, 5) : null });
       if (!found) throw new NumberError('no US numbers are for sale right now; try again shortly', 503);
       await order(found, 'US');
       const r = await db

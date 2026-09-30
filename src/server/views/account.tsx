@@ -88,7 +88,8 @@ export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerM
     </form>
     <h2>numbers</h2>
     <p class="small">
-      calls go out from a number in the country you're calling, so a number abroad is what lets you call businesses there. us and canadian businesses can always be called. extra numbers
+      calls go out from a number in the country you're calling when you have one. us, canadian, and european businesses can always be called (europe from a european
+      number if you have one, else your us number); anywhere else, a number in that country is what lets you call there. extra numbers
       cost exactly what the carrier charges: the upfront cost plus the first month now, then the monthly cost every 30 days from your balance. if your balance can't cover a renewal, the
       number is released after 7 days.
     </p>

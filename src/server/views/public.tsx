@@ -68,8 +68,8 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
         </ul>
         <h3>where it calls</h3>
         <p class="small">
-          any business in the us and canada, from the free us number every account gets. calling another country takes a callbay number there, bought from your
-          credits at the carrier's price.{live.length > 0 && <> numbers available now: {names(live)}.</>}
+          any business in the us, canada, and europe, from the free us number every account gets, or from a european number if you have one. anywhere else takes
+          a callbay number in that country, bought from your credits at the carrier's price.{live.length > 0 && <> numbers available now: {names(live)}.</>}
           {soon.length > 0 && <> coming soon, with regulator paperwork in review: {names(soon)}.</>}
         </p>
         <h3>how it sounds</h3>
@@ -92,8 +92,9 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
       <details>
         <summary>which countries can it call?</summary>
         <p>
-          every account can call businesses in the us and canada. to call a business in another country, buy a callbay number in that country and calls there go out
-          from it, so the business sees a local number and can call you back.{live.length > 0 && <> numbers you can buy today: {names(live)}.</>}
+          every account can call businesses in the us, canada, and europe. european calls go out from your european callbay number if you have one, otherwise from
+          your us number. anywhere else, buy a callbay number in that country and calls there go out from it. a local number also means the business sees a familiar
+          number and can call you back cheaply.{live.length > 0 && <> numbers you can buy today: {names(live)}.</>}
           {soon.length > 0 && <> waiting on regulator approval, usually a few days: {names(soon)}.</>} calls abroad cost the same {dollars(p.pricePerMinuteCents)}/min as calls at home.
         </p>
       </details>
@@ -216,7 +217,7 @@ export const RulesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
     <h1>rules</h1>
     <p>callbay places calls a person would make themselves: bookings, appointments, questions for a business. it is not for anything else.</p>
     <ul>
-      <li>US and Canadian numbers, and numbers in countries where your account holds a callbay number. no emergency numbers, no premium-rate or shared-cost numbers.</li>
+      <li>US, Canadian and European numbers, and numbers in other countries where your account holds a callbay number. no emergency numbers, no premium-rate or shared-cost numbers.</li>
       <li>no telemarketing, sales, surveys, debt collection, political calls, or calls to people who didn't expect to hear from you.</li>
       <li>no harassment, threats, pranks, or pretending to be someone else. the caller always calls <i>for</i> you; it never claims to be you.</li>
       <li>the same number can be called a few times a day, not more. anyone who asks not to be called again is never called by callbay again.</li>

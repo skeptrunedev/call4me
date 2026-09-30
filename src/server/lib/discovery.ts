@@ -90,7 +90,7 @@ export function llmsTxt(site: string, pricePerMinuteCents: number, posts: PostEn
   return [
     '# callbay',
     '',
-    `> your AI agent makes phone calls for you: restaurant bookings, doctor, dentist, and vet appointments, dealership and service questions, home internet, flight changes, and questions for any business in the US and Canada, or abroad with a callbay number in that country. The caller sounds like a normal person, asks your agent mid-call when it needs something, and your agent gets the outcome and transcript. Prepaid credits from $10; ${price} per minute of talk time; unanswered calls are free.`,
+    `> your AI agent makes phone calls for you: restaurant bookings, doctor, dentist, and vet appointments, dealership and service questions, home internet, flight changes, and questions for any business in the US, Canada and Europe, or elsewhere with a callbay number in that country. The caller sounds like a normal person, asks your agent mid-call when it needs something, and your agent gets the outcome and transcript. Prepaid credits from $10; ${price} per minute of talk time; unanswered calls are free.`,
     '',
     'Everything goes through the MCP server, signed in as a callbay user (Google or X in the browser, then OAuth for the agent), or with an API key from the account page.',
     '',

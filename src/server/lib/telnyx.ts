@@ -236,16 +236,17 @@ export function telnyx(env: TelnyxEnv) {
     },
 
     /**
-     * Let our outbound voice profile call `country`. Telnyx refuses calls to countries missing
-     * from the profile's whitelist, which starts as the US and Canada.
+     * Let our outbound voice profile call `countries`. Telnyx refuses calls to countries missing
+     * from the profile's whitelist, which starts as the US and Canada. Only ever adds.
      */
-    async allowDestination(country: string): Promise<void> {
+    async allowDestinations(countries: string[]): Promise<void> {
       const app = await call<{ data: { outbound: { outbound_voice_profile_id: string } } }>(env, 'GET', `/call_control_applications/${encodeURIComponent(env.TELNYX_CONNECTION_ID)}`);
       const profileId = app.data.outbound.outbound_voice_profile_id;
       const profile = await call<{ data: { whitelisted_destinations: string[] } }>(env, 'GET', `/outbound_voice_profiles/${encodeURIComponent(profileId)}`);
       const allowed = profile.data.whitelisted_destinations;
-      if (allowed.includes(country)) return;
-      await call(env, 'PATCH', `/outbound_voice_profiles/${encodeURIComponent(profileId)}`, { whitelisted_destinations: [...allowed, country] });
+      const missing = countries.filter((c) => !allowed.includes(c));
+      if (!missing.length) return;
+      await call(env, 'PATCH', `/outbound_voice_profiles/${encodeURIComponent(profileId)}`, { whitelisted_destinations: [...allowed, ...missing] });
     },
   };
 }

@@ -163,7 +163,7 @@ function sendMessage(req: RpcRequest, site: string): { status: number; body: unk
 
   const kinds = CATEGORIES.map((c) => ({ slug: c.slug, name: c.name, examples: c.examples }));
   const summary = [
-    'callbay places real phone calls to businesses for a user: in the US and Canada, and in any other country the account holds a callbay number in. Kinds of calls:',
+    'callbay places real phone calls to businesses for a user: in the US, Canada and Europe, and in any other country the account holds a callbay number in. Kinds of calls:',
     ...kinds.map((k) => `- ${k.slug}: ${k.name} (${k.examples})`),
     '',
     'Send a category slug to see exactly what that call needs before dialing.',

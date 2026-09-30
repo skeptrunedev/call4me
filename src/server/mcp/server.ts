@@ -44,7 +44,7 @@ The caller can only say what you give it, so everything is collected BEFORE dial
 
 To put the user on a call themselves: pass connect_when to callbay_place_call (e.g. "as soon as a person picks up", to skip a long hold), or call callbay_connect_me mid-call. Their phone rings and they join the call; the caller goes quiet, and takes over again when they press * or hang up.
 
-Calls go out from the account's own numbers: its free US number, plus any it bought (callbay_list_numbers, callbay_buy_number). US and Canadian businesses can always be called; a business in another country can be called once the account holds a number there, and the call goes out from it.
+Calls go out from the account's own numbers: its free US number, plus any it bought (callbay_list_numbers, callbay_buy_number). Businesses in the US, Canada and Europe can always be called (Europe from a European number when the account holds one, else from its US number); anywhere else, once the account holds a number in that country, and the call goes out from it.
 
 Every call leaves the calling number as the callback. If a call ends in voicemail or "we'll call you back", callbay remembers the task for 14 days: when the business calls that number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (callbay_get_call lists its callbacks) and in callbay_list_calls.
 
@@ -138,7 +138,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
     {
       title: 'Place a phone call',
       description:
-        'Call a business for the user (US and Canada, or any country the account holds a number in; see callbay_list_numbers) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category\'s required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with callbay_get_call. Credits for the maximum length are held up front; billed per minute of talk time; unanswered calls are free.',
+        'Call a business for the user (US, Canada, Europe, or any other country the account holds a number in; see callbay_list_numbers) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category\'s required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with callbay_get_call. Credits for the maximum length are held up front; billed per minute of talk time; unanswered calls are free.',
       inputSchema: z.object({
         to: z.string().min(3).max(40).describe('the number to call, e.g. "+14155550123", "(415) 555-0123", or abroad with its country code, e.g. "+31 20 123 4567"'),
         business: z.string().min(1).max(120).describe('who you are calling, as a person would say it: "Nopa", "Dr. Chen\'s office", "Toyota of Berkeley service"'),

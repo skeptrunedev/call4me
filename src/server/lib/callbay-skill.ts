@@ -13,7 +13,7 @@ export function callbaySkillMd(site: string, pricePerMinuteCents: number): strin
   const price = `$${(pricePerMinuteCents / 100).toFixed(2)}`;
   return `---
 name: callbay
-description: Place real phone calls for the user with callbay (${site}): book restaurants, doctor, dentist, and vet appointments, call dealerships, home internet providers, and airlines, or ask any business a question (US and Canada, or abroad from a callbay number in that country). Use when the user asks you to call somewhere, book something by phone, or find something out from a business that has no online way to do it.
+description: Place real phone calls for the user with callbay (${site}): book restaurants, doctor, dentist, and vet appointments, call dealerships, home internet providers, and airlines, or ask any business a question (US, Canada and Europe, or elsewhere from a callbay number in that country). Use when the user asks you to call somewhere, book something by phone, or find something out from a business that has no online way to do it.
 ---
 
 # callbay
@@ -57,6 +57,6 @@ ${CATEGORIES.map((c) => `- \`${c.slug}\`: ${c.name} (${c.examples})`).join('\n')
 
 ## Rules
 
-Only call businesses and services the user wants to reach, never personal numbers that don't expect the call. No telemarketing, surveys, collections, or pretending to be the user: the caller calls for them. US and Canadian numbers, plus numbers in countries the account holds a callbay number in (callbay_list_numbers, callbay_buy_number); no emergency or premium-rate numbers. Full rules: ${site}/rules
+Only call businesses and services the user wants to reach, never personal numbers that don't expect the call. No telemarketing, surveys, collections, or pretending to be the user: the caller calls for them. US, Canadian and European numbers, plus numbers in other countries the account holds a callbay number in (callbay_list_numbers, callbay_buy_number); no emergency or premium-rate numbers. Full rules: ${site}/rules
 `;
 }
