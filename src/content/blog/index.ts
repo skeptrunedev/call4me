@@ -1,8 +1,9 @@
 import type { PostSource } from '../../server/lib/blog';
+import experianPhoneNumber from './experian-phone-number.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
  * (`import launch from './call4me-is-open.md';`) and a line to the list. Its headline image
  * goes at public/static/blog/<slug>.svg.
  */
-export const POST_SOURCES: PostSource[] = [];
+export const POST_SOURCES: PostSource[] = [{ slug: 'experian-phone-number', markdown: experianPhoneNumber }];
