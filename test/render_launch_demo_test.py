@@ -101,6 +101,39 @@ class CallTimelineTest(unittest.TestCase):
         self.assertGreaterEqual(last[3], 641)
         self.assertEqual(renderer.outro_camera(edit, 5, poster=True), last)
 
+    def test_dissolves_remove_boundary_jump_without_changing_scene_timing(self):
+        edit = self.load()
+        edit.update(intro_duration=2, result_duration=6, capture_duration=10,
+                    terminal_result_at=4, terminal_submit_at=1,
+                    call_transition_duration=.45)
+        source = Image.new("RGB", (1580, 836), "white")
+        ImageDraw.Draw(source).rectangle((100, 500, 1400, 700), fill="blue")
+        samples = np.zeros(48000)
+        with patch.object(renderer, "native_frame", return_value=source):
+            for boundary in [2, 6]:
+                with self.subTest(boundary=boundary):
+                    before = np.array(renderer.scene(edit, boundary - 1 / 120,
+                                                     samples, 48000), dtype=float)
+                    after = np.array(renderer.scene(edit, boundary + 1 / 120,
+                                                    samples, 48000), dtype=float)
+                    hard_before = np.array(renderer.scene_frame(
+                        edit, boundary - 1 / 120, samples, 48000), dtype=float)
+                    hard_after = np.array(renderer.scene_frame(
+                        edit, boundary + 1 / 120, samples, 48000), dtype=float)
+                    self.assertLess(np.mean(abs(after - before)),
+                                    np.mean(abs(hard_after - hard_before)) * .1)
+            # Away from transitions, native scenes and the final zoom stay intact.
+            for t in [0, 3, 8, 11]:
+                self.assertEqual(renderer.scene(edit, t, samples, 48000).tobytes(),
+                                 renderer.scene_frame(edit, t, samples, 48000).tobytes())
+
+    def test_invalid_transition_duration(self):
+        for duration in [-.1, 1.1, float("nan"), float("inf")]:
+            with self.subTest(duration=duration):
+                self.edit["call_transition_duration"] = duration
+                with self.assertRaisesRegex(ValueError, "call_transition_duration"):
+                    self.load()
+
     def test_silence_and_speed_retime_later_clips_and_spanning_captions(self):
         self.edit["call_speed"] = 1.25
         self.edit["clips"][0]["remove_silence"] = [{"start": 1.5, "end": 2}]
@@ -180,6 +213,54 @@ class CallTimelineTest(unittest.TestCase):
         self.assertLess(spectrum[np.argmin(abs(frequencies - 440))],
                         spectrum[np.argmin(abs(frequencies - 880))] * .01)
         self.assertLess(np.max(np.abs(background)), 32767)
+
+    def test_continuous_song_has_no_boundary_gap_or_restart_and_preserves_voice(self):
+        edit = self.load()
+        call_path, voice, rate = renderer.prepare_audio(edit, self.root)
+        # Nonperiodic carrier period relative to either boundary detects cue restarts.
+        frequency = 883.7
+        carrier = np.sin(2 * np.pi * frequency * np.arange(12 * rate) / rate)
+        with wave.open(str(self.root / "music.wav"), "wb") as audio:
+            audio.setnchannels(1)
+            audio.setsampwidth(2)
+            audio.setframerate(rate)
+            audio.writeframes((carrier * 8000).astype("<i2").tobytes())
+        edit.update(intro_duration=2, result_duration=2, call_transition_duration=.45,
+                    music={"source": "music.wav", "start": 0, "fade_out": .5,
+                           "fade_in": .5, "call_background_gain_db": -20,
+                           "continuous": True})
+        path = renderer.prepare_soundtrack(edit, self.root / "edit.json",
+                                          call_path, self.root, 8)
+
+        def read(path):
+            with wave.open(str(path)) as audio:
+                self.assertEqual(audio.getnframes(), 8 * rate)
+                return np.frombuffer(audio.readframes(audio.getnframes()),
+                                     dtype="<i2").reshape(-1, 2).astype(float)
+
+        mixed = read(path)
+        score = read(self.root / "music-bed.wav")
+        residual = mixed - score
+        # Subtracting the score recovers the original call without any gain change.
+        a, b = round(2.1 * rate), round(5.8 * rate)
+        np.testing.assert_allclose(residual[a:b, 0], voice[a - 2 * rate:b - 2 * rate]
+                                   * 32768, atol=1, rtol=0)
+        for boundary in [2, 6]:
+            a, b = round((boundary - .01) * rate), round((boundary + .01) * rate)
+            tone = score[a:b, 0]
+            self.assertGreater(np.sqrt(np.mean(tone ** 2)), 100)
+            # Correlation across each boundary confirms uninterrupted song position.
+            self.assertGreater(np.corrcoef(tone, carrier[a:b])[0, 1], .999)
+            left_rms = np.sqrt(np.mean(tone[:len(tone) // 2] ** 2))
+            right_rms = np.sqrt(np.mean(tone[len(tone) // 2:] ** 2))
+            self.assertAlmostEqual(left_rms / right_rms, 1, delta=.05)
+        opening_rms = np.sqrt(np.mean(score[rate:round(1.25 * rate), 0] ** 2))
+        background_rms = np.sqrt(np.mean(score[3 * rate:round(3.25 * rate), 0] ** 2))
+        closing_rms = np.sqrt(np.mean(score[round(6.6 * rate):round(6.85 * rate), 0] ** 2))
+        self.assertAlmostEqual(background_rms / opening_rms, .1, delta=.002)
+        # Loudness normalization can vary the carrier gain slightly over time.
+        self.assertAlmostEqual(closing_rms / opening_rms, 1, delta=.01)
+        self.assertLess(np.max(np.abs(mixed)), 32767)
 
 
 if __name__ == "__main__":

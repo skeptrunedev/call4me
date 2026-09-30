@@ -132,6 +132,10 @@ def load_edit(path):
             zoom["width"] > 0 and zoom["start"] >= 0 and zoom["duration"] > 0):
         raise ValueError("Invalid final response camera crop or zoom timing")
     edit["response_zoom"] = zoom
+    transition = float(edit.get("call_transition_duration", 0))
+    if not math.isfinite(transition) or not 0 <= transition <= 1:
+        raise ValueError("call_transition_duration must be between 0 and 1")
+    edit["call_transition_duration"] = transition
     offset = 0.0
     cues = []
     segments = []
@@ -211,8 +215,16 @@ def prepare_soundtrack(edit, manifest, call_audio, output, total):
     intro, result = edit["intro_duration"], edit["result_duration"]
     call_end = intro + edit["audio_duration"]
     inputs = ["-i", str(call_audio)]
-    filters = [f"[0:a]pan=stereo|c0=c0|c1=c0,"
+    voice_fades = ""
+    if edit["call_transition_duration"]:
+        fade_in = min(.08, edit["audio_duration"] / 2)
+        fade_out = min(.12, edit["audio_duration"] / 2)
+        voice_fades = (f"afade=t=in:d={fade_in}:curve=hsin,"
+                       f"afade=t=out:st={edit['audio_duration'] - fade_out}:"
+                       f"d={fade_out}:curve=hsin,")
+    filters = [f"[0:a]pan=stereo|c0=c0|c1=c0,{voice_fades}"
                f"adelay={round(intro * rate)}S:all=1,apad,atrim=duration={total}[call]"]
+    music_master = None
     music = edit.get("music")
     if music:
         source = (manifest.parent / music["source"]).resolve()
@@ -230,49 +242,94 @@ def prepare_soundtrack(edit, manifest, call_audio, output, total):
             if not math.isfinite(background_gain) or not -60 <= background_gain <= -12:
                 raise ValueError("call_background_gain_db must be between -60 and -12")
         intro_music = intro - gap
-        if not (min(start, resume) >= 0 and 0 < gap < intro and
-                0 < fade_out < intro_music and 0 < fade_in < result and
+        continuous = bool(music.get("continuous", False))
+        valid_cues = start >= 0 if continuous else min(start, resume) >= 0 and 0 < gap < intro
+        if not (valid_cues and 0 < fade_out < (intro if continuous else intro_music) and
+                0 < fade_in < result and
                 -30 <= level <= -14):
             raise ValueError("Invalid music cue, fade, or loudness setting")
         inputs += ["-i", str(source)]
-        filters += [
-            "[1:a]asplit=3[mi][mo][mb]" if background_gain is not None
-            else "[1:a]asplit=2[mi][mo]",
-            f"[mi]atrim=start={start}:duration={intro_music},asetpts=PTS-STARTPTS[ic]",
-            f"[mo]atrim=start={resume}:duration={result},asetpts=PTS-STARTPTS[oc]",
-            "[ic][oc]concat=n=2:v=0:a=1,"
-            f"loudnorm=I={level}:TP=-2:LRA=11,aresample={rate},"
-            "aformat=channel_layouts=stereo,asplit=2[ni][no]",
-            f"[ni]atrim=duration={intro_music},asetpts=PTS-STARTPTS,"
-            "afade=t=in:d=0.03,"
-            f"afade=t=out:st={intro_music - fade_out}:d={fade_out}[opening]",
-            f"[no]atrim=start={intro_music},asetpts=PTS-STARTPTS,"
-            f"afade=t=in:d={fade_in},"
-            f"afade=t=out:st={max(0, result - .8)}:d={min(.8, result)},"
-            f"adelay={round(call_end * rate)}S:all=1[closing]",
-        ]
-        tracks = "[call][opening][closing]"
-        if background_gain is not None:
-            duration = edit["audio_duration"]
-            fade = min(.3, duration / 2)
-            filters.append(
-                f"[mb]atrim=start={start + intro}:duration={duration},asetpts=PTS-STARTPTS,"
+        if continuous:
+            if background_gain is None:
+                raise ValueError("Continuous music requires call_background_gain_db")
+            low = 10 ** (background_gain / 20)
+            down = f"clip((t-{intro - fade_out})/{fade_out},0,1)"
+            up = f"clip((t-{call_end})/{fade_in},0,1)"
+            gain = (f"1+({low}-1)*({down})^2*(3-2*({down}))"
+                    f"+(1-{low})*({up})^2*(3-2*({up}))")
+            filters += [
+                f"[1:a]atrim=start={start}:duration={total},asetpts=PTS-STARTPTS,"
                 f"loudnorm=I={level}:TP=-2:LRA=11,aresample={rate},"
-                f"aformat=channel_layouts=stereo,volume={background_gain}dB,"
-                f"afade=t=in:d={fade},afade=t=out:st={duration - fade}:d={fade},"
-                f"adelay={round(intro * rate)}S:all=1[background]"
-            )
-            tracks += "[background]"
-        filters.append(f"{tracks}amix=inputs={4 if background_gain is not None else 3}:"
-                       f"normalize=0:dropout_transition=0,atrim=duration={total}[out]")
-        mapped = "[out]"
+                "aformat=channel_layouts=stereo,"
+                f"aeval=exprs='val(0)*({gain})|val(1)*({gain})':c=stereo,"
+                "afade=t=in:d=0.03:curve=hsin,"
+                f"afade=t=out:st={max(0, total - .8)}:d={min(.8, total)}:curve=hsin,"
+                "apad,"
+                f"atrim=duration={total},asplit=2[score][score_master]",
+                f"[call][score]amix=inputs=2:normalize=0:dropout_transition=0,"
+                f"atrim=duration={total}[out]",
+            ]
+            music_master = output / "music-bed.wav"
+            mapped = "[out]"
+        else:
+            filters.extend(separate_music_cues(edit, total, rate))
+            mapped = "[out]"
     else:
         mapped = "[call]"
     soundtrack = output / "soundtrack.wav"
-    run(["ffmpeg", "-y", "-loglevel", "error", *inputs,
-         "-filter_complex", ";".join(filters), "-map", mapped,
-         "-ar", str(rate), "-ac", "2", "-c:a", "pcm_s16le", str(soundtrack)])
+    command = ["ffmpeg", "-y", "-loglevel", "error", *inputs,
+               "-filter_complex", ";".join(filters), "-map", mapped,
+               "-ar", str(rate), "-ac", "2", "-c:a", "pcm_s16le", str(soundtrack)]
+    if music_master:
+        command += ["-map", "[score_master]", "-ar", str(rate), "-ac", "2",
+                    "-c:a", "pcm_s16le", str(music_master)]
+    run(command)
     return soundtrack
+
+
+def separate_music_cues(edit, total, rate):
+    """Keep the original independent intro, background, and result cue mode."""
+    music = edit["music"]
+    intro, result = edit["intro_duration"], edit["result_duration"]
+    call_end = intro + edit["audio_duration"]
+    start = float(music["start"])
+    resume = float(music.get("outro_start", start))
+    intro_music = intro - float(music.get("silence_before_call", .15))
+    fade_out = float(music.get("fade_out", 1.1))
+    fade_in = float(music.get("fade_in", .65))
+    level = float(music.get("loudness", -19))
+    background_gain = music.get("call_background_gain_db")
+    filters = [
+        "[1:a]asplit=3[mi][mo][mb]" if background_gain is not None
+        else "[1:a]asplit=2[mi][mo]",
+        f"[mi]atrim=start={start}:duration={intro_music},asetpts=PTS-STARTPTS[ic]",
+        f"[mo]atrim=start={resume}:duration={result},asetpts=PTS-STARTPTS[oc]",
+        "[ic][oc]concat=n=2:v=0:a=1,"
+        f"loudnorm=I={level}:TP=-2:LRA=11,aresample={rate},"
+        "aformat=channel_layouts=stereo,asplit=2[ni][no]",
+        f"[ni]atrim=duration={intro_music},asetpts=PTS-STARTPTS,"
+        "afade=t=in:d=0.03,"
+        f"afade=t=out:st={intro_music - fade_out}:d={fade_out}[opening]",
+        f"[no]atrim=start={intro_music},asetpts=PTS-STARTPTS,"
+        f"afade=t=in:d={fade_in},"
+        f"afade=t=out:st={max(0, result - .8)}:d={min(.8, result)},"
+        f"adelay={round(call_end * rate)}S:all=1[closing]",
+    ]
+    tracks = "[call][opening][closing]"
+    if background_gain is not None:
+        duration = edit["audio_duration"]
+        fade = min(.3, duration / 2)
+        filters.append(
+            f"[mb]atrim=start={start + intro}:duration={duration},asetpts=PTS-STARTPTS,"
+            f"loudnorm=I={level}:TP=-2:LRA=11,aresample={rate},"
+            f"aformat=channel_layouts=stereo,volume={background_gain}dB,"
+            f"afade=t=in:d={fade},afade=t=out:st={duration - fade}:d={fade},"
+            f"adelay={round(intro * rate)}S:all=1[background]"
+        )
+        tracks += "[background]"
+    filters.append(f"{tracks}amix=inputs={4 if background_gain is not None else 3}:"
+                   f"normalize=0:dropout_transition=0,atrim=duration={total}[out]")
+    return filters
 
 
 def prepare_terminal(edit, manifest, output):
@@ -331,13 +388,15 @@ def outro_camera(edit, t, poster=False):
     return tuple(a + (b - a) * u for a, b in zip(wide, response))
 
 
-def scene(edit, t, samples, rate, poster=False):
+def scene_frame(edit, t, samples, rate, poster=False, phase=None):
     im = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(im)
     intro = edit["intro_duration"]
     play_t = max(0, min(edit["audio_duration"], t - intro))
-    playing = intro <= t < intro + edit["audio_duration"] and not poster
-    finished = t >= intro + edit["audio_duration"] or poster
+    playing = (phase == "call" if phase else intro <= t < intro + edit["audio_duration"]) and not poster
+    finished = (phase == "result" if phase else t >= intro + edit["audio_duration"]) or poster
+    if playing:
+        play_t = min(play_t, max(0, edit["audio_duration"] - 1 / FPS))
     label = "call complete" if finished else "listen to the call" if playing else "ask your agent"
     draw_link(d, (90, 40), "call4.me", 56)
     draw_link(d, (1450, 66), label, 30)
@@ -347,11 +406,11 @@ def scene(edit, t, samples, rate, poster=False):
         # Every pixel inside this viewport comes from the continuous X11 capture.
         # Camera framing and optional typing tempo never redraw terminal text.
         source_t = (edit["capture_duration"] - .25 if poster else
-                    edit["terminal_result_at"] + t - intro - edit["audio_duration"]
-                    if finished else intro_source_time(edit, t))
+                    edit["terminal_result_at"] + max(0, t - intro - edit["audio_duration"])
+                    if finished else intro_source_time(edit, min(intro, max(0, t))))
         source = native_frame(edit, source_t)
-        crop = (outro_camera(edit, t - intro - edit["audio_duration"], poster)
-                if finished else camera(edit, t))
+        crop = (outro_camera(edit, max(0, t - intro - edit["audio_duration"]), poster)
+                if finished else camera(edit, min(intro, max(0, t))))
         viewport = source.transform((1760, 816), Image.Transform.EXTENT,
                                     crop, Image.Resampling.BICUBIC,
                                     fillcolor=BG)
@@ -383,6 +442,20 @@ def scene(edit, t, samples, rate, poster=False):
         d.line((115, 948, 115 + 1683 * play_t / edit["audio_duration"], 948), fill=ACCENT, width=3)
     draw_text(d, (91, 1016), "recorded terminal replay · original call audio · edited for length", 25, MUTED)
     return im
+
+
+def scene(edit, t, samples, rate, poster=False):
+    duration = edit["call_transition_duration"]
+    if duration and not poster:
+        boundaries = [(edit["intro_duration"], "intro", "call"),
+                      (edit["intro_duration"] + edit["audio_duration"], "call", "result")]
+        for boundary, before, after in boundaries:
+            start = boundary - duration * .4
+            if start <= t < start + duration:
+                weight = ease(0, 1, (t - start) / duration)
+                return Image.blend(scene_frame(edit, t, samples, rate, phase=before),
+                                   scene_frame(edit, t, samples, rate, phase=after), weight)
+    return scene_frame(edit, t, samples, rate, poster)
 
 
 def main():
@@ -424,6 +497,7 @@ def main():
         "terminal_call_at": edit["terminal_call_at"],
         "terminal_result_at": edit["terminal_result_at"],
         "response_zoom": edit["response_zoom"],
+        "call_transition_duration": edit["call_transition_duration"],
     }
     if args.reuse_video:
         previous_intro = args.reuse_video.parent / "intro-edit.json"

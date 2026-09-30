@@ -13,7 +13,7 @@ explicit local fixture with a verified historical result. Label the footage as
 a recorded replay. Audio playback and captions belong in a separate editorial
 scene.
 
-Show the user's request first, cut to the call audio immediately when the native
+Show the user's request first, transition to the call audio when the native
 terminal says "Calling callbay", then return to the completed native terminal
 result after the audio ends. Use a white page, black serif editorial text,
 default blue underlined links, and simple gray rules. Record the terminal with
@@ -180,6 +180,24 @@ can be reused only when its adjacent `call-edit.json` matches the current call
 timeline and captions exactly. Keep supplied songs and finished mixes outside git.
 An accelerated intro also requires matching `intro-edit.json` metadata for reuse.
 Changing either intro timing or the native capture requires a full render.
+
+For smooth call boundaries, set `call_transition_duration` to 0.45 seconds.
+The visual dissolve uses a smooth easing curve, starting 40 percent of its
+duration before each boundary and ending afterward. Outgoing and incoming
+terminal frames hold at their edges while the recording scene dissolves.
+Call duration, caption timing, and the final response zoom remain unchanged.
+The value defaults to zero and accepts up to one second. A full render is
+required when it changes. Check caption readability through the dissolve.
+
+Set `music.continuous` to `true` with `call_background_gain_db` to use one
+continuous song excerpt throughout. `fade_out` smoothly lowers its volume
+before the call, and `fade_in` brings it up after the call. This mode preserves
+song position across both boundaries instead of restarting the closing cue,
+and ignores `outro_start` and `silence_before_call`. It also writes the isolated
+`music-bed.wav` for verification. Subtract this score from the soundtrack to
+check voice gain. With visual transitions enabled, short voice fades affect
+only the first 0.08 and last 0.12 seconds. Verify those intervals contain quiet
+margins before applying them to a new recording.
 
 Check the contact sheet and individual preview frames before the full render.
 After rendering, decode the actual MP4, inspect frames at the zooms and caption
