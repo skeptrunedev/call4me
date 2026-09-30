@@ -83,15 +83,24 @@ inside their selected clip. Prompt and result text may be abridged for
 readability, with that choice documented in the manifest provenance.
 
 The renderer decodes frames from the single capture and displays each selected
-segment in order at its original speed. The audio occupies the middle of the
+segment in order. Terminal footage defaults to its original speed. The audio occupies the middle of the
 edit, between invocation and result. Smooth camera transforms provide the zooms.
 It never substitutes terminal text or action screenshots. The matching still
 comes from a frame of this same recording.
 
+To accelerate only prompt entry, set `typing_speed` between 1 and 4 and supply
+`terminal_typing_start_at` and `terminal_typing_end_at` in source seconds. Verify
+the last typed character is visible at the selected end, before
+`terminal_submit_at`. Footage before and after the typing range retains its
+original speed, including the finished prompt hold and completed result.
+Camera moves keep their original animation durations. Call audio, captions,
+and music move earlier with the shortened intro; music keeps its original
+playback speed. The private `intro-edit.json` records the capture and timing.
+
 The renderer defaults to the original audio speed, trims the selected ranges,
 normalizes the excerpt's loudness, and derives the waveform from those samples.
 An optional `call_speed` between 0.5 and 2 changes only the call playback tempo
-while preserving voice pitch. The terminal footage and music retain their speed.
+while preserving voice pitch. This setting leaves terminal and music speed alone.
 Each clip can also contain `remove_silence`, a list of source `start` and `end`
 ranges to remove from inside that clip. Review these ranges against the WAV and
 word timestamps. Automatic silence detection alone can mistake quiet initial
@@ -159,6 +168,8 @@ only quiet music, and that the mix does not clip. When it is disabled, verify
 the call samples match the excerpt exactly in both channels. A shortened video
 can be reused only when its adjacent `call-edit.json` matches the current call
 timeline and captions exactly. Keep supplied songs and finished mixes outside git.
+An accelerated intro also requires matching `intro-edit.json` metadata for reuse.
+Changing either intro timing or the native capture requires a full render.
 
 Check the contact sheet and individual preview frames before the full render.
 After rendering, decode the actual MP4, inspect frames at the zooms and caption

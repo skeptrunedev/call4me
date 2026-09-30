@@ -56,6 +56,29 @@ class CallTimelineTest(unittest.TestCase):
         self.assertEqual([(c["start"], c["end"]) for c in edit["cues"]],
                          [(.25, 1.75), (2, 4)])
 
+    def test_typing_speed_preserves_completed_prompt_hold_and_call_timing(self):
+        self.edit.update(typing_speed=2, terminal_typing_start_at=1,
+                         terminal_typing_end_at=5, terminal_submit_at=7)
+        edit = self.load()
+        source_times = [0, .5, 1, 2, 5, 5.5, 7, 9]
+        expected = [0, .5, 1, 1.5, 3, 3.5, 5, 7]
+        self.assertEqual([renderer.intro_time(edit, t) for t in source_times], expected)
+        self.assertEqual([renderer.intro_source_time(edit, t) for t in expected], source_times)
+        self.assertEqual(renderer.intro_time(edit, 7) - renderer.intro_time(edit, 5), 2)
+        self.assertEqual(edit["audio_duration"], 4)
+        self.assertEqual(edit["cues"][0]["start"], .25)
+
+    def test_typing_settings_validate_source_interval(self):
+        for speed in [0, 4.1, float("nan"), float("inf")]:
+            with self.subTest(speed=speed):
+                self.edit["typing_speed"] = speed
+                with self.assertRaisesRegex(ValueError, "typing_speed"):
+                    self.load()
+        self.edit.update(typing_speed=2, terminal_typing_start_at=1,
+                         terminal_typing_end_at=5, terminal_submit_at=4)
+        with self.assertRaisesRegex(ValueError, "prompt entry"):
+            self.load()
+
     def test_silence_and_speed_retime_later_clips_and_spanning_captions(self):
         self.edit["call_speed"] = 1.25
         self.edit["clips"][0]["remove_silence"] = [{"start": 1.5, "end": 2}]

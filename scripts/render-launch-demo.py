@@ -81,6 +81,25 @@ def subtitle_stamp(t):
     return f"{ms // 3600000:02}:{ms // 60000 % 60:02}:{ms // 1000 % 60:02},{ms % 1000:03}"
 
 
+def intro_time(edit, source_t):
+    """Map a native capture timestamp to the edited intro timeline."""
+    start, end = edit["typing_start"], edit["typing_end"]
+    if source_t <= start:
+        return source_t
+    return (start + (min(source_t, end) - start) / edit["typing_speed"]
+            + max(0, source_t - end))
+
+
+def intro_source_time(edit, t):
+    """Select original capture frames, accelerating only the typing interval."""
+    start = edit["typing_start"]
+    if t <= start:
+        return t
+    typing_end = intro_time(edit, edit["typing_end"])
+    return (start + (min(t, typing_end) - start) * edit["typing_speed"]
+            + max(0, t - typing_end))
+
+
 def load_edit(path):
     edit = json.loads(path.read_text())
     source = (path.parent / edit["source"]).resolve()
@@ -93,6 +112,15 @@ def load_edit(path):
     speed = float(edit.get("call_speed", 1))
     if not math.isfinite(speed) or not .5 <= speed <= 2:
         raise ValueError("call_speed must be between 0.5 and 2")
+    typing_speed = float(edit.get("typing_speed", 1))
+    if not math.isfinite(typing_speed) or not 1 <= typing_speed <= 4:
+        raise ValueError("typing_speed must be between 1 and 4")
+    typing_start = float(edit.get("terminal_typing_start_at", 0))
+    typing_end = float(edit.get("terminal_typing_end_at", 0))
+    if typing_speed != 1 and not (0 <= typing_start < typing_end <
+                                  edit.get("terminal_submit_at", 0)):
+        raise ValueError("Accelerated typing requires start and end within the prompt entry")
+    edit.update(typing_speed=typing_speed, typing_start=typing_start, typing_end=typing_end)
     offset = 0.0
     cues = []
     segments = []
@@ -258,7 +286,7 @@ def prepare_terminal(edit, manifest, output):
     call_at, result_at = edit["terminal_call_at"], edit["terminal_result_at"]
     if not 0 < edit["terminal_submit_at"] < call_at < result_at < edit["capture_duration"]:
         raise ValueError("Expected submit, calling, then completed result within the native capture")
-    edit["intro_duration"] = call_at
+    edit["intro_duration"] = intro_time(edit, call_at)
     edit["result_duration"] = edit["capture_duration"] - result_at
 
 
@@ -275,7 +303,7 @@ def camera(edit, t, poster=False):
     wide = box(-112, 0, 1804)
     close = box(-20, 430, 1100)
     result = box(0, 98, 1580)
-    submit = edit["terminal_submit_at"]
+    submit = intro_time(edit, edit["terminal_submit_at"])
     if poster:
         return result
     if t >= edit["terminal_expand_at"]:
@@ -302,13 +330,14 @@ def scene(edit, t, samples, rate, poster=False):
 
     if not playing:
         # Every pixel inside this viewport comes from the continuous X11 capture.
-        # The only treatment is camera framing; there is no redrawn terminal text.
+        # Camera framing and optional typing tempo never redraw terminal text.
         source_t = (edit["capture_duration"] - .25 if poster else
                     edit["terminal_result_at"] + t - intro - edit["audio_duration"]
-                    if finished else t)
+                    if finished else intro_source_time(edit, t))
         source = native_frame(edit, source_t)
         viewport = source.transform((1760, 816), Image.Transform.EXTENT,
-                                    camera(edit, source_t, finished), Image.Resampling.BICUBIC,
+                                    camera(edit, source_t if finished else t, finished),
+                                    Image.Resampling.BICUBIC,
                                     fillcolor=BG)
         im.paste(viewport, (80, 145))
         d = ImageDraw.Draw(im)
@@ -366,10 +395,32 @@ def main():
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "call-edit.json").write_text(json.dumps(call_plan, indent=2) + "\n")
     prepare_terminal(edit, args.manifest.resolve(), args.output)
+    intro_plan = {
+        "capture_sha256": edit["capture_sha256"],
+        "capture_duration": edit["capture_duration"],
+        "typing_speed": edit["typing_speed"],
+        "typing_start": edit["typing_start"],
+        "typing_end": edit["typing_end"],
+        "intro_duration": edit["intro_duration"],
+        "result_duration": edit["result_duration"],
+        "terminal_submit_at": edit["terminal_submit_at"],
+        "terminal_expand_at": edit["terminal_expand_at"],
+        "terminal_call_at": edit["terminal_call_at"],
+        "terminal_result_at": edit["terminal_result_at"],
+    }
+    if args.reuse_video:
+        previous_intro = args.reuse_video.parent / "intro-edit.json"
+        if previous_intro.is_file():
+            if json.loads(previous_intro.read_text()) != intro_plan:
+                parser.error("Changed terminal capture or intro timing requires a full render")
+        elif edit["typing_speed"] != 1:
+            parser.error("Accelerated intro reuse requires matching intro-edit.json metadata")
+    (args.output / "intro-edit.json").write_text(json.dumps(intro_plan, indent=2) + "\n")
     audio, samples, rate = prepare_audio(edit, args.output)
     intro = edit["intro_duration"]
     total = intro + edit["audio_duration"] + edit["result_duration"]
-    preview_times = [0, 3, edit["terminal_submit_at"] - .2, intro - 1 / FPS,
+    submit = intro_time(edit, edit["terminal_submit_at"])
+    preview_times = [0, min(3, submit - .3), submit - .2, intro - 1 / FPS,
                      intro + 1, intro + 8, intro + edit["audio_duration"], total - 2]
     frames = [scene(edit, t, samples, rate) for t in preview_times]
     sheet = Image.new("RGB", (960 * 2, 540 * 4), BG)
@@ -378,7 +429,7 @@ def main():
                     (i % 2 * 960, i // 2 * 540))
     sheet.save(args.output / "contact-sheet.jpg", quality=90)
     scene(edit, total, samples, rate, poster=True).save(args.output / "launch-still.png")
-    for i, t in enumerate([edit["terminal_submit_at"] - .2, total - .25, intro + 1]):
+    for i, t in enumerate([submit - .2, total - .25, intro + 1]):
         scene(edit, t, samples, rate).save(args.output / f"preview-{i + 1}.png")
     captions = []
     for i, cue in enumerate(edit["cues"], 1):
