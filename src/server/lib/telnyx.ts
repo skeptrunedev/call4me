@@ -1,5 +1,5 @@
 /**
- * The few Telnyx Call Control and Numbers endpoints callbay uses.
+ * The few Telnyx Call Control and Numbers endpoints call4me uses.
  * Docs: developers.telnyx.com/api-reference (dial incl. supervise_call_control_id, switch_supervisor_role,
  * gather_using_speak, hangup, send_dtmf, answer,
  * available_phone_numbers, number_orders, phone_numbers, requirement_groups, outbound_voice_profiles)
@@ -184,7 +184,7 @@ export function telnyx(env: TelnyxEnv) {
     async joinGate(callControlId: string, opts: { callId: string; business: string }): Promise<void> {
       await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/gather_using_speak`, {
         voice: 'AWS.Polly.Joanna-Neural',
-        payload: `This is callbay. Your call with ${opts.business} is on the line. Press 1 to join it.`,
+        payload: `This is Call for Me. Your call with ${opts.business} is on the line. Press 1 to join it.`,
         invalid_payload: 'Press 1 to join the call.',
         valid_digits: '1',
         minimum_digits: 1,

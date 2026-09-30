@@ -32,10 +32,10 @@ export const LoginPage: FC<{ next: string; error?: string; providers: { google: 
 
 export const ConsentPage: FC<{ client: string; query: string; error?: string }> = ({ client, query, error }) => (
   <Layout title="connect" page="consent" signedIn>
-    <h1>connect {client} to callbay?</h1>
+    <h1>connect {client} to call4me?</h1>
     {error && <p class="err">{error}</p>}
     <p>
-      {client} will be able to place phone calls for you, read your calls and calling profile, and spend your callbay credits. you can reconnect or revoke it
+      {client} will be able to place phone calls for you, read your calls and calling profile, and spend your call4me credits. you can reconnect or revoke it
       anytime by signing out of the client.
     </p>
     <form method="post" action="/oauth/consent" class="inline">
@@ -250,7 +250,7 @@ export const CallPage: FC<{ call: CallView; agentPrompt: string }> = ({ call, ag
 
 export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: string; apiKey: string | null }> = ({ signedIn, installPrompt, origin, apiKey }) => (
   <Layout title="install mcp" page="mcp" signedIn={signedIn}>
-    <h1>install the callbay mcp</h1>
+    <h1>install the call4me mcp</h1>
     {apiKey ? (
       <p>
         your server URL is <code>{mcpUrl(origin, apiKey)}</code>. it carries your key, so your agent needs no sign-in. the easiest way is to paste this prompt into your agent:
@@ -264,31 +264,31 @@ export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: str
     <h3>by hand</h3>
     <pre class="wrap">
       {apiKey
-        ? `claude code:     claude mcp add --scope user --transport http callbay ${mcpUrl(origin, apiKey)}
-codex:           codex mcp add callbay --url ${mcpUrl(origin, apiKey)}
+        ? `claude code:     claude mcp add --scope user --transport http call4me ${mcpUrl(origin, apiKey)}
+codex:           codex mcp add call4me --url ${mcpUrl(origin, apiKey)}
 claude desktop / claude.ai / chatgpt:  settings → connectors → add custom connector → ${mcpUrl(origin, apiKey)}
 or send "Authorization: Bearer ${apiKey}" to ${origin}/mcp`
-        : `claude code:     claude mcp add --scope user --transport http callbay ${origin}/mcp   then /mcp → callbay → authenticate
-codex:           codex mcp add callbay --url ${origin}/mcp   then   codex mcp login callbay
+        : `claude code:     claude mcp add --scope user --transport http call4me ${origin}/mcp   then /mcp → call4me → authenticate
+codex:           codex mcp add call4me --url ${origin}/mcp   then   codex mcp login call4me
 claude desktop / claude.ai / chatgpt:  settings → connectors → add custom connector → ${origin}/mcp
 can't sign in?   create a key at ${origin}/account and use ${origin}/mcp/<key>, or send "Authorization: Bearer <key>" to /mcp`}
     </pre>
     <h3>tools</h3>
     <ul>
       <li>
-        <code>callbay_place_call</code> call a business with a goal, the facts it may share, and what it may accept
+        <code>call4me_place_call</code> call a business with a goal, the facts it may share, and what it may accept
       </li>
       <li>
-        <code>callbay_get_call</code> status, live transcript, open questions, outcome (long-polls with wait_seconds)
+        <code>call4me_get_call</code> status, live transcript, open questions, outcome (long-polls with wait_seconds)
       </li>
       <li>
-        <code>callbay_answer_question</code> answer something the business asked mid-call
+        <code>call4me_answer_question</code> answer something the business asked mid-call
       </li>
       <li>
-        <code>callbay_list_calls</code> recent calls, including callbacks your number answered
+        <code>call4me_list_calls</code> recent calls, including callbacks your number answered
       </li>
       <li>
-        <code>callbay_get_balance</code>, <code>callbay_add_funds</code>
+        <code>call4me_get_balance</code>, <code>call4me_add_funds</code>
       </li>
     </ul>
   </Layout>

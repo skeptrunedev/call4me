@@ -39,7 +39,7 @@ export interface Reload {
   renewsAt: number | null;
 }
 
-const PRODUCT = { name: 'callbay credits', description: 'Prepaid credits for phone calls your AI agent places.' };
+const PRODUCT = { name: 'call4me credits', description: 'Prepaid credits for phone calls your AI agent places.' };
 
 /** Where a subscription's invoices land: the account it was bought for. */
 const subscriptionOf = (invoice: Stripe.Invoice): string | null => {

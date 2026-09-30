@@ -9,9 +9,9 @@ export function openApiDocument(site: string) {
   const error = { description: 'Request failed', content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string' } }, required: ['error'] } } } };
   return {
     openapi: '3.1.0',
-    info: { title: 'callbay API', version: '1.1.0', description: 'Manage the account\'s phone numbers and retrieve existing call recordings. Phone calls and other account tools are available through MCP.' },
+    info: { title: 'call4me API', version: '1.1.0', description: 'Manage the account\'s phone numbers and retrieve existing call recordings. Phone calls and other account tools are available through MCP.' },
     servers: [{ url: site }],
-    components: { securitySchemes: { bearerAuth: { type: 'http', scheme: 'bearer', description: 'A callbay API key or OAuth access token for the site or MCP resource.' } } },
+    components: { securitySchemes: { bearerAuth: { type: 'http', scheme: 'bearer', description: 'A call4me API key or OAuth access token for the site or MCP resource.' } } },
     paths: {
       [numbersPath]: {
         get: {

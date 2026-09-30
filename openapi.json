@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "callbay API",
+    "title": "call4me API",
     "version": "1.1.0",
     "description": "Manage the account's phone numbers and retrieve existing call recordings. Phone calls and other account tools are available through MCP."
   },
@@ -15,7 +15,7 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "A callbay API key or OAuth access token for the site or MCP resource."
+        "description": "A call4me API key or OAuth access token for the site or MCP resource."
       }
     }
   },
@@ -216,7 +216,7 @@
       },
       "post": {
         "operationId": "buyNumber",
-        "description": "Buy another phone number, in the US or abroad, paid from the balance at the carrier's own price (see callbay_list_numbers for prices). It renews from the balance every 30 days; if the balance can't cover a renewal the number is released after 7 days. Only buy when the user asks for a number or needs one to call a country.",
+        "description": "Buy another phone number, in the US or abroad, paid from the balance at the carrier's own price (see call4me_list_numbers for prices). It renews from the balance every 30 days; if the balance can't cover a renewal the number is released after 7 days. Only buy when the user asks for a number or needs one to call a country.",
         "security": [
           {
             "bearerAuth": []

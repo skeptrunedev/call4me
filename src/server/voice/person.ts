@@ -1,7 +1,7 @@
 import type { TranscriptLine } from '../services/calls';
 
 /**
- * Patching the person (callbay's user) into a live call. Their phone is rung as a listen-only
+ * Patching the person (call4me's user) into a live call. Their phone is rung as a listen-only
  * supervisor and a voicemail answers like a person does, so they only join after pressing 1.
  * A ring that ends without that is settled for the call: the caller is told they can't be
  * reached, and doesn't ring again on its own (it used to, patching voicemail in each time).

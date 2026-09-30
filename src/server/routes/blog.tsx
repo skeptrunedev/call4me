@@ -84,7 +84,7 @@ blog.post('/subscribe', async (c) => {
 // open every link in an email; the change itself is a POST (like the drip's /unsubscribe).
 blog.get('/subscribe/confirm', async (c) => {
   const row = await svc(c).byToken(c.req.query('token') ?? '');
-  return c.html(<SubscribeConfirm signedIn={Boolean(c.get('account'))} action="/blog/subscribe/confirm" token={row.token} title="confirm your subscription" text={`get new callbay posts at ${row.email}? one email per post, and every one has an unsubscribe link.`} button="subscribe" />);
+  return c.html(<SubscribeConfirm signedIn={Boolean(c.get('account'))} action="/blog/subscribe/confirm" token={row.token} title="confirm your subscription" text={`get new call4me posts at ${row.email}? one email per post, and every one has an unsubscribe link.`} button="subscribe" />);
 });
 
 blog.post('/subscribe/confirm', async (c) => {
@@ -94,7 +94,7 @@ blog.post('/subscribe/confirm', async (c) => {
 
 blog.get('/unsubscribe', async (c) => {
   const row = await svc(c).byToken(c.req.query('token') ?? '');
-  return c.html(<SubscribeConfirm signedIn={Boolean(c.get('account'))} action="/blog/unsubscribe" token={row.token} title="unsubscribe" text={`stop sending callbay blog posts to ${row.email}?`} button="unsubscribe" />);
+  return c.html(<SubscribeConfirm signedIn={Boolean(c.get('account'))} action="/blog/unsubscribe" token={row.token} title="unsubscribe" text={`stop sending call4me blog posts to ${row.email}?`} button="unsubscribe" />);
 });
 
 blog.post('/unsubscribe', async (c) => {
@@ -121,7 +121,7 @@ blog.get('/support/done', async (c) => {
     <SubscribeResult
       signedIn
       title={ok ? 'thank you' : 'hmm'}
-      text={ok ? 'you support callbay. paid posts are open to you while the subscription runs; manage it any time from the blog.' : 'we could not confirm that checkout. if you were charged, email me@call4.me.'}
+      text={ok ? 'you support call4me. paid posts are open to you while the subscription runs; manage it any time from the blog.' : 'we could not confirm that checkout. if you were charged, email me@call4.me.'}
       next={next}
     />,
   );

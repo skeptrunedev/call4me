@@ -40,7 +40,7 @@
     // Signup drip (services/drip.ts): accounts created at or after this time (ms since
     // epoch) get the lifecycle emails. Empty turns the drip off.
     "DRIP_START": "1790575258929",
-    "APP_NAME": "callbay",
+    "APP_NAME": "call4me",
     // US cents per started minute of talk time.
     "PRICE_PER_MINUTE_CENTS": "25",
     "VOICE_MODEL": "gpt-live-1",

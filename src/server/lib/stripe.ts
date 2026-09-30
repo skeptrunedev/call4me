@@ -1,7 +1,7 @@
 import type Stripe from 'stripe';
 
 // ---- machine payments (x402 over USDC on Base, settled into the Stripe balance)
-// Ported from skillbay's lib/stripe.ts; callbay and skillbay share one Stripe account.
+// Ported from skillbay's lib/stripe.ts; call4me and skillbay share one Stripe account.
 
 /** The preview API version that carries crypto deposit addresses and transaction-verified PaymentIntents. */
 export const CRYPTO_API_VERSION = '2026-05-27.preview';

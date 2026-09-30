@@ -11,7 +11,7 @@ import { BlogError } from './blog';
  * they arrive; because renewals and cancellations may not reach us as events, a stale row
  * is re-checked with Stripe when it is read, at most once a day.
  *
- * callbay and skillbay share one Stripe account and both webhooks see every event. So the
+ * call4me and skillbay share one Stripe account and both webhooks see every event. So the
  * Checkout session and the subscription never carry client_reference_id (skillbay fulfils
  * any session that has one) or a user_id metadata key (skillbay's supporter sync reads it);
  * they are tagged app=callbay, kind=supporter, account_id instead (SUPPORTER_METADATA), and
@@ -39,7 +39,7 @@ export const DEFAULT_SUPPORTER_CENTS = 500;
 /** Metadata on every supporter Checkout session and subscription. */
 export const SUPPORTER_METADATA = (accountId: string) => ({ app: 'callbay', kind: 'supporter', account_id: accountId });
 
-/** A Stripe object (Checkout session, subscription, invoice parent) that belongs to callbay's supporter tier. */
+/** A Stripe object (Checkout session, subscription, invoice parent) that belongs to call4me's supporter tier. */
 export const isSupporterObject = (metadata: Stripe.Metadata | null | undefined): boolean => metadata?.app === 'callbay' && metadata?.kind === 'supporter';
 
 export function supporters(db: D1Database, stripe: Stripe, env: { SUPPORTER_PRICE_CENTS?: string }) {
@@ -74,7 +74,7 @@ export function supporters(db: D1Database, stripe: Stripe, env: { SUPPORTER_PRIC
         currency: 'usd',
         unit_amount: cents(),
         recurring: { interval: 'month' },
-        product_data: { name: 'callbay supporter', metadata: { app: 'callbay', kind: 'supporter' } },
+        product_data: { name: 'call4me supporter', metadata: { app: 'callbay', kind: 'supporter' } },
         metadata: { app: 'callbay', kind: 'supporter' },
       });
       await db.prepare(`INSERT INTO settings (key, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at`).bind(PRICE_KEY, price.id, now()).run();
@@ -107,7 +107,7 @@ export function supporters(db: D1Database, stripe: Stripe, env: { SUPPORTER_PRIC
      */
     async checkout(account: Account, origin: string, next: string): Promise<string> {
       const existing = await this.row(account.id);
-      if (existing && (await this.isSupporter(account.id))) throw new BlogError('you already support callbay', 409);
+      if (existing && (await this.isSupporter(account.id))) throw new BlogError('you already support call4me', 409);
       const customer =
         existing?.stripe_customer_id ?? (await db.prepare(`SELECT stripe_customer_id FROM accounts WHERE id = ?`).bind(account.id).first<{ stripe_customer_id: string | null }>())?.stripe_customer_id ?? undefined;
       const metadata = SUPPORTER_METADATA(account.id);

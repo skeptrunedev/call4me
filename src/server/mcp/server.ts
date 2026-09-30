@@ -17,12 +17,49 @@ import { mayCall, NumberError, numbers, type NumberView } from '../services/numb
 import { getCallRecordings } from '../services/recordings';
 
 /**
- * The callbay MCP server: the handful of tools a coding agent needs to make a phone call
+ * The call4me MCP server: the handful of tools a coding agent needs to make a phone call
  * for its user and follow it to the end. Stateless: a fresh server per request.
  */
 
-export const SERVER_NAME = 'callbay';
+export const SERVER_NAME = 'call4me';
 export const SERVER_VERSION = '1.0.0';
+
+/**
+ * The tools were named callbay_* before the rename. Agents with a saved skill or prompt still
+ * call those names, so a tools/call for callbay_X is served as call4me_X (see
+ * withCurrentToolNames); tools/list only ever shows the call4me_* names.
+ */
+const LEGACY_TOOL_PREFIX = 'callbay_';
+const TOOL_PREFIX = 'call4me_';
+
+export const currentToolName = (name: string): string => (name.startsWith(LEGACY_TOOL_PREFIX) ? TOOL_PREFIX + name.slice(LEGACY_TOOL_PREFIX.length) : name);
+
+/**
+ * The MCP request with any legacy tool name in a tools/call renamed. The SDK has no unlisted
+ * tools (tools/list shows every enabled tool, tools/call refuses disabled ones), so the name is
+ * rewritten before the request reaches it. Anything that isn't a JSON-RPC POST passes through.
+ */
+export async function withCurrentToolNames(req: Request): Promise<Request> {
+  if (req.method !== 'POST') return req;
+  let body: unknown;
+  try {
+    body = JSON.parse(await req.clone().text());
+  } catch {
+    return req; // the SDK answers the parse error
+  }
+  let renamed = false;
+  const rename = (m: unknown): unknown => {
+    const msg = m as { method?: unknown; params?: { name?: unknown } } | null;
+    if (msg?.method !== 'tools/call' || typeof msg.params?.name !== 'string' || currentToolName(msg.params.name) === msg.params.name) return m;
+    renamed = true;
+    return { ...msg, params: { ...msg.params, name: currentToolName(msg.params.name) } };
+  };
+  const next = Array.isArray(body) ? body.map(rename) : rename(body);
+  if (!renamed) return req;
+  const headers = new Headers(req.headers);
+  headers.delete('content-length');
+  return new Request(req.url, { method: req.method, headers, body: JSON.stringify(next), signal: req.signal });
+}
 
 export interface McpDeps {
   env: Env;
@@ -32,21 +69,21 @@ export interface McpDeps {
   stripe: () => Stripe;
 }
 
-const INSTRUCTIONS = `callbay places real phone calls for the user: doctor/dentist/vet appointments, restaurant bookings, car service and dealership questions, home services, salons, and questions for any business.
+const INSTRUCTIONS = `call4me places real phone calls for the user: doctor/dentist/vet appointments, restaurant bookings, car service and dealership questions, home services, salons, and questions for any business.
 
 The caller can only say what you give it, so everything is collected BEFORE dialing:
-1. Once, up front: callbay_get_profile. If it's missing things, ask the user in one message for their full legal name, date of birth, phone, home address, health and dental insurance (carrier + member ID, or self-pay), and car (year/make/model/mileage, VIN) if they have one, and save them with callbay_save_profile. Skip what they decline.
-2. For each call: pick the category and call callbay_get_requirements(category). Ask the user for every required field that isn't already known (one message, not one question at a time), plus the per-call details (reason, dates and times that work, party size...).
+1. Once, up front: call4me_get_profile. If it's missing things, ask the user in one message for their full legal name, date of birth, phone, home address, health and dental insurance (carrier + member ID, or self-pay), and car (year/make/model/mileage, VIN) if they have one, and save them with call4me_save_profile. Skip what they decline.
+2. For each call: pick the category and call call4me_get_requirements(category). Ask the user for every required field that isn't already known (one message, not one question at a time), plus the per-call details (reason, dates and times that work, party size...).
 3. Find the right number (search the web if needed; check it is the right location).
-4. callbay_place_call with the category and details. If it answers "Not calling yet", ask the user exactly what it lists and try again.
-5. Poll callbay_get_call with wait_seconds until finished. If it shows an open question, the business is waiting on the line: answer right away with callbay_answer_question.
+4. call4me_place_call with the category and details. If it answers "Not calling yet", ask the user exactly what it lists and try again.
+5. Poll call4me_get_call with wait_seconds until finished. If it shows an open question, the business is waiting on the line: answer right away with call4me_answer_question.
 6. Tell the user the outcome in a line or two.
 
-To put the user on a call themselves: pass connect_when to callbay_place_call (e.g. "as soon as a person picks up", to skip a long hold), or call callbay_connect_me mid-call. Their phone rings and they join the call by pressing 1; the caller goes quiet, and takes over again when they press * or hang up. To end a call early, use callbay_hang_up.
+To put the user on a call themselves: pass connect_when to call4me_place_call (e.g. "as soon as a person picks up", to skip a long hold), or call call4me_connect_me mid-call. Their phone rings and they join the call by pressing 1; the caller goes quiet, and takes over again when they press * or hang up. To end a call early, use call4me_hang_up.
 
-Calls go out from the account's own numbers: its free US number, plus any it bought (callbay_list_numbers, callbay_buy_number). Businesses in the US, Canada and Europe can always be called (Europe from a European number when the account holds one, else from its US number); anywhere else, once the account holds a number in that country, and the call goes out from it.
+Calls go out from the account's own numbers: its free US number, plus any it bought (call4me_list_numbers, call4me_buy_number). Businesses in the US, Canada and Europe can always be called (Europe from a European number when the account holds one, else from its US number); anywhere else, once the account holds a number in that country, and the call goes out from it.
 
-Every call leaves the calling number as the callback. If a call ends in voicemail or "we'll call you back", callbay remembers the task for 14 days: when the business calls that number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (callbay_get_call lists its callbacks) and in callbay_list_calls.
+Every call leaves the calling number as the callback. If a call ends in voicemail or "we'll call you back", call4me remembers the task for 14 days: when the business calls that number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (call4me_get_call lists its callbacks) and in call4me_list_calls.
 
 The caller sounds like a normal person calling for the user. It keeps turns short and does not read the booking back at the end; the recap comes back to you.
 Only call businesses and services the user wants to reach, never personal numbers they don't expect a call from.`;
@@ -94,7 +131,7 @@ export function callView(row: CallRow, questions: Question[], callbacks: CallRow
 function callText(v: ReturnType<typeof callView>): string {
   const lines = [`${v.id} · ${v.status}${v.finished ? '' : v.status === 'completed' ? ' (writing the recap)' : ' (in progress)'} · ${v.business} ${v.number}`];
   if (v.open_questions.length) {
-    lines.push('', 'OPEN QUESTION (the business is waiting on the line; answer now with callbay_answer_question):');
+    lines.push('', 'OPEN QUESTION (the business is waiting on the line; answer now with call4me_answer_question):');
     for (const q of v.open_questions) lines.push(`- [${q.id}] ${q.question}`);
   }
   if (v.outcome) lines.push('', `outcome: ${v.outcome.result}`, v.outcome.summary, v.outcome.details ? JSON.stringify(v.outcome.details) : '');
@@ -106,11 +143,11 @@ function callText(v: ReturnType<typeof callView>): string {
   return lines.join('\n').trim();
 }
 
-const callIdArg = z.string().min(1).max(40).describe('the call id from callbay_place_call, e.g. "call_ab12..."');
+const callIdArg = z.string().min(1).max(40).describe('the call id from call4me_place_call, e.g. "call_ab12..."');
 
-export function createCallbayServer(deps: McpDeps): McpServer {
+export function createCall4meServer(deps: McpDeps): McpServer {
   const { env, account } = deps;
-  const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION, title: 'callbay', websiteUrl: deps.origin }, { instructions: INSTRUCTIONS, jsonSchemaValidator: new CfWorkerJsonSchemaValidator() });
+  const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION, title: 'call4me', websiteUrl: deps.origin }, { instructions: INSTRUCTIONS, jsonSchemaValidator: new CfWorkerJsonSchemaValidator() });
   const db = calls(env.DB);
 
   const guard = (fn: () => Promise<CallToolResult>) => async (): Promise<CallToolResult> => {
@@ -124,7 +161,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   };
 
   server.registerTool(
-    'callbay_get_recordings',
+    'call4me_get_recordings',
     { title: 'Get call recordings', description: recordingDescription, inputSchema: recordingInput, outputSchema: recordingOutput, annotations: RO },
     (async (args: { call_id: string }) => guard(async () => {
       const result = await getCallRecordings(env, account.id, args.call_id);
@@ -134,16 +171,16 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   );
 
   server.registerTool(
-    'callbay_place_call',
+    'call4me_place_call',
     {
       title: 'Place a phone call',
       description:
-        'Call a business for the user (US, Canada, Europe, or any other country the account holds a number in; see callbay_list_numbers) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category\'s required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with callbay_get_call. Credits for the maximum length are held up front; billed per minute of talk time; unanswered calls are free.',
+        'Call a business for the user (US, Canada, Europe, or any other country the account holds a number in; see call4me_list_numbers) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category\'s required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with call4me_get_call. Credits for the maximum length are held up front; billed per minute of talk time; unanswered calls are free.',
       inputSchema: z.object({
         to: z.string().min(3).max(40).describe('the number to call, e.g. "+14155550123", "(415) 555-0123", or abroad with its country code, e.g. "+31 20 123 4567"'),
         business: z.string().min(1).max(120).describe('who you are calling, as a person would say it: "Nopa", "Dr. Chen\'s office", "Toyota of Berkeley service"'),
         goal: z.string().min(5).max(1500).describe('what the call should achieve, in plain words: "Book a table for 4 tomorrow (Sat Oct 3) around 7pm under Khami."'),
-        category: z.enum(CATEGORY_SLUGS).describe('the kind of call; decides what must be known first (see callbay_get_requirements)'),
+        category: z.enum(CATEGORY_SLUGS).describe('the kind of call; decides what must be known first (see call4me_get_requirements)'),
         details: z.record(z.string(), z.string().max(1000)).optional().describe('answers to the category\'s fields by key, e.g. {"reason":"annual physical","patient_status":"existing","availability":"weekday mornings next week"}. Profile fields (name, DOB, phone, insurance...) are filled from the saved profile only when the call is for the profile\'s owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner\'s are never used.'),
         on_behalf_of: z.string().min(1).max(80).optional().describe('who the call is for, as the caller should say it (default: the profile\'s full_name). The caller calls FOR this person; it never claims to be them.'),
         facts: z.string().max(3000).optional().describe('anything else the caller may share beyond the category\'s fields, one per line'),
@@ -160,12 +197,12 @@ export function createCallbayServer(deps: McpDeps): McpServer {
       guard(async () => {
         const row = await placeCall(env, deps.origin, account, args);
         const v = callView(row, []);
-        return ok(`calling ${v.business} at ${v.number} (${v.id}). Poll callbay_get_call with wait_seconds: 30 until finished, and answer any open question immediately.`, v);
+        return ok(`calling ${v.business} at ${v.number} (${v.id}). Poll call4me_get_call with wait_seconds: 30 until finished, and answer any open question immediately.`, v);
       })()) as never,
   );
 
   server.registerTool(
-    'callbay_get_call',
+    'call4me_get_call',
     {
       title: 'Check on a call',
       description:
@@ -190,7 +227,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   );
 
   server.registerTool(
-    'callbay_connect_me',
+    'call4me_connect_me',
     {
       title: 'Patch the user into a live call',
       description:
@@ -206,7 +243,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
         if (args.phone) {
           const p = checkDialable(args.phone);
           if (!p.ok) throw new CallError(`phone: ${p.reason}`);
-          if (!(await mayCall(env.DB, account.id, p))) throw new CallError(`phone: calling ${p.country} needs a number there (callbay_buy_number)`);
+          if (!(await mayCall(env.DB, account.id, p))) throw new CallError(`phone: calling ${p.country} needs a number there (call4me_buy_number)`);
           phone = p.e164;
         }
         const res = await sessionFor(env, row.id).fetch('https://session/connect-person', { method: 'POST', body: JSON.stringify({ phone }) });
@@ -216,10 +253,10 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   );
 
   server.registerTool(
-    'callbay_hang_up',
+    'call4me_hang_up',
     {
       title: 'Hang up a live call',
-      description: 'End a call in progress now, e.g. when it is going nowhere or the user changed their mind. Talk time so far is billed as usual; callbay_get_call shows the final state.',
+      description: 'End a call in progress now, e.g. when it is going nowhere or the user changed their mind. Talk time so far is billed as usual; call4me_get_call shows the final state.',
       inputSchema: z.object({ call_id: callIdArg }),
       annotations: { ...OPEN, destructiveHint: true },
     },
@@ -234,7 +271,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   );
 
   server.registerTool(
-    'callbay_answer_question',
+    'call4me_answer_question',
     {
       title: 'Answer the caller\'s question',
       description: 'Answer a question the caller asked mid-call (listed in open_questions). The caller relays it on the line within a second or two. Answer in a few plain words.',
@@ -250,7 +287,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   );
 
   server.registerTool(
-    'callbay_list_calls',
+    'call4me_list_calls',
     {
       title: 'List recent calls',
       description: 'Recent calls on this account, newest first, including callbacks the account\'s number answered (direction "inbound"): a callback about an unfinished task (callback_for) tried to finish it, anything else took a message.',
@@ -269,10 +306,10 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   );
 
   server.registerTool(
-    'callbay_get_balance',
+    'call4me_get_balance',
     {
       title: 'Balance and phone numbers',
-      description: 'The prepaid balance, the per-minute price, and the account\'s own callbay phone numbers (calls go out from them and the calling number is the callback left on every call; callbacks to it finish the unfinished task or take a message).',
+      description: 'The prepaid balance, the per-minute price, and the account\'s own call4me phone numbers (calls go out from them and the calling number is the callback left on every call; callbacks to it finish the unfinished task or take a message).',
       inputSchema: z.object({}),
       annotations: RO,
     },
@@ -298,7 +335,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   );
 
   server.registerTool(
-    'callbay_get_requirements',
+    'call4me_get_requirements',
     {
       title: 'What a call needs',
       description: 'The information a kind of call needs before dialing, and which of it the saved profile already has. Without a category, lists the categories.',
@@ -324,14 +361,14 @@ export function createCallbayServer(deps: McpDeps): McpServer {
         const text = [
           `${category.name}. Before calling, make sure you have:`,
           ...fields.map((f) => `- ${f.key}${f.required ? '' : ' (optional)'}: ${f.known ? `have it (profile ${f.from_profile})` : f.ask}`),
-          'Pass per-call answers in place_call "details" by key. Missing profile fields: ask once and save with callbay_save_profile.',
+          'Pass per-call answers in place_call "details" by key. Missing profile fields: ask once and save with call4me_save_profile.',
         ].join('\n');
         return ok(text, { category: category.slug, fields });
       })()) as never,
   );
 
   server.registerTool(
-    'callbay_get_profile',
+    'call4me_get_profile',
     {
       title: 'Saved caller profile',
       description: 'The facts saved for every call (name, DOB, phone, address, insurance, car) and which are still missing.',
@@ -351,7 +388,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   );
 
   server.registerTool(
-    'callbay_save_profile',
+    'call4me_save_profile',
     {
       title: 'Save caller profile',
       description: 'Save facts that are the same on every call, so they never have to be asked again. Merges into what is saved; an empty string removes a field. Only save what the user gave you.',
@@ -366,7 +403,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   );
 
   server.registerTool(
-    'callbay_add_funds',
+    'call4me_add_funds',
     {
       title: 'Add funds',
       description:
@@ -385,7 +422,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   );
 
   server.registerTool(
-    'callbay_stop_reload',
+    'call4me_stop_reload',
     {
       title: 'Stop the monthly reload',
       description: 'Cancel the monthly reload. Credits already loaded stay on the account. Only do this when the user asks.',
@@ -400,7 +437,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   );
 
   server.registerTool(
-    'callbay_list_numbers',
+    'call4me_list_numbers',
     { title: 'Phone numbers', description: listNumbersDescription, inputSchema: z.object({}), outputSchema: numbersOutput, annotations: { ...RO, openWorldHint: true } },
     (async () =>
       guard(async () => {
@@ -415,7 +452,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   );
 
   server.registerTool(
-    'callbay_buy_number',
+    'call4me_buy_number',
     { title: 'Buy a phone number', description: buyNumberDescription, inputSchema: buyNumberInput, annotations: OPEN },
     (async (args: { country: string; area_code?: string }) =>
       guard(async () => {
@@ -426,7 +463,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   );
 
   server.registerTool(
-    'callbay_release_number',
+    'call4me_release_number',
     { title: 'Release a phone number', description: releaseNumberDescription, inputSchema: releaseNumberInput, annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true } },
     (async (args: { number: string }) =>
       guard(async () => {

@@ -206,7 +206,7 @@ export function atomFeed(site: string, posts: Post[]): string {
   return [
     '<?xml version="1.0" encoding="utf-8"?>',
     '<feed xmlns="http://www.w3.org/2005/Atom">',
-    `  <title>callbay blog</title>`,
+    `  <title>call4me blog</title>`,
     `  <subtitle>notes on AI agents that make phone calls for you</subtitle>`,
     `  <link href="${site}/blog/feed.xml" rel="self" type="application/atom+xml"/>`,
     `  <link href="${site}/blog" rel="alternate" type="text/html"/>`,

@@ -14,7 +14,7 @@ async function signedIn(c: AppContext) {
   return account;
 }
 
-const unauthorized = (c: AppContext) => c.json({ error: 'sign in with a callbay API key or OAuth access token' }, 401);
+const unauthorized = (c: AppContext) => c.json({ error: 'sign in with a call4me API key or OAuth access token' }, 401);
 
 function failure(c: AppContext, err: unknown) {
   if (err instanceof NumberError) return c.json({ error: err.message }, err.status as 400);

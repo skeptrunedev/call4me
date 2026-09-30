@@ -44,7 +44,7 @@ export function withAuthCookies(res: Response, headers: Headers): Response {
 const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at`;
 
 /**
- * The callbay account that belongs to a signed-in user. First sign-in adopts an account
+ * The call4me account that belongs to a signed-in user. First sign-in adopts an account
  * made under the same (real) email before sign-in existed, or opens a new one.
  */
 export async function accountForUser(db: D1Database, user: { id: string; email: string | null; name: string | null }): Promise<Account> {
@@ -100,7 +100,7 @@ export async function accountForToken(c: AppContext, claims: JWTPayload): Promis
 
 /**
  * The account behind a request's Bearer credential for the site's own endpoints (GET /api):
- * an OAuth access token for the site or MCP resource, or a callbay API key. Null when there
+ * an OAuth access token for the site or MCP resource, or a call4me API key. Null when there
  * is none or it does not verify.
  */
 export async function bearerAccount(c: AppContext): Promise<Account | null> {

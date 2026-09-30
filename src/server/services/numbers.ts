@@ -301,7 +301,7 @@ export function numbers(env: Env) {
         if (european) return european.phone_number;
       }
       if (to.home || EUROPE.has(to.country)) return owned.find((n) => isHome(n.phone_number))?.phone_number ?? (await this.ensureIncluded(account, to.e164));
-      throw new NumberError(`calling ${COUNTRIES[to.country]?.name ?? to.country} needs a number there; buy one with callbay_buy_number`, 422);
+      throw new NumberError(`calling ${COUNTRIES[to.country]?.name ?? to.country} needs a number there; buy one with call4me_buy_number`, 422);
     },
 
     /** The account's free first number: a US local number, in the area code of the first place it calls when that is a +1 number. */

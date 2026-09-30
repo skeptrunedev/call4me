@@ -16,6 +16,6 @@ export const AUTHORS: Record<string, Author> = {
     handle: '@skeptrune',
     url: 'https://x.com/skeptrune',
     avatar: '/static/nick.jpg',
-    bio: 'builds callbay, the phone for your AI agent. software engineer; previously founded Trieve. email me@call4.me.',
+    bio: 'builds call4me, the phone for your AI agent. software engineer; previously founded Trieve. email me@call4.me.',
   },
 };

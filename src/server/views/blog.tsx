@@ -10,12 +10,12 @@ import { Layout } from './layout';
  * The blog, laid out the way a newsletter site is (featured posts with headline images,
  * a card list with authors and engagement counts, tabs, search, a subscribe box,
  * recommendations, an archive; on a post: hero image, dek, bylines with avatars, share
- * links, like button, comments, related posts) but drawn like the rest of callbay.
+ * links, like button, comments, related posts) but drawn like the rest of call4me.
  * Ported from skillbay's views/blog.tsx.
  */
 
 const AUTHOR_LD = (p: Post) => p.authors.map((a) => ({ '@type': 'Person', name: a.name, alternateName: a.handle, url: a.url, image: `${SITE}${a.avatar}` }));
-const PUBLISHER = { '@type': 'Organization', name: 'callbay', url: SITE, logo: { '@type': 'ImageObject', url: `${SITE}/favicon.svg` } };
+const PUBLISHER = { '@type': 'Organization', name: 'call4me', url: SITE, logo: { '@type': 'ImageObject', url: `${SITE}/favicon.svg` } };
 
 export type Tab = 'latest' | 'top' | 'discussions';
 
@@ -95,7 +95,7 @@ export const BlogIndex: FC<{
         jsonLd: {
           '@context': 'https://schema.org',
           '@type': 'Blog',
-          name: 'callbay blog',
+          name: 'call4me blog',
           url: `${SITE}/blog`,
           publisher: PUBLISHER,
           blogPost: all.map((p) => ({ '@type': 'BlogPosting', headline: p.title, url: `${SITE}/blog/${p.slug}`, datePublished: p.date, image: `${SITE}/og/blog/${p.slug}.png`, author: AUTHOR_LD(p) })),
@@ -103,7 +103,7 @@ export const BlogIndex: FC<{
       }}
     >
       <div class="blog-head">
-        <h1>callbay blog</h1>
+        <h1>call4me blog</h1>
         <p class="muted">notes on AI agents that make phone calls for you.</p>
         <SubscribeBox count={subscribers} next="/blog" compact anchor sent={subscribed === 'sent'} error={subscribed && subscribed !== 'sent' ? subscribed : undefined} />
       </div>
@@ -347,7 +347,7 @@ export const BlogPost: FC<{
                   </>
                 ) : (
                   <>
-                    <a href={`/login?next=${here}`}>sign in</a> if you already support callbay, or <a href={`/blog/support?next=${here}`}>become a supporter</a>.
+                    <a href={`/login?next=${here}`}>sign in</a> if you already support call4me, or <a href={`/blog/support?next=${here}`}>become a supporter</a>.
                   </>
                 )}
               </p>
@@ -390,7 +390,7 @@ export const BlogPost: FC<{
       <SubscribeBox count={subscribers} next={here} anchor sent={subscribed === 'sent'} error={subscribed && subscribed !== 'sent' ? subscribed : undefined} />
       {supporter && (
         <p class="small muted">
-          you support callbay, thank you. <a href="/blog/support/manage">manage the subscription</a>.
+          you support call4me, thank you. <a href="/blog/support/manage">manage the subscription</a>.
         </p>
       )}
 

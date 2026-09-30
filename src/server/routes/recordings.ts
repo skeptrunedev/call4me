@@ -18,7 +18,7 @@ recordings.get(recordingPath.replace('{call_id}', ':call_id'), async (c) => {
   const account = await bearerAccount(c);
   if (!account) {
     c.header('www-authenticate', `Bearer resource_metadata="${origin(c)}/.well-known/oauth-protected-resource"`);
-    return c.json({ error: 'sign in with a callbay API key or OAuth access token' }, 401);
+    return c.json({ error: 'sign in with a call4me API key or OAuth access token' }, 401);
   }
   const input = recordingInput.safeParse({ call_id: c.req.param('call_id') });
   if (!input.success) return c.json({ error: 'invalid call id' }, 400);

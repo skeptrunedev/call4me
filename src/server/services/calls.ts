@@ -98,7 +98,7 @@ export class CallError extends Error {
   }
 }
 
-/** Limits that keep one account from turning callbay into a robocaller. */
+/** Limits that keep one account from turning call4me into a robocaller. */
 export const LIMITS = {
   concurrentPerAccount: 2,
   /**
@@ -161,23 +161,23 @@ export function calls(db: D1Database) {
       const intake = resolveIntake(category, input.details ?? {}, forSomeoneElse ? {} : profile);
       if (intake.missing.length || intake.invalid.length) throw new CallError(missingMessage(category, intake, forSomeoneElse ? input.on_behalf_of!.trim() : null), 422);
       const onBehalfOf = input.on_behalf_of?.trim() || profile.full_name || account.display_name;
-      if (!onBehalfOf) throw new CallError('on_behalf_of: who is this call for? Pass their name, or save full_name with callbay_save_profile.', 422);
+      if (!onBehalfOf) throw new CallError('on_behalf_of: who is this call for? Pass their name, or save full_name with call4me_save_profile.', 422);
 
       const to = checkDialable(input.to);
       if (!to.ok) throw new CallError(to.reason);
       // Abroad, an account calls only countries it holds a number in (services/numbers.ts).
       if (!(await mayCall(db, account.id, to))) {
-        throw new CallError(`calling ${to.country} numbers needs a number in ${to.country}: see callbay_list_numbers, then buy one with callbay_buy_number`, 422);
+        throw new CallError(`calling ${to.country} numbers needs a number in ${to.country}: see call4me_list_numbers, then buy one with call4me_buy_number`, 422);
       }
       if (input.from) {
         const from = checkDialable(input.from);
         const owns = from.ok && (await db.prepare(`SELECT 1 FROM numbers WHERE account_id = ? AND phone_number = ? AND status = 'active'`).bind(account.id, from.e164).first());
-        if (!owns) throw new CallError(`from: ${input.from} is not one of this account's numbers (see callbay_list_numbers)`);
+        if (!owns) throw new CallError(`from: ${input.from} is not one of this account's numbers (see call4me_list_numbers)`);
       }
       if (input.timezone && !validTimeZone(input.timezone)) throw new CallError(`timezone: "${input.timezone}" is not an IANA time zone like America/New_York`);
 
       const blocked = await db.prepare(`SELECT reason FROM blocked_numbers WHERE number = ?`).bind(to.e164).first<{ reason: string }>();
-      if (blocked) throw new CallError('this number asked not to be called by callbay', 403);
+      if (blocked) throw new CallError('this number asked not to be called by call4me', 403);
 
       const since = now() - DAY;
       const counts = await db
@@ -197,7 +197,7 @@ export function calls(db: D1Database) {
 
       // Credits up front: the call holds its maximum cost now and settles when it ends.
       const balance = await accounts(db).balanceCents(account.id);
-      if (balance < pricePerMinuteCents) throw new CallError(`balance is $${(balance / 100).toFixed(2)}; add credits with callbay_add_funds`, 402);
+      if (balance < pricePerMinuteCents) throw new CallError(`balance is $${(balance / 100).toFixed(2)}; add credits with call4me_add_funds`, 402);
       const affordable = Math.floor(balance / pricePerMinuteCents);
       const maxMinutes = Math.max(1, Math.min(input.max_minutes ?? LIMITS.defaultMaxMinutes, LIMITS.maxMinutes, affordable));
       const holdCents = maxMinutes * pricePerMinuteCents;

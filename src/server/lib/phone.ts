@@ -1,7 +1,7 @@
 import { parsePhoneNumberFromString, type NumberType } from 'libphonenumber-js/max';
 
 /**
- * Which numbers callbay will dial. At home: US and Canadian numbers (+1, excluding the
+ * Which numbers call4me will dial. At home: US and Canadian numbers (+1, excluding the
  * Caribbean and Atlantic NANP countries, which bill as international and are the usual
  * toll-fraud targets), never emergency or N11 service codes, never premium-rate 900/976.
  * Abroad: valid landline, mobile and toll-free numbers, never premium-rate or shared-cost

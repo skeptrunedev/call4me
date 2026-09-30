@@ -4,7 +4,7 @@ import { accountForToken, bearerToken, challenge, looksLikeJwt, sessionAccount, 
 import { legacyHosts, origin, stripeFor, viewerKey, type AppContext, type AppEnv } from '../lib/context';
 import { installPrompt } from '../lib/prompts';
 import { accounts, type Account } from '../services/accounts';
-import { createCallbayServer } from '../mcp/server';
+import { createCall4meServer, withCurrentToolNames } from '../mcp/server';
 import { McpPage } from '../views/account';
 
 /**
@@ -17,14 +17,14 @@ export const mcp = new Hono<AppEnv>();
 /** DNS-rebinding guard the MCP spec asks for: only our own hostnames may address the endpoint. */
 const allowedHosts = (c: AppContext) => [c.env.CANONICAL_HOST, ...legacyHosts(c.env), 'localhost', '127.0.0.1', '[::1]'].filter(Boolean);
 
-function serve(c: AppContext, account: Account): Promise<Response> | Response {
+async function serve(c: AppContext, account: Account): Promise<Response> {
   const rejected = hostHeaderValidationResponse(c.req.raw, allowedHosts(c));
   if (rejected) return rejected;
-  const handler = createMcpHandler(() => createCallbayServer({ env: c.env, origin: origin(c), account, stripe: () => stripeFor(c) }), {
+  const handler = createMcpHandler(() => createCall4meServer({ env: c.env, origin: origin(c), account, stripe: () => stripeFor(c) }), {
     legacy: 'stateless',
     onerror: (err) => console.warn('mcp', String(err)),
   });
-  return handler.fetch(c.req.raw);
+  return handler.fetch(await withCurrentToolNames(c.req.raw));
 }
 
 // MCP clients always GET with Accept: text/event-stream (the streamable HTTP spec requires
@@ -46,7 +46,7 @@ mcp.get('/', async (c) => {
  */
 mcp.all('/', async (c) => {
   const token = bearerToken(c);
-  if (!token) return challenge(c, 'sign in to callbay to use this server');
+  if (!token) return challenge(c, 'sign in to call4me to use this server');
   if (looksLikeJwt(token)) {
     try {
       const account = await accountForToken(c, await verifyMcpToken(c, token));
@@ -57,13 +57,13 @@ mcp.all('/', async (c) => {
     return challenge(c, 'invalid or expired access token', 'invalid_token');
   }
   const account = await accounts(c.env.DB).byKey(token);
-  return account ? serve(c, account) : challenge(c, 'invalid callbay key', 'invalid_token');
+  return account ? serve(c, account) : challenge(c, 'invalid call4me key', 'invalid_token');
 });
 
 /** /mcp/<key>: the key rides in the URL for clients whose connector UI can't sign in or set headers. */
 mcp.get('/:key', (c) => (wantsHtml(c) ? c.redirect('/mcp', 302) : c.text('POST MCP requests here', 405)));
 mcp.all('/:key', async (c) => {
   const account = await accounts(c.env.DB).byKey(c.req.param('key'));
-  if (!account) return c.json({ jsonrpc: '2.0', error: { code: -32001, message: `callbay: invalid key. Use ${origin(c)}/mcp and sign in, or create a key at ${origin(c)}/account.` }, id: null }, 401);
+  if (!account) return c.json({ jsonrpc: '2.0', error: { code: -32001, message: `call4me: invalid key. Use ${origin(c)}/mcp and sign in, or create a key at ${origin(c)}/account.` }, id: null }, 401);
   return serve(c, account);
 });

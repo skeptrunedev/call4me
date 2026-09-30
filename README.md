@@ -1,4 +1,4 @@
-# callbay
+# call4me
 
 https://call4.me
 
@@ -23,8 +23,8 @@ agent ──MCP──▶ worker ──POST /v2/calls──▶ Telnyx ──PSTN�
 - `src/server/mcp/server.ts`: the MCP tools.
 
 The app does not request recording when dialing or answering. Existing recordings stored by Telnyx
-can be retrieved after a call ends using `callbay_get_recordings({ call_id })` over MCP, or
-`GET /api/calls/{call_id}/recordings` with a callbay API key or OAuth token in the Bearer header.
+can be retrieved after a call ends using `call4me_get_recordings({ call_id })` over MCP, or
+`GET /api/calls/{call_id}/recordings` with a call4me API key or OAuth token in the Bearer header.
 Both check account ownership before contacting Telnyx and return fresh download links without
 storing them. Empty results can mean processing is pending or no recording was saved. Links may
 expire and should only be shared with the account owner.

@@ -45,7 +45,7 @@ export function cardSvg(card: OgCard): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${OG_WIDTH}" height="${OG_HEIGHT}" viewBox="0 0 ${OG_WIDTH} ${OG_HEIGHT}">
   <rect width="${OG_WIDTH}" height="${OG_HEIGHT}" fill="#ffffff"/>
   <rect x="24" y="24" width="${OG_WIDTH - 48}" height="${OG_HEIGHT - 48}" fill="none" stroke="#cccccc" stroke-width="3"/>
-  <text x="72" y="130" font-family="DejaVu Sans" font-weight="bold" font-size="64" fill="#551a8b">callbay</text>
+  <text x="72" y="130" font-family="DejaVu Sans" font-weight="bold" font-size="64" fill="#551a8b">call4me</text>
   <text x="352" y="130" font-family="DejaVu Sans" font-size="30" fill="#666666">your AI agent makes phone calls for you</text>
   <line x1="72" y1="166" x2="${OG_WIDTH - 72}" y2="166" stroke="#cccccc" stroke-width="3"/>
   ${titleLines.map((l, i) => `<text x="72" y="${titleY + i * lineH}" font-family="DejaVu Sans" font-weight="bold" font-size="${titleSize}" fill="#222222">${esc(l)}</text>`).join('\n  ')}

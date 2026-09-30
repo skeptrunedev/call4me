@@ -12,7 +12,7 @@ import {
  * Stripe off-ramps what lands there into the Stripe balance. A facilitator (PayAI by default,
  * no account) verifies and settles the buyer's USDC authorization on-chain, then the
  * transaction is recorded as a PaymentIntent so it refunds and reports like a card top-up.
- * Nobody on callbay holds a wallet. Crediting the account is the caller's job (routes/api-root.ts).
+ * Nobody on call4me holds a wallet. Crediting the account is the caller's job (routes/api-root.ts).
  */
 
 /** A thing that can be paid for. */

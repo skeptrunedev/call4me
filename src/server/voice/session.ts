@@ -19,8 +19,8 @@ import { BACK_OFFICE_TOOLS } from './prompt';
  *
  * GPT-Live's back office (a Responses model with end_call / ask_user / press_digits)
  * runs our functions; we answer them over the same socket.
- *   /answer     callbay_answer_question; the answer goes straight to the voice model
- *   /hang-up    callbay_hang_up; the hangup webhook finishes and bills the call as usual
+ *   /answer     call4me_answer_question; the answer goes straight to the voice model
+ *   /hang-up    call4me_hang_up; the hangup webhook finishes and bills the call as usual
  *
  * The person's own phone (person.ts): /connect-person rings it, /person-answered asks them to
  * press 1, /person-gate puts them on the call if they did, /person-left hands the call back.
@@ -54,7 +54,7 @@ export interface SessionSetup {
   controlId?: string;
   /** Per-call secrets (account PINs) to mask in the stored transcript. */
   redact?: string[];
-  /** Who can be patched into the call (callbay's user), from which number, and where their leg reports. */
+  /** Who can be patched into the call (call4me's user), from which number, and where their leg reports. */
   person?: { name: string; phone: string | null; from: string; webhookUrl: string; connectWhen?: string | null };
 }
 
@@ -538,7 +538,7 @@ export class CallSession extends DurableObject<Env> {
     if (!s?.person || !s.controlId || this.ended) return 'the call is not live';
     if (this.personLeg) return this.personOn ? `${s.person.name} is already on the call` : `already ringing ${s.person.name}`;
     const phone = phoneOverride || s.person.phone;
-    if (!phone) return `no phone number for ${s.person.name}; save one with callbay_save_profile or pass phone`;
+    if (!phone) return `no phone number for ${s.person.name}; save one with call4me_save_profile or pass phone`;
     const remaining = Math.max(60, s.maxSeconds - Math.round((Date.now() - (this.answeredAt || Date.now())) / 1000));
     try {
       this.personLeg = await telnyx(this.env).dialPerson({ to: phone, from: s.person.from, webhookUrl: s.person.webhookUrl, callId: s.callId, superviseControlId: s.controlId, timeLimitSecs: remaining });
@@ -616,7 +616,7 @@ export class CallSession extends DurableObject<Env> {
     });
   }
 
-  /** callbay_hang_up: the user ends the call from their agent. */
+  /** call4me_hang_up: the user ends the call from their agent. */
   private async hangUpForUser(): Promise<string> {
     const s = await this.load();
     if (!s?.controlId || this.ended) return 'the call is not live';
@@ -650,7 +650,7 @@ export class CallSession extends DurableObject<Env> {
     }
     switch (item.name) {
       case 'connect_person':
-        // callbay_connect_me (the user asking) can still ring them; the caller can't keep retrying.
+        // call4me_connect_me (the user asking) can still ring them; the caller can't keep retrying.
         output = this.personUnreachable ? alreadyUnreachable(s.person?.name ?? 'the person') : await this.connectPerson();
         break;
       case 'end_call':

@@ -8,9 +8,9 @@ import { carriesPayment, x402, type Payable } from '../services/x402';
 
 /**
  * GET /api: call credits over x402. Without a payment it answers 402 with the USDC price of
- * `amount` dollars of credits (default $10, 10 to 500), payable to callbay's Stripe deposit
+ * `amount` dollars of credits (default $10, 10 to 500), payable to call4me's Stripe deposit
  * address on Base. With a payment it must also carry the account to credit, as
- * `Authorization: Bearer <callbay key or OAuth token>`; a payment without one is refused
+ * `Authorization: Bearer <call4me key or OAuth token>`; a payment without one is refused
  * before anything settles. Once settled, the credits land on the ledger (ref x402:<tx>) and
  * the response says the new balance.
  */
@@ -37,7 +37,7 @@ apiRoot.get('/api', async (c) => {
 
   const payable: Payable = {
     url: amount === undefined ? `${site}/api` : `${site}/api?amount=${cents / 100}`,
-    description: `${dollars(cents)} of callbay call credits (phone calls your AI agent places), credited to the account named by Authorization: Bearer <callbay key or OAuth token>. Other amounts: ?amount=<dollars>, 10 to 500.`,
+    description: `${dollars(cents)} of call4me call credits (phone calls your AI agent places), credited to the account named by Authorization: Bearer <call4me key or OAuth token>. Other amounts: ?amount=<dollars>, 10 to 500.`,
     mimeType: 'application/json',
     cents,
     payTo,
@@ -47,7 +47,7 @@ apiRoot.get('/api', async (c) => {
   // Credits need an account: refuse a payment that names none before anything settles.
   const account = carriesPayment(c.req.raw) ? await bearerAccount(c) : null;
   if (carriesPayment(c.req.raw) && !account) {
-    return c.body(error('unauthorized', `send Authorization: Bearer <callbay key or OAuth token> with the payment so the credits land on your account; see ${site}/auth.md`), 401, {
+    return c.body(error('unauthorized', `send Authorization: Bearer <call4me key or OAuth token> with the payment so the credits land on your account; see ${site}/auth.md`), 401, {
       ...HEADERS,
       'www-authenticate': `Bearer resource_metadata="${origin(c)}/.well-known/oauth-protected-resource"`,
     });

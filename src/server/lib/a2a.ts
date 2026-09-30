@@ -3,7 +3,7 @@ import { CATEGORIES, categoryBySlug, type Category } from '../services/intake';
 /**
  * A2A 1.0 (a2a-protocol.org) over its JSON-RPC binding: the Agent Card that other agents
  * discover at /.well-known/agent-card.json, and a stateless agent that answers `SendMessage`
- * with the kinds of calls callbay makes and what one of them needs before dialing. Placing a
+ * with the kinds of calls call4me makes and what one of them needs before dialing. Placing a
  * call acts for a signed-in user and spends credits, so it stays on the MCP server; the card
  * and every reply point there. Every task completes within the request, so there is nothing
  * to get, list, cancel, or subscribe to afterwards; those methods say so per the spec.
@@ -15,10 +15,10 @@ export function agentCard(site: string, version: string) {
   // A2A 1.0 card: the transport lives in supportedInterfaces; the 0.3-era top-level url,
   // protocolVersion, and preferredTransport are gone.
   return {
-    name: 'callbay',
-    description: `Tells other agents what phone calls callbay can make for a user and exactly what each kind of call needs before dialing. Placing the call itself goes through the callbay MCP server at ${site}/mcp, signed in as the user.`,
+    name: 'call4me',
+    description: `Tells other agents what phone calls call4me can make for a user and exactly what each kind of call needs before dialing. Placing the call itself goes through the call4me MCP server at ${site}/mcp, signed in as the user.`,
     version,
-    provider: { organization: 'callbay', url: site },
+    provider: { organization: 'call4me', url: site },
     iconUrl: `${site}/favicon.svg`,
     documentationUrl: `${site}/mcp`,
     supportedInterfaces: [{ url: `${site}/a2a`, protocolBinding: 'JSONRPC', protocolVersion: A2A_PROTOCOL_VERSION }],
@@ -29,16 +29,16 @@ export function agentCard(site: string, version: string) {
       {
         id: 'list-call-types',
         name: 'Kinds of calls',
-        description: 'The kinds of calls callbay makes (slug, name, examples), the price, and how to connect. Send any text, or a data part {} with no category.',
+        description: 'The kinds of calls call4me makes (slug, name, examples), the price, and how to connect. Send any text, or a data part {} with no category.',
         tags: ['phone-calls', 'bookings', 'appointments'],
-        examples: ['what calls can you make?', 'can callbay book a dentist appointment?'],
+        examples: ['what calls can you make?', 'can call4me book a dentist appointment?'],
         inputModes: ['text/plain', 'application/json'],
         outputModes: ['text/plain', 'application/json'],
       },
       {
         id: 'get-requirements',
         name: 'What a call needs',
-        description: `Every field one kind of call needs before callbay will dial (required and optional, with the question to ask the user). Send a data part {"category"} or a text message naming the category slug, e.g. "${CATEGORIES[0]!.slug}".`,
+        description: `Every field one kind of call needs before call4me will dial (required and optional, with the question to ask the user). Send a data part {"category"} or a text message naming the category slug, e.g. "${CATEGORIES[0]!.slug}".`,
         tags: ['phone-calls', 'requirements', 'intake'],
         examples: ['what does a restaurant call need?', 'requirements for flight_change'],
         inputModes: ['text/plain', 'application/json'],
@@ -98,7 +98,7 @@ export function a2aDispatch(rawBody: string, site: string): { status: number; bo
     case 'GetTask':
     case 'CancelTask':
     case 'SubscribeToTask':
-      return { status: 404, body: rpcError(req.id, CODES.taskNotFound, 'Task not found: callbay tasks complete within the SendMessage call and are not stored') };
+      return { status: 404, body: rpcError(req.id, CODES.taskNotFound, 'Task not found: call4me tasks complete within the SendMessage call and are not stored') };
     case 'ListTasks':
       return { status: 200, body: rpcResult(req.id, { tasks: [], nextPageToken: '', pageSize: 0, totalSize: 0 }) };
     case 'SendStreamingMessage':
@@ -119,7 +119,7 @@ export function categoryInText(text: string): Category | null {
   return CATEGORIES.find((c) => t.includes(c.slug) || t.includes(c.slug.replace(/_/g, ' '))) ?? null;
 }
 
-const connectLine = (site: string) => `To place a call, connect the callbay MCP server at ${site}/mcp (the user signs in with Google or X) and use callbay_place_call.`;
+const connectLine = (site: string) => `To place a call, connect the call4me MCP server at ${site}/mcp (the user signs in with Google or X) and use call4me_place_call.`;
 
 function sendMessage(req: RpcRequest, site: string): { status: number; body: unknown } {
   const params = (req.params ?? {}) as { message?: Message };
@@ -153,7 +153,7 @@ function sendMessage(req: RpcRequest, site: string): { status: number; body: unk
       '',
       `Examples: ${category.examples}.`,
       '',
-      'callbay dials only once it has:',
+      'call4me dials only once it has:',
       ...fields.map((f) => `- ${f.key}${f.required ? '' : ' (optional)'}: ${f.ask}${f.fromProfile ? ` (saved profile field ${f.fromProfile})` : ''}`),
       '',
       connectLine(site),
@@ -163,7 +163,7 @@ function sendMessage(req: RpcRequest, site: string): { status: number; body: unk
 
   const kinds = CATEGORIES.map((c) => ({ slug: c.slug, name: c.name, examples: c.examples }));
   const summary = [
-    'callbay places real phone calls to businesses for a user: in the US, Canada and Europe, and in any other country the account holds a callbay number in. Kinds of calls:',
+    'call4me places real phone calls to businesses for a user: in the US, Canada and Europe, and in any other country the account holds a call4me number in. Kinds of calls:',
     ...kinds.map((k) => `- ${k.slug}: ${k.name} (${k.examples})`),
     '',
     'Send a category slug to see exactly what that call needs before dialing.',

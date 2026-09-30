@@ -27,7 +27,7 @@ export async function ownerKey(c: AppContext, account: Account): Promise<string>
 /** The signed-in viewer's key for the page's copy prompts; null signed out. */
 export const viewerKey = async (c: AppContext, account = c.get('account')): Promise<string | null> => (account ? ownerKey(c, account) : null);
 
-/** Hosts callbay used to live on (LEGACY_HOSTS in wrangler.jsonc). */
+/** Hosts call4me used to live on (LEGACY_HOSTS in wrangler.jsonc). */
 export const legacyHosts = (env: Pick<Env, 'LEGACY_HOSTS'>): string[] =>
   (env.LEGACY_HOSTS ?? '')
     .split(',')

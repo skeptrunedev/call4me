@@ -41,7 +41,7 @@ og.get('/blog/:file{.+\\.png}', async (c) => {
   return png(c, async () => {
     const asset = await c.env.ASSETS.fetch(new Request(new URL(post.image, c.req.url)));
     if (asset.ok) return { svg: await asset.text(), maxAge: 86400 };
-    const card: OgCard = { title: post.title, subtitle: post.subtitle, footer: `callbay blog · ${post.date}` };
+    const card: OgCard = { title: post.title, subtitle: post.subtitle, footer: `call4me blog · ${post.date}` };
     return { svg: cardSvg(card), maxAge: 3600 };
   });
 });

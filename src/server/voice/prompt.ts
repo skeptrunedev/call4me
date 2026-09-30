@@ -3,11 +3,11 @@
  * every rule here exists because a default voice agent does the opposite.
  *
  * Deliberately absent: any opening disclosure line, any "this call may be recorded"
- * notice (callbay does not record audio), and any end-of-call read-back.
+ * notice (call4me does not record audio), and any end-of-call read-back.
  * Deliberately present: the caller is the owner's personal assistant and says so, never
  * the person it calls for; and an honest answer when someone sincerely asks if they are
  * talking to an AI. Not volunteering it is how a person would talk; lying when asked
- * is a line callbay does not cross (and several states require the honest answer).
+ * is a line call4me does not cross (and several states require the honest answer).
  */
 
 /** "Sarah Harris" -> "Sarah"; how the caller introduces herself. */
@@ -36,11 +36,11 @@ export interface CallBrief {
   facts: string;
   /** What the caller may accept without asking: "any time 6:30-8pm", "up to $400". */
   flexibility: string;
-  /** The account's own callbay number: the only number the business is given to call back. */
+  /** The account's own call4me number: the only number the business is given to call back. */
   callbackNumber: string;
   /** Local date and time at the business, so "tomorrow" means something. Null when the time zone is unknown. */
   localTime: string | null;
-  /** The person callbay works for, who can be patched into the call. */
+  /** The person call4me works for, who can be patched into the call. */
   owner: string;
   /** When to patch them in without being asked, e.g. "as soon as a person picks up". */
   connectWhen: string | null;
@@ -276,7 +276,7 @@ export const BACK_OFFICE_TOOLS = [
   {
     type: 'function',
     name: 'connect_person',
-    description: 'Ring the person callbay works for and patch them into this call, so they talk to the other side directly. Use it when the other side insists on speaking to them, or when the connect condition is met. They join by pressing 1 when they pick up. The caller goes quiet while they are on and takes over again when they hang up or press star. If the result says they could not be reached, do not call this again.',
+    description: 'Ring the person call4me works for and patch them into this call, so they talk to the other side directly. Use it when the other side insists on speaking to them, or when the connect condition is met. They join by pressing 1 when they pick up. The caller goes quiet while they are on and takes over again when they hang up or press star. If the result says they could not be reached, do not call this again.',
     parameters: { type: 'object', properties: {}, required: [] },
   },
   {
