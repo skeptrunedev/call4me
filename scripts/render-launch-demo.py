@@ -167,7 +167,7 @@ def prepare_audio(edit, output):
 
 
 def prepare_soundtrack(edit, manifest, call_audio, output, total):
-    """Keep the verified call untouched; place music only outside its interval."""
+    """Preserve voice gain, with an optional quiet music bed during the call."""
     rate = 48000
     intro, result = edit["intro_duration"], edit["result_duration"]
     call_end = intro + edit["audio_duration"]
@@ -185,6 +185,11 @@ def prepare_soundtrack(edit, manifest, call_audio, output, total):
         fade_in = float(music.get("fade_in", .65))
         gap = float(music.get("silence_before_call", .15))
         level = float(music.get("loudness", -19))
+        background_gain = music.get("call_background_gain_db")
+        if background_gain is not None:
+            background_gain = float(background_gain)
+            if not math.isfinite(background_gain) or not -60 <= background_gain <= -12:
+                raise ValueError("call_background_gain_db must be between -60 and -12")
         intro_music = intro - gap
         if not (min(start, resume) >= 0 and 0 < gap < intro and
                 0 < fade_out < intro_music and 0 < fade_in < result and
@@ -192,7 +197,8 @@ def prepare_soundtrack(edit, manifest, call_audio, output, total):
             raise ValueError("Invalid music cue, fade, or loudness setting")
         inputs += ["-i", str(source)]
         filters += [
-            "[1:a]asplit=2[mi][mo]",
+            "[1:a]asplit=3[mi][mo][mb]" if background_gain is not None
+            else "[1:a]asplit=2[mi][mo]",
             f"[mi]atrim=start={start}:duration={intro_music},asetpts=PTS-STARTPTS[ic]",
             f"[mo]atrim=start={resume}:duration={result},asetpts=PTS-STARTPTS[oc]",
             "[ic][oc]concat=n=2:v=0:a=1,"
@@ -205,9 +211,21 @@ def prepare_soundtrack(edit, manifest, call_audio, output, total):
             f"afade=t=in:d={fade_in},"
             f"afade=t=out:st={max(0, result - .8)}:d={min(.8, result)},"
             f"adelay={round(call_end * rate)}S:all=1[closing]",
-            "[call][opening][closing]amix=inputs=3:normalize=0:dropout_transition=0,"
-            f"atrim=duration={total}[out]",
         ]
+        tracks = "[call][opening][closing]"
+        if background_gain is not None:
+            duration = edit["audio_duration"]
+            fade = min(.3, duration / 2)
+            filters.append(
+                f"[mb]atrim=start={start + intro}:duration={duration},asetpts=PTS-STARTPTS,"
+                f"loudnorm=I={level}:TP=-2:LRA=11,aresample={rate},"
+                f"aformat=channel_layouts=stereo,volume={background_gain}dB,"
+                f"afade=t=in:d={fade},afade=t=out:st={duration - fade}:d={fade},"
+                f"adelay={round(intro * rate)}S:all=1[background]"
+            )
+            tracks += "[background]"
+        filters.append(f"{tracks}amix=inputs={4 if background_gain is not None else 3}:"
+                       f"normalize=0:dropout_transition=0,atrim=duration={total}[out]")
         mapped = "[out]"
     else:
         mapped = "[call]"
@@ -333,16 +351,20 @@ def main():
     if not shutil.which("ffmpeg") or not REGULAR.exists() or not BOLD.exists():
         parser.error("ffmpeg and the Liberation Serif regular/bold fonts are required")
     edit = load_edit(args.manifest.resolve())
-    if args.reuse_video and (edit["call_speed"] != 1 or edit["silence_removed"]):
-        parser.error("Call timing edits require a full render to retime the visuals and captions")
-    args.output.mkdir(parents=True, exist_ok=True)
-    (args.output / "call-edit.json").write_text(json.dumps({
+    call_plan = {
         "call_speed": edit["call_speed"],
         "silence_removed": edit["silence_removed"],
         "audio_duration": edit["audio_duration"],
         "source_segments": edit["audio_segments"],
         "captions": edit["cues"],
-    }, indent=2) + "\n")
+    }
+    if args.reuse_video and (edit["call_speed"] != 1 or edit["silence_removed"]):
+        previous_plan = args.reuse_video.parent / "call-edit.json"
+        if not previous_plan.is_file() or json.loads(previous_plan.read_text()) != call_plan:
+            parser.error("Reused video must have a matching call-edit.json timeline; "
+                         "changed call timing or captions require a full render")
+    args.output.mkdir(parents=True, exist_ok=True)
+    (args.output / "call-edit.json").write_text(json.dumps(call_plan, indent=2) + "\n")
     prepare_terminal(edit, args.manifest.resolve(), args.output)
     audio, samples, rate = prepare_audio(edit, args.output)
     intro = edit["intro_duration"]

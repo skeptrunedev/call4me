@@ -122,10 +122,11 @@ Exports are 1920 by 1080 at 30 frames per second, H.264/AAC MP4, PNG
 still, SRT captions, and preview frames. The audio timer measures only the edited
 excerpt, not the duration of the original call.
 
-Optional music belongs only under the terminal intro and completed result.
+By default, optional music plays only under the terminal intro and completed result.
 Choose a recognizable phrase from the supplied source, fade fully out before
 the call begins, and fade back in once the call ends. Keep the call at its
-verified level with no music beneath it. An audio revision should preserve the
+verified level. When requested, add a quiet music bed beneath the call.
+An audio revision should preserve the
 approved video stream exactly.
 
 To add music, supply a `music` object in the private edit manifest. `source`
@@ -136,6 +137,14 @@ music `loudness` of minus 19 LUFS. The closing cue also fades out at the end.
 The renderer normalizes only the selected music, leaves the verified call
 samples unchanged, and writes a stereo `soundtrack.wav` for verification.
 
+Set `music.call_background_gain_db` to enable a quiet call background. It reduces
+the song relative to the configured music loudness, without reducing or
+normalizing the call voices again. A setting of minus 20 dB keeps the song very
+quiet. The bed continues from the song position reached at the end of the intro,
+plays at the original song speed, and fades at both call boundaries. Omit this
+field to retain silence beneath the call. Allowed settings are minus 60 to
+minus 12 dB.
+
 Reuse the approved visual edit for a music revision:
 
 ```sh
@@ -144,9 +153,12 @@ uv run scripts/render-launch-demo.py /private/edit-with-music.json /output/music
 ```
 
 The reused video must match the manifest's visual edit and timing. Verify its
-video stream hash matches the new output, the call samples in the master WAV
-match the normalized excerpt in both channels, and music is silent for the
-entire call interval. Keep supplied songs and finished mixes outside git.
+video stream hash matches the new output. When a background is enabled, check
+that the difference between the mixed call and the normalized excerpt contains
+only quiet music, and that the mix does not clip. When it is disabled, verify
+the call samples match the excerpt exactly in both channels. A shortened video
+can be reused only when its adjacent `call-edit.json` matches the current call
+timeline and captions exactly. Keep supplied songs and finished mixes outside git.
 
 Check the contact sheet and individual preview frames before the full render.
 After rendering, decode the actual MP4, inspect frames at the zooms and caption

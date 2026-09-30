@@ -93,6 +93,49 @@ class CallTimelineTest(unittest.TestCase):
         peak = frequencies[np.argmax(np.abs(np.fft.rfft(tone)))]
         self.assertAlmostEqual(peak, 440, delta=4)
 
+    def test_quiet_background_preserves_voice_gain_and_intro_outro(self):
+        edit = self.load()
+        call_path, _, rate = renderer.prepare_audio(edit, self.root)
+        music = np.sin(2 * np.pi * 880 * np.arange(12 * rate) / rate) * 8000
+        with wave.open(str(self.root / "music.wav"), "wb") as audio:
+            audio.setnchannels(1)
+            audio.setsampwidth(2)
+            audio.setframerate(rate)
+            audio.writeframes(music.astype("<i2").tobytes())
+        edit.update(intro_duration=2, result_duration=2, music={
+            "source": "music.wav", "start": 0, "fade_out": .5, "fade_in": .5})
+
+        def mix(folder):
+            folder.mkdir()
+            path = renderer.prepare_soundtrack(edit, self.root / "edit.json",
+                                              call_path, folder, 8)
+            with wave.open(str(path)) as audio:
+                self.assertEqual(audio.getnframes(), 8 * rate)
+                return np.frombuffer(audio.readframes(audio.getnframes()),
+                                     dtype="<i2").reshape(-1, 2).astype(float)
+
+        baseline = mix(self.root / "baseline")
+        edit["music"]["call_background_gain_db"] = -20
+        background = mix(self.root / "background")
+        # Adding a mixer input can change float accumulation by one PCM unit.
+        np.testing.assert_allclose(background[:2 * rate], baseline[:2 * rate], atol=1, rtol=0)
+        np.testing.assert_allclose(background[6 * rate:], baseline[6 * rate:], atol=1, rtol=0)
+        a, b = round(3.25 * rate), round(3.75 * rate)
+        voice = baseline[a:b, 0]
+        mixed = background[a:b, 0]
+        residual = mixed - voice
+        relative_rms = np.sqrt(np.mean(residual ** 2) / np.mean(voice ** 2))
+        self.assertGreater(relative_rms, .02)
+        self.assertLess(relative_rms, .12)
+        frequencies = np.fft.rfftfreq(len(residual), 1 / rate)
+        peak = frequencies[np.argmax(np.abs(np.fft.rfft(residual)))]
+        self.assertAlmostEqual(peak, 880, delta=2)
+        # A gain change to the voices would leave a 440 Hz peak in the residual.
+        spectrum = np.abs(np.fft.rfft(residual))
+        self.assertLess(spectrum[np.argmin(abs(frequencies - 440))],
+                        spectrum[np.argmin(abs(frequencies - 880))] * .01)
+        self.assertLess(np.max(np.abs(background)), 32767)
+
 
 if __name__ == "__main__":
     unittest.main()
