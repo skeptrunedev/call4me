@@ -23,7 +23,8 @@ import { BACK_OFFICE_TOOLS } from './prompt';
  *   /hang-up    call4me_hang_up; the hangup webhook finishes and bills the call as usual
  *
  * The person's own phone (person.ts): /connect-person rings it, /person-answered starts the wait
- * for their 1, /person-join puts them on the call when they press it, /person-left hands the call back.
+ * for their 1, /person-key puts them on the call when they press it and relays their keys to the
+ * business after that, /person-left hands the call back.
  */
 
 const OPENAI_LIVE_URL = 'https://api.openai.com/v1/live/sessions';
@@ -131,6 +132,8 @@ export class CallSession extends DurableObject<Env> {
   /** The person's own phone leg while it rings or is on the call; the caller stays silent while they talk. */
   private personLeg: string | null = null;
   private personOn = false;
+  /** Keys relayed from the person's phone to the business, one after another. */
+  private keysOut: Promise<void> = Promise.resolve();
   /** Once they've been rung, the connect condition is settled; lines already checked against it. */
   private personRung = false;
   /** A ring ended without them pressing 1: the caller stops trying to connect them on this call. */
@@ -190,9 +193,11 @@ export class CallSession extends DurableObject<Env> {
       case '/person-answered':
         this.personAnswered();
         return new Response('ok');
-      case '/person-join':
-        await this.personJoin();
+      case '/person-key': {
+        const { digit } = (await req.json()) as { digit: string };
+        await this.personKey(digit);
         return new Response('ok');
+      }
       case '/person-left':
         this.personLeft();
         return new Response('ok');
@@ -632,6 +637,22 @@ export class CallSession extends DurableObject<Env> {
       console.log('person leg never pressed 1', this.setup?.callId);
       void telnyx(this.env).hangup(leg).catch((err) => console.warn('person hangup', String(err)));
     }, JOIN_WAIT_MS);
+  }
+
+  /**
+   * A key from the person's phone. Listening, 1 puts them on the call; on the call, every key goes
+   * to the business in the order pressed (account numbers, SSNs: never logged or stored).
+   */
+  private async personKey(digit: string): Promise<void> {
+    if (!this.personOn) {
+      if (digit === '1') await this.personJoin();
+      return;
+    }
+    const s = await this.load();
+    if (!s?.controlId || this.ended) return;
+    const controlId = s.controlId;
+    this.keysOut = this.keysOut.then(() => telnyx(this.env).sendDtmf(controlId, digit)).catch(() => console.warn('relaying a key failed', s.callId));
+    await this.keysOut;
   }
 
   /** They pressed 1: from listening to on the call. */

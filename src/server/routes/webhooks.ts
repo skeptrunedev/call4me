@@ -153,13 +153,14 @@ webhooks.post('/telnyx', async (c) => {
 
   // The person's own phone patched into the call: its events move the call between them and
   // the caller, and never end or bill the call itself. Answering leaves them listening; 1 puts
-  // them on the call, * hands it back.
+  // them on the call, * hands it back, and once they are on, other keys go through to the business
+  // (a supervisor leg carries their voice but not their keypad).
   if (state?.personLeg) {
     const session = sessionFor(c.env, callId);
     if (type === 'call.answered') await session.fetch('https://session/person-answered', { method: 'POST' });
     else if (type === 'call.hangup') await session.fetch('https://session/person-left', { method: 'POST', body: JSON.stringify({ cause: p.hangup_cause ?? null }) });
-    else if (type === 'call.dtmf.received' && p.digit === '1') await session.fetch('https://session/person-join', { method: 'POST' });
     else if (type === 'call.dtmf.received' && p.digit === '*' && p.call_control_id) await telnyx(c.env).hangup(p.call_control_id);
+    else if (type === 'call.dtmf.received' && p.digit) await session.fetch('https://session/person-key', { method: 'POST', body: JSON.stringify({ digit: p.digit }) });
     return c.text('ok');
   }
 
