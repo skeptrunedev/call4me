@@ -5,10 +5,10 @@ layout and sign in state. The content lives in `src/content/examples.ts`; the
 reviewed MP3 excerpts live in `public/static/examples`. It needs no calling
 credentials, recording API requests, or call history queries to render.
 
-The current examples use the founder's historical TAO, Monkeybrains, and Amazon
-Pharmacy calls. The original audio was verified against Telnyx recordings and
-the saved call transcripts. Each example shows the specific outcome supported
-by that conversation. The internet call did not schedule installation, and the
+The current examples use the founder's historical TAO booking and cancellation,
+Monkeybrains, and Amazon Pharmacy calls. The original audio was verified against
+Telnyx recordings and the saved call transcripts. Each example shows the specific
+outcome supported by that conversation. The internet call did not schedule installation, and the
 Amazon call did not prove the review finished. Historical prices and availability
 in the audio are statements from the dated call.
 

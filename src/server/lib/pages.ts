@@ -36,7 +36,7 @@ export interface PageOverride {
 
 export const PAGES = {
   home: { description: SITE_DESCRIPTION, card: 'site', path: '/' },
-  examples: { description: 'listen to real callbay calls: a dinner reservation, home internet questions, and an expedited support review. original voices, edited excerpts, and transcripts.', card: 'examples', path: '/examples' },
+  examples: { description: 'listen to real callbay calls: booking and canceling dinner reservations, home internet questions, and an expedited support review. original voices, edited excerpts, and transcripts.', card: 'examples', path: '/examples' },
   mcp: { description: 'install callbay in claude code, codex, claude desktop, claude.ai, or chatgpt with one prompt. your agent gets a tool that makes phone calls.', card: 'mcp', path: '/mcp' },
   login: { description: 'sign in to callbay with google or x to load credits and connect your AI agent.', card: 'login', path: '/login' },
   account: { description: 'your callbay balance, monthly reload, key, and every call with its transcript.', card: 'account', path: '/account' },
