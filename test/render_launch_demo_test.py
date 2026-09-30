@@ -10,9 +10,11 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import wave
 
 import numpy as np
+from PIL import Image, ImageDraw
 
 sys.dont_write_bytecode = True
 
@@ -78,6 +80,26 @@ class CallTimelineTest(unittest.TestCase):
                          terminal_typing_end_at=5, terminal_submit_at=4)
         with self.assertRaisesRegex(ValueError, "prompt entry"):
             self.load()
+
+    def test_outro_animates_and_keeps_entire_final_response_in_view(self):
+        edit = self.load()
+        edit.update(intro_duration=2, result_duration=6, capture_duration=10,
+                    terminal_result_at=4, terminal_submit_at=1)
+        source = Image.new("RGB", (1580, 836), "white")
+        ImageDraw.Draw(source).rectangle((22, 556, 1510, 641), fill="black")
+        with patch.object(renderer, "native_frame", return_value=source):
+            opening = renderer.scene(edit, 6, np.zeros(1), 48000)
+            closing = renderer.scene(edit, 11, np.zeros(1), 48000)
+        self.assertNotEqual(opening.tobytes(), closing.tobytes())
+        first = renderer.outro_camera(edit, 0)
+        last = renderer.outro_camera(edit, 5)
+        self.assertLess(last[2] - last[0], first[2] - first[0])
+        self.assertGreater(last[1], 478)  # Earlier tool output must leave the close view.
+        self.assertLessEqual(last[0], 22)
+        self.assertGreaterEqual(last[2], 1510)
+        self.assertLessEqual(last[1], 556)
+        self.assertGreaterEqual(last[3], 641)
+        self.assertEqual(renderer.outro_camera(edit, 5, poster=True), last)
 
     def test_silence_and_speed_retime_later_clips_and_spanning_captions(self):
         self.edit["call_speed"] = 1.25

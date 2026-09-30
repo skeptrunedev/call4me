@@ -100,6 +100,10 @@ def intro_source_time(edit, t):
             + max(0, t - typing_end))
 
 
+def camera_box(x, y, width):
+    return x, y, x + width, y + width * 816 / 1760
+
+
 def load_edit(path):
     edit = json.loads(path.read_text())
     source = (path.parent / edit["source"]).resolve()
@@ -121,6 +125,13 @@ def load_edit(path):
                                   edit.get("terminal_submit_at", 0)):
         raise ValueError("Accelerated typing requires start and end within the prompt entry")
     edit.update(typing_speed=typing_speed, typing_start=typing_start, typing_end=typing_end)
+    zoom = {"x": 0, "y": 500, "width": 1580, "start": .4, "duration": 1.2}
+    zoom.update(edit.get("response_zoom", {}))
+    zoom = {key: float(value) for key, value in zoom.items()}
+    if not (all(math.isfinite(value) for value in zoom.values()) and
+            zoom["width"] > 0 and zoom["start"] >= 0 and zoom["duration"] > 0):
+        raise ValueError("Invalid final response camera crop or zoom timing")
+    edit["response_zoom"] = zoom
     offset = 0.0
     cues = []
     segments = []
@@ -288,6 +299,8 @@ def prepare_terminal(edit, manifest, output):
         raise ValueError("Expected submit, calling, then completed result within the native capture")
     edit["intro_duration"] = intro_time(edit, call_at)
     edit["result_duration"] = edit["capture_duration"] - result_at
+    if edit["response_zoom"]["start"] + edit["response_zoom"]["duration"] >= edit["result_duration"]:
+        raise ValueError("Final response zoom must finish before the result footage ends")
 
 
 def native_frame(edit, t):
@@ -295,25 +308,27 @@ def native_frame(edit, t):
     return Image.open(edit["native_frames"][index]).convert("RGB")
 
 
-def camera(edit, t, poster=False):
+def camera(edit, t):
     # Fixed aspect ratio throughout. The close view fits all three prompt lines.
-    def box(x, y, width):
-        return x, y, x + width, y + width * 816 / 1760
-
-    wide = box(-112, 0, 1804)
-    close = box(-20, 430, 1100)
-    result = box(0, 98, 1580)
+    wide = camera_box(-112, 0, 1804)
+    close = camera_box(-20, 430, 1100)
     submit = intro_time(edit, edit["terminal_submit_at"])
-    if poster:
-        return result
-    if t >= edit["terminal_expand_at"]:
-        u = ease(0, 1, (t - edit["terminal_expand_at"]) / 1.2)
-        return tuple(a + (b - a) * u for a, b in zip(wide, result))
     if t < submit:
         u = ease(0, 1, (t - .25) / 1.4)
     else:
         u = ease(1, 0, (t - submit) / .9)
     return tuple(a + (b - a) * u for a, b in zip(wide, close))
+
+
+def outro_camera(edit, t, poster=False):
+    """Reveal the terminal, then move onto the complete final response."""
+    zoom = edit["response_zoom"]
+    wide = camera_box(-112, 0, 1804)
+    response = camera_box(zoom["x"], zoom["y"], zoom["width"])
+    if poster:
+        return response
+    u = ease(0, 1, (t - zoom["start"]) / zoom["duration"])
+    return tuple(a + (b - a) * u for a, b in zip(wide, response))
 
 
 def scene(edit, t, samples, rate, poster=False):
@@ -335,9 +350,10 @@ def scene(edit, t, samples, rate, poster=False):
                     edit["terminal_result_at"] + t - intro - edit["audio_duration"]
                     if finished else intro_source_time(edit, t))
         source = native_frame(edit, source_t)
+        crop = (outro_camera(edit, t - intro - edit["audio_duration"], poster)
+                if finished else camera(edit, t))
         viewport = source.transform((1760, 816), Image.Transform.EXTENT,
-                                    camera(edit, source_t if finished else t, finished),
-                                    Image.Resampling.BICUBIC,
+                                    crop, Image.Resampling.BICUBIC,
                                     fillcolor=BG)
         im.paste(viewport, (80, 145))
         d = ImageDraw.Draw(im)
@@ -407,12 +423,13 @@ def main():
         "terminal_expand_at": edit["terminal_expand_at"],
         "terminal_call_at": edit["terminal_call_at"],
         "terminal_result_at": edit["terminal_result_at"],
+        "response_zoom": edit["response_zoom"],
     }
     if args.reuse_video:
         previous_intro = args.reuse_video.parent / "intro-edit.json"
         if previous_intro.is_file():
             if json.loads(previous_intro.read_text()) != intro_plan:
-                parser.error("Changed terminal capture or intro timing requires a full render")
+                parser.error("Changed terminal capture, camera, or intro timing requires a full render")
         elif edit["typing_speed"] != 1:
             parser.error("Accelerated intro reuse requires matching intro-edit.json metadata")
     (args.output / "intro-edit.json").write_text(json.dumps(intro_plan, indent=2) + "\n")
@@ -420,10 +437,13 @@ def main():
     intro = edit["intro_duration"]
     total = intro + edit["audio_duration"] + edit["result_duration"]
     submit = intro_time(edit, edit["terminal_submit_at"])
+    call_end = intro + edit["audio_duration"]
     preview_times = [0, min(3, submit - .3), submit - .2, intro - 1 / FPS,
-                     intro + 1, intro + 8, intro + edit["audio_duration"], total - 2]
+                     intro + 1, intro + 8, call_end, call_end + 1,
+                     call_end + edit["response_zoom"]["start"] + edit["response_zoom"]["duration"],
+                     total - 2]
     frames = [scene(edit, t, samples, rate) for t in preview_times]
-    sheet = Image.new("RGB", (960 * 2, 540 * 4), BG)
+    sheet = Image.new("RGB", (960 * 2, 540 * math.ceil(len(frames) / 2)), BG)
     for i, frame in enumerate(frames):
         sheet.paste(frame.resize((960, 540), Image.Resampling.LANCZOS),
                     (i % 2 * 960, i // 2 * 540))

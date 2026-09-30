@@ -97,6 +97,16 @@ Camera moves keep their original animation durations. Call audio, captions,
 and music move earlier with the shortened intro; music keeps its original
 playback speed. The private `intro-edit.json` records the capture and timing.
 
+After the call, show the terminal overview briefly, ease into the complete
+final response, and hold the closer view. The separate outro camera prevents
+the still image framing from disabling the animation. `response_zoom` accepts
+source crop `x`, `y`, and `width`, plus `start` and `duration` in seconds from
+the start of the result scene. Defaults are a 0.4 second overview, a 1.2 second
+move, and a crop at source x 0, y 500, width 1580. Verify the complete response
+fits that crop in the selected native take. The still uses the finished close
+view. Camera settings are recorded with the capture metadata and must match
+when reusing video for a soundtrack revision.
+
 The renderer defaults to the original audio speed, trims the selected ranges,
 normalizes the excerpt's loudness, and derives the waveform from those samples.
 An optional `call_speed` between 0.5 and 2 changes only the call playback tempo
