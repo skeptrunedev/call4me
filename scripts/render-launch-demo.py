@@ -90,35 +90,72 @@ def load_edit(path):
         raise ValueError("The manifest must identify the original session and call.")
     with wave.open(str(source)) as audio:
         duration = audio.getnframes() / audio.getframerate()
+    speed = float(edit.get("call_speed", 1))
+    if not math.isfinite(speed) or not .5 <= speed <= 2:
+        raise ValueError("call_speed must be between 0.5 and 2")
     offset = 0.0
     cues = []
+    segments = []
+    removed = 0.0
     for clip in edit["clips"]:
         start, end = clip["start"], clip["end"]
         if not 0 <= start < end <= duration:
             raise ValueError(f"Invalid audio cut: {start}..{end}")
+        # Explicit, reviewed source ranges keep quiet consonants out of silence cuts.
+        kept = []
+        cursor = start
+        for cut in clip.get("remove_silence", []):
+            lo, hi = cut["start"], cut["end"]
+            if not cursor <= lo < hi <= end:
+                raise ValueError(f"Invalid or overlapping silence cut: {cut}")
+            if cursor < lo:
+                kept.append({"start": cursor, "end": lo})
+            removed += hi - lo
+            cursor = hi
+        if cursor < end:
+            kept.append({"start": cursor, "end": end})
+        if not kept:
+            raise ValueError("A silence edit cannot remove an entire clip")
+
+        def elapsed(t):
+            return sum(max(0, min(t, span["end"]) - span["start"])
+                       for span in kept) / speed
+
         for cue in clip["captions"]:
             if not start <= cue["start"] < cue["end"] <= end:
                 raise ValueError(f"Caption outside selected audio: {cue}")
-            cues.append({**cue, "start": offset + cue["start"] - start,
-                         "end": offset + cue["end"] - start})
-        offset += end - start
-    edit.update(source_path=source, cues=cues, audio_duration=offset)
+            cue_start, cue_end = elapsed(cue["start"]), elapsed(cue["end"])
+            if cue_start >= cue_end:
+                raise ValueError(f"Silence edit removes a complete caption: {cue}")
+            cues.append({**cue, "start": offset + cue_start,
+                         "end": offset + cue_end})
+        segments.extend(kept)
+        offset += elapsed(end)
+    if not segments:
+        raise ValueError("At least one audio clip is required")
+    edit.update(source_path=source, cues=cues, audio_duration=offset,
+                audio_segments=segments, call_speed=speed, silence_removed=removed)
     return edit
 
 
 def prepare_audio(edit, output):
     # Trim before normalization, so all measurements describe only the selected audio.
-    # Tiny edge fades prevent clicks. No time stretching or generated voice is used.
+    # Tiny edge fades prevent clicks. Tempo changes preserve the original voices.
     filters = []
-    for i, clip in enumerate(edit["clips"]):
+    for i, clip in enumerate(edit["audio_segments"]):
         duration = clip["end"] - clip["start"]
+        fade = min(.008, duration / 2)
         filters.append(
             f"[0:a]atrim=start={clip['start']}:end={clip['end']},asetpts=PTS-STARTPTS,"
-            f"afade=t=in:d=0.008,afade=t=out:st={duration - .008}:d=0.008[a{i}]"
+            f"afade=t=in:d={fade},afade=t=out:st={duration - fade}:d={fade}[a{i}]"
         )
-    labels = "".join(f"[a{i}]" for i in range(len(edit["clips"])))
-    filters.append(f"{labels}concat=n={len(edit['clips'])}:v=0:a=1,"
-                   "loudnorm=I=-16:TP=-1.5:LRA=11[out]")
+    labels = "".join(f"[a{i}]" for i in range(len(edit["audio_segments"])))
+    tempo = f"atempo={edit['call_speed']}," if edit["call_speed"] != 1 else ""
+    # Pin the master to the caption timeline after tempo processing and resampling.
+    samples = round(edit["audio_duration"] * 48000)
+    filters.append(f"{labels}concat=n={len(edit['audio_segments'])}:v=0:a=1,"
+                   f"{tempo}loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,"
+                   f"apad=whole_len={samples},atrim=end_sample={samples}[out]")
     audio_path = output / "call-excerpt.wav"
     run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(edit["source_path"]),
          "-filter_complex", ";".join(filters), "-map", "[out]", "-ar", "48000",
@@ -261,7 +298,10 @@ def scene(edit, t, samples, rate, poster=False):
     elif playing:
         draw_link(d, (115, 212), "phone calls > pharmacy", 30)
         draw_text(d, (110, 273), "amazon pharmacy support", 62, INK, True)
-        draw_text(d, (114, 362), "original call recording", 30, MUTED)
+        recording_label = "original call recording"
+        if edit["call_speed"] != 1:
+            recording_label += f" · {edit['call_speed']:g}× speed"
+        draw_text(d, (114, 362), recording_label, 30, MUTED)
         draw_text(d, (1390, 366), f"{stamp(play_t)} / {stamp(edit['audio_duration'])}", 26, MUTED)
         start = int(max(0, play_t - 1.4) * rate)
         for i in range(108):
@@ -293,7 +333,16 @@ def main():
     if not shutil.which("ffmpeg") or not REGULAR.exists() or not BOLD.exists():
         parser.error("ffmpeg and the Liberation Serif regular/bold fonts are required")
     edit = load_edit(args.manifest.resolve())
+    if args.reuse_video and (edit["call_speed"] != 1 or edit["silence_removed"]):
+        parser.error("Call timing edits require a full render to retime the visuals and captions")
     args.output.mkdir(parents=True, exist_ok=True)
+    (args.output / "call-edit.json").write_text(json.dumps({
+        "call_speed": edit["call_speed"],
+        "silence_removed": edit["silence_removed"],
+        "audio_duration": edit["audio_duration"],
+        "source_segments": edit["audio_segments"],
+        "captions": edit["cues"],
+    }, indent=2) + "\n")
     prepare_terminal(edit, args.manifest.resolve(), args.output)
     audio, samples, rate = prepare_audio(edit, args.output)
     intro = edit["intro_duration"]

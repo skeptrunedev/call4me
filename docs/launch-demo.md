@@ -88,9 +88,37 @@ edit, between invocation and result. Smooth camera transforms provide the zooms.
 It never substitutes terminal text or action screenshots. The matching still
 comes from a frame of this same recording.
 
-The renderer uses the original audio at its original speed, trims the selected
-ranges, normalizes the excerpt's loudness, and derives the waveform from those
-samples. Exports are 1920 by 1080 at 30 frames per second, H.264/AAC MP4, PNG
+The renderer defaults to the original audio speed, trims the selected ranges,
+normalizes the excerpt's loudness, and derives the waveform from those samples.
+An optional `call_speed` between 0.5 and 2 changes only the call playback tempo
+while preserving voice pitch. The terminal footage and music retain their speed.
+Each clip can also contain `remove_silence`, a list of source `start` and `end`
+ranges to remove from inside that clip. Review these ranges against the WAV and
+word timestamps. Automatic silence detection alone can mistake quiet initial
+consonants for silence. Preserve short pauses and margins around spoken words.
+
+Captions, the waveform, the playback timer, and the completed result all follow
+the shortened call timeline. The playback label identifies a speed change.
+The private output `call-edit.json` records the retained source ranges, removed
+silence duration, speed, and retimed captions. Timing changes require a full
+render; `--reuse-video` cannot retime an earlier visual edit. For example:
+
+```json
+{
+  "call_speed": 1.2,
+  "clips": [{
+    "start": 13.0,
+    "end": 17.35,
+    "remove_silence": [{"start": 15.41, "end": 16.66}],
+    "captions": [
+      {"start": 13.04, "end": 15.05, "speaker": "automated assistant", "text": "Are you a customer?"},
+      {"start": 16.5, "end": 17.2, "speaker": "ai agent", "text": "Yes."}
+    ]
+  }]
+}
+```
+
+Exports are 1920 by 1080 at 30 frames per second, H.264/AAC MP4, PNG
 still, SRT captions, and preview frames. The audio timer measures only the edited
 excerpt, not the duration of the original call.
 
