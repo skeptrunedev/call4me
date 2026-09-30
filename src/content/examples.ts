@@ -1,0 +1,76 @@
+export interface CallExample {
+  slug: string;
+  title: string;
+  business: string;
+  date: string;
+  request: string;
+  outcome: string;
+  audio: string;
+  duration: string;
+  transcript: { speaker: 'ai agent' | 'representative'; text: string }[];
+}
+
+/** Curated public excerpts only. Original recordings and account data stay private. */
+export const EXAMPLES: CallExample[] = [
+  {
+    slug: 'dinner-reservation',
+    title: 'book a table for two',
+    business: 'TAO Los Angeles',
+    date: 'September 27, 2026',
+    request: 'get a table for two tonight, around 8.',
+    outcome: 'the restaurant confirmed a reservation for two at 8 pm.',
+    audio: '/static/examples/dinner-reservation.mp3',
+    duration: '22 seconds',
+    transcript: [
+      { speaker: 'ai agent', text: 'Hi! I was hoping to get a table for two tonight, around eight?' },
+      { speaker: 'representative', text: 'Let me see what we have available.' },
+      { speaker: 'ai agent', text: 'Sure.' },
+      { speaker: 'representative', text: 'Alrighty. Well, I was able to make a reservation tonight at eight p.m. for two guests. We\'ll be seeing you soon.' },
+      { speaker: 'ai agent', text: 'Awesome. Thanks so much. Bye!' },
+      { speaker: 'representative', text: 'Bye.' },
+    ],
+  },
+  {
+    slug: 'internet-availability',
+    title: 'check home internet options',
+    business: 'Monkeybrains',
+    date: 'September 28, 2026',
+    request: 'check service availability, the plan, and the soonest installation.',
+    outcome: 'the representative confirmed service was available and explained the plan and installation openings. no installation was booked.',
+    audio: '/static/examples/internet-availability.mp3',
+    duration: '63 seconds',
+    transcript: [
+      { speaker: 'representative', text: 'Okay, so we are able to service that building. So it\'s going to be one fifty for installation, and that does cover your first month of service. After that, it\'s going to be thirty five dollars a month.' },
+      { speaker: 'ai agent', text: 'Oh, that\'s great. And what kind of speeds are you usually seeing, and how soon could an install happen?' },
+      { speaker: 'representative', text: 'Yeah, so for our standard residential plan, we offer a capacity of a hundred megabits per second for download and upload.' },
+      { speaker: 'ai agent', text: 'Okay, and what would be the soonest you could do an install?' },
+      { speaker: 'representative', text: 'Let me take a look. Okay, so I did have some openings for tomorrow. I have a nine a.m., so we would arrive between nine and eleven a.m., as well as eleven a.m., so then they would arrive between eleven and one.' },
+      { speaker: 'ai agent', text: 'Awesome, that\'s really helpful. I\'ll check with the property manager and get back to you. Thanks so much for your help!' },
+      { speaker: 'representative', text: 'Sounds good.' },
+    ],
+  },
+  {
+    slug: 'expedite-review',
+    title: 'get a stalled review moving',
+    business: 'Amazon Pharmacy',
+    date: 'September 28, 2026',
+    request: 'find out what is holding up a review and ask support to move it along.',
+    outcome: 'the representative agreed to mark the pending items as important. she estimated about an hour for review and said an email would follow when they were ready. this call does not confirm the review finished.',
+    audio: '/static/examples/expedite-review.mp3',
+    duration: '26 seconds',
+    transcript: [
+      { speaker: 'representative', text: 'Clinical customer care.' },
+      { speaker: 'representative', text: 'How can I help you?' },
+      { speaker: 'ai agent', text: 'Three prescriptions still under pharmacist review for over a day.' },
+      { speaker: 'ai agent', text: 'Can you see what\'s blocking them and help move them along today?' },
+      { speaker: 'representative', text: 'Yeah, absolutely.' },
+      { speaker: 'representative', text: 'Oh, it does say in progress.' },
+      { speaker: 'representative', text: 'Okay, I\'ll go ahead and mark them as important.' },
+      { speaker: 'representative', text: 'Usually once that happens, they\'re done within like an hour.' },
+      { speaker: 'ai agent', text: 'Oh, nice! Okay.' },
+      { speaker: 'representative', text: 'But the customer will get an email as soon as they are ready to order.' },
+      { speaker: 'ai agent', text: 'Perfect, thanks so much!' },
+      { speaker: 'representative', text: 'Okay, you\'re welcome. Have a great day. Bye.' },
+    ],
+  },
+];

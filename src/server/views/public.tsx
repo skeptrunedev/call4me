@@ -44,6 +44,7 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
           </li>
         </ol>
         <h3>add credits</h3>
+        <p class="small">want to hear it first? <a href="/examples">listen to real calls</a>.</p>
         <BuyForm signedIn={p.signedIn} error={p.error} amount={p.amount} />
         <p class="small">top up anytime from <a href="/account">my account</a> or ask your agent (callbay_add_funds).</p>
       </div>
@@ -59,6 +60,7 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
           <li>sitting through phone menus and hold music</li>
         </ul>
         <h3>how it sounds</h3>
+        <p><a href="/examples">hear the agent on real calls</a></p>
         <ul>
           <li>short, casual turns. no "certainly!", no support-bot voice.</li>
           <li>no recap at the end. it says "perfect, thanks!" and hangs up. your agent gets the recap.</li>

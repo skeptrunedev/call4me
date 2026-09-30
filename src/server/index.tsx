@@ -25,6 +25,8 @@ import { notifySignups } from './services/signups';
 import { blog } from './routes/blog';
 import { admin } from './routes/admin';
 import { BlogError } from './services/blog';
+import { EXAMPLES } from '../content/examples';
+import { exampleAudio } from './lib/example-audio';
 
 export { CallSession } from './voice/session';
 
@@ -37,6 +39,15 @@ app.use('*', async (c, next) => {
   await next();
 });
 
+// The asset binding returns complete files. Supply ranges for the reviewed audio only.
+for (const example of EXAMPLES) {
+  app.on(['GET', 'HEAD'], example.audio, async (c) => {
+    const request = new Request(c.req.raw, { method: 'GET' });
+    request.headers.delete('range');
+    request.headers.delete('if-range');
+    return exampleAudio(c.req.raw, await c.env.ASSETS.fetch(request));
+  });
+}
 app.get('/static/*', (c) => c.env.ASSETS.fetch(c.req.raw));
 app.get('/favicon.svg', (c) => c.env.ASSETS.fetch(c.req.raw));
 // Link-preview cards (lib/pages.ts).

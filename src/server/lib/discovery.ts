@@ -57,6 +57,7 @@ export function robotsTxt(site: string): string {
 /** The public pages, in sitemap order. Account, sign-in, checkout, and one-time pages are left out. */
 export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: string }[] = [
   { page: 'home', changefreq: 'weekly', priority: '1.0' },
+  { page: 'examples', changefreq: 'monthly', priority: '0.9' },
   { page: 'mcp', changefreq: 'monthly', priority: '0.9' },
   { page: 'blog', changefreq: 'weekly', priority: '0.7' },
   { page: 'rules', changefreq: 'monthly' },
@@ -105,6 +106,7 @@ export function llmsTxt(site: string, pricePerMinuteCents: number, posts: PostEn
     '## Site',
     '',
     `- [Home](${site}/): what callbay does, pricing, and the install prompt`,
+    `- [Examples](${site}/examples): real call recordings with edited excerpts, outcomes, and transcripts`,
     `- [Install MCP](${site}/mcp): one prompt for Claude Code, Codex, Claude Desktop, claude.ai, and ChatGPT`,
     `- [Rules](${site}/rules): what callbay will and will not call for`,
     `- [Blog](${site}/blog): notes on AI agents that make phone calls, what callbay is good at, what changed (Atom feed at ${site}/blog/feed.xml)`,

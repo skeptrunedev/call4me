@@ -9,6 +9,7 @@ import { MIN_TOPUP_CENTS, parseAmountCents, reloadOf, topups, TopupError } from 
 import { validUnsubscribe } from '../services/drip';
 import { AccountPage, CallPage, NewKeyPage } from '../views/account';
 import { HomePage, MessagePage, PrivacyPage, RulesPage, TermsPage, UnsubscribePage, WelcomePage } from '../views/public';
+import { ExamplesPage } from '../views/examples';
 
 export const pub = new Hono<AppEnv>();
 
@@ -17,6 +18,7 @@ const home = async (c: AppContext, extra: { error?: string; amount?: string } = 
   c.html(<HomePage origin={origin(c)} pricePerMinuteCents={pricePerMinute(c.env)} signedIn={signedIn(c)} installPrompt={installPrompt(origin(c), await viewerKey(c))} {...extra} />, status);
 
 pub.get('/', (c) => home(c));
+pub.get('/examples', (c) => c.html(<ExamplesPage signedIn={signedIn(c)} />));
 
 /**
  * "add funds": straight to Stripe, signed in or not. Credits come in $10 units (the buyer

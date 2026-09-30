@@ -36,6 +36,7 @@ export interface PageOverride {
 
 export const PAGES = {
   home: { description: SITE_DESCRIPTION, card: 'site', path: '/' },
+  examples: { description: 'listen to real callbay calls: a dinner reservation, home internet questions, and an expedited support review. original voices, edited excerpts, and transcripts.', card: 'examples', path: '/examples' },
   mcp: { description: 'install callbay in claude code, codex, claude desktop, claude.ai, or chatgpt with one prompt. your agent gets a tool that makes phone calls.', card: 'mcp', path: '/mcp' },
   login: { description: 'sign in to callbay with google or x to load credits and connect your AI agent.', card: 'login', path: '/login' },
   account: { description: 'your callbay balance, monthly reload, key, and every call with its transcript.', card: 'account', path: '/account' },
@@ -55,6 +56,7 @@ export type PageKey = keyof typeof PAGES;
 
 /** The card image behind each /og/<name>.png. */
 export const CARDS: Record<string, OgCard> = {
+  examples: { title: 'listen to real calls', subtitle: 'hear the agent ask questions and get things done before you buy', footer: 'original voices · edited excerpts · transcripts' },
   site: { title: 'book dinners, doctor appointments, call dealerships', subtitle: 'one prompt installs it in claude code, codex, claude desktop, or chatgpt', footer: 'prepaid credits from $10' },
   mcp: { title: 'install callbay in your agent', subtitle: 'one prompt for claude code, codex, claude desktop, claude.ai, and chatgpt', footer: 'your agent gets a make-a-phone-call tool' },
   login: { title: 'sign in', subtitle: 'with google or x, to load credits and connect your agent', footer: 'no passwords' },

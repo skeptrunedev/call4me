@@ -37,10 +37,10 @@ const COPY_SCRIPT = `
 const WEBMCP_SCRIPT = `
 (function () {
   var mc = (document.modelContext || navigator.modelContext); if (!mc || typeof mc.registerTool !== 'function') return;
-  var PAGES = { home: '/', mcp: '/mcp', blog: '/blog', rules: '/rules', privacy: '/privacy', terms: '/terms', account: '/account' };
-  var pageArg = { type: 'object', properties: { page: { type: 'string', enum: Object.keys(PAGES), description: 'home, mcp (install), blog, rules, privacy, terms, or account (signed in)' } }, required: ['page'] };
+  var PAGES = { home: '/', examples: '/examples', mcp: '/mcp', blog: '/blog', rules: '/rules', privacy: '/privacy', terms: '/terms', account: '/account' };
+  var pageArg = { type: 'object', properties: { page: { type: 'string', enum: Object.keys(PAGES), description: 'home, examples (real calls), mcp (install), blog, rules, privacy, terms, or account (signed in)' } }, required: ['page'] };
   var tools = [
-    { name: 'callbay_read_page', description: 'Read a callbay page as markdown: home (what callbay does and pricing), mcp (how to install), blog (posts and the newsletter), rules, privacy, terms, or account (balance and calls; needs the person signed in).',
+    { name: 'callbay_read_page', description: 'Read a callbay page as markdown: home (what callbay does and pricing), examples (real call excerpts and transcripts), mcp (how to install), blog (posts and the newsletter), rules, privacy, terms, or account (balance and calls; needs the person signed in).',
       inputSchema: pageArg,
       execute: function (a) { return fetch(PAGES[a.page] || '/', { headers: { accept: 'text/markdown' } }).then(function (r) { return r.text(); }); } },
     { name: 'callbay_get_install_prompt', description: 'The prompt that installs the callbay MCP server in Claude Code, Codex, Claude Desktop, claude.ai, or ChatGPT and signs the person in; the agent then gets tools to place phone calls.',
@@ -123,6 +123,7 @@ export const Layout: FC<{
         </div>
         <div id="topnav">
           <a href="/">home</a>
+          <a href="/examples">examples</a>
           {/* A form, not a link: it opens a Stripe checkout, which crawlers and link previews must not do. */}
           <form method="post" action="/add-funds" class="navform">
             <button type="submit" class="linkbutton">add funds</button>
