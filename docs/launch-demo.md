@@ -97,6 +97,9 @@ the captured content's proportions and source height while enlarging the view
 into that space. Call captions use larger text and the progress line sits at
 y1020. The approved fullscreen ending keeps its existing camera framing.
 Content layout changes are recorded in `intro-edit.json` and require a full render.
+Keep the page header together at the top left as a single breadcrumb,
+`call4.me > ask your agent` during the intro and `call4.me > listen to the call`
+during audio playback. Use the same type size throughout the header.
 
 To accelerate only prompt entry, set `typing_speed` between 1 and 4 and supply
 `terminal_typing_start_at` and `terminal_typing_end_at` in source seconds. Verify

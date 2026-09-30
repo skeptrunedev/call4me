@@ -458,8 +458,7 @@ def scene_frame(edit, t, samples, rate, poster=False, phase=None):
     if playing:
         play_t = min(play_t, max(0, edit["audio_duration"] - 1 / FPS))
     label = "call complete" if finished else "listen to the call" if playing else "ask your agent"
-    draw_link(d, (90, 40), "call4.me", 56)
-    draw_link(d, (1450, 66), label, 30)
+    draw_link(d, (90, 40), f"call4.me > {label}", 56)
     d.line((80, 120, 1840, 120), fill=LINE, width=1)
 
     if not playing:
@@ -545,7 +544,7 @@ def main():
     intro_plan = {
         "content_layout": {"width": CONTENT_W, "height": CONTENT_H,
                            "intro_wide": list(INTRO_WIDE), "intro_close": list(INTRO_CLOSE),
-                           "revision": 2},
+                           "revision": 3},
         "capture_sha256": edit["capture_sha256"],
         "capture_duration": edit["capture_duration"],
         "capture_size": list(edit["capture_size"]),
