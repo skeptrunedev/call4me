@@ -1,9 +1,9 @@
 import { DurableObject } from 'cloudflare:workers';
 import { Raindrop, type Interaction } from 'raindrop-ai';
-import { calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
+import { ACTIVE, calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
 import { connectCheckMessage, forcedHandoffMessage, MenuRecovery, missedHandoff } from './handoff';
-import { alreadyUnreachable, JOIN_WAIT_MS, mergeTranscript, unreachableMessage } from './person';
+import { alreadyUnreachable, JOIN_WAIT_MS, mergeTranscript, resumeNote, unreachableMessage } from './person';
 import { BACK_OFFICE_TOOLS } from './prompt';
 
 /**
@@ -44,6 +44,15 @@ const MENU_QUIET_MS = 3_000;
 /** A back-office run that never reports back stops blocking new ones after this long. */
 const BACK_OFFICE_STALE_MS = QUESTION_WAIT_MS + 15_000;
 const MAX_FORCED_HANDOFFS = 12;
+/**
+ * The alarm doubles as a heartbeat that outlives this instance: Cloudflare can reset a session
+ * mid-call, and a fresh instance with no phone stream first asks Telnyx to reattach it, then
+ * hangs up rather than bill a call nobody is listening to.
+ */
+const HEARTBEAT_MS = 20_000;
+const REATTACH_WAIT_MS = 15_000;
+/** Between the wrap-up heads-up and the hard stop. */
+const WRAP_UP_MS = 40_000;
 
 export interface SessionSetup {
   callId: string;
@@ -54,6 +63,8 @@ export interface SessionSetup {
   pricePerMinuteCents: number;
   /** Telnyx's id for the phone leg: known up front for inbound calls, after dialing for outbound. */
   controlId?: string;
+  /** Where Telnyx streams the call's audio, to reattach it after a reset. */
+  streamUrl?: string;
   /** Per-call secrets (account PINs) to mask in the stored transcript. */
   redact?: string[];
   /** Who can be patched into the call (call4me's user), from which number, and where their leg reports. */
@@ -89,6 +100,8 @@ export class CallSession extends DurableObject<Env> {
   private live: WebSocket | null = null;
   private liveReady = false;
   private answered = false;
+  /** This instance took over a call already in progress (the previous one was reset). */
+  private resumed = false;
   /** When each milestone happened, logged as one line per step so a broken call shows where it stopped. */
   private answeredAt = 0;
   private liveStartedAt = 0;
@@ -208,11 +221,41 @@ export class CallSession extends DurableObject<Env> {
     server.accept();
     this.phone = server;
     server.addEventListener('message', (ev) => this.onPhoneFrame(typeof ev.data === 'string' ? ev.data : ''));
-    server.addEventListener('close', () => void this.shutdown('media stream closed'));
-    server.addEventListener('error', () => void this.shutdown('media stream error'));
+    // A stream that closes without Telnyx's "stop" is not a hang-up: the call may be reattached.
+    server.addEventListener('close', () => void this.phoneLost(server, 'media stream closed'));
+    server.addEventListener('error', () => void this.phoneLost(server, 'media stream error'));
+    await this.ctx.storage.delete(['orphanSince', 'reattached']);
+    if (!this.answered) await this.resumeIfLive();
     // Inbound calls are answered with the stream attached, so the stream itself means "answered".
     if (this.answered) await this.startLive();
     return new Response(null, { status: 101, webSocket: client });
+  }
+
+  /** A stream reaching a fresh instance of a call whose voice session already ran: pick the call back up. */
+  private async resumeIfLive(): Promise<void> {
+    const s = await this.load();
+    if (!s || !(await this.ctx.storage.get('liveStarted'))) return;
+    const row = await calls(this.env.DB).byId(s.callId);
+    if (!row?.answered_at || !ACTIVE.includes(row.status)) return;
+    this.answered = true;
+    this.answeredAt = row.answered_at;
+    this.resumed = true;
+    this.heardThem = true;
+    this.mark('resuming after the session restarted');
+  }
+
+  /** The stream dropped without a hang-up: drop the voice session and let the heartbeat reattach or end the call. */
+  private async phoneLost(socket: WebSocket, reason: string): Promise<void> {
+    if (this.phone !== socket || this.ended) return;
+    console.warn('call session lost the phone stream:', reason, this.setup?.callId);
+    this.phone = null;
+    const live = this.live;
+    this.live = null;
+    this.liveReady = false;
+    if (live?.readyState === WebSocket.OPEN) live.close(1000, 'phone stream lost');
+    await this.flushTranscript().catch((err) => console.warn('transcript flush', String(err)));
+    await this.ctx.storage.put('orphanSince', Date.now());
+    await this.scheduleAlarm(Date.now() + 1_000);
   }
 
   private onPhoneFrame(raw: string): void {
@@ -283,13 +326,20 @@ export class CallSession extends DurableObject<Env> {
     ws.accept();
     this.live = ws;
     ws.addEventListener('message', (ev) => void this.onLive(typeof ev.data === 'string' ? ev.data : ''));
-    ws.addEventListener('close', () => void this.shutdown('live session closed'));
-    ws.addEventListener('error', () => void this.shutdown('live session error'));
+    // A socket dropped on purpose (phoneLost) is no longer this.live and ends nothing.
+    ws.addEventListener('close', () => void (this.live === ws && this.shutdown('live session closed')));
+    ws.addEventListener('error', () => void (this.live === ws && this.shutdown('live session error')));
+    let instructions = s.instructions;
+    if (this.resumed) {
+      const row = await calls(this.env.DB).byId(s.callId);
+      const sofar = row?.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [];
+      instructions = `${s.instructions}\n\n${resumeNote(sofar)}`;
+    }
     this.sendLive({
       type: 'session.start',
       session: {
         model: this.env.VOICE_MODEL || 'gpt-live-1',
-        instructions: s.instructions,
+        instructions,
         audio: { format: { type: 'audio/pcmu', rate: 8000 }, output: { voice: s.voice } },
         delegation: {
           type: 'responses',
@@ -305,9 +355,12 @@ export class CallSession extends DurableObject<Env> {
         },
       },
     });
-    // Hard stop a little before Telnyx's own time limit, with a heads-up to wrap up first.
-    const wrapAt = Math.max(30, s.maxSeconds - 45) * 1000;
-    await this.ctx.storage.setAlarm(Date.now() + wrapAt);
+    // Hard stop a little before Telnyx's own time limit, with a heads-up to wrap up first. Kept
+    // across resets: it counts from pickup, not from this instance.
+    if (!(await this.ctx.storage.get('wrapAt'))) {
+      await this.ctx.storage.put('wrapAt', (this.answeredAt || Date.now()) + Math.max(30, s.maxSeconds - 45) * 1000);
+    }
+    await this.scheduleAlarm();
   }
 
   private sendLive(msg: unknown): void {
@@ -325,6 +378,7 @@ export class CallSession extends DurableObject<Env> {
       case 'session.started': {
         this.liveReady = true;
         this.liveStartedAt = Date.now();
+        void this.ctx.storage.put('liveStarted', true);
         this.mark(`live session started, flushing ${this.pendingAudio.length} buffered frames`);
         for (const a of this.pendingAudio) this.sendLive({ type: 'session.input_audio.append', audio: a });
         this.pendingAudio = [];
@@ -769,19 +823,53 @@ export class CallSession extends DurableObject<Env> {
     await db.saveTranscript(s.callId, this.transcript.map((l) => ({ ...l, text: redact(l.text.trim(), s.redact ?? []) })));
   }
 
-  // ---- time limit
+  // ---- heartbeat and time limit
+
+  /** The next alarm: the heartbeat, or the wrap-up/stop time when that comes sooner. */
+  private async scheduleAlarm(at = Date.now() + HEARTBEAT_MS): Promise<void> {
+    const [wrapAt, stopAt] = await Promise.all([this.ctx.storage.get<number>('wrapAt'), this.ctx.storage.get<number>('stopAt')]);
+    const due = stopAt ?? wrapAt;
+    await this.ctx.storage.setAlarm(due && due < at ? due : at);
+  }
 
   async alarm(): Promise<void> {
     const s = await this.load();
     if (!s || this.ended) return;
-    if (!(await this.ctx.storage.get('warned'))) {
-      await this.ctx.storage.put('warned', true);
-      // While the person is talking the caller stays quiet; the hard stop still comes.
-      if (!this.personOn) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'Time is almost up. Wrap up now: get the one thing you still need, say a quick goodbye, and hand off to hang up (end_call).' });
-      await this.ctx.storage.setAlarm(Date.now() + 40_000);
+    const now = Date.now();
+    if (!this.phone) {
+      // The instance holding the stream was reset and nothing has reconnected it here.
+      const row = await calls(this.env.DB).byId(s.callId);
+      if (!row || !ACTIVE.includes(row.status)) {
+        await this.ctx.storage.deleteAlarm();
+        return;
+      }
+      const since = (await this.ctx.storage.get<number>('orphanSince')) ?? now;
+      await this.ctx.storage.put('orphanSince', since);
+      if (!(await this.ctx.storage.get('reattached')) && s.controlId && s.streamUrl) {
+        await this.ctx.storage.put('reattached', true);
+        console.warn('reattaching the media stream', s.callId);
+        await telnyx(this.env).startStreaming(s.controlId, s.streamUrl).catch((err) => console.warn('reattach failed', s.callId, String(err)));
+        await this.ctx.storage.setAlarm(now + REATTACH_WAIT_MS);
+        return;
+      }
+      if (now - since < REATTACH_WAIT_MS) {
+        await this.ctx.storage.setAlarm(since + REATTACH_WAIT_MS);
+        return;
+      }
+      await this.fail('lost the call audio and could not reconnect it');
       return;
     }
-    await this.hangup();
+    const [wrapAt, stopAt] = await Promise.all([this.ctx.storage.get<number>('wrapAt'), this.ctx.storage.get<number>('stopAt')]);
+    if (stopAt && now >= stopAt) {
+      await this.hangup();
+      return;
+    }
+    if (!stopAt && wrapAt && now >= wrapAt) {
+      await this.ctx.storage.put('stopAt', now + WRAP_UP_MS);
+      // While the person is talking the caller stays quiet; the hard stop still comes.
+      if (!this.personOn) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'Time is almost up. Wrap up now: get the one thing you still need, say a quick goodbye, and hand off to hang up (end_call).' });
+    }
+    await this.scheduleAlarm();
   }
 
   // ---- teardown

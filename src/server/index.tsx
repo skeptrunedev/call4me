@@ -59,10 +59,21 @@ app.route('/og', og);
 
 // Telnyx's media stream for a call. The path carries an HMAC of the call id, so only the
 // URL we handed Telnyx when dialing can attach audio to a call.
+// Cloudflare can reset the session mid-call ("This script has been upgraded"); Telnyx then
+// reconnects the stream once, and a reconnect that lands on the instance being reset is retried
+// on a fresh stub, which resumes the call (CallSession.acceptStream).
 app.get('/voice/stream/:callId/:sig', async (c) => {
   const { callId, sig } = c.req.param();
   if (!safeEqual(sig, await hmacHex(c.env.STREAM_SECRET, callId))) return c.text('forbidden', 403);
-  return sessionFor(c.env, callId).fetch(new Request('https://session/stream', c.req.raw));
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await sessionFor(c.env, callId).fetch(new Request('https://session/stream', c.req.raw));
+    } catch (err) {
+      if (!(err as { retryable?: boolean }).retryable || attempt >= 3) throw err;
+      console.warn('stream attach retry', callId, attempt, String(err));
+      await new Promise((r) => setTimeout(r, 300 * attempt));
+    }
+  }
 });
 
 app.route('/webhooks', webhooks);
