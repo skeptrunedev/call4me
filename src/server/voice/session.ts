@@ -103,6 +103,7 @@ export class CallSession extends DurableObject<Env> {
   private answered = false;
   /** This instance took over a call already in progress (the previous one was reset). */
   private resumed = false;
+  private liveStarting: Promise<void> | null = null;
   /** When each milestone happened, logged as one line per step so a broken call shows where it stopped. */
   private answeredAt = 0;
   private liveStartedAt = 0;
@@ -229,11 +230,17 @@ export class CallSession extends DurableObject<Env> {
     // A stream that closes without Telnyx's "stop" is not a hang-up: the call may be reattached.
     server.addEventListener('close', () => void this.phoneLost(server, 'media stream closed'));
     server.addEventListener('error', () => void this.phoneLost(server, 'media stream error'));
+    // Complete Telnyx's handshake first: it waits well under the time picking a call back up takes
+    // (storage, D1, a new voice session), and drops a stream that isn't answered promptly.
+    this.ctx.waitUntil(this.streamAttached().catch((err) => console.warn('stream attach', this.setup?.callId, String(err))));
+    return new Response(null, { status: 101, webSocket: client });
+  }
+
+  private async streamAttached(): Promise<void> {
     await this.ctx.storage.delete(['orphanSince', 'reattached']);
     if (!this.answered) await this.resumeIfLive();
     // Inbound calls are answered with the stream attached, so the stream itself means "answered".
     if (this.answered) await this.startLive();
-    return new Response(null, { status: 101, webSocket: client });
   }
 
   /** A stream reaching a fresh instance of a call whose voice session already ran: pick the call back up. */
@@ -287,7 +294,15 @@ export class CallSession extends DurableObject<Env> {
 
   // ---- GPT-Live side
 
-  private async startLive(): Promise<void> {
+  /** One voice session at a time: the answered webhook and a stream attaching can both ask for it. */
+  private startLive(): Promise<void> {
+    this.liveStarting ??= this.openLive().finally(() => {
+      this.liveStarting = null;
+    });
+    return this.liveStarting;
+  }
+
+  private async openLive(): Promise<void> {
     const s = await this.load();
     if (!s || this.live || this.ended || !this.phone) return;
     // Start monitoring alongside the connection, so telemetry never delays live audio.
