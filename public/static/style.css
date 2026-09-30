@@ -160,3 +160,6 @@ form.inline { margin: 6px 0; }
 .post td, .post th { border: 1px solid #ddd; padding: 4px 8px; }
 @media (max-width: 700px) { .featured-row { flex-direction: column; } .card .thumb img { width: 110px; } }
 @media (max-width: 600px) { .form input[type=text], .form input[type=email] { width: 100%; } }
+.faq details { margin: 6px 0; }
+.faq summary { cursor: pointer; }
+.faq details p { margin: 6px 0 12px 16px; }

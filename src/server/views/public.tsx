@@ -1,5 +1,6 @@
 import type { FC } from 'hono/jsx';
 import { dollars } from '../services/accounts';
+import type { CountryOffer } from '../services/numbers';
 import { MIN_TOPUP_CENTS } from '../services/topups';
 import { MonthlyBox } from './account';
 import { SITE, SITE_DESCRIPTION } from '../lib/pages';
@@ -25,7 +26,12 @@ export const BuyForm: FC<{ signedIn: boolean; error?: string; amount?: string }>
   </form>
 );
 
-export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; error?: string; amount?: string }> = (p) => (
+const names = (cs: CountryOffer[]) => cs.map((c) => c.name.toLowerCase()).join(', ');
+
+export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; countries: CountryOffer[]; error?: string; amount?: string }> = (p) => {
+  const live = p.countries.filter((c) => c.available);
+  const soon = p.countries.filter((c) => !c.available);
+  return (
   <Layout page="home" signedIn={p.signedIn} meta={{ jsonLd: HOME_LD }}>
     <p>
       your coding agent (claude code, codex, claude desktop, chatgpt) gets one new tool: <b>make a phone call</b>. it calls the restaurant, the doctor's office,
@@ -59,6 +65,12 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
           <li>store hours, stock checks, quotes, "do you do X"</li>
           <li>sitting through phone menus and hold music</li>
         </ul>
+        <h3>where it calls</h3>
+        <p class="small">
+          any business in the us and canada, from the free us number every account gets. calling another country takes a callbay number there, bought from your
+          credits at the carrier's price.{live.length > 0 && <> numbers available now: {names(live)}.</>}
+          {soon.length > 0 && <> coming soon, with regulator paperwork in review: {names(soon)}.</>}
+        </p>
         <h3>how it sounds</h3>
         <p><a href="/examples">hear the agent on real calls</a></p>
         <ul>
@@ -74,8 +86,64 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
     <h3>the prompt</h3>
     <p class="small">{p.signedIn ? 'this is what you paste into your agent. your key is already in it.' : 'this is what you paste into your agent. it signs you in; sign in here first and your key comes in the prompt instead.'}</p>
     <CopyBlock id="install-prompt" text={p.installPrompt} rows={12} />
+    <h3 id="faq">faq</h3>
+    <div class="faq">
+      <details>
+        <summary>which countries can it call?</summary>
+        <p>
+          every account can call businesses in the us and canada. to call a business in another country, buy a callbay number in that country and calls there go out
+          from it, so the business sees a local number and can call you back.{live.length > 0 && <> numbers you can buy today: {names(live)}.</>}
+          {soon.length > 0 && <> waiting on regulator approval, usually a few days: {names(soon)}.</>} calls abroad cost the same {dollars(p.pricePerMinuteCents)}/min as calls at home.
+        </p>
+      </details>
+      <details>
+        <summary>what does it cost?</summary>
+        <p>
+          {dollars(p.pricePerMinuteCents)} per minute of talk time, prepaid, from {dollars(MIN_TOPUP_CENTS)}. each call holds its maximum cost up front and gives back what it didn't use
+          when it ends. unanswered, busy, and failed calls are free.
+        </p>
+      </details>
+      <details>
+        <summary>do i need my own phone number?</summary>
+        <p>
+          no. your first call buys you a free us number, and every call goes out from it. when a business calls that number back, callbay answers, finishes the task
+          if it was left open, or takes a message for your agent.
+        </p>
+      </details>
+      <details>
+        <summary>how do extra numbers work?</summary>
+        <p>
+          ask your agent (callbay_buy_number) or use <a href="/account">my account</a>. a number costs exactly what our phone carrier charges us, no markup: its upfront
+          cost plus the first month when you buy it, then the monthly cost every 30 days from your credits. your account page shows each country's price. if your credits
+          can't cover a renewal, the number is released after 7 days. you can release a number anytime.
+        </p>
+      </details>
+      <details>
+        <summary>which agents does it work with?</summary>
+        <p>claude code, codex, claude desktop, claude.ai, chatgpt, and anything else that speaks mcp. paste the prompt above and your agent sets itself up.</p>
+      </details>
+      <details>
+        <summary>can i jump on the call myself?</summary>
+        <p>
+          yes. tell your agent to connect you "as soon as a person picks up" to skip the hold music, or ask mid-call. your phone rings and you're on the line; press *
+          or hang up to hand it back.
+        </p>
+      </details>
+      <details>
+        <summary>will they know it's an AI?</summary>
+        <p>
+          it doesn't announce itself and it sounds like a normal person calling for you. if someone sincerely asks, it says yes and carries on. it never pretends to be
+          you. see <a href="/rules">rules</a>.
+        </p>
+      </details>
+      <details>
+        <summary>who can it call?</summary>
+        <p>businesses and services you want to reach. no telemarketing, no surveys, no calling people who don't expect it, no emergency or premium-rate numbers.</p>
+      </details>
+    </div>
   </Layout>
-);
+  );
+};
 
 export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; balanceCents: number; email: string; pending?: boolean; signedOut?: boolean; next?: string }> = (p) => (
   <Layout title="you're in" page="welcome" signedIn={!p.signedOut && !p.pending}>
@@ -147,7 +215,7 @@ export const RulesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
     <h1>rules</h1>
     <p>callbay places calls a person would make themselves: bookings, appointments, questions for a business. it is not for anything else.</p>
     <ul>
-      <li>US and Canadian numbers only. no emergency numbers, no premium-rate numbers.</li>
+      <li>US and Canadian numbers, and numbers in countries where your account holds a callbay number. no emergency numbers, no premium-rate or shared-cost numbers.</li>
       <li>no telemarketing, sales, surveys, debt collection, political calls, or calls to people who didn't expect to hear from you.</li>
       <li>no harassment, threats, pranks, or pretending to be someone else. the caller always calls <i>for</i> you; it never claims to be you.</li>
       <li>the same number can be called a few times a day, not more. anyone who asks not to be called again is never called by callbay again.</li>

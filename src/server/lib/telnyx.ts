@@ -1,7 +1,8 @@
 /**
  * The few Telnyx Call Control and Numbers endpoints callbay uses.
  * Docs: developers.telnyx.com/api-reference (dial incl. supervise_call_control_id, hangup, send_dtmf, answer,
- * available_phone_numbers, number_orders) and .../receiving-webhooks for signatures.
+ * available_phone_numbers, number_orders, phone_numbers, requirement_groups, outbound_voice_profiles)
+ * and .../receiving-webhooks for signatures.
  */
 
 const API = 'https://api.telnyx.com/v2';
@@ -36,6 +37,17 @@ async function call<T>(env: TelnyxEnv, method: string, path: string, body?: unkn
   }
   return (text ? JSON.parse(text) : {}) as T;
 }
+
+export interface AvailableNumber {
+  phoneNumber: string;
+  /** What Telnyx charges once when the number is bought, in US cents (rounded up). */
+  upfrontCents: number;
+  /** What Telnyx charges every month the number is kept, in US cents (rounded up). */
+  monthlyCents: number;
+}
+
+/** Telnyx quotes dollars as decimal strings ("1.00000"). */
+const toCents = (dollars: string) => Math.ceil(Number(dollars) * 100 - 1e-9);
 
 export interface TelnyxRecording {
   id: string;
@@ -171,28 +183,69 @@ export function telnyx(env: TelnyxEnv) {
       await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/send_dtmf`, { digits, duration_millis: 250 });
     },
 
-    /** Buy a local voice number, preferably in `areaCode`, attached to our Call Control connection. */
-    async buyNumber(areaCode: string | null): Promise<string> {
+    /**
+     * The first voice number for sale in `country` of `type`, preferably in `areaCode` (national
+     * destination code), with what Telnyx charges for it. Null when none is for sale.
+     */
+    async availableNumber(opts: { country: string; type: string; areaCode?: string | null }): Promise<AvailableNumber | null> {
       const search = async (ndc: string | null) => {
-        const q = new URLSearchParams({ 'filter[country_code]': 'US', 'filter[phone_number_type]': 'local', 'filter[features][]': 'voice', 'filter[limit]': '1' });
+        const q = new URLSearchParams({ 'filter[country_code]': opts.country, 'filter[phone_number_type]': opts.type, 'filter[features][]': 'voice', 'filter[limit]': '1' });
         if (ndc) {
           q.set('filter[national_destination_code]', ndc);
           q.set('filter[best_effort]', 'true');
         }
-        const r = await call<{ data: { phone_number: string }[] }>(env, 'GET', `/available_phone_numbers?${q}`);
-        return r.data[0]?.phone_number ?? null;
+        const r = await call<{ data: { phone_number: string; cost_information: { upfront_cost: string; monthly_cost: string; currency: string } }[] }>(env, 'GET', `/available_phone_numbers?${q}`);
+        const n = r.data[0];
+        if (!n) return null;
+        if (n.cost_information.currency !== 'USD') throw new TelnyxError(`number prices in ${n.cost_information.currency}, not USD`, 502);
+        return { phoneNumber: n.phone_number, upfrontCents: toCents(n.cost_information.upfront_cost), monthlyCents: toCents(n.cost_information.monthly_cost) };
       };
-      const number = (await search(areaCode)) ?? (await search(null));
-      if (!number) throw new TelnyxError('no phone numbers available to buy', 503);
-      // Orders complete asynchronously; a number can't place calls until its order succeeds.
-      const order = await call<{ data: { id: string; status: string } }>(env, 'POST', '/number_orders', { phone_numbers: [{ phone_number: number }], connection_id: env.TELNYX_CONNECTION_ID });
+      return (opts.areaCode ? await search(opts.areaCode) : null) ?? (await search(null));
+    },
+
+    /**
+     * Order `number` onto our Call Control connection, with the requirement group that holds its
+     * country's paperwork when it needs one. Orders complete asynchronously and a number can't
+     * place calls until its order succeeds, so this waits for the outcome.
+     */
+    async orderNumber(number: string, requirementGroupId?: string | null): Promise<void> {
+      const order = await call<{ data: { id: string; status: string } }>(env, 'POST', '/number_orders', {
+        phone_numbers: [{ phone_number: number, ...(requirementGroupId ? { requirement_group_id: requirementGroupId } : {}) }],
+        connection_id: env.TELNYX_CONNECTION_ID,
+      });
       let status = order.data.status;
       for (let i = 0; i < 20 && status === 'pending'; i++) {
         await new Promise((r) => setTimeout(r, 1500));
         status = (await call<{ data: { status: string } }>(env, 'GET', `/number_orders/${order.data.id}`)).data.status;
       }
       if (status !== 'success') throw new TelnyxError(`number order ${order.data.id} for ${number} is ${status}`, 503);
-      return number;
+    },
+
+    /** Give a number back to Telnyx; its monthly charge stops. Already gone counts as released. */
+    async releaseNumber(number: string): Promise<void> {
+      const q = new URLSearchParams({ 'filter[phone_number]': number });
+      const r = await call<{ data: { id: string; phone_number: string }[] }>(env, 'GET', `/phone_numbers?${q}`);
+      const found = r.data.find((n) => n.phone_number === number);
+      if (!found) return;
+      await call(env, 'DELETE', `/phone_numbers/${encodeURIComponent(found.id)}`);
+    },
+
+    /** "approved" once Telnyx has accepted a requirement group's paperwork. */
+    async requirementGroupStatus(id: string): Promise<string> {
+      return (await call<{ data: { status: string } }>(env, 'GET', `/requirement_groups/${encodeURIComponent(id)}`)).data.status;
+    },
+
+    /**
+     * Let our outbound voice profile call `country`. Telnyx refuses calls to countries missing
+     * from the profile's whitelist, which starts as the US and Canada.
+     */
+    async allowDestination(country: string): Promise<void> {
+      const app = await call<{ data: { outbound: { outbound_voice_profile_id: string } } }>(env, 'GET', `/call_control_applications/${encodeURIComponent(env.TELNYX_CONNECTION_ID)}`);
+      const profileId = app.data.outbound.outbound_voice_profile_id;
+      const profile = await call<{ data: { whitelisted_destinations: string[] } }>(env, 'GET', `/outbound_voice_profiles/${encodeURIComponent(profileId)}`);
+      const allowed = profile.data.whitelisted_destinations;
+      if (allowed.includes(country)) return;
+      await call(env, 'PATCH', `/outbound_voice_profiles/${encodeURIComponent(profileId)}`, { whitelisted_destinations: [...allowed, country] });
     },
   };
 }

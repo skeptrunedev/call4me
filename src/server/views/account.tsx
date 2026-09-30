@@ -1,8 +1,8 @@
 import type { FC } from 'hono/jsx';
-import { formatPhone } from '../lib/phone';
 import { mcpUrl } from '../lib/prompts';
 import type { callView } from '../mcp/server';
 import { dollars, type Account } from '../services/accounts';
+import type { CountryOffer, NumberView } from '../services/numbers';
 import { MIN_TOPUP_CENTS, type Reload } from '../services/topups';
 import { CopyBlock, Layout } from './layout';
 
@@ -61,14 +61,14 @@ export const NewKeyPage: FC<{ apiKey: string; installPrompt: string }> = ({ apiK
   </Layout>
 );
 
-export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerMinuteCents: number; phoneNumber: string | null; reload: Reload | null; calls: CallView[]; apiKey: string; agentPrompt: string; error?: string }> = (p) => (
+export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerMinuteCents: number; numbers: NumberView[]; offers: CountryOffer[]; reload: Reload | null; calls: CallView[]; apiKey: string; agentPrompt: string; error?: string; numberError?: string }> = (p) => (
   <Layout title="my account" page="account" signedIn>
     <h1>
       balance: <span class="price">{dollars(p.balanceCents)}</span>
     </h1>
     <p class="small">
       {p.account.email} · {dollars(p.pricePerMinuteCents)}/min · about {Math.floor(p.balanceCents / p.pricePerMinuteCents)} minutes left · your number:{' '}
-      {p.phoneNumber ? formatPhone(p.phoneNumber) : 'assigned on your first call'}
+      {p.numbers[0]?.number ?? 'assigned on your first call'}
     </p>
     <CopyBlock id="agent-prompt" text={p.agentPrompt} rows={12} hidden />
     {p.reload ? (
@@ -85,6 +85,59 @@ export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerM
       <label for="amount">add credits (dollars, min ${MIN_TOPUP_CENTS / 100})</label>
       <input type="text" id="amount" name="amount" class="amount" inputmode="decimal" value={String(p.reload ? p.reload.cents / 100 : MIN_TOPUP_CENTS / 100)} /> <button type="submit">pay with card</button>
       <MonthlyBox replacing={Boolean(p.reload)} />
+    </form>
+    <h2>numbers</h2>
+    <p class="small">
+      calls go out from a number in the country you're calling, so a number abroad is what lets you call businesses there. us and canadian businesses can always be called. extra numbers
+      cost exactly what the carrier charges: the upfront cost plus the first month now, then the monthly cost every 30 days from your balance. if your balance can't cover a renewal, the
+      number is released after 7 days.
+    </p>
+    {p.numbers.length === 0 ? (
+      <p class="muted">no numbers yet. your free us number is bought on your first call.</p>
+    ) : (
+      <table class="rows">
+        <thead>
+          <tr>
+            <th>number</th>
+            <th>country</th>
+            <th class="n">monthly</th>
+            <th>renews</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {p.numbers.map((n) => (
+            <tr>
+              <td>{n.number}</td>
+              <td>
+                {n.country_name} <span class="small muted">{n.type.replace('_', ' ')}</span>
+              </td>
+              <td class="n">{n.included ? 'free' : n.monthly}</td>
+              <td class="small">{n.included ? '' : n.overdue ? <span class="err">overdue: released {n.release_after} unless you add credits</span> : n.renews}</td>
+              <td>
+                {!n.included && (
+                  <form method="post" action="/account/numbers/release" class="inline-form">
+                    <input type="hidden" name="number" value={n.e164} />
+                    <button type="submit" class="linkbutton">release</button>
+                  </form>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
+    <form method="post" action="/account/numbers" class="buy">
+      {p.numberError && <p class="err">{p.numberError}</p>}
+      <label for="country">add a number</label>
+      <select id="country" name="country">
+        {p.offers.map((o) => (
+          <option value={o.country} disabled={!o.available}>
+            {o.name} ({o.type.replace('_', ' ')}): {o.available ? `${o.price} now, then ${o.monthly}/month` : o.reason}
+          </option>
+        ))}
+      </select>{' '}
+      <button type="submit">buy from balance</button>
     </form>
     <h2>calls</h2>
     {p.calls.length === 0 ? (

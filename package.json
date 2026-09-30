@@ -26,6 +26,7 @@
     "better-auth": "^1.7.6",
     "hono": "^4.13.9",
     "jose": "^6.2.12",
+    "libphonenumber-js": "^1.13.14",
     "marked": "^18.0.14",
     "marked-footnote": "^1.4.0",
     "raindrop-ai": "^0.8.0",

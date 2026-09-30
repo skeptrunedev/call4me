@@ -1,8 +1,11 @@
 import { newId, now } from '../lib/ids';
-import { checkDialable } from '../lib/phone';
+import { checkDialable, type PhoneCheck } from '../lib/phone';
 import { accounts, type Account } from './accounts';
 import { categoryBySlug, CATEGORY_SLUGS, missingMessage, resolveIntake } from './intake';
+import { mayCall } from './numbers';
 import { profiles } from './profiles';
+
+type Dialable = Extract<PhoneCheck, { ok: true }>;
 
 export type CallStatus = 'queued' | 'dialing' | 'in_progress' | 'completed' | 'no_answer' | 'busy' | 'failed' | 'canceled';
 export const ACTIVE: CallStatus[] = ['queued', 'dialing', 'in_progress'];
@@ -126,6 +129,8 @@ export interface PlaceCallInput {
   max_minutes?: number;
   /** When to patch the user in without being asked, e.g. "as soon as a person picks up". */
   connect_when?: string;
+  /** Which of the account's numbers to call from; by default one in the callee's country. */
+  from?: string;
 }
 
 /** What a per-call secret looks like wherever the call is stored. */
@@ -146,7 +151,7 @@ export function calls(db: D1Database) {
      * Returns the call plus its per-call secrets (account PINs): those reach the caller's
      * instructions but are never written to the database.
      */
-    async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number): Promise<{ call: CallRow; secrets: { label: string; value: string }[] }> {
+    async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number): Promise<{ call: CallRow; secrets: { label: string; value: string }[]; to: Dialable }> {
       const category = categoryBySlug(input.category);
       if (!category) throw new CallError(`category must be one of: ${CATEGORY_SLUGS.join(', ')}`);
       const profile = await profiles(db).get(account.id);
@@ -160,6 +165,15 @@ export function calls(db: D1Database) {
 
       const to = checkDialable(input.to);
       if (!to.ok) throw new CallError(to.reason);
+      // Abroad, an account calls only countries it holds a number in (services/numbers.ts).
+      if (!(await mayCall(db, account.id, to))) {
+        throw new CallError(`calling ${to.country} numbers needs a number in ${to.country}: see callbay_list_numbers, then buy one with callbay_buy_number`, 422);
+      }
+      if (input.from) {
+        const from = checkDialable(input.from);
+        const owns = from.ok && (await db.prepare(`SELECT 1 FROM numbers WHERE account_id = ? AND phone_number = ? AND status = 'active'`).bind(account.id, from.e164).first());
+        if (!owns) throw new CallError(`from: ${input.from} is not one of this account's numbers (see callbay_list_numbers)`);
+      }
       if (input.timezone && !validTimeZone(input.timezone)) throw new CallError(`timezone: "${input.timezone}" is not an IANA time zone like America/New_York`);
 
       const blocked = await db.prepare(`SELECT reason FROM blocked_numbers WHERE number = ?`).bind(to.e164).first<{ reason: string }>();
@@ -207,7 +221,7 @@ export function calls(db: D1Database) {
         .bind(id, account.id, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(brief), category.slug, holdCents, now())
         .run();
       const secrets = intake.known.filter((k) => k.sensitive).map((k) => ({ label: k.label, value: k.value }));
-      return { call: (await this.byId(id))!, secrets };
+      return { call: (await this.byId(id))!, secrets, to };
     },
 
     byId(id: string): Promise<CallRow | null> {

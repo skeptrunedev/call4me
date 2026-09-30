@@ -12,6 +12,8 @@ import { sessionFor } from '../voice/session';
 import { CATEGORIES, categoryBySlug, CATEGORY_SLUGS, PROFILE_FIELDS, type ProfileKey } from '../services/intake';
 import { ProfileError, profiles } from '../services/profiles';
 import { recordingDescription, recordingInput, recordingOutput } from '../lib/recording-schema';
+import { buyNumberDescription, buyNumberInput, listNumbersDescription, numbersOutput, releaseNumberDescription, releaseNumberInput } from '../lib/number-schema';
+import { mayCall, NumberError, numbers, type NumberView } from '../services/numbers';
 import { getCallRecordings } from '../services/recordings';
 
 /**
@@ -42,7 +44,9 @@ The caller can only say what you give it, so everything is collected BEFORE dial
 
 To put the user on a call themselves: pass connect_when to callbay_place_call (e.g. "as soon as a person picks up", to skip a long hold), or call callbay_connect_me mid-call. Their phone rings and they join the call; the caller goes quiet, and takes over again when they press * or hang up.
 
-Every call leaves the account's own callbay number as the callback. If a call ends in voicemail or "we'll call you back", callbay remembers the task for 14 days: when the business calls that number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (callbay_get_call lists its callbacks) and in callbay_list_calls.
+Calls go out from the account's own numbers: its free US number, plus any it bought (callbay_list_numbers, callbay_buy_number). US and Canadian businesses can always be called; a business in another country can be called once the account holds a number there, and the call goes out from it.
+
+Every call leaves the calling number as the callback. If a call ends in voicemail or "we'll call you back", callbay remembers the task for 14 days: when the business calls that number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (callbay_get_call lists its callbacks) and in callbay_list_calls.
 
 The caller sounds like a normal person calling for the user. It keeps turns short and does not read the booking back at the end; the recap comes back to you.
 Only call businesses and services the user wants to reach, never personal numbers they don't expect a call from.`;
@@ -113,7 +117,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
     try {
       return await fn();
     } catch (err) {
-      if (err instanceof CallError || err instanceof TopupError || err instanceof ProfileError) return fail(err.message);
+      if (err instanceof CallError || err instanceof TopupError || err instanceof ProfileError || err instanceof NumberError) return fail(err.message);
       console.error('mcp tool failed', err);
       return fail('something broke on the server; try again in a moment.');
     }
@@ -134,9 +138,9 @@ export function createCallbayServer(deps: McpDeps): McpServer {
     {
       title: 'Place a phone call',
       description:
-        'Call a US or Canadian business for the user and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category\'s required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with callbay_get_call. Credits for the maximum length are held up front; billed per minute of talk time; unanswered calls are free.',
+        'Call a business for the user (US and Canada, or any country the account holds a number in; see callbay_list_numbers) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category\'s required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with callbay_get_call. Credits for the maximum length are held up front; billed per minute of talk time; unanswered calls are free.',
       inputSchema: z.object({
-        to: z.string().min(3).max(40).describe('the number to call, e.g. "+14155550123" or "(415) 555-0123"'),
+        to: z.string().min(3).max(40).describe('the number to call, e.g. "+14155550123", "(415) 555-0123", or abroad with its country code, e.g. "+31 20 123 4567"'),
         business: z.string().min(1).max(120).describe('who you are calling, as a person would say it: "Nopa", "Dr. Chen\'s office", "Toyota of Berkeley service"'),
         goal: z.string().min(5).max(1500).describe('what the call should achieve, in plain words: "Book a table for 4 tomorrow (Sat Oct 3) around 7pm under Khami."'),
         category: z.enum(CATEGORY_SLUGS).describe('the kind of call; decides what must be known first (see callbay_get_requirements)'),
@@ -148,6 +152,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
         connect_when: z.string().max(300).optional().describe('when to ring the user and patch them into the call without being asked, e.g. "as soon as a person picks up" (skip the hold) or "if they need to speak to me". Rings the phone in their profile. They hand the call back to the caller by pressing * or hanging up.'),
         max_minutes: z.number().int().min(1).max(LIMITS.maxMinutes).optional().describe(`hard cap on talk time (default ${LIMITS.defaultMaxMinutes})`),
         voice: z.enum(VOICES).optional().describe('caller voice (default marin)'),
+        from: z.string().max(40).optional().describe('which of the account\'s numbers to call from (default: one in the callee\'s country)'),
       }),
       annotations: OPEN,
     },
@@ -201,6 +206,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
         if (args.phone) {
           const p = checkDialable(args.phone);
           if (!p.ok) throw new CallError(`phone: ${p.reason}`);
+          if (!(await mayCall(env.DB, account.id, p))) throw new CallError(`phone: calling ${p.country} needs a number there (callbay_buy_number)`);
           phone = p.e164;
         }
         const res = await sessionFor(env, row.id).fetch('https://session/connect-person', { method: 'POST', body: JSON.stringify({ phone }) });
@@ -247,8 +253,8 @@ export function createCallbayServer(deps: McpDeps): McpServer {
   server.registerTool(
     'callbay_get_balance',
     {
-      title: 'Balance and phone number',
-      description: 'The prepaid balance, the per-minute price, and the account\'s own callbay phone number (calls go out from it and it is the callback number left on every call; callbacks to it finish the unfinished task or take a message).',
+      title: 'Balance and phone numbers',
+      description: 'The prepaid balance, the per-minute price, and the account\'s own callbay phone numbers (calls go out from them and the calling number is the callback left on every call; callbacks to it finish the unfinished task or take a message).',
       inputSchema: z.object({}),
       annotations: RO,
     },
@@ -257,18 +263,19 @@ export function createCallbayServer(deps: McpDeps): McpServer {
         const balance = await accounts(env.DB).balanceCents(account.id);
         const price = pricePerMinute(env);
         const reload = await reloadOf(env.DB, account.id);
-        const number = await env.DB.prepare(`SELECT phone_number FROM accounts WHERE id = ?`).bind(account.id).first<{ phone_number: string | null }>();
+        const owned = await numbers(env).views(account.id);
         const out = {
           balance: dollars(balance),
           balance_cents: balance,
           price_per_minute: dollars(price),
           minutes_left: Math.floor(balance / price),
-          phone_number: number?.phone_number ? formatPhone(number.phone_number) : null,
+          phone_number: owned[0]?.number ?? null,
+          numbers: owned,
           email: account.email,
           monthly_reload: reload ? { amount: dollars(reload.cents), status: reload.status, next: reload.renewsAt ? new Date(reload.renewsAt).toISOString().slice(0, 10) : null } : null,
         };
         const reloadText = out.monthly_reload ? `reloads ${out.monthly_reload.amount} monthly${out.monthly_reload.next ? ` (next ${out.monthly_reload.next})` : ''}` : 'no monthly reload';
-        return ok(`balance ${out.balance} (~${out.minutes_left} min at ${out.price_per_minute}/min), ${reloadText}. number: ${out.phone_number ?? 'assigned on the first call'}.`, out);
+        return ok(`balance ${out.balance} (~${out.minutes_left} min at ${out.price_per_minute}/min), ${reloadText}. ${owned.length ? `numbers: ${owned.map(numberText).join('; ')}` : 'number: assigned on the first call'}.`, out);
       })()) as never,
   );
 
@@ -374,5 +381,46 @@ export function createCallbayServer(deps: McpDeps): McpServer {
       })()) as never,
   );
 
+  server.registerTool(
+    'callbay_list_numbers',
+    { title: 'Phone numbers', description: listNumbersDescription, inputSchema: z.object({}), outputSchema: numbersOutput, annotations: { ...RO, openWorldHint: true } },
+    (async () =>
+      guard(async () => {
+        const n = numbers(env);
+        const [owned, countries] = await Promise.all([n.views(account.id), n.offers()]);
+        const text = [
+          owned.length ? `your numbers:\n${owned.map((v) => `- ${numberText(v)}`).join('\n')}` : 'no numbers yet: the free US number is bought on the first call.',
+          `countries (price today, then monthly):\n${countries.map((c) => `- ${c.country} ${c.name} (${c.type}): ${c.available ? `${c.price}, then ${c.monthly}/month` : c.reason}`).join('\n')}`,
+        ].join('\n\n');
+        return ok(text, { numbers: owned, countries });
+      })()) as never,
+  );
+
+  server.registerTool(
+    'callbay_buy_number',
+    { title: 'Buy a phone number', description: buyNumberDescription, inputSchema: buyNumberInput, annotations: OPEN },
+    (async (args: { country: string; area_code?: string }) =>
+      guard(async () => {
+        const bought = await numbers(env).buy(account, { country: args.country, areaCode: args.area_code });
+        const balance = await accounts(env.DB).balanceCents(account.id);
+        return ok(`bought ${numberText(bought)}. balance ${dollars(balance)}.`, { number: bought, balance: dollars(balance) });
+      })()) as never,
+  );
+
+  server.registerTool(
+    'callbay_release_number',
+    { title: 'Release a phone number', description: releaseNumberDescription, inputSchema: releaseNumberInput, annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true } },
+    (async (args: { number: string }) =>
+      guard(async () => {
+        const released = await numbers(env).release(account, args.number);
+        return ok(`released ${released.number}; its monthly charge has stopped.`, { released });
+      })()) as never,
+  );
+
   return server;
+}
+
+function numberText(v: NumberView): string {
+  const billing = v.included ? 'free' : v.overdue ? `renewal overdue, released after ${v.release_after} unless credits are added` : `${v.monthly}/month, renews ${v.renews}`;
+  return `${v.number} (${v.country_name} ${v.type}, ${billing})`;
 }

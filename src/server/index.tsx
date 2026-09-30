@@ -14,6 +14,7 @@ import { agent } from './routes/agent';
 import { a2a } from './routes/a2a';
 import { apiRoot } from './routes/api-root';
 import { recordings } from './routes/recordings';
+import { numberRoutes } from './routes/numbers';
 import { discovery } from './routes/discovery';
 import { siteUrl } from './lib/auth-options';
 import { API_CATALOG_LINK, API_CATALOG_MEDIA_TYPE, buildApiCatalog } from './lib/discovery';
@@ -21,6 +22,7 @@ import { MessagePage } from './views/public';
 import { sessionFor } from './voice/session';
 import { makeMessenger } from './lib/messaging';
 import { runDrip } from './services/drip';
+import { numbers } from './services/numbers';
 import { notifySignups } from './services/signups';
 import { blog } from './routes/blog';
 import { admin } from './routes/admin';
@@ -68,6 +70,7 @@ app.route('/', agent);
 app.route('/', a2a);
 app.route('/', apiRoot);
 app.route('/', recordings);
+app.route('/', numberRoutes);
 app.route('/.well-known', discovery);
 // RFC 9727 API catalog, advertised from the home page's Link header (below).
 app.on(['GET', 'HEAD'], '/.well-known/api-catalog', (c) =>
@@ -127,8 +130,12 @@ app.onError((err, c) => {
 
 export default {
   fetch: app.fetch,
-  // Signup drip (services/drip.ts), off while DRIP_START is empty.
+  // Number renewals (services/numbers.ts), signup notices, and the signup drip (services/drip.ts),
+  // which is off while DRIP_START is empty.
   async scheduled(_event, env, ctx) {
+    const n = numbers(env);
+    ctx.waitUntil(n.renewDue().then((r) => console.log('number renewals', JSON.stringify(r))));
+    ctx.waitUntil(n.refreshOffers().then((r) => console.log('number offers', JSON.stringify(r))));
     const origin = `https://${env.CANONICAL_HOST}`;
     const messenger = makeMessenger(env);
     ctx.waitUntil(notifySignups({ db: env.DB, messenger, to: adminEmails(env), origin }).then((r) => console.log('signup notices', JSON.stringify(r))));

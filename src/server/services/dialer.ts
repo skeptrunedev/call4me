@@ -5,6 +5,7 @@ import { telnyx } from '../lib/telnyx';
 import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions, inboundInstructions, type OpenTask } from '../voice/prompt';
 import { sessionFor, type SessionSetup } from '../voice/session';
 import { accounts, type Account } from './accounts';
+import { mayCall, numbers } from './numbers';
 import { profiles } from './profiles';
 import { calls, CallError, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 
@@ -26,29 +27,19 @@ async function personFor(env: Env, origin: string, account: Account, from: strin
   const profile = await profiles(env.DB).get(account.id);
   // Profiles hold numbers as people type them; Telnyx dials E.164 only.
   const phone = profile.phone ? checkDialable(profile.phone) : null;
-  return { name: profile.full_name || account.display_name || 'the account owner', phone: phone?.ok ? phone.e164 : null, from, webhookUrl: `${origin}/webhooks/telnyx`, connectWhen };
-}
-
-/** The account's own number, bought on first use in the area code of the first place it calls. */
-export async function ensureNumber(env: Env, account: Account, nearE164: string): Promise<string> {
-  const existing = await env.DB.prepare(`SELECT phone_number FROM accounts WHERE id = ?`).bind(account.id).first<{ phone_number: string | null }>();
-  if (existing?.phone_number) return existing.phone_number;
-  const bought = await telnyx(env).buyNumber(nearE164.slice(2, 5));
-  // A concurrent first call may have bought one too; keep whichever landed first.
-  await env.DB.prepare(`UPDATE accounts SET phone_number = COALESCE(phone_number, ?) WHERE id = ?`).bind(bought, account.id).run();
-  const row = await env.DB.prepare(`SELECT phone_number FROM accounts WHERE id = ?`).bind(account.id).first<{ phone_number: string }>();
-  return row!.phone_number;
+  const reachable = phone?.ok && (await mayCall(env.DB, account.id, phone)) ? phone.e164 : null;
+  return { name: profile.full_name || account.display_name || 'the account owner', phone: reachable, from, webhookUrl: `${origin}/webhooks/telnyx`, connectWhen };
 }
 
 export async function placeCall(env: Env, origin: string, account: Account, input: PlaceCallInput & { voice?: Voice }): Promise<CallRow> {
   const price = pricePerMinute(env);
   const db = calls(env.DB);
-  const { call, secrets } = await db.create(account, input, price);
+  const { call, secrets, to } = await db.create(account, input, price);
   const brief = JSON.parse(call.brief) as Brief;
   if (!account.display_name) await accounts(env.DB).setDisplayName(account.id, brief.on_behalf_of);
 
   try {
-    const from = await ensureNumber(env, account, call.to_number);
+    const from = await numbers(env).callerId(account, to, input.from);
     await env.DB.prepare(`UPDATE calls SET from_number = ? WHERE id = ?`).bind(from, call.id).run();
     const person = await personFor(env, origin, account, from, brief.connect_when ?? null);
     const cb = {
@@ -101,7 +92,11 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
  * message-taking brief that knows what this number called about recently.
  */
 export async function answerInbound(env: Env, origin: string, opts: { controlId: string; from: string; to: string }): Promise<void> {
-  const account = await env.DB.prepare(`SELECT id, email, display_name, key_prefix, created_at FROM accounts WHERE phone_number = ?`).bind(opts.to).first<Account>();
+  const account = await env.DB.prepare(
+    `SELECT a.id, a.email, a.display_name, a.key_prefix, a.created_at FROM accounts a JOIN numbers n ON n.account_id = a.id WHERE n.phone_number = ? AND n.status = 'active'`,
+  )
+    .bind(opts.to)
+    .first<Account>();
   const blocked = await env.DB.prepare(`SELECT 1 FROM blocked_numbers WHERE number = ?`).bind(opts.from).first();
   const price = pricePerMinute(env);
   const balance = account ? await accounts(env.DB).balanceCents(account.id) : 0;

@@ -5,6 +5,7 @@ import { callView } from '../mcp/server';
 import { accounts, type Account } from '../services/accounts';
 import { calls, CallError } from '../services/calls';
 import { pricePerMinute } from '../services/dialer';
+import { NumberError, numbers } from '../services/numbers';
 import { MIN_TOPUP_CENTS, parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
 import { validUnsubscribe } from '../services/drip';
 import { AccountPage, CallPage, NewKeyPage } from '../views/account';
@@ -15,7 +16,10 @@ export const pub = new Hono<AppEnv>();
 
 const signedIn = (c: AppContext) => Boolean(c.get('account'));
 const home = async (c: AppContext, extra: { error?: string; amount?: string } = {}, status: 200 | 400 = 200) =>
-  c.html(<HomePage origin={origin(c)} pricePerMinuteCents={pricePerMinute(c.env)} signedIn={signedIn(c)} installPrompt={installPrompt(origin(c), await viewerKey(c))} {...extra} />, status);
+  c.html(
+    <HomePage origin={origin(c)} pricePerMinuteCents={pricePerMinute(c.env)} signedIn={signedIn(c)} installPrompt={installPrompt(origin(c), await viewerKey(c))} countries={await numbers(c.env).offers()} {...extra} />,
+    status,
+  );
 
 pub.get('/', (c) => home(c));
 pub.get('/examples', (c) => c.html(<ExamplesPage signedIn={signedIn(c)} />));
@@ -66,17 +70,30 @@ pub.get('/welcome', async (c) => {
 
 // ---- account
 
-async function accountPage(c: AppContext, account: Account, error?: string) {
-  const [balance, rows, number, reload, key] = await Promise.all([
+async function accountPage(c: AppContext, account: Account, errors: { error?: string; numberError?: string } = {}) {
+  const n = numbers(c.env);
+  const [balance, rows, owned, offers, reload, key] = await Promise.all([
     accounts(c.env.DB).balanceCents(account.id),
     calls(c.env.DB).list(account.id, 50),
-    c.env.DB.prepare(`SELECT phone_number FROM accounts WHERE id = ?`).bind(account.id).first<{ phone_number: string | null }>(),
+    n.views(account.id),
+    n.offers(),
     reloadOf(c.env.DB, account.id),
     ownerKey(c, account),
   ]);
   return c.html(
-    <AccountPage account={account} balanceCents={balance} pricePerMinuteCents={pricePerMinute(c.env)} phoneNumber={number?.phone_number ?? null} reload={reload} calls={rows.map((r) => callView(r, []))} apiKey={key} agentPrompt={accountPrompt(origin(c), key)} error={error} />,
-    error ? 400 : 200,
+    <AccountPage
+      account={account}
+      balanceCents={balance}
+      pricePerMinuteCents={pricePerMinute(c.env)}
+      numbers={owned}
+      offers={offers}
+      reload={reload}
+      calls={rows.map((r) => callView(r, []))}
+      apiKey={key}
+      agentPrompt={accountPrompt(origin(c), key)}
+      {...errors}
+    />,
+    errors.error || errors.numberError ? 400 : 200,
   );
 }
 
@@ -93,7 +110,33 @@ pub.post('/account/funds', async (c) => {
     const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: parseAmountCents(field(form, 'amount', 20)), monthly: form.get('monthly') === 'on', origin: origin(c), account });
     return c.redirect(url, 303);
   } catch (err) {
-    if (err instanceof TopupError) return accountPage(c, account, err.message);
+    if (err instanceof TopupError) return accountPage(c, account, { error: err.message });
+    throw err;
+  }
+});
+
+pub.post('/account/numbers', async (c) => {
+  const account = c.get('account');
+  if (!account) return c.redirect('/login?next=/account', 302);
+  const form = await c.req.formData();
+  try {
+    await numbers(c.env).buy(account, { country: field(form, 'country', 2) });
+    return c.redirect('/account', 303);
+  } catch (err) {
+    if (err instanceof NumberError) return accountPage(c, account, { numberError: err.message });
+    throw err;
+  }
+});
+
+pub.post('/account/numbers/release', async (c) => {
+  const account = c.get('account');
+  if (!account) return c.redirect('/login?next=/account', 302);
+  const form = await c.req.formData();
+  try {
+    await numbers(c.env).release(account, field(form, 'number', 40));
+    return c.redirect('/account', 303);
+  } catch (err) {
+    if (err instanceof NumberError) return accountPage(c, account, { numberError: err.message });
     throw err;
   }
 });

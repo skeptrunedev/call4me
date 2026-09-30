@@ -9,7 +9,7 @@ export interface Account {
   created_at: number;
 }
 
-export type LedgerKind = 'topup' | 'reload' | 'hold' | 'release' | 'call' | 'refund' | 'adjustment';
+export type LedgerKind = 'topup' | 'reload' | 'hold' | 'release' | 'call' | 'refund' | 'adjustment' | 'number';
 
 export function accounts(db: D1Database) {
   return {
@@ -82,13 +82,18 @@ export function accounts(db: D1Database) {
      * concurrent calls cannot both spend the same credits. False when the balance is short.
      */
     async hold(accountId: string, cents: number, ref: string, note: string): Promise<boolean> {
+      return this.spend(accountId, cents, 'hold', ref, note);
+    },
+
+    /** Take `cents` out as `kind` only if the balance covers it (see hold). False when short or already recorded. */
+    async spend(accountId: string, cents: number, kind: LedgerKind, ref: string, note: string): Promise<boolean> {
       const r = await db
         .prepare(
-          `INSERT INTO ledger (id, account_id, amount_cents, kind, ref, note, created_at)
-           SELECT ?1, ?2, -?3, 'hold', ?4, ?5, ?6
+          `INSERT OR IGNORE INTO ledger (id, account_id, amount_cents, kind, ref, note, created_at)
+           SELECT ?1, ?2, -?3, ?4, ?5, ?6, ?7
            WHERE (SELECT COALESCE(SUM(amount_cents), 0) FROM ledger WHERE account_id = ?2) >= ?3`,
         )
-        .bind(newId(), accountId, cents, ref, note, now())
+        .bind(newId(), accountId, cents, kind, ref, note, now())
         .run();
       return (r.meta.changes ?? 0) > 0;
     },
