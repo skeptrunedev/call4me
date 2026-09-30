@@ -84,7 +84,7 @@ class CallTimelineTest(unittest.TestCase):
     def test_outro_zooms_without_scrolling_and_keeps_entire_final_response_in_view(self):
         edit = self.load()
         edit.update(intro_duration=2, result_duration=6, capture_duration=10,
-                    terminal_result_at=4, terminal_submit_at=1)
+                    terminal_result_at=4, terminal_submit_at=2)
         source = Image.new("RGB", (1580, 836), "white")
         ImageDraw.Draw(source).rectangle((22, 556, 1510, 641), fill="black")
         with patch.object(renderer, "native_frame", return_value=source):
@@ -94,7 +94,14 @@ class CallTimelineTest(unittest.TestCase):
         first = renderer.outro_camera(edit, 0)
         last = renderer.outro_camera(edit, 5)
         self.assertLess(last[2] - last[0], first[2] - first[0])
-        self.assertAlmostEqual((first[2] - first[0]) / (last[2] - last[0]), 1.5)
+        intro_first = renderer.camera(edit, 0)
+        for t in np.linspace(0, 1.65, 31):
+            intro_box = renderer.camera(edit, t)
+            outro_box = renderer.outro_camera(edit, t)
+            # Relative text growth and easing must match the actual intro camera.
+            self.assertAlmostEqual((first[2] - first[0]) / (outro_box[2] - outro_box[0]),
+                                   (intro_first[2] - intro_first[0]) /
+                                   (intro_box[2] - intro_box[0]))
         self.assertLessEqual(last[0], 22)
         self.assertGreaterEqual(last[2], 1510)
         self.assertLessEqual(last[1], 556)
@@ -107,6 +114,27 @@ class CallTimelineTest(unittest.TestCase):
             box = renderer.outro_camera(edit, t)
             self.assertAlmostEqual((center_x - box[0]) / (box[2] - box[0]), .5)
             self.assertAlmostEqual((center_y - box[1]) / (box[3] - box[1]), .5)
+
+    def test_end_at_zoom_removes_result_hold(self):
+        self.edit["end_at_response_zoom"] = True
+        edit = self.load()
+        edit.update(terminal_capture="capture.mp4", terminal_submit_at=2,
+                    terminal_call_at=3, terminal_result_at=4)
+        capture = self.root / "capture.mp4"
+        capture.write_bytes(b"synthetic capture")
+        digest = renderer.hashlib.sha256(capture.read_bytes()).hexdigest()
+        frames = self.root / ("native-frames-" + digest[:12])
+        frames.mkdir()
+        (frames / "complete.json").write_text("{}")
+        for i in range(300):
+            (frames / f"{i + 1:05}.png").touch()
+        renderer.prepare_terminal(edit, self.root / "edit.json", self.root)
+        self.assertAlmostEqual(edit["result_duration"], 1.65)
+        self.assertEqual(renderer.outro_camera(edit, edit["result_duration"]),
+                         renderer.outro_camera(edit, edit["result_duration"], poster=True))
+        edit["end_at_response_zoom"] = False
+        renderer.prepare_terminal(edit, self.root / "edit.json", self.root)
+        self.assertEqual(edit["result_duration"], 6)
 
     def test_dissolves_remove_boundary_jump_without_changing_scene_timing(self):
         edit = self.load()

@@ -97,18 +97,25 @@ Camera moves keep their original animation durations. Call audio, captions,
 and music move earlier with the shortened intro; music keeps its original
 playback speed. The private `intro-edit.json` records the capture and timing.
 
-After the call, center the final response, zoom in, and hold the closer view.
+After the call, center the final response and zoom in with the intro's cadence.
 Keep its center fixed on screen throughout the zoom so the motion reads as
 magnification rather than scrolling through the terminal. The separate outro camera prevents
 the still image framing from disabling the animation. `response_zoom` accepts
 source crop `x`, `y`, and `width`, an `opening_scale` greater than one, plus
 `start` and `duration` in seconds from the start of the result scene. Defaults
-are a 0.4 second hold, a 1.2 second zoom, a 1.5 opening scale, and a crop at
+match the intro: a 0.25 second lead in, a 1.4 second zoom, an opening scale
+of 1804 divided by 1100, and a crop at
 source x 0, y 234, width 1580. The opening crop shares the close view's center
 and starts wider by the configured scale. Verify the complete response
 fits that crop in the selected native take. The still uses the finished close
 view. Camera settings are recorded with the capture metadata and must match
 when reusing video for a soundtrack revision.
+
+Set `end_at_response_zoom` to `true` to end the video when the zoom completes.
+The result duration then equals the zoom start plus its duration, removing the
+remaining terminal hold. The final encoded frame samples the completed zoom
+even when the endpoint falls between 30 fps timestamps. The song fades to the
+shorter endpoint. This setting is recorded in the visual reuse metadata.
 
 The renderer defaults to the original audio speed, trims the selected ranges,
 normalizes the excerpt's loudness, and derives the waveform from those samples.

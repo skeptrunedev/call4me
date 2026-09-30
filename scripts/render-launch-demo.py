@@ -28,6 +28,9 @@ BG, INK = "#ffffff", "#000000"
 MUTED, LINE, ACCENT = "#666666", "#cccccc", "#0000ff"
 REGULAR = Path("/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf")
 BOLD = Path("/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf")
+INTRO_WIDE = (-112, 0, 1804)
+INTRO_CLOSE = (-20, 430, 1100)
+ZOOM_DELAY, ZOOM_DURATION = .25, 1.4
 
 
 def run(argv):
@@ -125,8 +128,9 @@ def load_edit(path):
                                   edit.get("terminal_submit_at", 0)):
         raise ValueError("Accelerated typing requires start and end within the prompt entry")
     edit.update(typing_speed=typing_speed, typing_start=typing_start, typing_end=typing_end)
-    zoom = {"x": 0, "y": 234, "width": 1580, "opening_scale": 1.5,
-            "start": .4, "duration": 1.2}
+    zoom = {"x": 0, "y": 234, "width": 1580,
+            "opening_scale": INTRO_WIDE[2] / INTRO_CLOSE[2],
+            "start": ZOOM_DELAY, "duration": ZOOM_DURATION}
     zoom.update(edit.get("response_zoom", {}))
     zoom = {key: float(value) for key, value in zoom.items()}
     if not (all(math.isfinite(value) for value in zoom.values()) and
@@ -134,6 +138,9 @@ def load_edit(path):
             zoom["start"] >= 0 and zoom["duration"] > 0):
         raise ValueError("Invalid final response camera crop or zoom timing")
     edit["response_zoom"] = zoom
+    if not isinstance(edit.get("end_at_response_zoom", False), bool):
+        raise ValueError("end_at_response_zoom must be a boolean")
+    edit["end_at_response_zoom"] = edit.get("end_at_response_zoom", False)
     transition = float(edit.get("call_transition_duration", 0))
     if not math.isfinite(transition) or not 0 <= transition <= 1:
         raise ValueError("call_transition_duration must be between 0 and 1")
@@ -357,9 +364,11 @@ def prepare_terminal(edit, manifest, output):
     if not 0 < edit["terminal_submit_at"] < call_at < result_at < edit["capture_duration"]:
         raise ValueError("Expected submit, calling, then completed result within the native capture")
     edit["intro_duration"] = intro_time(edit, call_at)
-    edit["result_duration"] = edit["capture_duration"] - result_at
-    if edit["response_zoom"]["start"] + edit["response_zoom"]["duration"] >= edit["result_duration"]:
+    available = edit["capture_duration"] - result_at
+    zoom_end = edit["response_zoom"]["start"] + edit["response_zoom"]["duration"]
+    if zoom_end > available:
         raise ValueError("Final response zoom must finish before the result footage ends")
+    edit["result_duration"] = zoom_end if edit["end_at_response_zoom"] else available
 
 
 def native_frame(edit, t):
@@ -369,11 +378,11 @@ def native_frame(edit, t):
 
 def camera(edit, t):
     # Fixed aspect ratio throughout. The close view fits all three prompt lines.
-    wide = camera_box(-112, 0, 1804)
-    close = camera_box(-20, 430, 1100)
+    wide = camera_box(*INTRO_WIDE)
+    close = camera_box(*INTRO_CLOSE)
     submit = intro_time(edit, edit["terminal_submit_at"])
     if t < submit:
-        u = ease(0, 1, (t - .25) / 1.4)
+        u = ease(0, 1, (t - ZOOM_DELAY) / ZOOM_DURATION)
     else:
         u = ease(1, 0, (t - submit) / .9)
     return tuple(a + (b - a) * u for a, b in zip(wide, close))
@@ -501,6 +510,7 @@ def main():
         "terminal_call_at": edit["terminal_call_at"],
         "terminal_result_at": edit["terminal_result_at"],
         "response_zoom": edit["response_zoom"],
+        "end_at_response_zoom": edit["end_at_response_zoom"],
         "call_transition_duration": edit["call_transition_duration"],
     }
     if args.reuse_video:
@@ -514,12 +524,14 @@ def main():
     audio, samples, rate = prepare_audio(edit, args.output)
     intro = edit["intro_duration"]
     total = intro + edit["audio_duration"] + edit["result_duration"]
+    frame_count = math.ceil(total * FPS)
+    video_duration = frame_count / FPS
     submit = intro_time(edit, edit["terminal_submit_at"])
     call_end = intro + edit["audio_duration"]
     preview_times = [0, min(3, submit - .3), submit - .2, intro - 1 / FPS,
                      intro + 1, intro + 8, call_end, call_end + 1,
                      call_end + edit["response_zoom"]["start"] + edit["response_zoom"]["duration"],
-                     total - 2]
+                     total - 1 / FPS]
     frames = [scene(edit, t, samples, rate) for t in preview_times]
     sheet = Image.new("RGB", (960 * 2, 540 * math.ceil(len(frames) / 2)), BG)
     for i, frame in enumerate(frames):
@@ -544,19 +556,21 @@ def main():
             parser.error("--reuse-video must name a separate existing approved video")
         run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(args.reuse_video),
              "-i", str(soundtrack), "-map", "0:v:0", "-map", "1:a:0",
-             "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-t", str(total),
+             "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-t", str(video_duration),
              "-movflags", "+faststart", str(output)])
         print(f"Updated soundtrack: {output} ({total:.2f}s)", flush=True)
         return
     command = ["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
                "-s", f"{W}x{H}", "-r", str(FPS), "-i", "pipe:0", "-i", str(soundtrack),
-               "-map", "0:v", "-map", "1:a:0", "-t", str(total), "-c:v", "libx264",
+               "-map", "0:v", "-map", "1:a:0", "-t", str(video_duration), "-c:v", "libx264",
                "-preset", "fast", "-crf", "18", "-pix_fmt", "yuv420p", "-c:a", "aac",
                "-b:a", "192k", "-movflags", "+faststart", str(output)]
     encoder = subprocess.Popen(command, stdin=subprocess.PIPE)
     try:
-        for i in range(math.ceil(total * FPS)):
-            encoder.stdin.write(scene(edit, i / FPS, samples, rate).tobytes())
+        for i in range(frame_count):
+            # End on the completed zoom even when its timestamp falls between frames.
+            t = total if edit["end_at_response_zoom"] and i == frame_count - 1 else i / FPS
+            encoder.stdin.write(scene(edit, t, samples, rate).tobytes())
             if i % (FPS * 5) == 0:
                 print(f"Rendering {i / FPS:.0f}/{total:.1f}s", flush=True)
     finally:
