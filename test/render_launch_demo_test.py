@@ -210,6 +210,45 @@ class CallTimelineTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "response_fullscreen"):
             self.load()
 
+    def test_ring_on_typing_completion_holds_native_prompt_without_zoom_out(self):
+        self.edit.update(typing_speed=2, terminal_typing_start_at=1,
+                         terminal_typing_end_at=5, terminal_submit_at=7,
+                         ring_on_typing_complete=True)
+        edit = self.load()
+        edit.update(intro_duration=7, result_duration=2, terminal_result_at=9)
+        # Submission would normally move the prompt out of the close camera.
+        typed = Image.new("RGB", (1580, 836), "white")
+        ImageDraw.Draw(typed).rectangle((22, 660, 900, 740), fill="black")
+        submitted = Image.new("RGB", (1580, 836), "white")
+        ImageDraw.Draw(submitted).rectangle((22, 30, 900, 110), fill="black")
+        def native_at(e, t, result=False):
+            return submitted if t >= 7 else typed
+        with patch.object(renderer, "native_frame", side_effect=native_at):
+            first = renderer.scene_frame(edit, 3, np.zeros(1), 48000)
+            for t in [3.1, 4, 5, 6.9, 7]:
+                self.assertEqual(renderer.scene_frame(edit, t, np.zeros(1), 48000,
+                                                      phase="intro").tobytes(), first.tobytes())
+                self.assertEqual(renderer.intro_source_time(edit, t), 5)
+        ring = {"source": "source.wav", "start": 3, "duration": 1.25}
+        edit["ringback"] = ring
+        self.assertEqual(renderer.ringback_settings(edit, self.root / "edit.json")["start"], 3)
+        edit["ringback"] = {**ring, "start": 2.99}
+        with self.assertRaisesRegex(ValueError, "typing completion"):
+            renderer.ringback_settings(edit, self.root / "edit.json")
+        edit["ring_on_typing_complete"] = False
+        edit["ringback"] = ring
+        with self.assertRaisesRegex(ValueError, "prompt submission"):
+            renderer.ringback_settings(edit, self.root / "edit.json")
+
+    def test_ring_on_typing_completion_requires_verified_interval_and_boolean(self):
+        for value in ["true", 1, None]:
+            self.edit["ring_on_typing_complete"] = value
+            with self.assertRaisesRegex(ValueError, "boolean"):
+                self.load()
+        self.edit["ring_on_typing_complete"] = True
+        with self.assertRaisesRegex(ValueError, "verified prompt entry"):
+            self.load()
+
     def test_dissolves_remove_boundary_jump_without_changing_scene_timing(self):
         edit = self.load()
         edit.update(intro_duration=2, result_duration=6, capture_duration=10,

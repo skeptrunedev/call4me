@@ -97,6 +97,8 @@ def intro_time(edit, source_t):
 
 def intro_source_time(edit, t):
     """Select original capture frames, accelerating only the typing interval."""
+    if edit.get("ring_on_typing_complete", False):
+        t = min(t, intro_time(edit, edit["typing_end"]))
     start = edit["typing_start"]
     if t <= start:
         return t
@@ -130,6 +132,13 @@ def load_edit(path):
                                   edit.get("terminal_submit_at", 0)):
         raise ValueError("Accelerated typing requires start and end within the prompt entry")
     edit.update(typing_speed=typing_speed, typing_start=typing_start, typing_end=typing_end)
+    ring_on_typing_complete = edit.get("ring_on_typing_complete", False)
+    if not isinstance(ring_on_typing_complete, bool):
+        raise ValueError("ring_on_typing_complete must be a boolean")
+    if ring_on_typing_complete and not (0 <= typing_start < typing_end <
+                                      edit.get("terminal_submit_at", 0)):
+        raise ValueError("Ringing after typing requires a verified prompt entry interval")
+    edit["ring_on_typing_complete"] = ring_on_typing_complete
     zoom = {"x": 0, "y": 234, "width": 1580,
             "opening_scale": INTRO_WIDE[2] / INTRO_CLOSE[2],
             "start": ZOOM_DELAY, "duration": ZOOM_DURATION}
@@ -258,10 +267,13 @@ def ringback_settings(edit, manifest):
     values = local_sound_settings(edit, manifest, "ringback")
     if values is None:
         return None
-    submit = intro_time(edit, float(edit["terminal_submit_at"]))
+    cue_after = (edit["typing_end"] if edit.get("ring_on_typing_complete", False)
+                 else float(edit["terminal_submit_at"]))
+    submit = intro_time(edit, cue_after)
     end = values["start"] + values["duration"]
     if not submit <= values["start"] < end <= edit["intro_duration"]:
-        raise ValueError("Ringback must fit after prompt submission and before the call")
+        event = "typing completion" if edit.get("ring_on_typing_complete", False) else "prompt submission"
+        raise ValueError(f"Ringback must fit after {event} and before the call")
     return values
 
 
@@ -506,7 +518,7 @@ def camera(edit, t):
     wide = camera_box(*INTRO_WIDE)
     close = camera_box(*INTRO_CLOSE)
     submit = intro_time(edit, edit["terminal_submit_at"])
-    if t < submit:
+    if t < submit or edit.get("ring_on_typing_complete", False):
         u = ease(0, 1, (t - ZOOM_DELAY) / ZOOM_DURATION)
     else:
         u = ease(1, 0, (t - submit) / .9)
@@ -654,6 +666,8 @@ def main():
         "end_at_response_zoom": edit["end_at_response_zoom"],
         "call_transition_duration": edit["call_transition_duration"],
     }
+    if edit["ring_on_typing_complete"]:
+        intro_plan["ring_on_typing_complete"] = True
     if args.reuse_video:
         previous_intro = args.reuse_video.parent / "intro-edit.json"
         if previous_intro.is_file():

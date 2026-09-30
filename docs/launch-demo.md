@@ -273,6 +273,14 @@ If the source call has no ringback, identify any separately added or synthesized
 ringing in the private edit provenance; it is a sound design cue rather than
 audio of another call.
 
+Set `ring_on_typing_complete` to `true` when ringing should begin as soon as
+the verified typing interval ends. The intro holds that completed native
+prompt frame at the close camera position through the ring, without zooming
+back out for submission. In this mode, the ring may begin at edited typing
+completion instead of submission. It must still finish before call playback.
+Include the hold and added ringing in private provenance. This visual change
+requires a full render and is recorded in `intro-edit.json`.
+
 For a disconnect cue, add an optional `hangup` object with the same local
 `source`, video `start`, source `duration`, optional `source_start`, and
 optional `gain_db` fields. The cue must begin after call playback finishes
