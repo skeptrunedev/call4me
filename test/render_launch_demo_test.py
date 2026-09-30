@@ -128,6 +128,8 @@ class CallTimelineTest(unittest.TestCase):
         (frames / "complete.json").write_text("{}")
         for i in range(300):
             (frames / f"{i + 1:05}.png").touch()
+        for name in ["00001.png", "00300.png"]:
+            Image.new("RGB", (1580, 836), "white").save(frames / name)
         renderer.prepare_terminal(edit, self.root / "edit.json", self.root)
         self.assertAlmostEqual(edit["result_duration"], 1.65)
         self.assertEqual(renderer.outro_camera(edit, edit["result_duration"]),
@@ -135,6 +137,78 @@ class CallTimelineTest(unittest.TestCase):
         edit["end_at_response_zoom"] = False
         renderer.prepare_terminal(edit, self.root / "edit.json", self.root)
         self.assertEqual(edit["result_duration"], 6)
+
+    def cached_capture(self, name, size, count, color):
+        capture = self.root / name
+        capture.write_bytes(name.encode())
+        digest = renderer.hashlib.sha256(capture.read_bytes()).hexdigest()
+        folder = self.root / ("native-frames-" + digest[:12])
+        folder.mkdir(exist_ok=True)
+        (folder / "complete.json").write_text("{}")
+        image = Image.new("RGB", size, color)
+        first = folder / "00001.png"
+        image.save(first)
+        for i in range(1, count):
+            (folder / f"{i + 1:05}.png").hardlink_to(first)
+        return digest
+
+    def test_separate_native_result_capture_preserves_intro_and_fills_screen(self):
+        self.edit.update(terminal_capture="intro.mp4", terminal_submit_at=2,
+                         terminal_call_at=3, terminal_result_at=4,
+                         terminal_result_capture="result.mp4", result_capture_at=.5,
+                         response_fullscreen=True, end_at_response_zoom=True,
+                         response_zoom={"width": 1040})
+        intro_digest = self.cached_capture("intro.mp4", (1580, 836), 300, "red")
+        result_digest = self.cached_capture("result.mp4", (1696, 954), 90, "blue")
+        edit = self.load()
+        renderer.prepare_terminal(edit, self.root / "edit.json", self.root)
+        self.assertEqual(edit["capture_sha256"], intro_digest)
+        self.assertEqual(edit["result_capture_sha256"], result_digest)
+        self.assertEqual(edit["intro_duration"], 3)
+        self.assertEqual(edit["result_source_start"], .5)
+        self.assertEqual(edit["result_duration"], 1.65)
+        self.assertEqual(renderer.native_frame(edit, 0).getpixel((0, 0)), (255, 0, 0))
+        # Native result pixels reach every edge; no editorial page or white fill remains.
+        for t in [7, 7.8, 8.65]:
+            image = renderer.scene(edit, t, np.zeros(1), 48000)
+            self.assertEqual(image.getextrema(), ((0, 0), (0, 0), (255, 255)))
+        self.assertEqual(renderer.outro_camera(edit, 0), (0, 0, 1696, 954))
+        self.assertEqual(renderer.outro_camera(edit, 1.65), (0, 369, 1040, 954))
+        for t in np.linspace(0, 1.65, 31):
+            x, y, right, bottom = renderer.outro_camera(edit, t)
+            self.assertEqual(x, 0)
+            self.assertEqual(bottom, 954)
+            self.assertGreaterEqual(y, 0)
+            self.assertLessEqual(right, 1696)
+            self.assertAlmostEqual((right - x) / (bottom - y), 16 / 9)
+
+    def test_fullscreen_capture_rejects_wrong_aspect_size_or_short_footage(self):
+        self.edit.update(terminal_capture="intro.mp4", terminal_submit_at=2,
+                         terminal_call_at=3, terminal_result_at=4,
+                         response_fullscreen=True, end_at_response_zoom=True,
+                         response_zoom={"width": 1040})
+        self.cached_capture("intro.mp4", (1580, 836), 300, "red")
+        for name, size, count, message in [
+                ("square.mp4", (954, 954), 90, "16:9"),
+                ("small.mp4", (960, 540), 90, "fit inside"),
+                ("short.mp4", (1696, 954), 30, "finish before")]:
+            with self.subTest(name=name):
+                self.cached_capture(name, size, count, "blue")
+                self.edit["terminal_result_capture"] = name
+                with self.assertRaisesRegex(ValueError, message):
+                    renderer.prepare_terminal(self.load(), self.root / "edit.json", self.root)
+        self.edit.update(terminal_result_capture="square.mp4", result_capture_at=2)
+        with self.assertRaisesRegex(ValueError, "finish before"):
+            renderer.prepare_terminal(self.load(), self.root / "edit.json", self.root)
+
+    def test_result_capture_settings_require_finite_start_and_boolean_mode(self):
+        for value in [-1, float("nan"), float("inf")]:
+            self.edit["result_capture_at"] = value
+            with self.assertRaisesRegex(ValueError, "result_capture_at"):
+                self.load()
+        self.edit.update(result_capture_at=0, response_fullscreen="true")
+        with self.assertRaisesRegex(ValueError, "response_fullscreen"):
+            self.load()
 
     def test_dissolves_remove_boundary_jump_without_changing_scene_timing(self):
         edit = self.load()

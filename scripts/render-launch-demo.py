@@ -141,6 +141,13 @@ def load_edit(path):
     if not isinstance(edit.get("end_at_response_zoom", False), bool):
         raise ValueError("end_at_response_zoom must be a boolean")
     edit["end_at_response_zoom"] = edit.get("end_at_response_zoom", False)
+    if not isinstance(edit.get("response_fullscreen", False), bool):
+        raise ValueError("response_fullscreen must be a boolean")
+    edit["response_fullscreen"] = edit.get("response_fullscreen", False)
+    result_at = float(edit.get("result_capture_at", 0))
+    if not math.isfinite(result_at) or result_at < 0:
+        raise ValueError("result_capture_at must be a finite nonnegative timestamp")
+    edit["result_capture_at"] = result_at
     transition = float(edit.get("call_transition_duration", 0))
     if not math.isfinite(transition) or not 0 <= transition <= 1:
         raise ValueError("call_transition_duration must be between 0 and 1")
@@ -341,9 +348,8 @@ def separate_music_cues(edit, total, rate):
     return filters
 
 
-def prepare_terminal(edit, manifest, output):
-    """Decode one continuous capture. No assembled terminal images are accepted."""
-    capture = (manifest.parent / edit["terminal_capture"]).resolve()
+def decode_terminal(capture, output):
+    """Decode a continuous native video into a cache keyed by its content."""
     if not capture.is_file():
         raise ValueError(f"Continuous terminal capture missing: {capture}")
     digest = hashlib.sha256(capture.read_bytes()).hexdigest()
@@ -357,23 +363,52 @@ def prepare_terminal(edit, manifest, output):
     frames = sorted(folder.glob("*.png"))
     if not frames:
         raise ValueError("The terminal recording has no frames")
-    edit["native_frames"] = frames
-    edit["capture_duration"] = len(frames) / FPS
-    edit["capture_sha256"] = digest
+    with Image.open(frames[0]) as first:
+        size = first.size
+    with Image.open(frames[-1]) as last:
+        if last.size != size:
+            raise ValueError("Native terminal capture dimensions changed during recording")
+    return frames, digest, len(frames) / FPS, size
+
+
+def prepare_terminal(edit, manifest, output):
+    """Select native intro and result footage without assembling terminal images."""
+    capture = (manifest.parent / edit["terminal_capture"]).resolve()
+    frames, digest, duration, size = decode_terminal(capture, output)
+    edit.update(native_frames=frames, capture_sha256=digest,
+                capture_duration=duration, capture_size=size)
     call_at, result_at = edit["terminal_call_at"], edit["terminal_result_at"]
     if not 0 < edit["terminal_submit_at"] < call_at < result_at < edit["capture_duration"]:
         raise ValueError("Expected submit, calling, then completed result within the native capture")
     edit["intro_duration"] = intro_time(edit, call_at)
-    available = edit["capture_duration"] - result_at
+    if edit.get("terminal_result_capture"):
+        result_capture = (manifest.parent / edit["terminal_result_capture"]).resolve()
+        result_frames, result_digest, result_duration, result_size = decode_terminal(
+            result_capture, output)
+        result_start = edit["result_capture_at"]
+    else:
+        result_frames, result_digest, result_duration, result_size = frames, digest, duration, size
+        result_start = result_at
+    edit.update(result_frames=result_frames, result_capture_sha256=result_digest,
+                result_capture_duration=result_duration, result_capture_size=result_size,
+                result_source_start=result_start)
+    available = result_duration - result_start
     zoom_end = edit["response_zoom"]["start"] + edit["response_zoom"]["duration"]
     if zoom_end > available:
         raise ValueError("Final response zoom must finish before the result footage ends")
+    if edit["response_fullscreen"]:
+        width, height = result_size
+        if width * H != height * W:
+            raise ValueError("Fullscreen result capture must have a 16:9 aspect ratio")
+        if not 0 < edit["response_zoom"]["width"] < width:
+            raise ValueError("Fullscreen response crop must fit inside the result capture")
     edit["result_duration"] = zoom_end if edit["end_at_response_zoom"] else available
 
 
-def native_frame(edit, t):
-    index = min(len(edit["native_frames"]) - 1, max(0, int(t * FPS)))
-    return Image.open(edit["native_frames"][index]).convert("RGB")
+def native_frame(edit, t, result=False):
+    frames = edit.get("result_frames", edit["native_frames"]) if result else edit["native_frames"]
+    index = min(len(frames) - 1, max(0, int(t * FPS)))
+    return Image.open(frames[index]).convert("RGB")
 
 
 def camera(edit, t):
@@ -389,8 +424,13 @@ def camera(edit, t):
 
 
 def outro_camera(edit, t, poster=False):
-    """Zoom around the response center, keeping it stationary on screen."""
+    """Frame the native result with its configured zoom and anchor."""
     zoom = edit["response_zoom"]
+    if edit["response_fullscreen"]:
+        opening_width, bottom = edit["result_capture_size"]
+        u = 1 if poster else ease(0, 1, (t - zoom["start"]) / zoom["duration"])
+        width = opening_width + (zoom["width"] - opening_width) * u
+        return 0, bottom - width * H / W, width, bottom
     response = camera_box(zoom["x"], zoom["y"], zoom["width"])
     if poster:
         return response
@@ -408,6 +448,11 @@ def scene_frame(edit, t, samples, rate, poster=False, phase=None):
     play_t = max(0, min(edit["audio_duration"], t - intro))
     playing = (phase == "call" if phase else intro <= t < intro + edit["audio_duration"]) and not poster
     finished = (phase == "result" if phase else t >= intro + edit["audio_duration"]) or poster
+    elapsed = max(0, t - intro - edit["audio_duration"])
+    if finished and edit["response_fullscreen"]:
+        source = native_frame(edit, edit["result_source_start"] + elapsed, result=True)
+        return source.transform((W, H), Image.Transform.EXTENT,
+                                outro_camera(edit, elapsed, poster), Image.Resampling.BICUBIC)
     if playing:
         play_t = min(play_t, max(0, edit["audio_duration"] - 1 / FPS))
     label = "call complete" if finished else "listen to the call" if playing else "ask your agent"
@@ -418,10 +463,9 @@ def scene_frame(edit, t, samples, rate, poster=False, phase=None):
     if not playing:
         # Every pixel inside this viewport comes from the continuous X11 capture.
         # Camera framing and optional typing tempo never redraw terminal text.
-        source_t = (edit["capture_duration"] - .25 if poster else
-                    edit["terminal_result_at"] + max(0, t - intro - edit["audio_duration"])
+        source_t = (edit.get("result_source_start", edit["terminal_result_at"]) + elapsed
                     if finished else intro_source_time(edit, min(intro, max(0, t))))
-        source = native_frame(edit, source_t)
+        source = native_frame(edit, source_t, result=finished)
         crop = (outro_camera(edit, max(0, t - intro - edit["audio_duration"]), poster)
                 if finished else camera(edit, min(intro, max(0, t))))
         viewport = source.transform((1760, 816), Image.Transform.EXTENT,
@@ -500,6 +544,12 @@ def main():
     intro_plan = {
         "capture_sha256": edit["capture_sha256"],
         "capture_duration": edit["capture_duration"],
+        "capture_size": list(edit["capture_size"]),
+        "result_capture_sha256": edit["result_capture_sha256"],
+        "result_capture_duration": edit["result_capture_duration"],
+        "result_capture_size": list(edit["result_capture_size"]),
+        "result_source_start": edit["result_source_start"],
+        "response_fullscreen": edit["response_fullscreen"],
         "typing_speed": edit["typing_speed"],
         "typing_start": edit["typing_start"],
         "typing_end": edit["typing_end"],

@@ -4,7 +4,7 @@ The launch asset pairs a terminal replay of a real saved session with the origin
 phone recording. The reference is Brayden Wilmoth's terminal screenshot for the
 Cloudflare CLI: https://x.com/BraydenWilmoth/status/2104593590307479829.
 
-The terminal segment is one continuous screen recording of Claude Code's native
+Each terminal source is a continuous screen recording of Claude Code's native
 interface. Capture actual typing, submission, and native tool output. Keep the
 original transcript intact. Run an isolated Claude session connected only to
 `scripts/launch-replay-mcp.mjs`, with built in tools disabled. This offline MCP
@@ -59,6 +59,8 @@ For the launch theme, copy `scripts/launch-terminal-theme.json` to
 `~/.claude/themes/call4me-launch.json`, and pass
 `--settings '{"theme":"custom:call4me-launch"}'` only to the capture session.
 Set the terminal emulator's own background to white and foreground to black.
+Unset `NO_COLOR` in the capture process so the native theme remains visible.
+The theme includes `clawd_body` for the logo and `claude` for interface accents.
 
 The capture script records X11 continuously with ffmpeg and saves a timed input
 event log. Use the recorded `SUBMIT` and `EXPAND_TRANSCRIPT` times in the edit
@@ -82,7 +84,7 @@ contains source `start`/`end`, `speaker`, and `text`. Caption times must remain
 inside their selected clip. Prompt and result text may be abridged for
 readability, with that choice documented in the manifest provenance.
 
-The renderer decodes frames from the single capture and displays each selected
+The renderer decodes frames from the native capture and displays each selected
 segment in order. Terminal footage defaults to its original speed. The audio occupies the middle of the
 edit, between invocation and result. Smooth camera transforms provide the zooms.
 It never substitutes terminal text or action screenshots. The matching still
@@ -110,6 +112,33 @@ and starts wider by the configured scale. Verify the complete response
 fits that crop in the selected native take. The still uses the finished close
 view. Camera settings are recorded with the capture metadata and must match
 when reusing video for a soundtrack revision.
+
+For an approved fullscreen ending, set `response_fullscreen` to `true` and
+optionally supply a separate `terminal_result_capture` video relative to the
+manifest. This preserves the original intro capture and its timing. The result
+must be another genuine continuous native terminal recording, not an assembled
+image or a redrawn terminal. If the approved response needs shorter lines,
+capture that wrapping in the terminal itself. Keep its wording faithful to the
+historical result and document the layout choice in the private provenance.
+
+`result_capture_at` selects the completed view within the separate recording,
+defaulting to zero. The selected result footage must contain the entire zoom.
+Without a separate capture, the result still starts at `terminal_result_at` in
+the original recording. Capture hashes, dimensions, durations, and selected
+start times are included in `intro-edit.json`; changing any of them requires a
+full render.
+
+The fullscreen result capture must have a 16:9 aspect ratio. It fills the whole
+1920 by 1080 frame without the surrounding editorial page. Its camera starts
+with the entire native frame, then zooms around the bottom left corner to
+`response_zoom.width`, using the configured start, duration, and easing. All
+intermediate crops stay inside the recorded terminal. In this mode, source
+crop `x`, `y`, and `opening_scale` are superseded by the native frame bounds.
+A 1696 by 954 capture and a final width of 1040 produce opening bounds
+`[0, 0, 1696, 954]` and final bounds `[0, 369, 1040, 954]`. Verify the complete
+header is visible initially, the final response fits the close view, and the
+terminal reaches the bottom edge throughout. The matching still uses the same
+result recording and completed camera framing.
 
 Set `end_at_response_zoom` to `true` to end the video when the zoom completes.
 The result duration then equals the zoom start plus its duration, removing the
