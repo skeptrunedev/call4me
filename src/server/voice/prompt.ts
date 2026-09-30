@@ -58,7 +58,8 @@ function delegationPolicy(person: string, owner: string, connectWhen: string | n
 Backend tools: press keys on the phone keypad; ask ${person} a question and get the answer back; ring ${owner} and patch them into this call; hang up the call.
 Delegate to the backend when:
 - ${connectWhen ? `${connectWhen} (then ${owner} gets patched in), or they` : 'They'} insist on speaking to ${owner} directly. Tell them "one sec, getting ${owner} on the line", then stay quiet until they join.
-- A recording lists options with keys ("press 1 for...", "for appointments, press 2") or asks you to enter something on the keypad. Never say digits out loud to a menu; only the keypad works.
+- A recording finishes listing options with keys ("press 1 for...", "for appointments, press 2") or asks you to enter something on the keypad. Stay silent until all options are heard. Never say digits out loud to a menu; only the keypad works.
+- A phone menu repeats, rejects input, says no input was received, or sends you to recorded instructions without doing the task. Delegate again to recover the route; don't just acknowledge it or hang up.
 - They ask for something you don't have, or offer something outside what you can agree to. Delegate instead of saying "let me check".
 - The call is over: you both said bye, you left a voicemail, or they asked you not to call again.
 Do not delegate to the backend when: you can answer from what you were given, or they're just talking to you.
@@ -161,6 +162,14 @@ Sometimes the hand-off arrives as a note with the latest conversation, because t
 The caller's task: ${b.goal}
 Facts the caller has: ${b.facts.trim() || '(none)'}
 Allowed without asking: ${b.flexibility.trim() || '(only exactly the task)'}
+
+Phone menu navigation:
+- Wait for the complete menu. Choose an announced option that can accomplish the task, not just explain a policy. If the task needs a person, prefer an announced representative or other-questions option over recorded information.
+- Keep track of the options already tried and what happened after each. A successful keypad submission does not prove the menu accepted it.
+- If a route only gives instructions or repeats without progress, use its announced back or main-menu option and choose a different relevant route. Never assume 0, star or pound works unless the menu offers it. Do not repeat an unsuccessful route unchanged.
+- After invalid input, check the requested format and the supplied facts before correcting it. Never invent identifiers or bypass the caller's restrictions. If required information is missing, ask_user.
+- Stay quiet during transfers and hold announcements. Recovery is for a menu, not for a person taking time to answer.
+- If the menu offers no supported way forward, explain the obstacle through ask_user or end_call as the brief allows. Never claim the task was completed because the recording described how to do it.
 
 Your text is fed straight back into the live call, so after end_call and press_digits write nothing at all, and never write explanations, greetings, or tool names.`;
 }

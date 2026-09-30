@@ -42,6 +42,17 @@ The recording API's OpenAPI document is served at `/api/openapi.json`. Run
 CI checks the generated artifact for drift. Run `npm test`, `npm run check`, `npm run lint`,
 and `npx wrangler deploy --dry-run` before deploying through git.
 
+Menu recovery tracks fresh phone prompts separately from transcript timestamps and remembers
+accepted keypad submissions. Repeated menus, invalid input, and recorded instruction dead ends
+can restart the existing back office after the recording goes quiet. It waits for pending tools
+and their continuations, avoids interrupting holds or a person answering, and asks the model to
+choose a supported route from the heard options rather than blindly replaying digits.
+
+`npm test` includes provider message replay tests for recovery and its timing races. To evaluate
+the configured back office model against synthetic menu scenarios, run `npm run test:menu:live`
+with `OPENAI_API_KEY` (or a local `.dev.vars`). This opt-in evaluation calls OpenAI, inspects
+the proposed tool calls, and never executes a tool or places a phone call.
+
 ## Setup
 
 1. Telnyx: a Call Control application (its id is `TELNYX_CONNECTION_ID`) with webhook URL

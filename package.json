@@ -16,7 +16,8 @@
     "grant": "node scripts/grant-credits.mjs",
     "transfer": "node scripts/transfer-credits.mjs",
     "openapi:generate": "tsx scripts/generate-openapi.ts",
-    "test": "node --import tsx --test test/*.test.ts"
+    "test": "node --import tsx --test test/*.test.ts",
+    "test:menu:live": "tsx scripts/eval-menu-recovery.ts"
   },
   "dependencies": {
     "@better-auth/mcp": "^1.7.6",

@@ -2,7 +2,7 @@ import { DurableObject } from 'cloudflare:workers';
 import { Raindrop, type Interaction } from 'raindrop-ai';
 import { calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
-import { connectCheckMessage, forcedHandoffMessage, missedHandoff } from './handoff';
+import { connectCheckMessage, forcedHandoffMessage, MenuRecovery, missedHandoff } from './handoff';
 import { alreadyUnreachable, mergeTranscript, pressedToJoin, unreachableMessage } from './person';
 import { BACK_OFFICE_TOOLS } from './prompt';
 
@@ -39,6 +39,8 @@ const SILENCE_LIMIT_MS = 30_000;
 const HANGUP_GRACE_MS = 700;
 /** Quiet time after the last words before checking for a hand-off the voice model skipped. */
 const HANDOFF_QUIET_MS = 1_500;
+/** A recording may pause between options; allow more quiet before choosing a menu route. */
+const MENU_QUIET_MS = 3_000;
 /** A back-office run that never reports back stops blocking new ones after this long. */
 const BACK_OFFICE_STALE_MS = QUESTION_WAIT_MS + 15_000;
 const MAX_FORCED_HANDOFFS = 12;
@@ -105,6 +107,9 @@ export class CallSession extends DurableObject<Env> {
   private backOfficeBusy = false;
   private lastHandoffAt = 0;
   private forcedHandoffs = new Set<number>();
+  private menuRecovery = new MenuRecovery();
+  private forcedMenus = 0;
+  private lastTranscriptAt = 0;
   private handoffTimer: ReturnType<typeof setTimeout> | null = null;
   /** Back-office functions still running (an ask_user waits on the person). Its response already reported completed. */
   private toolsRunning = 0;
@@ -345,7 +350,9 @@ export class CallSession extends DurableObject<Env> {
       case 'session.input_transcript.delta': {
         if (!this.heardThem) this.mark('first words from them');
         this.heardThem = true;
-        this.appendTranscript('them', (ev as { delta: string }).delta);
+        const delta = (ev as { delta: string }).delta;
+        this.appendTranscript('them', delta);
+        if (delta) this.menuRecovery.observe(delta, Date.now());
         this.scheduleHandoffCheck();
         // Barge-in: GPT-Live stops generating when talked over, but audio already queued at
         // Telnyx keeps playing. If the model has gone quiet while playback is still ahead,
@@ -400,6 +407,7 @@ export class CallSession extends DurableObject<Env> {
             throw err;
           } finally {
             this.toolsRunning--;
+            this.scheduleHandoffCheck();
             const durationMs = Date.now() - startedAt;
             this.observe(() => {
               const monitoring = this.backOfficeInteractions.get(monitoringId);
@@ -412,6 +420,7 @@ export class CallSession extends DurableObject<Env> {
           }
         } else if (e.event.type === 'response.completed' || e.event.type === 'response.failed' || e.event.type === 'error') {
           this.backOfficeBusy = false;
+          this.scheduleHandoffCheck();
           console.log('back office', e.event.type);
           this.observe(() => {
             const monitoring = this.backOfficeInteractions.get(monitoringId);
@@ -497,25 +506,32 @@ export class CallSession extends DurableObject<Env> {
   // ---- hand-offs the voice model skipped
 
   private scheduleHandoffCheck(): void {
+    if (this.ended || this.endingCall) return;
     if (this.handoffTimer) clearTimeout(this.handoffTimer);
-    this.handoffTimer = setTimeout(() => this.checkMissedHandoff(), HANDOFF_QUIET_MS);
+    const quiet = this.menuRecovery.pending() ? MENU_QUIET_MS : HANDOFF_QUIET_MS;
+    const remaining = Math.max(0, this.lastTranscriptAt + quiet - Date.now());
+    this.handoffTimer = setTimeout(() => this.checkMissedHandoff(), remaining);
   }
 
   private checkMissedHandoff(): void {
     this.handoffTimer = null;
-    if (this.ended || this.endingCall || this.personLeg || this.forcedHandoffs.size >= MAX_FORCED_HANDOFFS) return;
+    if (this.ended || this.endingCall || this.personLeg || this.forcedHandoffs.size + this.forcedMenus >= MAX_FORCED_HANDOFFS) return;
     // A running function still owes the back office its output; GPT-Live rejects a new response until then.
     if (this.toolsRunning || (this.backOfficeBusy && Date.now() - this.lastHandoffAt < BACK_OFFICE_STALE_MS)) return;
-    const miss = missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs);
+    const menu = this.menuRecovery.pending();
+    const miss = menu ?? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs);
     if (!miss) {
       this.checkConnectCondition();
       return;
     }
-    this.forcedHandoffs.add(miss.line.at);
+    if (menu) {
+      this.menuRecovery.checked(menu.snapshot);
+      this.forcedMenus++;
+    } else this.forcedHandoffs.add(miss.line.at);
     this.backOfficeBusy = true;
     this.lastHandoffAt = Date.now();
-    this.mark(`no hand-off after ${miss.reason === 'menu' ? 'a phone menu' : 'a spoken promise'}; starting the back office`);
-    this.sendLive({ type: 'response.item.create', item: { type: 'message', role: 'user', content: [{ type: 'input_text', text: forcedHandoffMessage(miss, this.transcript) }] } });
+    this.mark(`no hand-off after ${miss.reason === 'promise' ? 'a spoken promise' : 'a phone menu'}; starting the back office`);
+    this.sendLive({ type: 'response.item.create', item: { type: 'message', role: 'user', content: [{ type: 'input_text', text: forcedHandoffMessage(miss, this.transcript, this.menuRecovery.history()) }] } });
     this.sendLive({ type: 'response.create' });
   }
 
@@ -661,8 +677,14 @@ export class CallSession extends DurableObject<Env> {
         break;
       case 'press_digits': {
         const digits = String(args.digits ?? '').replace(/[^0-9*#wW]/g, '').slice(0, 32);
-        if (digits && s.controlId) await telnyx(this.env).sendDtmf(s.controlId, digits);
-        output = digits ? `pressed ${digits}` : 'no valid digits';
+        output = 'no valid digits';
+        if (digits && !s.controlId) output = 'no phone connection; keypad input was not submitted';
+        if (digits && s.controlId) {
+          const snapshot = this.menuRecovery.snapshot();
+          await telnyx(this.env).sendDtmf(s.controlId, digits);
+          this.menuRecovery.submitted(digits, snapshot);
+          output = `keypad submitted: ${digits}; wait for the next prompt to confirm it worked`;
+        }
         break;
       }
       default:
@@ -670,7 +692,12 @@ export class CallSession extends DurableObject<Env> {
     }
     this.observe(() => this.toolMonitoring.get(item.call_id)?.monitoring.output.push(redact(output, s.redact ?? [])));
     this.sendLive({ type: 'response.item.create', item: { type: 'function_call_output', call_id: item.call_id, output } });
-    if (item.name !== 'end_call') this.sendLive({ type: 'response.create' });
+    if (item.name !== 'end_call') {
+      // The tool result starts another backend response. Recovery must wait for it too.
+      this.backOfficeBusy = true;
+      this.lastHandoffAt = Date.now();
+      this.sendLive({ type: 'response.create' });
+    }
   }
 
   private async endCall(s: Stored, args: Record<string, unknown>): Promise<string> {
@@ -726,6 +753,7 @@ export class CallSession extends DurableObject<Env> {
 
   private appendTranscript(role: TranscriptLine['role'], delta: string): void {
     if (!delta) return;
+    this.lastTranscriptAt = Date.now();
     const last = this.transcript[this.transcript.length - 1];
     if (last && last.role === role) last.text += delta;
     else this.transcript.push({ role, text: delta.trimStart(), at: Date.now() });
