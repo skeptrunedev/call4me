@@ -1,0 +1,4 @@
+# Optional Raindrop monitoring. Supply a write key locally and as a Worker secret.
+RAINDROP_WRITE_KEY=
+# Optional project slug; leave blank to use the write key's default project.
+RAINDROP_PROJECT_ID=

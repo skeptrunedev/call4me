@@ -6,6 +6,10 @@ interface Env {
   STRIPE_SECRET_KEY: string;
   STRIPE_WEBHOOK_SECRET: string;
   OPENAI_API_KEY: string;
+  /** Optional AI monitoring write key. Unset disables Raindrop. */
+  RAINDROP_WRITE_KEY?: string;
+  /** Optional Raindrop project slug; unset uses the write key's default project. */
+  RAINDROP_PROJECT_ID?: string;
   TELNYX_API_KEY: string;
   /** Base64 Ed25519 public key from the Telnyx portal (API keys → public key), for webhook signatures. */
   TELNYX_PUBLIC_KEY: string;

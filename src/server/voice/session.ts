@@ -1,4 +1,5 @@
 import { DurableObject } from 'cloudflare:workers';
+import { Raindrop, type Interaction } from 'raindrop-ai';
 import { calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
 import { connectCheckMessage, forcedHandoffMessage, missedHandoff } from './handoff';
@@ -53,6 +54,8 @@ export interface SessionSetup {
 }
 
 type Stored = SessionSetup;
+
+type BackOfficeMonitoring = { interaction: Interaction; output: string[]; startedAt: number; activeTools: number; status?: string };
 
 type LiveEvent =
   | { type: 'session.started'; session: { id: string } }
@@ -110,6 +113,16 @@ export class CallSession extends DurableObject<Env> {
   private connectChecked = new Set<number>();
   /** The teardown in progress, so the hangup webhook can wait for the final transcript write. */
   private closing: Promise<void> | null = null;
+  private raindrop: Raindrop | null = null;
+  private voiceInteraction: Interaction | null = null;
+  private monitoringReady: Promise<void> | null = null;
+  private monitoringUserId: string | null = null;
+  private backOfficeInteractions = new Map<string, BackOfficeMonitoring>();
+  private toolMonitoring = new Map<string, { monitoring: BackOfficeMonitoring; name: string; startedAt: number }>();
+  private monitoringError: string | null = null;
+  private monitoringQueue: Promise<void> = Promise.resolve();
+  private monitoringClosed = false;
+  private monitoringFinishes = new Set<Promise<void>>();
 
   async fetch(req: Request): Promise<Response> {
     const url = new URL(req.url);
@@ -209,6 +222,34 @@ export class CallSession extends DurableObject<Env> {
   private async startLive(): Promise<void> {
     const s = await this.load();
     if (!s || this.live || this.ended || !this.phone) return;
+    // Start monitoring alongside the connection, so telemetry never delays live audio.
+    if (this.env.RAINDROP_WRITE_KEY && !this.monitoringReady) {
+      this.monitoringReady = (async () => {
+        const row = await calls(this.env.DB).byId(s.callId);
+        if (!row) return;
+        this.raindrop = new Raindrop({
+          writeKey: this.env.RAINDROP_WRITE_KEY,
+          projectId: this.env.RAINDROP_PROJECT_ID,
+          redactPii: true,
+          useExternalOtel: true,
+          bypassOtelForTools: true,
+          appGit: false,
+          localWorkshopUrl: false,
+        });
+        this.monitoringUserId = row.account_id;
+        this.raindrop.setUserDetails({ userId: row.account_id, traits: {} });
+        this.voiceInteraction = this.raindrop.begin({
+          eventId: crypto.randomUUID(),
+          event: 'callbay_voice_call',
+          userId: row.account_id,
+          convoId: s.callId,
+          model: this.env.VOICE_MODEL || 'gpt-live-1',
+          input: redact(s.instructions, s.redact ?? []),
+          properties: { direction: row.direction, back_office_model: this.env.BACK_OFFICE_MODEL || 'gpt-5.5' },
+        });
+      })().catch(() => console.warn('raindrop voice initialization failed', s.callId));
+      this.ctx.waitUntil(this.monitoringReady);
+    }
     this.mark('live connecting');
     const res = await fetch(OPENAI_LIVE_URL, { headers: { upgrade: 'websocket', authorization: `Bearer ${this.env.OPENAI_API_KEY}` } });
     this.mark(`live connect ${res.status}`);
@@ -309,32 +350,110 @@ export class CallSession extends DurableObject<Env> {
         this.backOfficeBusy = true;
         this.lastHandoffAt = Date.now();
         console.log('delegation', JSON.stringify((ev as { delegation: unknown }).delegation));
+        this.observe(() => this.beginBackOffice((ev as { delegation: { id: string } }).delegation.id));
         break;
       case 'response.event': {
         const e = ev as { delegation_id: string; event: { type: string; item?: { type: string; call_id: string; name: string; arguments: string } } };
+        const monitoringId = e.delegation_id || 'back-office';
+        this.observe(() => {
+          this.beginBackOffice(monitoringId);
+          if (e.event.type === 'response.output_item.done' && e.event.item) {
+            // Content stays in AI output, where the SDK redacts it, rather than trace attributes.
+            this.backOfficeInteractions.get(monitoringId)?.output.push(redact(JSON.stringify(e.event.item), this.setup?.redact ?? []));
+          }
+        });
         if (e.event.type === 'response.output_item.done' && e.event.item?.type === 'function_call') {
           console.log('back office call', e.event.item.name, e.event.item.arguments);
           this.toolsRunning++;
+          const item = e.event.item;
+          this.observe(() => {
+            const monitoring = this.backOfficeInteractions.get(monitoringId);
+            if (monitoring) {
+              monitoring.activeTools++;
+              this.toolMonitoring.set(item.call_id, { monitoring, name: item.name, startedAt });
+            }
+          });
+          const startedAt = Date.now();
+          let toolError: string | undefined;
           try {
             await this.runTool(e.event.item);
+          } catch (err) {
+            toolError = 'tool execution failed';
+            this.observe(() => this.backOfficeInteractions.get(monitoringId)?.output.push(redact(String(err), this.setup?.redact ?? [])));
+            throw err;
           } finally {
             this.toolsRunning--;
+            const durationMs = Date.now() - startedAt;
+            this.observe(() => {
+              const monitoring = this.backOfficeInteractions.get(monitoringId);
+              if (!monitoring) return;
+              monitoring.activeTools--;
+              this.toolMonitoring.delete(item.call_id);
+              monitoring.interaction.trackTool({ name: item.name, startTime: startedAt, durationMs, error: toolError });
+              this.finishBackOffice(monitoringId);
+            });
           }
         } else if (e.event.type === 'response.completed' || e.event.type === 'response.failed' || e.event.type === 'error') {
           this.backOfficeBusy = false;
           console.log('back office', e.event.type);
+          this.observe(() => {
+            const monitoring = this.backOfficeInteractions.get(monitoringId);
+            if (monitoring) {
+              monitoring.status = e.event.type;
+              if (e.event.type !== 'response.completed') monitoring.output.push(redact(JSON.stringify(e.event), this.setup?.redact ?? []));
+              this.finishBackOffice(monitoringId);
+            }
+          });
         }
         break;
       }
       case 'error': {
         const e = ev as { error: { code?: string; message: string } };
         console.warn('gpt-live error', e.error.code, e.error.message);
+        this.monitoringError = redact(e.error.message, this.setup?.redact ?? []);
         break;
       }
       case 'session.closed':
         await this.shutdown(`live session closed: ${(ev as { reason: string }).reason}`);
         break;
     }
+  }
+
+  /** Serialize telemetry only; model messages and tools never await this queue. */
+  private observe(operation: () => void): void {
+    if (this.monitoringClosed || !this.monitoringReady) return;
+    this.monitoringQueue = this.monitoringQueue.then(() => this.monitoringReady).then(() => {
+      if (!this.monitoringClosed) operation();
+    }).catch(() => console.warn('raindrop tracking failed', this.setup?.callId));
+    this.ctx.waitUntil(this.monitoringQueue);
+  }
+
+  private beginBackOffice(id: string): void {
+    const s = this.setup;
+    if (!s || !this.raindrop || !this.monitoringUserId || this.backOfficeInteractions.has(id)) return;
+    try {
+      const input = `${s.backOffice}\n\nConversation:\n${this.transcript.map((l) => `${l.role}: ${l.text}`).join('\n')}`;
+      this.backOfficeInteractions.set(id, {
+        interaction: this.raindrop.begin({ eventId: crypto.randomUUID(), event: 'callbay_back_office', userId: this.monitoringUserId, convoId: s.callId, model: this.env.BACK_OFFICE_MODEL || 'gpt-5.5', input: redact(input, s.redact ?? []) }),
+        output: [],
+        startedAt: Date.now(),
+        activeTools: 0,
+      });
+    } catch {
+      console.warn('raindrop back office initialization failed', s.callId);
+    }
+  }
+
+  private finishBackOffice(id: string): void {
+    const monitoring = this.backOfficeInteractions.get(id);
+    if (!monitoring?.status || monitoring.activeTools) return;
+    this.backOfficeInteractions.delete(id);
+    const finish = monitoring.interaction.finish({
+      output: monitoring.output.join('\n'),
+      properties: { status: monitoring.status, duration_ms: Date.now() - monitoring.startedAt },
+    }).catch(() => console.warn('raindrop back office delivery failed', this.setup?.callId));
+    this.monitoringFinishes.add(finish);
+    this.ctx.waitUntil(finish.finally(() => this.monitoringFinishes.delete(finish)));
   }
 
   // ---- health
@@ -463,7 +582,9 @@ export class CallSession extends DurableObject<Env> {
     }
     let output: string;
     if (this.personOn && item.name !== 'ask_user') {
-      this.sendLive({ type: 'response.item.create', item: { type: 'function_call_output', call_id: item.call_id, output: 'the person is on the call; do nothing until they hand it back' } });
+      const output = 'the person is on the call; do nothing until they hand it back';
+      this.observe(() => this.toolMonitoring.get(item.call_id)?.monitoring.output.push(output));
+      this.sendLive({ type: 'response.item.create', item: { type: 'function_call_output', call_id: item.call_id, output } });
       return;
     }
     switch (item.name) {
@@ -485,6 +606,7 @@ export class CallSession extends DurableObject<Env> {
       default:
         output = `unknown tool ${item.name}`;
     }
+    this.observe(() => this.toolMonitoring.get(item.call_id)?.monitoring.output.push(redact(output, s.redact ?? [])));
     this.sendLive({ type: 'response.item.create', item: { type: 'function_call_output', call_id: item.call_id, output } });
     if (item.name !== 'end_call') this.sendLive({ type: 'response.create' });
   }
@@ -573,6 +695,7 @@ export class CallSession extends DurableObject<Env> {
   // ---- teardown
 
   private async fail(error: string): Promise<void> {
+    this.monitoringError = redact(error, this.setup?.redact ?? []);
     const s = await this.load();
     if (s) await calls(this.env.DB).finish(s.callId, { status: 'failed', error, pricePerMinuteCents: s.pricePerMinuteCents });
     await this.shutdown(error);
@@ -598,6 +721,28 @@ export class CallSession extends DurableObject<Env> {
     }
     if (this.phone?.readyState === WebSocket.OPEN) this.phone.close(1000, 'call ended');
     await this.ctx.storage.deleteAlarm();
+    // Protect all terminal event deliveries with the Durable Object's request lifetime.
+    this.ctx.waitUntil((async () => {
+      await this.monitoringReady;
+      await this.monitoringQueue;
+      this.monitoringClosed = true;
+      if (!this.raindrop) return;
+      for (const tool of this.toolMonitoring.values()) {
+        tool.monitoring.interaction.trackTool({ name: tool.name, startTime: tool.startedAt, durationMs: Date.now() - tool.startedAt, error: 'interrupted by call end' });
+      }
+      for (const [id, monitoring] of this.backOfficeInteractions) {
+        monitoring.status = 'interrupted';
+        monitoring.activeTools = 0;
+        this.finishBackOffice(id);
+      }
+      this.toolMonitoring.clear();
+      await Promise.allSettled(this.monitoringFinishes);
+      await this.voiceInteraction?.finish({
+        output: [...this.transcript.map((l) => `${l.role}: ${redact(l.text.trim(), s?.redact ?? [])}`), ...(this.monitoringError ? [`Error: ${this.monitoringError}`] : [])].join('\n'),
+        properties: { status: this.monitoringError ? 'error' : 'completed', duration_ms: this.answeredAt ? Date.now() - this.answeredAt : 0, frames_in: this.framesIn, frames_out: this.framesOut },
+      });
+      await this.raindrop.close();
+    })().catch(() => console.warn('raindrop voice delivery failed', s?.callId)));
   }
 }
 
