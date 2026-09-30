@@ -14,6 +14,7 @@
     "db:migrate:remote": "wrangler d1 migrations apply callbay --remote",
     "deploy": "wrangler deploy",
     "grant": "node scripts/grant-credits.mjs",
+    "transfer": "node scripts/transfer-credits.mjs",
     "openapi:generate": "tsx scripts/generate-openapi.ts",
     "test": "node --import tsx --test test/*.test.ts"
   },
