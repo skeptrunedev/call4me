@@ -25,17 +25,43 @@ Bookmarks nearly equal likes. People saved it to use later, so it needs to show 
 | Costco (tire center, refunds) | 9 min | order lookup, refund |
 | Walgreens, CVS | 4 to 8 min | pharmacy questions |
 
-These searches are huge and the pages that rank for them are weak (Ahrefs US, 2026-09-30):
+## What Ahrefs shows (pulled 2026-09-30)
 
-| Search | Monthly volume |
-|---|---:|
-| xfinity customer service | 634,000 |
-| xfinity customer service number | 272,000 |
-| costco return policy | 53,000 |
-| costco customer service | 20,000 |
-| xfinity cancel service | 12,000 |
-| how to cancel xfinity | 9,500 |
-| cancel xfinity | 7,000 |
+**Most searches for the companies we've already called can't be won.** The company's own site, its forums, Reddit or Facebook hold the top results:
+
+| Search | Monthly volume | Who holds the top 10 |
+|---|---:|---|
+| xfinity customer service number | 272,000 | Reddit and Facebook's own answer pages |
+| how to cancel xfinity | 9,500 | Google's AI summary, then Xfinity's own forums and Reddit. No company-guide site in the top 9. |
+| costco return policy | 53,000 | Costco's own help pages |
+| united airlines customer service | 39,000 | united.com (7 of 10 results) |
+| amazon pharmacy customer service | 200 | no results in Ahrefs |
+
+The Xfinity cancel searches are the exception worth taking. No company-guide site ranks for them, only forum threads. "how to cancel xfinity" (9,500), "cancel xfinity internet" (7,700) and "cancel xfinity" (7,000) together get 24,000 a month. Reddit ranks #4 and #9, so answering in r/Comcast_Xfinity is search work in its own right.
+
+**GetHuman ranks without links.** Its biggest pages have 0 to 11 referring domains each. Examples: "verizon customer service" (638,000 a month, ranks #4 with 5 domains), "wayfair customer service" (69,000, #2 with 1 domain) and "fedex customer service number" (72,000, #1 with 1 domain). What makes it rank is covering many companies on one site, not links to each page. Links matter for the whole domain, which is what the Hold Time Index is for.
+
+**Easy wins GetHuman and Pine already hold** (Ahrefs rates these KD 0 to 10, where 0 is easiest), from the content gap against our 4 competitors:
+
+| Search | Monthly volume | Who ranks now |
+|---|---:|---|
+| verizon customer service | 638,000 | GetHuman #4 |
+| expedia customer service | 157,000 | GetHuman #1 |
+| paypal customer service number | 87,000 | GetHuman #5 |
+| fedex customer service number | 72,000 | GetHuman #1 |
+| usaa phone number | 70,000 | GetHuman #1 |
+| wayfair customer service | 69,000 | GetHuman #2 |
+| uber eats customer service number | 62,000 | GetHuman #7 |
+| cox customer service | 53,000 | GetHuman #7 |
+| temu customer service | 44,000 | GetHuman #9 |
+| hertz customer service | 34,000 | GetHuman #13 |
+| cancel planet fitness membership | 34,000 | Pine #11 |
+| asurion phone number | 26,000 | GetHuman #1 |
+| cancel youtube tv | 22,000 | Pine #6 |
+
+Two more from the companies we've already called: "comcast business customer service" (11,000, KD 0) and "united change flight" (2,300, KD 0).
+
+**Our backlinks are still all spam.** Ahrefs shows 487 referring domains for call4.me, 49 of them new since Sep 28. The ones we checked (the top 40) are all "buy backlinks" shops, nearly all nofollow. Launch links haven't been crawled yet. Domain rating is 0, and we rank for 0 keywords.
 
 "call4me" gets 0 searches. Everything our name brings in comes from the launch and word of mouth, so the brand has to rank first for its own name, and all the growth comes from chore searches.
 
@@ -100,12 +126,12 @@ Weekends are agent-only: build work and rank logging, with no calls and no posti
 - Blog post from Oct 2 goes up.
 
 **Tue Oct 6: first 5 pages + Hacker News**
-- Publish Xfinity (cancel), Xfinity (customer service), Comcast Business, United Airlines and Amazon Pharmacy. All five come from calls we've already made.
+- Publish the 5 pages where we already have call data and the search results can be won: Xfinity cancel (24,000 a month across 3 searches), Comcast Business customer service (11,000), CVS pharmacy phone number (4,000), United flight change (2,300) and Walgreens pharmacy phone number (600). Skip "xfinity customer service" and "costco return policy": those results belong to the companies themselves and to Reddit and Facebook.
 - Nick posts a Show HN around 8am Pacific. The agent drafts it, and Nick edits it and posts it.
-- First 5 measurement calls: the top 5 companies left on the tracked list.
+- First 5 measurement calls, in the order of the easy-wins table: Verizon, Expedia, PayPal, FedEx, USAA. Then Wayfair, Uber Eats, Cox, Temu, Hertz, Asurion, and for cancellation pages Planet Fitness and YouTube TV. This order holds until the tracked list is done.
 
 **Wed Oct 7: 5 pages**
-- Costco (customer service, returns), Walgreens, CVS, plus 1 from the tracked list.
+- Pages for the 5 companies called yesterday (Verizon, Expedia, PayPal, FedEx, USAA).
 - 5 measurement calls.
 
 **Thu Oct 8: 5 pages**
@@ -124,7 +150,7 @@ Weekends are agent-only: build work and rank logging, with no calls and no posti
 
 **Mon Oct 12:** scoreboard snapshot. 5 calls, 5 pages. A second blog post: "How long it takes to reach a person at 25 companies", a preview of the Hold Time Index.
 
-**Tue Oct 13:** 5 calls, 5 pages. Reddit: reply to 1 current thread from someone stuck cancelling Xfinity or Comcast (r/Comcast_Xfinity). Answer the question in full first, and link only if it helps.
+**Tue Oct 13:** 5 calls, 5 pages. Reddit: reply to 1 current thread from someone stuck cancelling Xfinity or Comcast (r/Comcast_Xfinity). Reddit ranks #4 and #9 for "how to cancel xfinity", so a good reply in a thread that ranks brings search traffic directly. Answer the question in full first, and link only if it helps.
 
 **Wed Oct 14:** 5 calls, 5 pages. Ship the comparison page, "call4.me vs Pine": a fair side-by-side table (where it works, price model, how you use it).
 
