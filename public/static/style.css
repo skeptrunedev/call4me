@@ -67,6 +67,7 @@ footer a { margin-right: 8px; }
 
 /* call4me */
 .copyblock { margin: 8px 0; }
+.server-url { overflow-wrap: anywhere; }
 .copyblock textarea { display: block; margin-top: 6px; width: 100%; max-width: 980px; font-family: "Courier New", Courier, monospace; font-size: 13px; }
 .key { font-family: "Courier New", Courier, monospace; font-size: 16px; background: #fff3a8; padding: 2px 6px; word-break: break-all; }
 .cols { display: flex; gap: 40px; flex-wrap: wrap; }

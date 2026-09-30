@@ -254,11 +254,11 @@ export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: str
     <h1>install the call4me mcp</h1>
     {apiKey ? (
       <p>
-        your server URL is <code>{mcpUrl(origin, apiKey)}</code>. it carries your key, so your agent needs no sign-in. the easiest way is to paste this prompt into your agent:
+        your server URL is <code class="server-url">{mcpUrl(origin, apiKey)}</code>. it carries your key, so your agent needs no sign-in. the easiest way is to paste this prompt into your agent:
       </p>
     ) : (
       <p>
-        the server is <code>{origin}/mcp</code>. your agent signs you in through the browser (google or x). the easiest way is to paste this prompt into your agent:
+        the server is <code class="server-url">{origin}/mcp</code>. your agent signs you in through the browser (google or x). the easiest way is to paste this prompt into your agent:
       </p>
     )}
     <CopyBlock id="install-prompt" text={installPrompt} rows={14} />
