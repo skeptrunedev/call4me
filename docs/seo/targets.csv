@@ -1,0 +1,1922 @@
+rank,company,job,monthly_volume,keywords,kd_median,top_keyword,competitors_in_top10,score
+1,verizon,call,884100,9,0,verizon customer service,19pine.ai:1;gethuman.com:6,884100
+2,fedex,call,415800,16,9,fedex customer service,gethuman.com:5,218842
+3,planet fitness,cancel,173100,28,2,how to cancel planet fitness membership,19pine.ai:6;xpendy.com:1;rocketmoney.com:4,216375
+4,delta,call,121400,4,0,delta customer service,gethuman.com:4,121400
+5,usaa,call,99500,9,0,usaa phone number,gethuman.com:9,99500
+6,paypal,call,102300,9,1,paypal customer service number,gethuman.com:7,93000
+7,expedia,call,210600,86,13,expedia customer service phone number,donotpay.com:2;gethuman.com:84,91565
+8,adobe,cancel,106800,5,9,how to cancel adobe subscription,,84316
+9,wayfair,call,117700,16,5,wayfair customer service,gethuman.com:16,78467
+10,audible,cancel,55300,4,1,how to cancel audible membership,,75409
+11,fubo,cancel,48500,15,0,how to cancel fubo subscription,xpendy.com:9,72750
+12,hulu,cancel,51500,18,6,how to cancel hulu,xpendy.com:7;19pine.ai:3,48281
+13,ups,call,46700,6,0,ups contact number,gethuman.com:2,46700
+14,experian,call,46200,2,0,experian phone number,gethuman.com:2,46200
+15,spotify premium,cancel,39100,4,3,how to cancel spotify premium,,45115
+16,youtube tv,cancel,39200,10,4,cancel youtube tv,19pine.ai:2,42000
+17,priceline,call,105100,13,16,priceline customer service,gethuman.com:13,40423
+18,fpl,call,40100,9,0,fpl phone number,gethuman.com:8,40100
+19,amazon canada,call,60000,1,5,amazon canada customer service phone number,gethuman.com:1,40000
+20,mediacom,call,45600,5,2,mediacom customer service,gethuman.com:5,38000
+21,uber eats,call,64000,3,7,uber eats customer service number,gethuman.com:1,37647
+22,temu,call,71100,14,9,temu customer service,gethuman.com:13,37421
+23,walmart,call,37100,5,0,walmart phone number,gethuman.com:5,37100
+24,hulu,call,65800,20,8,hulu customer service number,gethuman.com:19,36556
+25,crunchyroll,cancel,20300,8,0,how to cancel crunchyroll membership,19pine.ai:1,30450
+26,paramount plus,cancel,44600,6,12,how to cancel paramount plus,xpendy.com:4,30409
+27,scribd,cancel,20000,1,0,scribd cancel subscription,,30000
+28,spectrum internet,cancel,19800,7,0,cancel spectrum internet,xpendy.com:4,29700
+29,fabletics,call,35100,9,2,fabletics customer service,19pine.ai:2;gethuman.com:2,29250
+30,chatgpt,cancel,25200,9,3,how to cancel chatgpt subscription,,29077
+31,allstate,call,29000,4,0,allstate customer service number,gethuman.com:3,29000
+32,canva,cancel,25900,8,4,how to cancel canva subscription,,27750
+33,la fitness,cancel,22000,9,2,la fitness cancel membership,rocketmoney.com:3,27500
+34,fabletics,cancel,21900,9,2,how to cancel fabletics membership,19pine.ai:1;xpendy.com:2,27375
+35,irs,call,25000,1,0,irs customer service,donotpay.com:1,25000
+36,fubotv,cancel,16000,7,0,how to cancel fubotv,xpendy.com:4,24000
+37,spectrum,cancel,19100,8,3,spectrum cancel service,xpendy.com:4,22038
+38,nydailynews.com,call,22000,1,0,nydailynews.com/customer service,,22000
+39,qvc,call,23900,8,1,qvc phone number,gethuman.com:8,21727
+40,comcast,call,21600,4,0,comcast customer service number,gethuman.com:4,21600
+41,fifth third bank,call,21000,1,0,fifth third bank customer service,,21000
+42,doordash order,cancel,13800,6,0,how to cancel doordash order,donotpay.com:1;xpendy.com:3,20700
+43,hellofresh,cancel,14800,5,1,how to cancel hellofresh,19pine.ai:2,20182
+44,espn,cancel,14800,9,1,cancel espn subscription,19pine.ai:5,20182
+45,aaa insurance 1-800,call,20100,2,0,aaa insurance customer service 1-800,gethuman.com:2,20100
+46,costco,refund,49800,3,5,costco return policy,,19920
+47,disney plus,cancel,20800,4,6,cancel disney plus,,19500
+48,factor meals,cancel,13000,1,0,how to cancel factor meals,xpendy.com:1,19500
+49,peacock,cancel,46700,10,26,how to cancel peacock,xpendy.com:1,19458
+50,verizon wireless,call,19200,4,0,verizon wireless customer service number,19pine.ai:1;gethuman.com:2,19200
+51,ontrac,call,19200,6,0,ontrac customer service,gethuman.com:6,19200
+52,dashpass,cancel,13600,3,1,how to cancel dashpass,19pine.ai:1,18545
+53,adobe,call,27200,5,5,adobe customer service number,,18133
+54,linkedin premium,cancel,11800,2,0,how to cancel linkedin premium,donotpay.com:2,17700
+55,netflix,cancel,11000,5,0,netflix cancel,,16500
+56,coursehero,refund,27000,1,0,coursehero refund,19pine.ai:1,16200
+57,agoda booking,call,19000,1,2,agoda booking number,gethuman.com:1,15833
+58,best buy,refund,28700,5,1,best buy return policy,19pine.ai:4,15655
+59,windstream,call,18600,4,2,windstream customer service,gethuman.com:2,15500
+60,bank,call,15400,3,0,us bank customer service phone number,,15400
+61,espn plus,cancel,13100,7,3,how to cancel espn plus,19pine.ai:3;xpendy.com:3,15115
+62,pottery barn,call,19600,4,3,pottery barn customer service,,15077
+63,citi bank,call,15000,1,0,citi bank customer service,,15000
+64,aetna,call,15000,1,0,aetna customer service number,gethuman.com:1,15000
+65,amazon music,cancel,11000,1,1,how to cancel amazon music,,15000
+66,lyft,call,27700,8,9,lyft customer service,gethuman.com:4,14579
+67,att internet,cancel,9600,3,0,how to cancel att internet,,14400
+68,dmv,call,14200,2,0,dmv phone number,gethuman.com:2,14200
+69,united,call,14200,5,0,united customer service phone number live person,gethuman.com:5,14200
+70,lululemon,call,14000,1,0,lululemon customer service,donotpay.com:1,14000
+71,hertz,call,19400,9,4,hertz customer service number,gethuman.com:7,13857
+72,directv,call,26300,8,9,directv customer service phone number,gethuman.com:7,13842
+73,crunch,cancel,23600,10,16,how to cancel crunch membership,rocketmoney.com:6;19pine.ai:3,13615
+74,t-mobile,call,51700,5,29,t-mobile customer service hours,,13256
+75,cellular,call,17100,4,3,us cellular customer service,gethuman.com:4,13154
+76,carmax,call,20800,5,6,carmax customer service,gethuman.com:3,13000
+77,fashion nova,refund,23000,2,1,fashion nova return policy,,12545
+78,spirit airlines,call,22400,6,8,spirit airlines customer service,gethuman.com:6,12444
+79,lifelock,call,12300,3,0,lifelock customer service,donotpay.com:1;gethuman.com:2,12300
+80,netflix,call,37500,13,21,netflix customer service phone number 24 hours,donotpay.com:1;gethuman.com:12,12097
+81,united airlines,call,12000,3,0,united airlines customer service phone number,donotpay.com:1;gethuman.com:2,12000
+82,discover,call,12000,1,0,discover customer service number,gethuman.com:1,12000
+83,chicago tribune,call,23900,2,10,chicago tribune/customer service,,11950
+84,carvana,call,18900,7,6,carvana phone number,gethuman.com:5,11812
+85,gym,cancel,9400,1,2,how to cancel gym membership,xpendy.com:1,11750
+86,spotify,cancel,16400,8,11,cancel spotify,,11714
+87,at&t,call,23400,8,10,call at&t customer service,gethuman.com:7,11700
+88,xbox,cancel,7700,6,0,xbox subscription cancel,donotpay.com:1;19pine.ai:1,11550
+89,experian,cancel,7500,3,0,how to cancel experian membership,gethuman.com:2,11250
+90,old navy,refund,28000,2,5,old navy return policy,,11200
+91,kohls,call,11000,1,0,kohls customer service,donotpay.com:1,11000
+92,been verified,cancel,13700,7,9,how to cancel been verified,,10816
+93,asurion,call,27300,2,16,asurion phone number,gethuman.com:2,10500
+94,adp,call,10500,4,0,adp phone number,gethuman.com:1,10500
+95,breezeline,call,13600,2,3,breezeline customer service,,10462
+96,thrive market,cancel,6900,3,0,how to cancel thrive market membership,,10350
+97,shein,call,12400,5,2,shein customer service phone number live person,gethuman.com:5,10333
+98,capcut,cancel,7500,4,1,how to cancel capcut subscription,19pine.ai:1,10227
+99,draftkings,call,22100,6,12,draftkings customer service,gethuman.com:5,10045
+100,brightspeed,call,11000,1,1,brightspeed customer service,,10000
+101,truconnect,call,10000,1,0,truconnect customer service,gethuman.com:1,10000
+102,eos,cancel,7900,3,2,how to cancel eos membership,,9875
+103,dsw,call,9700,3,0,dsw customer service,gethuman.com:3,9700
+104,southwest airlines,call,11600,2,2,southwest airlines phone number,donotpay.com:1,9667
+105,fox one,cancel,6400,4,0,cancel fox one subscription,,9600
+106,doordash,cancel,6300,4,0,how to cancel doordash subscription,donotpay.com:1;xpendy.com:1,9450
+107,spark,call,11200,3,2,spark customer service number,gethuman.com:1,9333
+108,chime,call,21400,14,13,phone number for chime,gethuman.com:3,9304
+109,albert,cancel,9300,5,5,how to cancel albert subscription,,9300
+110,doordash 24 7,call,26000,1,18,doordash customer service phone number 24/7,gethuman.com:1,9286
+111,youtube,call,31100,4,24,youtube customer service phone number,gethuman.com:4,9147
+112,american home shield,call,12800,3,4,american home shield phone number,donotpay.com:1;gethuman.com:1,9143
+113,google,call,9100,1,0,google customer service phone number live person,gethuman.com:1,9100
+114,apple subscriptions,cancel,13300,3,12,how to cancel apple subscriptions,,9068
+115,credit one,call,8900,1,0,credit one phone number,gethuman.com:1,8900
+116,volaris,call,15000,9,7,volaris customer service phone number 24 hours,gethuman.com:8,8824
+117,fanduel,call,8600,2,0,fanduel customer service,gethuman.com:2,8600
+118,fed ex,call,8500,2,0,fed ex customer service,gethuman.com:1,8500
+119,delta 24 7,call,8500,1,0,delta customer service 24/7,gethuman.com:1,8500
+120,metropcs,call,24200,4,19,metropcs customer service,gethuman.com:4,8345
+121,pnc bank,call,8100,1,0,pnc bank phone number,gethuman.com:1,8100
+122,hbo,cancel,6300,3,2,hbo cancel subscription,,7875
+123,ambit energy,call,7800,1,0,ambit energy customer service,gethuman.com:1,7800
+124,metro,call,16800,7,12,metro customer service number,gethuman.com:3,7636
+125,grubhub,call,13700,5,8,grubhub customer service number,gethuman.com:5,7611
+126,credit karma,call,10600,8,4,credit karma customer service phone number,gethuman.com:5,7571
+127,mr cooper,call,10500,2,4,mr cooper phone number,gethuman.com:2,7500
+128,ryze,cancel,5000,2,0,how to cancel ryze subscription,,7500
+129,sam's club,refund,13700,2,1,sam's club return policy,,7473
+130,verizon fios,call,7400,3,0,verizon fios customer service phone number 24 hours,gethuman.com:3,7400
+131,subscriptions iphone,cancel,15500,3,22,how to cancel subscriptions on iphone,,7266
+132,anytime fitness,cancel,10600,3,12,how to cancel anytime fitness membership,,7227
+133,remitly,call,9900,4,4,remitly customer service,,7071
+134,fubo tv,cancel,4700,3,0,cancel fubo tv,xpendy.com:1,7050
+135,aarp,call,7000,1,0,aarp phone number,gethuman.com:1,7000
+136,zara,refund,15000,1,3,zara return policy,,6923
+137,hotels.com,call,15000,6,12,hotels.com phone number,gethuman.com:6,6818
+138,dsw,refund,13500,2,2,dsw return policy,donotpay.com:2,6750
+139,roku,cancel,13500,11,20,how to cancel roku subscription,rocketmoney.com:6,6750
+140,discord nitro,cancel,4500,3,0,how to cancel discord nitro,,6750
+141,chipotle,call,20900,4,21,chipotle customer service,gethuman.com:2,6742
+142,starbucks,call,9400,3,4,starbucks customer service number,gethuman.com:2,6714
+143,metlife,call,6700,2,0,metlife phone number,gethuman.com:2,6700
+144,prime,cancel,12400,3,18,how to cancel prime membership,,6643
+145,tj maxx,refund,11000,1,0,tj maxx return policy,,6600
+146,rei,refund,12000,1,1,rei return policy,,6545
+147,walmart plus,cancel,4300,1,0,how to cancel walmart plus,19pine.ai:1,6450
+148,sling tv,cancel,7300,4,7,how to cancel sling tv,19pine.ai:3,6441
+149,spirit,call,9000,3,4,spirit customer service number,gethuman.com:3,6429
+150,samsung,call,6400,1,0,samsung customer service phone number live person,gethuman.com:1,6400
+151,rocket money,cancel,4200,5,0,how to cancel rocket money subscription,19pine.ai:1;rocketmoney.com:5,6300
+152,apple tv,cancel,15100,2,26,how to cancel apple tv,,6292
+153,xfinity internet,cancel,10900,5,16,cancel xfinity internet,19pine.ai:1,6288
+154,ubereats,call,13600,4,12,ubereats customer service number,gethuman.com:4,6182
+155,crunch fitness,cancel,7800,6,9,how to cancel crunch fitness membership,19pine.ai:4;rocketmoney.com:5,6158
+156,hello fresh,cancel,4500,2,1,cancel hello fresh,xpendy.com:1,6136
+157,xbox 24 hour,call,15200,2,15,xbox 24 hour support phone number,gethuman.com:2,6080
+158,lulus,refund,11000,1,1,lulus return policy,,6000
+159,adt,cancel,4000,5,0,adt cancellation,donotpay.com:1,6000
+160,macy's,refund,12900,2,3,macy's return policy,,5954
+161,schwab,call,5900,1,0,schwab customer service,gethuman.com:1,5900
+162,ppl,call,9400,5,6,ppl customer service,gethuman.com:4,5875
+163,scentbird,cancel,3900,4,0,how to cancel scentbird subscription,19pine.ai:1,5850
+164,burner,call,5800,1,0,burner phone number,donotpay.com:1,5800
+165,netspend,call,5800,3,0,netspend number,gethuman.com:3,5800
+166,general,call,5800,1,0,the general phone number,gethuman.com:1,5800
+167,txu energy,call,5800,1,0,txu energy customer service,gethuman.com:1,5800
+168,verizon internet,call,5800,1,0,verizon internet customer service phone number,gethuman.com:1,5800
+169,spokeo,cancel,5000,6,3,how to cancel spokeo subscription,19pine.ai:3;gethuman.com:1,5769
+170,tiktok,call,14400,3,15,tiktok customer service phone number,gethuman.com:2,5760
+171,classpass,cancel,3800,3,0,how to cancel classpass,gethuman.com:1,5700
+172,steam,call,11100,8,10,steam support number,,5550
+173,groupon,call,11600,6,11,groupon live person phone number,donotpay.com:1;gethuman.com:5,5524
+174,shein,refund,11000,1,2,shein return policy,,5500
+175,thrive,cancel,4000,2,1,how to cancel thrive membership,,5455
+176,24 hour fitness,cancel,3600,4,0,how to cancel 24 hour fitness membership,19pine.ai:2;rocketmoney.com:1,5400
+177,dash pass,cancel,3600,1,0,how to cancel dash pass,,5400
+178,turo,call,8600,5,6,turo customer service number,gethuman.com:3,5375
+179,starz,cancel,7500,5,11,cancel starz subscription,,5357
+180,delta faucet,call,7500,2,4,delta faucet customer service,gethuman.com:1,5357
+181,seatgeek,call,9100,4,7,seatgeek customer service,gethuman.com:4,5353
+182,ross,refund,11500,2,3,ross return policy,donotpay.com:1,5308
+183,instacart,cancel,6000,6,7,how to cancel instacart subscription,19pine.ai:1,5294
+184,grammarly,cancel,6000,5,7,how to cancel grammarly subscription,,5294
+185,aaa,cancel,4500,3,3,how to cancel aaa membership,,5192
+186,truist,call,19700,2,28,truist customer service,19pine.ai:1,5184
+187,revolve,refund,8500,1,0,revolve return policy,donotpay.com:1,5100
+188,safeco,call,5100,1,0,safeco customer service,donotpay.com:1,5100
+189,chegg,cancel,5100,4,5,chegg cancel subscription,19pine.ai:1;rocketmoney.com:3,5100
+190,frontier,call,13600,7,17,is frontier customer service 24 hours,donotpay.com:2;gethuman.com:4,5037
+191,zelle,call,19000,1,28,zelle customer service,,5000
+192,ebay,call,7500,5,5,call ebay customer service phone number,gethuman.com:2,5000
+193,frontier,cancel,3300,1,0,frontier cancellation policy,19pine.ai:1,4950
+194,can you doordash order,cancel,3600,2,1,can you cancel a doordash order,xpendy.com:1,4909
+195,macy's,call,4900,5,0,macy's phone number,gethuman.com:3,4900
+196,ticketmaster,call,16100,6,23,ticketmaster customer service phone number,gethuman.com:6,4879
+197,aritzia,refund,8100,1,0,aritzia return policy,donotpay.com:1,4860
+198,playstation plus,cancel,7100,3,12,cancel playstation plus,,4841
+199,square,call,8700,9,8,square contact number,gethuman.com:1,4833
+200,empower,call,4800,1,0,empower phone number,gethuman.com:1,4800
+201,amazon,call,4800,4,0,amazon customer service number live person,gethuman.com:3,4800
+202,verizon help,call,4700,1,0,verizon help number,gethuman.com:1,4700
+203,hotworx,cancel,3100,3,0,how to cancel hotworx membership,,4650
+204,soundcloud,cancel,3100,3,0,how to cancel soundcloud subscription,,4650
+205,mcafee,cancel,3100,3,0,how to cancel mcafee subscription,19pine.ai:3,4650
+206,orbitz,call,7900,3,7,orbitz customer service,gethuman.com:3,4647
+207,patreon,cancel,3400,4,1,cancel patreon membership,19pine.ai:1,4636
+208,agoda,call,14800,2,22,agoda customer service,gethuman.com:2,4625
+209,frontier internet,call,9700,4,11,frontier internet customer service number live person,gethuman.com:3,4619
+210,ikea,call,12000,1,16,ikea customer service,gethuman.com:1,4615
+211,klarna,call,12000,1,16,klarna customer service,,4615
+212,chatgpt plus,cancel,4000,3,3,how to cancel chatgpt plus,19pine.ai:1,4615
+213,dish,call,4600,1,0,dish phone number,gethuman.com:1,4600
+214,princess polly,refund,9100,1,2,princess polly return policy,,4550
+215,autozone,refund,7500,1,0,autozone return policy,donotpay.com:1,4500
+216,xbox request,refund,7500,1,0,xbox refund request,,4500
+217,citi credit card,call,4500,1,0,citi credit card customer service,gethuman.com:1,4500
+218,curology,cancel,3600,2,2,how to cancel curology,19pine.ai:1,4500
+219,sling,cancel,3000,3,0,cancel sling subscription,19pine.ai:1,4500
+220,whoop,cancel,3000,2,0,how to cancel whoop membership,,4500
+221,google fiber,call,5800,1,3,google fiber customer service,,4462
+222,hobby lobby,refund,8900,1,2,hobby lobby return policy,,4450
+223,pacsun,call,6200,2,4,pacsun customer service,gethuman.com:2,4429
+224,lufthansa,call,6200,3,4,lufthansa customer service phone number,,4429
+225,paramount,cancel,5900,3,10,cancel paramount subscription,xpendy.com:1,4425
+226,bumble,cancel,4700,2,6,how to cancel bumble subscription,,4406
+227,can you planet fitness,cancel,3500,3,2,can you cancel planet fitness online,rocketmoney.com:2;19pine.ai:1;xpendy.com:1,4375
+228,jetblue,call,12200,4,18,jetblue phone number,gethuman.com:2,4357
+229,geico,cancel,2900,1,0,geico cancel policy,,4350
+230,bank america credit card 24 7,call,4300,1,0,bank of america credit card customer service phone number 24/7,gethuman.com:1,4300
+231,xbox game pass,cancel,5400,2,9,how to cancel xbox game pass,,4263
+232,xfinity,call,4200,3,0,xfinity toll free number,gethuman.com:2,4200
+233,subscriptions roku,cancel,2800,1,0,how to cancel subscriptions on roku,rocketmoney.com:1,4200
+234,verizon tech,call,5000,1,2,verizon tech support phone number,gethuman.com:1,4167
+235,philo,cancel,3600,3,3,cancel philo,19pine.ai:1,4154
+236,claude,cancel,3600,2,3,how to cancel claude subscription,,4154
+237,marshalls,refund,7600,2,1,marshalls return policy,,4145
+238,fanatics,call,7000,4,7,fanatics customer service,gethuman.com:4,4118
+239,verizon fios technical,call,4100,1,0,verizon fios technical support phone number,gethuman.com:1,4100
+240,duke energy,call,5300,2,3,duke energy number,gethuman.com:1,4077
+241,shein 24 hour,call,5300,3,3,shein 24 hour customer service phone number,gethuman.com:2,4077
+242,suddenlink,call,5700,4,4,suddenlink phone number,gethuman.com:4,4071
+243,usps,call,14200,2,25,usps customer service number,gethuman.com:2,4057
+244,venmo,call,6000,4,5,venmo customer service phone number 24 hours,gethuman.com:4,4000
+245,blue cross blue shield,call,4000,2,0,blue cross blue shield number,gethuman.com:2,4000
+246,navy federal,call,4700,2,2,navy federal customer service hours,,3917
+247,peloton,cancel,5200,2,10,cancel peloton membership,,3900
+248,home depot,call,3900,2,0,home depot online customer service phone number,donotpay.com:1,3900
+249,coursehero,call,3900,1,0,coursehero customer service,19pine.ai:1;xpendy.com:1,3900
+250,aep,call,3900,2,0,aep phone number,gethuman.com:2,3900
+251,santander,call,3900,2,0,santander phone number,gethuman.com:2,3900
+252,caremark,call,3900,1,0,caremark phone number,gethuman.com:1,3900
+253,acima,call,6600,5,7,acima phone number,gethuman.com:4,3882
+254,adam and eve order,cancel,3100,2,2,adam and eve cancel order,donotpay.com:2,3875
+255,nespresso,call,11200,2,19,nespresso customer service,,3862
+256,frontier airlines,call,9200,4,14,frontier airlines customer service phone number,gethuman.com:3,3833
+257,sony,call,4600,3,2,sony phone number,gethuman.com:1,3833
+258,doordash pass,cancel,5600,2,12,how to cancel doordash pass,,3818
+259,beenverified,cancel,4800,4,9,beenverified cancel,19pine.ai:2;rocketmoney.com:2,3789
+260,subscriptions,cancel,2500,3,0,free app to cancel subscriptions,rocketmoney.com:1,3750
+261,weight watchers,cancel,2500,2,0,how to cancel weight watchers,,3750
+262,assurance wireless,call,7100,2,9,assurance wireless phone number,gethuman.com:2,3737
+263,subway,call,4100,3,1,subway customer service number,gethuman.com:3,3727
+264,dollar tree,refund,6200,1,0,dollar tree return policy,,3720
+265,athleta,call,3700,1,0,athleta customer service,gethuman.com:1,3700
+266,vanguard,call,3700,1,0,vanguard customer service number,gethuman.com:1,3700
+267,ally bank,call,3700,1,0,ally bank phone number,gethuman.com:1,3700
+268,gap,refund,8000,1,3,gap return policy,,3692
+269,aeromexico,call,4800,4,3,aeromexico customer service,gethuman.com:4,3692
+270,shopify,cancel,2700,2,1,cancel shopify subscription,,3682
+271,apple,cancel,4900,7,10,how to cancel apple care,rocketmoney.com:3,3675
+272,wow,call,6600,2,8,wow customer service,,3667
+273,banana republic,call,4400,2,2,banana republic customer service,gethuman.com:2,3667
+274,vivid seats,call,5800,2,6,vivid seats customer service,gethuman.com:2,3625
+275,stan store,call,3600,1,0,stan store customer service telephone number,19pine.ai:1,3600
+276,chime 1 800,call,3600,1,0,chime 1 800 number,gethuman.com:1,3600
+277,stubhub,call,8600,5,14,stubhub customer service number,gethuman.com:2,3583
+278,scentbird,call,4300,5,2,scentbird customer service phone number,gethuman.com:5,3583
+279,general insurance,call,9300,2,16,the general insurance phone number,gethuman.com:2,3577
+280,petsmart,refund,7100,1,2,petsmart return policy,,3550
+281,avianca,call,7800,6,12,avianca customer service number,gethuman.com:6,3545
+282,clover,call,3900,4,1,clover customer service number,gethuman.com:4,3545
+283,popeyes,call,4600,3,3,popeyes customer service number,gethuman.com:3,3538
+284,tel fono servicio al cliente amazon en espa ol,call,4600,1,3,teléfono servicio al cliente amazon en español phone number,,3538
+285,sunrun,call,10900,4,21,sunrun customer service,gethuman.com:4,3516
+286,hulu 24 7,call,6300,1,8,is hulu customer service phone number 24 7,gethuman.com:1,3500
+287,uber,call,3500,1,0,uber customer service phone number usa,xpendy.com:1,3500
+288,eversource,call,3500,3,0,eversource phone number customer service,gethuman.com:3,3500
+289,citibank,call,3500,1,0,citibank phone number,gethuman.com:1,3500
+290,citizens,call,3500,1,0,citizens customer service,gethuman.com:1,3500
+291,shop,call,3500,3,0,shop app customer service number,,3500
+292,at&t internet,cancel,2800,3,2,cancel at&t internet,,3500
+293,roblox premium,cancel,2300,1,0,how to cancel roblox premium,donotpay.com:1,3450
+294,onlyfans,cancel,2300,1,0,how to cancel onlyfans subscription,19pine.ai:1,3450
+295,pf,cancel,2300,2,0,how to cancel pf membership,,3450
+296,rockauto,call,5100,3,5,rockauto customer service phone number,donotpay.com:1;gethuman.com:2,3400
+297,lycamobile,call,3400,1,0,lycamobile customer service,gethuman.com:1,3400
+298,bestbuy,call,3400,1,0,bestbuy customer service,gethuman.com:1,3400
+299,siriusxm,cancel,8600,2,28,how to cancel siriusxm,,3395
+300,metro pcs,call,7800,3,13,metro pcs phone number,gethuman.com:2,3391
+301,instacart,call,7400,5,12,instacart customer service phone number,gethuman.com:3,3364
+302,spark driver,call,5000,3,5,spark driver customer service number live person,gethuman.com:3,3333
+303,costco electronics,refund,6100,2,1,costco electronics return policy,,3327
+304,uniqlo,refund,5500,1,0,uniqlo return policy,,3300
+305,citi card,call,3300,1,0,citi card customer service,gethuman.com:1,3300
+306,dicks,call,4900,1,5,dicks customer support,,3267
+307,primo water,call,9100,4,18,primo water customer service,gethuman.com:4,3250
+308,fpl 24 7,call,9100,1,18,fpl customer service number 24/7,gethuman.com:1,3250
+309,bradford exchange,call,5500,3,7,bradford exchange phone number customer service,gethuman.com:3,3235
+310,old navy,call,4800,3,5,old navy customer service number,gethuman.com:3,3200
+311,cettire,call,3200,1,0,cettire customer service number,,3200
+312,duolingo,call,3200,2,0,duolingo customer service,gethuman.com:2,3200
+313,google one,cancel,3400,3,6,how to cancel google one subscription,,3188
+314,toast,call,3500,3,1,toast support number,,3182
+315,tinder,cancel,2100,2,0,how to cancel tinder subscription,19pine.ai:1;gethuman.com:1,3150
+316,tinder gold,cancel,4600,2,12,how to cancel tinder gold,,3136
+317,zoom,cancel,2300,2,1,how to cancel zoom subscription,19pine.ai:1,3136
+318,goodwill,refund,5200,1,0,goodwill return policy,,3120
+319,temu about orders,call,5900,2,9,how do i contact temu about orders phone number,gethuman.com:2,3105
+320,american eagle,refund,6200,1,2,american eagle return policy,,3100
+321,esurance,call,3100,1,0,esurance customer service,gethuman.com:1,3100
+322,sirius,call,3100,1,0,sirius customer service,gethuman.com:1,3100
+323,godaddy,call,3100,1,0,godaddy customer service number,gethuman.com:1,3100
+324,delta dental,call,3100,1,0,delta dental customer service number,gethuman.com:1,3100
+325,direct express,call,3100,2,0,direct express phone number to talk to a person,gethuman.com:2,3100
+326,com,call,4000,3,3,care.com customer service,gethuman.com:3,3077
+327,green dot,call,4000,3,3,green dot customer service phone number,gethuman.com:3,3077
+328,dhl,call,4600,4,5,dhl customer service 24 hours phone number,gethuman.com:3,3067
+329,car shield,call,4600,2,5,car shield phone number,,3067
+330,cvs,refund,5100,1,0,cvs return policy,donotpay.com:1,3060
+331,aerie,refund,5100,1,0,aerie return policy,,3060
+332,pacsun,refund,5100,1,0,pacsun return policy,,3060
+333,airtalk wireless,call,5200,1,7,airtalk wireless customer service,,3059
+334,iphone,cancel,6400,4,22,how to cancel a subscription on iphone,rocketmoney.com:2,3000
+335,fabletics,refund,5000,1,0,fabletics return policy,,3000
+336,fubo trial,cancel,3600,1,8,fubo cancel free trial,,3000
+337,capcut,call,3600,2,2,capcut customer service,gethuman.com:2,3000
+338,dish network,cancel,3200,2,6,how to cancel dish network,xpendy.com:1,3000
+339,etihad,call,3000,1,0,etihad customer service,gethuman.com:1,3000
+340,navy federal credit union,call,3000,1,0,call navy federal credit union,gethuman.com:1,3000
+341,ipsy,cancel,2600,3,3,how to cancel ipsy,,3000
+342,credit one card,cancel,2600,2,3,how to cancel credit one card,,3000
+343,nintendo,cancel,2200,2,1,how to cancel nintendo online,,3000
+344,help.microsoft.com,call,6200,1,11,help.microsoft.com talk to a person,,2952
+345,staples,call,5600,2,9,staples customer service phone number,gethuman.com:1,2947
+346,walmart without receipt,refund,4900,1,0,walmart return policy without receipt,donotpay.com:1,2940
+347,fubo,call,8200,4,18,fubo customer service,gethuman.com:4,2929
+348,athleta,refund,5800,1,2,athleta return policy,,2900
+349,lemonade renters insurance,call,2900,1,0,lemonade renters insurance phone number,19pine.ai:1,2900
+350,peco,call,2900,2,0,peco customer service number live person,gethuman.com:2,2900
+351,metropcs 24 7,call,8100,1,18,metropcs customer service number 24/7,gethuman.com:1,2893
+352,dazn,cancel,2300,2,2,how to cancel dazn subscription,19pine.ai:1,2875
+353,lemonade insurance,cancel,2100,2,1,how to cancel lemonade insurance,xpendy.com:1,2864
+354,abcmouse,cancel,2100,3,1,how to cancel abcmouse,19pine.ai:2,2864
+355,stitch fix,cancel,1900,1,0,how to cancel stitch fix,,2850
+356,starz,call,4500,3,6,starz customer service number,19pine.ai:1;gethuman.com:2,2812
+357,ps plus,cancel,3000,3,6,how to cancel ps plus,,2812
+358,upstart,call,2800,1,0,upstart customer service,gethuman.com:1,2800
+359,hbo max,cancel,2600,2,4,how to cancel my hbo max subscription,,2786
+360,costco,call,3600,5,3,costco online customer service,gethuman.com:3,2769
+361,hilton,call,3300,2,2,hilton customer service number,gethuman.com:1,2750
+362,verizon internet,cancel,2200,2,2,how to cancel verizon internet,,2750
+363,factor,cancel,2200,2,2,how to cancel factor subscription,,2750
+364,albert,call,7100,4,16,albert customer service,,2731
+365,lively,call,3000,2,1,lively customer service,gethuman.com:2,2727
+366,guitar center,refund,5400,1,2,guitar center return policy,,2700
+367,chewy,refund,4500,1,0,chewy return policy,,2700
+368,qlink,call,2700,1,0,qlink customer service,,2700
+369,google pay 24 7,call,2700,1,0,google pay customer service phone number 24/7,,2700
+370,club pilates,cancel,1800,1,0,club pilates cancellation policy,,2700
+371,probiller,cancel,1800,1,0,probiller cancel,19pine.ai:1;xpendy.com:1,2700
+372,blink,call,7000,5,16,blink customer service number,gethuman.com:4,2692
+373,petco,refund,4400,1,0,petco return policy,,2640
+374,dasher,call,7100,3,17,dasher customer service,gethuman.com:2,2630
+375,roadie,call,4200,3,6,roadie customer service,gethuman.com:2,2625
+376,fashion nova reviews,call,2600,1,0,fashion nova customer service reviews,,2600
+377,edd,call,2600,1,0,edd phone number,gethuman.com:1,2600
+378,freedom debt relief,call,2600,2,0,freedom debt relief phone number,gethuman.com:2,2600
+379,verizon financial,call,2600,1,0,verizon financial services number,gethuman.com:1,2600
+380,quickbooks,call,2600,1,0,quickbooks customer support phone number,gethuman.com:1,2600
+381,canva pro,cancel,1900,3,1,how to cancel canva pro,,2591
+382,cvs carepass,cancel,1700,2,0,cvs carepass cancel,donotpay.com:1;xpendy.com:1,2550
+383,clear,cancel,1700,1,0,cancel clear membership,,2550
+384,menards,refund,4200,1,0,menards return policy,donotpay.com:1,2520
+385,boot barn,refund,4200,1,0,boot barn return policy,donotpay.com:1,2520
+386,walgreens,refund,4200,1,0,walgreens return policy,,2520
+387,xfinity mobile,call,6800,2,17,xfinity mobile customer care,,2519
+388,dicks sporting goods,refund,4600,1,1,dicks sporting goods return policy,,2509
+389,1-800 expedia,call,7000,2,18,1-800 expedia phone number,gethuman.com:2,2500
+390,bjs,call,5000,4,10,bjs customer service number,gethuman.com:1,2500
+391,at&t technical,call,5000,2,10,at&t technical support phone number,gethuman.com:2,2500
+392,directv,cancel,3000,2,8,how to cancel directv,,2500
+393,chime 1800,call,2500,1,0,chime 1800 number,gethuman.com:1,2500
+394,fedex help,call,2500,1,0,fedex help number,gethuman.com:1,2500
+395,td,call,2500,2,0,td customer service number,gethuman.com:2,2500
+396,wells fargo,call,2500,1,0,wells fargo number,gethuman.com:1,2500
+397,savage x fenty,cancel,2800,4,7,how to cancel savage x fenty membership,xpendy.com:1,2471
+398,cox,call,7400,4,20,cox customer service phone number,gethuman.com:2,2467
+399,kindle unlimited,cancel,1800,3,1,how do i cancel kindle unlimited,,2455
+400,bridgecrest,call,4400,4,8,bridgecrest customer service,,2444
+401,copa airlines,call,3900,2,6,copa airlines customer service,gethuman.com:1,2438
+402,game pass,cancel,3400,3,11,cancel game pass,,2429
+403,nfl shop,call,2900,1,2,nfl shop customer service,,2417
+404,paramount plus,call,6000,3,15,paramount plus customer service phone number,gethuman.com:3,2400
+405,earthlink,call,3600,3,5,earthlink customer service phone number,gethuman.com:3,2400
+406,wisely card,call,2400,1,0,wisely card customer service,,2400
+407,asurion claim,call,2400,1,0,asurion claim phone number,gethuman.com:1,2400
+408,indigo,call,2400,3,0,indigo customer service number,gethuman.com:3,2400
+409,straight,call,9100,4,28,straight talk customer service phone number to talk to a person,gethuman.com:3,2395
+410,canva,call,6700,3,18,canva customer service number,gethuman.com:3,2393
+411,wisely,call,7600,3,22,wisely customer service,,2375
+412,fitness connection,cancel,1900,2,2,fitness connection cancel membership,,2375
+413,dropbox,cancel,2200,3,4,how to cancel dropbox subscription,,2357
+414,autozone,call,5100,2,12,autozone phone number,gethuman.com:1,2318
+415,paramount plus roku,cancel,1700,1,1,how to cancel paramount plus on roku,,2318
+416,uber,cancel,1700,1,1,how to cancel uber,,2318
+417,onstar,cancel,2000,2,3,cancel onstar,,2308
+418,aritzia,call,2300,1,0,aritzia customer service,gethuman.com:1,2300
+419,tag mobile 24 7,call,2300,1,0,tag mobile customer service phone number 24 7,gethuman.com:1,2300
+420,allstate insurance,call,2300,1,0,allstate insurance customer service phone number,,2300
+421,boa,call,2300,1,0,boa customer service number,gethuman.com:1,2300
+422,ufcu,call,2300,1,0,ufcu customer service,,2300
+423,hp technical 24 7,call,7100,1,21,hp technical support phone number 24/7,gethuman.com:1,2290
+424,academy,refund,3800,1,0,academy return policy,donotpay.com:1,2280
+425,chimes,call,5000,4,12,chimes number,gethuman.com:4,2273
+426,ancestry helpline,call,4300,1,9,ancestry helpline,gethuman.com:1,2263
+427,tractor supply,refund,4900,1,3,tractor supply return policy,,2262
+428,jet blue,call,5200,3,13,jet blue phone number customer service,gethuman.com:3,2261
+429,subscriptions steam,cancel,1500,1,0,how to cancel subscriptions on steam,19pine.ai:1,2250
+430,fabletics vip,cancel,1500,2,0,how to cancel fabletics vip membership,19pine.ai:1;xpendy.com:1,2250
+431,sirius xm,cancel,1500,1,0,sirius xm cancel,,2250
+432,vistaprint,call,6500,4,19,vistaprint customer service,gethuman.com:4,2241
+433,priceline com,call,4700,1,11,priceline com customer service phone number,gethuman.com:1,2238
+434,floor and decor,refund,3700,1,0,floor and decor return policy,donotpay.com:1,2220
+435,people,refund,3700,1,0,free people return policy,,2220
+436,madewell,refund,3700,1,0,madewell return policy,gethuman.com:1,2220
+437,under armour,call,2200,1,0,under armour customer service,,2200
+438,progressive,call,2200,1,0,progressive contact,,2200
+439,walmart 1800,call,2200,1,0,walmart 1800 number,gethuman.com:1,2200
+440,onstar,call,2200,1,0,onstar phone number,gethuman.com:1,2200
+441,td bank 24 7,call,2200,1,0,td bank customer service phone number 24 7,gethuman.com:1,2200
+442,aetna insurance,call,2200,1,0,aetna insurance customer service,gethuman.com:1,2200
+443,uber eat,call,2200,2,0,uber eat customer service number,gethuman.com:1,2200
+444,anthem blue cross provider,call,2200,1,0,anthem blue cross provider phone number,gethuman.com:1,2200
+445,hims,cancel,1900,2,3,how to cancel hims subscription,,2192
+446,direct energy,call,3500,2,6,direct energy customer service,gethuman.com:2,2188
+447,amazon credit card,call,3500,2,6,amazon credit card phone number,gethuman.com:1,2188
+448,geico insurance,cancel,3200,1,12,how to cancel geico insurance,,2182
+449,ebay 24 7,call,4100,1,9,ebay live customer service 24/7,gethuman.com:1,2158
+450,banana republic,refund,3900,1,1,banana republic return policy,,2127
+451,chime bank,call,5100,4,14,call chime bank,gethuman.com:3,2125
+452,reliant energy,call,3400,1,6,reliant energy phone number,,2125
+453,gpt,cancel,2400,2,7,how to cancel chat gpt subscription,,2118
+454,scheels,refund,3500,1,0,scheels return policy,donotpay.com:1,2100
+455,paramount,call,2100,1,0,paramount customer service phone number,gethuman.com:1,2100
+456,fox nation,cancel,1400,2,0,fox nation cancel subscription,19pine.ai:2,2100
+457,hibbett,call,2300,2,1,hibbett customer service number,,2091
+458,angi,call,2700,3,3,angi customer service phone number,gethuman.com:2,2077
+459,reformation,refund,3800,1,1,reformation return policy,,2073
+460,ulta,call,5100,3,15,ulta customer service number,gethuman.com:3,2040
+461,doordash,refund,3400,2,0,how to get a refund on doordash,,2040
+462,resume now,cancel,1900,2,4,resume now cancel subscription,rocketmoney.com:1,2036
+463,state farm insurance,call,7900,2,29,state farm insurance customer service,19pine.ai:1,2026
+464,bloomingdales,refund,3700,1,1,bloomingdales return policy,,2018
+465,classpass,call,5000,3,15,classpass customer service,xpendy.com:1;gethuman.com:1,2000
+466,cspire,call,4600,2,13,cspire customer service,,2000
+467,lexington law,call,4200,2,11,lexington law phone number,,2000
+468,carshield,call,3800,2,9,carshield customer service,,2000
+469,instacart shopper,call,3400,3,7,instacart shopper support phone number,gethuman.com:2,2000
+470,flex rent 24 7,call,2200,1,1,flex rent support phone number 24/7,,2000
+471,frontier internet,cancel,2000,2,5,how to cancel frontier internet,,2000
+472,british airways,call,2000,1,0,british airways phone number,gethuman.com:1,2000
+473,massage envy,cancel,1600,2,2,how to cancel massage envy membership,,2000
+474,zenni,refund,4300,1,3,zenni return policy,,1985
+475,ace hardware,refund,3300,1,0,ace hardware return policy,donotpay.com:1,1980
+476,paypal payment,cancel,2100,1,6,how to cancel paypal payment,,1969
+477,men's wearhouse,refund,3900,1,2,men's wearhouse return policy,donotpay.com:1,1950
+478,dillards,refund,3900,1,2,dillards return policy,,1950
+479,cricut,cancel,1300,2,0,cancel cricut subscription,,1950
+480,oura,cancel,1300,2,0,how to cancel oura membership,19pine.ai:2,1950
+481,uber eats,cancel,1300,1,0,how to cancel uber eats,,1950
+482,fortnite crew,cancel,1300,1,0,cancel fortnite crew,,1950
+483,tmobile home internet,cancel,2700,2,11,how to cancel tmobile home internet,,1929
+484,warby parker,refund,3200,1,0,warby parker return policy,donotpay.com:1,1920
+485,webstaurant,call,4200,2,12,webstaurant phone number,gethuman.com:2,1909
+486,anthropologie,call,3800,2,10,anthropologie customer service,gethuman.com:1,1900
+487,thrifty,call,1900,2,0,thrifty customer service,gethuman.com:2,1900
+488,geico 800,call,1900,1,0,geico 800 number,gethuman.com:1,1900
+489,amazon 1-800,call,1900,1,0,amazon 1-800 number,gethuman.com:1,1900
+490,sprint,call,3400,1,8,sprint support contact number,gethuman.com:1,1889
+491,txu,call,3200,2,7,txu phone number,gethuman.com:1,1882
+492,tinder,call,4100,2,12,tinder customer service,19pine.ai:1,1864
+493,rheem,call,3700,3,10,rheem customer service,donotpay.com:1,1850
+494,yahoo,call,3700,2,10,how to contact yahoo by phone,gethuman.com:2,1850
+495,sandals,call,2400,3,3,sandals customer service phone number,19pine.ai:1;gethuman.com:1,1846
+496,yelp,call,2400,2,3,yelp customer service,,1846
+497,allstate,cancel,1600,2,3,allstate cancel policy,,1846
+498,bestbuy,refund,4300,1,4,bestbuy return policy,,1843
+499,nfl,cancel,2700,2,12,cancel nfl subscription,,1841
+500,expedia.com,call,5100,6,18,expedia.com phone number,gethuman.com:6,1821
+501,cvs hr,call,4900,2,17,cvs hr phone number,,1815
+502,temu 0800,call,3600,2,10,temu customer service number free 0800 usa,gethuman.com:2,1800
+503,sam's,refund,3000,1,0,sam's return policy,,1800
+504,seatgeek 24 hour,call,2700,2,5,seatgeek 24 hour customer service telephone number,gethuman.com:2,1800
+505,tmobile,cancel,1800,2,5,how to cancel tmobile service,xpendy.com:2,1800
+506,austrian airlines,call,1800,1,0,austrian airlines customer service,gethuman.com:1,1800
+507,at&t internet,call,1800,2,0,call at&t customer service internet,gethuman.com:1,1800
+508,herff jones,call,1800,1,0,herff jones customer service,,1800
+509,irobot,call,1800,1,0,irobot customer service,,1800
+510,crunch fitness,call,1800,1,0,crunch fitness customer service,,1800
+511,optimum,cancel,1200,1,0,optimum cancel service,donotpay.com:1,1800
+512,unsubscribe from onlyfans,cancel,1200,1,0,how to unsubscribe from onlyfans,19pine.ai:1,1800
+513,aaa,call,6800,2,28,call aaa customer service phone number,gethuman.com:1,1789
+514,avis,call,5700,5,22,avis customer service number,gethuman.com:4,1781
+515,snapchat,call,3200,3,8,snapchat support number,gethuman.com:1,1778
+516,iberia,call,3900,2,12,iberia customer service,gethuman.com:2,1773
+517,simplisafe,cancel,1300,2,1,cancel simplisafe,,1773
+518,flo,cancel,1300,2,1,how to cancel flo subscription,xpendy.com:2;19pine.ai:1,1773
+519,adidas,refund,5600,1,9,adidas return policy,,1768
+520,anthropologie,refund,3800,1,3,anthropologie return policy,donotpay.com:1,1754
+521,hollister,refund,2900,1,0,hollister return policy,donotpay.com:1,1740
+522,birkenstock,refund,2900,1,0,birkenstock return policy,,1740
+523,pandora,call,5200,1,20,pandora customer service,,1733
+524,hers,cancel,1500,1,3,how to cancel hers subscription,,1731
+525,carmax payment,call,1900,1,1,carmax payment phone number,,1727
+526,college ave,call,2400,2,4,college ave phone number,,1714
+527,domino's,call,1700,1,0,domino's customer service,,1700
+528,makemytrip,call,1700,1,0,makemytrip customer care,gethuman.com:1,1700
+529,choice hotel,call,1700,1,0,choice hotel customer service,gethuman.com:1,1700
+530,amazon flex,call,1700,1,0,amazon flex customer service number,,1700
+531,att air,call,1700,1,0,att air customer service,,1700
+532,old navy credit card,call,1700,1,0,old navy credit card customer service,,1700
+533,urban outfitters,refund,2800,1,0,urban outfitters return policy,donotpay.com:1,1680
+534,backcountry,refund,2800,1,0,backcountry return policy,donotpay.com:1,1680
+535,extra space storage,call,3000,2,8,extra space storage customer service,,1667
+536,rooms go,call,2500,1,5,rooms to go customer service,,1667
+537,bankmobile 24 hour,call,2000,1,2,bankmobile 24 hour customer service,gethuman.com:1,1667
+538,booking.com,call,2000,1,2,booking.com customer service phone number,gethuman.com:1,1667
+539,eharmony,call,3300,2,10,eharmony customer service phone number,gethuman.com:2,1650
+540,xfinity wifi,cancel,1100,1,0,how to cancel xfinity wifi,,1650
+541,doordash,call,4600,5,18,doordash support phone number,gethuman.com:1,1643
+542,foot locker,refund,4100,1,5,foot locker return policy,,1640
+543,pretty little thing,refund,3000,1,1,pretty little thing return policy,,1636
+544,hibbett sports,call,1800,1,1,hibbett sports customer service,,1636
+545,linkedin,call,1800,1,1,linkedin support phone number,,1636
+546,espn+,cancel,1200,2,1,how to cancel espn+,,1636
+547,cvs extracare,cancel,1200,2,1,how to cancel cvs extracare,,1636
+548,kohl's,refund,4900,2,8,kohl's return policy,,1633
+549,state farm 24 hour,call,4400,3,17,is state farm 24 hour customer service,gethuman.com:2,1630
+550,etsy,call,5700,5,25,etsy customer service chat,gethuman.com:5,1629
+551,order doordash,cancel,1300,1,2,how to cancel an order on doordash,,1625
+552,google play,cancel,1300,2,2,how to cancel google play subscription,19pine.ai:1;rocketmoney.com:2,1625
+553,meijer,refund,2700,1,0,meijer return policy,,1620
+554,skechers,refund,2700,1,0,skechers return policy,,1620
+555,ashley,call,2100,2,3,ashley customer service,,1615
+556,macy,call,2100,1,3,macy customer service phone number,,1615
+557,famous footwear,refund,3200,1,2,famous footwear return policy,donotpay.com:1,1600
+558,shark,call,3200,3,10,shark customer service phone number,gethuman.com:2,1600
+559,carshield claims,call,1600,1,0,carshield claims phone number,,1600
+560,roblox,call,1600,1,0,contact roblox,19pine.ai:1,1600
+561,fetch pet insurance,cancel,1600,2,5,how to cancel fetch pet insurance,,1600
+562,vsp,call,1600,1,0,vsp customer service,gethuman.com:1,1600
+563,sixt car rental,call,1600,1,0,sixt car rental customer service,,1600
+564,playstation 24 7,call,3500,2,12,playstation customer service 24/7,,1591
+565,hugo insurance,call,1900,1,2,hugo insurance phone number,,1583
+566,marshalls,call,1900,2,2,marshalls customer service,gethuman.com:2,1583
+567,sheetz,call,3300,2,11,sheetz customer service phone number,gethuman.com:2,1571
+568,ann taylor,call,2200,2,4,ann taylor customer service phone number,gethuman.com:2,1571
+569,directv stream,cancel,2200,2,11,how to cancel directv stream,,1571
+570,flex rent,call,2200,1,4,flex rent customer service phone number,,1571
+571,new york times,cancel,2500,2,14,new york times cancel subscription,19pine.ai:1,1562
+572,life alert,call,2500,2,6,life alert customer service,gethuman.com:1,1562
+573,southwest,refund,2600,1,0,southwest refund policy,,1560
+574,quick quack,cancel,2700,3,16,quick quack cancel membership,,1558
+575,bj's,call,3100,3,10,what is bj's customer service number live person,gethuman.com:2,1550
+576,mattress firm,refund,4900,1,9,mattress firm return policy,,1547
+577,progressive leasing,call,2000,1,3,progressive leasing customer service,,1538
+578,la fitness,call,2300,1,5,la fitness customer service phone number,gethuman.com:1,1533
+579,varo,call,2900,2,9,varo customer service phone number,,1526
+580,new balance,refund,3800,1,5,new balance return policy,,1520
+581,cvs,call,3800,4,15,cvs customer service phone number,,1520
+582,torrid,refund,2500,1,0,torrid return policy,donotpay.com:1,1500
+583,west elm,refund,2500,1,0,west elm return policy,,1500
+584,hsn,call,2400,2,6,hsn customer service number,gethuman.com:2,1500
+585,amazon audible,cancel,2200,2,12,amazon audible cancel,,1500
+586,1800 contacts,call,2100,2,4,1800 contacts phone number,gethuman.com:2,1500
+587,t mobile internet,cancel,2000,2,10,how to cancel t mobile internet,,1500
+588,vrbo,call,1500,1,0,vrbo contact number,donotpay.com:1,1500
+589,instagram,call,1500,2,0,instagram support phone number,donotpay.com:1,1500
+590,city furniture,call,1500,2,0,city furniture customer service,gethuman.com:2,1500
+591,karma,call,1500,1,0,karma customer service number live person,gethuman.com:1,1500
+592,1-800 walmart,call,1500,1,0,what is the 1-800 number for walmart customer service,gethuman.com:1,1500
+593,qantas,call,1500,1,0,qantas customer service,gethuman.com:1,1500
+594,viagogo,call,1500,1,0,viagogo customer service,gethuman.com:1,1500
+595,xfinity comcast,call,1500,1,0,xfinity comcast phone number,gethuman.com:1,1500
+596,tory burch,call,1500,1,0,tory burch customer service,gethuman.com:1,1500
+597,at&t wifi,call,1500,1,0,at&t wifi customer service,,1500
+598,t mobile 24 7,call,1500,1,0,t mobile customer service number 24 7 usa,,1500
+599,coopers hawk,cancel,1300,2,3,how to cancel coopers hawk membership,19pine.ai:2,1500
+600,sam's club,cancel,1300,1,3,how to cancel sam's club membership,,1500
+601,how planet fitness,cancel,1200,1,2,how can i cancel my planet fitness membership,,1500
+602,google fiber,cancel,1100,2,1,how to cancel google fiber,,1500
+603,gold's gym,cancel,1100,2,1,cancel gold's gym membership,rocketmoney.com:2,1500
+604,at planet fitness,cancel,1000,1,0,how to cancel membership at planet fitness,,1500
+605,etsy 24 7,call,5500,1,27,etsy customer service phone number 24/7,gethuman.com:1,1486
+606,youtube premium,call,3700,1,15,youtube premium customer service phone number,gethuman.com:1,1480
+607,oscar insurance,call,3400,2,13,oscar insurance phone number,gethuman.com:2,1478
+608,youtube tv,call,5000,3,24,youtube tv customer service number,gethuman.com:3,1471
+609,macy's credit card payment,call,2200,1,5,macy's credit card payment phone number,,1467
+610,sonic,call,1600,1,1,sonic customer service phone number,gethuman.com:1,1455
+611,fubotv,call,4200,3,19,fubotv customer service,gethuman.com:3,1448
+612,peloton,call,2600,2,8,peloton customer service,gethuman.com:1,1444
+613,dollar general,refund,2400,1,0,dollar general return policy,donotpay.com:1,1440
+614,staples,refund,2400,1,0,staples return policy,donotpay.com:1,1440
+615,express,refund,2400,1,0,express return policy,donotpay.com:1,1440
+616,lands end,refund,2400,1,0,lands end return policy,,1440
+617,fanatics,refund,2400,1,0,fanatics return policy,,1440
+618,patagonia,refund,2400,1,0,patagonia return policy,,1440
+619,expedia help,call,3300,2,13,expedia help number,gethuman.com:2,1435
+620,cinemark,refund,3100,2,3,cinemark refund,,1431
+621,weight watchers,call,2000,1,4,weight watchers customer service,,1429
+622,bjs,refund,2600,1,1,bjs return policy,,1418
+623,victoria secret,refund,2600,1,1,victoria secret return policy,,1418
+624,american home shield,cancel,1700,2,8,how to cancel american home shield,,1417
+625,fingerhut,call,1700,2,2,fingerhut customer service,gethuman.com:2,1417
+626,labcorp,call,3100,2,12,labcorp live customer service number,gethuman.com:2,1409
+627,credit one bank,call,3100,2,12,credit one bank customer service talk to a person,,1409
+628,walmart spark,call,2100,1,5,walmart spark customer service telephone number,gethuman.com:1,1400
+629,chase,call,1400,2,0,customer service chase,donotpay.com:2,1400
+630,cleo,call,1400,1,0,cleo customer service number,,1400
+631,delta airlines,call,1400,2,0,contact delta airlines,gethuman.com:2,1400
+632,cvs corporate,call,1400,1,0,cvs corporate phone number,gethuman.com:1,1400
+633,adp 24 7,call,1400,1,0,adp customer service 24/7,,1400
+634,bofa,call,1400,1,0,bofa customer service number,gethuman.com:1,1400
+635,hughesnet,call,3900,2,18,hughesnet phone number,gethuman.com:2,1393
+636,sweetwater,refund,2300,1,0,sweetwater return policy,,1380
+637,spirit halloween,refund,2300,1,0,spirit halloween return policy,,1380
+638,burlington,refund,2300,1,0,burlington return policy,,1380
+639,justfly,call,2200,3,6,justfly phone number,gethuman.com:3,1375
+640,target,call,5200,5,28,contact target customer service,gethuman.com:2,1368
+641,nectar,call,2600,2,9,nectar customer service,gethuman.com:2,1368
+642,greensky,call,1500,2,1,greensky customer service,gethuman.com:2,1364
+643,west elm,call,1500,1,1,west elm customer service number,gethuman.com:1,1364
+644,starbucks corporate,call,1500,1,1,starbucks corporate phone number,,1364
+645,spectrum tv,cancel,1000,1,1,how to cancel spectrum tv,,1364
+646,victoria secret,call,1900,1,4,victoria secret customer service number,gethuman.com:1,1357
+647,lemonade insurance,call,2300,1,7,lemonade insurance customer service,gethuman.com:1,1353
+648,frontier flight,cancel,900,1,0,frontier cancel flight,19pine.ai:1,1350
+649,xfinity,cancel,900,1,0,how do i cancel my xfinity service,,1350
+650,malwarebytes,cancel,900,1,0,how to cancel malwarebytes subscription,,1350
+651,minecraft realms,cancel,900,1,0,how to cancel minecraft realms,,1350
+652,pets best insurance,cancel,900,1,0,how to cancel pets best insurance,,1350
+653,paypal credit,call,3600,2,17,paypal credit customer service number 24 hours,gethuman.com:2,1333
+654,playstation,call,3200,2,14,call playstation support,,1333
+655,linkedin 24 7,call,1600,1,2,linkedin support phone number 24 7,,1333
+656,att,call,4100,4,21,contact att customer service,gethuman.com:3,1323
+657,nordstrom,call,4200,2,22,nordstrom customer service number,gethuman.com:2,1312
+658,tiktok shop 24 7,call,2100,1,6,tiktok shop customer service number 24/7,,1312
+659,spot pet insurance,cancel,1400,2,6,how to cancel spot pet insurance,,1312
+660,saks,refund,2400,1,1,saks return policy,,1309
+661,verizon,cancel,2000,1,13,verizon cancel service,,1304
+662,non voip,call,1300,1,0,non voip number free,donotpay.com:1,1300
+663,kobalt,call,1300,1,0,kobalt customer service,,1300
+664,federal express,call,1300,1,0,federal express customer service,,1300
+665,evenflo,call,1300,1,0,evenflo customer service,gethuman.com:1,1300
+666,savage x fenty,call,1300,1,0,savage x fenty customer service,xpendy.com:1,1300
+667,bmo,call,1300,1,0,bmo customer service phone number,gethuman.com:1,1300
+668,delta dental california,call,1300,1,0,delta dental customer service phone number california,gethuman.com:1,1300
+669,asap tickets,call,1300,2,0,asap tickets phone number,gethuman.com:2,1300
+670,south carolina dmv,call,1300,1,0,south carolina dmv phone number,gethuman.com:1,1300
+671,dutch bros,call,1300,1,0,dutch bros customer service,gethuman.com:1,1300
+672,qvc order,call,1300,1,0,qvc phone number to order,gethuman.com:1,1300
+673,sony playstation 24 7,call,1300,1,0,sony playstation customer service number 24 7,,1300
+674,at&t 1-800,call,1300,1,0,at&t 1-800 number,gethuman.com:1,1300
+675,advance auto parts,call,1300,1,0,advance auto parts customer service,,1300
+676,pods,call,2200,2,7,pods customer service,gethuman.com:1,1294
+677,nfl plus,cancel,2300,2,17,cancel nfl plus,19pine.ai:2,1278
+678,just answer,call,2800,2,12,just answer phone number,gethuman.com:2,1273
+679,finish line,call,1400,2,1,finish line customer service number,gethuman.com:1,1273
+680,amway,call,1400,1,1,amway customer service,,1273
+681,usps hr,call,1400,2,1,usps hr number,gethuman.com:1,1273
+682,truthfinder,cancel,1100,2,3,how to cancel truthfinder,donotpay.com:1;rocketmoney.com:2,1269
+683,total adblock,cancel,1100,1,3,total adblock cancel subscription,,1269
+684,party city,refund,2100,1,0,party city return policy,donotpay.com:1,1260
+685,pandora,refund,2100,1,0,pandora return policy,donotpay.com:1,1260
+686,advance auto parts,refund,2100,1,0,advance auto parts return policy,,1260
+687,dicks sporting good,refund,2100,1,0,dicks sporting good return policy,,1260
+688,banana republic factory,refund,2100,1,0,banana republic factory return policy,,1260
+689,o reilly auto parts,refund,2300,1,1,o reilly auto parts return policy,donotpay.com:1,1255
+690,611,call,4500,3,26,611 phone number,gethuman.com:2,1250
+691,shopify,call,4000,4,22,shopify customer service number hours,,1250
+692,lemonade,call,2000,1,6,lemonade customer service number,gethuman.com:1,1250
+693,american amicable,call,1500,2,2,american amicable customer service,,1250
+694,teladoc,call,2600,2,11,teladoc phone number,,1238
+695,verizon fios,cancel,1400,2,7,cancel verizon fios,,1235
+696,tracfone,call,4800,2,29,tracfone customer service number real person,gethuman.com:2,1231
+697,metro pcs pay bill,call,3200,1,16,metro pcs pay bill phone number,,1231
+698,urban air,cancel,900,1,1,cancel urban air membership,,1227
+699,subscriptions android,cancel,900,1,1,how to cancel subscriptions on android,,1227
+700,expedia area code,call,3400,2,18,expedia customer service number with area code,gethuman.com:2,1214
+701,gap factory,refund,2200,1,1,gap factory return policy,,1200
+702,walmart,refund,2000,1,0,return policy walmart,donotpay.com:1,1200
+703,verizon,refund,2000,1,0,verizon return policy,,1200
+704,louis vuitton,refund,2000,1,0,louis vuitton return policy,,1200
+705,dell,refund,2000,1,0,dell return policy,,1200
+706,go2bank,call,1800,1,5,go2bank customer service,,1200
+707,ita airways,call,1800,1,5,ita airways customer service,,1200
+708,kindle,cancel,1200,2,5,how to cancel kindle subscription,,1200
+709,usaa today,call,1200,1,0,usaa customer service hours today,gethuman.com:1,1200
+710,aarp insurance,call,1200,1,0,aarp insurance phone number,gethuman.com:1,1200
+711,bloomingdales,call,1200,1,0,bloomingdales customer service,gethuman.com:1,1200
+712,cit bank,call,1200,1,0,cit bank customer service,gethuman.com:1,1200
+713,hotwire,call,1200,2,0,hotwire customer service number,gethuman.com:2,1200
+714,starbucks 24 7,call,1200,1,0,is starbucks customer service 24 7,gethuman.com:1,1200
+715,xfinity 1800,call,1200,1,0,xfinity 1800 number,gethuman.com:1,1200
+716,robinhood immediately,call,1200,1,0,how to contact robinhood immediately,,1200
+717,uhaul,call,1200,1,0,uhaul customer service number,gethuman.com:1,1200
+718,amazon 800,call,1200,1,0,amazon 800 customer service number,,1200
+719,koa,cancel,800,1,0,koa cancellation policy,,1200
+720,soundcloud go+,cancel,800,1,0,how to cancel soundcloud go+,19pine.ai:1,1200
+721,trial,cancel,800,1,0,how to cancel a free trial,,1200
+722,icloud,cancel,800,1,0,how to cancel icloud subscription,,1200
+723,nitro discord,cancel,800,1,0,how to cancel nitro discord,,1200
+724,guardio,cancel,800,1,0,guardio cancel membership,xpendy.com:1,1200
+725,ashley furniture,call,2600,2,12,ashley furniture customer service phone number,gethuman.com:2,1182
+726,jcpenney,call,2600,2,12,jcpenney customer service number,gethuman.com:2,1182
+727,instagram helpline,call,1300,1,1,instagram helpline number contact,gethuman.com:1,1182
+728,fye,cancel,1100,2,4,fye cancel membership,rocketmoney.com:1;xpendy.com:1,1179
+729,vivint,cancel,1100,2,4,cancel vivint,,1179
+730,nyt,cancel,1800,2,13,cancel nyt subscription,19pine.ai:1,1174
+731,tj maxx,call,4200,3,26,tj maxx customer service phone number,gethuman.com:3,1167
+732,peacock roku,cancel,1400,1,8,how to cancel peacock on roku,,1167
+733,chipotle,refund,2900,2,5,chipotle refund,gethuman.com:1,1160
+734,delta faucets,call,1500,1,3,delta faucets customer service,,1154
+735,lot,call,1500,1,3,lot customer service number usa,gethuman.com:1,1154
+736,u haul,call,1500,1,3,u haul customer service phone number,gethuman.com:1,1154
+737,academy,call,1500,1,3,academy customer service number,gethuman.com:1,1154
+738,1 800 expedia,call,3200,4,18,1 800 expedia phone number usa 24 hours,gethuman.com:4,1143
+739,disney 24 7,call,2400,1,11,disney customer service phone number 24 7,gethuman.com:1,1143
+740,men's wearhouse,call,1600,1,4,men's wearhouse customer service,gethuman.com:1,1143
+741,omaha steaks,call,1600,2,4,omaha steaks customer service,gethuman.com:1,1143
+742,showpo,refund,1900,1,0,showpo return policy,donotpay.com:1,1140
+743,five below,refund,1900,1,0,five below return policy,,1140
+744,wyndham,call,3300,2,19,wyndham customer service,,1138
+745,expedia hotel,call,3400,3,20,expedia hotel phone number,gethuman.com:3,1133
+746,farfetch,call,1700,1,5,farfetch customer service,19pine.ai:1,1133
+747,iehp,call,1700,1,5,iehp customer service,,1133
+748,adt technical,call,2800,1,15,adt technical support phone number,gethuman.com:1,1120
+749,belk,call,2800,2,15,belk customer service phone number,gethuman.com:2,1120
+750,lyft driver,call,2800,2,15,lyft driver customer service phone number,,1120
+751,jd sports,refund,2200,1,2,jd sports return policy,,1100
+752,national visa center,call,1100,1,0,national visa center phone number,gethuman.com:1,1100
+753,geico,call,1100,1,0,contact geico,gethuman.com:1,1100
+754,skechers,call,1100,1,0,skechers customer service phone number,gethuman.com:1,1100
+755,toro,call,1100,1,0,toro customer service number,gethuman.com:1,1100
+756,flipkart,call,1100,1,0,flipkart customer care number,gethuman.com:1,1100
+757,corporate,call,1100,1,0,corporate number,gethuman.com:1,1100
+758,busey bank routing,call,1100,1,0,busey bank routing number,gethuman.com:1,1100
+759,progressive car insurance,call,1100,1,0,progressive car insurance customer service,gethuman.com:1,1100
+760,tap,call,1100,1,0,tap customer service,,1100
+761,mcafee,call,3600,4,23,mcafee customer service phone number,gethuman.com:4,1091
+762,flixbus,call,2400,2,12,flixbus customer service number,gethuman.com:1,1091
+763,academy sports,refund,2000,1,1,academy sports return policy,,1091
+764,pretty little thing,call,1200,2,1,pretty little thing customer service,,1091
+765,puretalk,call,1200,1,1,puretalk customer service,,1091
+766,lands end,call,1200,1,1,lands end customer service phone number,gethuman.com:1,1091
+767,hbomax,cancel,800,1,1,hbomax cancel subscription,,1091
+768,unsubscribe from youtube tv,cancel,800,1,1,how to unsubscribe from youtube tv,,1091
+769,expedia reservation,cancel,800,1,1,cancel expedia reservation,gethuman.com:1,1091
+770,expedia car rental,call,2500,4,13,expedia car rental phone number usa,gethuman.com:4,1087
+771,xfinity's,call,2600,1,14,xfinity's phone number,gethuman.com:1,1083
+772,identityiq,call,1300,2,2,identityiq phone number,xpendy.com:1,1083
+773,eos,call,1300,1,2,eos customer service,,1083
+774,e zpass ny,call,1300,1,2,e zpass ny customer service number live person,gethuman.com:1,1083
+775,safeway,call,2700,2,15,safeway customer service phone number,gethuman.com:2,1080
+776,children's place,refund,1800,2,0,children's place return policy,donotpay.com:2,1080
+777,barnes and noble,refund,1800,1,0,barnes and noble return policy,,1080
+778,homegoods,refund,1800,1,0,homegoods return policy,,1080
+779,carter's,refund,1800,1,0,carter's return policy,,1080
+780,levi's,refund,1800,1,0,levi's return policy,,1080
+781,woot,refund,1800,1,0,woot return policy,,1080
+782,food lion,call,1400,2,3,food lion customer service phone number,gethuman.com:2,1077
+783,menards,call,1500,1,4,menards customer service phone number,gethuman.com:1,1071
+784,artlist,cancel,1000,1,4,how to cancel artlist subscription,,1071
+785,dollar tree,call,3200,2,20,dollar tree customer service,gethuman.com:1,1067
+786,equinox,cancel,1700,2,14,how to cancel equinox membership,19pine.ai:1,1062
+787,moen,call,3500,2,23,moen customer service,,1061
+788,davita guest,call,1800,1,7,davita guest services phone number,,1059
+789,asics,call,1800,1,7,asics customer service,,1059
+790,discover card,cancel,1200,1,7,how to cancel discover card,,1059
+791,chewy,call,3800,4,26,call chewy,gethuman.com:4,1056
+792,your planet fitness,cancel,1400,1,10,how to cancel your planet fitness membership,rocketmoney.com:1,1050
+793,dominos order,cancel,700,1,0,how to cancel dominos order,,1050
+794,order etsy,cancel,700,1,0,how to cancel order on etsy,,1050
+795,discovery plus,cancel,700,1,0,cancel discovery plus,19pine.ai:1;xpendy.com:1,1050
+796,vix,cancel,700,1,0,how to cancel vix subscription,19pine.ai:1,1050
+797,tiktok,cancel,700,1,0,how to cancel tiktok subscription,19pine.ai:1,1050
+798,twitch,cancel,700,1,0,how to cancel twitch subscription,19pine.ai:1,1050
+799,lightroom,cancel,700,1,0,how to cancel lightroom subscription,,1050
+800,instacart order,cancel,700,1,0,cancel instacart order,,1050
+801,youtubetv,cancel,700,1,0,how to cancel youtubetv,,1050
+802,hbo max roku,cancel,700,1,0,how to cancel hbo max on roku,,1050
+803,spectrum internet without calling,cancel,700,1,0,how to cancel spectrum internet without calling,,1050
+804,fitness 19,cancel,700,1,0,fitness 19 cancel membership,,1050
+805,usaa auto insurance,cancel,700,1,0,how to cancel usaa auto insurance,,1050
+806,direct tv,cancel,700,1,0,how to cancel direct tv,,1050
+807,revolve,call,2200,2,11,revolve customer service number,,1048
+808,zagg,call,2200,2,11,zagg customer service number,gethuman.com:2,1048
+809,outlook,call,2300,1,12,outlook customer service number,,1045
+810,ambetter insurance,cancel,900,1,3,how to cancel ambetter insurance,,1038
+811,maurices,refund,1900,1,1,maurices return policy,donotpay.com:1,1036
+812,neiman marcus,refund,1900,1,1,neiman marcus return policy,,1036
+813,youtube tv trial,cancel,2200,2,22,how to cancel youtube tv free trial,,1031
+814,state farm,call,3700,4,26,state farm customer care,gethuman.com:1,1028
+815,t mobile business,call,3700,1,26,t mobile business customer service,gethuman.com:1,1028
+816,farmers insurance,call,4100,2,30,farmers insurance phone number,gethuman.com:1,1025
+817,how long paypal take,refund,1700,3,0,how long do paypal refunds take,donotpay.com:1,1020
+818,home goods,refund,1700,1,0,home goods return policy,,1020
+819,qvc,refund,1700,1,0,qvc return policy,,1020
+820,qatar,call,3100,1,21,qatar customer service,gethuman.com:1,1000
+821,regions,call,3000,1,20,regions customer service number,,1000
+822,directv stream,call,2400,2,14,directv stream customer service phone number,gethuman.com:2,1000
+823,crate and barrel,call,2200,1,12,crate and barrel customer service phone number,gethuman.com:1,1000
+824,michaels,call,1800,1,8,michaels customer service number,gethuman.com:1,1000
+825,blue chew,call,1700,2,7,blue chew customer service,19pine.ai:2,1000
+826,greyhound 24 hour,call,1700,1,7,greyhound 24 hour customer service number,gethuman.com:1,1000
+827,popeyes corporate,call,1700,2,7,popeyes corporate number,gethuman.com:2,1000
+828,famous footwear,call,1600,2,6,famous footwear customer service phone number,19pine.ai:1;gethuman.com:1,1000
+829,taylormade,call,1600,1,6,taylormade customer service,gethuman.com:1,1000
+830,iherb,call,1500,2,5,iherb customer service phone number,gethuman.com:1,1000
+831,hotel.com,call,1500,1,5,hotel.com customer service number,gethuman.com:1,1000
+832,oura,call,1400,1,4,oura customer service,19pine.ai:1,1000
+833,mr cooper 24 7,call,1400,1,4,mr cooper customer service phone number 24/7,gethuman.com:1,1000
+834,tillys,call,1400,1,4,tillys customer service,gethuman.com:1,1000
+835,consolidated communications,call,1300,2,3,consolidated communications phone number,,1000
+836,asiana airlines,call,1200,1,2,asiana airlines customer service,,1000
+837,cb2,call,1200,2,2,cb2 customer service phone number,,1000
+838,viasat,call,1200,1,2,viasat phone number,,1000
+839,sofi,call,1200,1,2,sofi customer service number live person,,1000
+840,shopper,call,1100,1,1,shopper support phone number,gethuman.com:1,1000
+841,little caesars,call,1100,1,1,little caesars customer service,gethuman.com:1,1000
+842,unclaimed money search social security,call,1000,1,0,free unclaimed money search by social security number,donotpay.com:1,1000
+843,pnc business,call,1000,1,0,pnc business customer service,,1000
+844,distrokid,call,1000,1,0,distrokid customer service,,1000
+845,blink fitness,call,1000,1,0,blink fitness customer service,,1000
+846,txtag,call,1000,1,0,txtag customer service,gethuman.com:1,1000
+847,tdbank,call,1000,1,0,tdbank customer service phone number,gethuman.com:1,1000
+848,lyft driver 24 7,call,1000,1,0,lyft driver customer service phone number 24/7,gethuman.com:1,1000
+849,verizon prepaid,call,1000,1,0,verizon prepaid customer service phone number 24 hours,gethuman.com:1,1000
+850,bill.com,call,1000,1,0,bill.com customer service phone number,gethuman.com:1,1000
+851,talbots,call,1000,1,0,talbots customer service phone number,gethuman.com:1,1000
+852,webster bank,call,1000,1,0,webster bank customer service,gethuman.com:1,1000
+853,green dot 24 7,call,1000,1,0,green dot customer service number 24/7,,1000
+854,comfort inn,call,1000,1,0,comfort inn customer service,,1000
+855,home depot credit card,call,1000,1,0,home depot customer service credit card,,1000
+856,priceline,cancel,800,1,2,priceline cancellation policy,,1000
+857,liberty mutual,cancel,800,1,2,liberty mutual cancel policy,,1000
+858,buckle,refund,1800,1,1,buckle return policy,donotpay.com:1,982
+859,lasership,call,3700,2,28,lasership customer service number,gethuman.com:2,974
+860,penfed,call,3500,1,26,penfed phone number,,972
+861,sams club,refund,2100,1,3,sams club return policy,,969
+862,crate and barrel,refund,2100,1,3,crate and barrel return policy,,969
+863,banfield,call,2800,2,19,banfield customer service,19pine.ai:2,966
+864,vivint,call,2600,2,17,vivint customer service number live person,gethuman.com:2,963
+865,regal,call,2500,2,16,regal customer service phone number,gethuman.com:2,962
+866,vans,refund,1600,1,0,vans return policy,donotpay.com:1,960
+867,loft,refund,1600,1,0,loft return policy,donotpay.com:1,960
+868,asics,refund,1600,1,0,asics return policy,,960
+869,best buy tv,refund,1600,1,0,best buy tv return policy,19pine.ai:1,960
+870,expedia flights,call,2200,3,13,expedia flights customer service,gethuman.com:3,957
+871,singapore airlines,call,2200,1,13,singapore airlines customer service,,957
+872,t-mobile business,call,2100,1,12,t-mobile business customer service,gethuman.com:1,955
+873,carparts.com,call,2100,2,12,carparts.com phone number,gethuman.com:1,955
+874,can you your planet fitness,cancel,700,1,1,can you cancel your planet fitness membership online,xpendy.com:1,955
+875,flixbus,cancel,700,1,1,flixbus cancellation policy,,955
+876,nitro,cancel,700,1,1,how to cancel nitro,,955
+877,fubotv trial,cancel,700,1,1,how to cancel fubotv free trial,xpendy.com:1,955
+878,expedia flight,cancel,700,1,1,how to cancel expedia flight,gethuman.com:1,955
+879,hp technical,call,2000,1,11,what is the phone number for hp technical support,gethuman.com:1,952
+880,youtube tv 24 7,call,3800,1,30,youtube tv customer service phone number 24/7,gethuman.com:1,950
+881,varo bank,call,1700,1,8,varo bank customer service,,944
+882,h&m,refund,3300,1,11,h&m return policy,,943
+883,rent runway,call,1600,2,7,rent the runway customer service,gethuman.com:1,941
+884,factor,call,1400,2,5,factor customer service phone number,19pine.ai:1,933
+885,united airlines international,call,1400,1,5,united airlines customer service international,gethuman.com:1,933
+886,ancestry,call,1300,1,4,ancestry customer service phone number,gethuman.com:1,929
+887,eddie bauer,refund,1700,1,1,eddie bauer return policy,,927
+888,directv's,call,2400,1,16,directv's phone number,gethuman.com:1,923
+889,dell,call,2400,2,16,dell customer service phone number 24 hours,gethuman.com:1,923
+890,onlyfans,refund,5200,1,24,onlyfans refund,,918
+891,uscca,cancel,1100,2,8,how to cancel uscca membership,,917
+892,homeserve,call,1100,2,2,homeserve customer service,,917
+893,lowe's orders,call,1100,1,2,lowe's customer service number for online orders,gethuman.com:1,917
+894,costco's,refund,2900,2,9,what is costco's return policy,,916
+895,rumpke,call,2100,1,13,rumpke customer service phone number,gethuman.com:1,913
+896,best siriusxm,call,3100,1,24,what is the best phone number for siriusxm,gethuman.com:1,912
+897,paramount+ plus,cancel,1700,1,18,paramount+ plus phone number to cancel,gethuman.com:1,911
+898,anthem blue cross,call,2000,1,12,anthem blue cross customer service phone number,,909
+899,hilton grand vacations,call,1000,1,1,hilton grand vacations phone number,,909
+900,rise broadband,call,1000,2,1,rise broadband customer service phone number,,909
+901,electrolux,call,1000,1,1,electrolux customer service,,909
+902,amigo energy,call,1000,1,1,amigo energy customer service,gethuman.com:1,909
+903,t mobile,refund,1800,2,2,t mobile return policy,donotpay.com:1,900
+904,home depot plant,refund,1800,1,2,home depot plant return policy,,900
+905,usaa home insurance,call,1800,1,10,usaa home insurance phone number,,900
+906,ulta's,refund,1500,1,0,what is ulta's return policy,,900
+907,ann taylor,refund,1500,1,0,ann taylor return policy,donotpay.com:1;19pine.ai:1,900
+908,ugg,refund,1500,1,0,ugg return policy,,900
+909,quick quack car wash,cancel,900,1,5,quick quack car wash cancel membership,,900
+910,caribbean airlines,call,900,1,0,caribbean airlines customer service,,900
+911,big lots,call,900,1,0,big lots customer service,gethuman.com:1,900
+912,liftmaster,call,900,1,0,liftmaster customer service phone number,gethuman.com:1,900
+913,footlocker,call,900,1,0,footlocker customer service number,gethuman.com:1,900
+914,pure,call,900,1,0,pure talk customer service phone number,gethuman.com:1,900
+915,blue cross blue shield provider,call,900,1,0,blue cross blue shield provider phone number,gethuman.com:1,900
+916,coinbase,call,900,1,0,coinbase customer service number,gethuman.com:1,900
+917,conn's,call,900,1,0,conn's customer service,gethuman.com:1,900
+918,eyemed,call,900,1,0,eyemed phone number,gethuman.com:1,900
+919,blue cross,call,900,1,0,blue cross phone number,gethuman.com:1,900
+920,mango,call,900,1,0,mango customer service number,gethuman.com:1,900
+921,peacock reddit,call,900,1,0,peacock customer service number reddit,,900
+922,trieagle energy,call,900,1,0,trieagle energy phone number,,900
+923,vitalchek,call,900,1,0,vitalchek customer service phone number,,900
+924,quickbooks,cancel,600,1,0,how to cancel quickbooks online,donotpay.com:1,900
+925,hand and stone,cancel,600,1,0,how to cancel hand and stone membership,,900
+926,billie,cancel,600,1,0,how to cancel billie subscription,,900
+927,unsubscribe onlyfans,cancel,600,1,0,how to unsubscribe on onlyfans,19pine.ai:1,900
+928,amc+,cancel,600,1,0,amc+ cancel subscription,,900
+929,amc plus,cancel,600,1,0,cancel amc plus,,900
+930,wix,cancel,600,1,0,how to cancel wix subscription,,900
+931,frontier airlines,cancel,600,1,0,frontier airlines cancellation,19pine.ai:1,900
+932,european wax center,cancel,600,1,0,european wax center cancellation policy,19pine.ai:1,900
+933,your score and more,cancel,600,1,0,your score and more cancel membership,19pine.ai:1,900
+934,subscriptions google play,cancel,600,1,0,how to cancel subscriptions on google play,rocketmoney.com:1,900
+935,lasta,cancel,600,1,0,lasta app cancel subscription,xpendy.com:1,900
+936,peacock,call,3400,4,28,phone number for peacock,gethuman.com:4,895
+937,maytag,call,2400,2,17,maytag customer service phone number,gethuman.com:2,889
+938,home credit card payment,call,3000,1,24,home credit card payment phone number,gethuman.com:1,882
+939,gamestop,call,1500,1,7,gamestop customer service,gethuman.com:1,882
+940,tiktok shop,call,1500,1,7,tiktok shop customer service phone number,gethuman.com:1,882
+941,xfinity back,call,3500,1,30,xfinity call back,,875
+942,alamo,call,2100,2,14,alamo customer service,gethuman.com:2,875
+943,carshield 24 hour,call,1400,1,6,carshield 24 hour customer service phone number,,875
+944,meijer,call,1400,1,6,meijer customer service phone number,gethuman.com:1,875
+945,unsubscribe from btwletternews,cancel,700,1,2,how to unsubscribe from btwletternews,,875
+946,discord,call,2700,4,21,discord customer service phone number,gethuman.com:1,871
+947,adt 24 7,call,2000,1,13,adt customer service number 24/7,,870
+948,root insurance,call,2000,1,13,root insurance customer service,,870
+949,tmobile,call,2600,2,20,tmobile support phone number,gethuman.com:2,867
+950,bluechew,call,1300,2,5,bluechew customer service phone number,19pine.ai:2,867
+951,adobe acrobat,call,1300,2,5,adobe acrobat customer service,,867
+952,macys,call,1200,1,4,macys customer service phone number,gethuman.com:1,857
+953,sephora,call,2300,3,17,sephora customer service phone number,gethuman.com:2,852
+954,quick quack,call,1700,1,10,quick quack customer service,,850
+955,wsj,call,1100,1,3,wsj customer service,19pine.ai:1,846
+956,mediacom 24 7,call,1100,1,3,mediacom customer service 24/7,gethuman.com:1,846
+957,nike,call,2700,3,22,nike customer service phone number,gethuman.com:1,844
+958,carvana,refund,1400,1,0,carvana return policy,,840
+959,bonobos,refund,1400,1,0,bonobos return policy,,840
+960,hot topic,refund,1400,1,0,hot topic return policy,donotpay.com:1,840
+961,lego,refund,1400,1,0,lego return policy,,840
+962,ray ban,call,2000,3,14,ray ban customer service phone number,gethuman.com:3,833
+963,air,call,2000,1,14,air talk customer service,,833
+964,at t,call,1500,1,8,at t customer service,gethuman.com:1,833
+965,saks,call,1500,1,8,saks customer service number,gethuman.com:1,833
+966,goodrx,call,1000,1,2,goodrx customer service,,833
+967,dillards,call,1900,3,13,dillards customer service,19pine.ai:1;gethuman.com:3,826
+968,ashley furniture,refund,2600,1,9,ashley furniture return policy,,821
+969,safelite,call,1800,2,12,safelite customer service phone number,gethuman.com:2,818
+970,oreillys,refund,1500,1,1,oreillys return policy,donotpay.com:1,818
+971,center avianca 24 horas,call,900,1,1,call center avianca 24 horas,gethuman.com:1,818
+972,superstar car wash,cancel,600,1,1,superstar car wash cancel membership,donotpay.com:1,818
+973,super star car wash,cancel,600,1,1,super star car wash cancel membership,,818
+974,metro t-mobile,call,2200,2,17,metro by t-mobile phone number,gethuman.com:1,815
+975,summit racing,call,1300,1,6,summit racing phone number,gethuman.com:1,812
+976,rh,call,1300,1,6,rh customer service,gethuman.com:1,812
+977,latam airlines,call,1300,1,6,latam airlines customer service,,812
+978,paychex 24 7,call,1700,1,11,paychex customer service number 24/7,,810
+979,paramount+,call,2100,1,16,paramount+ customer service phone number,gethuman.com:1,808
+980,if i audible i lose credits,cancel,700,1,3,if i cancel audible do i lose my credits,,808
+981,grammarly,call,2900,1,26,grammarly customer service,gethuman.com:1,806
+982,expedia english,call,2500,1,21,expedia customer service english,gethuman.com:1,806
+983,orangetheory,cancel,1600,2,20,how to cancel orangetheory membership,rocketmoney.com:2,800
+984,gap,call,1200,1,5,gap customer service phone number,gethuman.com:1,800
+985,verizon corporate,call,800,1,0,verizon corporate number,donotpay.com:1,800
+986,usps out,call,800,1,0,usps call out number,donotpay.com:1,800
+987,charles tyrwhitt,call,800,1,0,charles tyrwhitt customer service,gethuman.com:1,800
+988,state farm provider,call,800,1,0,state farm provider phone number,,800
+989,harry and david,call,800,1,0,harry and david customer service,19pine.ai:1,800
+990,zoho,call,800,1,0,zoho customer service,,800
+991,metlife pet insurance,call,800,1,0,metlife pet insurance phone number,xpendy.com:1,800
+992,seed,cancel,800,1,5,how to cancel seed subscription,,800
+993,healthpartners,call,800,1,0,healthpartners phone number,gethuman.com:1,800
+994,crypto.com,call,800,1,0,crypto.com customer service number,gethuman.com:1,800
+995,miele,call,800,1,0,miele customer service,gethuman.com:1,800
+996,blue cross blue shield texas,call,800,1,0,blue cross blue shield of texas customer service,gethuman.com:1,800
+997,spanx,call,800,1,0,spanx customer service phone number,gethuman.com:1,800
+998,georgia natural gas,call,800,1,0,georgia natural gas customer service,gethuman.com:1,800
+999,aaa 1800,call,800,1,0,aaa 1800 number,gethuman.com:1,800
+1000,home depot order,call,800,1,0,home depot online order customer service,,800
+1001,lulu,call,800,1,0,lulu customer service,gethuman.com:1,800
+1002,unemployment,call,800,1,0,unemployment customer service number,gethuman.com:1,800
+1003,verizon collections,call,800,1,0,verizon collections phone number,,800
+1004,chime card,call,2700,2,24,chime card phone number,,794
+1005,disney+,call,1500,1,9,disney+ customer service,gethuman.com:1,789
+1006,lenscrafters,refund,2100,1,6,lenscrafters return policy,,788
+1007,tik tok,call,2200,3,18,tik tok customer service,,786
+1008,planet fitness fee,cancel,1100,1,11,planet fitness cancellation fee,rocketmoney.com:1,786
+1009,turo 24 7,call,1100,1,4,turo customer service number 24/7,gethuman.com:1,786
+1010,shoprite,call,1100,1,4,shoprite customer service,gethuman.com:1,786
+1011,hertz rental car,call,1100,1,4,hertz rental car customer service,,786
+1012,el al,call,2500,2,22,el al customer service,gethuman.com:2,781
+1013,kroger,refund,1300,1,0,kroger return policy,,780
+1014,google play,refund,1300,1,0,refund google play,donotpay.com:1,780
+1015,figs,refund,1300,1,0,figs return policy,,780
+1016,total wine,refund,1300,1,0,total wine return policy,donotpay.com:1,780
+1017,lenovo,refund,1300,1,0,lenovo return policy,donotpay.com:1,780
+1018,sally beauty,refund,1300,1,0,sally beauty return policy,,780
+1019,mango,refund,1300,1,0,mango return policy,donotpay.com:1,780
+1020,b&h,refund,1300,1,0,b&h return policy,,780
+1021,everlane,refund,1300,1,0,everlane return policy,,780
+1022,best buy's,refund,1300,1,0,what is best buy's return policy,19pine.ai:1,780
+1023,sling tv billing,call,2100,1,17,sling tv billing phone number,,778
+1024,parts geek,call,1400,1,8,parts geek phone number,gethuman.com:1,778
+1025,freeway insurance,call,1400,1,8,freeway insurance customer service,,778
+1026,prudential,call,1400,1,8,prudential phone number,,778
+1027,ssense,refund,2200,1,7,ssense return policy,,776
+1028,siriusxm,call,3100,2,30,siriusxm phone number,gethuman.com:2,775
+1029,carters,call,2400,1,21,carters customer service,,774
+1030,public storage,call,1000,1,3,public storage customer service phone number,,769
+1031,been verified,call,2300,2,20,been verified phone number,19pine.ai:1,767
+1032,hers,call,2600,1,24,hers customer service,,765
+1033,webroot,call,1300,2,7,webroot customer service,gethuman.com:2,765
+1034,lawn love,call,1300,2,7,lawn love phone number,gethuman.com:1,765
+1035,bhphotovideo,refund,1400,1,1,bhphotovideo return policy,donotpay.com:1,764
+1036,edd disability,call,1600,1,11,edd disability phone number to talk to a person,gethuman.com:1,762
+1037,rocket mortgage,call,1900,2,15,rocket mortgage customer service hours,,760
+1038,american eagle,call,2200,1,19,american eagle customer service phone number,gethuman.com:1,759
+1039,pnc,call,2800,2,27,pnc customer service hours,,757
+1040,home depot's,refund,1500,1,2,what is home depot's return policy,,750
+1041,wayfair returns,call,1200,1,6,wayfair customer service phone number for returns,gethuman.com:1,750
+1042,eversource ct,call,1200,1,6,eversource phone number customer service ct,,750
+1043,nfl plus,call,900,1,2,nfl plus customer service,,750
+1044,at&t near me,call,900,1,2,at&t near me customer service,,750
+1045,unsubscribe from paramount plus,cancel,800,1,6,how to unsubscribe from paramount plus,xpendy.com:1,750
+1046,psychology today profile,cancel,600,1,2,how to cancel psychology today profile,,750
+1047,microsoft game pass,cancel,600,1,2,microsoft game pass cancel,,750
+1048,rocket money subscriptions,cancel,600,1,2,rocket money cancel subscriptions,rocketmoney.com:1,750
+1049,cookunity,cancel,600,1,2,how to cancel cookunity,,750
+1050,lifetime,cancel,600,1,2,how to cancel lifetime membership,,750
+1051,sandals,cancel,500,1,0,sandals cancellation policy,,750
+1052,identityiq,cancel,500,1,0,how to cancel identityiq,,750
+1053,icloud storage,cancel,500,1,0,how to cancel icloud storage,,750
+1054,ancestry,cancel,500,1,0,how to cancel ancestry membership,,750
+1055,geoguessr,cancel,500,1,0,how to cancel geoguessr subscription,19pine.ai:1,750
+1056,credit review,cancel,500,1,0,credit review cancel subscription,19pine.ai:1,750
+1057,planet fitness form,cancel,500,1,0,planet fitness cancellation form,19pine.ai:1,750
+1058,paypal subscriptions,cancel,500,1,0,how to cancel paypal subscriptions,rocketmoney.com:1,750
+1059,la fitness form,cancel,500,1,0,la fitness cancellation form,rocketmoney.com:1,750
+1060,unsubscribe from fubo,cancel,500,1,0,how to unsubscribe from fubo,xpendy.com:1,750
+1061,britbox,cancel,500,1,0,how to cancel britbox,,750
+1062,1800 contacts order,cancel,500,1,0,1800 contacts cancel order,gethuman.com:1,750
+1063,order shein,cancel,500,1,0,how to cancel order on shein,gethuman.com:1,750
+1064,farfetch,refund,2100,1,7,farfetch return policy,,741
+1065,lyft 24 7,call,2200,2,20,lyft customer service number 24/7,,733
+1066,domino's corporate,call,1100,1,5,domino's corporate number,,733
+1067,breville,call,1100,2,5,breville customer support,gethuman.com:2,733
+1068,poshmark,call,1900,2,16,poshmark customer service phone number,gethuman.com:2,731
+1069,cricket pay bill,call,1900,2,16,cricket pay bill phone number,,731
+1070,walmart,cancel,1600,2,23,how to cancel walmart subscription,,727
+1071,bright money,call,1600,1,12,bright money customer service,,727
+1072,gofundme,call,1600,2,12,gofundme customer service phone number,gethuman.com:1,727
+1073,calendars.com.pl,call,800,1,1,calendars.com.pl customer service phone number,gethuman.com:1,727
+1074,expedia help center,call,800,1,1,expedia help center phone number,gethuman.com:1,727
+1075,virgin atlantic,call,800,1,1,virgin atlantic customer service number,gethuman.com:1,727
+1076,arby's,call,1300,2,8,arby's customer service phone number,gethuman.com:2,722
+1077,motel 6,call,1300,2,8,motel 6 customer service,gethuman.com:2,722
+1078,sierra,refund,1200,1,0,sierra return policy,donotpay.com:1,720
+1079,mercari,refund,1200,1,0,mercari return policy,,720
+1080,zumiez,refund,1200,1,0,zumiez return policy,donotpay.com:1,720
+1081,big lots,refund,1200,1,0,big lots return policy,donotpay.com:1;19pine.ai:1,720
+1082,williams sonoma,refund,1200,1,0,williams sonoma return policy,donotpay.com:1,720
+1083,ollies,refund,1200,1,0,ollies return policy,donotpay.com:1,720
+1084,cotton,refund,1200,1,0,cotton on return policy,donotpay.com:1,720
+1085,advance auto,refund,1200,1,0,advance auto return policy,,720
+1086,nectar,refund,1200,1,0,nectar return policy,,720
+1087,travelocity,call,2000,2,18,travelocity phone number,gethuman.com:2,714
+1088,fed express,call,1000,1,4,fed express phone number,gethuman.com:1,714
+1089,shein returns,call,1000,1,4,shein customer service returns phone number,gethuman.com:1,714
+1090,wingstop,call,1000,1,4,wingstop customer service,gethuman.com:1,714
+1091,tj maxx credit card,call,2200,2,21,tj maxx credit card phone number customer service,gethuman.com:2,710
+1092,under armour,refund,1300,1,1,under armour return policy,,709
+1093,rockauto,refund,2000,1,7,rockauto return policy,donotpay.com:1,706
+1094,silverscript,call,1200,2,7,silverscript phone number,,706
+1095,credit one credit card,call,1200,1,7,credit one credit card customer service,,706
+1096,clear,call,1900,2,17,clear customer service,gethuman.com:1,704
+1097,state farm 24-hour,call,2600,1,27,is state farm 24-hour customer service,gethuman.com:1,703
+1098,living spaces,refund,1400,1,2,living spaces return policy,donotpay.com:1,700
+1099,roku.com,cancel,1400,1,20,my.roku.com cancel subscription,,700
+1100,axs,call,1400,1,10,axs customer service phone number,,700
+1101,temporary credit card purchases,call,700,1,0,temporary credit card number for online purchases,donotpay.com:1,700
+1102,verification codes,call,700,1,0,free phone number for verification codes,,700
+1103,5 3,call,700,1,0,5/3 customer service number,,700
+1104,game pass xbox,cancel,700,1,5,how to cancel game pass on xbox,,700
+1105,adobe help,call,700,1,0,adobe help number,,700
+1106,starz roku,cancel,700,1,5,how to cancel starz on roku,rocketmoney.com:1,700
+1107,flex,call,700,1,0,flex customer service phone number live person,gethuman.com:1,700
+1108,800,call,700,1,0,800 phone number,gethuman.com:1,700
+1109,ashley stewart,call,700,1,0,ashley stewart customer service,gethuman.com:1,700
+1110,paypal 1800,call,700,1,0,paypal 1800 number,gethuman.com:1,700
+1111,claude,call,700,1,0,claude customer service,gethuman.com:1,700
+1112,414,call,700,1,0,414 phone number,gethuman.com:1,700
+1113,gopuff,call,700,1,0,gopuff customer service,gethuman.com:1,700
+1114,next insurance,call,700,1,0,next insurance customer service,gethuman.com:1,700
+1115,aspire credit card,call,700,1,0,aspire credit card customer service,gethuman.com:1,700
+1116,progressive claims,call,700,1,0,what is progressive claims phone number,,700
+1117,anthem,call,700,1,0,anthem customer service telephone number,,700
+1118,hertz corporate,call,700,1,0,hertz corporate number,gethuman.com:1,700
+1119,first citizens bank,call,700,1,0,first citizens bank phone number,gethuman.com:1,700
+1120,telus,call,700,1,0,telus customer service,gethuman.com:1,700
+1121,delta diamond medallion,call,700,1,0,delta diamond medallion phone number,,700
+1122,dayforce,call,700,1,0,dayforce customer service,,700
+1123,montgomery ward,call,700,1,0,montgomery ward phone number,gethuman.com:1,700
+1124,ugg,call,700,1,0,ugg customer service,,700
+1125,kohls card,call,700,1,0,kohls card customer service,,700
+1126,bath and body,call,2300,2,23,bath and body customer service,gethuman.com:1,697
+1127,la fitness corporate,call,900,1,3,la fitness corporate phone number,gethuman.com:1,692
+1128,noom,cancel,600,1,3,how to cancel noom,,692
+1129,edge fitness,cancel,600,1,3,how to cancel edge fitness membership,,692
+1130,cox internet,cancel,600,1,3,cancel cox internet,,692
+1131,cvs pharmacy,call,2200,1,22,cvs pharmacy customer service,,688
+1132,mister car wash,cancel,1100,1,14,mister car wash cancel membership,,688
+1133,cracker barrel,call,1100,2,6,call cracker barrel,gethuman.com:2,688
+1134,vizio,call,2400,2,25,vizio customer service phone number,gethuman.com:2,686
+1135,costco jewelry,refund,1600,1,4,costco jewelry return policy,,686
+1136,microsoft 365,call,2600,2,28,microsoft 365 customer service phone number,gethuman.com:1,684
+1137,royal caribbean,call,1500,1,12,call royal caribbean,,682
+1138,blink,cancel,500,1,1,how to cancel blink subscription,,682
+1139,metro t mobile,call,2700,2,30,metro t mobile customer service,,675
+1140,usaa insurance,call,2200,3,23,call usaa insurance,gethuman.com:1,667
+1141,petsmart,call,2000,1,20,petsmart customer service number,gethuman.com:1,667
+1142,apples,call,1800,1,17,apples number,gethuman.com:1,667
+1143,frontier cable,call,1800,1,17,frontier cable customer service,gethuman.com:1,667
+1144,people magazine,call,1600,2,14,people magazine customer service,gethuman.com:2,667
+1145,stub hub,call,1400,1,11,stub hub customer service,,667
+1146,rogers,call,1200,2,8,rogers customer service,gethuman.com:2,667
+1147,prometric,call,1000,2,5,prometric customer service phone number,gethuman.com:2,667
+1148,gamepass,cancel,800,1,8,cancel gamepass,,667
+1149,delonghi,call,800,1,2,delonghi customer service,,667
+1150,air europa,call,800,1,2,air europa customer service,,667
+1151,perplexity,cancel,800,1,8,how to cancel perplexity subscription,,667
+1152,express,call,800,1,2,express customer service phone number,gethuman.com:1,667
+1153,airvoice wireless,call,800,1,2,airvoice wireless customer service,gethuman.com:1,667
+1154,booking com,call,800,1,2,booking com customer service,gethuman.com:1,667
+1155,brandy melville,refund,2200,1,10,brandy melville return policy,,660
+1156,lane bryant,refund,1100,1,0,lane bryant return policy,donotpay.com:1,660
+1157,overdraft fees,refund,1100,1,0,how to get overdraft fees refunded,donotpay.com:1,660
+1158,vitamin shoppe,refund,1100,1,0,vitamin shoppe return policy,donotpay.com:1,660
+1159,talbots,refund,1100,1,0,talbots return policy,donotpay.com:1,660
+1160,gucci,refund,1100,1,0,gucci return policy,,660
+1161,victoria's secret,refund,1100,1,0,victoria's secret return policy,,660
+1162,brooks,refund,1100,1,0,brooks return policy,,660
+1163,audible,call,2100,2,22,audible customer service phone number,gethuman.com:2,656
+1164,greyhound,cancel,700,1,6,greyhound cancellation policy,,656
+1165,o'reilly,refund,1200,1,1,o'reilly return policy,donotpay.com:1,655
+1166,dick's sporting goods,refund,1200,1,1,dick's sporting goods return policy,,655
+1167,rack room shoes,refund,1200,1,1,rack room shoes return policy,donotpay.com:1,655
+1168,bobs furniture,call,1700,1,16,bobs furniture customer service,gethuman.com:1,654
+1169,whole foods,refund,1300,1,2,whole foods return policy,donotpay.com:1,650
+1170,zoosk,call,1300,1,10,zoosk customer service,gethuman.com:1,650
+1171,bed bath and beyond,call,1300,1,10,bed bath and beyond customer service phone number,gethuman.com:1,650
+1172,stop and shop,call,1100,1,7,stop and shop customer service phone number,gethuman.com:1,647
+1173,tmobile pay bill,call,1100,1,7,tmobile pay bill number,,647
+1174,macys 1800,call,1100,1,7,macys 1800 number,gethuman.com:1,647
+1175,grubhub driver 24 7,call,1100,1,7,grubhub driver support phone number 24 7,gethuman.com:1,647
+1176,panera,call,1100,1,7,panera customer service phone number,,647
+1177,husqvarna,call,1100,1,7,husqvarna customer service,,647
+1178,sunglass hut,refund,1500,1,4,sunglass hut return policy,donotpay.com:1,643
+1179,adapthealth 24 hour,call,900,1,4,adapthealth 24 hour customer service,19pine.ai:1,643
+1180,caseys corporate,call,900,1,4,caseys corporate number,19pine.ai:1,643
+1181,macy's credit card,call,900,1,4,macy's credit card customer service phone number,,643
+1182,prodigy,cancel,600,1,4,how to cancel prodigy membership,xpendy.com:1,643
+1183,you tube tv,cancel,600,1,4,cancel you tube tv,,643
+1184,greyhound,refund,1700,2,6,greyhound refund policy,,638
+1185,savage fenty,call,1400,1,12,savage fenty customer service,,636
+1186,expedia guest,call,1400,1,12,expedia guest service number,gethuman.com:1,636
+1187,seaworld,call,1400,1,12,seaworld customer service phone number,gethuman.com:1,636
+1188,sears,call,1400,1,12,sears customer service live person telephone number,gethuman.com:1,636
+1189,chegg,call,700,1,1,chegg phone number,19pine.ai:1,636
+1190,expedia line,call,700,1,1,expedia customer service line,gethuman.com:1,636
+1191,pentagon federal credit union,call,700,1,1,pentagon federal credit union phone number,gethuman.com:1,636
+1192,planet fitness corporate,call,700,1,1,planet fitness corporate phone number,gethuman.com:1,636
+1193,eyebuydirect,refund,1800,1,7,eyebuydirect return policy,donotpay.com:1,635
+1194,lulu,refund,1900,1,8,lulu return policy,,633
+1195,cubesmart,call,1200,1,9,cubesmart customer service,19pine.ai:1,632
+1196,expedia,cancel,800,1,9,expedia cancellation number,gethuman.com:1,632
+1197,new york times,call,1500,1,14,new york times customer service phone number,,625
+1198,petco,call,1500,1,14,petco phone number,,625
+1199,vineyard vines,call,1000,1,6,vineyard vines customer service,,625
+1200,bath & body works,call,1000,1,6,bath & body works customer service phone number,gethuman.com:1,625
+1201,rent center,call,1000,1,6,rent a center customer service,gethuman.com:1,625
+1202,lands' end,call,1000,1,6,lands' end customer service,,625
+1203,fisher scientific,call,1000,1,6,fisher scientific customer service,,625
+1204,premium spotify,cancel,500,1,2,how to cancel premium on spotify,xpendy.com:1,625
+1205,cox,cancel,500,1,2,cox cancel service,,625
+1206,alert 360,call,1300,2,11,alert 360 customer service,,619
+1207,at&t help,call,1300,1,11,at&t help number,gethuman.com:1,619
+1208,academy sports,call,2100,2,24,academy sports customer service,gethuman.com:1,618
+1209,air france,call,1600,1,16,air france customer service phone number,,615
+1210,six flags,call,800,1,3,six flags customer service phone number,gethuman.com:1,615
+1211,kendra scott,call,800,1,3,kendra scott customer service,,615
+1212,airtalk,call,800,1,3,airtalk phone number,,615
+1213,arlo,call,1100,1,8,arlo customer service phone number,,611
+1214,tap portugal,call,1400,1,13,tap portugal customer service,,609
+1215,fubo tv,call,2400,2,30,fubo tv customer service,gethuman.com:2,600
+1216,costco tv,refund,1600,1,6,costco tv return policy,,600
+1217,expedia hotels,call,1500,3,15,expedia hotels customer service,gethuman.com:3,600
+1218,ulta,refund,1200,2,2,return policy ulta,,600
+1219,windstream internet,call,1200,1,10,windstream internet customer service,,600
+1220,1 800 chime,call,1200,1,10,1 800 number for chime,,600
+1221,steve madden,refund,1100,1,1,steve madden return policy,,600
+1222,champs,refund,1100,1,1,champs return policy,,600
+1223,windsor,refund,1000,1,0,windsor return policy online,,600
+1224,5 below,refund,1000,1,0,5 below return policy,,600
+1225,ray ban,refund,1000,1,0,ray ban return policy,,600
+1226,office depot,refund,1000,1,0,office depot return policy,,600
+1227,microcenter,refund,1000,1,0,microcenter return policy,,600
+1228,adorama,refund,1000,1,0,adorama return policy,donotpay.com:1,600
+1229,gamestop,refund,1000,1,0,gamestop return policy,donotpay.com:1;19pine.ai:1,600
+1230,publix,refund,1000,1,0,publix return policy,,600
+1231,thredup,refund,1000,1,0,thredup return policy,,600
+1232,david's bridal,refund,1000,1,0,david's bridal return policy,,600
+1233,frontier,refund,1000,1,0,frontier refund policy,19pine.ai:1,600
+1234,24 hour fitness,call,900,1,5,24 hour fitness customer service,,600
+1235,verification code,call,600,1,0,verification code number,donotpay.com:1,600
+1236,snapchat helpline,call,600,1,0,snapchat helpline number 24 hours,gethuman.com:1,600
+1237,hampton inn,call,600,1,0,hampton inn customer service,,600
+1238,time4learning,call,600,1,0,time4learning phone number,xpendy.com:1,600
+1239,netspend 1800,call,600,1,0,netspend 1800 number,gethuman.com:1,600
+1240,synchrony bank,call,600,1,0,synchrony bank number,gethuman.com:1,600
+1241,united healthcare,call,600,1,0,united healthcare phone number,gethuman.com:1,600
+1242,direct tv,call,600,1,0,direct tv customer service phone number,gethuman.com:1,600
+1243,ww,call,600,1,0,ww customer service,gethuman.com:1,600
+1244,gamestop corporate,call,600,1,0,gamestop corporate number,gethuman.com:1,600
+1245,choice home warranty,call,600,1,0,choice home warranty customer service number,gethuman.com:1,600
+1246,833,call,600,1,0,833 phone number,gethuman.com:1,600
+1247,oscar health insurance,call,600,1,0,oscar health insurance customer service hours,gethuman.com:1,600
+1248,nelnet student loans,call,600,1,0,nelnet student loans phone number,gethuman.com:1,600
+1249,anthem health insurance,call,600,1,0,anthem health insurance phone number,gethuman.com:1,600
+1250,hoka,call,600,1,0,hoka customer service,gethuman.com:1,600
+1251,cvs corporate office,call,600,1,0,cvs corporate office phone number,gethuman.com:1,600
+1252,woman within,call,600,1,0,woman within customer service phone number,gethuman.com:1,600
+1253,at amazon,call,600,1,0,how do i speak to a live person at amazon,gethuman.com:1,600
+1254,regions mortgage,call,600,1,0,regions mortgage customer service,gethuman.com:1,600
+1255,experian 800,call,600,1,0,experian 800 number,gethuman.com:1,600
+1256,qatar airlines,call,600,1,0,qatar airlines customer service,gethuman.com:1,600
+1257,home depot 1800,call,600,1,0,home depot 1800 number,gethuman.com:1,600
+1258,nba,call,600,1,0,nba phone number,gethuman.com:1,600
+1259,zelle 24 7,call,2300,1,29,zelle customer service number 24 7,,590
+1260,triple,call,2000,1,24,triple a customer service number,gethuman.com:1,588
+1261,merrick bank,call,2000,1,24,merrick bank phone number,,588
+1262,cingular wireless,call,2100,1,26,cingular wireless customer service,,583
+1263,chicos,call,700,1,2,chicos customer service phone number,gethuman.com:1,583
+1264,take 5 car wash,call,700,1,2,take 5 car wash customer service,,583
+1265,credit karma 1 800 reddit,call,700,1,2,credit karma 1 800 customer service number live person reddit,gethuman.com:1,583
+1266,hertz 1800,call,700,1,2,hertz 1800 number,gethuman.com:1,583
+1267,usaa info,call,700,1,2,usaa contact info,,583
+1268,allstate 24 7,call,2200,1,28,allstate customer service 24 7,,579
+1269,shark vacuum,call,1100,1,9,shark vacuum customer service phone number,gethuman.com:1,579
+1270,tractor supply,call,1100,1,9,tractor supply customer service,gethuman.com:1,579
+1271,doordash address and,call,1100,1,9,doordash address and phone number,,579
+1272,onelife fitness,cancel,500,1,3,how to cancel onelife fitness membership,,577
+1273,credit one credit card,cancel,500,1,3,how to cancel a credit one credit card,,577
+1274,ticketmaster 0800,call,1900,1,23,ticketmaster phone number live person 0800,gethuman.com:1,576
+1275,samsung technical,call,2300,1,30,samsung technical support phone number,gethuman.com:1,575
+1276,kfc corporate,call,1200,1,11,kfc corporate number,gethuman.com:1,571
+1277,keurig,call,1200,2,11,keurig customer support,gethuman.com:2,571
+1278,otterbox,call,1200,1,11,otterbox phone number,gethuman.com:1,571
+1279,nutrisystem,call,800,1,4,nutrisystem phone number,rocketmoney.com:1;gethuman.com:1,571
+1280,lincoln heritage,call,800,1,4,lincoln heritage customer service,,571
+1281,skylight,call,800,1,4,skylight customer service phone number,gethuman.com:1,571
+1282,macy,refund,1700,1,8,macy return policy,,567
+1283,priceline hotel,call,1700,1,20,priceline hotel support phone number,gethuman.com:1,567
+1284,bovada,call,2200,2,29,bovada customer service number,gethuman.com:2,564
+1285,steve madden,call,900,1,6,steve madden customer service,,562
+1286,alaska,call,900,1,6,alaska customer service number,,562
+1287,verizon.com,call,900,1,6,verizon.com customer service,,562
+1288,kohler,call,900,1,6,kohler customer service phone number,gethuman.com:1,562
+1289,applecare,cancel,600,1,6,cancel applecare,,562
+1290,hims,call,1500,1,17,hims customer service,,556
+1291,frontier technical,call,1500,1,17,frontier technical support phone number,gethuman.com:1,556
+1292,rcn,call,1000,1,8,rcn customer service number,gethuman.com:1,556
+1293,price line,call,1000,1,8,price line number,gethuman.com:1,556
+1294,hertz 800,call,1000,1,8,hertz 800 number,gethuman.com:1,556
+1295,cabela's,refund,1200,1,3,cabela's return policy,,554
+1296,fubo roku,cancel,700,1,9,how to cancel fubo on roku,xpendy.com:1,553
+1297,consumer cellular,call,1600,2,19,consumer cellular customer service phone number live person,gethuman.com:1,552
+1298,amtrak,call,1600,1,19,is amtrak customer service 24 hours,gethuman.com:1,552
+1299,walgreens,call,1600,1,19,walgreens customer service number,,552
+1300,j crew,refund,1100,1,2,j crew return policy,,550
+1301,carhartt,call,1100,1,10,carhartt customer service,,550
+1302,att tech,call,1100,1,10,att tech support phone number,gethuman.com:1,550
+1303,usaa roadside assistance,call,1100,1,10,usaa roadside assistance phone number,gethuman.com:1,550
+1304,boost mobile,call,1700,1,21,boost mobile customer service phone number 24 hours,gethuman.com:1,548
+1305,ups corporate,call,1800,1,23,ups corporate phone number,,545
+1306,seatgeek tickets,call,1200,1,12,seatgeek tickets customer service phone number,,545
+1307,autozone corporate,call,1200,1,12,autozone corporate phone number,,545
+1308,nordvpn,refund,1000,1,1,nordvpn refund,,545
+1309,storage treasures,call,600,1,1,storage treasures phone number,,545
+1310,carrier,call,600,1,1,carrier customer service,gethuman.com:1,545
+1311,taco bell,call,1300,1,14,taco bell customer service number 24 hours,gethuman.com:1,542
+1312,espn,call,2000,2,27,espn customer service phone number,gethuman.com:2,541
+1313,hibbett,refund,900,1,0,hibbett return policy,donotpay.com:1,540
+1314,at walmart,refund,900,1,0,what is the return policy at walmart,donotpay.com:1,540
+1315,kohls,refund,900,1,0,what is kohls return policy,,540
+1316,fred meyer,refund,900,1,0,fred meyer return policy,donotpay.com:1,540
+1317,tory burch,refund,900,1,0,tory burch return policy,,540
+1318,levi,refund,900,1,0,levi return policy,,540
+1319,sams,refund,900,1,0,sams return policy,,540
+1320,jjshouse,refund,900,1,0,jjshouse return policy,,540
+1321,bloomingdale,refund,900,1,0,bloomingdale return policy,,540
+1322,aliexpress,refund,900,1,0,aliexpress return policy,19pine.ai:1,540
+1323,westjet,call,700,1,3,westjet customer service,,538
+1324,bumble,call,700,1,3,bumble customer service,,538
+1325,hugo,call,700,1,3,hugo customer service number,,538
+1326,bitdefender,call,700,1,3,bitdefender customer service,gethuman.com:1,538
+1327,papa john's,call,700,1,3,papa john's customer service,gethuman.com:1,538
+1328,home chef,cancel,500,1,4,how to cancel home chef,19pine.ai:1,536
+1329,identity guard,call,1600,2,20,identity guard customer service,,533
+1330,quick quack car wash,call,800,1,5,quick quack car wash customer service,,533
+1331,hertz billing,call,800,1,5,hertz billing phone number,gethuman.com:1,533
+1332,anthem bcbs,call,800,1,5,anthem bcbs phone number,gethuman.com:1,533
+1333,roadie 24 7,call,800,1,5,roadie support telephone number 24 7,gethuman.com:1,533
+1334,at&t u verse 24 7,call,800,1,5,at&t u verse customer service number 24/7,gethuman.com:1,533
+1335,firestone,call,900,1,7,firestone customer service,gethuman.com:1,529
+1336,flixbus 24 7,call,900,1,7,flixbus customer service number 24/7,,529
+1337,subscriptions paypal,cancel,600,1,7,how to cancel subscriptions on paypal,,529
+1338,nytimes,call,1900,1,26,nytimes customer service phone number,gethuman.com:1,528
+1339,disneyplus,call,2100,1,30,disneyplus customer service,,525
+1340,att prepaid,call,1200,1,13,att prepaid phone number,gethuman.com:1,522
+1341,seat geek,call,1200,2,13,seat geek customer service,gethuman.com:1,522
+1342,costco laptop,refund,1300,1,5,costco laptop return policy,,520
+1343,adp help,call,1300,1,15,adp help number,,520
+1344,dasher direct,call,1500,1,19,dasher direct customer service,,517
+1345,lexisnexis,call,1500,1,19,lexisnexis customer service,,517
+1346,canva 24 7,call,1700,1,23,canva support phone number 24/7,gethuman.com:1,515
+1347,at&t prepaid,call,1800,1,25,at&t prepaid phone number,,514
+1348,home depot,refund,1200,1,4,return policy home depot,,514
+1349,m and t bank,call,2000,1,30,m and t bank customer service,gethuman.com:1,500
+1350,t mobile 800,call,2000,1,30,t mobile 800 number,gethuman.com:1,500
+1351,microsoft,call,1900,2,28,microsoft customer service phone number usa,,500
+1352,choice rewards,call,1800,2,26,choice rewards number,gethuman.com:2,500
+1353,cheapoair,call,1700,2,24,cheapoair phone number,gethuman.com:2,500
+1354,expedia 1800,call,1400,1,18,expedia 1800 number,gethuman.com:1,500
+1355,verizon's,call,1400,1,18,verizon's phone number,gethuman.com:1,500
+1356,albert genius,call,1300,2,16,albert genius customer service phone number,,500
+1357,discovery,call,1200,2,14,discovery contact number,gethuman.com:1,500
+1358,truist 24 7,call,1100,1,12,truist customer service number 24/7,,500
+1359,yahoo 24 7,call,1000,1,10,yahoo customer service phone number 24 7,,500
+1360,frontier business,call,900,1,8,frontier business customer service,,500
+1361,enterprise 24 7,call,900,1,8,enterprise customer service 24/7 number,gethuman.com:1,500
+1362,edible arrangements,call,800,1,6,edible arrangements customer service,gethuman.com:1,500
+1363,fifth third dispute,call,700,1,4,fifth third dispute number,,500
+1364,perfect resume,cancel,700,1,11,my perfect resume cancel subscription,,500
+1365,trivago,call,700,1,4,trivago customer service phone number,gethuman.com:1,500
+1366,costco.com,call,700,1,4,costco.com phone number,gethuman.com:1,500
+1367,chick-fil- gift card and pin check balance,call,600,1,2,chick-fil-a gift card number and pin check balance,,500
+1368,fye backstage pass,cancel,600,1,8,fye backstage pass cancel,rocketmoney.com:1,500
+1369,nurx,call,600,1,2,nurx customer service,,500
+1370,apple pay,cancel,600,1,8,how to cancel apple pay,,500
+1371,choice,call,600,1,2,choice customer service,gethuman.com:1,500
+1372,dunkin' donuts,call,600,1,2,dunkin' donuts customer service,gethuman.com:1,500
+1373,ups international,call,500,1,0,ups international phone number,donotpay.com:1,500
+1374,document birth certificate,call,500,1,0,what is the document number on a birth certificate,donotpay.com:1,500
+1375,royal air maroc,call,500,1,0,royal air maroc customer service,donotpay.com:1,500
+1376,class pass,cancel,500,1,5,how to cancel class pass,,500
+1377,plt,call,500,1,0,plt customer service,,500
+1378,bluechew,cancel,500,1,5,how to cancel bluechew subscription,19pine.ai:1,500
+1379,progressive fax,call,500,1,0,progressive fax number,,500
+1380,squarespace,call,500,1,0,squarespace customer support,,500
+1381,alaska airlines,call,500,1,0,alaska airlines customer service chat,,500
+1382,discord,cancel,500,1,5,how to cancel discord subscription,,500
+1383,hulu unsubscribe,cancel,500,1,5,hulu unsubscribe,,500
+1384,wayfair 800,call,500,1,0,wayfair 800 number,gethuman.com:1,500
+1385,stream energy,call,500,1,0,stream energy phone number,gethuman.com:1,500
+1386,standup wireless,call,500,1,0,standup wireless customer service,gethuman.com:1,500
+1387,applecare,call,500,1,0,applecare customer service phone number,gethuman.com:1,500
+1388,at&t 24 7,call,500,1,0,at&t customer service number 24 7,gethuman.com:1,500
+1389,fidelity,call,500,1,0,call fidelity,gethuman.com:1,500
+1390,855,call,500,1,0,855 phone number,gethuman.com:1,500
+1391,norton,call,500,1,0,norton number,gethuman.com:1,500
+1392,comdata,call,500,1,0,comdata customer service phone number,gethuman.com:1,500
+1393,square 24 7,call,500,1,0,square customer service number 24/7,,500
+1394,dexis,call,500,1,0,dexis support number,,500
+1395,metro tmobile,call,500,1,0,metro by tmobile customer service,,500
+1396,priority pass,call,500,1,0,priority pass customer service,gethuman.com:1,500
+1397,michael kors,call,500,1,0,michael kors customer service number,gethuman.com:1,500
+1398,southwest,call,500,1,0,call southwest customer service,gethuman.com:1,500
+1399,suncoast,call,500,1,0,suncoast phone number,gethuman.com:1,500
+1400,hibbett sports,refund,900,1,1,hibbett sports return policy,donotpay.com:1,491
+1401,rugs,refund,900,1,1,rugs usa return policy,,491
+1402,h and m,refund,1300,1,6,h and m return policy,,488
+1403,disney plus,call,1900,2,29,disney plus customer service number,gethuman.com:1,487
+1404,globe life,call,1300,1,17,globe life customer service,,481
+1405,terminix,call,1200,1,15,terminix customer service number,gethuman.com:1,480
+1406,bass pro,refund,800,1,0,bass pro return policy,donotpay.com:1,480
+1407,von maur,refund,800,1,0,von maur return policy,,480
+1408,hermes,refund,800,1,0,hermes return policy,,480
+1409,lowes paint,refund,800,1,0,lowes paint return policy,donotpay.com:1,480
+1410,classpass trial,cancel,800,1,15,how to cancel classpass free trial,,480
+1411,xbox,refund,800,1,0,how to refund on xbox,,480
+1412,lush,refund,800,1,0,lush return policy,donotpay.com:1,480
+1413,jomashop,refund,800,1,0,jomashop return policy,,480
+1414,vineyard vines,refund,800,1,0,vineyard vines return policy,,480
+1415,heb,refund,800,1,0,heb return policy,donotpay.com:1,480
+1416,bloomingdale's,refund,800,1,0,bloomingdale's return policy,,480
+1417,carters,refund,800,1,0,carters return policy,,480
+1418,carhartt,refund,800,1,0,carhartt return policy,,480
+1419,fedex money back guarantee,refund,800,1,0,fedex money back guarantee,,480
+1420,frontier pay bill,call,1100,1,13,frontier pay bill phone number 24 hours,gethuman.com:1,478
+1421,zazzle,call,1000,1,11,zazzle customer service number,gethuman.com:1,476
+1422,fresh direct,call,900,1,9,fresh direct customer service,19pine.ai:1,474
+1423,hinge,cancel,600,1,9,how to cancel hinge subscription,,474
+1424,t mobile help,call,1700,1,26,t mobile help number,,472
+1425,hellofresh,call,1600,1,24,hellofresh phone number,,471
+1426,tap air portugal,call,800,1,7,tap air portugal customer service,,471
+1427,vanilla gift card,call,800,1,7,vanilla gift card customer service talk to a person,gethuman.com:1,471
+1428,thrifty car rental,call,800,1,7,thrifty car rental customer service phone number,,471
+1429,saks fifth ave,call,800,1,7,saks fifth ave customer service,,471
+1430,chime com,call,1500,1,22,support chime com customer service,,469
+1431,nytimes,cancel,500,1,6,nytimes cancel subscription,,469
+1432,acorn,call,700,1,5,acorn customer service,gethuman.com:1,467
+1433,wix,call,700,1,5,wix support phone number live person,,467
+1434,ross,call,700,1,5,ross customer service,gethuman.com:1,467
+1435,taco bell 24 7,call,700,1,5,taco bell customer service number 24 7,gethuman.com:1,467
+1436,purple,call,700,1,5,purple customer service,gethuman.com:1,467
+1437,empower 24 7,call,700,1,5,empower customer service phone number 24 7,gethuman.com:1,467
+1438,avianca airlines,call,700,1,5,avianca airlines customer service,gethuman.com:1,467
+1439,wordpress,call,1300,1,18,wordpress customer service,,464
+1440,speedway,call,1300,1,18,speedway customer service,gethuman.com:1,464
+1441,dicks sporting good,call,1800,1,29,dicks sporting good customer service number,gethuman.com:1,462
+1442,choice hotels,call,1200,1,16,choice hotels phone number,gethuman.com:1,462
+1443,sparklight pay bill,call,600,1,3,sparklight phone number to pay bill,,462
+1444,alo,call,600,1,3,alo customer service,,462
+1445,711,call,600,1,3,711 customer service,gethuman.com:1,462
+1446,usps 24 7,call,1700,1,27,usps customer service number 24/7,gethuman.com:1,459
+1447,costco furniture,refund,1300,1,7,costco furniture return policy,,459
+1448,directv billing,call,1500,1,23,directv customer service billing phone number,gethuman.com:1,455
+1449,canva billing,call,1000,1,12,canva contact billing telephone number,gethuman.com:1,455
+1450,expedia expedia,call,1000,1,12,is expedia customer service 24 hours phone expedia,gethuman.com:1,455
+1451,molina,call,500,1,1,molina customer service,,455
+1452,hbo,call,500,1,1,hbo customer service phone number,gethuman.com:1,455
+1453,pay pal,call,1400,1,21,pay pal phone number,,452
+1454,lowe's,call,1800,1,30,lowe's customer service number,gethuman.com:1,450
+1455,att wifi,call,900,1,10,att wifi customer service number,gethuman.com:1,450
+1456,fedex billing,call,900,1,10,fedex billing phone number,gethuman.com:1,450
+1457,holiday inn,call,1300,1,19,holiday inn customer service phone number,gethuman.com:1,448
+1458,coach,call,1300,1,19,coach customer service number,gethuman.com:1,448
+1459,mcdonald's,call,1700,1,28,mcdonald's customer service number,gethuman.com:1,447
+1460,go bank,call,1200,2,17,go to bank customer service,gethuman.com:1,444
+1461,2k,call,800,1,8,2k customer service,,444
+1462,world hyatt,call,800,1,8,world of hyatt phone number,gethuman.com:1,444
+1463,ford motor credit,call,1500,1,24,ford motor credit phone number,gethuman.com:1,441
+1464,hulu roku,cancel,500,1,7,how to cancel hulu on roku,,441
+1465,primo brands,call,1100,1,15,primo brands customer service,,440
+1466,lego,call,1100,1,15,lego customer service number,,440
+1467,uphold,call,700,1,6,uphold phone number,gethuman.com:1,438
+1468,kiwi.com,call,700,1,6,kiwi.com customer service,,438
+1469,ultra mobile,call,700,1,6,ultra mobile customer service phone number,,438
+1470,evo,refund,800,1,1,evo return policy,,436
+1471,safeway,refund,800,1,1,safeway return policy,,436
+1472,aspen dental,call,1000,1,13,aspen dental customer service,19pine.ai:1,435
+1473,geek squad,call,1000,1,13,geek squad customer service phone number,gethuman.com:1,435
+1474,chuck e cheese,call,1000,1,13,chuck e cheese customer service,gethuman.com:1,435
+1475,alaska airline,call,1000,1,13,alaska airline phone number,,435
+1476,expedia 800,call,1200,2,18,expedia 800 number usa,gethuman.com:2,429
+1477,bridgecrest payoff,call,900,1,11,bridgecrest payoff phone number,,429
+1478,kfc,call,900,1,11,kfc customer service number,gethuman.com:1,429
+1479,ups resources,call,900,1,11,ups human resources phone number,,429
+1480,oura ring,call,600,1,4,oura ring customer service,19pine.ai:1,429
+1481,flight club,call,600,1,4,flight club customer service phone number,19pine.ai:1,429
+1482,aliexpress,call,600,1,4,aliexpress contact,gethuman.com:1,429
+1483,bloomingdale's,call,600,1,4,bloomingdale's customer service phone number,gethuman.com:1,429
+1484,paypal,cancel,1100,2,29,how to cancel paypal,rocketmoney.com:1,423
+1485,noom,call,1600,2,28,noom customer service,19pine.ai:2,421
+1486,way2go,call,800,1,9,way2go customer service,,421
+1487,dunkin donuts,call,800,1,9,dunkin donuts customer service,,421
+1488,gci,call,800,1,9,gci customer service,,421
+1489,rent center corporate,call,800,1,9,rent a center corporate number,gethuman.com:1,421
+1490,directv 800,call,800,1,9,directv 800 number,gethuman.com:1,421
+1491,away,refund,700,1,0,away return policy,donotpay.com:1,420
+1492,boscov's,refund,700,1,0,boscov's return policy,donotpay.com:1,420
+1493,rainbow,refund,700,1,0,rainbow return policy,donotpay.com:1,420
+1494,william sonoma,refund,700,1,0,william sonoma return policy,donotpay.com:1,420
+1495,chicos,refund,700,1,0,chicos return policy,donotpay.com:1,420
+1496,sally's,refund,700,1,0,sally's return policy,,420
+1497,chargeback,refund,700,1,0,how to do a chargeback,,420
+1498,home depot paint,refund,700,1,0,home depot paint return policy,,420
+1499,ross without receipt,refund,700,1,0,ross return policy without receipt,,420
+1500,doc martens,refund,700,1,0,doc martens return policy,,420
+1501,tiffany,refund,700,1,0,tiffany return policy,,420
+1502,soma,refund,700,1,0,soma return policy,donotpay.com:1,420
+1503,mac,refund,700,1,0,mac return policy,donotpay.com:1,420
+1504,guitar center used gear,refund,700,1,0,guitar center used gear return policy,,420
+1505,lids,refund,700,1,0,lids return policy,,420
+1506,forever 21,refund,700,1,0,forever 21 return policy,,420
+1507,abercrombie and fitch,refund,700,1,0,abercrombie and fitch return policy,,420
+1508,grainger,refund,700,1,0,grainger return policy,,420
+1509,marshall,refund,700,1,0,marshall return policy,,420
+1510,car insurance if sold,refund,700,1,0,can i get a refund for car insurance if sold,19pine.ai:1,420
+1511,windstream holdings,call,1000,1,14,windstream holdings customer service,,417
+1512,american airlines lost baggage,call,500,1,2,american airlines lost baggage phone number,19pine.ai:1,417
+1513,aaron's,call,500,1,2,aaron's customer service,,417
+1514,can you crunch,cancel,500,1,8,can you cancel crunch membership online,rocketmoney.com:1,417
+1515,lids,call,500,1,2,lids customer service phone number,gethuman.com:1,417
+1516,latam,call,500,1,2,latam customer service phone number 24 hours,gethuman.com:1,417
+1517,gilt,call,500,1,2,gilt customer service number,gethuman.com:1,417
+1518,mediacom internet,call,500,1,2,mediacom internet customer service,gethuman.com:1,417
+1519,finish line,refund,900,1,3,finish line return policy,donotpay.com:1,415
+1520,footlocker,refund,900,1,3,footlocker return policy,,415
+1521,kendra scott,refund,1100,1,6,kendra scott return policy,,412
+1522,rakuten,call,700,1,7,rakuten customer service phone number,gethuman.com:1,412
+1523,first american home warranty,call,900,1,12,first american home warranty customer service,,409
+1524,pizza hut,call,900,1,12,pizza hut customer service number 24 hours,gethuman.com:1,409
+1525,zenni,call,900,1,12,zenni customer service phone number,gethuman.com:1,409
+1526,verizon home internet,cancel,600,1,12,how to cancel verizon home internet,,409
+1527,oakley,call,1100,1,17,oakley customer service phone number,gethuman.com:1,407
+1528,simplisafe,call,1500,2,27,simplisafe customer service phone number,gethuman.com:2,405
+1529,royal carribean,call,1500,1,27,royal carribean customer service,,405
+1530,sun run,call,1200,1,20,sun run customer service,gethuman.com:1,400
+1531,amc,call,1000,1,15,amc customer service number,gethuman.com:1,400
+1532,mens warehouse,refund,800,1,2,mens warehouse return policy,donotpay.com:1,400
+1533,jcrew,refund,800,1,2,jcrew return policy,donotpay.com:1,400
+1534,costco time limit,refund,800,1,2,costco return policy time limit,,400
+1535,pandora music,call,800,1,10,pandora music customer service,,400
+1536,google fiber 24 7,call,800,1,10,google fiber customer service phone number 24/7,gethuman.com:1,400
+1537,glasses,call,800,1,10,glasses usa customer service,,400
+1538,rover,call,800,1,10,rover customer service number,gethuman.com:1,400
+1539,mediacom pay bill,call,600,1,5,mediacom pay bill phone number,,400
+1540,emirates 24 7,call,600,1,5,emirates customer service 24/7,gethuman.com:1,400
+1541,hertz reservations,call,600,1,5,hertz reservations phone number,gethuman.com:1,400
+1542,adobe fee,cancel,900,1,24,adobe cancellation fee,,397
+1543,dollar rental car,call,1500,2,28,dollar rental car customer service,gethuman.com:2,395
+1544,paypal,refund,2300,1,25,paypal refund,,394
+1545,expedia center,call,1100,2,18,expedia call center number,gethuman.com:2,393
+1546,justanswer,refund,1500,1,13,justanswer refund phone number,gethuman.com:1,391
+1547,carmax warranty,call,900,1,13,carmax warranty phone number,,391
+1548,credit pros,call,700,1,8,credit pros phone number,gethuman.com:1,389
+1549,ssense,call,700,1,8,ssense customer service,gethuman.com:1,389
+1550,xbox,call,700,1,8,xbox support phone number real person,gethuman.com:1,389
+1551,nj unemployment,call,700,1,8,nj unemployment phone number to talk to a person,gethuman.com:1,389
+1552,ll bean,refund,900,1,4,ll bean return policy,,386
+1553,lime scooter,call,1500,2,29,lime scooter customer service,gethuman.com:2,385
+1554,ge,call,1000,1,16,ge customer service phone number,gethuman.com:1,385
+1555,liberty university financial aid,call,500,1,3,liberty university financial aid phone number,,385
+1556,walmart callout,call,500,1,3,walmart callout number,gethuman.com:1,385
+1557,oscar,call,500,1,3,oscar customer service,gethuman.com:1,385
+1558,levi,call,500,1,3,levi customer service,gethuman.com:1,385
+1559,ross dress less,refund,700,1,1,ross dress for less return policy,donotpay.com:1,382
+1560,how long target take,refund,700,1,1,how long does target take to refund,,382
+1561,boohoo,refund,700,1,1,boohoo return policy,donotpay.com:1,382
+1562,lyft,refund,700,1,1,lyft refund,,382
+1563,dermstore,call,800,1,11,dermstore customer service,gethuman.com:1,381
+1564,aspire,call,800,1,11,aspire customer service,gethuman.com:1,381
+1565,sonos,call,800,1,11,sonos customer service phone number,gethuman.com:1,381
+1566,ps5,call,800,1,11,ps5 customer service number,,381
+1567,amc,refund,1900,2,20,amc refund policy,,380
+1568,paypal mastercard,call,1100,1,19,paypal mastercard customer service,,379
+1569,zara,call,1400,2,27,zara phone number,,378
+1570,ipass,call,1400,1,27,ipass phone number,,378
+1571,chase dispute,call,1500,2,30,chase dispute number,,375
+1572,zillow,call,1200,1,22,zillow customer service number live person,gethuman.com:1,375
+1573,six flags,cancel,900,1,26,cancel six flags membership,,375
+1574,roku channel,cancel,700,1,18,how to cancel roku channel subscription,rocketmoney.com:1,375
+1575,puregym,cancel,600,1,14,puregym cancel membership,,375
+1576,acima leasing,call,600,1,6,acima leasing customer service,,375
+1577,gpt,call,600,1,6,chat gpt customer service,,375
+1578,disney+,cancel,600,1,14,how to cancel disney+ subscription,,375
+1579,airtalk wireless 24 7,call,600,1,6,airtalk wireless phone number 24 7,,375
+1580,walmart resources,call,1300,1,25,walmart human resources phone number,,371
+1581,philips,call,1000,1,17,philips customer service phone number,gethuman.com:1,370
+1582,best western,call,1400,2,28,best western customer service,gethuman.com:2,368
+1583,stripe,call,1400,2,28,stripe customer service number live person,,368
+1584,spokeo,call,700,1,9,spokeo customer service,gethuman.com:1,368
+1585,dunkin,call,800,1,12,dunkin customer service,gethuman.com:1,364
+1586,emirates airlines,call,800,1,12,emirates airlines customer service,gethuman.com:1,364
+1587,checkr,call,800,1,12,checkr customer service number,,364
+1588,expedia booking,call,1300,2,26,expedia booking number,gethuman.com:2,361
+1589,fitbit,call,1300,2,26,fitbit customer service number,gethuman.com:2,361
+1590,target circle,call,1300,1,26,target circle customer service,,361
+1591,nationwide,call,900,1,15,nationwide customer service phone number,,360
+1592,air canada,call,900,1,15,air canada customer service phone number,,360
+1593,bootbarn,refund,600,1,0,bootbarn return policy,donotpay.com:1,360
+1594,dxl,refund,600,1,0,dxl return policy,,360
+1595,costco alcohol,refund,600,1,0,costco alcohol return policy,,360
+1596,home.depot,refund,600,1,0,home.depot return policy,,360
+1597,lv,refund,600,1,0,lv return policy,,360
+1598,burlington coat factory,refund,600,1,0,burlington coat factory return policy,donotpay.com:1,360
+1599,hobby lobby's,refund,600,1,0,what is hobby lobby's return policy,,360
+1600,ace,refund,600,1,0,ace return policy,,360
+1601,kohls receipt,refund,600,1,0,kohls return policy with receipt,,360
+1602,petco fish,refund,600,1,0,petco fish return policy,,360
+1603,brooks brothers,refund,600,1,0,brooks brothers return policy,,360
+1604,jcpenny,refund,600,1,0,jcpenny return policy,,360
+1605,ae,refund,600,1,0,ae return policy,,360
+1606,puma,refund,600,1,0,puma return policy,,360
+1607,sprouts,refund,600,1,0,sprouts return policy,,360
+1608,jetblue,refund,600,1,0,jetblue refund policy,19pine.ai:1,360
+1609,emirates,refund,600,1,0,emirates refund,,360
+1610,spanx,refund,600,1,0,spanx return policy,,360
+1611,m&t bank,call,1400,2,29,m&t bank phone number,19pine.ai:1;gethuman.com:1,359
+1612,1-800-xfinity,call,1400,1,29,call 1-800-xfinity free,,359
+1613,fios,call,1400,2,29,fios customer service phone number,gethuman.com:1,359
+1614,american income life,call,1000,2,18,american income life phone number,xpendy.com:1,357
+1615,expedia have,call,1000,1,18,does expedia have a phone number,gethuman.com:1,357
+1616,uber eats driver,call,1000,1,18,uber eats driver customer service number,,357
+1617,bj,call,500,1,4,bj customer service number,,357
+1618,aceable,call,500,1,4,aceable customer service,,357
+1619,ryobi,call,500,1,4,ryobi customer service number,gethuman.com:1,357
+1620,prime video channels,cancel,800,1,24,how to cancel prime video channels,,353
+1621,j crew,call,600,1,7,j crew customer service number,gethuman.com:1,353
+1622,jd,call,600,1,7,jd customer service number,gethuman.com:1,353
+1623,sixt,call,600,1,7,sixt customer service phone number,gethuman.com:1,353
+1624,readers digest,call,600,1,7,readers digest phone number,gethuman.com:1,353
+1625,chipotle hr,call,1400,1,30,chipotle hr number,,350
+1626,ring doorbell,call,1400,2,30,ring doorbell customer service phone number,gethuman.com:2,350
+1627,spotify,refund,700,1,2,spotify refund,,350
+1628,swarovski,refund,700,1,2,swarovski return policy,,350
+1629,compassion international,call,700,1,10,compassion international phone number,,350
+1630,choice warranty,call,700,1,10,choice warranty customer service,,350
+1631,philo,call,700,1,10,philo customer service,gethuman.com:1,350
+1632,roadside assistance allstate,call,700,1,10,roadside assistance allstate phone number,gethuman.com:1,350
+1633,fedex 800,call,700,1,10,fedex 800 number customer service,,350
+1634,daikin tech,call,700,1,10,daikin tech support number,,350
+1635,carmax maxcare,call,800,1,13,carmax maxcare phone number,gethuman.com:1,348
+1636,usaa help,call,800,1,13,usaa help number,gethuman.com:1,348
+1637,fandango,call,800,1,13,fandango customer service phone number,gethuman.com:1,348
+1638,windstream 24 7,call,800,1,13,windstream customer service 24/7 phone number,,348
+1639,roku from,cancel,900,1,29,cancel roku subscription from phone,rocketmoney.com:1,346
+1640,truthfinder,call,1000,2,19,truthfinder number,,345
+1641,expedia's,call,1000,2,19,expedia's phone number,gethuman.com:2,345
+1642,plus,call,1000,1,19,plus customer service number,gethuman.com:1,345
+1643,jos bank,refund,800,1,4,jos a bank return policy,donotpay.com:1,343
+1644,jcp,refund,800,1,4,jcp return policy,,343
+1645,crunch,call,1300,1,28,crunch customer service,gethuman.com:1,342
+1646,nfl+,cancel,500,1,12,how to cancel nfl+,19pine.ai:1,341
+1647,brigit,call,1200,1,26,brigit customer service,donotpay.com:1,333
+1648,united 1k,call,1100,1,23,united 1k phone number,,333
+1649,google nest,call,800,1,14,google nest customer service phone number,gethuman.com:1,333
+1650,nfl,call,800,1,14,nfl phone number,,333
+1651,wisp,call,700,1,11,wisp customer service,,333
+1652,cuisinart,call,700,1,11,cuisinart customer service phone number,gethuman.com:1,333
+1653,otterbox warranty,call,700,1,11,otterbox warranty phone number,gethuman.com:1,333
+1654,pandora,cancel,600,1,17,how to cancel pandora subscription,,333
+1655,crunch corporate,call,600,1,8,crunch corporate number,gethuman.com:1,333
+1656,ameren,call,600,1,8,ameren customer service phone number,gethuman.com:1,333
+1657,korean airlines,call,600,1,8,korean airlines customer service,gethuman.com:1,333
+1658,sally beauty,call,600,1,8,sally beauty customer service,gethuman.com:1,333
+1659,kayak,call,600,1,8,kayak customer service phone number,gethuman.com:1,333
+1660,twilio,call,500,1,5,twilio customer service phone number,gethuman.com:1,333
+1661,starbucks 800,call,500,1,5,starbucks 800 number,gethuman.com:1,333
+1662,hobby lobby without receipt,refund,600,1,1,hobby lobby return policy without receipt,,327
+1663,tmobile,refund,600,1,1,tmobile return policy,donotpay.com:1,327
+1664,aldo,refund,600,1,1,aldo return policy,,327
+1665,kay jewelers,refund,600,1,1,kay jewelers return policy,,327
+1666,north face,refund,600,1,1,north face return policy,,327
+1667,dick's,refund,600,1,1,dick's return policy,,327
+1668,pets best,call,1200,1,27,pets best customer service,,324
+1669,sysco will,call,1100,2,24,sysco will call,gethuman.com:2,324
+1670,ihg,call,1100,1,24,ihg phone number,gethuman.com:1,324
+1671,current,call,1100,2,24,current number,,324
+1672,no,refund,700,1,3,no refunds,,323
+1673,youtube tv,refund,800,1,5,youtube tv refund,,320
+1674,primo water 24 7,call,800,1,15,primo water customer service number 24 7,gethuman.com:1,320
+1675,network solutions,call,700,1,12,network solutions customer service,,318
+1676,c spire,call,700,1,12,c spire customer service,,318
+1677,toyota 1-800,call,700,1,12,toyota customer service 1-800 number,,318
+1678,access,call,1200,1,28,my access customer service number,gethuman.com:1,316
+1679,royal caribbean reservations,call,1200,1,28,royal caribbean phone number reservations,,316
+1680,zenni optical,refund,1000,1,9,zenni optical return policy,,316
+1681,marcus,call,600,1,9,marcus customer service,gethuman.com:1,316
+1682,firestone corporate,call,600,1,9,firestone corporate phone number,gethuman.com:1,316
+1683,priceline help,call,600,1,9,priceline help number,gethuman.com:1,316
+1684,evergy,call,600,1,9,evergy phone number,,316
+1685,ui,call,1000,1,22,ui customer service,,312
+1686,betmgm,call,500,1,6,betmgm customer service,gethuman.com:1,312
+1687,pay cox bill,call,500,1,6,pay cox bill phone number,,312
+1688,dollar rental,call,900,1,19,dollar rental customer service,gethuman.com:1,310
+1689,doordash 1-800,call,800,1,16,doordash 1-800 number,gethuman.com:1,308
+1690,state farm 1 800,call,1000,1,23,state farm 1 800 number,,303
+1691,state farm insurance claim,call,1200,1,30,state farm insurance claim phone number,,300
+1692,t mobile,call,1200,2,30,t mobile customer number,gethuman.com:2,300
+1693,american express 24 7,call,1200,1,30,american express 24/7 customer service phone number,,300
+1694,ring billing,call,900,1,20,ring billing customer service telephone number,gethuman.com:1,300
+1695,choice privileges,call,900,1,20,choice privileges phone number,gethuman.com:1,300
+1696,frontier landline,call,900,1,20,frontier landline customer service,gethuman.com:1,300
+1697,rock auto,refund,800,1,6,rock auto return policy,donotpay.com:1,300
+1698,comcast,cancel,800,1,30,how to cancel comcast,,300
+1699,sherwin williams,refund,700,1,4,sherwin williams return policy,donotpay.com:1,300
+1700,wayfair furniture,refund,700,1,4,wayfair return policy furniture,,300
+1701,att,refund,700,1,4,att return policy,,300
+1702,costco computer,refund,700,1,4,costco computer return policy,,300
+1703,napa,refund,600,1,2,napa return policy,donotpay.com:1,300
+1704,cb2,refund,600,1,2,cb2 return policy,,300
+1705,hyatt reservations,call,600,1,10,hyatt reservations phone number,gethuman.com:1,300
+1706,steam requirements,refund,500,1,0,steam refund requirements,donotpay.com:1,300
+1707,aritzia store,refund,500,1,0,aritzia return policy in store,donotpay.com:1,300
+1708,merrell,refund,500,1,0,merrell return policy,donotpay.com:1,300
+1709,vs,refund,500,1,0,vs return policy,donotpay.com:1,300
+1710,parts geek,refund,500,1,0,parts geek return policy,donotpay.com:1,300
+1711,ross receipt,refund,500,1,0,ross return policy with receipt,,300
+1712,dashpass,refund,500,1,0,dashpass refund,xpendy.com:1,300
+1713,cole haan,refund,500,1,0,cole haan return policy,donotpay.com:1,300
+1714,uber,refund,500,1,0,uber refund,,300
+1715,united request,refund,500,1,0,united refund request,,300
+1716,dicks shoe,refund,500,1,0,dicks shoe return policy,donotpay.com:1,300
+1717,plato's closet,refund,500,1,0,plato's closet return policy,donotpay.com:1,300
+1718,dicks,refund,500,1,0,what is dicks return policy,donotpay.com:1,300
+1719,royal caribbean,refund,500,1,0,royal caribbean refund policy,,300
+1720,plt,refund,500,1,0,plt return policy,,300
+1721,bealls,refund,500,1,0,bealls return policy,,300
+1722,costco appliance,refund,500,1,0,costco appliance return policy,,300
+1723,cettire,refund,500,1,0,cettire return policy,,300
+1724,nutrafol,call,500,1,7,nutrafol customer service,,294
+1725,scribd,call,500,1,7,scribd customer service,,294
+1726,anthem blue cross blue shield,call,500,1,7,anthem blue cross blue shield number,gethuman.com:1,294
+1727,global tel link,call,700,1,14,global tel link phone number,,292
+1728,national rental car,call,700,1,14,national rental car customer service,gethuman.com:1,292
+1729,chime banking,call,700,1,14,phone number to chime banking,gethuman.com:1,292
+1730,subscriptions roku tv,cancel,600,1,21,how to cancel subscriptions on roku tv,,290
+1731,metlife pet insurance,cancel,600,1,21,how to cancel metlife pet insurance,,290
+1732,state farm claims,call,1100,1,28,state farm phone number for claims,,289
+1733,paypal time,refund,1000,1,11,paypal refund time,,286
+1734,apple,call,1000,1,25,what is apple support number,,286
+1735,doordash 800,call,800,1,18,doordash 800 number,gethuman.com:1,286
+1736,hulu help,call,600,1,11,hulu help number,gethuman.com:1,286
+1737,amtrak,refund,800,1,7,amtrak refund,,282
+1738,il makiage,call,900,1,22,il makiage customer service,,281
+1739,turkish airlines,call,900,1,22,turkish airlines number,gethuman.com:1,281
+1740,big 5,refund,700,1,5,big 5 return policy,donotpay.com:1,280
+1741,class pass,call,700,1,15,class pass customer service,gethuman.com:1,280
+1742,bath and body works,call,700,1,15,bath and body works customer service hours,gethuman.com:1,280
+1743,truck,call,700,1,15,real truck phone number,gethuman.com:1,280
+1744,betterhelp,call,1000,1,26,betterhelp customer service,,278
+1745,ring camera,call,1000,1,26,ring camera customer service phone number,,278
+1746,comcast internet,cancel,500,1,17,cancelling comcast internet,,278
+1747,expedia hotel,cancel,500,1,17,expedia hotel cancellation number,gethuman.com:1,278
+1748,evergy 24 hour,call,500,1,8,evergy 24 hour customer service phone number,gethuman.com:1,278
+1749,kohl,call,500,1,8,kohl customer service,gethuman.com:1,278
+1750,ecsi as,refund,600,1,3,ecsi as agent for refund,,277
+1751,mapfre,call,800,1,19,mapfre customer service phone number,,276
+1752,ebay,refund,1000,1,12,ebay refund,,273
+1753,expedia centre,call,600,1,12,expedia call centre,gethuman.com:1,273
+1754,region,call,600,1,12,region customer service,gethuman.com:1,273
+1755,schlage,call,600,1,12,schlage customer service phone number,gethuman.com:1,273
+1756,nest,call,600,1,12,nest customer service number,gethuman.com:1,273
+1757,hotmail,call,600,1,12,hotmail customer service number,gethuman.com:1,273
+1758,linkedin,refund,500,1,1,linkedin refund,,273
+1759,att information,call,900,1,24,att contact information,gethuman.com:1,265
+1760,amc,cancel,600,1,24,how to cancel amc membership,,265
+1761,google store,refund,700,1,6,google store return policy,,262
+1762,ebay united states,call,600,1,13,ebay customer service phone number united states,gethuman.com:1,261
+1763,mercari,call,700,1,17,mercari phone number,gethuman.com:1,259
+1764,state farm,cancel,500,1,19,cancel state farm policy,,259
+1765,santander consumer,call,800,1,21,santander consumer usa customer service,gethuman.com:1,258
+1766,walmart money card,call,900,1,26,walmart money card customer service,,250
+1767,affirm 24 7,call,800,1,22,affirm customer service number 24 7,gethuman.com:1,250
+1768,affirm,call,800,1,22,call affirm,gethuman.com:1,250
+1769,expedia partner central,call,700,1,18,expedia partner central phone number,,250
+1770,lowes,call,600,1,14,lowes online customer service,,250
+1771,fpl miami,call,600,1,14,fpl customer service number miami,gethuman.com:1,250
+1772,optimum ny,call,600,1,14,optimum ny customer service,gethuman.com:1,250
+1773,tjmaxx credit card,call,600,1,14,tjmaxx credit card phone number,gethuman.com:1,250
+1774,white house black market,refund,500,1,2,white house black market return policy,donotpay.com:1,250
+1775,cabelas,refund,500,1,2,cabelas return policy,donotpay.com:1,250
+1776,adapt health,call,500,1,10,adapt health phone number,19pine.ai:1,250
+1777,roku subscriptions,cancel,500,1,20,roku subscriptions cancel,rocketmoney.com:1,250
+1778,perfect resume,call,500,1,10,my perfect resume customer service,,250
+1779,altice,call,500,1,10,altice customer service,gethuman.com:1,250
+1780,shop pay 24 7,call,500,1,10,shop pay support phone number 24 7,gethuman.com:1,250
+1781,priceline 1800,call,500,1,10,priceline 1800 number,gethuman.com:1,250
+1782,royal jordanian,call,500,1,10,royal jordanian usa phone number,,250
+1783,michael kors,refund,700,1,7,michael kors return policy,,247
+1784,walmart no receipt,refund,900,1,12,walmart no receipt return policy,,245
+1785,unsubscribe from peacock,cancel,600,1,27,how to unsubscribe from peacock,,243
+1786,aol,call,800,1,23,aol customer service phone number,gethuman.com:1,242
+1787,wall street journal,call,700,1,19,wall street journal customer service phone number,gethuman.com:1,241
+1788,instant ink,call,700,1,19,instant ink phone number,gethuman.com:1,241
+1789,facebook,call,700,1,19,facebook phone number customer service,,241
+1790,patreon,refund,600,1,5,patreon refund,,240
+1791,j crew factory,refund,600,1,5,j crew factory return policy,,240
+1792,amtrak ticket,refund,600,1,5,amtrak ticket refund,,240
+1793,tcl,call,600,1,15,tcl customer service number,gethuman.com:1,240
+1794,national,call,600,1,15,national customer service,gethuman.com:1,240
+1795,general electric,call,600,1,15,general electric customer service phone number,gethuman.com:1,240
+1796,consumer reports,call,500,1,11,consumer reports phone number,gethuman.com:1,238
+1797,target guest relations,call,900,1,28,target guest relations number,,237
+1798,asurion home plus,call,800,1,24,asurion home plus phone number,,235
+1799,banfield wellness,cancel,500,1,22,how to cancel banfield wellness plan,,234
+1800,blue nile,refund,700,1,8,blue nile return policy,,233
+1801,xtream mediacom,call,700,1,20,xtream mediacom phone number,gethuman.com:1,233
+1802,dollar tree corporate,call,700,1,20,dollar tree corporate phone number,gethuman.com:1,233
+1803,facebook have,call,700,1,20,does facebook have a customer service number,,233
+1804,dyson,refund,1500,1,29,dyson return policy,,231
+1805,netflix help,call,900,1,29,netflix help number,gethuman.com:1,231
+1806,dillard's,call,600,1,16,dillard's customer service phone number,gethuman.com:1,231
+1807,ncl,call,600,1,16,ncl customer service number,,231
+1808,oakley,refund,800,1,11,oakley return policy,,229
+1809,dvc,call,500,1,12,dvc phone number,,227
+1810,bill,call,500,1,12,call bill,gethuman.com:1,227
+1811,united mileageplus,call,500,1,12,united mileageplus customer service phone number,gethuman.com:1,227
+1812,ourtime,call,500,1,12,ourtime customer service,,227
+1813,chamberlain,call,500,1,12,chamberlain customer service,gethuman.com:1,227
+1814,sodexo,call,900,1,30,sodexo phone number,gethuman.com:1,225
+1815,brinks home security,call,900,1,30,brinks home security phone number,,225
+1816,bath and body,refund,600,1,6,bath and body return policy,,225
+1817,crunch gym,cancel,600,1,30,how to cancel crunch gym membership,,225
+1818,rooms go,refund,1000,1,17,rooms to go return policy,,222
+1819,at ticketmaster,call,600,1,17,how do i talk to a real person at ticketmaster?,gethuman.com:1,222
+1820,nyt,call,600,1,17,nyt customer service phone number,gethuman.com:1,222
+1821,carnival cruise 24 hour,call,700,1,22,carnival cruise 24 hour customer service,gethuman.com:1,219
+1822,tjmaxx,refund,800,1,12,tjmaxx return policy,,218
+1823,expedia helpline,call,500,1,13,expedia helpline,gethuman.com:1,217
+1824,skylight one,call,500,1,13,skylight one customer service,,217
+1825,ebay's,call,500,1,13,ebay's phone number,gethuman.com:1,217
+1826,t mobile corporate,call,800,1,27,t mobile corporate number,gethuman.com:1,216
+1827,freeway insurance 24 hour,call,800,1,27,freeway insurance 24 hour phone number,gethuman.com:1,216
+1828,target help,call,800,1,27,target help number,,216
+1829,expedia reservations,call,600,1,18,expedia reservations phone number,gethuman.com:1,214
+1830,verizon 611,call,600,1,18,verizon 611 number,,214
+1831,dillard's,refund,500,1,4,dillard's return policy,,214
+1832,francesca's,refund,500,1,4,francesca's return policy,,214
+1833,costco electronic,refund,500,1,4,costco electronic return policy,,214
+1834,gnc,refund,500,1,4,gnc return policy,,214
+1835,united airlines 24 7,call,700,1,23,united airlines customer care number 24/7,gethuman.com:1,212
+1836,disney +,call,700,1,23,disney + customer service,gethuman.com:1,212
+1837,shopbop,refund,600,1,7,shopbop return policy,,212
+1838,verizon business,call,800,1,28,verizon business support phone number,,211
+1839,united status,refund,700,1,10,united refund status,,210
+1840,priceline.com,call,500,1,14,priceline.com phone number,gethuman.com:1,208
+1841,doordash dasher,call,500,1,14,doordash dasher customer service number,,208
+1842,farmers,call,700,1,24,farmers customer service number,gethuman.com:1,206
+1843,chewy.com,call,800,1,30,chewy.com customer service,gethuman.com:1,200
+1844,sunrun solar,call,700,1,25,sunrun solar customer service,gethuman.com:1,200
+1845,dollar,call,600,1,20,dollar customer service,gethuman.com:1,200
+1846,usaa auto insurance,call,600,1,20,usaa auto insurance customer service,gethuman.com:1,200
+1847,bose,call,600,1,20,bose customer service phone number,gethuman.com:1,200
+1848,doordash driver,call,500,1,15,doordash driver support number,gethuman.com:1,200
+1849,aadvantage,call,700,1,26,aadvantage customer service phone number,gethuman.com:1,194
+1850,navy,call,600,1,21,navy customer service number,,194
+1851,cox 1800,call,600,1,21,cox 1800 number,gethuman.com:1,194
+1852,audible,refund,900,1,18,audible refund,,193
+1853,priceline 800,call,500,1,16,priceline 800 number,gethuman.com:1,192
+1854,paramount +,call,500,1,16,paramount + customer service,gethuman.com:1,192
+1855,lulu lemon,refund,600,1,9,lulu lemon return policy,,189
+1856,old navy's,refund,600,1,9,what is old navy's return policy,,189
+1857,general motors,call,600,1,22,general motors customer service,,188
+1858,expedia confirmation,call,600,1,22,expedia confirmation number,gethuman.com:1,188
+1859,lexus,call,600,1,22,lexus customer service number,,188
+1860,ticketmaster help,call,600,1,22,ticketmaster help number,,188
+1861,barclay credit card,call,600,1,22,barclay credit card customer service,gethuman.com:1,188
+1862,netflix tv,cancel,500,1,30,how to cancel netflix on tv,,188
+1863,expedia travel,call,500,1,17,expedia travel customer service phone number,gethuman.com:1,185
+1864,tmobile from,call,700,1,28,how to call tmobile from phone,gethuman.com:1,184
+1865,dollar rent car,call,700,1,28,dollar rent a car customer service,gethuman.com:1,184
+1866,nordstrom's,refund,700,1,13,what is nordstrom's return policy,,183
+1867,teen mobile,call,700,1,29,teen mobile customer service,gethuman.com:1,179
+1868,sirius radio,call,700,1,29,phone number for sirius radio,gethuman.com:1,179
+1869,team mobile,call,500,1,18,team mobile customer service phone number,gethuman.com:1,179
+1870,there expedia,call,500,1,18,is there a phone number for expedia,gethuman.com:1,179
+1871,sysco,call,600,1,24,sysco customer service number,gethuman.com:1,176
+1872,paypal credit card,call,600,1,24,paypal credit card customer service phone number,gethuman.com:1,176
+1873,starbucks 1800,call,600,1,24,starbucks 1800 number,,176
+1874,olive garden,call,600,1,24,olive garden customer service,gethuman.com:1,176
+1875,att business,call,600,1,24,att business customer service number,,176
+1876,regal,refund,500,1,7,regal refund policy,,176
+1877,tj max,refund,500,1,7,tj max return policy,,176
+1878,optimum retention department,call,700,1,30,optimum retention department phone number,gethuman.com:1,175
+1879,apple's,call,500,1,19,apple's phone number,gethuman.com:1,172
+1880,direct,call,500,1,19,direct phone number,gethuman.com:1,172
+1881,boost,call,500,1,19,boost customer service number 24 hours,,172
+1882,canva,refund,600,1,11,canva refund,,171
+1883,stanley,call,600,1,25,stanley customer service number,,171
+1884,cedar point,call,600,1,26,cedar point customer service phone number,gethuman.com:1,167
+1885,comcast's,call,600,1,26,comcast's phone number,,167
+1886,farmers auto insurance,call,600,1,26,farmers auto insurance phone number,gethuman.com:1,167
+1887,amazon resources,call,500,1,20,amazon human resources phone number,,167
+1888,tj maxx without receipt,refund,600,1,12,tj maxx return policy without receipt,,164
+1889,autozone battery,refund,600,1,12,autozone battery return policy,,164
+1890,doordash drivers,call,600,1,27,doordash customer service number for drivers,,162
+1891,cvs help desk,call,500,1,21,cvs help desk number,,161
+1892,mcafee billing,call,500,1,21,mcafee customer service phone number billing,gethuman.com:1,161
+1893,expedia group,call,500,1,21,expedia group customer service,gethuman.com:1,161
+1894,holiday inn express,call,500,1,21,holiday inn express customer service phone number,gethuman.com:1,161
+1895,ashley,refund,500,1,9,ashley return policy,,158
+1896,tmobile technical,call,500,1,22,tmobile technical support phone number,gethuman.com:1,156
+1897,penfed credit union,call,600,1,29,penfed credit union customer service,,154
+1898,mailchimp,call,500,1,23,mailchimp customer service number,,152
+1899,blink camera,call,500,1,23,blink camera customer service phone number,gethuman.com:1,152
+1900,panda express,call,600,1,30,panda express customer service,gethuman.com:1,150
+1901,1800 state farm,call,600,1,30,1800 state farm number,,150
+1902,discord,refund,500,1,10,discord refund,,150
+1903,volkswagen financial,call,500,1,24,volkswagen financial services phone number,,147
+1904,norwegian,call,500,1,24,norwegian phone number,gethuman.com:1,147
+1905,paychex,call,500,1,24,paychex customer service phone number,,147
+1906,expedia request,refund,500,1,11,expedia refund request,gethuman.com:1,143
+1907,florida food stamp,call,500,1,25,florida food stamp number,gethuman.com:1,143
+1908,chase bank,call,500,1,25,chase bank customer service hours,,143
+1909,kraken,call,500,1,26,kraken customer service phone number,gethuman.com:1,139
+1910,state farm line,call,500,1,26,state farm customer service line,,139
+1911,walmart battery,refund,500,1,12,walmart battery return policy,,136
+1912,expedia,refund,500,1,12,how to get a refund on expedia,gethuman.com:1,136
+1913,bath and body work,call,500,1,27,bath and body work customer service,,135
+1914,amex platinum,call,500,1,28,amex platinum customer service number,,132
+1915,tripple,call,500,1,30,tripple a number,gethuman.com:1,125
+1916,humana,call,500,1,30,humana telephone number customer service,,125
+1917,netflix,refund,800,1,30,netflix refund,,120
+1918,tinder,refund,500,1,15,tinder refund,,120
+1919,wayfair's,refund,600,1,30,what is wayfair's return policy,,90
+1920,godaddy,refund,500,1,26,godaddy refund policy,,83
+1921,grammarly,refund,500,1,28,grammarly refund,,79
