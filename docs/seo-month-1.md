@@ -24,7 +24,7 @@ We pulled every keyword the 5 competitors rank for with at least 500 searches a 
 | 200 | 65% |
 | 400 | 76% |
 
-So Month 1 is about the top 300, done well. Pages ranked 1,000 to 1,921 add little.
+So Month 1 is about the top of the list, done well. The top 150 alone cover 60% of all searches. Pages ranked 1,000 to 1,921 add little.
 
 **The biggest pages barely have links.** GetHuman ranks #4 for "verizon customer service" (638,000 a month) with 5 referring domains, #2 for "wayfair customer service" with 1, and #1 for "fedex customer service number" with 1. What ranks is a site covering many companies well, not links to each page. Links matter for the domain as a whole, which is what the launch and the Hold Time Index are for.
 
@@ -40,46 +40,68 @@ So Month 1 is about the top 300, done well. Pages ranked 1,000 to 1,921 add litt
 
 **Some results can't be won and get skipped.** Searches where the brand's own site or forums hold the whole first page stay off the list even if they're big: "xfinity customer service number" (Reddit and Facebook), "costco return policy" (costco.com) and "united airlines customer service" (united.com, 7 of 10 results). Checking the top 10 results (`ahrefs keyword-serp`) before each batch catches these.
 
-## How we get to 300 good pages in a month
+## Every page is a real call
 
-**1. Probe calls verify every phone number automatically.** Hand-checking each number was the bottleneck: 30 minutes a day is enough for about 10 numbers. A probe is a short automated call. It dials the number, listens to the phone menu for about 45 seconds, transcribes it and hangs up before reaching a person. The page ships only if the greeting names the right company. It also saves the menu options ("press 2 for billing"), which no competitor publishes. A probe costs a few cents and takes no staff time at the company. Nick spot-checks 10 a day instead of approving every number.
+Before a page goes up, we place a real test call to that company and do the job the page is about, as far as it can go without the caller's own account. Then the page walks through that call in detail:
 
-**2. Full measurement calls on the top 100 only.** Probes can't tell us the wait to reach a person. So each weekday, 5 full calls go to the top 100 companies: navigate the menu, wait for a person, ask one real question (hours or cancellation policy), and record the menu path and the wait. That data goes on the pages worth the most, and it's what AI assistants quote.
+- **The phone tree, step by step:** every menu, what we pressed or said, and which option actually reached a person
+- **The wait:** how long each stage took, and when we called (day and time)
+- **The conversation:** what the rep asked for, what they offered (retention deals, credits, transfers), which answers moved things forward and which didn't
+- **What you need ready:** account number, PIN, last 4 of the card, address on file, whatever the call required
+- **Where it got stuck,** and how to get past it
+- **"Have your agent make this call":** the prompt, filled in with everything above
 
-**3. Launch speed follows indexing.** A new domain gets a small crawl budget. We publish in batches and only speed up while Google indexes at least 60% of what we've published. Link each new page from a company A to Z list and category pages (telecom, airlines, gyms, streaming, banks, shipping). Without those links Google won't find the pages.
+Nobody else publishes this. GetHuman and Pine list a number and generic steps. Our pages show the real path through the call, and the details are exactly what AI assistants quote. We don't need a separate phone-number check either: the number is verified because we just called it.
 
-**4. AI-assistant traffic (GEO) is built in from Day 1.**
-- **Bing Webmaster Tools and IndexNow** ping on every publish. ChatGPT search draws heavily on Bing, so pages get into Bing fast.
-- **Structured data** on every page: Organization with contactPoint (phone, hours), HowTo for cancel steps, and FAQ.
-- **Markdown version of every page and an entry in llms.txt.**
-- **An Ahrefs Brand Radar report** set up in the UI on Day 1 with about 50 prompts, such as "how do I cancel planet fitness", "verizon customer service number" and "can an AI call customer service for me". It's checked weekly with `ahrefs brand-radar`. This is how we measure AI mentions.
+**What each call does, by page type:**
+
+| Page type | The test call |
+|---|---|
+| Customer service (`/call/<company>`) | Get through to a person and settle one real question (hours, fees, how to change a plan). Record every step to get there. |
+| Cancel (`/cancel/<company>`) | Get to the cancellation or retention department and find out exactly what they need and what they offer, up to the point where a real account is required. If we have a real account with the company, cancel it for real and document every step. |
+
+**Rules for the calls:**
+- Our own account, and a real question or task each time. We never waste an agent's time on a fake story.
+- Never publish a rep's name or anything that identifies them. Quote what they said, not who they are.
+- Only during the company's phone hours. Calls run in parallel, so the limit is how many write-ups we can review, not how many lines we can dial.
+- Each call costs roughly $1 (a 20-minute call). 150 pages cost about $150.
+
+**Pace is set by review.** The agent drafts each page from the call transcript. Nick reads every page before it goes up, because accuracy is the whole value. 5 pages a day in Week 2 while the template settles, 10 a day in Week 3, 15 a day from Week 4.
+
+**Pages must be found and indexed.** A new domain gets a small crawl budget. Link every page from a `/companies` A to Z list and category pages (telecom, airlines, gyms, streaming, banks, shipping). Ping IndexNow on publish. If Google indexes less than 60% of what's published, stop and fix the template before adding more.
+
+**AI-assistant traffic (GEO) from Day 1:**
+- **Bing Webmaster Tools + IndexNow** (ChatGPT search leans on Bing)
+- **Structured data on every page:** Organization with contactPoint, HowTo for the steps, FAQ
+- **A markdown version of every page and an entry in llms.txt**
+- **An Ahrefs Brand Radar report** with about 50 prompts, read weekly with `ahrefs brand-radar`
 
 ## Targets for October 31
 
 - [ ] Rename live: call4.me ranks #1 for "call4me", "call4.me" and "call for me ai"
 - [ ] Analytics, Search Console, Bing Webmaster and IndexNow live, with signups tracked by source
-- [ ] Probe calls built. Every published number probed, the wrong-number rate measured, and Nick spot-checking daily.
-- [ ] 300 pages live (the top 300 in `targets.csv`, minus unwinnable results), at least 60% indexed
-- [ ] 60 of the top 100 with measured wait times
+- [ ] 150 pages live, each from a real test call (the top 150 in `targets.csv`, minus unwinnable results), covering 60% of the list's search volume
+- [ ] At least 60% of them indexed
 - [ ] Listed in at least 10 MCP and agent directories
 - [ ] Brand Radar report live with a baseline
-- [ ] Hold Time Index #1 ready to go out Monday, November 2
+- [ ] Hold Time Index #1 ready to go out Monday, November 2 (the test calls are its data)
 
 ## Daily rhythm (from Week 2)
 
 | When | What | Who |
 |---|---|---|
-| Morning | Review yesterday's pages. Spot-check 10 probed numbers. Approve the 5 measurement calls. | Nick, 30 min |
-| Morning | Run probes for the next batch. Check the top 10 results for each and drop unwinnable ones. | agent |
-| Midday | Place the 5 measurement calls. One distribution action (Reddit reply, directory, mention). | agent (drafts), Nick sends, 20 min |
-| Afternoon | Generate and publish the day's pages from probe data plus sources. Ping IndexNow. | agent |
-| Evening | Indexing ratio, rank changes, log. Set the next day's batch size from the indexing ratio. | agent |
+| Morning | Review and approve yesterday's drafted pages | Nick, 45 min |
+| Morning | Check the top 10 results for the day's targets and drop unwinnable ones. Prepare each call's brief. | agent |
+| Business hours | Place the day's test calls in parallel. Answer any question a call raises. | agent |
+| Afternoon | Draft a page from each transcript: phone tree, steps, what was needed, what was offered | agent |
+| Midday | One distribution action (Reddit reply, directory, mention) | agent drafts, Nick sends, 15 min |
+| Evening | Publish approved pages, ping IndexNow, log indexing and rank changes | agent |
 
-Weekends are agent-only: builds, fixes and logs, with no calls and no posting.
+Weekends are agent-only: builds, fixes and logs, with no calls (most phone lines are closed or short-staffed) and no posting.
 
 ## The days
 
-### Week 1: foundation, launch links, probe calls (Oct 1 to 4)
+### Week 1: foundation, launch links, template (Oct 1 to 4)
 
 **Thu Oct 1: rename + measurement**
 - Ship the call4me rename (the `rename-call4me` worktree has 43 changed files that were never committed): titles, meta, OG cards, robots.txt, llms.txt, MCP server name.
@@ -87,77 +109,77 @@ Weekends are agent-only: builds, fixes and logs, with no calls and no posting.
 - Google Search Console and Bing Webmaster Tools verified and sitemap submitted. IndexNow key published.
 - Nick: create the Brand Radar report in the Ahrefs UI (about 50 prompts). Go through the 76 launch replies and add the chores people mention to `targets.csv`.
 
-**Fri Oct 2: launch links**
+**Fri Oct 2: launch links + first test call**
 - Submit to the MCP Registry, Smithery, Glama, mcp.so and PulseMCP. The agent drafts, Nick submits.
-- Add a line to the privacy page and terms: anonymous call stats may be published in aggregate.
-- First blog post, about one of our own long calls (for example the 23-minute Comcast Business call). No customer's call goes public without their permission.
+- Add a line to the privacy page and terms: we publish write-ups of our own test calls, and never any customer's call.
+- The first 2 test calls, Verizon (customer service) and Planet Fitness (cancel), to decide what a write-up needs to capture.
 
-**Sat Oct 3 (agent): company table + probe calls**
-- D1 `companies` table: slug, name, job, phone numbers (each with a source URL, the probe transcript and a verified date), hours, menu options, measured wait, cancel steps, other ways to cancel.
-- Probe mode in the dialer: a max duration of 60 seconds, hang up before a person answers, transcribe the greeting and menu, and check that the company name appears.
+**Sat Oct 3 (agent): data model**
+- D1 `companies` and `test_calls` tables: company, page type, the number dialed and its source, when we called, each step of the phone tree (menu prompt, what we pressed or said, time spent), rep interactions, what was needed, the outcome, links to the call record.
+- A script that turns a finished call's transcript into a draft phone-tree write-up for review.
 
 **Sun Oct 4 (agent): templates**
-- `/call/<company>` and `/cancel/<company>`: answer first, number with source and verified date, menu options from the probe, measured wait when we have one, other ways, and a "have your agent call" prompt. JSON-LD, markdown version, IndexNow ping on publish.
+- `/call/<company>` and `/cancel/<company>` built from the Oct 2 write-ups: answer first, phone tree as numbered steps, a timeline of the wait, what to have ready, what they offered, other ways, "have your agent make this call". JSON-LD, markdown version, IndexNow ping on publish.
 - `/companies` A to Z list and category pages. Sitemap split by type.
-- Run the top-10 check (`ahrefs keyword-serp`) on the top 150 targets and mark unwinnable ones.
+- Check the top 10 results (`ahrefs keyword-serp`) for the top 150 targets and mark unwinnable ones.
 
-### Week 2: first 100 (Oct 5 to 11)
+### Week 2: the first 20 pages (Oct 5 to 11)
 
-**Mon Oct 5:** scoreboard snapshot (`ahrefs batch` on us plus 5 competitors). Probe the top 50 numbers. Blog post goes up.
+**Mon Oct 5:** scoreboard snapshot (`ahrefs batch` on us plus the 5 competitors). Publish Verizon and Planet Fitness. 5 test calls: FedEx, Delta, USAA, PayPal, Expedia.
 
-**Tue Oct 6:** publish the **top 25** (Verizon, FedEx, Planet Fitness cancel, Delta, USAA, PayPal, Expedia, Adobe cancel, Wayfair, Audible cancel...). Show HN around 8am Pacific (the agent drafts, Nick posts). First 5 measurement calls: Verizon, FedEx, Delta, USAA, PayPal.
+**Tue Oct 6:** publish yesterday's 5. Show HN around 8am Pacific (the agent drafts, Nick posts), with the Verizon write-up as proof. 5 test calls: Adobe cancel, Wayfair, Audible cancel, fubo cancel, Hulu cancel.
 
-**Wed Oct 7:** publish targets 26 to 50. 5 measurement calls.
+**Wed Oct 7:** publish 5, 5 test calls (the next 5 in `targets.csv`).
 
-**Thu Oct 8:** Search Console check on the first 25: are they discovered, crawled, indexed? Fix templates, not single pages. Publish 51 to 75. 5 measurement calls.
+**Thu Oct 8:** publish 5, 5 test calls. Search Console: are the first pages discovered, crawled and indexed? Fix the template, not single pages.
 
-**Fri Oct 9:** publish 76 to 100. 5 measurement calls. Submit to Claude and Codex plugin lists and "awesome MCP" GitHub lists (as PRs).
+**Fri Oct 9:** publish 5, 5 test calls. Submit to Claude and Codex plugin lists and "awesome MCP" GitHub lists (as PRs).
 
-**Sat Oct 10 (agent):** probe 101 to 200 and run the top-10 check. Link related pages to each other (company ↔ its cancel page ↔ its category).
+**Sat Oct 10 (agent):** link related pages to each other (a company ↔ its cancel page ↔ its category). Write briefs for next week's 50 calls.
 
-**Sun Oct 11 (agent):** indexing report for the first 100 (Google and Bing). Set Week 3's pace: **40 a day if at least 60% are indexed, 20 a day if not.**
+**Sun Oct 11 (agent):** indexing report for the first 22 pages (Google and Bing). Look through the drafts for the parts Nick corrected most, and fix the draft script so they come out right the first time.
 
-### Week 3: 100 to 200 (Oct 12 to 18)
+### Week 3: 10 a day (Oct 12 to 18)
 
-**Mon Oct 12:** scoreboard + first Brand Radar reading. Publish at the set pace. 5 measurement calls.
+**Mon Oct 12:** scoreboard + first Brand Radar reading. 10 test calls, publish 10.
 
-**Tue Oct 13:** publish. 5 calls. One Reddit reply (r/Comcast_Xfinity, r/PlanetFitness, r/verizon: answer the person's question first). Reddit threads rank for many of these searches, so good replies are search traffic in their own right.
+**Tue Oct 13:** 10 calls, publish 10. One Reddit reply (r/Comcast_Xfinity, r/PlanetFitness, r/verizon: answer the person's question first). Reddit threads rank for many of these searches, so a good reply is search traffic in its own right.
 
-**Wed Oct 14:** publish. 5 calls. Ship "call4.me vs Pine" and "call4.me vs GetHuman" ("pine ai" gets 1,100 a month, "gethuman" 800).
+**Wed Oct 14:** 10 calls, publish 10. Ship "call4.me vs Pine" and "call4.me vs GetHuman" ("pine ai" gets 1,100 a month, "gethuman" 800).
 
-**Thu Oct 15:** publish. 5 calls. Update the top 25 with their measured wait times.
+**Thu Oct 15:** 10 calls, publish 10.
 
-**Fri Oct 16:** publish. 5 calls. Halfway check: if fewer than half of all pages are indexed, stop publishing Monday and fix page quality first.
+**Fri Oct 16:** 10 calls, publish 10. Halfway check: if fewer than 60% of pages are indexed, hold the pace at 10 next week and fix the template first.
 
-**Sat Oct 17 (agent):** probe 201 to 300 and run the top-10 check. List pages ranked 11 to 30 and what each one is missing.
+**Sat Oct 17 (agent):** list pages ranked 11 to 30 and what each one is missing.
 
-**Sun Oct 18 (agent):** recheck every probe older than 14 days on the top 50.
+**Sun Oct 18 (agent):** briefs for next week's calls.
 
-### Week 4: 200 to 300 and strengthening the head (Oct 19 to 25)
+### Week 4: 15 a day (Oct 19 to 25)
 
-**Mon Oct 19:** scoreboard + Brand Radar. Publish at the set pace. 5 calls.
+**Mon Oct 19:** scoreboard + Brand Radar. 15 calls, publish 15.
 
-**Tue Oct 20:** publish. 5 calls. Improve the 10 pages closest to page one (sharper answer at the top, fresher wait time, better FAQ).
+**Tue Oct 20:** 15 calls, publish 15. Redo the test call for the 5 pages closest to page one and update their write-ups, so they show a recent date.
 
-**Wed Oct 21:** publish. 5 calls. One distribution action.
+**Wed Oct 21:** 15 calls, publish 15. One distribution action.
 
-**Thu Oct 22:** publish. 5 calls. Build a list of 10 consumer reporters who wrote about hold times, cancelling or customer service in the last year, each with a link to their article.
+**Thu Oct 22:** 15 calls, publish 15. Build a list of 10 consumer reporters who wrote about hold times, cancelling or customer service in the last year, each with a link to their article.
 
-**Fri Oct 23:** reach 300 pages. 5 calls.
+**Fri Oct 23:** 15 calls, publish 15. **About 150 pages live.**
 
-**Sat Oct 24 (agent):** Hold Time Index #1 data freeze: every measured call, fastest and slowest companies to reach a person.
+**Sat Oct 24 (agent):** Hold Time Index #1 data freeze: every test call so far, fastest and slowest companies to reach a person, the longest phone trees.
 
 **Sun Oct 25 (agent):** draft `/hold-time-index` with a chart, the method and a markdown version.
 
 ### Week 5: Index + month review (Oct 26 to 31)
 
-**Mon Oct 26:** scoreboard + Brand Radar. Nick reviews the Index. Measurement calls continue. New pages only if indexing is above 60%.
+**Mon Oct 26:** scoreboard + Brand Radar. Nick reviews the Index. Test calls continue at 15 a day if indexing is above 60%.
 
 **Tue Oct 27:** reporter pitches, one per reporter, each tied to their own article. Nick reviews every one.
 
 **Wed Oct 28:** Index final. X thread and blog post written.
 
-**Thu Oct 29:** month review against every target above. Set Month 2: the refund pages, pages 301 to 700, and whatever Brand Radar says AI assistants cite.
+**Thu Oct 29:** month review against every target above. Set Month 2: the next 150 targets, the refund pages, and whatever Brand Radar says AI assistants cite.
 
 **Fri Oct 30:** fix what the review found. Queue the Index, the pitches and the thread.
 
@@ -167,8 +189,8 @@ Weekends are agent-only: builds, fixes and logs, with no calls and no posting.
 
 ## What must never slip
 
-- No number is published without a source link and a passing probe. A wrong number sends people to scammers.
-- Probe calls hang up before a person answers, and at most 1 probe per number per 14 days.
-- Nothing from a customer's call goes public without their permission. Our own calls are fine.
+- No page goes up without a real test call behind it, and without Nick reading it.
+- Never publish a rep's name or anything that identifies them.
+- Nothing from a customer's call goes public without their permission. Our own test calls are fine.
 - Every external post, reply and pitch is drafted by the agent and sent by Nick.
-- If indexing drops below 60%, stop publishing and fix the template.
+- If indexing drops below 60%, stop adding pages and fix the template.
