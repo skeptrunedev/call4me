@@ -41,7 +41,7 @@ The caller can only say what you give it. Call \`callbay_get_profile\`, then ask
 3. \`callbay_place_call\` with \`to\`, \`business\`, \`goal\`, \`category\`, and \`details\` (answers by field key). Add \`flexibility\` for what the caller may accept without asking. If it answers "Not calling yet", ask the user exactly what it lists and try again.
 4. Poll \`callbay_get_call\` with \`wait_seconds: 30\` until \`finished\`. If it lists \`open_questions\`, the business is waiting on the line: answer right away with \`callbay_answer_question\`.
 5. Tell the user the result in a line or two, including anything they need to note (a confirmation number, a time to show up).
-6. To put the user on the line: pass \`connect_when\` (e.g. "as soon as a person picks up") to skip a hold, or call \`callbay_connect_me\` mid-call. Their phone rings and they join; they press * or hang up to hand the call back to the caller.
+6. To put the user on the line: pass \`connect_when\` (e.g. "as soon as a person picks up") to skip a hold, or call \`callbay_connect_me\` mid-call. Their phone rings and they join by pressing 1; they press * or hang up to hand the call back to the caller. To end a call early (it's going nowhere, or the user changed their mind), call \`callbay_hang_up\`.
 7. Voicemail or "we'll call you back" is not a dead end: the callback number left is always the account's callbay number, and when the business calls it back within 14 days callbay answers and finishes the task. Check \`callbay_get_call\` on the original call later; it lists the callbacks and their outcomes.
 
 Categories:

@@ -42,7 +42,7 @@ The caller can only say what you give it, so everything is collected BEFORE dial
 5. Poll callbay_get_call with wait_seconds until finished. If it shows an open question, the business is waiting on the line: answer right away with callbay_answer_question.
 6. Tell the user the outcome in a line or two.
 
-To put the user on a call themselves: pass connect_when to callbay_place_call (e.g. "as soon as a person picks up", to skip a long hold), or call callbay_connect_me mid-call. Their phone rings and they join the call; the caller goes quiet, and takes over again when they press * or hang up.
+To put the user on a call themselves: pass connect_when to callbay_place_call (e.g. "as soon as a person picks up", to skip a long hold), or call callbay_connect_me mid-call. Their phone rings and they join the call by pressing 1; the caller goes quiet, and takes over again when they press * or hang up. To end a call early, use callbay_hang_up.
 
 Calls go out from the account's own numbers: its free US number, plus any it bought (callbay_list_numbers, callbay_buy_number). Businesses in the US, Canada and Europe can always be called (Europe from a European number when the account holds one, else from its US number); anywhere else, once the account holds a number in that country, and the call goes out from it.
 
@@ -194,7 +194,7 @@ export function createCallbayServer(deps: McpDeps): McpServer {
     {
       title: 'Patch the user into a live call',
       description:
-        'Ring the user now and patch them into a call in progress, so they talk to the business directly while the caller goes quiet. Rings the phone in their profile unless phone is given. When they press * or hang up, the caller takes the call back and carries on with the task.',
+        'Ring the user now and patch them into a call in progress, so they talk to the business directly while the caller goes quiet. Rings the phone in their profile unless phone is given; they join by pressing 1 when they pick up (a voicemail never gets patched in). When they press * or hang up, the caller takes the call back and carries on with the task.',
       inputSchema: z.object({ call_id: callIdArg, phone: z.string().max(40).optional().describe('a different number to ring, e.g. "(415) 555-0123"') }),
       annotations: OPEN,
     },
@@ -210,6 +210,24 @@ export function createCallbayServer(deps: McpDeps): McpServer {
           phone = p.e164;
         }
         const res = await sessionFor(env, row.id).fetch('https://session/connect-person', { method: 'POST', body: JSON.stringify({ phone }) });
+        const { message } = (await res.json()) as { message: string };
+        return ok(message, { call_id: row.id, message });
+      })()) as never,
+  );
+
+  server.registerTool(
+    'callbay_hang_up',
+    {
+      title: 'Hang up a live call',
+      description: 'End a call in progress now, e.g. when it is going nowhere or the user changed their mind. Talk time so far is billed as usual; callbay_get_call shows the final state.',
+      inputSchema: z.object({ call_id: callIdArg }),
+      annotations: { ...OPEN, destructiveHint: true },
+    },
+    (async (args: { call_id: string }) =>
+      guard(async () => {
+        const row = await db.forAccount(account.id, args.call_id);
+        if (!ACTIVE.includes(row.status)) throw new CallError('the call is not live');
+        const res = await sessionFor(env, row.id).fetch('https://session/hang-up', { method: 'POST' });
         const { message } = (await res.json()) as { message: string };
         return ok(message, { call_id: row.id, message });
       })()) as never,

@@ -1,6 +1,7 @@
 /**
  * The few Telnyx Call Control and Numbers endpoints callbay uses.
- * Docs: developers.telnyx.com/api-reference (dial incl. supervise_call_control_id, hangup, send_dtmf, answer,
+ * Docs: developers.telnyx.com/api-reference (dial incl. supervise_call_control_id, switch_supervisor_role,
+ * gather_using_speak, hangup, send_dtmf, answer,
  * available_phone_numbers, number_orders, phone_numbers, requirement_groups, outbound_voice_profiles)
  * and .../receiving-webhooks for signatures.
  */
@@ -160,9 +161,9 @@ export function telnyx(env: TelnyxEnv) {
     },
 
     /**
-     * Ring the person and, once they answer, put them on the call as a "barge" supervisor: they
-     * hear and are heard by both ends, and the business leg (and its media stream) is untouched.
-     * The short ring timeout keeps their own voicemail from answering onto the call.
+     * Ring the person as a "monitor" supervisor of the call: they hear both ends, but nobody hears
+     * them. A voicemail can pick up in two seconds, so answering proves nothing; they are only put
+     * on the call (switchSupervisorRole to barge) after pressing 1 at the joinGate prompt.
      */
     async dialPerson(opts: { to: string; from: string; webhookUrl: string; callId: string; superviseControlId: string; timeLimitSecs: number }): Promise<string> {
       const r = await call<{ data: { call_control_id: string } }>(env, 'POST', '/calls', {
@@ -174,9 +175,29 @@ export function telnyx(env: TelnyxEnv) {
         timeout_secs: 20,
         time_limit_secs: opts.timeLimitSecs,
         supervise_call_control_id: opts.superviseControlId,
-        supervisor_role: 'barge',
+        supervisor_role: 'monitor',
       });
       return r.data.call_control_id;
+    },
+
+    /** Ask the answered person leg to press 1; the result comes back as call.gather.ended. */
+    async joinGate(callControlId: string, opts: { callId: string; business: string }): Promise<void> {
+      await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/gather_using_speak`, {
+        voice: 'AWS.Polly.Joanna-Neural',
+        payload: `This is callbay. Your call with ${opts.business} is on the line. Press 1 to join it.`,
+        invalid_payload: 'Press 1 to join the call.',
+        valid_digits: '1',
+        minimum_digits: 1,
+        maximum_digits: 1,
+        maximum_tries: 2,
+        timeout_millis: 8000,
+        client_state: personClientState(opts.callId),
+      });
+    },
+
+    /** barge: they hear and are heard by both ends; monitor: they only listen. */
+    async switchSupervisorRole(callControlId: string, role: 'barge' | 'monitor'): Promise<void> {
+      await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/switch_supervisor_role`, { role });
     },
 
     async sendDtmf(callControlId: string, digits: string): Promise<void> {

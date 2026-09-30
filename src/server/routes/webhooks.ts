@@ -108,7 +108,7 @@ webhooks.post('/stripe', async (c) => {
 interface TelnyxWebhook {
   data?: {
     event_type?: string;
-    payload?: { call_control_id?: string; call_leg_id?: string; client_state?: string | null; direction?: string; from?: string; to?: string; hangup_cause?: string; digit?: string };
+    payload?: { call_control_id?: string; call_leg_id?: string; client_state?: string | null; direction?: string; from?: string; to?: string; hangup_cause?: string; digit?: string; digits?: string; status?: string };
   };
 }
 
@@ -152,10 +152,11 @@ webhooks.post('/telnyx', async (c) => {
   if (!callId) return c.text('ok'); // not ours, or already gone
 
   // The person's own phone patched into the call: its events move the call between them and
-  // the caller, and never end or bill the call itself.
+  // the caller, and never end or bill the call itself. Answering only starts the press-1 prompt.
   if (state?.personLeg) {
     const session = sessionFor(c.env, callId);
-    if (type === 'call.answered') await session.fetch('https://session/person-joined', { method: 'POST' });
+    if (type === 'call.answered') await session.fetch('https://session/person-answered', { method: 'POST' });
+    else if (type === 'call.gather.ended') await session.fetch('https://session/person-gate', { method: 'POST', body: JSON.stringify({ status: p.status, digits: p.digits }) });
     else if (type === 'call.hangup') await session.fetch('https://session/person-left', { method: 'POST', body: JSON.stringify({ cause: p.hangup_cause ?? null }) });
     else if (type === 'call.dtmf.received' && p.digit === '*' && p.call_control_id) await telnyx(c.env).hangup(p.call_control_id);
     return c.text('ok');

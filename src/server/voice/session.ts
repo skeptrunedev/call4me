@@ -3,6 +3,7 @@ import { Raindrop, type Interaction } from 'raindrop-ai';
 import { calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
 import { connectCheckMessage, forcedHandoffMessage, missedHandoff } from './handoff';
+import { alreadyUnreachable, mergeTranscript, pressedToJoin, unreachableMessage } from './person';
 import { BACK_OFFICE_TOOLS } from './prompt';
 
 /**
@@ -19,6 +20,10 @@ import { BACK_OFFICE_TOOLS } from './prompt';
  * GPT-Live's back office (a Responses model with end_call / ask_user / press_digits)
  * runs our functions; we answer them over the same socket.
  *   /answer     callbay_answer_question; the answer goes straight to the voice model
+ *   /hang-up    callbay_hang_up; the hangup webhook finishes and bills the call as usual
+ *
+ * The person's own phone (person.ts): /connect-person rings it, /person-answered asks them to
+ * press 1, /person-gate puts them on the call if they did, /person-left hands the call back.
  */
 
 const OPENAI_LIVE_URL = 'https://api.openai.com/v1/live/sessions';
@@ -110,6 +115,10 @@ export class CallSession extends DurableObject<Env> {
   private personOn = false;
   /** Once they've been rung, the connect condition is settled; lines already checked against it. */
   private personRung = false;
+  /** A ring ended without them pressing 1: the caller stops trying to connect them on this call. */
+  private personUnreachable = false;
+  /** Whether this instance holds the whole transcript (it was set up here, or has read the stored one back). */
+  private transcriptComplete = false;
   private connectChecked = new Set<number>();
   /** The teardown in progress, so the hangup webhook can wait for the final transcript write. */
   private closing: Promise<void> | null = null;
@@ -129,6 +138,7 @@ export class CallSession extends DurableObject<Env> {
     switch (url.pathname) {
       case '/setup': {
         this.setup = (await req.json()) as Stored;
+        this.transcriptComplete = true;
         await this.ctx.storage.put('setup', this.setup);
         return new Response('ok');
       }
@@ -159,12 +169,19 @@ export class CallSession extends DurableObject<Env> {
         const { phone } = (await req.json()) as { phone?: string };
         return Response.json({ message: await this.connectPerson(phone) });
       }
-      case '/person-joined':
-        await this.personJoined();
+      case '/person-answered':
+        await this.personAnswered();
         return new Response('ok');
+      case '/person-gate': {
+        const { status, digits } = (await req.json()) as { status?: string; digits?: string };
+        await this.personGate(status, digits);
+        return new Response('ok');
+      }
       case '/person-left':
         this.personLeft();
         return new Response('ok');
+      case '/hang-up':
+        return Response.json({ message: await this.hangUpForUser() });
       case '/answer': {
         const { id, question, answer } = (await req.json()) as { id: string; question: string; answer: string };
         this.answerCameIn(id, question, answer);
@@ -515,7 +532,7 @@ export class CallSession extends DurableObject<Env> {
     this.sendLive({ type: 'response.create' });
   }
 
-  /** Ring the person's phone; they join the call when they answer (person-joined). Returns what happened. */
+  /** Ring the person's phone; they join once they answer and press 1 (person-gate). Returns what happened. */
   private async connectPerson(phoneOverride?: string): Promise<string> {
     const s = await this.load();
     if (!s?.person || !s.controlId || this.ended) return 'the call is not live';
@@ -532,7 +549,40 @@ export class CallSession extends DurableObject<Env> {
     }
     this.personRung = true;
     this.note(`ringing ${s.person.name} to join the call`);
-    return `ringing ${s.person.name}; they join as soon as they pick up`;
+    return `ringing ${s.person.name}; they join once they pick up and press 1`;
+  }
+
+  /** Their phone answered, which a voicemail also does: they stay listen-only until they press 1. */
+  private async personAnswered(): Promise<void> {
+    const s = await this.load();
+    if (!s?.person || !this.personLeg || this.ended) return;
+    const row = await calls(this.env.DB).byId(s.callId);
+    try {
+      await telnyx(this.env).joinGate(this.personLeg, { callId: s.callId, business: row?.business ?? 'the business' });
+    } catch (err) {
+      console.warn('join prompt failed', s.callId, String(err));
+      await telnyx(this.env).hangup(this.personLeg).catch((e) => console.warn('person hangup', String(e)));
+    }
+  }
+
+  private async personGate(status: string | undefined, digits: string | undefined): Promise<void> {
+    const s = await this.load();
+    if (!this.personLeg || this.personOn || this.ended) return;
+    const leg = this.personLeg;
+    if (!pressedToJoin(status, digits)) {
+      // Voicemail, silence or a wrong key: hang up their leg; person-left tells the caller.
+      console.log('join prompt ended without a 1', s?.callId, status);
+      await telnyx(this.env).hangup(leg).catch((err) => console.warn('person hangup', String(err)));
+      return;
+    }
+    try {
+      await telnyx(this.env).switchSupervisorRole(leg, 'barge');
+    } catch (err) {
+      console.warn('switch to barge failed', s?.callId, String(err));
+      await telnyx(this.env).hangup(leg).catch((e) => console.warn('person hangup', String(e)));
+      return;
+    }
+    await this.personJoined();
   }
 
   private async personJoined(): Promise<void> {
@@ -553,15 +603,26 @@ export class CallSession extends DurableObject<Env> {
     const wasOn = this.personOn;
     this.personOn = false;
     this.personLeg = null;
+    if (!wasOn) this.personUnreachable = true;
     if (this.ended || this.endingCall) return;
-    this.note(wasOn ? `${this.setup?.person?.name ?? 'the person'} handed the call back` : `${this.setup?.person?.name ?? 'the person'} didn't pick up`);
+    const name = this.setup?.person?.name ?? 'the person';
+    this.note(wasOn ? `${name} handed the call back` : `${name} didn't join (no answer or voicemail)`);
     this.sendLive({
       type: 'session.instructions.append',
       delegation_id: null,
       content: wasOn
-        ? `${this.setup?.person?.name ?? 'The person'} has left the call and handed it back to you. Pick up where they left off: say something short like "Hi, I'm back on for ${this.setup?.person?.name ?? 'them'}", then keep working on the task. If it's already done, say bye and hand off to hang up.`
-        : `${this.setup?.person?.name ?? 'The person'} didn't pick up. Carry on with the task yourself.`,
+        ? `${name} has left the call and handed it back to you. Pick up where they left off: say something short like "Hi, I'm back on for ${name}", then keep working on the task. If it's already done, say bye and hand off to hang up.`
+        : unreachableMessage(name),
     });
+  }
+
+  /** callbay_hang_up: the user ends the call from their agent. */
+  private async hangUpForUser(): Promise<string> {
+    const s = await this.load();
+    if (!s?.controlId || this.ended) return 'the call is not live';
+    this.note('the call was ended by the user');
+    await this.hangup();
+    return 'hung up';
   }
 
   private note(text: string): void {
@@ -589,7 +650,8 @@ export class CallSession extends DurableObject<Env> {
     }
     switch (item.name) {
       case 'connect_person':
-        output = await this.connectPerson();
+        // callbay_connect_me (the user asking) can still ring them; the caller can't keep retrying.
+        output = this.personUnreachable ? alreadyUnreachable(s.person?.name ?? 'the person') : await this.connectPerson();
         break;
       case 'end_call':
         output = await this.endCall(s, args);
@@ -674,7 +736,15 @@ export class CallSession extends DurableObject<Env> {
     if (this.flushTimer) clearTimeout(this.flushTimer);
     this.flushTimer = null;
     const s = await this.load();
-    if (s && this.transcript.length) await calls(this.env.DB).saveTranscript(s.callId, this.transcript.map((l) => ({ ...l, text: redact(l.text.trim(), s.redact ?? []) })));
+    if (!s || !this.transcript.length) return;
+    const db = calls(this.env.DB);
+    if (!this.transcriptComplete) {
+      // This instance restarted mid-call: keep what the previous one stored instead of overwriting it.
+      const row = await db.byId(s.callId);
+      this.transcript = mergeTranscript(row?.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [], this.transcript);
+      this.transcriptComplete = true;
+    }
+    await db.saveTranscript(s.callId, this.transcript.map((l) => ({ ...l, text: redact(l.text.trim(), s.redact ?? []) })));
   }
 
   // ---- time limit

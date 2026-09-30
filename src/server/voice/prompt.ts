@@ -276,7 +276,7 @@ export const BACK_OFFICE_TOOLS = [
   {
     type: 'function',
     name: 'connect_person',
-    description: 'Ring the person callbay works for and patch them into this call, so they talk to the other side directly. Use it when the other side insists on speaking to them, or when the connect condition is met. The caller goes quiet while they are on and takes over again when they hang up or press star.',
+    description: 'Ring the person callbay works for and patch them into this call, so they talk to the other side directly. Use it when the other side insists on speaking to them, or when the connect condition is met. They join by pressing 1 when they pick up. The caller goes quiet while they are on and takes over again when they hang up or press star. If the result says they could not be reached, do not call this again.',
     parameters: { type: 'object', properties: {}, required: [] },
   },
   {
