@@ -213,7 +213,7 @@ const clock = (millis: number) => {
 const RecordingSection: FC<{ callId: string; recordings: CallRecordings }> = ({ callId, recordings }) => (
   <>
     <h2>recording</h2>
-    <p class="small">calls are recorded by our phone carrier (Telnyx). only you can play a call's recording, from this page or through your agent.</p>
+    <p class="small">calls are recorded by our phone carrier (Telnyx). play or save available recordings here, or ask your agent for them. only share recording links with people you want to hear the call.</p>
     {recordings.state === 'live' && <p class="muted">the recording shows up here once the call ends.</p>}
     {recordings.state === 'failed' && (
       <p class="err">

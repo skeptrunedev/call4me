@@ -155,6 +155,10 @@ const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ p
         </p>
       </details>
       <details>
+        <summary>are calls recorded? where can i listen?</summary>
+        <p>yes. our phone carrier (Telnyx) records calls. after a call ends, open it in <a href="/account">my account</a> to play or save its recording and read the transcript. you can also ask your agent for the recording. it can take a minute to appear after hangup.</p>
+      </details>
+      <details>
         <summary>who can it call?</summary>
         <p>businesses and services you want to reach. no telemarketing, no surveys, no calling people who don't expect it, no emergency or premium-rate numbers.</p>
       </details>
@@ -239,7 +243,7 @@ export const RulesPage: FC<{ signedIn: boolean; pricePerMinuteCents: number; cou
       <li>no harassment, threats, pranks, or pretending to be someone else. the caller always calls <i>for</i> you; it never claims to be you.</li>
       <li>the same number can be called a few times a day, not more. anyone who asks not to be called again is never called by call4me again.</li>
       <li>the caller does not open by announcing it's an AI, the same way you don't open a call by explaining who you are. if someone sincerely asks, it tells the truth.</li>
-      <li>calls are not recorded. a text transcript is kept on your account so your agent can tell you what happened.</li>
+      <li>calls are recorded by our phone carrier (Telnyx). after a call ends, open it in <a href="/account">my account</a> to play or save the recording. a text transcript is kept there too.</li>
       <li>the caller never reads out card numbers, bank details, or passwords.</li>
     </ul>
     <p>break these and the account is closed without a refund of the remaining balance.</p>
@@ -254,7 +258,7 @@ export const PrivacyPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ si
     <ul>
       <li>we store your email, your balance history, and for each call: the number, the brief your agent sent, the outcome, and a text transcript.</li>
       <li>if you save a calling profile (name, date of birth, phone, address, insurance, car), we store it so your agent doesn't have to ask before every call. the caller only shares it with the place it's calling, and only when asked. your agent can remove any of it with call4me_save_profile.</li>
-      <li>we don't record call audio. audio passes through our phone carrier (Telnyx) and speech model provider (OpenAI) while the call is live.</li>
+      <li>our phone carrier (Telnyx) records and stores call audio. audio also passes through our speech model provider (OpenAI) while the call is live. after a call ends, you can play or save available recordings from <a href="/account">my account</a>, or ask your agent for them. recording links can expire and anyone you share a link with can use it.</li>
       <li>payments are handled by Stripe; we never see your card.</li>
       <li>on the blog, a cookie remembers which posts you liked. a comment stores the name and email you give (the email is never shown), and the newsletter stores your email until you unsubscribe.</li>
       <li>email us to delete your account and its call history.</li>
