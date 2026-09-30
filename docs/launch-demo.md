@@ -273,6 +273,16 @@ If the source call has no ringback, identify any separately added or synthesized
 ringing in the private edit provenance; it is a sound design cue rather than
 audio of another call.
 
+For a disconnect cue, add an optional `hangup` object with the same local
+`source`, video `start`, source `duration`, optional `source_start`, and
+optional `gain_db` fields. The cue must begin after call playback finishes
+and end by the final response zoom's start. It uses the same short edge fades
+and original playback speed as ringback, without changing song volume or
+moving any timeline. The isolated `hangup-bed.wav` covers the exact master
+duration for verification. Subtract it from the soundtrack to verify the
+approved mix remains intact. Omit `hangup` to retain the previous soundtrack,
+and record any synthesized disconnect sound in the private edit provenance.
+
 Check the contact sheet and individual preview frames before the full render.
 After rendering, decode the actual MP4, inspect frames at the zooms and caption
 changes, and check the exported audio against the source transcript. Copy final

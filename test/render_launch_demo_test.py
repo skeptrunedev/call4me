@@ -492,6 +492,91 @@ class CallTimelineTest(unittest.TestCase):
             renderer.prepare_soundtrack(edit, self.root / "edit.json",
                                         self.root / "source.wav", self.root, 8)
 
+    def test_hangup_adds_only_post_call_cue_and_preserves_music_ring_and_voice(self):
+        edit = self.load()
+        call_path, _, rate = renderer.prepare_audio(edit, self.root)
+        effect = (np.sin(2 * np.pi * 743.7 * np.arange(rate) / rate)
+                  * 5000).astype("<i2")
+        music = (np.sin(2 * np.pi * 883.7 * np.arange(12 * rate) / rate)
+                 * 6000).astype("<i2")
+        for name, samples in [("hangup.wav", effect), ("music.wav", music)]:
+            with wave.open(str(self.root / name), "wb") as audio:
+                audio.setnchannels(1)
+                audio.setsampwidth(2)
+                audio.setframerate(rate)
+                audio.writeframes(samples.tobytes())
+        edit.update(intro_duration=2, result_duration=2, terminal_submit_at=1,
+                    ringback={"source": "source.wav", "start": 1.2, "duration": .3})
+
+        def read(path):
+            with wave.open(str(path)) as audio:
+                self.assertEqual(audio.getnframes(), 8 * rate)
+                return np.frombuffer(audio.readframes(audio.getnframes()),
+                                     dtype="<i2").reshape(-1, 2).astype(float)
+
+        for mode in ["none", "separate", "continuous"]:
+            with self.subTest(mode=mode):
+                edit.pop("hangup", None)
+                edit.pop("music", None)
+                if mode != "none":
+                    edit["music"] = {
+                        "source": "music.wav", "start": 0, "fade_out": .5,
+                        "fade_in": .5, "call_background_gain_db": -20,
+                        "continuous": mode == "continuous"}
+                baseline_folder = self.root / (mode + "-before-hangup")
+                baseline_folder.mkdir()
+                baseline = read(renderer.prepare_soundtrack(
+                    edit, self.root / "edit.json", call_path, baseline_folder, 8))
+                edit["hangup"] = {
+                    "source": "hangup.wav", "start": 6.02, "duration": .18,
+                    "source_start": .2, "gain_db": -9}
+                folder = self.root / (mode + "-with-hangup")
+                folder.mkdir()
+                mixed = read(renderer.prepare_soundtrack(
+                    edit, self.root / "edit.json", call_path, folder, 8))
+                isolated = read(folder / "hangup-bed.wav")
+                start, end = round(6.02 * rate), round(6.2 * rate)
+                self.assertTrue(np.all(isolated[:start] == 0))
+                self.assertTrue(np.all(isolated[end:] == 0))
+                # Original source phase verifies both the offset and playback speed.
+                a, b = start + round(.05 * rate), end - round(.05 * rate)
+                expected = effect[round(.25 * rate):round(.33 * rate)]
+                expected = expected * 10 ** (-9 / 20) / np.sqrt(2)
+                np.testing.assert_allclose(isolated[a:b, 0], expected, atol=1, rtol=0)
+                np.testing.assert_allclose(mixed - isolated, baseline, atol=1, rtol=0)
+                np.testing.assert_allclose(mixed[:start], baseline[:start], atol=1, rtol=0)
+                np.testing.assert_allclose(mixed[end:], baseline[end:], atol=1, rtol=0)
+                self.assertEqual((folder / "ringback-bed.wav").read_bytes(),
+                                 (baseline_folder / "ringback-bed.wav").read_bytes())
+                if mode == "continuous":
+                    self.assertEqual((folder / "music-bed.wav").read_bytes(),
+                                     (baseline_folder / "music-bed.wav").read_bytes())
+                self.assertLess(np.max(abs(mixed)), 32767)
+
+    def test_hangup_rejects_invalid_sources_and_cues_outside_post_call_window(self):
+        edit = self.load()
+        edit.update(intro_duration=2, result_duration=2)
+        cue = {"source": "source.wav", "start": 6.02, "duration": .18}
+        for key, value in [
+                ("source", "missing.wav"), ("source", None),
+                ("start", float("nan")), ("start", float("inf")),
+                ("source_start", -1), ("source_start", float("nan")),
+                ("duration", 0), ("duration", float("inf")),
+                ("gain_db", float("nan")), ("gain_db", 1),
+                ("start", 5.9), ("start", 6.15), ("start", 6.26)]:
+            with self.subTest(key=key, value=value):
+                edit["hangup"] = {**cue, key: value}
+                with patch.object(renderer, "run") as execute:
+                    with self.assertRaisesRegex(ValueError, "[Hh]angup"):
+                        renderer.prepare_soundtrack(edit, self.root / "edit.json",
+                                                    self.root / "source.wav", self.root, 8)
+                    execute.assert_not_called()
+        edit["hangup"] = cue
+        edit["response_zoom"]["start"] = 0
+        with self.assertRaisesRegex(ValueError, "before the final zoom"):
+            renderer.prepare_soundtrack(edit, self.root / "edit.json",
+                                        self.root / "source.wav", self.root, 8)
+
 
 if __name__ == "__main__":
     unittest.main()
