@@ -81,7 +81,7 @@ class CallTimelineTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "prompt entry"):
             self.load()
 
-    def test_outro_animates_and_keeps_entire_final_response_in_view(self):
+    def test_outro_zooms_without_scrolling_and_keeps_entire_final_response_in_view(self):
         edit = self.load()
         edit.update(intro_duration=2, result_duration=6, capture_duration=10,
                     terminal_result_at=4, terminal_submit_at=1)
@@ -94,12 +94,19 @@ class CallTimelineTest(unittest.TestCase):
         first = renderer.outro_camera(edit, 0)
         last = renderer.outro_camera(edit, 5)
         self.assertLess(last[2] - last[0], first[2] - first[0])
-        self.assertGreater(last[1], 478)  # Earlier tool output must leave the close view.
+        self.assertAlmostEqual((first[2] - first[0]) / (last[2] - last[0]), 1.5)
         self.assertLessEqual(last[0], 22)
         self.assertGreaterEqual(last[2], 1510)
         self.assertLessEqual(last[1], 556)
         self.assertGreaterEqual(last[3], 641)
         self.assertEqual(renderer.outro_camera(edit, 5, poster=True), last)
+        # The response center must never translate while the text grows.
+        center_x = (last[0] + last[2]) / 2
+        center_y = (last[1] + last[3]) / 2
+        for t in np.linspace(0, 3, 31):
+            box = renderer.outro_camera(edit, t)
+            self.assertAlmostEqual((center_x - box[0]) / (box[2] - box[0]), .5)
+            self.assertAlmostEqual((center_y - box[1]) / (box[3] - box[1]), .5)
 
     def test_dissolves_remove_boundary_jump_without_changing_scene_timing(self):
         edit = self.load()

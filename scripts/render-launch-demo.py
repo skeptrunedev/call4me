@@ -125,11 +125,13 @@ def load_edit(path):
                                   edit.get("terminal_submit_at", 0)):
         raise ValueError("Accelerated typing requires start and end within the prompt entry")
     edit.update(typing_speed=typing_speed, typing_start=typing_start, typing_end=typing_end)
-    zoom = {"x": 0, "y": 500, "width": 1580, "start": .4, "duration": 1.2}
+    zoom = {"x": 0, "y": 234, "width": 1580, "opening_scale": 1.5,
+            "start": .4, "duration": 1.2}
     zoom.update(edit.get("response_zoom", {}))
     zoom = {key: float(value) for key, value in zoom.items()}
     if not (all(math.isfinite(value) for value in zoom.values()) and
-            zoom["width"] > 0 and zoom["start"] >= 0 and zoom["duration"] > 0):
+            zoom["width"] > 0 and zoom["opening_scale"] > 1 and
+            zoom["start"] >= 0 and zoom["duration"] > 0):
         raise ValueError("Invalid final response camera crop or zoom timing")
     edit["response_zoom"] = zoom
     transition = float(edit.get("call_transition_duration", 0))
@@ -378,14 +380,16 @@ def camera(edit, t):
 
 
 def outro_camera(edit, t, poster=False):
-    """Reveal the terminal, then move onto the complete final response."""
+    """Zoom around the response center, keeping it stationary on screen."""
     zoom = edit["response_zoom"]
-    wide = camera_box(-112, 0, 1804)
     response = camera_box(zoom["x"], zoom["y"], zoom["width"])
     if poster:
         return response
     u = ease(0, 1, (t - zoom["start"]) / zoom["duration"])
-    return tuple(a + (b - a) * u for a, b in zip(wide, response))
+    width = zoom["width"] * (zoom["opening_scale"] + (1 - zoom["opening_scale"]) * u)
+    center_x = (response[0] + response[2]) / 2
+    center_y = (response[1] + response[3]) / 2
+    return camera_box(center_x - width / 2, center_y - width * 816 / 1760 / 2, width)
 
 
 def scene_frame(edit, t, samples, rate, poster=False, phase=None):
