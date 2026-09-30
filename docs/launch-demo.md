@@ -9,16 +9,16 @@ interface. Capture actual typing, submission, and native tool output. Keep the
 original transcript intact. Run an isolated Claude session connected only to
 `scripts/launch-replay-mcp.mjs`, with built in tools disabled. This offline MCP
 server cannot dial or access credentials. It fails closed unless supplied an
-explicit local fixture with a verified historical result. Label the footage as
-a recorded replay. Audio playback and captions belong in a separate editorial
-scene.
+explicit local fixture with a verified historical result. Document the replay
+provenance in the private manifest and delivery notes. Audio playback and captions
+belong in a separate editorial scene.
 
 Show the user's request first, transition to the call audio when the native
 terminal says "Calling callbay", then return to the completed native terminal
 result after the audio ends. Use a white page, black serif editorial text,
 default blue underlined links, and simple gray rules. Record the terminal with
-a white background and a light theme to match. Label the terminal as a replay and the
-audio as an edited excerpt. Do not imply that the edited running time is the
+a white background and a light theme to match. Identify the source audio in the
+call scene. Do not imply that the edited running time is the
 actual time it took to complete the call.
 
 The call excerpt should demonstrate navigation of the automated phone menu,
@@ -89,6 +89,13 @@ segment in order. Terminal footage defaults to its original speed. The audio occ
 edit, between invocation and result. Smooth camera transforms provide the zooms.
 It never substitutes terminal text or action screenshots. The matching still
 comes from a frame of this same recording.
+
+Keep the video free of the old bottom provenance caption. The intro terminal
+viewport runs from y145 to y1040, using 895 pixels of height. Its camera preserves
+the captured content's proportions and source height while enlarging the view
+into that space. Call captions use larger text and the progress line sits at
+y1020. The approved fullscreen ending keeps its existing camera framing.
+Content layout changes are recorded in `intro-edit.json` and require a full render.
 
 To accelerate only prompt entry, set `typing_speed` between 1 and 4 and supply
 `terminal_typing_start_at` and `terminal_typing_end_at` in source seconds. Verify

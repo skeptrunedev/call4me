@@ -28,8 +28,10 @@ BG, INK = "#ffffff", "#000000"
 MUTED, LINE, ACCENT = "#666666", "#cccccc", "#0000ff"
 REGULAR = Path("/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf")
 BOLD = Path("/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf")
-INTRO_WIDE = (-112, 0, 1804)
-INTRO_CLOSE = (-20, 430, 1100)
+CONTENT_W, CONTENT_H = 1760, 895
+# Keep the same source height and zoom ratio while filling the reclaimed footer.
+INTRO_WIDE = (-32, 0, 1804 * 816 / CONTENT_H)
+INTRO_CLOSE = (-20, 430, 1100 * 816 / CONTENT_H)
 ZOOM_DELAY, ZOOM_DURATION = .25, 1.4
 
 
@@ -104,7 +106,7 @@ def intro_source_time(edit, t):
 
 
 def camera_box(x, y, width):
-    return x, y, x + width, y + width * 816 / 1760
+    return x, y, x + width, y + width * CONTENT_H / CONTENT_W
 
 
 def load_edit(path):
@@ -436,9 +438,9 @@ def outro_camera(edit, t, poster=False):
         return response
     u = ease(0, 1, (t - zoom["start"]) / zoom["duration"])
     width = zoom["width"] * (zoom["opening_scale"] + (1 - zoom["opening_scale"]) * u)
-    center_x = (response[0] + response[2]) / 2
-    center_y = (response[1] + response[3]) / 2
-    return camera_box(center_x - width / 2, center_y - width * 816 / 1760 / 2, width)
+    expansion = (width - zoom["width"]) / 2
+    return camera_box(response[0] - expansion,
+                      response[1] - expansion * CONTENT_H / CONTENT_W, width)
 
 
 def scene_frame(edit, t, samples, rate, poster=False, phase=None):
@@ -468,15 +470,15 @@ def scene_frame(edit, t, samples, rate, poster=False, phase=None):
         source = native_frame(edit, source_t, result=finished)
         crop = (outro_camera(edit, max(0, t - intro - edit["audio_duration"]), poster)
                 if finished else camera(edit, min(intro, max(0, t))))
-        viewport = source.transform((1760, 816), Image.Transform.EXTENT,
+        viewport = source.transform((CONTENT_W, CONTENT_H), Image.Transform.EXTENT,
                                     crop, Image.Resampling.BICUBIC,
                                     fillcolor=BG)
         im.paste(viewport, (80, 145))
         d = ImageDraw.Draw(im)
-        d.rectangle((80, 145, 1840, 961), outline=LINE, width=1)
+        d.rectangle((80, 145, 1840, 145 + CONTENT_H), outline=LINE, width=1)
     elif playing:
         draw_link(d, (115, 212), "phone calls > pharmacy", 30)
-        draw_text(d, (110, 273), "amazon pharmacy support", 62, INK, True)
+        draw_text(d, (110, 273), "amazon pharmacy support", 70, INK, True)
         recording_label = "original call recording"
         if edit["call_speed"] != 1:
             recording_label += f" · {edit['call_speed']:g}× speed"
@@ -489,15 +491,14 @@ def scene_frame(edit, t, samples, rate, poster=False, phase=None):
             rms = float(np.sqrt(np.mean(samples[lo:hi] ** 2))) if lo < hi else 0
             h = min(72, 3 + rms * 270)
             x = 120 + i * 15.4
-            d.rounded_rectangle((x, 537 - h, x + 5, 537 + h), 2,
+            d.rounded_rectangle((x, 555 - h, x + 5, 555 + h), 2,
                                 fill=ACCENT if i < 54 else "#cccccc")
         cue = next((c for c in edit["cues"] if c["start"] <= play_t < c["end"]), None)
         if cue:
-            draw_text(d, (115, 693), cue["speaker"].lower(), 30, ACCENT)
-            wrapped(d, (111, 755), cue["text"], 49, 80, gap=16)
-        d.line((115, 948, 1798, 948), fill=LINE, width=3)
-        d.line((115, 948, 115 + 1683 * play_t / edit["audio_duration"], 948), fill=ACCENT, width=3)
-    draw_text(d, (91, 1016), "recorded terminal replay · original call audio · edited for length", 25, MUTED)
+            draw_text(d, (115, 724), cue["speaker"].lower(), 32, ACCENT)
+            wrapped(d, (111, 790), cue["text"], 55, 70, gap=16)
+        d.line((115, 1020, 1798, 1020), fill=LINE, width=3)
+        d.line((115, 1020, 115 + 1683 * play_t / edit["audio_duration"], 1020), fill=ACCENT, width=3)
     return im
 
 
@@ -542,6 +543,9 @@ def main():
     (args.output / "call-edit.json").write_text(json.dumps(call_plan, indent=2) + "\n")
     prepare_terminal(edit, args.manifest.resolve(), args.output)
     intro_plan = {
+        "content_layout": {"width": CONTENT_W, "height": CONTENT_H,
+                           "intro_wide": list(INTRO_WIDE), "intro_close": list(INTRO_CLOSE),
+                           "revision": 2},
         "capture_sha256": edit["capture_sha256"],
         "capture_duration": edit["capture_duration"],
         "capture_size": list(edit["capture_size"]),
