@@ -112,7 +112,7 @@ export const EXAMPLES: CallExample[] = [
   },
   {
     slug: 'expedite-review',
-    title: 'get a stalled review moving',
+    title: 'get a stalled prescription review moving',
     business: 'Amazon Pharmacy',
     date: 'September 28, 2026',
     request: 'three of my prescriptions have been stuck in pharmacist review for over a day. find out what is holding them up and ask support to move them along.',
