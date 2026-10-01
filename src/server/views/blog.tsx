@@ -17,7 +17,7 @@ import { Layout } from './layout';
 const AUTHOR_LD = (p: Post) => p.authors.map((a) => ({ '@type': 'Person', name: a.name, alternateName: a.handle, url: a.url, image: `${SITE}${a.avatar}` }));
 const PUBLISHER = { '@type': 'Organization', name: 'call4me', url: SITE, logo: { '@type': 'ImageObject', url: `${SITE}/favicon.svg` } };
 
-export type Tab = 'latest' | 'top' | 'discussions';
+export type Tab = 'latest' | 'top';
 
 const byline = (p: Post) => p.authors.map((a) => a.name).join(', ');
 
@@ -117,7 +117,7 @@ export const BlogIndex: FC<{
       )}
 
       <div class="tabs">
-        {(['latest', 'top', 'discussions'] as Tab[]).map((t) => (
+        {(['latest', 'top'] as Tab[]).map((t) => (
           <a href={`/blog?tab=${t}`} class={t === tab && !q ? 'on' : ''}>
             {t}
           </a>

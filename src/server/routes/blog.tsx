@@ -44,13 +44,13 @@ async function standing(c: AppContext): Promise<{ signedIn: boolean; supporter: 
 
 blog.get('/', async (c) => {
   const all = posts();
-  const tab = (['latest', 'top', 'discussions'].includes(c.req.query('tab') ?? '') ? c.req.query('tab') : 'latest') as Tab;
+  const tab = (['latest', 'top'].includes(c.req.query('tab') ?? '') ? c.req.query('tab') : 'latest') as Tab;
   const q = (c.req.query('q') ?? '').trim().slice(0, 100);
   const [engagement, subscribers] = await Promise.all([svc(c).engagement(all.map((p) => p.slug)), svc(c).subscriberCount()]);
   let list = q ? searchPosts(all, q) : all;
   const score = (p: Post) => {
     const e = engagement.get(p.slug)!;
-    return tab === 'top' ? e.likes * 10 + e.comments : e.comments;
+    return e.likes * 10 + e.comments;
   };
   if (!q && tab !== 'latest') list = [...list].sort((a, b) => score(b) - score(a) || (a.date < b.date ? 1 : -1));
   return c.html(<BlogIndex signedIn={Boolean(c.get('account'))} posts={list} all={all} engagement={engagement} tab={tab} q={q} subscribers={subscribers} subscribed={c.req.query('subscribed')} />);
