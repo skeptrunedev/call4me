@@ -381,8 +381,7 @@ export const BlogPost: FC<{
               </a>
             </b>{' '}
             <span class="muted">{a.handle}</span>
-            <br />
-            <span class="small">{a.bio}</span>
+            <span class="small bio">{a.bio}</span>
           </p>
         ))}
       </div>

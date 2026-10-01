@@ -152,6 +152,7 @@ form.inline { margin: 6px 0; }
 .post figcaption { color: #555; font-size: 13px; margin-top: 4px; }
 .post .paywall { background: #fbf7ff; border-color: #551a8b; }
 .author-box img { border-radius: 50%; vertical-align: middle; border: 1px solid #ddd; }
+.author-box .bio { display: block; margin-top: 8px; }
 .comment { margin: 12px 0; }
 .comment pre { background: none; border: none; padding: 0; font-family: inherit; font-size: inherit; margin: 4px 0 0; }
 .post h2 { font-size: 18px; margin-top: 28px; }
