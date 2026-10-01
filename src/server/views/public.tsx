@@ -145,13 +145,13 @@ const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ p
       </details>
       <details>
         <summary>can i use it with muse?</summary>
-        <p>yes. paste the prompt above into muse and it adds call4me as a custom connector, then makes calls for you from the chat.</p>
+        <p>yes. paste the prompt above into muse and it builds its own call4me integration, asking for your api key (from your account page) through its secure credential prompt. then it makes calls for you from the chat.</p>
       </details>
       <details>
         <summary>can i use it with grok bot?</summary>
         <p>
-          yes. paste the prompt above into grok bot, approve the "add mcp server" card it shows, and it can make calls for you. on grok.com you can also add it under
-          connectors → new connector → custom.
+          yes. paste the prompt above into grok bot and approve when it asks to add the custom mcp server, and it can make calls for you. on grok.com, add it yourself
+          under grok.com/connectors → new connector → custom.
         </p>
       </details>
       <details>
