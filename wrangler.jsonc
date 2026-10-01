@@ -42,6 +42,9 @@
     "VOICE_HOST": "voice.call4.me",
     // IndexNow key (services/indexnow.ts). Public by design: served at /<key>.txt.
     "INDEXNOW_KEY": "3d15f1882b0b7931273db1a9e4f5ef35",
+    // OpenAI plugin portal domain challenge, served as plain text at /.well-known/openai-apps-challenge.
+    // Public by design; empty until the portal issues one.
+    "OPENAI_APPS_CHALLENGE": "",
     // Hosts callbay used to live on (comma-separated). Pages there redirect to
     // CANONICAL_HOST, but MCP, OAuth, webhooks and voice keep answering in place:
     // installed agents, issued tokens and provider webhooks still point there.

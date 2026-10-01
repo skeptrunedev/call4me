@@ -29,6 +29,12 @@ agent.get('/:file{[0-9a-f]{32}\\.txt}', (c) => {
   return c.text(key, 200, { 'content-type': 'text/plain; charset=utf-8', ...CACHE });
 });
 
+/** The OpenAI plugin portal checks that we own the MCP server's domain: the token, alone, as plain text. */
+agent.get('/.well-known/openai-apps-challenge', (c) => {
+  const token = c.env.OPENAI_APPS_CHALLENGE;
+  return token ? c.text(token, 200, { 'content-type': 'text/plain; charset=utf-8' }) : c.notFound();
+});
+
 agent.get('/llms.txt', (c) => c.body(llmsTxt(site(c), pricePerMinute(c.env), posts()), 200, { 'content-type': 'text/markdown; charset=utf-8', ...CACHE }));
 
 for (const path of ['/.well-known/mcp/server-card.json', '/.well-known/mcp.json']) {
