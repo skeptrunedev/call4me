@@ -110,6 +110,11 @@ Weekends are agent-only: builds, fixes and logs, with no calls (most phone lines
 - Ahrefs Site Audit project (free Webmaster Tools, verified through Search Console, weekly crawl Wednesdays 8pm PT). First crawl: health 99, 2 errors, 26 warnings. After fixes: health 100, 0 errors. Fixed: http served pages instead of redirecting to https, titles and meta descriptions too long, homepage had no h1, blog BlogPosting schema errors, archive missing from the sitemap, and slow pages (every request built the auth instance, whose OAuth plugin queried D1 three times; blog pages now read from the nearest D1 replica).
 - Call fixes found while testing: joining a call by pressing 1, relaying the user's keypad to the business, surviving session resets, reattaching a stream that never sends audio, no per-number daily limits.
 
+**Thu Oct 1, done:**
+- 5 posts from customers' overnight calls, each aimed at a keyword picked with the Ahrefs CLI before drafting (US volume and difficulty pulled that morning): [Adderall shortage](https://call4.me/blog/adderall-shortage) (9,500/mo, KD 25, 11 pharmacies), [Etihad customer service](https://call4.me/blog/etihad-customer-service) (3,000, KD 0), [American Airlines flight credit](https://call4.me/blog/american-airlines-flight-credit) (2,800, KD 0), [lawyer consultation fee](https://call4.me/blog/lawyer-consultation-fee) (3,100, KD 0), [how to find a new primary care doctor](https://call4.me/blog/how-to-find-a-new-primary-care-doctor) (600, KD 0, 15 calls). Restaurant booking, store stock and shoe hold calls were skipped: no measurable search volume.
+- 4 of those calls added to /examples. Rules for customer-call posts are in `docs/examples.md`: every call embedded, dead air trimmed, names and IDs muted, and the business muted where it shows where the customer goes.
+- Call bugs these calls surfaced, not yet fixed: our side hung up mid-question once, our caller went silent after a person answered, it spoke to keypad menus and talked over voice menus, and it gave a wrong callback number.
+
 ## The days
 
 ### Week 1: foundation, launch links, template (Oct 1 to 4)
