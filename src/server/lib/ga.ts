@@ -62,13 +62,18 @@ export async function gaEmailHash(email: string): Promise<string> {
  * Send events for one browser (and account) to GA. Unset GA_API_SECRET disables it, as in
  * local dev and tests. Never throws: analytics must not fail a payment webhook or a call.
  */
-export async function sendGa(env: Pick<Env, 'GA_API_SECRET'>, opts: { client: GaClient; userId?: string; emailHash?: string | null; events: GaEvent[] }): Promise<void> {
+export async function sendGa(
+  env: Pick<Env, 'GA_API_SECRET'>,
+  opts: { client: GaClient; userId?: string; emailHash?: string | null; userProperties?: Record<string, string>; events: GaEvent[] },
+): Promise<void> {
   if (!env.GA_API_SECRET || opts.events.length === 0) return;
   const session: GaParams = opts.client.sessionId ? { session_id: opts.client.sessionId, engagement_time_msec: 1 } : {};
+  const props = Object.entries(opts.userProperties ?? {});
   const body = {
     client_id: opts.client.clientId,
     ...(opts.userId ? { user_id: opts.userId } : {}),
     ...(opts.emailHash ? { user_data: { sha256_email_address: [opts.emailHash] } } : {}),
+    ...(props.length ? { user_properties: Object.fromEntries(props.map(([k, value]) => [k, { value }])) } : {}),
     events: opts.events.map((e) => ({ name: e.name, params: { ...session, ...e.params } })),
   };
   const url = `https://www.google-analytics.com/mp/collect?measurement_id=${GA_MEASUREMENT_ID}&api_secret=${encodeURIComponent(env.GA_API_SECRET)}`;

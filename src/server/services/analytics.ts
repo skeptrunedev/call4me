@@ -4,6 +4,7 @@
  * Meta's hashed external_id) and its browser's ids, so activity that happens with no browser
  * (webhooks, agents) still joins the visits and ad clicks that led to it.
  */
+import { decodeFirstTouch, firstTouchUserProperties, type FirstTouch } from '../lib/first-touch';
 import { gaEmailHash, sendGa, type GaClient, type GaEvent } from '../lib/ga';
 import { realEmail } from '../lib/auth-options';
 import { newId, now } from '../lib/ids';
@@ -42,10 +43,11 @@ function metaEvent(e: GaEvent): MetaEvent | null {
   }
 }
 
-/** The browser an event came from, as each of GA and Meta knows it. */
+/** The browser an event came from, as each of GA and Meta knows it, and where it first came from. */
 export interface Visitor {
   ga: GaClient | null;
   meta: MetaBrowser | null;
+  touch?: FirstTouch | null;
 }
 
 /** GA's hashed email for an account; none for X sign-ins known only by a placeholder address. */
@@ -71,8 +73,22 @@ export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID
     return [{ name: 'sign_up', params: { method: provider?.provider ?? 'checkout' } }];
   }
 
+  /**
+   * The account's first touch: the one it already has, else this browser's, kept from now on.
+   * Every GA event then carries it as user properties, which GA has even for buyers who block
+   * gtag and for calls an agent places, so revenue and calls report by where the account came from.
+   */
+  async function firstTouch(account: Account, from: Visitor): Promise<FirstTouch | null> {
+    const kept = decodeFirstTouch(account.first_touch);
+    if (kept || !from.touch) return kept;
+    await db.prepare(`UPDATE accounts SET first_touch = ? WHERE id = ? AND first_touch IS NULL`).bind(JSON.stringify(from.touch), account.id).run();
+    account.first_touch = JSON.stringify(from.touch);
+    return from.touch;
+  }
+
   async function track(account: Account, events: GaEvent[], from: Visitor = { ga: null, meta: null }): Promise<void> {
     if (!env.GA_API_SECRET && !metaOn) return;
+    const touch = await firstTouch(account, from);
     const all = [...(await claimSignup(account)), ...events];
     const client = from.ga ?? (account.ga_client_id ? { clientId: account.ga_client_id, sessionId: null } : serverClient(account));
     // The account's last known Meta ids stand in for any the event's own browser lacks.
@@ -84,7 +100,7 @@ export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID
       url: from.meta?.url ?? null,
     };
     const metaEvents = all.map(metaEvent).filter((e): e is MetaEvent => e !== null);
-    await Promise.all([sendGa(env, { client, userId: account.id, emailHash: await emailHashOf(account), events: all }), sendMeta(env, { user: { externalId: account.id }, browser, events: metaEvents })]);
+    await Promise.all([sendGa(env, { client, userId: account.id, emailHash: await emailHashOf(account), userProperties: touch ? firstTouchUserProperties(touch) : undefined, events: all }), sendMeta(env, { user: { externalId: account.id }, browser, events: metaEvents })]);
   }
 
   return {
@@ -97,6 +113,7 @@ export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID
       if ((fbp && fbp !== account.meta_fbp) || (fbc && fbc !== account.meta_fbc)) {
         await db.prepare(`UPDATE accounts SET meta_fbp = COALESCE(?, meta_fbp), meta_fbc = COALESCE(?, meta_fbc) WHERE id = ?`).bind(fbp, fbc, account.id).run();
       }
+      await firstTouch(account, from);
       if (!from.ga) return;
       if (from.ga.clientId !== account.ga_client_id) await db.prepare(`UPDATE accounts SET ga_client_id = ? WHERE id = ?`).bind(from.ga.clientId, account.id).run();
       if (account.ga_signup_at === null) await track(account, [], from);

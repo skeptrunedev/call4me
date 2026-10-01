@@ -31,6 +31,7 @@ import { admin } from './routes/admin';
 import { BlogError } from './services/blog';
 import { exampleAudio } from './lib/example-audio';
 import { analytics, emailHashOf } from './services/analytics';
+import { firstTouchCookie, firstTouchOf, firstTouchSetCookie } from './lib/first-touch';
 
 const app = new Hono<AppEnv>();
 
@@ -42,6 +43,16 @@ app.use('*', async (c, next) => {
   const to = canonicalRedirect(new URL(c.req.url), c.env);
   if (to) return c.redirect(to, 301);
   await next();
+});
+
+// A browser's first page records where it came from (lib/first-touch.ts), so checkouts and
+// accounts can say so to GA even when gtag is blocked.
+app.use('*', async (c, next) => {
+  await next();
+  if (c.req.method !== 'GET' || c.res.status !== 200 || !(c.res.headers.get('content-type') ?? '').includes('text/html')) return;
+  if (firstTouchCookie(c.req.header('cookie'))) return;
+  const touch = firstTouchOf(new URL(c.req.url), c.req.header('referer'));
+  if (touch) c.header('set-cookie', firstTouchSetCookie(touch), { append: true });
 });
 
 // The asset binding returns complete files. Supply ranges for the reviewed audio only:

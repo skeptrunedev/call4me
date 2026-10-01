@@ -2,6 +2,7 @@ import type { Context } from 'hono';
 import type Stripe from 'stripe';
 import { accounts, type Account } from '../services/accounts';
 import type { Visitor } from '../services/analytics';
+import { firstTouchCookie } from './first-touch';
 import { gaClient } from './ga';
 import { metaBrowser } from './meta';
 import { makeStripe } from '../services/topups';
@@ -32,8 +33,12 @@ export async function ownerKey(c: AppContext, account: Account): Promise<string>
 /** The signed-in viewer's key for the page's copy prompts; null signed out. */
 export const viewerKey = async (c: AppContext, account = c.get('account')): Promise<string | null> => (account ? ownerKey(c, account) : null);
 
-/** The browser behind this request, as GA and Meta identify it (services/analytics.ts). */
-export const visitor = (c: AppContext): Visitor => ({ ga: gaClient(c.req.header('cookie')), meta: metaBrowser(c.req.url, c.req.raw.headers) });
+/** The browser behind this request, as GA and Meta identify it, and where it first came from (services/analytics.ts). */
+export const visitor = (c: AppContext): Visitor => ({
+  ga: gaClient(c.req.header('cookie')),
+  meta: metaBrowser(c.req.url, c.req.raw.headers),
+  touch: firstTouchCookie(c.req.header('cookie')),
+});
 
 /** Hosts call4me used to live on (LEGACY_HOSTS in wrangler.jsonc). */
 export const legacyHosts = (env: Pick<Env, 'LEGACY_HOSTS'>): string[] =>

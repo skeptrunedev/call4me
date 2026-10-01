@@ -38,6 +38,8 @@ interface TopupRow {
   meta_fbc: string | null;
   meta_ip: string | null;
   meta_user_agent: string | null;
+  /** The checkout browser's first touch, as JSON (lib/first-touch.ts). */
+  first_touch: string | null;
 }
 
 export interface Reload {
@@ -134,13 +136,13 @@ export function topups(db: D1Database, stripe: Stripe) {
               ...(customer ? {} : { customer_creation: 'always' as const }),
             }),
       });
-      const { ga, meta } = opts.from ?? { ga: null, meta: null };
+      const { ga, meta, touch } = opts.from ?? { ga: null, meta: null, touch: null };
       await db
         .prepare(
-          `INSERT INTO topups (id, account_id, email, amount_cents, monthly, stripe_session_id, ga_client_id, ga_session_id, meta_fbp, meta_fbc, meta_ip, meta_user_agent, created_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          `INSERT INTO topups (id, account_id, email, amount_cents, monthly, stripe_session_id, ga_client_id, ga_session_id, meta_fbp, meta_fbc, meta_ip, meta_user_agent, first_touch, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         )
-        .bind(id, opts.account?.id ?? null, email ?? null, opts.amountCents, opts.monthly ? 1 : 0, session.id, ga?.clientId ?? null, ga?.sessionId ?? null, meta?.fbp ?? null, meta?.fbc ?? null, meta?.ip ?? null, meta?.userAgent ?? null, now())
+        .bind(id, opts.account?.id ?? null, email ?? null, opts.amountCents, opts.monthly ? 1 : 0, session.id, ga?.clientId ?? null, ga?.sessionId ?? null, meta?.fbp ?? null, meta?.fbc ?? null, meta?.ip ?? null, meta?.userAgent ?? null, touch ? JSON.stringify(touch) : null, now())
         .run();
       return session.url!;
     },
