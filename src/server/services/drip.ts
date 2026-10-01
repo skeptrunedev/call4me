@@ -12,11 +12,21 @@ export interface DripEmail {
   body: string;
 }
 
+/**
+ * An email's copy with placeholders: {addCredits} (this account's add-credits link, no scheme)
+ * and {host} (the site as people type it). Stored in the email_templates table so the copy can
+ * change without a deploy; STEPS holds the default each one falls back to.
+ */
+export type EmailTemplate = DripEmail;
+
+export const PLACEHOLDERS = ['addCredits', 'host'] as const;
+
 interface Step {
   id: string;
   /** How long after signup the step is due, in ms. */
   after: number;
-  email: (ctx: DripContext) => DripEmail;
+  /** The copy used when the email_templates table has no valid row for this step. */
+  template: EmailTemplate;
 }
 
 interface DripContext {
@@ -31,18 +41,45 @@ export const STEPS: Step[] = [
   {
     id: 'welcome',
     after: 0,
-    email: ({ host, addCredits }) => ({
+    template: {
       subject: 'welcome to Call for Me',
-      body: `hey, I'm Nick, the creator of call4me. thank you so much for signing up! to get started, add credits at ${addCredits} and paste the prompt from ${host} into your agent.
+      body: `hey, I'm Nick, the creator of call4me. thank you so much for signing up! to get started, add credits at {addCredits} and paste the prompt from {host} into your agent.
 
 If you reply with feedback, I'm happy to give you $25 in credits. Anything helps, including how you found it and why you signed up.
 
 Here's my cell # for imessage or whatsapp - 7379832612 .
 
 - Nick`,
-    }),
+    },
   },
 ];
+
+/** Placeholders in a template that the code doesn't fill (a typo would reach people as "{...}"). */
+export function unknownPlaceholders(t: EmailTemplate): string[] {
+  const known = new Set<string>(PLACEHOLDERS);
+  return [...new Set([...`${t.subject}\n${t.body}`.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).filter((name) => !known.has(name)))];
+}
+
+/** The email for one account: the template with its placeholders filled. */
+export function fill(t: EmailTemplate, ctx: DripContext): DripEmail {
+  const sub = (s: string) => s.replace(/\{(addCredits|host)\}/g, (_, name: keyof DripContext) => ctx[name]);
+  return { subject: sub(t.subject), body: sub(t.body) };
+}
+
+/**
+ * The copy for a step: its email_templates row, or the code default when there's no row or the
+ * row uses a placeholder the code can't fill.
+ */
+export async function templateFor(db: D1Database, step: Step): Promise<EmailTemplate> {
+  const row = await db.prepare(`SELECT subject, body FROM email_templates WHERE key = ?`).bind(step.id).first<EmailTemplate>();
+  if (!row) return step.template;
+  const unknown = unknownPlaceholders(row);
+  if (unknown.length) {
+    console.error('email template has unknown placeholders, using the default', step.id, unknown.join(','));
+    return step.template;
+  }
+  return { subject: row.subject, body: row.body };
+}
 
 /** The unsubscribe link for an account, signed so it can't be forged for someone else. */
 export async function unsubscribeUrl(origin: string, secret: string, accountId: string): Promise<string> {
@@ -115,6 +152,7 @@ export async function runDrip(opts: {
   const t = now();
   const tally = { sent: 0, failed: 0 };
   for (const step of STEPS) {
+    const template = await templateFor(opts.db, step);
     const { results } = await opts.db
       .prepare(
         `SELECT id, email, created_at FROM accounts
@@ -130,7 +168,7 @@ export async function runDrip(opts: {
       if (!claim.meta.changes) continue;
       try {
         const host = new URL(opts.origin).host;
-        const email = step.email({ host, addCredits: `${host}${await addCreditsPath(opts.secret, a.id)}` });
+        const email = fill(template, { host, addCredits: `${host}${await addCreditsPath(opts.secret, a.id)}` });
         const { subject, text, html } = render(email, await unsubscribeUrl(opts.origin, opts.secret, a.id), host);
         await opts.messenger.sendEmail(a.email, subject, text, html);
         tally.sent++;

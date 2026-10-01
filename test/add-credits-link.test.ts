@@ -13,7 +13,7 @@ registerHooks({
   },
 });
 
-const { addCreditsAccount, addCreditsPath, render, STEPS } = await import('../src/server/services/drip');
+const { addCreditsAccount, addCreditsPath, fill, render, STEPS } = await import('../src/server/services/drip');
 const { pub } = await import('../src/server/routes/public');
 
 const secret = 'test-secret';
@@ -95,7 +95,7 @@ test('posting the link opens a monthly, adjustable checkout for that account', a
 test('the welcome email shows the link without a scheme and the HTML links it', async () => {
   const welcome = STEPS.find((s) => s.id === 'welcome')!;
   const addCredits = `call4.me${await addCreditsPath(secret, account.id)}`;
-  const email = welcome.email({ host: 'call4.me', addCredits });
+  const email = fill(welcome.template, { host: 'call4.me', addCredits });
   assert.ok(email.body.includes(`add credits at ${addCredits} and paste the prompt from call4.me into your agent.`));
   assert.ok(email.body.includes('7379832612'));
   assert.ok(!email.body.includes('https://'));
