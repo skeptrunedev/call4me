@@ -114,7 +114,7 @@ Weekends are agent-only: builds, fixes and logs, with no calls (most phone lines
 - All 5 test calls placed ($12 across 9 calls). Numbers confirmed on each company's own site first.
 - **Reached a person:** USAA (press 1 for non-member, 2 for joining, say "membership", about a 2 minute hold) and UPS (say "representative" twice at the tracking number prompt, about 3 minutes of hold).
 - **Walled without an account:** Verizon's AI assistant needs the account's mobile or account number; FedEx won't connect without a tracking or door tag number; FPL answers "representative" with "That option is not available" and routes new customers into an automated signup that needs the new address.
-- **Lesson for the template:** "a real question, no account" works for membership and policy questions but not for carriers, telcos and utilities. Those pages publish the wall (the exact phone tree and the identifier it demands) and get redone with a real account or package when we have one.
+- **Lesson for the template:** "a real question, no account" works for membership and policy questions but not for carriers, telcos and utilities. Those pages wait until a call with a real account, package or address reaches a person; the wall can be a section inside them. Verizon reached a rep the same day on Nick's own account (5G Do More at $219.08 a month, Unlimited Welcome quoted at $170.58).
 - 5 drafts written from the recordings, awaiting Nick's review: `usaa-phone-number`, `ups-contact-number`, `verizon-customer-service`, `fedex-customer-service-number`, `fpl-phone-number`.
 - Caller fixes shipped from these calls: ask a spoken menu for a representative instead of looping its routes; never think out loud on the line; never guess where the user is calling from. Still open: the caller stalls ("hold on") and repeats failed routes on spoken menus, which needs spoken-menu cases in `test:menu:live`; and some caller lines in the saved transcript are silent on the recording.
 - The account can only run 2 calls at once, which caps the Week 3 and 4 pace (10 to 15 calls a day) unless it's raised.
@@ -225,6 +225,7 @@ Still open from launch day: analytics with signup source tracking; Nick to creat
 ## What must never slip
 
 - No page goes up without a real test call behind it, and without Nick reading it.
+- No page goes up unless one of its calls reached a live person. A phone-tree wall alone never publishes: try every route the menu offers, then use a real account, tracking number or address. A walled call can sit inside the page as "what happens without X".
 - Never publish a rep's name or anything that identifies them.
 - Nothing from a customer's call goes public without their permission. Our own test calls are fine.
 - Every external post, reply and pitch is drafted by the agent and sent by Nick.
