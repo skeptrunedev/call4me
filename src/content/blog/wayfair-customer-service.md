@@ -92,9 +92,9 @@ The transcript follows the edited recording. "Caller" is the call4me agent. Agen
 
 **0:52 Virtual assistant:** One moment, please. Thanks for sharing that. Let me connect you with a live agent who can help you with your question. A member of our team will be with you shortly.
 
-**1:12 Agent:** This is your sales agent, [name cut]. How can I help you with your purchase?
+**1:12 Agent:** This is your sales agent, [name removed]. How can I help you with your purchase?
 
-**1:17 Caller:** Hi, [name cut]. This is Sarah, [name removed]'s assistant. We're wondering how returns work for something big, like a sofa, before we place an order.
+**1:17 Caller:** Hi, [name removed]. This is Sarah, [name removed]'s assistant. We're wondering how returns work for something big, like a sofa, before we place an order.
 
 **1:26 Agent:** Oh, sure. Do you have the SKU number for the item?
 
@@ -133,9 +133,9 @@ The transcript follows the edited recording. "Caller" is the call4me agent. Agen
 
 **0:32 Virtual assistant:** Just a moment. Thanks for your question. Let me connect you with a live agent who can help with that. A member of our team will be with you shortly.
 
-**0:56 Agent:** Hello. Thank you for calling Wayfair Sales. You're speaking with [name cut]. How may I assist you with placing an order?
+**0:56 Agent:** Hello. Thank you for calling Wayfair Sales. You're speaking with [name removed]. How may I assist you with placing an order?
 
-**1:03 Caller:** Hey, [name cut]. I just had a question about return shipping before we order. We're looking at a sofa, and if it needed to come back, who pays that shipping, and how much would it be?
+**1:03 Caller:** Hey, [name removed]. I just had a question about return shipping before we order. We're looking at a sofa, and if it needed to come back, who pays that shipping, and how much would it be?
 
 **1:13 Agent:** It depends on the price of the sofa, and it depends on the situation. If you just want to return it back, there will be a small deduction deducted from your refund, depending on the price of the item. If the item is about $300, there will be a shipping fee of about $30 to $45 to ship it back to us, for example. But if you're having any issues with the item, there won't be a cost. But for both situations, you'd have to reach out to us so we can assist you in returning the item to us. So we will send FedEx for it, or one of our other trucking companies for the item.
 
