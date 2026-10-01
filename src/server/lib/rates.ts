@@ -10,4 +10,4 @@ export const DESTINATION_PRICE_CENTS: Readonly<Record<string, number>> = { AE: 4
 const perMinute = (cents: number) => `$${(cents / 100).toFixed(2)}/min`;
 
 /** For agent instructions: the UAE and Japan are reachable from the US number, each at its own price. */
-export const ABROAD_CALLING = `UAE and Japanese businesses too, from the account's US number (the business sees a US caller ID), at ${perMinute(DESTINATION_PRICE_CENTS.AE)} and ${perMinute(DESTINATION_PRICE_CENTS.JP)}`;
+export const ABROAD_CALLING = `UAE (${perMinute(DESTINATION_PRICE_CENTS.AE)}) and Japanese (${perMinute(DESTINATION_PRICE_CENTS.JP)}) businesses too, from the account's US number (the business sees a US caller ID)`;
