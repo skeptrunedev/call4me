@@ -112,7 +112,7 @@ From the side that makes the calls: on a short business call, mostly you can't, 
 - **Reading everything back.** Real people don't repeat the whole booking at the end of a call. Our caller doesn't either.
 - **Narrating what it's doing.** "I'm going to press 2 now" is something no person says. It's an open bug for us; it still happens.
 - **Pauses in the wrong places.** A caller that waits too long after "how can I help you?" sounds like a machine thinking.
-- **A recording notice or a disclosure script up front.** We don't record calls and don't open with one.
+- **A disclosure script up front.** A person calling for someone else doesn't open with one, and our caller doesn't either.
 
 The one thing call4me won't do is lie about it. If someone sincerely asks whether they're talking to an AI, the caller says yes. This is the rule, word for word:
 
