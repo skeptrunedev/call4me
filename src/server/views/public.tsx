@@ -283,7 +283,7 @@ export const TermsPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
     <h1>terms</h1>
     <ul>
       <li>credits are prepaid and don't expire. a call holds its maximum cost from your balance before it dials and settles when it ends: talk time from pickup, rounded up to the minute. the rest of the hold comes back.</li>
-      <li>by default, what you load reloads every month: the same amount is charged to your card and added as credits. stop it anytime from your account or your agent (call4me_stop_reload); credits already loaded stay.</li>
+      <li>by default, what you load reloads every month: the same amount is charged to your card and added as credits. stop it anytime from your account; credits already loaded stay.</li>
       <li>unanswered, busy, and failed calls are free.</li>
       <li>you're responsible for the calls you ask for and must follow the <a href="/rules">rules</a>.</li>
       <li>the service is provided as is. a call can fail, get something wrong, or end without a result; check anything important.</li>

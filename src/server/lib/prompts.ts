@@ -72,8 +72,7 @@ First call call4me_get_balance. Show me any assigned call4me numbers from its nu
 Then, depending on what I ask:
 - Balance, price per minute, and my call4me phone number: call4me_get_balance.
 - My recent calls: call4me_list_calls (outbound calls and callbacks to my number, newest first). For any one, call4me_get_call with its call_id gives the outcome and transcript. Summarize each in one line: who, what for, and the result.
-- Add credits: call4me_add_funds with amount_dollars (10 to 500). It reloads that amount monthly unless you pass monthly: false, so ask me which I want. Give me the checkout link; nothing is charged until I pay.
-- Stop the monthly reload: call4me_stop_reload, only if I ask. Credits already loaded stay.
+- Add credits: call4me_add_funds with amount_dollars (10 to 500). It reloads that amount monthly. Give me the checkout link; nothing is charged until I pay.
 - My calling profile (name, date of birth, phone, address, insurance, car): call4me_get_profile to see it, call4me_save_profile to change it (an empty string removes a field).
 - Replacing my API key is only done on ${origin}/account (the old one stops working); agents signed in through OAuth don't need one.`;
 }

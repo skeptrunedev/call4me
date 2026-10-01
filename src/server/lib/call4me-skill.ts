@@ -61,8 +61,7 @@ ${CATEGORIES.map((c) => `- \`${c.slug}\`: ${c.name} (${c.examples})`).join('\n')
 
 - \`call4me_get_balance\`: balance, price per minute, minutes left, the account's assigned call4me \`numbers\`, and the monthly reload. \`phone_number\` is null when no number is assigned yet. Show the returned numbers and their countries to the user during setup; calls and verification rings use the \`calling_number\` returned for that particular call, and businesses can call it back to finish the unfinished task or leave a message.
 - \`call4me_list_calls\`: recent calls, newest first; \`call4me_get_call\` for any one's outcome and transcript.
-- \`call4me_add_funds\`: a Stripe checkout link ($10 to $500; reloads monthly unless \`monthly: false\`). Give the link to the user; nothing is charged until they pay.
-- \`call4me_stop_reload\`: cancel the monthly reload, only when the user asks.
+- \`call4me_add_funds\`: a Stripe checkout link ($10 to $500; reloads that amount monthly). Give the link to the user; nothing is charged until they pay.
 
 ## Rules
 

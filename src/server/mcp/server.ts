@@ -417,32 +417,16 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     {
       title: 'Add funds',
       description:
-        'A Stripe checkout link that adds credits. By default the same amount reloads every month (replacing any current monthly reload); pass monthly: false for a one-time load. Give the link to the user to open; nothing is charged until they pay.',
+        'A Stripe checkout link that adds credits now and reloads the same amount every month (replacing any current monthly reload). Give the link to the user to open; nothing is charged until they pay.',
       inputSchema: z.object({
         amount_dollars: z.number().min(10).max(500).default(10),
-        monthly: z.boolean().default(true).describe('reload this amount every month (default true)'),
       }),
       annotations: { ...OPEN, openWorldHint: false },
     },
-    (async (args: { amount_dollars: number; monthly: boolean }) =>
+    (async (args: { amount_dollars: number }) =>
       guard(async () => {
-        const url = await topups(env.DB, deps.stripe()).checkout({ amountCents: parseAmountCents(args.amount_dollars), monthly: args.monthly, origin: deps.origin, account });
-        return ok(`open this to pay${args.monthly ? ' (reloads monthly; stop anytime)' : ''}: ${url}`, { url, monthly: args.monthly });
-      })()) as never,
-  );
-
-  server.registerTool(
-    'call4me_stop_reload',
-    {
-      title: 'Stop the monthly reload',
-      description: 'Cancel the monthly reload. Credits already loaded stay on the account. Only do this when the user asks.',
-      inputSchema: z.object({}),
-      annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
-    },
-    (async () =>
-      guard(async () => {
-        await topups(env.DB, deps.stripe()).stopReload(account.id);
-        return ok('monthly reload stopped. credits already loaded stay.', { stopped: true });
+        const url = await topups(env.DB, deps.stripe()).checkout({ amountCents: parseAmountCents(args.amount_dollars), monthly: true, origin: deps.origin, account });
+        return ok(`open this to pay (reloads monthly): ${url}`, { url, monthly: true });
       })()) as never,
   );
 
