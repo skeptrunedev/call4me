@@ -17,7 +17,6 @@ export const ExamplesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
       <h1>listen to real calls</h1>
       <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
       <p>hear the agent talk to a business, ask questions, and get an answer before you buy.</p>
-      <p class="small">jump to: {EXAMPLES.map((example, i) => <>{i > 0 && ' · '}<a href={`#${example.slug}`}>{example.title}</a></>)}</p>
       {EXAMPLES.map((example) => (
         <article class="example" id={example.slug} aria-labelledby={`${example.slug}-title`}>
           <h2 id={`${example.slug}-title`}>{example.title}</h2>

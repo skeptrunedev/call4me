@@ -11,7 +11,6 @@ export const CallOnboarding: FC<{ numbers?: NumberView[] }> = ({ numbers = [] })
         <ul>
           {numbers.map((n) => <li><strong>{n.number}</strong>{numbers.length > 1 && <> ({n.country_name})</>}</li>)}
         </ul>
-        <p class="small">calls use one of your call4me numbers, depending on the country you're calling. that same number rings you when you join the call.</p>
       </>
     ) : (
       <p>your free us number is assigned on your first call. your agent will show you the number to save as a contact named call4me once the call starts.</p>
