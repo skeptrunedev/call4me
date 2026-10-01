@@ -57,6 +57,10 @@ export interface CallRow {
   outcome: string | null;
   transcript: string | null;
   hangup_cause: string | null;
+  /** Telnyx's hangup_source: 'caller' (our side, on an outbound call), 'callee', or 'unknown'. */
+  hangup_source: string | null;
+  /** Set when call4me itself hung up: why (the task was done, the user asked, the time limit...). */
+  end_reason: string | null;
   error: string | null;
   /** Inbound only: the outbound call whose unfinished task this callback picked up. */
   callback_for: string | null;
@@ -260,6 +264,11 @@ export function calls(db: D1Database) {
       await db.prepare(`UPDATE calls SET status = 'in_progress', answered_at = COALESCE(answered_at, ?) WHERE id = ? AND status IN ('queued','dialing')`).bind(at, id).run();
     },
 
+    /** call4me is about to hang up its side: record why, unless an earlier reason already won. */
+    async hangingUp(id: string, reason: string): Promise<void> {
+      await db.prepare(`UPDATE calls SET end_reason = COALESCE(end_reason, ?) WHERE id = ?`).bind(reason, id).run();
+    },
+
     async saveTranscript(id: string, lines: TranscriptLine[]): Promise<void> {
       await db.prepare(`UPDATE calls SET transcript = ? WHERE id = ?`).bind(JSON.stringify(lines), id).run();
     },
@@ -272,7 +281,7 @@ export function calls(db: D1Database) {
      * Terminal state plus billing, exactly once: the status guard makes a second hangup
      * event a no-op, and the ledger ref is the call id.
      */
-    async finish(id: string, opts: { status: CallStatus; hangupCause?: string | null; error?: string | null; pricePerMinuteCents: number; at?: number }): Promise<CallRow | null> {
+    async finish(id: string, opts: { status: CallStatus; hangupCause?: string | null; hangupSource?: string | null; error?: string | null; pricePerMinuteCents: number; at?: number }): Promise<CallRow | null> {
       const endedAt = opts.at ?? now();
       const row = await this.byId(id);
       if (!row || !ACTIVE.includes(row.status)) return row;
@@ -282,10 +291,10 @@ export function calls(db: D1Database) {
       const cost = status === 'completed' && talkSeconds > 0 ? billedCents(talkSeconds, opts.pricePerMinuteCents) : 0;
       const r = await db
         .prepare(
-          `UPDATE calls SET status = ?, ended_at = ?, billed_seconds = ?, cost_cents = ?, hangup_cause = COALESCE(?, hangup_cause), error = COALESCE(?, error)
+          `UPDATE calls SET status = ?, ended_at = ?, billed_seconds = ?, cost_cents = ?, hangup_cause = COALESCE(?, hangup_cause), hangup_source = COALESCE(?, hangup_source), error = COALESCE(?, error)
            WHERE id = ? AND status IN ('queued','dialing','in_progress')`,
         )
-        .bind(status, endedAt, talkSeconds, cost, opts.hangupCause ?? null, opts.error ?? null, id)
+        .bind(status, endedAt, talkSeconds, cost, opts.hangupCause ?? null, opts.hangupSource ?? null, opts.error ?? null, id)
         .run();
       if ((r.meta.changes ?? 0) > 0) {
         const ledger = accounts(db);

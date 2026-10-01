@@ -1,5 +1,5 @@
 import { newId, now } from '../lib/ids';
-import { keyHint, newApiKey, sealKey, sha256Hex, unsealKey } from '../lib/keys';
+import { keyHint, newApiKey, normalizeKey, sealKey, sha256Hex, unsealKey } from '../lib/keys';
 
 export interface Account {
   id: string;
@@ -23,8 +23,9 @@ export type LedgerKind = 'topup' | 'reload' | 'hold' | 'release' | 'call' | 'ref
 
 export function accounts(db: D1Database) {
   return {
+    /** The account a presented key belongs to, after undoing what clients do to keys in transit (normalizeKey). */
     async byKey(key: string): Promise<Account | null> {
-      return db.prepare(`SELECT ${ACCOUNT_COLUMNS} FROM accounts WHERE key_hash = ?`).bind(await sha256Hex(key)).first<Account>();
+      return db.prepare(`SELECT ${ACCOUNT_COLUMNS} FROM accounts WHERE key_hash = ?`).bind(await sha256Hex(normalizeKey(key))).first<Account>();
     },
 
     async byId(id: string): Promise<Account | null> {

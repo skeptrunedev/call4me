@@ -124,6 +124,26 @@ function fail(message: string): CallToolResult {
 const callingNumber = (row: CallRow) => row.ring_number ?? row.from_number;
 
 /** The shape every call tool returns: what an agent needs to decide its next step. */
+/**
+ * Who ended a finished call and why, in words: a drop on the phone network reads differently from
+ * the business hanging up or call4me hanging up its side. Telnyx's hangup_source says which leg
+ * ended it ('caller' is us on an outbound call); end_reason says why when it was us.
+ */
+export function howItEnded(row: CallRow, transcript: TranscriptLine[]): string | null {
+  if (ACTIVE.includes(row.status) || !row.answered_at) return row.hangup_cause;
+  const them = row.direction === 'outbound' ? 'the business' : 'the caller';
+  const ourLeg = row.direction === 'outbound' ? 'caller' : 'callee';
+  let ended: string;
+  if (row.error) ended = `call4me ended the call after a failure: ${row.error}`;
+  else if (row.hangup_cause && row.hangup_cause !== 'normal_clearing') ended = `the call dropped on the phone network (${row.hangup_cause}), not a hang-up`;
+  else if (row.hangup_source === ourLeg) ended = `call4me hung up: ${row.end_reason ?? 'no reason recorded'}`;
+  else if (row.hangup_source && row.hangup_source !== 'unknown') ended = `${them} hung up`;
+  else ended = row.end_reason ? `call4me hung up: ${row.end_reason}` : `${them} hung up, or the line dropped (the carrier did not say which side)`;
+  // An answered line that never carried a word from them is worth knowing before redialing.
+  if (!transcript.some((l) => l.role === 'them')) ended += `. No speech ever came through from ${them}'s side of the line`;
+  return ended;
+}
+
 export function callView(row: CallRow, questions: Question[], callbacks: CallRow[] = []) {
   const outcome = row.outcome ? (JSON.parse(row.outcome) as Outcome) : null;
   const transcript = row.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [];
@@ -151,6 +171,7 @@ export function callView(row: CallRow, questions: Question[], callbacks: CallRow
     talk_minutes: row.billed_seconds ? Math.ceil(row.billed_seconds / 60) : 0,
     cost: dollars(row.cost_cents ?? 0),
     hangup_cause: row.hangup_cause,
+    ended: howItEnded(row, transcript),
     error: row.error,
     created_at: new Date(row.created_at).toISOString(),
     transcript: transcript.map((l) => `${l.role}: ${l.text}`),
@@ -169,7 +190,7 @@ function callText(v: ReturnType<typeof callView>): string {
   if (v.callback_for) lines.push('', `callback that picked up the unfinished task of ${v.callback_for}`);
   for (const c of v.callbacks) lines.push('', `they called back (${c.id}, ${c.created_at.slice(0, 16).replace('T', ' ')}): ${c.outcome ? `${c.outcome.result}. ${c.outcome.summary}` : 'in progress'}`);
   if (v.error) lines.push('', `error: ${v.error}`);
-  if (v.finished) lines.push('', `talk time ${v.talk_minutes} min, cost ${v.cost}${v.hangup_cause ? `, ended: ${v.hangup_cause}` : ''}`);
+  if (v.finished) lines.push('', `talk time ${v.talk_minutes} min, cost ${v.cost}${v.ended ? `, ended: ${v.ended}` : ''}`);
   if (v.transcript.length) lines.push('', 'transcript:', ...v.transcript);
   return lines.join('\n').trim();
 }

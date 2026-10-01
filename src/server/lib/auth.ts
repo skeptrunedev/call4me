@@ -144,7 +144,9 @@ export async function bearerAccount(c: AppContext): Promise<Account | null> {
 /** The RFC 9728 challenge: 401 + WWW-Authenticate so MCP clients start (or repeat) the OAuth flow. */
 export function challenge(c: AppContext, message: string, error?: string, path: McpPath = '/mcp'): Response {
   const metadata = `${origin(c)}/.well-known/oauth-protected-resource${path}`;
-  const params = [`resource_metadata="${metadata}"`, ...(error ? [`error="${error}"`, `error_description="${message}"`] : [])];
+  // A header value is a quoted ASCII string: no double quotes, nothing past Latin-1 (Workers throws).
+  const description = message.replace(/"/g, "'").replace(/…/g, '...').replace(/[^\x20-\x7e]/g, '?');
+  const params = [`resource_metadata="${metadata}"`, ...(error ? [`error="${error}"`, `error_description="${description}"`] : [])];
   return new Response(JSON.stringify({ jsonrpc: '2.0', error: { code: -32000, message }, id: null }), {
     status: 401,
     headers: { 'content-type': 'application/json', 'www-authenticate': `Bearer ${params.join(', ')}` },

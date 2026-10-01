@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { createMcpHandler, hostHeaderValidationResponse } from '@modelcontextprotocol/server';
 import { accountForToken, bearerToken, challenge, looksLikeJwt, sessionAccount, verifyMcpToken, type McpPath } from '../lib/auth';
 import { legacyHosts, origin, stripeFor, viewerKey, type AppContext, type AppEnv } from '../lib/context';
+import { describeKey, normalizeKey } from '../lib/keys';
 import { installPrompt } from '../lib/prompts';
 import { accounts, type Account } from '../services/accounts';
 import type { Surface } from '../services/intake';
@@ -48,19 +49,22 @@ mcp.get('/', async (c) => {
  * starts sign-in.
  */
 async function authorized(c: AppContext, path: McpPath, surface: Surface): Promise<Response> {
-  const token = bearerToken(c);
-  if (!token) return challenge(c, 'sign in to call4me to use this server', undefined, path);
+  const raw = bearerToken(c);
+  if (!raw) return challenge(c, 'sign in to call4me to use this server', undefined, path);
+  const token = normalizeKey(raw);
   if (looksLikeJwt(token)) {
+    let why = 'it belongs to no account';
     try {
       const account = await accountForToken(c, await verifyMcpToken(c, token, path));
       if (account) return serve(c, account, surface);
     } catch (err) {
-      console.warn('mcp token rejected', String(err));
+      why = String(err);
+      console.warn('mcp token rejected', why);
     }
-    return challenge(c, 'invalid or expired access token', 'invalid_token', path);
+    return challenge(c, `access token not accepted (${token.length} characters): ${why}`, 'invalid_token', path);
   }
-  const account = await accounts(c.env.DB).byKey(token);
-  return account ? serve(c, account, surface) : challenge(c, 'invalid call4me key', 'invalid_token', path);
+  const account = await accounts(c.env.DB).byKey(raw);
+  return account ? serve(c, account, surface) : challenge(c, `call4me key not accepted: ${describeKey(raw)}`, 'invalid_token', path);
 }
 
 mcp.all('/', (c) => authorized(c, '/mcp', 'agents'));
@@ -68,8 +72,9 @@ mcp.all('/', (c) => authorized(c, '/mcp', 'agents'));
 /** /mcp/<key>: the key rides in the URL for clients whose connector UI can't sign in or set headers. */
 mcp.get('/:key', (c) => (wantsHtml(c) ? c.redirect('/mcp', 302) : c.text('POST MCP requests here', 405)));
 mcp.all('/:key', async (c) => {
-  const account = await accounts(c.env.DB).byKey(c.req.param('key'));
-  if (!account) return c.json({ jsonrpc: '2.0', error: { code: -32001, message: `call4me: invalid key. Use ${origin(c)}/mcp and sign in, or create a key at ${origin(c)}/account.` }, id: null }, 401);
+  const raw = c.req.param('key');
+  const account = await accounts(c.env.DB).byKey(raw);
+  if (!account) return c.json({ jsonrpc: '2.0', error: { code: -32001, message: `call4me key not accepted: ${describeKey(raw)}. Your key is at ${origin(c)}/account, or use ${origin(c)}/mcp and sign in.` }, id: null }, 401);
   return serve(c, account);
 });
 

@@ -303,7 +303,7 @@ export class VoiceSession extends DurableObject<Env> {
       if (this.liveReady) this.sendLive({ type: 'session.input_audio.append', audio: payload });
       else if (this.pendingAudio.length < 250) this.pendingAudio.push(payload); // ~5s at 20ms frames
     } else if (frame.event === 'stop') {
-      void this.shutdown('media stream stopped');
+      void this.shutdown('the phone audio stream stopped');
     }
   }
 
@@ -366,8 +366,8 @@ export class VoiceSession extends DurableObject<Env> {
     this.live = ws;
     ws.addEventListener('message', (ev) => void this.onLive(typeof ev.data === 'string' ? ev.data : ''));
     // A socket dropped on purpose (phoneLost) is no longer this.live and ends nothing.
-    ws.addEventListener('close', () => void (this.live === ws && this.shutdown('live session closed')));
-    ws.addEventListener('error', () => void (this.live === ws && this.shutdown('live session error')));
+    ws.addEventListener('close', () => void (this.live === ws && this.shutdown('the voice model disconnected')));
+    ws.addEventListener('error', () => void (this.live === ws && this.shutdown('the voice model connection failed')));
     let instructions = s.instructions;
     if (this.resumed) {
       const row = await calls(this.env.DB).byId(s.callId);
@@ -531,7 +531,7 @@ export class VoiceSession extends DurableObject<Env> {
         break;
       }
       case 'session.closed':
-        await this.shutdown(`live session closed: ${(ev as { reason: string }).reason}`);
+        await this.shutdown(`the voice model closed the session (${(ev as { reason: string }).reason})`);
         break;
     }
   }
@@ -772,7 +772,7 @@ export class VoiceSession extends DurableObject<Env> {
     const s = await this.load();
     if (!s?.controlId || this.ended) return 'the call is not live';
     this.note('the call was ended by the user');
-    await this.hangup();
+    await this.hangup('the user hung up from their agent (call4me_hang_up)');
     return 'hung up';
   }
 
@@ -861,7 +861,7 @@ export class VoiceSession extends DurableObject<Env> {
     }
     // Let the goodbye finish, then hang up. The hangup webhook bills and writes the recap.
     const wait = Math.max(0, this.playbackEndsAt - Date.now()) + HANGUP_GRACE_MS;
-    setTimeout(() => void this.hangup(), wait);
+    setTimeout(() => void this.hangup('the caller finished and said goodbye (end_call)'), wait);
     return 'hanging up';
   }
 
@@ -896,8 +896,8 @@ export class VoiceSession extends DurableObject<Env> {
     this.waiting.get(id)?.(answer);
   }
 
-  private hangup(): Promise<void> {
-    return this.shutdown('hung up');
+  private hangup(reason: string): Promise<void> {
+    return this.shutdown(reason);
   }
 
   // ---- transcript
@@ -964,7 +964,7 @@ export class VoiceSession extends DurableObject<Env> {
     }
     const [wrapAt, stopAt] = await Promise.all([this.ctx.storage.get<number>('wrapAt'), this.ctx.storage.get<number>('stopAt')]);
     if (stopAt && now >= stopAt) {
-      await this.hangup();
+      await this.hangup('the call reached its time limit');
       return;
     }
     if (!stopAt && wrapAt && now >= wrapAt) {
@@ -995,7 +995,11 @@ export class VoiceSession extends DurableObject<Env> {
     if (this.handoffTimer) clearTimeout(this.handoffTimer);
     console.log('call session ending:', reason);
     const s = await this.load();
-    if (s?.controlId && reason !== 'hangup webhook') await telnyx(this.env).hangup(s.controlId).catch((err) => console.warn('hangup', String(err)));
+    if (s?.controlId && reason !== 'hangup webhook') {
+      // Our side is ending the call: say why before the hangup webhook finishes the row.
+      await calls(this.env.DB).hangingUp(s.callId, reason).catch((err) => console.warn('end reason', String(err)));
+      await telnyx(this.env).hangup(s.controlId).catch((err) => console.warn('hangup', String(err)));
+    }
     if (this.personLeg) await telnyx(this.env).hangup(this.personLeg).catch((err) => console.warn('person hangup', String(err)));
     await this.flushTranscript().catch((err) => console.warn('transcript flush', String(err)));
     if (this.live?.readyState === WebSocket.OPEN) {
