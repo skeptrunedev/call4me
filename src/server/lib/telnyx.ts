@@ -83,6 +83,13 @@ export const readClientState = (s: string | undefined | null): { callId: string;
   }
 };
 
+/**
+ * The highest carrier rate per minute (USD) our outbound profile accepts. Telnyx's default cap
+ * blocks the UAE (other carriers charge about $0.22-0.25/min to reach it); calls there are billed at their
+ * own higher price (lib/rates.ts), so this leaves room for them without opening anything pricier.
+ */
+const MAX_DESTINATION_RATE = 0.3;
+
 export function telnyx(env: TelnyxEnv) {
   return {
     /** Recover an exact historical association from original provider webhook payloads. */
@@ -250,16 +257,23 @@ export function telnyx(env: TelnyxEnv) {
 
     /**
      * Let our outbound voice profile call `countries`. Telnyx refuses calls to countries missing
-     * from the profile's whitelist, which starts as the US and Canada. Only ever adds.
+     * from the profile's whitelist, which starts as the US and Canada, and to any destination
+     * whose rate is over the profile's cap, so the cap is raised to MAX_DESTINATION_RATE too.
+     * Only ever adds and raises.
      */
     async allowDestinations(countries: string[]): Promise<void> {
       const app = await call<{ data: { outbound: { outbound_voice_profile_id: string } } }>(env, 'GET', `/call_control_applications/${encodeURIComponent(env.TELNYX_CONNECTION_ID)}`);
       const profileId = app.data.outbound.outbound_voice_profile_id;
-      const profile = await call<{ data: { whitelisted_destinations: string[] } }>(env, 'GET', `/outbound_voice_profiles/${encodeURIComponent(profileId)}`);
+      const profile = await call<{ data: { whitelisted_destinations: string[]; max_destination_rate: number | string | null } }>(env, 'GET', `/outbound_voice_profiles/${encodeURIComponent(profileId)}`);
       const allowed = profile.data.whitelisted_destinations;
       const missing = countries.filter((c) => !allowed.includes(c));
-      if (!missing.length) return;
-      await call(env, 'PATCH', `/outbound_voice_profiles/${encodeURIComponent(profileId)}`, { whitelisted_destinations: [...allowed, ...missing] });
+      const cap = profile.data.max_destination_rate;
+      const capTooLow = cap !== null && Number(cap) < MAX_DESTINATION_RATE;
+      if (!missing.length && !capTooLow) return;
+      await call(env, 'PATCH', `/outbound_voice_profiles/${encodeURIComponent(profileId)}`, {
+        whitelisted_destinations: [...allowed, ...missing],
+        ...(capTooLow ? { max_destination_rate: MAX_DESTINATION_RATE } : {}),
+      });
     },
   };
 }

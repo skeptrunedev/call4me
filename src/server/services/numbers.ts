@@ -137,12 +137,19 @@ export const EUROPE = new Set([
   'AT', 'BE', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HR', 'HU', 'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK',
 ]);
 
-/** Every country some account may call: the telephone carrier must allow each of them. */
-export const CALLABLE = [...new Set(['US', 'CA', ...EUROPE, ...Object.keys(COUNTRIES)])];
+/**
+ * Countries any account may call from its free US number without holding a number there: Europe,
+ * and the UAE, where no carrier sells numbers to a company outside the country, so a US caller ID
+ * is the only way in. A call to the UAE costs more (lib/rates.ts).
+ */
+export const FROM_HOME = new Set([...EUROPE, 'AE']);
 
-/** Whether the account may reach `to`: +1 numbers and Europe always, elsewhere a country it holds a number in. */
+/** Every country some account may call: the telephone carrier must allow each of them. */
+export const CALLABLE = [...new Set(['US', 'CA', ...FROM_HOME, ...Object.keys(COUNTRIES)])];
+
+/** Whether the account may reach `to`: +1 numbers and FROM_HOME countries always, elsewhere a country it holds a number in. */
 export async function mayCall(db: D1Database, accountId: string, to: Extract<PhoneCheck, { ok: true }>): Promise<boolean> {
-  if (to.home || EUROPE.has(to.country)) return true;
+  if (to.home || FROM_HOME.has(to.country)) return true;
   return Boolean(await db.prepare(`SELECT 1 FROM numbers WHERE account_id = ? AND country = ? AND status = 'active'`).bind(accountId, to.country).first());
 }
 
@@ -284,7 +291,7 @@ export function numbers(env: Env) {
     /**
      * The number a call to `to` goes out from: `requested` when given (it must be one of the
      * account's), else one in the callee's country, else (calling Europe) a European one, else
-     * (calling a +1 number or Europe) its US number, buying the free one on the first call.
+     * (calling a +1 number or a FROM_HOME country) its US number, buying the free one on the first call.
      */
     async callerId(account: Account, to: Extract<PhoneCheck, { ok: true }>, requested?: string | null): Promise<string> {
       const owned = await active(account.id);
@@ -300,7 +307,7 @@ export function numbers(env: Env) {
         const european = owned.find((n) => EUROPE.has(n.country));
         if (european) return european.phone_number;
       }
-      if (to.home || EUROPE.has(to.country)) return owned.find((n) => isHome(n.phone_number))?.phone_number ?? (await this.ensureIncluded(account, to.e164));
+      if (to.home || FROM_HOME.has(to.country)) return owned.find((n) => isHome(n.phone_number))?.phone_number ?? (await this.ensureIncluded(account, to.e164));
       throw new NumberError(`calling ${COUNTRIES[to.country]?.name ?? to.country} needs a number there; buy one with call4me_buy_number`, 422);
     },
 

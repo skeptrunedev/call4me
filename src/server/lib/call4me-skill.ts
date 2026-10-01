@@ -1,4 +1,5 @@
 import { CATEGORIES } from '../services/intake';
+import { DESTINATION_PRICE_CENTS, UAE_CALLING } from './rates';
 
 /**
  * call4me's own skill: how an agent sets call4me up and places calls with it. Served from the
@@ -14,14 +15,15 @@ export const CALL4ME_SKILL_DESCRIPTION = 'How to install call4me and have it pla
 
 export function call4meSkillMd(site: string, pricePerMinuteCents: number): string {
   const price = `$${(pricePerMinuteCents / 100).toFixed(2)}`;
+  const uaePrice = `$${(DESTINATION_PRICE_CENTS.AE / 100).toFixed(2)}`;
   return `---
 name: call4me
-description: Place real phone calls for the user with call4me (${site}): book restaurants, doctor, dentist, and vet appointments, call dealerships, home internet providers, and airlines, or ask any business a question (US, Canada and Europe, or elsewhere from a call4me number in that country). Use when the user asks you to call somewhere, book something by phone, or find something out from a business that has no online way to do it.
+description: Place real phone calls for the user with call4me (${site}): book restaurants, doctor, dentist, and vet appointments, call dealerships, home internet providers, and airlines, or ask any business a question (US, Canada, Europe and the UAE, or elsewhere from a call4me number in that country). Use when the user asks you to call somewhere, book something by phone, or find something out from a business that has no online way to do it.
 ---
 
 # call4me
 
-call4me gives you one capability: a phone call. A caller that sounds like a normal person dials the business, has the conversation, asks you mid-call when it needs something it wasn't given, and hands you the outcome and a transcript. Credits are prepaid (from $10); talk time costs ${price} per minute, held up front and settled when the call ends; unanswered calls are free.
+call4me gives you one capability: a phone call. A caller that sounds like a normal person dials the business, has the conversation, asks you mid-call when it needs something it wasn't given, and hands you the outcome and a transcript. Credits are prepaid (from $10); talk time costs ${price} per minute (UAE calls ${uaePrice}), held up front and settled when the call ends; unanswered calls are free.
 
 ## Connect
 
@@ -65,6 +67,6 @@ ${CATEGORIES.map((c) => `- \`${c.slug}\`: ${c.name} (${c.examples})`).join('\n')
 
 ## Rules
 
-Only call businesses and services the user wants to reach, never personal numbers that don't expect the call. No telemarketing, surveys, collections, or pretending to be the user: the caller calls for them. US, Canadian and European numbers, plus numbers in other countries the account holds a call4me number in (call4me_list_numbers, call4me_buy_number); no emergency or premium-rate numbers. Full rules: ${site}/rules
+Only call businesses and services the user wants to reach, never personal numbers that don't expect the call. No telemarketing, surveys, collections, or pretending to be the user: the caller calls for them. US, Canadian and European numbers, ${UAE_CALLING}, plus numbers in other countries the account holds a call4me number in (call4me_list_numbers, call4me_buy_number); no emergency or premium-rate numbers. Full rules: ${site}/rules
 `;
 }

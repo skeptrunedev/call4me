@@ -5,7 +5,8 @@ import { z } from 'zod';
 import { formatPhone } from '../lib/phone';
 import { accounts, dollars, type Account } from '../services/accounts';
 import { ACTIVE, CallError, calls, LIMITS, type CallRow, type Outcome, type Question, type TranscriptLine } from '../services/calls';
-import { placeCall, pricePerMinute, VOICES } from '../services/dialer';
+import { placeCall, pricePerMinute, pricePerMinuteTo, VOICES } from '../services/dialer';
+import { DESTINATION_PRICE_CENTS, UAE_CALLING } from '../lib/rates';
 import { parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
 import { checkDialable } from '../lib/phone';
 import { sessionFor } from '../voice/stub';
@@ -93,7 +94,7 @@ The caller can only say what you give it, so everything is collected BEFORE dial
 
 To put the user on a call themselves: pass connect_when to call4me_place_call (e.g. "as soon as a person picks up", to skip a long hold), or call call4me_connect_me mid-call. Give the user a heads up before placing a call that may ring them, and before call4me_connect_me. Tell them why and use the actual call's calling_number from call4me_get_call; for a new call, use the selected owned number when known and confirm it from the place_call result. If the first number has not been assigned yet, explain that upfront and show it as soon as place_call returns. Their phone rings and they join the call by pressing 1; the caller goes quiet, and takes over again when they press * or hang up. To have them listen in without taking over, pass listen_in: true to call4me_place_call (they hear the call from the moment the business answers) or mode: "listen" to call4me_connect_me: nobody on the call hears them, the caller keeps working, and they press 1 anytime to take over. To end a call early, use call4me_hang_up.
 
-Calls go out from the account's own numbers: its free US number, plus any it bought (${agents ? 'call4me_list_numbers, call4me_buy_number' : 'call4me_get_balance lists them'}). Businesses in the US, Canada and Europe can always be called (Europe from a European number when the account holds one, else from its US number); anywhere else, once the account holds a number in that country, and the call goes out from it.
+Calls go out from the account's own numbers: its free US number, plus any it bought (${agents ? 'call4me_list_numbers, call4me_buy_number' : 'call4me_get_balance lists them'}). Businesses in the US, Canada and Europe can always be called (Europe from a European number when the account holds one, else from its US number), and ${UAE_CALLING}; anywhere else, once the account holds a number in that country, and the call goes out from it.
 
 Every call leaves the calling number as the callback. If a call ends in voicemail or "we'll call you back", call4me remembers the task for 14 days: when the business calls that number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (call4me_get_call lists its callbacks) and in call4me_list_calls.
 
@@ -196,7 +197,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     {
       title: 'Place a phone call',
       description:
-        'Call a business for the user (US, Canada, Europe, or any other country the account holds a number in; see call4me_list_numbers) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category\'s required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with call4me_get_call. Credits for the maximum length are held up front; billed per minute of talk time; unanswered calls are free.',
+        `Call a business for the user (US, Canada, Europe, the UAE at ${dollars(DESTINATION_PRICE_CENTS.AE)}/min, or any other country the account holds a number in; see call4me_list_numbers) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category's required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with call4me_get_call. Credits for the maximum length are held up front; billed per minute of talk time; unanswered calls are free.`,
       inputSchema: z.object({
         to: z.string().min(3).max(40).describe('the number to call, e.g. "+14155550123", "(415) 555-0123", or abroad with its country code, e.g. "+31 20 123 4567"'),
         business: z.string().min(1).max(120).describe('who you are calling, as a person would say it: "Nopa", "Dr. Chen\'s office", "Toyota of Berkeley service"'),
@@ -219,7 +220,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       guard(async () => {
         const row = await placeCall(env, deps.origin, account, args, surface);
         const v = callView(row, []);
-        return ok(`calling ${v.business} at ${v.number} (${v.id}). Your call4me number is ${v.calling_number}; show it to the user so they recognize a call if they need to join. Poll call4me_get_call with wait_seconds: 30 until finished, and answer any open question immediately.`, v);
+        return ok(`calling ${v.business} at ${v.number} (${v.id}), ${dollars(pricePerMinuteTo(env, row.to_number))}/min of talk time. Your call4me number is ${v.calling_number}; show it to the user so they recognize a call if they need to join. Poll call4me_get_call with wait_seconds: 30 until finished, and answer any open question immediately.`, v);
       })()) as never,
   );
 
@@ -349,6 +350,8 @@ export function createCall4meServer(deps: McpDeps): McpServer {
           balance: dollars(balance),
           balance_cents: balance,
           price_per_minute: dollars(price),
+          // Destinations billed at their own price instead (the UAE).
+          price_per_minute_by_country: Object.fromEntries(Object.entries(DESTINATION_PRICE_CENTS).map(([c, cents]) => [c, dollars(cents)])),
           minutes_left: Math.floor(balance / price),
           phone_number: owned[0]?.number ?? null,
           numbers: owned,
@@ -356,7 +359,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
           monthly_reload: reload ? { amount: dollars(reload.cents), status: reload.status, next: reload.renewsAt ? new Date(reload.renewsAt).toISOString().slice(0, 10) : null } : null,
         };
         const reloadText = out.monthly_reload ? `reloads ${out.monthly_reload.amount} monthly${out.monthly_reload.next ? ` (next ${out.monthly_reload.next})` : ''}` : 'no monthly reload';
-        return ok(`balance ${out.balance} (~${out.minutes_left} min at ${out.price_per_minute}/min), ${reloadText}. ${owned.length ? `numbers: ${owned.map(numberText).join('; ')}. Show these to the user and suggest saving them as a contact named call4me` : 'number: assigned on the first call. Explain this during setup, then show calling_number from the first call result'}. Call4me may ring the personal phone in the user's profile if a business needs account verification or the user asks to join. Answer and press 1 to join; press * or hang up to hand the call back. They can also just listen in (listen_in on call4me_place_call, or mode "listen" on call4me_connect_me) and press 1 to take over. Give a heads up before a call that may ring them and before connecting them.`, out);
+        return ok(`balance ${out.balance} (~${out.minutes_left} min at ${out.price_per_minute}/min; UAE calls ${out.price_per_minute_by_country.AE}/min), ${reloadText}. ${owned.length ? `numbers: ${owned.map(numberText).join('; ')}. Show these to the user and suggest saving them as a contact named call4me` : 'number: assigned on the first call. Explain this during setup, then show calling_number from the first call result'}. Call4me may ring the personal phone in the user's profile if a business needs account verification or the user asks to join. Answer and press 1 to join; press * or hang up to hand the call back. They can also just listen in (listen_in on call4me_place_call, or mode "listen" on call4me_connect_me) and press 1 to take over. Give a heads up before a call that may ring them and before connecting them.`, out);
       })()) as never,
   );
 

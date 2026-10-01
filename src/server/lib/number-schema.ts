@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UAE_CALLING } from './rates';
 
 /** Shared by the MCP number tools, the /api/numbers routes and the OpenAPI document. */
 
@@ -38,7 +39,7 @@ export const buyNumberInput = z.object({
 export const releaseNumberInput = z.object({ number: z.string().min(3).max(40).describe('one of the account\'s numbers, e.g. "+31612345678"') });
 
 export const listNumbersDescription =
-  'The account\'s phone numbers, and the countries more can be bought in with today\'s prices. Calls go out from a number in the callee\'s country when the account holds one. US, Canadian and European businesses can always be called (Europe from a European number if the account has one, else from its US number); elsewhere, a number in the country is what lets the account call there. Numbers cost exactly what the carrier charges: the upfront cost plus the first month when bought, then the monthly cost every 30 days, taken from the balance.';
+  `The account's phone numbers, and the countries more can be bought in with today's prices. Calls go out from a number in the callee's country when the account holds one. US, Canadian and European businesses can always be called (Europe from a European number if the account has one, else from its US number), and ${UAE_CALLING}; elsewhere, a number in the country is what lets the account call there. Numbers cost exactly what the carrier charges: the upfront cost plus the first month when bought, then the monthly cost every 30 days, taken from the balance.`;
 export const buyNumberDescription =
   'Buy another phone number, in the US or abroad, paid from the balance at the carrier\'s own price (see call4me_list_numbers for prices). It renews from the balance every 30 days; if the balance can\'t cover a renewal the number is released after 7 days. Only buy when the user asks for a number or needs one to call a country.';
 export const releaseNumberDescription =

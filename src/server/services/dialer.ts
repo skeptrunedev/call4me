@@ -1,6 +1,7 @@
 import { newId, now } from '../lib/ids';
 import { hmacHex } from '../lib/keys';
 import { checkDialable } from '../lib/phone';
+import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { telnyx } from '../lib/telnyx';
 import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions, inboundInstructions, type OpenTask } from '../voice/prompt';
 import type { SessionSetup } from '../voice/session';
@@ -16,6 +17,15 @@ export const VOICES = ['marin', 'cedar', 'gleam', 'meridian'] as const;
 export type Voice = (typeof VOICES)[number];
 
 export const pricePerMinute = (env: Env) => Number(env.PRICE_PER_MINUTE_CENTS || 25);
+
+/** What a call to `to` costs per minute: its destination's own price (lib/rates.ts), else the standard one. */
+export function pricePerMinuteTo(env: Env, to: string): number {
+  const p = checkDialable(to);
+  return (p.ok && DESTINATION_PRICE_CENTS[p.country]) || pricePerMinute(env);
+}
+
+/** The per-minute price a call is billed at: by destination when we placed it, the standard one for a call that came in. */
+export const callPrice = (env: Env, row: Pick<CallRow, 'direction' | 'to_number'>) => (row.direction === 'outbound' ? pricePerMinuteTo(env, row.to_number) : pricePerMinute(env));
 
 /** Telnyx's media stream for a call, on the voice Worker's own host (src/server/voice/worker.ts). */
 export async function streamUrl(env: Env, callId: string): Promise<string> {
@@ -46,7 +56,7 @@ async function personFor(env: Env, origin: string, account: Account, from: strin
 }
 
 export async function placeCall(env: Env, origin: string, account: Account, input: PlaceCallInput & { voice?: Voice }, surface: Surface = 'agents'): Promise<CallRow> {
-  const price = pricePerMinute(env);
+  const price = pricePerMinuteTo(env, input.to);
   const db = calls(env.DB);
   const { call, secrets, to } = await db.create(account, input, price, surface);
   const brief = JSON.parse(call.brief) as Brief;

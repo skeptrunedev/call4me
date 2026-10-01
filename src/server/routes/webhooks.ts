@@ -5,7 +5,7 @@ import { now } from '../lib/ids';
 import { readClientState, telnyx, verifyTelnyxSignature } from '../lib/telnyx';
 import { calls, type Brief, type CallStatus, type TranscriptLine } from '../services/calls';
 import { summarizeCall, summaryPrompt } from '../services/summary';
-import { answerInbound, pricePerMinute } from '../services/dialer';
+import { answerInbound, callPrice, pricePerMinute } from '../services/dialer';
 import { isSupporterObject, supporters } from '../services/supporters';
 import { topups, verifyWebhook } from '../services/topups';
 import { sessionFor } from '../voice/stub';
@@ -160,7 +160,7 @@ webhooks.post('/telnyx', async (c) => {
     case 'call.hangup': {
       const row = await db.byId(callId);
       const status: CallStatus = row?.answered_at ? 'completed' : unansweredStatus(p.hangup_cause);
-      await db.finish(callId, { status, hangupCause: p.hangup_cause ?? null, pricePerMinuteCents: pricePerMinute(c.env) });
+      await db.finish(callId, { status, hangupCause: p.hangup_cause ?? null, pricePerMinuteCents: row ? callPrice(c.env, row) : pricePerMinute(c.env) });
       // Returns once the session has written the final transcript.
       await sessionFor(c.env, callId).fetch('https://session/ended', { method: 'POST' });
       // Store provider identity only after the voice session has ended. Person legs
