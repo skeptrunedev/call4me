@@ -7,9 +7,14 @@ speed. Its route uses the shared layout and sign in state. Content lives in
 requests, or call history queries to render.
 
 The examples use the founder's historical TAO booking and cancellation,
-Monkeybrains, and Amazon Pharmacy calls, plus three customer calls published with
-the account owners' permission: a dentist reschedule, a Costco Tire Center
-order lookup, and a junk removal quote and booking. For customer calls, also mute the business name when it would
+Monkeybrains, Amazon Pharmacy, and same day eye exam calls, plus customer calls
+published with the account owners' permission: a dentist reschedule, a Costco
+Tire Center order lookup, a junk removal quote and booking, a doctor's visit
+switched to video, and a private dining room quote. For a customer call, first
+confirm the dialed number is the business's published number and not the
+account's own phone: one "pizzeria" order turned out to be the owner's phone.
+For medical calls, also mute anything that would identify the practice's
+specialty, such as its menu of providers and the doctor's weekly schedule. For customer calls, also mute the business name when it would
 identify where the customer goes (the dental practice), the procedure, and
 every reading of an order number; check the saved transcript for words the
 recording buries under crosstalk, since independent transcription can miss them. Original audio was verified against

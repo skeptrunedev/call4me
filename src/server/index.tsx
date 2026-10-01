@@ -27,7 +27,6 @@ import { sitemapEntries } from './lib/discovery';
 import { blog, posts } from './routes/blog';
 import { admin } from './routes/admin';
 import { BlogError } from './services/blog';
-import { EXAMPLES } from '../content/examples';
 import { exampleAudio } from './lib/example-audio';
 
 const app = new Hono<AppEnv>();
@@ -40,8 +39,8 @@ app.use('*', async (c, next) => {
 });
 
 // The asset binding returns complete files. Supply ranges for the reviewed audio only:
-// the examples page, the voice samples, and the call recordings embedded in blog posts.
-for (const path of [...EXAMPLES.map((e) => e.audio), '/static/blog/:file{[a-z0-9-]+\\.mp3}', '/static/voices/:file{[a-z]+\\.mp3}']) {
+// the example calls (also embedded in blog posts), the voice samples, and the other blog recordings.
+for (const path of ['/static/examples/:file{[a-z0-9-]+\\.mp3}', '/static/blog/:file{[a-z0-9-]+\\.mp3}', '/static/voices/:file{[a-z]+\\.mp3}']) {
   app.on(['GET', 'HEAD'], path, async (c) => {
     const request = new Request(c.req.raw, { method: 'GET' });
     request.headers.delete('range');

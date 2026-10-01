@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <text x="80" y="150" font-family="Times New Roman, Times, serif" font-size="40" fill="#551a8b">call4me field test · sept 28, 2026</text>
+  <text x="80" y="250" font-family="Times New Roman, Times, serif" font-size="76" fill="#000000">Eye exam without insurance</text>
+  <text x="80" y="330" font-family="Times New Roman, Times, serif" font-size="44" fill="#333333">two real quotes, $143 and $99, recorded</text>
+  <g fill="#0000ee">
+    <rect x="80" y="430" width="10" height="40"/><rect x="100" y="410" width="10" height="80"/><rect x="120" y="440" width="10" height="20"/>
+    <rect x="140" y="400" width="10" height="100"/><rect x="160" y="425" width="10" height="50"/><rect x="180" y="445" width="10" height="10"/>
+    <rect x="200" y="415" width="10" height="70"/><rect x="220" y="435" width="10" height="30"/><rect x="240" y="405" width="10" height="90"/>
+    <rect x="260" y="430" width="10" height="40"/><rect x="280" y="445" width="10" height="10"/><rect x="300" y="420" width="10" height="60"/>
+  </g>
+  <text x="340" y="465" font-family="Times New Roman, Times, serif" font-size="40" fill="#000000">listen to the calls</text>
+</svg>
