@@ -278,12 +278,12 @@ export const CATEGORY_SLUGS = CATEGORIES.map((c) => c.slug) as [string, ...strin
 export const categoryBySlug = (slug: string) => CATEGORIES.find((c) => c.slug === slug);
 
 /**
- * Where the tools are served. Coding agents and custom connectors get everything; the ChatGPT
- * plugin directory forbids collecting restricted data (health information, government
- * identifiers, account secrets), so there the categories about it are gone and the remaining
- * categories never ask for or share those fields.
+ * Where the tools are served. Coding agents and custom connectors get everything; the app
+ * directories (ChatGPT's plugins, Claude's connectors) forbid collecting restricted data (health
+ * information, government identifiers, account secrets), so there the categories about it are
+ * gone and the remaining categories never ask for or share those fields.
  */
-export type Surface = 'agents' | 'chatgpt';
+export type Surface = 'agents' | 'directory';
 
 export interface Catalog {
   categories: Category[];
@@ -300,7 +300,7 @@ const restrictedField = (f: IntakeField) => Boolean(f.sensitive || (f.profile &&
 
 const CATALOGS: Record<Surface, Catalog> = {
   agents: buildCatalog(CATEGORIES, Object.keys(PROFILE_FIELDS) as ProfileKey[]),
-  chatgpt: buildCatalog(
+  directory: buildCatalog(
     CATEGORIES.filter((c) => !c.restricted).map((c) => ({ ...c, fields: c.fields.filter((f) => !restrictedField(f)) })),
     (Object.keys(PROFILE_FIELDS) as ProfileKey[]).filter((k) => !PROFILE_FIELDS[k].restricted),
   ),

@@ -20,7 +20,7 @@ const { catalog } = await import('../src/server/services/intake');
 
 const account = { id: 'acct_test', email: 'test@example.com' } as Account;
 
-async function rpc(surface: 'agents' | 'chatgpt', method: string, params: Record<string, unknown> = {}): Promise<Record<string, unknown>> {
+async function rpc(surface: 'agents' | 'directory', method: string, params: Record<string, unknown> = {}): Promise<Record<string, unknown>> {
   const handler = createMcpHandler(() => createCall4meServer({ env: {} as Env, origin: 'https://call4.me', account, stripe: () => { throw new Error('no stripe in tests'); }, surface }), { legacy: 'stateless' });
   const res = await handler.fetch(
     new Request('https://call4.me/chatgpt/mcp', {
@@ -35,10 +35,10 @@ async function rpc(surface: 'agents' | 'chatgpt', method: string, params: Record
 }
 
 type Tool = { name: string; annotations?: Record<string, boolean>; inputSchema: { properties?: Record<string, { enum?: string[] }> } };
-const tools = async (surface: 'agents' | 'chatgpt') => (await rpc(surface, 'tools/list')).tools as Tool[];
+const tools = async (surface: 'agents' | 'directory') => (await rpc(surface, 'tools/list')).tools as Tool[];
 
-test('the ChatGPT server sells nothing: no credit or number purchase tools', async () => {
-  const names = (await tools('chatgpt')).map((t) => t.name);
+test('the directory server sells nothing: no credit or number purchase tools', async () => {
+  const names = (await tools('directory')).map((t) => t.name);
   for (const name of ['call4me_add_funds', 'call4me_buy_number', 'call4me_list_numbers', 'call4me_release_number']) assert.ok(!names.includes(name), name);
   assert.ok(names.includes('call4me_place_call') && names.includes('call4me_get_balance'));
   const all = (await tools('agents')).map((t) => t.name);
@@ -46,21 +46,21 @@ test('the ChatGPT server sells nothing: no credit or number purchase tools', asy
 });
 
 test('the ChatGPT server never asks for health, government-ID or account-secret data', async () => {
-  const list = await tools('chatgpt');
+  const list = await tools('directory');
   const place = list.find((t) => t.name === 'call4me_place_call')!;
   const slugs = place.inputSchema.properties!.category.enum!;
   for (const slug of ['medical', 'dental', 'internet_existing_account']) assert.ok(!slugs.includes(slug), slug);
   assert.ok(slugs.includes('restaurant') && slugs.includes('flight_change'));
   const profileKeys = Object.keys(list.find((t) => t.name === 'call4me_save_profile')!.inputSchema.properties!);
   for (const key of ['insurance_member_id', 'dental_insurance_member_id', 'known_traveler_number', 'redress_number']) assert.ok(!profileKeys.includes(key), key);
-  const fields = catalog('chatgpt').categories.flatMap((c) => c.fields);
+  const fields = catalog('directory').categories.flatMap((c) => c.fields);
   assert.deepEqual(fields.filter((f) => f.sensitive || ['insurance_carrier', 'known_traveler_number', 'redress_number'].includes(f.profile ?? '')), []);
-  const result = await rpc('chatgpt', 'tools/call', { name: 'call4me_get_requirements', arguments: {} });
+  const result = await rpc('directory', 'tools/call', { name: 'call4me_get_requirements', arguments: {} });
   assert.doesNotMatch(JSON.stringify(result.content), /medical|dental/i);
 });
 
 test('placing a call is marked irreversible on every surface', async () => {
-  for (const surface of ['agents', 'chatgpt'] as const) {
+  for (const surface of ['agents', 'directory'] as const) {
     const place = (await tools(surface)).find((t) => t.name === 'call4me_place_call')!;
     assert.equal(place.annotations?.destructiveHint, true);
     assert.equal(place.annotations?.openWorldHint, true);
@@ -68,22 +68,33 @@ test('placing a call is marked irreversible on every surface', async () => {
 });
 
 test('every tool states each hint explicitly', async () => {
-  for (const tool of await tools('chatgpt')) {
+  for (const tool of await tools('directory')) {
     for (const hint of ['readOnlyHint', 'destructiveHint', 'openWorldHint']) assert.equal(typeof tool.annotations?.[hint], 'boolean', `${tool.name} ${hint}`);
   }
 });
 
 test('relaying an answer to the business is open-world, and saving the profile can remove fields', async () => {
-  const list = await tools('chatgpt');
+  const list = await tools('directory');
   assert.equal(list.find((t) => t.name === 'call4me_answer_question')!.annotations?.openWorldHint, true);
   assert.equal(list.find((t) => t.name === 'call4me_save_profile')!.annotations?.destructiveHint, true);
 });
 
 test('the ChatGPT instructions ask only for what a call needs', async () => {
-  const handler = (await import('@modelcontextprotocol/server')).createMcpHandler(() => createCall4meServer({ env: {} as Env, origin: 'https://call4.me', account, stripe: () => { throw new Error('no stripe'); }, surface: 'chatgpt' }), { legacy: 'stateless' });
+  const handler = (await import('@modelcontextprotocol/server')).createMcpHandler(() => createCall4meServer({ env: {} as Env, origin: 'https://call4.me', account, stripe: () => { throw new Error('no stripe'); }, surface: 'directory' }), { legacy: 'stateless' });
   const res = await handler.fetch(new Request('https://call4.me/chatgpt/mcp', { method: 'POST', headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 't', version: '1' } } }) }));
   const text = await res.text();
   const json = JSON.parse(text.startsWith('{') ? text : text.split('\n').find((l) => l.startsWith('data: '))!.slice(6)) as { result: { instructions: string } };
   assert.doesNotMatch(json.result.instructions, /date of birth|insurance|home address/i);
   assert.doesNotMatch(json.result.instructions, /\bVIN\b/);
+});
+
+test('every directory server is its own OAuth resource with its own metadata', async () => {
+  const { DIRECTORY_SERVERS, mcpResourceAt } = await import('../src/server/lib/auth-options');
+  const { directoryMcpProtectedResource } = await import('../src/server/lib/discovery');
+  assert.deepEqual(DIRECTORY_SERVERS.map((s) => s.path), ['/chatgpt/mcp', '/claude/mcp']);
+  for (const s of DIRECTORY_SERVERS) {
+    const meta = directoryMcpProtectedResource('https://call4.me', s);
+    assert.equal(meta.resource, mcpResourceAt(s.path, 'https://call4.me'));
+    assert.equal(meta.resource_name, `call4me for ${s.host}`);
+  }
 });

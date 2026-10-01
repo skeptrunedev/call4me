@@ -161,7 +161,7 @@ export function calls(db: D1Database) {
       if (!to.ok) throw new CallError(to.reason);
       // Abroad, an account calls only countries it holds a number in (services/numbers.ts).
       if (!(await mayCall(db, account.id, to))) {
-        throw new CallError(`calling ${to.country} numbers needs a number in ${to.country}: ${surface === 'agents' ? 'see call4me_list_numbers, then buy one with call4me_buy_number' : 'this account has none (see call4me_list_numbers)'}`, 422);
+        throw new CallError(`calling ${to.country} numbers needs a number in ${to.country}: ${surface === 'agents' ? 'see call4me_list_numbers, then buy one with call4me_buy_number' : 'this account has none (call4me_get_balance lists its numbers)'}`, 422);
       }
       if (input.from) {
         const from = checkDialable(input.from);

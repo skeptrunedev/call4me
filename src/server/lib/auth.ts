@@ -2,7 +2,7 @@ import { betterAuth } from 'better-auth';
 import type { Hono } from 'hono';
 import { createLocalJWKSet, jwtVerify, type JWTPayload } from 'jose';
 import { newId, now } from './ids';
-import { authOptions, chatgptMcpResource, COOKIE_PREFIX, mcpResource, realEmail, siteResource } from './auth-options';
+import { authOptions, COOKIE_PREFIX, DIRECTORY_SERVERS, mcpResource, mcpResourceAt as resourceAt, realEmail, siteResource, type McpPath } from './auth-options';
 import { origin, type AppContext, type AppEnv } from './context';
 import { accounts, type Account } from '../services/accounts';
 
@@ -111,13 +111,13 @@ export async function verifyAccessToken(c: AppContext, token: string, audience: 
 }
 
 /** An MCP endpoint's resource identifier, by the path it is served at. */
-export const mcpResourceAt = (c: AppContext, path: McpPath): string => (path === '/chatgpt/mcp' ? chatgptMcpResource(origin(c)) : mcpResource(origin(c)));
-export type McpPath = '/mcp' | '/chatgpt/mcp';
+export const mcpResourceAt = (c: AppContext, path: McpPath): string => resourceAt(path, origin(c));
+export type { McpPath };
 
 export const verifyMcpToken = (c: AppContext, token: string, path: McpPath = '/mcp') => verifyAccessToken(c, token, mcpResourceAt(c, path));
 
 /** Audiences the site's own endpoints honour: the site resource and the MCP servers' (one token serves both). */
-export const siteAudiences = (c: AppContext) => [siteResource(origin(c)), mcpResource(origin(c)), chatgptMcpResource(origin(c))];
+export const siteAudiences = (c: AppContext) => [siteResource(origin(c)), mcpResource(origin(c)), ...DIRECTORY_SERVERS.map((s) => resourceAt(s.path, origin(c)))];
 
 /** The account behind a verified token's user (`sub`). */
 export async function accountForToken(c: AppContext, claims: JWTPayload): Promise<Account | null> {

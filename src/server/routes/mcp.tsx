@@ -74,10 +74,12 @@ mcp.all('/:key', async (c) => {
 });
 
 /**
- * /chatgpt/mcp: the server listed in the ChatGPT plugin directory. Same accounts and sign-in,
- * its own OAuth resource, and the directory's tool set (McpDeps.surface).
+ * A server listed in an app directory (DIRECTORY_SERVERS: /chatgpt/mcp, /claude/mcp). Same
+ * accounts and sign-in, its own OAuth resource, and the directory tool set (McpDeps.surface).
  */
-export const chatgptMcp = new Hono<AppEnv>();
-
-chatgptMcp.get('/', (c) => (wantsHtml(c) ? c.redirect('/mcp', 302) : c.text('POST MCP requests here', 405)));
-chatgptMcp.all('/', (c) => authorized(c, '/chatgpt/mcp', 'chatgpt'));
+export function directoryMcp(path: McpPath): Hono<AppEnv> {
+  const app = new Hono<AppEnv>();
+  app.get('/', (c) => (wantsHtml(c) ? c.redirect('/mcp', 302) : c.text('POST MCP requests here', 405)));
+  app.all('/', (c) => authorized(c, path, 'directory'));
+  return app;
+}

@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
 import { createAuth } from '../lib/auth';
-import { siteUrl } from '../lib/auth-options';
+import { DIRECTORY_SERVERS, siteUrl } from '../lib/auth-options';
 import { origin, type AppContext, type AppEnv } from '../lib/context';
-import { agentAuth, aiCatalog, authMd, chatgptMcpProtectedResource, llmsTxt, robotsTxt, serverCard, siteProtectedResource, sitemapXml, webBotAuthDirectory } from '../lib/discovery';
+import { agentAuth, aiCatalog, authMd, directoryMcpProtectedResource, llmsTxt, robotsTxt, serverCard, siteProtectedResource, sitemapXml, webBotAuthDirectory } from '../lib/discovery';
 import { SERVER_NAME, SERVER_VERSION } from '../mcp/server';
 import { pricePerMinute } from '../services/dialer';
 import { posts } from './blog';
@@ -92,10 +92,10 @@ agent.on(['GET', 'HEAD'], '/.well-known/openid-configuration', (c) => {
   return createAuth(c).handler(new Request(url, { method: c.req.method, headers: c.req.raw.headers }));
 });
 
-/** Protected resource metadata for the site itself and the ChatGPT server; /.well-known/oauth-protected-resource/mcp stays with the auth plugin. */
+/** Protected resource metadata for the site itself and the app directories' servers; /.well-known/oauth-protected-resource/mcp stays with the auth plugin. */
 for (const [path, metadata] of [
   ['/.well-known/oauth-protected-resource', siteProtectedResource],
-  ['/.well-known/oauth-protected-resource/chatgpt/mcp', chatgptMcpProtectedResource],
+  ...DIRECTORY_SERVERS.map((s) => [`/.well-known/oauth-protected-resource${s.path}`, (site: string) => directoryMcpProtectedResource(site, s)] as const),
 ] as const) {
   agent.on(['GET', 'HEAD'], path, (c) => {
     const headers = { 'content-type': 'application/json', 'access-control-allow-origin': '*', ...CACHE };

@@ -68,8 +68,9 @@ export interface McpDeps {
   /** Built on first use: only the credit tools need Stripe. */
   stripe: () => Stripe;
   /**
-   * 'chatgpt' is the server listed in the ChatGPT plugin directory, whose rules forbid selling
-   * credits or numbers in the chat and collecting restricted data: it leaves out the purchase
+   * 'directory' is the server listed in the app directories (ChatGPT's plugins, Claude's
+   * connectors), whose rules forbid selling credits or numbers in the chat, executing purchases
+   * for the user, and collecting restricted data: it leaves out the purchase
    * tools and the categories and profile fields that need health, government-ID or account-secret
    * data (services/intake.ts catalog). Everyone else gets 'agents', the whole server.
    */
@@ -434,7 +435,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
   return server;
 }
 
-/** Buying credits and numbers, and managing numbers: not in the ChatGPT directory server (see McpDeps.surface). */
+/** Buying credits and numbers, and managing numbers: not in the app directories' server (see McpDeps.surface). */
 function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () => Promise<CallToolResult>) => () => Promise<CallToolResult>) {
   const { env, account } = deps;
 

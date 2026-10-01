@@ -259,16 +259,16 @@ export function siteProtectedResource(site: string) {
 }
 
 /**
- * RFC 9728 protected resource metadata for the ChatGPT directory's MCP server (/chatgpt/mcp). The
- * auth plugin serves only the /mcp document, so this one mirrors it for the second resource.
+ * RFC 9728 protected resource metadata for an app directory's MCP server (DIRECTORY_SERVERS). The
+ * auth plugin serves only the /mcp document, so this one mirrors it for the other resources.
  */
-export function chatgptMcpProtectedResource(site: string) {
+export function directoryMcpProtectedResource(site: string, server: { path: string; host: string }) {
   return {
-    resource: `${site}/chatgpt/mcp`,
+    resource: `${site}${server.path}`,
     authorization_servers: [`${site}/api/auth`],
     bearer_methods_supported: ['header'],
     scopes_supported: ['calls'],
-    resource_name: 'call4me for ChatGPT',
+    resource_name: `call4me for ${server.host}`,
     resource_documentation: `${site}/auth.md`,
   };
 }

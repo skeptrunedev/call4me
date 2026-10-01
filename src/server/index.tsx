@@ -2,7 +2,7 @@
 import './zod-first';
 import { Hono } from 'hono';
 import { canonicalRedirect, type AppEnv } from './lib/context';
-import { chatgptMcp, mcp } from './routes/mcp';
+import { directoryMcp, mcp } from './routes/mcp';
 import { pub } from './routes/public';
 import { authRoutes } from './routes/auth';
 import { adminEmails, mountAuth, sessionAccount } from './lib/auth';
@@ -15,7 +15,7 @@ import { apiRoot } from './routes/api-root';
 import { recordings } from './routes/recordings';
 import { numberRoutes } from './routes/numbers';
 import { discovery } from './routes/discovery';
-import { siteUrl } from './lib/auth-options';
+import { DIRECTORY_SERVERS, siteUrl } from './lib/auth-options';
 import { API_CATALOG_LINK, API_CATALOG_MEDIA_TYPE, buildApiCatalog } from './lib/discovery';
 import { MessagePage } from './views/public';
 import { makeMessenger } from './lib/messaging';
@@ -92,7 +92,7 @@ app.use('*', async (c, next) => {
 
 // The MCP endpoint authenticates each request itself (OAuth token or key), not by cookie.
 app.route('/mcp', mcp);
-app.route('/chatgpt/mcp', chatgptMcp);
+for (const s of DIRECTORY_SERVERS) app.route(s.path, directoryMcp(s.path));
 
 app.use('*', async (c, next) => {
   c.set('account', await sessionAccount(c));

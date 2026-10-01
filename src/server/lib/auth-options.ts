@@ -65,12 +65,12 @@ export function authOptions(deps: AuthDeps) {
         // in every hour would make the connector useless. Consent can be revoked.
         resources: [
           { identifier: mcpResource(deps.baseURL), name: `${deps.appName} MCP`, accessTokenTtl: 7 * 24 * 3600 },
-          // The ChatGPT directory's server (routes/mcp.tsx), a resource of its own so ChatGPT's token is bound to its URL.
-          { identifier: chatgptMcpResource(deps.baseURL), name: `${deps.appName} for ChatGPT`, accessTokenTtl: 7 * 24 * 3600 },
+          // The app directories' servers (routes/mcp.tsx), each a resource of its own so a host's token is bound to its URL.
+          ...DIRECTORY_SERVERS.map((s) => ({ identifier: mcpResourceAt(s.path, deps.baseURL), name: `${deps.appName} for ${s.host}`, accessTokenTtl: 7 * 24 * 3600 })),
           // The site itself (GET /api, credits over x402) accepts the same tokens, so agents can hold one token for both.
           { identifier: siteResource(deps.baseURL), name: `${deps.appName} API`, accessTokenTtl: 7 * 24 * 3600 },
         ],
-        clientRegistrationDefaultResources: [mcpResource(deps.baseURL), chatgptMcpResource(deps.baseURL), siteResource(deps.baseURL)],
+        clientRegistrationDefaultResources: [mcpResource(deps.baseURL), ...DIRECTORY_SERVERS.map((s) => mcpResourceAt(s.path, deps.baseURL)), siteResource(deps.baseURL)],
         loginPage: '/login',
         consentPage: '/oauth/consent',
         allowDynamicClientRegistration: true,
@@ -91,9 +91,19 @@ export function mcpResource(baseURL: string): string {
   return canonicalUrl('/mcp', baseURL);
 }
 
-/** The MCP server listed in the ChatGPT plugin directory, as a resource identifier. */
-export function chatgptMcpResource(baseURL: string): string {
-  return canonicalUrl('/chatgpt/mcp', baseURL);
+/**
+ * The MCP servers listed in app directories: the directory tool set (McpDeps.surface), one path
+ * per host so each host's token is bound to the URL it was listed with.
+ */
+export const DIRECTORY_SERVERS = [
+  { path: '/chatgpt/mcp', host: 'ChatGPT' },
+  { path: '/claude/mcp', host: 'Claude' },
+] as const;
+export type McpPath = '/mcp' | (typeof DIRECTORY_SERVERS)[number]['path'];
+
+/** An MCP endpoint, by the path it is served at, as a resource identifier. */
+export function mcpResourceAt(path: McpPath, baseURL: string): string {
+  return canonicalUrl(path, baseURL);
 }
 
 /** The site itself as a resource identifier (RFC 9728 root document; the audience of GET /api). */
