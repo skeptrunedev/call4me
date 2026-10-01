@@ -29,7 +29,7 @@ Both clubs' pages on planetfitness.com say **"Cancel Online, Anytime!"**
 
 ## Listen: Lakeshore (4 minutes 20 seconds)
 
-The full call, including the phone menu, cut only once (my last name, under a second).
+The full call, including the phone menu, with one short silence over my last name.
 
 <audio controls preload="metadata" src="/static/blog/cancel-planet-fitness-lakeshore.mp3" style="width:100%"><a href="/static/blog/cancel-planet-fitness-lakeshore.mp3">listen to the Lakeshore call</a></audio>
 
@@ -42,15 +42,15 @@ The full call, including the phone menu, cut only once (my last name, under a se
 - **3:07** If you joined at a different club
 - **4:00** Freeze or cheaper plan: "There is no cheaper option"
 
-## Listen: Kearny St (56 seconds)
+## Listen: Kearny St (1 minute 3 seconds)
 
-This call dropped partway through because of a bug on our side (fixed the same evening). What we got is the commitment and the fee. I cut the greeting, which included the staff member's name, and my last name.
+This call dropped partway through because of a bug on our side (fixed the same evening). What we got is the commitment and the fee. The greeting, which included the staff member's name, and my name are silenced, and the recording ends where the call dropped.
 
 <audio controls preload="metadata" src="/static/blog/cancel-planet-fitness-kearny.mp3" style="width:100%"><a href="/static/blog/cancel-planet-fitness-kearny.mp3">listen to the Kearny St call</a></audio>
 
-- **0:17** "With our classic membership, we have a 12 month commitment fee"
-- **0:27** "If not, there will be a $58 fee when you cancel"
-- **0:32** "For our Black Card membership, you can cancel at any time"
+- **0:23** "With our classic membership, we have a 12 month commitment fee"
+- **0:34** "If not, there will be a $58 fee when you cancel"
+- **0:38** "For our Black Card membership, you can cancel at any time"
 
 ## The phone tree at Lakeshore, step by step
 
@@ -82,57 +82,61 @@ The transcript follows the edited recording. "Caller" is the call4me agent. Staf
 
 **0:22 Phone menu:** If you are calling to update your billing, transferring, or canceling your membership, you can do so at planetfitness.com. If you need help signing into your account, press 1. If you are calling with a question about billing, press 2. To check our hours of operation, holiday hours, and other emergency closures, please press 3. If you are interested in a corporate membership, please press 4. For any other inquiries, please press 5. To repeat this information, press 8.
 
-**1:00 Staff:** Lakeshore, Planet Fitness.
+**0:59 Staff:** Lakeshore, Planet Fitness.
 
-**1:02 Caller:** Hi, this is Sarah, Nick's assistant. I'm just trying to understand the cancellation process at this location. What are the actual ways a member can cancel? Like, is it online, by phone, in person, by letter?
+**1:02 Caller:** Hi, this is Sarah, Nick [last name removed]'s assistant. I'm just trying to understand the cancellation process at this location. What are the actual ways a member can cancel? Like, is it online, by phone, in person, by letter?
 
 **1:19 Staff:** To cancel, you can either cancel through the website, PlanetFitness.com, or come in person, just because we do need a signature.
 
-**1:29 Caller:** Oh, okay. And is that true for all membership types? Classic, Black Card, or whatever else?
+**1:30 Caller:** Oh, okay. And is that true for all membership types? Classic, Black Card, or whatever else?
 
-**1:36 Staff:** Correct.
+**1:37 Staff:** Correct.
 
-**1:38 Caller:** Okay, nice. And what do they need to have? Member number, ID, key tag, anything like that?
+**1:39 Caller:** Okay, nice. And what do they need to have? Member number, ID, key tag, anything like that?
 
 **1:48 Staff:** No, if they have the app, they can just check in. If not, they could use their phone number. If they still have the key card, the key tag, then they can check in that way as well.
 
-**1:59 Caller:** Perfect. And are there any commitment periods, early cancellation fees, or does the $49 annual fee still hit after someone cancels?
+**2:00 Caller:** Perfect. And are there any commitment periods, early cancellation fees, or does the $49 annual fee still hit after someone cancels?
 
 **2:11 Staff:** Yeah, so, for example, if someone canceled today, their last bill date was September 17th, and they will still have until October 16th to still use the gym. If they were to cancel or freeze, I believe there isn't no way to avoid the annual fee if they were to go through that date of when the annual fee is due.
 
-**2:45 Caller:** Right, right, gotcha. And what if the membership was started at another club?
+**2:46 Caller:** Right, right, gotcha. And what if the membership was started at another club?
 
 **2:56 Staff:** If someone signed up at a different location?
 
-**2:59 Caller:** Yeah, like if they joined somewhere else and now want to cancel here. Is that any different?
+**3:00 Caller:** Yeah, like if they joined somewhere else and now want to cancel here. Is that any different?
 
 **3:07 Staff:** Yes, the thing is, we are under different franchises. We're not connected at all. So, if someone from, let's say, Texas comes to our location and wants to cancel, unfortunately, we don't have access to their membership. So, we will just tell them, either you can cancel through the website, or you'll have to give your Planet Fitness a call. Because I understand that it will be impossible for them to go down to Texas to cancel. So, the best bet is just to do it through the website. It's really hard though, but yeah.
 
-**3:49 Caller:** Okay, that makes sense. And do you offer a membership freeze or maybe a cheaper plan as an option instead?
+**3:51 Caller:** Okay, that makes sense. And do you offer a membership freeze or maybe a cheaper plan as an option instead?
 
 **4:00 Staff:** There is no cheaper option when it comes to the membership. Sometimes there are promotions that do happen at random times.
 
 **4:12 Caller:** Okay, that's really helpful. Thanks so much.
 
-**4:15 Staff:** No worries.
+**4:16 Staff:** No worries.
 
 </details>
 
 <details>
 <summary>Read the Kearny St transcript</summary>
 
-**0:00 Caller:** I'm calling because Nick is wondering how membership cancellation works at your location. Could you tell me what the cancellation policies are?
+**0:00 Staff:** [greeting with the staff member's name removed]
 
-**0:09 Staff:** Um, yeah, so, hold on one second.
+**0:02 Caller:** Hi, this is Sarah, [name removed]'s assistant.
 
-**0:17 Staff:** Yeah, so with our classic membership, we have a 12 month commitment fee. So for that, you will need to do all the 12 months. If not, there will be a $58 fee when you cancel. But for our Black Card membership, you can cancel at any time.
+**0:06 Caller:** I'm calling because Nick is wondering how membership cancellation works at your location. Could you tell me what the cancellation policies are?
 
-**0:37 Caller:** Oh, okay, so Black Card can cancel anytime, and the classic has that earlier termination fee?
+**0:16 Staff:** Um, yeah, so, hold on one second.
 
-**0:43 Staff:** Mm-hmm.
+**0:23 Staff:** Yeah, so with our classic membership, we have a 12 month commitment fee. So for that, you will need to do all the 12 months. If not, there will be a $58 fee when you cancel. But for our Black Card membership, you can cancel at any time.
 
-**0:44 Caller:** Okay, great. Do they have to come in person to cancel, or is online or over the phone okay?
+**0:43 Caller:** Oh, okay, so Black Card can cancel anytime, and the classic has that earlier termination fee?
 
-**0:55 Staff:** Hold on one second, I'm sorry.
+**0:50 Staff:** Mm-hmm.
+
+**0:51 Caller:** Okay, great. Do they have to come in person to cancel, or is online or over the phone okay?
+
+**1:00 Staff:** Hold on one second, I'm sorry.
 
 </details>

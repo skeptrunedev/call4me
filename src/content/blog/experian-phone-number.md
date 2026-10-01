@@ -14,7 +14,7 @@ We tested this on Wednesday, September 30, 2026, between about 3:45 and 5:45 pm 
 
 ## Listen to the call
 
-This is the call that got furthest: two full passes through Experian's identity check, and everything it said afterwards. It is 9 minutes 29 seconds, cut only in three places (about 3 seconds in total): Experian reading back my date of birth, and my last name twice.
+This is the call that got furthest: two full passes through Experian's identity check, and everything it said afterwards. It is 9 minutes 33 seconds, the whole call, with three short silences (about 3 seconds in total) over Experian reading back my date of birth and my last name, said twice.
 
 <audio controls preload="metadata" src="/static/blog/experian-phone-number.mp3" style="width:100%"><a href="/static/blog/experian-phone-number.mp3">listen to the recording</a></audio>
 
@@ -25,18 +25,18 @@ Jump to a moment:
 - **0:00** greeting, then a consent notice: calls may be recorded, and Experian may use AI and "biometric technology"
 - **0:38** "You've reached our self-service line"
 - **1:07** asks for your complete Social Security number
-- **1:44** ZIP code
+- **1:45** ZIP code
 - **1:56** the numeric part of your street address
 - **2:16** date of birth, typed as MMDDYYYY
-- **3:01** "what can we help you with?" menu
+- **3:00** "what can we help you with?" menu
 - **3:25** first pass fails: "We weren't able to verify your identity", and a 3 option menu
-- **3:55** second pass: Social Security number again
-- **6:27** date of birth read back, "Is that correct?"
-- **6:43** offers to text you instructions
-- **7:08** "Have you already attempted to complete a freeze online or through the mail?"
-- **7:31** "The simplest and most effective way to do a freeze is online or by mail"
-- **8:05** reads out the online and mail instructions
-- **9:23** "I'm afraid I can't proceed without valid information" and hangs up
+- **3:56** second pass: Social Security number again
+- **6:28** date of birth read back, "Is that correct?"
+- **6:46** offers to text you instructions
+- **7:10** "Have you already attempted to complete a freeze online or through the mail?"
+- **7:34** "The simplest and most effective way to do a freeze is online or by mail"
+- **8:09** reads out the online and mail instructions
+- **9:26** "I'm afraid I can't proceed without valid information" and hangs up
 
 ## The phone tree, step by step
 
@@ -102,9 +102,9 @@ The transcript follows the edited recording. Brief acknowledgments ("okay") are 
 
 **1:07 Experian:** To begin with, please say or enter your complete social security number.
 
-**1:31 Experian:** I seem to have missed that. Please say your response to proceed further.
+**1:32 Experian:** I seem to have missed that. Please say your response to proceed further.
 
-**1:44 Experian:** Now, please say or enter your zip code.
+**1:45 Experian:** Now, please say or enter your zip code.
 
 **1:56 Experian:** Almost there. To verify your identity, we also need the numeric portion of your street address. For example, if it's 1878 Main Street, please say or enter 1878.
 
@@ -112,19 +112,19 @@ The transcript follows the edited recording. Brief acknowledgments ("okay") are 
 
 **2:38 Experian:** Sorry, I didn't quite catch that. Please enter your date of birth using phone's dial pad as a two-digit month, two-digit day, and a four-digit year. For example, if it's January 22, 1978, you can say 01221978.
 
-**3:01 Experian:** Okay, what can we help you with exactly? Common requests are to freeze or unfreeze, add or remove a fraud alert, order a report, or score.
+**3:00 Experian:** Okay, what can we help you with exactly? Common requests are to freeze or unfreeze, add or remove a fraud alert, order a report, or score.
 
-**3:09 Caller:** Hi, I'm back on for Nick. I'd like to add a security freeze, please. And I'm noting everything down.
+**3:09 Caller:** Hi, I'm back on for Nick [last name removed]. I'd like to add a security freeze, please. And I'm noting everything down.
 
 **3:25 Experian:** We weren't able to verify your identity. Please note, to ensure your call is handled as efficiently as possible, please say verify or press 1 to verify your identity. To continue with self-help options, you may say self-help or press 2. If you'd like to get instructions on how to manage a freeze via mail or online, say instructions or press 3.
 
 **3:47 Caller:** Okay. Hmm. I'll try that verification again.
 
-**3:55 Experian:** To begin with, please say or enter your complete social security number.
+**3:56 Experian:** To begin with, please say or enter your complete social security number.
 
-**4:04 Caller:** I'll get Nick on to do that part. One sec.
+**4:05 Caller:** I'll get Nick on to do that part. One sec.
 
-**4:15 Experian:** I don't recognize that entry. Using your phone's dial pad, could you please enter your complete social security number?
+**4:16 Experian:** I don't recognize that entry. Using your phone's dial pad, could you please enter your complete social security number?
 
 **5:01 Experian:** I seem to have missed that. Please say your response to proceed further.
 
@@ -134,32 +134,32 @@ The transcript follows the edited recording. Brief acknowledgments ("okay") are 
 
 **5:45 Experian:** I seem to have missed that. Please enter your numeric portion of your street address.
 
-**6:00 Experian:** Thanks. Now, please enter your date of birth using the following format. Using your keypad, please enter two digits for the month, two digits for the day, and four digits for the year. For example, if your date of birth is July 20th, 2009, please enter 07202009.
+**6:01 Experian:** Thanks. Now, please enter your date of birth using the following format. Using your keypad, please enter two digits for the month, two digits for the day, and four digits for the year. For example, if your date of birth is July 20th, 2009, please enter 07202009.
 
-**6:27 Experian:** The date of birth I have received is [cut]. Is that correct?
+**6:28 Experian:** The date of birth I have received is [date of birth removed]. Is that correct?
 
-**6:34 Nick:** Yes.
+**6:36 Nick:** Yes.
 
-**6:43 Experian:** Thank you. If you're calling from a mobile number and have questions about how to add or remove a freeze, would you like to receive a text with additional instructions?
+**6:46 Experian:** Thank you. If you're calling from a mobile number and have questions about how to add or remove a freeze, would you like to receive a text with additional instructions?
 
-**6:54 Nick:** No.
+**6:56 Nick:** No.
 
-**7:08 Experian:** All right. Have you already attempted to complete a freeze online or through the mail?
+**7:10 Experian:** All right. Have you already attempted to complete a freeze online or through the mail?
 
-**7:13 Caller:** Hi. I'm back on for Nick. We haven't, actually. This is our first attempt. And I'm still taking notes.
+**7:16 Caller:** Hi. I'm back on for Nick [last name removed]. We haven't, actually. This is our first attempt. And I'm still taking notes.
 
-**7:31 Experian:** Sure. The simplest and most effective way to do a freeze is online or by mail. Would you like a text message with details on how to complete the freeze process using one of these two methods?
+**7:34 Experian:** Sure. The simplest and most effective way to do a freeze is online or by mail. Would you like a text message with details on how to complete the freeze process using one of these two methods?
 
-**7:46 Experian:** I'm sorry. I didn't quite get that. Would you like to try again? You may say yes or no.
+**7:50 Experian:** I'm sorry. I didn't quite get that. Would you like to try again? You may say yes or no.
 
-**7:53 Caller:** Could you repeat that? I didn't quite get it. Sorry.
+**7:56 Caller:** Could you repeat that? I didn't quite get it. Sorry.
 
-**8:05 Experian:** To freeze your credit report with Experian, you can do it online, by phone, or by mail. The online method is the fastest and easiest. Here's how. Online, visit the Experian website, https://www.experian.com/freeze, and go to the Credit Freeze Management Center, or by mail. Send a written request to Experian Security Freeze, P.O. Box 9554, Allen, TX 75013. Make sure to include your full name, Social Security number, addresses for the past two years, date of birth, a government-issued ID, and a utility bill or bank statement.
+**8:09 Experian:** To freeze your credit report with Experian, you can do it online, by phone, or by mail. The online method is the fastest and easiest. Here's how. Online, visit the Experian website, https://www.experian.com/freeze, and go to the Credit Freeze Management Center, or by mail. Send a written request to Experian Security Freeze, P.O. Box 9554, Allen, TX 75013. Make sure to include your full name, Social Security number, addresses for the past two years, date of birth, a government-issued ID, and a utility bill or bank statement.
 
-**8:59 Experian:** If you're calling from a mobile number and have questions about how to add or remove a freeze, would you like to receive a text with additional instructions?
+**9:02 Experian:** If you're calling from a mobile number and have questions about how to add or remove a freeze, would you like to receive a text with additional instructions?
 
-**9:13 Experian:** I'm sorry. I didn't quite get that. Would you like to try again? You may say yes or no.
+**9:16 Experian:** I'm sorry. I didn't quite get that. Would you like to try again? You may say yes or no.
 
-**9:23 Experian:** I'm afraid I can't proceed without valid information. Please consider reaching out to us again. Thank you.
+**9:26 Experian:** I'm afraid I can't proceed without valid information. Please consider reaching out to us again. Thank you.
 
 </details>
