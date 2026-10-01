@@ -34,6 +34,8 @@ Hotels, airlines, restaurants, or anything else where it's easiest to just make 
 
 If you reply and send me feedback, I'm happy to give you $25 in credits. Anything about your experience would be useful, including how you found it and why you decided to sign up.
 
+Here's my cell # for imessage or whatsapp - 7379832612 .
+
 - Nick`,
     }),
   },
