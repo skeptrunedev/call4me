@@ -17,7 +17,15 @@ test('an account calls UAE businesses from its US number, without a UAE number',
   assert.equal(await mayCall(noNumbers, 'acct_test', to), true);
 });
 
-test('countries outside the US, Canada, Europe and the UAE still need a number there', async () => {
+test('an account calls Japanese businesses from its US number too', async () => {
+  const to = checkDialable('+81 3 1234 5678');
+  assert.ok(to.ok && to.country === 'JP' && !to.home);
+  assert.equal(await mayCall(noNumbers, 'acct_test', to), true);
+  assert.ok(CALLABLE.includes('JP'));
+  assert.equal(pricePerMinuteTo(env, '+81 90 1234 5678'), 40);
+});
+
+test('countries outside the US, Canada, Europe, the UAE and Japan still need a number there', async () => {
   const to = checkDialable('+52 55 1234 5678');
   assert.ok(to.ok && to.country === 'MX');
   assert.equal(await mayCall(noNumbers, 'acct_test', to), false);

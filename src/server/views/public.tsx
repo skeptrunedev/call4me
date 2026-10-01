@@ -77,7 +77,7 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
           <li>flight rebooking after a cancellation or delay, date changes, refunds</li>
           <li>store hours, stock checks, quotes, "do you do X"</li>
           <li>sitting through phone menus and hold music</li>
-          <li>businesses abroad: europe and the uae from your free us number, plus a local number in any of {offers(p.countries).live.length} countries (see the <a href="#faq">faq</a>)</li>
+          <li>businesses abroad: europe, the uae and japan from your free us number, plus a local number in any of {offers(p.countries).live.length} countries (see the <a href="#faq">faq</a>)</li>
         </ul>
         <h3>how it sounds</h3>
         <p><a href="/examples">hear the agent on real calls</a></p>
@@ -110,7 +110,7 @@ const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ p
       <details>
         <summary>which countries can it call?</summary>
         <p>
-          every account can call businesses in the us, canada, europe, and the uae from its free us number. european calls go out from your european call4me number if
+          every account can call businesses in the us, canada, europe, the uae, and japan from its free us number. european calls go out from your european call4me number if
           you have one. anywhere else, buy a call4me number in that country and calls there go out from it, so the business sees a local number it can call back
           cheaply.{live.length > 0 && <> you can buy numbers in {live.length} countries today: {names(live)}.</>}
           {soon.length > 0 && <> waiting on regulator approval, usually a few days: {names(soon)}.</>} calls cost {dollars(pricePerMinuteCents)}/min wherever you call

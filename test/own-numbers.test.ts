@@ -110,7 +110,7 @@ test(`at most ${VERIFICATIONS_PER_DAY} codes a day per account`, async () => {
 test('call4me numbers and numbers in countries call4me does not call from cannot be verified', async () => {
   await env.DB.prepare(`INSERT INTO numbers (id, account_id, phone_number, country, number_type, included, monthly_cents, status, created_at) VALUES ('n1', 'acct_bob', '+12025550111', 'US', 'local', 1, 0, 'active', 0)`).run();
   await refusal(numbers(env).startVerification(alice, { number: '+12025550111', method: 'sms' }), 409, /is a call4me number/);
-  await refusal(numbers(env).startVerification(alice, { number: '+81 3 1234 5678', method: 'sms' }), 400, /doesn't place calls in JP/);
+  await refusal(numbers(env).startVerification(alice, { number: '+86 10 1234 5678', method: 'sms' }), 400, /doesn't place calls in CN/);
   await refusal(numbers(env).startVerification(alice, { number: '911', method: 'sms' }), 400, /number:/);
 });
 
