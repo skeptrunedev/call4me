@@ -17,8 +17,9 @@ type Recording = z.infer<typeof recordingOutput>['recordings'][number];
 export type CallRecordings = { state: 'live' } | { state: 'ready'; recordings: Recording[] } | { state: 'failed' };
 
 export const LoginPage: FC<{ next: string; error?: string; providers: { google: boolean; x: boolean }; agentPrompt?: string }> = ({ next, error, providers, agentPrompt }) => (
-  <Layout title="sign in" page="login">
-    <h1>sign in</h1>
+  <Layout title="sign up or sign in" page="login">
+    <h1>sign up or sign in</h1>
+    <p>new here? continue with google or x and your account is created automatically. there's no separate sign-up and no password.</p>
     {agentPrompt && <CopyBlock id="agent-prompt" text={agentPrompt} label="[ or have your agent connect: copy prompt for your agent ]" rows={12} hidden />}
     {error && <p class="err">{error}</p>}
     {providers.google && (
