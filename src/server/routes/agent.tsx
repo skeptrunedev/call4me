@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { createAuth } from '../lib/auth';
 import { siteUrl } from '../lib/auth-options';
 import { origin, type AppContext, type AppEnv } from '../lib/context';
-import { agentAuth, aiCatalog, authMd, llmsTxt, robotsTxt, serverCard, siteProtectedResource, sitemapXml, webBotAuthDirectory } from '../lib/discovery';
+import { agentAuth, aiCatalog, authMd, chatgptMcpProtectedResource, llmsTxt, robotsTxt, serverCard, siteProtectedResource, sitemapXml, webBotAuthDirectory } from '../lib/discovery';
 import { SERVER_NAME, SERVER_VERSION } from '../mcp/server';
 import { pricePerMinute } from '../services/dialer';
 import { posts } from './blog';
@@ -86,8 +86,13 @@ agent.on(['GET', 'HEAD'], '/.well-known/openid-configuration', (c) => {
   return createAuth(c).handler(new Request(url, { method: c.req.method, headers: c.req.raw.headers }));
 });
 
-/** Protected resource metadata for the site itself; /.well-known/oauth-protected-resource/mcp stays with the auth plugin. */
-agent.on(['GET', 'HEAD'], '/.well-known/oauth-protected-resource', (c) => {
-  const headers = { 'content-type': 'application/json', 'access-control-allow-origin': '*', ...CACHE };
-  return c.req.method === 'HEAD' ? c.body(null, 200, headers) : c.body(JSON.stringify(siteProtectedResource(site(c)), null, 2) + '\n', 200, headers);
-});
+/** Protected resource metadata for the site itself and the ChatGPT server; /.well-known/oauth-protected-resource/mcp stays with the auth plugin. */
+for (const [path, metadata] of [
+  ['/.well-known/oauth-protected-resource', siteProtectedResource],
+  ['/.well-known/oauth-protected-resource/chatgpt/mcp', chatgptMcpProtectedResource],
+] as const) {
+  agent.on(['GET', 'HEAD'], path, (c) => {
+    const headers = { 'content-type': 'application/json', 'access-control-allow-origin': '*', ...CACHE };
+    return c.req.method === 'HEAD' ? c.body(null, 200, headers) : c.body(JSON.stringify(metadata(site(c)), null, 2) + '\n', 200, headers);
+  });
+}

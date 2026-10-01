@@ -2,7 +2,7 @@ import { betterAuth } from 'better-auth';
 import type { Hono } from 'hono';
 import { createLocalJWKSet, jwtVerify, type JWTPayload } from 'jose';
 import { newId, now } from './ids';
-import { authOptions, mcpResource, realEmail, siteResource } from './auth-options';
+import { authOptions, chatgptMcpResource, mcpResource, realEmail, siteResource } from './auth-options';
 import { origin, type AppContext, type AppEnv } from './context';
 import { accounts, type Account } from '../services/accounts';
 
@@ -86,10 +86,14 @@ export async function verifyAccessToken(c: AppContext, token: string, audience: 
   return payload;
 }
 
-export const verifyMcpToken = (c: AppContext, token: string) => verifyAccessToken(c, token, mcpResource(origin(c)));
+/** An MCP endpoint's resource identifier, by the path it is served at. */
+export const mcpResourceAt = (c: AppContext, path: McpPath): string => (path === '/chatgpt/mcp' ? chatgptMcpResource(origin(c)) : mcpResource(origin(c)));
+export type McpPath = '/mcp' | '/chatgpt/mcp';
 
-/** Audiences the site's own endpoints honour: the site resource and the MCP server's (one token serves both). */
-export const siteAudiences = (c: AppContext) => [siteResource(origin(c)), mcpResource(origin(c))];
+export const verifyMcpToken = (c: AppContext, token: string, path: McpPath = '/mcp') => verifyAccessToken(c, token, mcpResourceAt(c, path));
+
+/** Audiences the site's own endpoints honour: the site resource and the MCP servers' (one token serves both). */
+export const siteAudiences = (c: AppContext) => [siteResource(origin(c)), mcpResource(origin(c)), chatgptMcpResource(origin(c))];
 
 /** The account behind a verified token's user (`sub`). */
 export async function accountForToken(c: AppContext, claims: JWTPayload): Promise<Account | null> {
@@ -116,8 +120,8 @@ export async function bearerAccount(c: AppContext): Promise<Account | null> {
 }
 
 /** The RFC 9728 challenge: 401 + WWW-Authenticate so MCP clients start (or repeat) the OAuth flow. */
-export function challenge(c: AppContext, message: string, error?: string): Response {
-  const metadata = `${origin(c)}/.well-known/oauth-protected-resource/mcp`;
+export function challenge(c: AppContext, message: string, error?: string, path: McpPath = '/mcp'): Response {
+  const metadata = `${origin(c)}/.well-known/oauth-protected-resource${path}`;
   const params = [`resource_metadata="${metadata}"`, ...(error ? [`error="${error}"`, `error_description="${message}"`] : [])];
   return new Response(JSON.stringify({ jsonrpc: '2.0', error: { code: -32000, message }, id: null }), {
     status: 401,

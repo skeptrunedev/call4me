@@ -252,6 +252,21 @@ export function siteProtectedResource(site: string) {
   };
 }
 
+/**
+ * RFC 9728 protected resource metadata for the ChatGPT directory's MCP server (/chatgpt/mcp). The
+ * auth plugin serves only the /mcp document, so this one mirrors it for the second resource.
+ */
+export function chatgptMcpProtectedResource(site: string) {
+  return {
+    resource: `${site}/chatgpt/mcp`,
+    authorization_servers: [`${site}/api/auth`],
+    bearer_methods_supported: ['header'],
+    scopes_supported: ['calls'],
+    resource_name: 'call4me for ChatGPT',
+    resource_documentation: `${site}/auth.md`,
+  };
+}
+
 /** Web Bot Auth directory: the public half of WEB_BOT_AUTH_KEY (an Ed25519 private JWK as JSON). */
 export function webBotAuthDirectory(privateJwk: string) {
   const priv = JSON.parse(privateJwk) as Record<string, unknown>;

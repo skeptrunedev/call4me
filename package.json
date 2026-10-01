@@ -15,6 +15,7 @@
     "deploy": "scripts/deploy-voice.sh && wrangler deploy",
     "grant": "node scripts/grant-credits.mjs",
     "transfer": "node scripts/transfer-credits.mjs",
+    "password-user": "node scripts/create-password-user.mjs",
     "openapi:generate": "tsx scripts/generate-openapi.ts",
     "test": "node --import tsx --test test/*.test.ts",
     "test:menu:live": "tsx scripts/eval-menu-recovery.ts"

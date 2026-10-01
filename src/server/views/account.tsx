@@ -33,6 +33,15 @@ export const LoginPage: FC<{ next: string; error?: string; providers: { google: 
       </form>
     )}
     {!providers.google && !providers.x && <p class="muted">sign-in is being set up. check back shortly.</p>}
+    <details>
+      <summary class="small">sign in with a password</summary>
+      <form method="post" action="/login/password">
+        <input type="hidden" name="next" value={next} />
+        <input type="email" name="email" placeholder="email" autocomplete="username" required />{' '}
+        <input type="password" name="password" placeholder="password" autocomplete="current-password" required />{' '}
+        <button type="submit">sign in</button>
+      </form>
+    </details>
     <p class="small">your credits, calls, and calling profile belong to the account you sign in with. an account you paid for before sign-in existed is linked by its email.</p>
   </Layout>
 );

@@ -1,7 +1,7 @@
 import { newId, now } from '../lib/ids';
 import { checkDialable, type PhoneCheck } from '../lib/phone';
 import { accounts, type Account } from './accounts';
-import { categoryBySlug, CATEGORY_SLUGS, missingMessage, resolveIntake } from './intake';
+import { catalog, missingMessage, resolveIntake, type Surface } from './intake';
 import { mayCall } from './numbers';
 import { profiles } from './profiles';
 
@@ -144,9 +144,10 @@ export function calls(db: D1Database) {
      * Returns the call plus its per-call secrets (account PINs): those reach the caller's
      * instructions but are never written to the database.
      */
-    async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number): Promise<{ call: CallRow; secrets: { label: string; value: string }[]; to: Dialable }> {
-      const category = categoryBySlug(input.category);
-      if (!category) throw new CallError(`category must be one of: ${CATEGORY_SLUGS.join(', ')}`);
+    async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number, surface: Surface = 'agents'): Promise<{ call: CallRow; secrets: { label: string; value: string }[]; to: Dialable }> {
+      const { bySlug, slugs } = catalog(surface);
+      const category = bySlug(input.category);
+      if (!category) throw new CallError(`category must be one of: ${slugs.join(', ')}`);
       const profile = await profiles(db).get(account.id);
       // The saved profile is the account owner's. A call for someone else (a friend's appointment)
       // must never borrow the owner's address, insurance or date of birth to fill that person's gaps.
@@ -160,7 +161,7 @@ export function calls(db: D1Database) {
       if (!to.ok) throw new CallError(to.reason);
       // Abroad, an account calls only countries it holds a number in (services/numbers.ts).
       if (!(await mayCall(db, account.id, to))) {
-        throw new CallError(`calling ${to.country} numbers needs a number in ${to.country}: see call4me_list_numbers, then buy one with call4me_buy_number`, 422);
+        throw new CallError(`calling ${to.country} numbers needs a number in ${to.country}: ${surface === 'agents' ? 'see call4me_list_numbers, then buy one with call4me_buy_number' : 'this account has none (see call4me_list_numbers)'}`, 422);
       }
       if (input.from) {
         const from = checkDialable(input.from);
@@ -180,7 +181,7 @@ export function calls(db: D1Database) {
 
       // Credits up front: the call holds its maximum cost now and settles when it ends.
       const balance = await accounts(db).balanceCents(account.id);
-      if (balance < pricePerMinuteCents) throw new CallError(`balance is $${(balance / 100).toFixed(2)}; add credits with call4me_add_funds`, 402);
+      if (balance < pricePerMinuteCents) throw new CallError(`balance is $${(balance / 100).toFixed(2)}; ${surface === 'agents' ? 'add credits with call4me_add_funds' : 'the user can add credits on the call4me website'}`, 402);
       const affordable = Math.floor(balance / pricePerMinuteCents);
       const maxMinutes = Math.max(1, Math.min(input.max_minutes ?? LIMITS.defaultMaxMinutes, LIMITS.maxMinutes, affordable));
       const holdCents = maxMinutes * pricePerMinuteCents;

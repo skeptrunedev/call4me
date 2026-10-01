@@ -9,7 +9,7 @@ import { placeCall, pricePerMinute, VOICES } from '../services/dialer';
 import { parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
 import { checkDialable } from '../lib/phone';
 import { sessionFor } from '../voice/session';
-import { CATEGORIES, categoryBySlug, CATEGORY_SLUGS, PROFILE_FIELDS, type ProfileKey } from '../services/intake';
+import { catalog, PROFILE_FIELDS, type Surface } from '../services/intake';
 import { ProfileError, profiles } from '../services/profiles';
 import { recordingDescription, recordingInput, recordingOutput } from '../lib/recording-schema';
 import { buyNumberDescription, buyNumberInput, listNumbersDescription, numbersOutput, releaseNumberDescription, releaseNumberInput } from '../lib/number-schema';
@@ -67,14 +67,23 @@ export interface McpDeps {
   account: Account;
   /** Built on first use: only the credit tools need Stripe. */
   stripe: () => Stripe;
+  /**
+   * 'chatgpt' is the server listed in the ChatGPT plugin directory, whose rules forbid selling
+   * credits or numbers in the chat and collecting restricted data: it leaves out the purchase
+   * tools and the categories and profile fields that need health, government-ID or account-secret
+   * data (services/intake.ts catalog). Everyone else gets 'agents', the whole server.
+   */
+  surface?: Surface;
 }
 
-const INSTRUCTIONS = `call4me places real phone calls for the user: doctor/dentist/vet appointments, restaurant bookings, car service and dealership questions, home services, salons, and questions for any business.
+function instructions(surface: Surface): string {
+  const agents = surface === 'agents';
+  return `call4me places real phone calls for the user: ${agents ? 'doctor/dentist/vet appointments' : 'vet appointments'}, restaurant bookings, car service and dealership questions, home services, salons, and questions for any business.
 
 During setup, call call4me_get_balance and show the user their actual call4me numbers. Suggest saving them as a contact named call4me. These are separate from the user's personal phone in call4me_get_profile: call4me may ring that personal phone when a business needs them to verify their account, or when they ask to join a call. Explain that they answer and press 1 to join, and press * or hang up to hand the call back. If phone_number is null and numbers is empty, explain that the free US number is assigned on the first call; never invent a number or buy an extra number for setup.
 
 The caller can only say what you give it, so everything is collected BEFORE dialing:
-1. Once, up front: call4me_get_profile. If it's missing things, ask the user in one message for their full legal name, date of birth, phone, home address, health and dental insurance (carrier + member ID, or self-pay), and car (year/make/model/mileage, VIN) if they have one, and save them with call4me_save_profile. Skip what they decline.
+1. Once, up front: call4me_get_profile. If it's missing things, ask the user in one message for their full legal name, date of birth, phone, home address, ${agents ? 'health and dental insurance (carrier + member ID, or self-pay), ' : ''}and car (year/make/model/mileage, VIN) if they have one, and save them with call4me_save_profile. Skip what they decline.
 2. For each call: pick the category and call call4me_get_requirements(category). Ask the user for every required field that isn't already known (one message, not one question at a time), plus the per-call details (reason, dates and times that work, party size...).
 3. Find the right number (search the web if needed; check it is the right location).
 4. call4me_place_call with the category and details. If it answers "Not calling yet", ask the user exactly what it lists and try again. Show its calling_number so the user knows which call4me number may ring them; suggest saving it if this is their first call or a different number than before. It is the call4me number, not number (the business's number).
@@ -83,15 +92,18 @@ The caller can only say what you give it, so everything is collected BEFORE dial
 
 To put the user on a call themselves: pass connect_when to call4me_place_call (e.g. "as soon as a person picks up", to skip a long hold), or call call4me_connect_me mid-call. Give the user a heads up before placing a call that may ring them, and before call4me_connect_me. Tell them why and use the actual call's calling_number from call4me_get_call; for a new call, use the selected owned number when known and confirm it from the place_call result. If the first number has not been assigned yet, explain that upfront and show it as soon as place_call returns. Their phone rings and they join the call by pressing 1; the caller goes quiet, and takes over again when they press * or hang up. To have them listen in without taking over, pass listen_in: true to call4me_place_call (they hear the call from the moment the business answers) or mode: "listen" to call4me_connect_me: nobody on the call hears them, the caller keeps working, and they press 1 anytime to take over. To end a call early, use call4me_hang_up.
 
-Calls go out from the account's own numbers: its free US number, plus any it bought (call4me_list_numbers, call4me_buy_number). Businesses in the US, Canada and Europe can always be called (Europe from a European number when the account holds one, else from its US number); anywhere else, once the account holds a number in that country, and the call goes out from it.
+Calls go out from the account's own numbers: its free US number, plus any it bought (${agents ? 'call4me_list_numbers, call4me_buy_number' : 'call4me_get_balance lists them'}). Businesses in the US, Canada and Europe can always be called (Europe from a European number when the account holds one, else from its US number); anywhere else, once the account holds a number in that country, and the call goes out from it.
 
 Every call leaves the calling number as the callback. If a call ends in voicemail or "we'll call you back", call4me remembers the task for 14 days: when the business calls that number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (call4me_get_call lists its callbacks) and in call4me_list_calls.
 
 The caller sounds like a normal person calling for the user. It keeps turns short and does not read the booking back at the end; the recap comes back to you.
 Only call businesses and services the user wants to reach, never personal numbers they don't expect a call from.`;
+}
 
 const RO: ToolAnnotations = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
 const OPEN: ToolAnnotations = { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true };
+/** Dialing a business can't be taken back: hosts that confirm irreversible actions ask the user first. */
+const DIALS: ToolAnnotations = { ...OPEN, destructiveHint: true };
 
 function ok(text: string, structured: Record<string, unknown>): CallToolResult {
   return { content: [{ type: 'text', text }], structuredContent: structured };
@@ -152,7 +164,10 @@ const callIdArg = z.string().min(1).max(40).describe('the call id from call4me_p
 
 export function createCall4meServer(deps: McpDeps): McpServer {
   const { env, account } = deps;
-  const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION, title: 'call4me', websiteUrl: deps.origin }, { instructions: INSTRUCTIONS, jsonSchemaValidator: new CfWorkerJsonSchemaValidator() });
+  const surface = deps.surface ?? 'agents';
+  const agents = surface === 'agents';
+  const intake = catalog(surface);
+  const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION, title: 'call4me', websiteUrl: deps.origin }, { instructions: instructions(surface), jsonSchemaValidator: new CfWorkerJsonSchemaValidator() });
   const db = calls(env.DB);
 
   const guard = (fn: () => Promise<CallToolResult>) => async (): Promise<CallToolResult> => {
@@ -185,8 +200,8 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         to: z.string().min(3).max(40).describe('the number to call, e.g. "+14155550123", "(415) 555-0123", or abroad with its country code, e.g. "+31 20 123 4567"'),
         business: z.string().min(1).max(120).describe('who you are calling, as a person would say it: "Nopa", "Dr. Chen\'s office", "Toyota of Berkeley service"'),
         goal: z.string().min(5).max(1500).describe('what the call should achieve, in plain words: "Book a table for 4 tomorrow (Sat Oct 3) around 7pm under Khami."'),
-        category: z.enum(CATEGORY_SLUGS).describe('the kind of call; decides what must be known first (see call4me_get_requirements)'),
-        details: z.record(z.string(), z.string().max(1000)).optional().describe('answers to the category\'s fields by key, e.g. {"reason":"annual physical","patient_status":"existing","availability":"weekday mornings next week"}. Profile fields (name, DOB, phone, insurance...) are filled from the saved profile only when the call is for the profile\'s owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner\'s are never used.'),
+        category: z.enum(intake.slugs).describe('the kind of call; decides what must be known first (see call4me_get_requirements)'),
+        details: z.record(z.string(), z.string().max(1000)).optional().describe(`answers to the category's fields by key, e.g. ${agents ? '{"reason":"annual physical","patient_status":"existing","availability":"weekday mornings next week"}' : '{"party_size":"4","date":"Sat Oct 3","time_window":"7pm, anything 6:30-8"}'}. Profile fields (${agents ? 'name, DOB, phone, insurance' : 'name, phone, address'}...) are filled from the saved profile only when the call is for the profile's owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner's are never used.`),
         on_behalf_of: z.string().min(1).max(80).optional().describe('who the call is for, as the caller should say it (default: the profile\'s full_name). The caller calls FOR this person; it never claims to be them.'),
         facts: z.string().max(3000).optional().describe('anything else the caller may share beyond the category\'s fields, one per line'),
         flexibility: z.string().max(1500).optional().describe('what the caller may accept without asking: "any time 6:30-8pm", "a different day this week is fine", "up to $300". Anything outside this becomes a question to you.'),
@@ -197,11 +212,11 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         voice: z.enum(VOICES).optional().describe('caller voice (default marin)'),
         from: z.string().max(40).optional().describe('which of the account\'s numbers to call from (default: one in the callee\'s country)'),
       }),
-      annotations: OPEN,
+      annotations: DIALS,
     },
     (async (args: Parameters<typeof placeCall>[3]) =>
       guard(async () => {
-        const row = await placeCall(env, deps.origin, account, args);
+        const row = await placeCall(env, deps.origin, account, args, surface);
         const v = callView(row, []);
         return ok(`calling ${v.business} at ${v.number} (${v.id}). Your call4me number is ${v.calling_number}; show it to the user so they recognize a call if they need to join. Poll call4me_get_call with wait_seconds: 30 until finished, and answer any open question immediately.`, v);
       })()) as never,
@@ -349,16 +364,16 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     {
       title: 'What a call needs',
       description: 'The information a kind of call needs before dialing, and which of it the saved profile already has. Without a category, lists the categories.',
-      inputSchema: z.object({ category: z.enum(CATEGORY_SLUGS).optional() }),
+      inputSchema: z.object({ category: z.enum(intake.slugs).optional() }),
       annotations: RO,
     },
     (async (args: { category?: string }) =>
       guard(async () => {
         if (!args.category) {
-          const text = CATEGORIES.map((c) => `${c.slug}: ${c.name} (${c.examples})`).join('\n');
-          return ok(text, { categories: CATEGORIES.map((c) => ({ slug: c.slug, name: c.name, examples: c.examples })) });
+          const text = intake.categories.map((c) => `${c.slug}: ${c.name} (${c.examples})`).join('\n');
+          return ok(text, { categories: intake.categories.map((c) => ({ slug: c.slug, name: c.name, examples: c.examples })) });
         }
-        const category = categoryBySlug(args.category)!;
+        const category = intake.bySlug(args.category)!;
         const profile = await profiles(env.DB).get(account.id);
         const fields = category.fields.map((f) => ({
           key: f.key,
@@ -381,14 +396,15 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     'call4me_get_profile',
     {
       title: 'Saved caller profile',
-      description: 'The facts saved for every call (name, DOB, phone, address, insurance, car) and which are still missing.',
+      description: `The facts saved for every call (name, DOB, phone, address, ${agents ? 'insurance, ' : ''}car) and which are still missing.`,
       inputSchema: z.object({}),
       annotations: RO,
     },
     (async () =>
       guard(async () => {
-        const profile = await profiles(env.DB).get(account.id);
-        const missing = (Object.keys(PROFILE_FIELDS) as ProfileKey[]).filter((k) => !profile[k]);
+        const saved = await profiles(env.DB).get(account.id);
+        const profile = Object.fromEntries(intake.profileKeys.filter((k) => saved[k]).map((k) => [k, saved[k]]));
+        const missing = intake.profileKeys.filter((k) => !profile[k]);
         const text = [
           ...Object.entries(profile).map(([k, v]) => `${k}: ${v}`),
           missing.length ? `missing: ${missing.map((k) => `${k} (${PROFILE_FIELDS[k].ask})`).join('; ')}` : 'complete',
@@ -402,15 +418,25 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     {
       title: 'Save caller profile',
       description: 'Save facts that are the same on every call, so they never have to be asked again. Merges into what is saved; an empty string removes a field. Only save what the user gave you.',
-      inputSchema: z.object(Object.fromEntries((Object.keys(PROFILE_FIELDS) as ProfileKey[]).map((k) => [k, z.string().max(500).optional().describe(PROFILE_FIELDS[k].label)]))),
+      inputSchema: z.object(Object.fromEntries(intake.profileKeys.map((k) => [k, z.string().max(500).optional().describe(PROFILE_FIELDS[k].label)]))),
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     },
     (async (args: Record<string, string | undefined>) =>
       guard(async () => {
         const saved = await profiles(env.DB).update(account.id, Object.fromEntries(Object.entries(args).filter(([, v]) => v !== undefined)) as Record<string, string>);
-        return ok(`saved. profile now has: ${Object.keys(saved).join(', ') || 'nothing'}`, { profile: saved });
+        const shown = Object.fromEntries(intake.profileKeys.filter((k) => saved[k]).map((k) => [k, saved[k]]));
+        return ok(`saved. profile now has: ${Object.keys(shown).join(', ') || 'nothing'}`, { profile: shown });
       })()) as never,
   );
+
+  if (agents) registerPurchaseTools(server, deps, guard);
+
+  return server;
+}
+
+/** Buying credits and numbers, and managing numbers: not in the ChatGPT directory server (see McpDeps.surface). */
+function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () => Promise<CallToolResult>) => () => Promise<CallToolResult>) {
+  const { env, account } = deps;
 
   server.registerTool(
     'call4me_add_funds',
@@ -465,8 +491,6 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         return ok(`released ${released.number}; its monthly charge has stopped.`, { released });
       })()) as never,
   );
-
-  return server;
 }
 
 function numberText(v: NumberView): string {

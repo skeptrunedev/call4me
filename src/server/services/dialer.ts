@@ -7,6 +7,7 @@ import { sessionFor, type SessionSetup } from '../voice/session';
 import { accounts, type Account } from './accounts';
 import { mayCall, numbers } from './numbers';
 import { profiles } from './profiles';
+import type { Surface } from './intake';
 import { calls, CallError, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 
 /** GPT-Live voices that read as a North American caller. marin is the model default. */
@@ -45,10 +46,10 @@ async function personFor(env: Env, origin: string, account: Account, from: strin
   return { name: profile.full_name || account.display_name || 'the account owner', phone: reachable, from, webhookUrl: `${origin}/webhooks/telnyx`, connectWhen, listenIn };
 }
 
-export async function placeCall(env: Env, origin: string, account: Account, input: PlaceCallInput & { voice?: Voice }): Promise<CallRow> {
+export async function placeCall(env: Env, origin: string, account: Account, input: PlaceCallInput & { voice?: Voice }, surface: Surface = 'agents'): Promise<CallRow> {
   const price = pricePerMinute(env);
   const db = calls(env.DB);
-  const { call, secrets, to } = await db.create(account, input, price);
+  const { call, secrets, to } = await db.create(account, input, price, surface);
   const brief = JSON.parse(call.brief) as Brief;
   if (!account.display_name) await accounts(env.DB).setDisplayName(account.id, brief.on_behalf_of);
 

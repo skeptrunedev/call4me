@@ -1,9 +1,10 @@
 import { Hono } from 'hono';
 import { createMcpHandler, hostHeaderValidationResponse } from '@modelcontextprotocol/server';
-import { accountForToken, bearerToken, challenge, looksLikeJwt, sessionAccount, verifyMcpToken } from '../lib/auth';
+import { accountForToken, bearerToken, challenge, looksLikeJwt, sessionAccount, verifyMcpToken, type McpPath } from '../lib/auth';
 import { legacyHosts, origin, stripeFor, viewerKey, type AppContext, type AppEnv } from '../lib/context';
 import { installPrompt } from '../lib/prompts';
 import { accounts, type Account } from '../services/accounts';
+import type { Surface } from '../services/intake';
 import { createCall4meServer, withCurrentToolNames } from '../mcp/server';
 import { numbers } from '../services/numbers';
 import { McpPage } from '../views/account';
@@ -18,10 +19,10 @@ export const mcp = new Hono<AppEnv>();
 /** DNS-rebinding guard the MCP spec asks for: only our own hostnames may address the endpoint. */
 const allowedHosts = (c: AppContext) => [c.env.CANONICAL_HOST, ...legacyHosts(c.env), 'localhost', '127.0.0.1', '[::1]'].filter(Boolean);
 
-async function serve(c: AppContext, account: Account): Promise<Response> {
+async function serve(c: AppContext, account: Account, surface: Surface = 'agents'): Promise<Response> {
   const rejected = hostHeaderValidationResponse(c.req.raw, allowedHosts(c));
   if (rejected) return rejected;
-  const handler = createMcpHandler(() => createCall4meServer({ env: c.env, origin: origin(c), account, stripe: () => stripeFor(c) }), {
+  const handler = createMcpHandler(() => createCall4meServer({ env: c.env, origin: origin(c), account, stripe: () => stripeFor(c), surface }), {
     legacy: 'stateless',
     onerror: (err) => console.warn('mcp', String(err)),
   });
@@ -42,24 +43,27 @@ mcp.get('/', async (c) => {
 });
 
 /**
- * /mcp: an OAuth access token from our provider (clients that sign in through the browser),
- * or an API key as a Bearer token. No token: the RFC 9728 challenge that starts sign-in.
+ * An OAuth access token from our provider for this endpoint's resource (clients that sign in
+ * through the browser), or an API key as a Bearer token. No token: the RFC 9728 challenge that
+ * starts sign-in.
  */
-mcp.all('/', async (c) => {
+async function authorized(c: AppContext, path: McpPath, surface: Surface): Promise<Response> {
   const token = bearerToken(c);
-  if (!token) return challenge(c, 'sign in to call4me to use this server');
+  if (!token) return challenge(c, 'sign in to call4me to use this server', undefined, path);
   if (looksLikeJwt(token)) {
     try {
-      const account = await accountForToken(c, await verifyMcpToken(c, token));
-      if (account) return serve(c, account);
+      const account = await accountForToken(c, await verifyMcpToken(c, token, path));
+      if (account) return serve(c, account, surface);
     } catch (err) {
       console.warn('mcp token rejected', String(err));
     }
-    return challenge(c, 'invalid or expired access token', 'invalid_token');
+    return challenge(c, 'invalid or expired access token', 'invalid_token', path);
   }
   const account = await accounts(c.env.DB).byKey(token);
-  return account ? serve(c, account) : challenge(c, 'invalid call4me key', 'invalid_token');
-});
+  return account ? serve(c, account, surface) : challenge(c, 'invalid call4me key', 'invalid_token', path);
+}
+
+mcp.all('/', (c) => authorized(c, '/mcp', 'agents'));
 
 /** /mcp/<key>: the key rides in the URL for clients whose connector UI can't sign in or set headers. */
 mcp.get('/:key', (c) => (wantsHtml(c) ? c.redirect('/mcp', 302) : c.text('POST MCP requests here', 405)));
@@ -68,3 +72,12 @@ mcp.all('/:key', async (c) => {
   if (!account) return c.json({ jsonrpc: '2.0', error: { code: -32001, message: `call4me: invalid key. Use ${origin(c)}/mcp and sign in, or create a key at ${origin(c)}/account.` }, id: null }, 401);
   return serve(c, account);
 });
+
+/**
+ * /chatgpt/mcp: the server listed in the ChatGPT plugin directory. Same accounts and sign-in,
+ * its own OAuth resource, and the directory's tool set (McpDeps.surface).
+ */
+export const chatgptMcp = new Hono<AppEnv>();
+
+chatgptMcp.get('/', (c) => (wantsHtml(c) ? c.redirect('/mcp', 302) : c.text('POST MCP requests here', 405)));
+chatgptMcp.all('/', (c) => authorized(c, '/chatgpt/mcp', 'chatgpt'));

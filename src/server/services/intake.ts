@@ -24,22 +24,30 @@ export type ProfileKey =
   | 'known_traveler_number'
   | 'redress_number';
 
-export const PROFILE_FIELDS: Record<ProfileKey, { label: string; ask: string; check?: (v: string) => string | null }> = {
+export interface ProfileField {
+  label: string;
+  ask: string;
+  check?: (v: string) => string | null;
+  /** Health insurance details or a government identifier: never asked for on surfaces that forbid restricted data (see catalog). */
+  restricted?: true;
+}
+
+export const PROFILE_FIELDS: Record<ProfileKey, ProfileField> = {
   full_name: { label: 'full name', ask: "What's your full legal name (as it appears on your ID/insurance card)?" },
   date_of_birth: { label: 'date of birth', ask: "What's your date of birth?", check: (v) => (parseDate(v) ? null : 'use a full date like 1990-03-14') },
   phone: { label: 'phone number', ask: "What's the best phone number for them to reach you?", check: (v) => (v.replace(/\D/g, '').length >= 10 ? null : 'use a 10-digit phone number') },
   email: { label: 'email', ask: 'What email should they use if they need one?' },
   address: { label: 'home address', ask: "What's your home address (street, city, state, ZIP)?" },
-  insurance_carrier: { label: 'health insurance carrier', ask: 'Who is your health insurance with (carrier and plan), or are you self-pay?' },
-  insurance_member_id: { label: 'health insurance member ID', ask: "What's the member ID on your health insurance card?" },
-  insurance_group_number: { label: 'health insurance group number', ask: "What's the group number on your health insurance card?" },
-  dental_insurance_carrier: { label: 'dental insurance carrier', ask: 'Who is your dental insurance with, or are you self-pay?' },
-  dental_insurance_member_id: { label: 'dental insurance member ID', ask: "What's the member ID on your dental insurance card?" },
+  insurance_carrier: { label: 'health insurance carrier', ask: 'Who is your health insurance with (carrier and plan), or are you self-pay?', restricted: true },
+  insurance_member_id: { label: 'health insurance member ID', ask: "What's the member ID on your health insurance card?", restricted: true },
+  insurance_group_number: { label: 'health insurance group number', ask: "What's the group number on your health insurance card?", restricted: true },
+  dental_insurance_carrier: { label: 'dental insurance carrier', ask: 'Who is your dental insurance with, or are you self-pay?', restricted: true },
+  dental_insurance_member_id: { label: 'dental insurance member ID', ask: "What's the member ID on your dental insurance card?", restricted: true },
   vehicle: { label: 'vehicle (year, make, model, mileage)', ask: "What's your car's year, make, model, and roughly how many miles?" },
   vin: { label: 'VIN', ask: "What's your car's VIN (17 characters, on the registration or driver's door)?" },
   frequent_flyer_numbers: { label: 'frequent flyer numbers', ask: 'Your frequent flyer numbers and status, per airline (e.g. "United MileagePlus AB123456, Premier Gold; Delta SkyMiles 1234567890")?' },
-  known_traveler_number: { label: 'Known Traveler Number (TSA PreCheck / Global Entry)', ask: "Do you have TSA PreCheck or Global Entry? What's your Known Traveler Number (KTN)?" },
-  redress_number: { label: 'TSA Redress number', ask: 'Do you have a TSA Redress number? (Most people don\'t.)' },
+  known_traveler_number: { label: 'Known Traveler Number (TSA PreCheck / Global Entry)', ask: "Do you have TSA PreCheck or Global Entry? What's your Known Traveler Number (KTN)?", restricted: true },
+  redress_number: { label: 'TSA Redress number', ask: 'Do you have a TSA Redress number? (Most people don\'t.)', restricted: true },
 };
 
 export interface IntakeField {
@@ -70,6 +78,8 @@ export interface Category {
   name: string;
   examples: string;
   fields: IntakeField[];
+  /** The call itself is about restricted data (health information, account secrets): left out where that is forbidden. */
+  restricted?: true;
 }
 
 const req = (key: string, label: string, ask: string, extra: Partial<IntakeField> = {}): IntakeField => ({ key, label, ask, required: true, ...extra });
@@ -82,6 +92,7 @@ export const CATEGORIES: Category[] = [
   {
     slug: 'medical',
     name: 'Doctor, specialist, therapy, labs, urgent care',
+    restricted: true,
     examples: 'book/reschedule/cancel a doctor visit, physical, specialist consult, therapy session, lab or imaging appointment',
     fields: [
       fromProfile('full_name', true, { key: 'patient_full_name', label: "patient's full name" }),
@@ -101,6 +112,7 @@ export const CATEGORIES: Category[] = [
   {
     slug: 'dental',
     name: 'Dentist, orthodontist, oral surgeon',
+    restricted: true,
     examples: 'cleaning, checkup, filling, tooth pain, ortho consult',
     fields: [
       fromProfile('full_name', true, { key: 'patient_full_name', label: "patient's full name" }),
@@ -211,6 +223,7 @@ export const CATEGORIES: Category[] = [
   {
     slug: 'internet_existing_account',
     name: 'Home internet: existing account',
+    restricted: true,
     examples: 'outage, billing dispute, lower the bill, change plan, move service, cancel, retention offer',
     fields: [
       fromProfile('full_name', true, { label: 'account holder name', ask: "What's the account holder's full name, as it appears on the bill?" }),
@@ -263,6 +276,37 @@ export const CATEGORIES: Category[] = [
 
 export const CATEGORY_SLUGS = CATEGORIES.map((c) => c.slug) as [string, ...string[]];
 export const categoryBySlug = (slug: string) => CATEGORIES.find((c) => c.slug === slug);
+
+/**
+ * Where the tools are served. Coding agents and custom connectors get everything; the ChatGPT
+ * plugin directory forbids collecting restricted data (health information, government
+ * identifiers, account secrets), so there the categories about it are gone and the remaining
+ * categories never ask for or share those fields.
+ */
+export type Surface = 'agents' | 'chatgpt';
+
+export interface Catalog {
+  categories: Category[];
+  slugs: [string, ...string[]];
+  profileKeys: ProfileKey[];
+  bySlug: (slug: string) => Category | undefined;
+}
+
+function buildCatalog(categories: Category[], profileKeys: ProfileKey[]): Catalog {
+  return { categories, slugs: categories.map((c) => c.slug) as [string, ...string[]], profileKeys, bySlug: (slug) => categories.find((c) => c.slug === slug) };
+}
+
+const restrictedField = (f: IntakeField) => Boolean(f.sensitive || (f.profile && PROFILE_FIELDS[f.profile].restricted));
+
+const CATALOGS: Record<Surface, Catalog> = {
+  agents: buildCatalog(CATEGORIES, Object.keys(PROFILE_FIELDS) as ProfileKey[]),
+  chatgpt: buildCatalog(
+    CATEGORIES.filter((c) => !c.restricted).map((c) => ({ ...c, fields: c.fields.filter((f) => !restrictedField(f)) })),
+    (Object.keys(PROFILE_FIELDS) as ProfileKey[]).filter((k) => !PROFILE_FIELDS[k].restricted),
+  ),
+};
+
+export const catalog = (surface: Surface): Catalog => CATALOGS[surface];
 
 export type Profile = Partial<Record<ProfileKey, string>>;
 

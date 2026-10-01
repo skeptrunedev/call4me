@@ -4,7 +4,7 @@ import { field, origin, safeNext, type AppContext, type AppEnv } from '../lib/co
 import { signInPrompt } from '../lib/prompts';
 import { ConsentPage, LoginPage } from '../views/account';
 
-/** Sign-in with Google or X (better-auth), and the consent step of the MCP OAuth provider. */
+/** Sign-in with Google or X (better-auth), password sign-in for provisioned accounts, and the consent step of the MCP OAuth provider. */
 export const authRoutes = new Hono<AppEnv>();
 
 const providers = (c: AppContext) => ({ google: Boolean(c.env.GOOGLE_CLIENT_ID), x: Boolean(c.env.X_CLIENT_ID) });
@@ -35,6 +35,22 @@ for (const [path, provider, label] of [
     return withAuthCookies(c.redirect(response.url, 303), headers);
   });
 }
+
+/** Accounts made with scripts/create-password-user.mjs; there is no password sign-up. */
+authRoutes.post('/login/password', async (c) => {
+  const form = await c.req.formData();
+  const next = safeNext(field(form, 'next'));
+  try {
+    const { headers } = await createAuth(c).api.signInEmail({
+      body: { email: field(form, 'email', 200), password: field(form, 'password', 200) },
+      headers: c.req.raw.headers,
+      returnHeaders: true,
+    });
+    return withAuthCookies(c.redirect(next, 303), headers);
+  } catch {
+    return c.html(<LoginPage next={next} error="wrong email or password" providers={providers(c)} />, 401);
+  }
+});
 
 authRoutes.post('/logout', async (c) => {
   const { headers } = await createAuth(c).api.signOut({ headers: c.req.raw.headers, returnHeaders: true });
