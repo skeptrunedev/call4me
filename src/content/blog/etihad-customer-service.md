@@ -106,7 +106,7 @@ The family in our call had emailed their follow-up to feedback@etihad.ae, and th
 
 ## Where our caller fell short
 
-- **It ran out of time.** The call was set to stop at 10 minutes, and it hung up at 9:55 while the agent was answering the question about a Guest Relations email. For a complaint follow-up, allow 15 minutes or more.
+- **It ran out of time.** The call was set to stop at 10 minutes, and it hung up at 9:55 while the agent was answering the question about a Guest Relations email. call4me has since dropped that cap: a call now runs as long as the balance covers.
 - **It asked the recording for Guest Relations** at 1:06. It's a keypad menu, and nothing happened.
 - **It didn't give a name** when the first agent asked, which led to some back and forth over a misheard name.
 - **It sat on the second menu without pressing anything** after the transfer, so the menu said it didn't recognize the entry and played again. That cost about 30 seconds.

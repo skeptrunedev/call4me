@@ -244,7 +244,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         timezone: z.string().max(60).optional().describe('IANA time zone of the business, e.g. "America/Los_Angeles", so "tomorrow" is unambiguous'),
         connect_when: z.string().max(300).optional().describe('when to ring the user and patch them into the call without being asked, e.g. "as soon as a person picks up" (skip the hold) or "if they need to speak to me". Rings the phone in their profile. They hand the call back to the caller by pressing * or hanging up.'),
         listen_in: z.boolean().optional().describe('ring the user as soon as the business answers so they can listen in: nobody on the call hears them and the caller keeps working. They press 1 anytime to take over, or hang up to stop listening. Rings the phone in their profile.'),
-        max_minutes: z.number().int().min(1).max(LIMITS.maxMinutes).optional().describe(`hard cap on talk time (default ${LIMITS.defaultMaxMinutes})`),
+        max_minutes: z.number().int().min(1).max(LIMITS.maxMinutes).optional().describe(`optional cap on talk time. Without it a call runs as long as the balance covers (up to ${LIMITS.maxMinutes / 60} hours) and holds that much; set it to leave credits free for a second call at the same time`),
         voice: z.enum(VOICES).optional().describe('caller voice (default marin); hear each at https://call4.me/voices'),
         from: z.string().max(40).optional().describe(`which of the account's numbers to call from (default: a call4me number in the callee's country)${agents ? '. May be one of the user\'s own verified numbers (call4me_verify_number), for businesses in its country: they see it and call back the user directly' : ''}`),
       }),
@@ -442,7 +442,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       guard(async () => {
         const saved = await profiles(env.DB).get(account.id);
         const profile = Object.fromEntries(intake.profileKeys.filter((k) => saved[k]).map((k) => [k, saved[k]]));
-        const missing = intake.profileKeys.filter((k) => !profile[k]);
+        const missing = intake.profileKeys.filter((k) => !profile[k] && !PROFILE_FIELDS[k].optional);
         const text = [
           ...Object.entries(profile).map(([k, v]) => `${k}: ${v}`),
           missing.length ? `missing: ${missing.map((k) => `${k} (${PROFILE_FIELDS[k].ask})`).join('; ')}` : 'complete',

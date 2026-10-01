@@ -9,6 +9,7 @@
 
 export type ProfileKey =
   | 'full_name'
+  | 'assistant_name'
   | 'date_of_birth'
   | 'phone'
   | 'email'
@@ -30,10 +31,13 @@ export interface ProfileField {
   check?: (v: string) => string | null;
   /** Health insurance details or a government identifier: never asked for on surfaces that forbid restricted data (see catalog). */
   restricted?: true;
+  /** Opt-in: never reported missing, so agents don't ask for it unless the user brings it up. */
+  optional?: true;
 }
 
 export const PROFILE_FIELDS: Record<ProfileKey, ProfileField> = {
   full_name: { label: 'full name', ask: "What's your full legal name (as it appears on your ID/insurance card)?" },
+  assistant_name: { label: 'assistant name', ask: 'Only if the user asks for it: a first name the caller introduces itself with ("Hi, I\'m Sam, Alex\'s assistant"). Unset, it is just "Alex\'s assistant".', check: (v) => (/^[\p{L}][\p{L}' -]{0,29}$/u.test(v) ? null : 'use a first name, letters only'), optional: true },
   date_of_birth: { label: 'date of birth', ask: "What's your date of birth?", check: (v) => (parseDate(v) ? null : 'use a full date like 1990-03-14') },
   phone: { label: 'phone number', ask: "What's the best phone number for them to reach you?", check: (v) => (v.replace(/\D/g, '').length >= 10 ? null : 'use a 10-digit phone number') },
   email: { label: 'email', ask: 'What email should they use if they need one?' },
@@ -313,6 +317,9 @@ const CATALOGS: Record<Surface, Catalog> = {
 export const catalog = (surface: Surface): Catalog => CATALOGS[surface];
 
 export type Profile = Partial<Record<ProfileKey, string>>;
+
+/** The first name the caller introduces itself with ("Hi, I'm Sam, Alex's assistant"), or null: by default it has none. */
+export const assistantNameOf = (profile: Profile) => profile.assistant_name || null;
 
 export interface Resolved {
   /** Every known field, labelled, in intake order: what the caller may share. */

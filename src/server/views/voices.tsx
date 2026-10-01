@@ -41,7 +41,7 @@ export const VoicesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ sig
       <h2>pick a voice</h2>
       <p>tell your agent which voice to use when it places the call ("use the gleam voice"). it passes it to the call tool:</p>
       <pre>{`call4me_place_call({ ..., voice: "gleam" })`}</pre>
-      <p>no voice means {VOICE_SAMPLES.find((s) => s.isDefault)!.voice}. every voice introduces itself as your assistant; none uses a name of its own.</p>
+      <p>no voice means {VOICE_SAMPLES.find((s) => s.isDefault)!.voice}. every voice introduces itself as your assistant, with no name of its own. if you want one ("hi, I'm Sam, Alex's assistant"), ask your agent to save assistant_name in your profile.</p>
       <p><a href="/blog/openai-realtime-voices-phone-calls">why the voices work this way</a> · <a href="/examples">listen to real calls</a> · <a href="/mcp">install mcp</a></p>
     </main>
     <script>{raw(AUDIO_SCRIPT)}</script>
