@@ -4,7 +4,7 @@ import { mcpUrl } from '../lib/prompts';
 import type { recordingOutput } from '../lib/recording-schema';
 import type { callView } from '../mcp/server';
 import { dollars, type Account } from '../services/accounts';
-import type { CountryOffer, NumberView } from '../services/numbers';
+import type { CountryOffer, NumberView, OwnNumberView } from '../services/numbers';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { MIN_TOPUP_CENTS, type Reload } from '../services/topups';
 import { CopyBlock, Layout } from './layout';
@@ -78,7 +78,21 @@ export const NewKeyPage: FC<{ apiKey: string; installPrompt: string }> = ({ apiK
   </Layout>
 );
 
-export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerMinuteCents: number; numbers: NumberView[]; offers: CountryOffer[]; reload: Reload | null; calls: CallView[]; apiKey: string; agentPrompt: string; error?: string; numberError?: string }> = (p) => (
+export const AccountPage: FC<{
+  account: Account;
+  balanceCents: number;
+  pricePerMinuteCents: number;
+  numbers: NumberView[];
+  ownNumbers: OwnNumberView[];
+  offers: CountryOffer[];
+  reload: Reload | null;
+  calls: CallView[];
+  apiKey: string;
+  agentPrompt: string;
+  error?: string;
+  numberError?: string;
+  ownNumberError?: string;
+}> = (p) => (
   <Layout title="my account" page="account" signedIn>
     <h1>
       balance: <span class="price">{dollars(p.balanceCents)}</span>
@@ -155,6 +169,49 @@ export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerM
         ))}
       </select>{' '}
       <button type="submit">buy from balance</button>
+    </form>
+    <h2>your own number</h2>
+    <p class="small">
+      calls can show your own phone number instead of a call4me number, to businesses in its country. we text it a code (or call and read it out) to check it's
+      yours. a call goes out from it only when you or your agent pick it; businesses call it back, so callbacks ring you instead of call4me.
+    </p>
+    {p.ownNumbers.length > 0 && (
+      <table class="rows">
+        <tbody>
+          {p.ownNumbers.map((n) => (
+            <tr>
+              <td>{n.number}</td>
+              <td>{n.country_name}</td>
+              <td>
+                {n.status === 'verified' ? (
+                  'verified'
+                ) : (
+                  <form method="post" action="/account/numbers/own/verify" class="inline-form">
+                    <input type="hidden" name="number" value={n.e164} />
+                    <input type="text" name="code" class="amount" placeholder="code" inputmode="numeric" autocomplete="one-time-code" required /> <button type="submit">verify</button>
+                  </form>
+                )}
+              </td>
+              <td>
+                <form method="post" action="/account/numbers/own/remove" class="inline-form">
+                  <input type="hidden" name="number" value={n.e164} />
+                  <button type="submit" class="linkbutton">remove</button>
+                </form>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
+    <form method="post" action="/account/numbers/own" class="buy">
+      {p.ownNumberError && <p class="err">{p.ownNumberError}</p>}
+      <label for="own-number">add your number</label>
+      <input type="text" id="own-number" name="number" placeholder="(415) 555-0123" inputmode="tel" autocomplete="tel" required />{' '}
+      <select name="method" aria-label="how to send the code">
+        <option value="sms">text me a code</option>
+        <option value="call">call me with a code</option>
+      </select>{' '}
+      <button type="submit">send code</button>
     </form>
     <h2>calls</h2>
     <p class="small">calls are recorded by our phone carrier (Telnyx). open a call to play or save its recording.</p>

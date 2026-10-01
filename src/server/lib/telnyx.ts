@@ -2,7 +2,8 @@
  * The few Telnyx Call Control and Numbers endpoints call4me uses.
  * Docs: developers.telnyx.com/api-reference (dial incl. supervise_call_control_id, switch_supervisor_role,
  * hangup, send_dtmf, answer, streaming_start,
- * available_phone_numbers, number_orders, phone_numbers, requirement_groups, outbound_voice_profiles)
+ * available_phone_numbers, number_orders, phone_numbers, requirement_groups, outbound_voice_profiles,
+ * verified_numbers)
  * and .../receiving-webhooks for signatures.
  */
 
@@ -14,6 +15,8 @@ export class TelnyxError extends Error {
   constructor(
     message: string,
     public status: number,
+    /** Telnyx's own explanation, without the request line. */
+    public detail = '',
   ) {
     super(message);
   }
@@ -34,7 +37,7 @@ async function call<T>(env: TelnyxEnv, method: string, path: string, body?: unkn
     } catch {
       // not JSON; keep the raw text
     }
-    throw new TelnyxError(`telnyx ${method} ${path}: ${res.status} ${detail}`, res.status);
+    throw new TelnyxError(`telnyx ${method} ${path}: ${res.status} ${detail}`, res.status, detail);
   }
   return (text ? JSON.parse(text) : {}) as T;
 }
@@ -249,6 +252,41 @@ export function telnyx(env: TelnyxEnv) {
       const found = r.data.find((n) => n.phone_number === number);
       if (!found) return;
       await call(env, 'DELETE', `/phone_numbers/${encodeURIComponent(found.id)}`);
+    },
+
+    /**
+     * Where Telnyx stands on `number` as caller ID: null when it has no record of it, else when it
+     * was verified (null while its code hasn't been submitted). Telnyx keeps one verified list for
+     * our whole account, so this says nothing about which call4me account proved it.
+     */
+    async verifiedNumber(number: string): Promise<{ verifiedAt: string | null } | null> {
+      try {
+        const r = await call<{ data: { verified_at?: string | null } }>(env, 'GET', `/verified_numbers/${encodeURIComponent(number)}`);
+        return { verifiedAt: r.data.verified_at || null };
+      } catch (err) {
+        if (err instanceof TelnyxError && err.status === 404) return null;
+        throw err;
+      }
+    },
+
+    /** Send a verification code to `number` by text or by a call that reads it out (dialing `extension` once answered). */
+    async requestVerification(number: string, method: 'sms' | 'call', extension?: string | null): Promise<void> {
+      await call(env, 'POST', '/verified_numbers', { phone_number: number, verification_method: method, ...(extension ? { extension } : {}) });
+    },
+
+    /** Submit the code `number` received. Once accepted, the number can be the `from` of our calls. */
+    async submitVerificationCode(number: string, code: string): Promise<void> {
+      const r = await call<{ data?: { verified_at?: string | null } }>(env, 'POST', `/verified_numbers/${encodeURIComponent(number)}/actions/verify`, { verification_code: code });
+      if (!r.data?.verified_at) throw new TelnyxError(`verifying ${number} returned no verified_at`, 502);
+    },
+
+    /** Take `number` off our verified caller IDs. Already gone counts as removed. */
+    async deleteVerifiedNumber(number: string): Promise<void> {
+      try {
+        await call(env, 'DELETE', `/verified_numbers/${encodeURIComponent(number)}`);
+      } catch (err) {
+        if (!(err instanceof TelnyxError && err.status === 404)) throw err;
+      }
     },
 
     /** "approved" once Telnyx has accepted a requirement group's paperwork. */

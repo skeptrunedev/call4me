@@ -2,7 +2,7 @@ import { newId, now } from '../lib/ids';
 import { checkDialable, type PhoneCheck } from '../lib/phone';
 import { accounts, type Account } from './accounts';
 import { catalog, missingMessage, resolveIntake, type Surface } from './intake';
-import { mayCall } from './numbers';
+import { mayCall, ownNumberRefusal } from './numbers';
 import { profiles } from './profiles';
 
 type Dialable = Extract<PhoneCheck, { ok: true }>;
@@ -42,6 +42,8 @@ export interface CallRow {
   direction: 'outbound' | 'inbound';
   to_number: string;
   from_number: string | null;
+  /** Set when from_number is the user's own verified number: the call4me number that rings them to join. */
+  ring_number: string | null;
   business: string;
   goal: string;
   brief: string;
@@ -165,8 +167,12 @@ export function calls(db: D1Database) {
       }
       if (input.from) {
         const from = checkDialable(input.from);
-        const owns = from.ok && (await db.prepare(`SELECT 1 FROM numbers WHERE account_id = ? AND phone_number = ? AND status = 'active'`).bind(account.id, from.e164).first());
-        if (!owns) throw new CallError(`from: ${input.from} is not one of this account's numbers (see call4me_list_numbers)`);
+        const ours = from.ok && (await db.prepare(`SELECT 1 FROM numbers WHERE account_id = ? AND phone_number = ? AND status = 'active'`).bind(account.id, from.e164).first());
+        // Or the user's own number, verified on this account.
+        const own = from.ok && !ours ? await db.prepare(`SELECT phone_number, country FROM verified_numbers WHERE account_id = ? AND phone_number = ? AND status = 'verified'`).bind(account.id, from.e164).first<{ phone_number: string; country: string }>() : null;
+        if (!ours && !own) throw new CallError(`from: ${input.from} is not one of this account's numbers (see call4me_list_numbers)`);
+        const refusal = own && ownNumberRefusal(own, to);
+        if (refusal) throw new CallError(refusal, 422);
       }
       if (input.timezone && !validTimeZone(input.timezone)) throw new CallError(`timezone: "${input.timezone}" is not an IANA time zone like America/New_York`);
 

@@ -13,8 +13,8 @@ import { sessionFor } from '../voice/stub';
 import { catalog, PROFILE_FIELDS, type Surface } from '../services/intake';
 import { ProfileError, profiles } from '../services/profiles';
 import { recordingDescription, recordingInput, recordingOutput } from '../lib/recording-schema';
-import { buyNumberDescription, buyNumberInput, listNumbersDescription, numbersOutput, releaseNumberDescription, releaseNumberInput } from '../lib/number-schema';
-import { mayCall, NumberError, numbers, type NumberView } from '../services/numbers';
+import { buyNumberDescription, buyNumberInput, listNumbersDescription, numbersOutput, ownNumberInput, releaseNumberDescription, releaseNumberInput, removeOwnNumberDescription, verifyNumberDescription, verifyNumberInput } from '../lib/number-schema';
+import { mayCall, NumberError, numbers, type NumberView, type OwnNumberView } from '../services/numbers';
 import { getCallRecordings } from '../services/recordings';
 
 /**
@@ -97,7 +97,9 @@ To put the user on a call themselves: pass connect_when to call4me_place_call (e
 
 Calls go out from the account's own numbers: its free US number, plus any it bought (${agents ? 'call4me_list_numbers, call4me_buy_number' : 'call4me_get_balance lists them'}). Businesses in the US, Canada and Europe can always be called (Europe from a European number when the account holds one, else from its US number), and ${UAE_CALLING}; anywhere else, once the account holds a number in that country, and the call goes out from it.
 
-Every call leaves the calling number as the callback. If a call ends in voicemail or "we'll call you back", call4me remembers the task for 14 days: when the business calls that number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (call4me_get_call lists its callbacks) and in call4me_list_calls.
+${agents ? `The user can also call from their own phone number: verify it once with call4me_verify_number (the carrier texts it a code; ask the user for it), then pass it as from to call4me_place_call. Only when the user asks for it; it is never picked on its own. Businesses in its country see the user's number, and callbacks ring the user's phone instead of call4me; call4me still rings the user from the call's calling_number when they join.
+
+` : ''}Every call leaves the number the business saw as the callback. If a call ends in voicemail or "we'll call you back", call4me remembers the task for 14 days: when the business calls a call4me number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (call4me_get_call lists its callbacks) and in call4me_list_calls.
 
 The caller sounds like a normal person calling for the user. It keeps turns short and does not read the booking back at the end; the recap comes back to you.
 Only call businesses and services the user wants to reach, never personal numbers they don't expect a call from.`;
@@ -119,6 +121,8 @@ function fail(message: string): CallToolResult {
   return { content: [{ type: 'text', text: message }], isError: true };
 }
 
+const callingNumber = (row: CallRow) => row.ring_number ?? row.from_number;
+
 /** The shape every call tool returns: what an agent needs to decide its next step. */
 export function callView(row: CallRow, questions: Question[], callbacks: CallRow[] = []) {
   const outcome = row.outcome ? (JSON.parse(row.outcome) as Outcome) : null;
@@ -133,8 +137,11 @@ export function callView(row: CallRow, questions: Question[], callbacks: CallRow
     direction: row.direction,
     business: row.business,
     number: formatPhone(row.to_number),
-    calling_number: row.from_number ? formatPhone(row.from_number) : null,
-    calling_number_e164: row.from_number,
+    // The call4me number the call is tied to, which rings the user to join. A call placed from the
+    // user's own number (own_number, what the business saw) still rings them from a call4me number.
+    calling_number: callingNumber(row) ? formatPhone(callingNumber(row)!) : null,
+    calling_number_e164: callingNumber(row),
+    own_number: row.ring_number && row.from_number ? formatPhone(row.from_number) : null,
     goal: row.goal,
     outcome,
     callback_for: row.callback_for,
@@ -152,6 +159,7 @@ export function callView(row: CallRow, questions: Question[], callbacks: CallRow
 
 function callText(v: ReturnType<typeof callView>): string {
   const lines = [`${v.id} · ${v.status}${v.finished ? '' : v.status === 'completed' ? ' (writing the recap)' : ' (in progress)'} · ${v.business} ${v.number}`];
+  if (v.own_number) lines.push(`called from the user's own number ${v.own_number}: the business saw it, and callbacks go to their phone`);
   if (v.calling_number) lines.push(`call4me number: ${v.calling_number} (the number that rings the user when they join)`);
   if (v.open_questions.length) {
     lines.push('', 'OPEN QUESTION (the business is waiting on the line; answer now with call4me_answer_question):');
@@ -217,7 +225,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         listen_in: z.boolean().optional().describe('ring the user as soon as the business answers so they can listen in: nobody on the call hears them and the caller keeps working. They press 1 anytime to take over, or hang up to stop listening. Rings the phone in their profile.'),
         max_minutes: z.number().int().min(1).max(LIMITS.maxMinutes).optional().describe(`hard cap on talk time (default ${LIMITS.defaultMaxMinutes})`),
         voice: z.enum(VOICES).optional().describe('caller voice (default marin); hear each at https://call4.me/voices'),
-        from: z.string().max(40).optional().describe('which of the account\'s numbers to call from (default: one in the callee\'s country)'),
+        from: z.string().max(40).optional().describe(`which of the account's numbers to call from (default: a call4me number in the callee's country)${agents ? '. May be one of the user\'s own verified numbers (call4me_verify_number), for businesses in its country: they see it and call back the user directly' : ''}`),
       }),
       annotations: DIALS,
     }),
@@ -225,7 +233,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       guard(async () => {
         const row = await placeCall(env, deps.origin, account, args, surface);
         const v = callView(row, []);
-        return ok(`calling ${v.business} at ${v.number} (${v.id}), ${dollars(pricePerMinuteTo(env, row.to_number))}/min of talk time. Your call4me number is ${v.calling_number}; show it to the user so they recognize a call if they need to join. Poll call4me_get_call with wait_seconds: 30 until finished, and answer any open question immediately.`, v);
+        return ok(`calling ${v.business} at ${v.number} (${v.id}), ${dollars(pricePerMinuteTo(env, row.to_number))}/min of talk time.${v.own_number ? ` It shows the user's own number ${v.own_number}, so callbacks go straight to their phone.` : ''} Your call4me number is ${v.calling_number}; show it to the user so they recognize a call if they need to join. Poll call4me_get_call with wait_seconds: 30 until finished, and answer any open question immediately.`, v);
       })()) as never,
   );
 
@@ -471,12 +479,13 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
     (async () =>
       guard(async () => {
         const n = numbers(env);
-        const [owned, countries] = await Promise.all([n.views(account.id), n.offers()]);
+        const [owned, own, countries] = await Promise.all([n.views(account.id), n.ownViews(account.id), n.offers()]);
         const text = [
           owned.length ? `your numbers:\n${owned.map((v) => `- ${numberText(v)}`).join('\n')}` : 'no numbers yet: the free US number is bought on the first call.',
+          ...(own.length ? [`the user's own numbers (calls use one only when from names it):\n${own.map((v) => `- ${ownNumberText(v)}`).join('\n')}`] : []),
           `countries (number price today, then monthly; calls there cost ${dollars(pricePerMinute(env))}/min unless noted):\n${countries.map((c) => `- ${c.country} ${c.name} (${c.type}): ${c.available ? `${c.price}, then ${c.monthly}/month${DESTINATION_PRICE_CENTS[c.country] ? `; calls ${dollars(DESTINATION_PRICE_CENTS[c.country]!)}/min` : ''}` : c.reason}`).join('\n')}`,
         ].join('\n\n');
-        return ok(text, { numbers: owned, countries });
+        return ok(text, { numbers: owned, own_numbers: own, countries });
       })()) as never,
   );
 
@@ -500,6 +509,35 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
         return ok(`released ${released.number}; its monthly charge has stopped.`, { released });
       })()) as never,
   );
+
+  server.registerTool(
+    'call4me_verify_number',
+    titled({ title: 'Call from your own number', description: verifyNumberDescription, inputSchema: verifyNumberInput, annotations: OPEN }),
+    (async (args: { number: string; code?: string; method: 'sms' | 'call'; extension?: string }) =>
+      guard(async () => {
+        const n = numbers(env);
+        if (args.code) {
+          const verified = await n.confirmVerification(account, args.number, args.code);
+          return ok(`verified ${verified.number}. Calls go out from it when call4me_place_call has from: "${verified.e164}"; businesses see it and call back the user's phone directly.`, { number: verified });
+        }
+        const pending = await n.startVerification(account, { number: args.number, method: args.method, extension: args.extension });
+        return ok(`${pending.method === 'sms' ? 'texted' : 'calling'} ${pending.number} with a code. Ask the user for it, then call call4me_verify_number again with the same number and code.`, { number: pending });
+      })()) as never,
+  );
+
+  server.registerTool(
+    'call4me_remove_own_number',
+    titled({ title: 'Stop calling from your own number', description: removeOwnNumberDescription, inputSchema: ownNumberInput, annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true } }),
+    (async (args: { number: string }) =>
+      guard(async () => {
+        const removed = await numbers(env).removeOwn(account, args.number);
+        return ok(`removed ${removed.number}; calls no longer go out from it.`, { removed });
+      })()) as never,
+  );
+}
+
+function ownNumberText(v: OwnNumberView): string {
+  return `${v.number} (${v.country_name}, ${v.status === 'verified' ? 'verified' : `waiting on the ${v.method === 'sms' ? 'texted' : 'called'} code`})`;
 }
 
 function numberText(v: NumberView): string {

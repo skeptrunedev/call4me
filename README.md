@@ -20,6 +20,11 @@ agent ──MCP──▶ worker ──POST /v2/calls──▶ Telnyx ──PSTN�
   no recording notice, no end-of-call read-back; honest if sincerely asked whether it's an AI.
 - `src/server/voice/session.ts`: the audio relay and back-office functions.
 - `src/server/services/dialer.ts`: placing calls, per-account numbers, answering callbacks.
+- `src/server/services/numbers.ts`: the account's call4me numbers, and the user's own numbers
+  verified to call from. Telnyx keeps one verified-number list for our whole carrier account, so
+  `verified_numbers` ties each to the one call4me account that submitted a fresh code for it; a
+  number Telnyx already lists as verified is never handed to another account. A call from an own
+  number (`from`) only reaches businesses in its country, and still rings the user from a call4me number.
 - `src/server/mcp/server.ts`: the MCP tools.
 
 The app does not request recording when dialing or answering. Existing recordings stored by Telnyx

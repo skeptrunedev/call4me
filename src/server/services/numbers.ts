@@ -1,4 +1,5 @@
 import { newId, now } from '../lib/ids';
+import { CODE_ATTEMPTS, VERIFICATIONS_PER_DAY } from '../lib/number-schema';
 import { checkDialable, formatPhone, type PhoneCheck } from '../lib/phone';
 import { telnyx, TelnyxError, type AvailableNumber } from '../lib/telnyx';
 import { accounts, dollars, type Account } from './accounts';
@@ -9,6 +10,12 @@ import { accounts, dollars, type Account } from './accounts';
  * charges: the upfront and first month's cost when bought, then the monthly cost every 30
  * days. A number whose renewal the balance can't cover is released after a grace period.
  * Owning a number in a country is what lets an account call businesses there.
+ *
+ * An account can also call from the user's own phone number once it proves it holds that phone
+ * (verified_numbers): the carrier texts or reads out a code, and the code comes back through
+ * call4me. Telnyx keeps one verified list for our whole carrier account, so a number is
+ * verified for one call4me account at a time, and only ever from a fresh code: a number the
+ * carrier already lists as verified is never handed to another account.
  */
 
 /**
@@ -45,6 +52,9 @@ export const RENEWAL_DAYS = 30;
 /** How long a number is kept after its renewal failed for lack of credits. */
 export const GRACE_DAYS = 7;
 
+/** A NANP (+1) number: US, Canadian and Puerto Rican numbers call each other's businesses. */
+const isHome = (e164: string) => e164.startsWith('+1');
+
 export class NumberError extends Error {
   constructor(
     message: string,
@@ -69,6 +79,7 @@ export interface NumberRow {
 }
 
 export interface NumberView {
+  kind: 'call4me';
   number: string;
   e164: string;
   country: string;
@@ -82,6 +93,32 @@ export interface NumberView {
   /** True once a renewal failed; the number is released at `release_after` unless credits are added. */
   overdue: boolean;
   release_after: string | null;
+}
+
+/** The user's own number, verified (or being verified) to call from. */
+export interface VerifiedNumberRow {
+  id: string;
+  account_id: string;
+  phone_number: string;
+  country: string;
+  method: 'sms' | 'call';
+  status: 'pending' | 'verified' | 'expired' | 'removed';
+  attempts: number;
+  created_at: number;
+  verified_at: number | null;
+  removed_at: number | null;
+}
+
+export interface OwnNumberView {
+  kind: 'own';
+  number: string;
+  e164: string;
+  country: string;
+  country_name: string;
+  /** pending: the code was sent and hasn't come back yet. */
+  status: 'pending' | 'verified';
+  method: 'sms' | 'call';
+  verified_at: string | null;
 }
 
 export interface CountryOffer {
@@ -114,6 +151,7 @@ const day = (ms: number) => new Date(ms).toISOString().slice(0, 10);
 export function numberView(r: NumberRow, at = now()): NumberView {
   const overdue = !r.included && r.paid_through !== null && r.paid_through <= at;
   return {
+    kind: 'call4me',
     number: formatPhone(r.phone_number),
     e164: r.phone_number,
     country: r.country,
@@ -126,6 +164,29 @@ export function numberView(r: NumberRow, at = now()): NumberView {
     overdue,
     release_after: overdue ? day(r.paid_through! + GRACE_DAYS * DAY) : null,
   };
+}
+
+export function ownNumberView(r: VerifiedNumberRow): OwnNumberView {
+  return {
+    kind: 'own',
+    number: formatPhone(r.phone_number),
+    e164: r.phone_number,
+    country: r.country,
+    country_name: COUNTRIES[r.country]?.name ?? r.country,
+    status: r.status === 'verified' ? 'verified' : 'pending',
+    method: r.method,
+    verified_at: r.verified_at === null ? null : new Date(r.verified_at).toISOString(),
+  };
+}
+
+/**
+ * Why the user's own number can't be the caller ID on a call to `to`, or null when it can. Telnyx
+ * refuses a caller ID it doesn't own on international calls (support.telnyx.com/en/articles/3546251),
+ * so an own number only calls its own country, or any +1 number when it is a +1 number.
+ */
+export function ownNumberRefusal(own: Pick<VerifiedNumberRow, 'phone_number' | 'country'>, to: Extract<PhoneCheck, { ok: true }>): string | null {
+  if (isHome(own.phone_number) ? to.home : own.country === to.country) return null;
+  return `from: your own number ${formatPhone(own.phone_number)} can only call ${isHome(own.phone_number) ? 'US and Canadian' : `${COUNTRIES[own.country]?.name ?? own.country}`} numbers; the carrier refuses it as caller ID on international calls`;
 }
 
 /**
@@ -159,8 +220,11 @@ export async function mayCall(db: D1Database, accountId: string, to: Extract<Pho
   return Boolean(await db.prepare(`SELECT 1 FROM numbers WHERE account_id = ? AND country = ? AND status = 'active'`).bind(accountId, to.country).first());
 }
 
-/** A NANP (+1) number: US, Canadian and Puerto Rican numbers call each other's businesses. */
-const isHome = (e164: string) => e164.startsWith('+1');
+/**
+ * The carrier refusing a verification request or a code is the user's to fix (a number that
+ * can't take texts, a wrong code); anything else is carrier trouble (carrier()).
+ */
+const refused = (err: unknown): err is TelnyxError => err instanceof TelnyxError && err.status >= 400 && err.status < 500 && ![401, 403, 429].includes(err.status);
 
 export function numbers(env: Env) {
   const db = env.DB;
@@ -188,6 +252,100 @@ export function numbers(env: Env) {
       .prepare(`INSERT OR REPLACE INTO number_offers (country, available, reason, upfront_cents, monthly_cents, checked_at) VALUES (?, ?, ?, ?, ?, ?)`)
       .bind(country, quote ? 1 : 0, quote ? null : (reason ?? `no ${COUNTRIES[country].name} numbers are for sale right now`), quote?.upfrontCents ?? null, quote?.monthlyCents ?? null, now())
       .run();
+  }
+
+  /** The account's own numbers, verified or waiting on their code. */
+  async function own(accountId: string): Promise<VerifiedNumberRow[]> {
+    const { results } = await db.prepare(`SELECT * FROM verified_numbers WHERE account_id = ? AND status IN ('pending', 'verified') ORDER BY created_at`).bind(accountId).all<VerifiedNumberRow>();
+    return results;
+  }
+
+  /** Which account `e164` is verified for, if any. */
+  async function verifiedFor(e164: string): Promise<VerifiedNumberRow | null> {
+    return db.prepare(`SELECT * FROM verified_numbers WHERE phone_number = ? AND status = 'verified'`).bind(e164).first<VerifiedNumberRow>();
+  }
+
+  /** The E.164 form of an own number as people type it. */
+  function ownE164(number: string): Extract<PhoneCheck, { ok: true }> {
+    const p = checkDialable(number);
+    if (!p.ok) throw new NumberError(`number: ${p.reason}`);
+    return p;
+  }
+
+  /** Refuses a number some account (this one or another) already has verified. */
+  async function assertUnclaimed(account: Account, e164: string): Promise<void> {
+    const holder = await verifiedFor(e164);
+    if (holder) throw new NumberError(holder.account_id === account.id ? `${formatPhone(e164)} is already verified on this account` : `${formatPhone(e164)} is verified on another call4me account; remove it there first`, 409);
+  }
+
+  /**
+   * Refuses a number the carrier already lists as verified. Its verify call might accept it
+   * without a fresh code, which would prove nothing about who holds the phone.
+   */
+  async function assertNotAtCarrier(e164: string): Promise<void> {
+    if (!(await provider.verifiedNumber(e164))?.verifiedAt) return;
+    console.error('verified at the carrier with no call4me account holding it', e164);
+    throw new NumberError(`${formatPhone(e164)} can't be verified on call4me right now`, 409);
+  }
+
+  async function startVerification(account: Account, opts: { number: string; method: 'sms' | 'call'; extension?: string | null }): Promise<OwnNumberView> {
+    const p = ownE164(opts.number);
+    if (opts.extension && opts.method !== 'call') throw new NumberError('extension: only a verification call can dial an extension');
+    if (!CALLABLE.includes(p.country)) throw new NumberError(`call4me doesn't place calls in ${p.country}, so a number there can't be verified`);
+    if (await db.prepare(`SELECT 1 FROM numbers WHERE phone_number = ? AND status = 'active'`).bind(p.e164).first()) throw new NumberError(`${formatPhone(p.e164)} is a call4me number, not your own phone`, 409);
+    await assertUnclaimed(account, p.e164);
+    const sent = await db.prepare(`SELECT COUNT(*) AS n FROM verified_numbers WHERE account_id = ? AND created_at > ?`).bind(account.id, now() - DAY).first<{ n: number }>();
+    if ((sent?.n ?? 0) >= VERIFICATIONS_PER_DAY) throw new NumberError(`at most ${VERIFICATIONS_PER_DAY} verification codes a day; try again tomorrow`, 429);
+    await assertNotAtCarrier(p.e164);
+    try {
+      await provider.requestVerification(p.e164, opts.method, opts.extension);
+    } catch (err) {
+      if (refused(err)) throw new NumberError(`the carrier could not send a code to ${formatPhone(p.e164)}: ${err.detail}`);
+      throw err;
+    }
+    // Only the newest code request counts; an older one waiting on its code is superseded.
+    await db.prepare(`UPDATE verified_numbers SET status = 'expired' WHERE account_id = ? AND phone_number = ? AND status = 'pending'`).bind(account.id, p.e164).run();
+    const id = newId();
+    await db
+      .prepare(`INSERT INTO verified_numbers (id, account_id, phone_number, country, method, status, attempts, created_at) VALUES (?, ?, ?, ?, ?, 'pending', 0, ?)`)
+      .bind(id, account.id, p.e164, p.country, opts.method, now())
+      .run();
+    return ownNumberView((await db.prepare(`SELECT * FROM verified_numbers WHERE id = ?`).bind(id).first<VerifiedNumberRow>())!);
+  }
+
+  async function confirmVerification(account: Account, number: string, code: string): Promise<OwnNumberView> {
+    const p = ownE164(number);
+    const row = await db
+      .prepare(`SELECT * FROM verified_numbers WHERE account_id = ? AND phone_number = ? AND status = 'pending' ORDER BY created_at DESC LIMIT 1`)
+      .bind(account.id, p.e164)
+      .first<VerifiedNumberRow>();
+    if (!row) throw new NumberError(`no code is waiting for ${formatPhone(p.e164)}; request one first`, 404);
+    await assertUnclaimed(account, p.e164);
+    // Checked again here: another request's code may have been accepted since this one was sent.
+    await assertNotAtCarrier(p.e164);
+    try {
+      await provider.submitVerificationCode(p.e164, code);
+    } catch (err) {
+      if (!refused(err)) throw err;
+      const attempts = row.attempts + 1;
+      const left = CODE_ATTEMPTS - attempts;
+      await db.prepare(`UPDATE verified_numbers SET attempts = ?, status = ? WHERE id = ?`).bind(attempts, left > 0 ? 'pending' : 'expired', row.id).run();
+      throw new NumberError(`that code was not accepted; ${left > 0 ? `${left} ${left === 1 ? 'try' : 'tries'} left` : 'request a new code'}`);
+    }
+    const at = now();
+    await db.prepare(`UPDATE verified_numbers SET status = 'verified', verified_at = ? WHERE id = ?`).bind(at, row.id).run();
+    return ownNumberView({ ...row, status: 'verified', verified_at: at });
+  }
+
+  async function removeOwn(account: Account, number: string): Promise<OwnNumberView> {
+    const p = checkDialable(number);
+    const e164 = p.ok ? p.e164 : number.trim();
+    const row = await db.prepare(`SELECT * FROM verified_numbers WHERE account_id = ? AND phone_number = ? AND status IN ('pending', 'verified')`).bind(account.id, e164).first<VerifiedNumberRow>();
+    if (!row) throw new NumberError('no such number on this account', 404);
+    // Off the carrier's list too, so the next account to verify it starts from a fresh code.
+    if (row.status === 'verified') await provider.deleteVerifiedNumber(row.phone_number);
+    await db.prepare(`UPDATE verified_numbers SET status = 'removed', removed_at = ? WHERE id = ?`).bind(now(), row.id).run();
+    return ownNumberView(row);
   }
 
   async function order(found: AvailableNumber, country: string): Promise<void> {
@@ -234,6 +392,30 @@ export function numbers(env: Env) {
 
     async views(accountId: string): Promise<NumberView[]> {
       return (await active(accountId)).map((r) => numberView(r));
+    },
+
+    /** The user's own numbers on the account: verified to call from, or waiting on their code. */
+    async ownViews(accountId: string): Promise<OwnNumberView[]> {
+      return (await own(accountId)).map(ownNumberView);
+    },
+
+    /**
+     * Have the carrier text `number` a code, or call it and read the code out (dialing `extension`
+     * once answered). The number becomes the account's to call from once confirmVerification gets
+     * that code back. At most VERIFICATIONS_PER_DAY requests a day.
+     */
+    async startVerification(account: Account, opts: { number: string; method: 'sms' | 'call'; extension?: string | null }): Promise<OwnNumberView> {
+      return carrier(() => startVerification(account, opts));
+    },
+
+    /** Hand the code back. CODE_ATTEMPTS wrong codes and a new one has to be requested. */
+    async confirmVerification(account: Account, number: string, code: string): Promise<OwnNumberView> {
+      return carrier(() => confirmVerification(account, number, code));
+    },
+
+    /** Stop calling from one of the user's own numbers (or drop one waiting on its code). */
+    async removeOwn(account: Account, number: string): Promise<OwnNumberView> {
+      return carrier(() => removeOwn(account, number));
     },
 
     /** Every country numbers are sold in, with its price as of the last refresh (at most ~15 minutes old). */
@@ -296,25 +478,34 @@ export function numbers(env: Env) {
     },
 
     /**
-     * The number a call to `to` goes out from: `requested` when given (it must be one of the
-     * account's), else one in the callee's country, else (calling Europe) a European one, else
-     * (calling a +1 number or a FROM_HOME country) its US number, buying the free one on the first call.
+     * The number a call to `to` goes out from: `requested` when given (one of the account's
+     * call4me numbers, or one of the user's own verified numbers: `own`), else one in the callee's
+     * country, else (calling Europe) a European one, else (calling a +1 number or a FROM_HOME
+     * country) its US number, buying the free one on the first call. An own number is never
+     * picked unless requested.
      */
-    async callerId(account: Account, to: Extract<PhoneCheck, { ok: true }>, requested?: string | null): Promise<string> {
+    async callerId(account: Account, to: Extract<PhoneCheck, { ok: true }>, requested?: string | null): Promise<{ number: string; own: boolean }> {
       const owned = await active(account.id);
       if (requested) {
         const p = checkDialable(requested);
         const match = p.ok && owned.find((n) => n.phone_number === p.e164);
-        if (!match) throw new NumberError(`from: ${requested} is not one of this account's numbers (${owned.map((n) => formatPhone(n.phone_number)).join(', ') || 'none yet'})`);
-        return match.phone_number;
+        if (match) return { number: match.phone_number, own: false };
+        const verified = p.ok ? await verifiedFor(p.e164) : null;
+        if (verified?.account_id === account.id) {
+          const refusal = ownNumberRefusal(verified, to);
+          if (refusal) throw new NumberError(refusal, 422);
+          return { number: verified.phone_number, own: true };
+        }
+        const choices = [...owned.map((n) => n.phone_number), ...(await own(account.id)).filter((n) => n.status === 'verified').map((n) => n.phone_number)];
+        throw new NumberError(`from: ${requested} is not one of this account's numbers (${choices.map(formatPhone).join(', ') || 'none yet'})`);
       }
       const sameCountry = owned.find((n) => n.country === to.country);
-      if (sameCountry) return sameCountry.phone_number;
+      if (sameCountry) return { number: sameCountry.phone_number, own: false };
       if (EUROPE.has(to.country)) {
         const european = owned.find((n) => EUROPE.has(n.country));
-        if (european) return european.phone_number;
+        if (european) return { number: european.phone_number, own: false };
       }
-      if (to.home || FROM_HOME.has(to.country)) return owned.find((n) => isHome(n.phone_number))?.phone_number ?? (await this.ensureIncluded(account, to.e164));
+      if (to.home || FROM_HOME.has(to.country)) return { number: owned.find((n) => isHome(n.phone_number))?.phone_number ?? (await this.ensureIncluded(account, to.e164)), own: false };
       throw new NumberError(`calling ${COUNTRIES[to.country]?.name ?? to.country} needs a number there; buy one with call4me_buy_number`, 422);
     },
 

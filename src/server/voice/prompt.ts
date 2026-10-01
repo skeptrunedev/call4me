@@ -26,8 +26,10 @@ export interface CallBrief {
   facts: string;
   /** What the caller may accept without asking: "any time 6:30-8pm", "up to $400". */
   flexibility: string;
-  /** The account's own call4me number: the only number the business is given to call back. */
+  /** The number the call comes from: the only number the business is given to call back. */
   callbackNumber: string;
+  /** The callback number is the owner's own phone rather than a call4me number: callbacks reach them directly. */
+  callbackRingsOwner: boolean;
   /** Local date and time at the business, so "tomorrow" means something. Null when the time zone is unknown. */
   localTime: string | null;
   /** The person call4me works for, who can be patched into the call. */
@@ -74,7 +76,7 @@ ${b.facts.trim() || '(nothing beyond the task itself)'}
 What you can agree to without checking:
 ${b.flexibility.trim() || '(only exactly what the task says)'}
 
-The callback number is ${spokenPhone(b.callbackNumber)}. Whenever they want a number to call back or text, and on any voicemail, give this one and only this one, even if another phone number appears above (that one is only for verifying an account).
+The callback number is ${spokenPhone(b.callbackNumber)}${b.callbackRingsOwner ? `, ${b.owner}'s own phone: a callback reaches ${b.owner} directly` : ''}. Whenever they want a number to call back or text, and on any voicemail, give this one and only this one, even if another phone number appears above (that one is only for verifying an account).
 ${b.localTime ? `It's ${b.localTime} for them right now.\n` : ''}
 ${delegationPolicy(b.onBehalfOf, b.owner, b.connectWhen)}
 

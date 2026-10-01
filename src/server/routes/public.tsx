@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { field, origin, ownerKey, stripeFor, viewerKey, visitor, type AppContext, type AppEnv } from '../lib/context';
 import { accountPrompt, callPrompt, examplesPrompt, voicesPrompt, installPrompt, privacyPrompt, rulesPrompt, supportPrompt, termsPrompt } from '../lib/prompts';
+import { confirmVerificationInput } from '../lib/number-schema';
 import { callView } from '../mcp/server';
 import { accounts, type Account } from '../services/accounts';
 import { ACTIVE, calls, CallError } from '../services/calls';
@@ -73,12 +74,13 @@ pub.get('/welcome', async (c) => {
 
 // ---- account
 
-async function accountPage(c: AppContext, account: Account, errors: { error?: string; numberError?: string } = {}) {
+async function accountPage(c: AppContext, account: Account, errors: { error?: string; numberError?: string; ownNumberError?: string } = {}) {
   const n = numbers(c.env);
-  const [balance, rows, owned, offers, reload, key] = await Promise.all([
+  const [balance, rows, owned, own, offers, reload, key] = await Promise.all([
     accounts(c.env.DB).balanceCents(account.id),
     calls(c.env.DB).list(account.id, 50),
     n.views(account.id),
+    n.ownViews(account.id),
     n.offers(),
     reloadOf(c.env.DB, account.id),
     ownerKey(c, account),
@@ -89,6 +91,7 @@ async function accountPage(c: AppContext, account: Account, errors: { error?: st
       balanceCents={balance}
       pricePerMinuteCents={pricePerMinute(c.env)}
       numbers={owned}
+      ownNumbers={own}
       offers={offers}
       reload={reload}
       calls={rows.map((r) => callView(r, []))}
@@ -96,7 +99,7 @@ async function accountPage(c: AppContext, account: Account, errors: { error?: st
       agentPrompt={accountPrompt(origin(c), key)}
       {...errors}
     />,
-    errors.error || errors.numberError ? 400 : 200,
+    errors.error || errors.numberError || errors.ownNumberError ? 400 : 200,
   );
 }
 
@@ -140,6 +143,47 @@ pub.post('/account/numbers/release', async (c) => {
     return c.redirect('/account', 303);
   } catch (err) {
     if (err instanceof NumberError) return accountPage(c, account, { numberError: err.message });
+    throw err;
+  }
+});
+
+pub.post('/account/numbers/own', async (c) => {
+  const account = c.get('account');
+  if (!account) return c.redirect('/login?next=/account', 302);
+  const form = await c.req.formData();
+  try {
+    await numbers(c.env).startVerification(account, { number: field(form, 'number', 40), method: field(form, 'method', 4) === 'call' ? 'call' : 'sms' });
+    return c.redirect('/account', 303);
+  } catch (err) {
+    if (err instanceof NumberError) return accountPage(c, account, { ownNumberError: err.message });
+    throw err;
+  }
+});
+
+pub.post('/account/numbers/own/verify', async (c) => {
+  const account = c.get('account');
+  if (!account) return c.redirect('/login?next=/account', 302);
+  const form = await c.req.formData();
+  const code = confirmVerificationInput.safeParse({ code: field(form, 'code', 40).replace(/[\s-]/g, '') });
+  if (!code.success) return accountPage(c, account, { ownNumberError: 'code: the letters and digits you received' });
+  try {
+    await numbers(c.env).confirmVerification(account, field(form, 'number', 40), code.data.code);
+    return c.redirect('/account', 303);
+  } catch (err) {
+    if (err instanceof NumberError) return accountPage(c, account, { ownNumberError: err.message });
+    throw err;
+  }
+});
+
+pub.post('/account/numbers/own/remove', async (c) => {
+  const account = c.get('account');
+  if (!account) return c.redirect('/login?next=/account', 302);
+  const form = await c.req.formData();
+  try {
+    await numbers(c.env).removeOwn(account, field(form, 'number', 40));
+    return c.redirect('/account', 303);
+  } catch (err) {
+    if (err instanceof NumberError) return accountPage(c, account, { ownNumberError: err.message });
     throw err;
   }
 });

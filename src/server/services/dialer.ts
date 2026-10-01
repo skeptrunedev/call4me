@@ -74,9 +74,13 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
 
   try {
     await voiceDeployDone(env);
-    const from = await numbers(env).callerId(account, to, input.from);
-    await env.DB.prepare(`UPDATE calls SET from_number = ? WHERE id = ?`).bind(from, call.id).run();
-    const person = await personFor(env, origin, account, from, brief.connect_when ?? null, brief.listen_in ?? false);
+    const n = numbers(env);
+    const caller = await n.callerId(account, to, input.from);
+    const from = caller.number;
+    // The user's phone always rings from a call4me number, never from their own.
+    const ring = caller.own ? (await n.callerId(account, to)).number : from;
+    await env.DB.prepare(`UPDATE calls SET from_number = ?, ring_number = ? WHERE id = ?`).bind(from, caller.own ? ring : null, call.id).run();
+    const person = await personFor(env, origin, account, ring, brief.connect_when ?? null, brief.listen_in ?? false);
     const cb = {
       onBehalfOf: brief.on_behalf_of,
       business: call.business,
@@ -84,8 +88,10 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       // Secrets were masked in the stored brief; the caller gets the real values.
       facts: secrets.reduce((f, sec) => f.replace(`${sec.label}: ${SECRET_MASK}`, `${sec.label}: ${sec.value} (share only when they ask to verify the account)`), brief.facts),
       flexibility: brief.flexibility,
-      // Callbacks always come to the account's own number, which answers and takes a message.
+      // Callbacks come to the number the business saw: a call4me number answers and takes a
+      // message, the user's own number rings the user.
       callbackNumber: from,
+      callbackRingsOwner: caller.own,
       localTime: localTimeIn(brief.timezone),
       owner: person.name,
       connectWhen: brief.connect_when ?? null,

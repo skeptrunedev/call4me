@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "call4me API",
-    "version": "1.1.0",
-    "description": "Manage the account's phone numbers and retrieve existing call recordings. Phone calls and other account tools are available through MCP."
+    "version": "1.2.0",
+    "description": "Manage the account's phone numbers (including the user's own, verified to call from) and retrieve existing call recordings. Phone calls and other account tools are available through MCP."
   },
   "servers": [
     {
@@ -23,7 +23,7 @@
     "/api/numbers": {
       "get": {
         "operationId": "listNumbers",
-        "description": "The account's phone numbers, and the countries more can be bought in with today's prices. Calls go out from a number in the callee's country when the account holds one. US, Canadian and European businesses can always be called (Europe from a European number if the account has one, else from its US number), and UAE businesses too, from the account's US number (the business sees a US caller ID), at $0.40/min; elsewhere, a number in the country is what lets the account call there. Numbers cost exactly what the carrier charges: the upfront cost plus the first month when bought, then the monthly cost every 30 days, taken from the balance.",
+        "description": "The account's phone numbers, and the countries more can be bought in with today's prices. Calls go out from a number in the callee's country when the account holds one. US, Canadian and European businesses can always be called (Europe from a European number if the account has one, else from its US number), and UAE businesses too, from the account's US number (the business sees a US caller ID), at $0.40/min; elsewhere, a number in the country is what lets the account call there. Numbers cost exactly what the carrier charges: the upfront cost plus the first month when bought, then the monthly cost every 30 days, taken from the balance. own_numbers are the user's own phone numbers verified with call4me_verify_number: free, and used only when call4me_place_call names one in from.",
         "security": [
           {
             "bearerAuth": []
@@ -43,6 +43,11 @@
                       "items": {
                         "type": "object",
                         "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "call4me",
+                            "description": "a number call4me holds for the account"
+                          },
                           "number": {
                             "type": "string",
                             "description": "formatted for people"
@@ -93,6 +98,7 @@
                           }
                         },
                         "required": [
+                          "kind",
                           "number",
                           "e164",
                           "country",
@@ -107,6 +113,67 @@
                         ],
                         "additionalProperties": false
                       }
+                    },
+                    "own_numbers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "own",
+                            "description": "the user's own phone number, verified to call from"
+                          },
+                          "number": {
+                            "type": "string",
+                            "description": "formatted for people"
+                          },
+                          "e164": {
+                            "type": "string"
+                          },
+                          "country": {
+                            "type": "string",
+                            "description": "ISO 3166-1 alpha-2"
+                          },
+                          "country_name": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "pending",
+                              "verified"
+                            ],
+                            "description": "pending: the code was sent and has not come back yet"
+                          },
+                          "method": {
+                            "type": "string",
+                            "enum": [
+                              "sms",
+                              "call"
+                            ],
+                            "description": "how the code was sent"
+                          },
+                          "verified_at": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "number",
+                          "e164",
+                          "country",
+                          "country_name",
+                          "status",
+                          "method",
+                          "verified_at"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "description": "the user's own phone numbers: calls go out from one only when place_call names it in from"
                     },
                     "countries": {
                       "type": "array",
@@ -187,6 +254,7 @@
                   },
                   "required": [
                     "numbers",
+                    "own_numbers",
                     "countries"
                   ],
                   "additionalProperties": false
@@ -258,6 +326,11 @@
                   "$schema": "https://json-schema.org/draft/2020-12/schema",
                   "type": "object",
                   "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "call4me",
+                      "description": "a number call4me holds for the account"
+                    },
                     "number": {
                       "type": "string",
                       "description": "formatted for people"
@@ -308,6 +381,7 @@
                     }
                   },
                   "required": [
+                    "kind",
                     "number",
                     "e164",
                     "country",
@@ -469,6 +543,11 @@
                   "$schema": "https://json-schema.org/draft/2020-12/schema",
                   "type": "object",
                   "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "call4me",
+                      "description": "a number call4me holds for the account"
+                    },
                     "number": {
                       "type": "string",
                       "description": "formatted for people"
@@ -519,6 +598,7 @@
                     }
                   },
                   "required": [
+                    "kind",
                     "number",
                     "e164",
                     "country",
@@ -573,6 +653,564 @@
             }
           },
           "409": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/numbers/own": {
+      "post": {
+        "operationId": "sendNumberVerification",
+        "description": "Send a verification code to the user's own phone number: a text, or a call that reads the code out. Submit the code with POST /api/numbers/own/{number}/verify. At most 5 codes a day.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 40,
+                    "description": "the user's own phone number, e.g. \"+14155550123\" or \"(415) 555-0123\""
+                  },
+                  "method": {
+                    "default": "sms",
+                    "description": "how to send the code: a text, or a call that reads it out (for landlines)",
+                    "type": "string",
+                    "enum": [
+                      "sms",
+                      "call"
+                    ]
+                  },
+                  "extension": {
+                    "description": "keys the verification call dials once answered, to get past a phone menu to an extension; w waits half a second, W one second. method \"call\" only",
+                    "type": "string",
+                    "pattern": "^[0-9A-D*#wW]{1,50}$"
+                  }
+                },
+                "required": [
+                  "number",
+                  "method"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "The code was sent; the number waits on it",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "own",
+                      "description": "the user's own phone number, verified to call from"
+                    },
+                    "number": {
+                      "type": "string",
+                      "description": "formatted for people"
+                    },
+                    "e164": {
+                      "type": "string"
+                    },
+                    "country": {
+                      "type": "string",
+                      "description": "ISO 3166-1 alpha-2"
+                    },
+                    "country_name": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "verified"
+                      ],
+                      "description": "pending: the code was sent and has not come back yet"
+                    },
+                    "method": {
+                      "type": "string",
+                      "enum": [
+                        "sms",
+                        "call"
+                      ],
+                      "description": "how the code was sent"
+                    },
+                    "verified_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "number",
+                    "e164",
+                    "country",
+                    "country_name",
+                    "status",
+                    "method",
+                    "verified_at"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/numbers/own/{number}/verify": {
+      "post": {
+        "operationId": "confirmNumberVerification",
+        "description": "Submit the code the user's own number received. Once accepted, calls can go out from it (from in call4me_place_call), to businesses in its own country.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "number",
+            "in": "path",
+            "required": true,
+            "description": "E.164, URL-encoded (+ as %2B)",
+            "schema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 40,
+              "description": "one of the user's own numbers on the account, e.g. \"+14155550123\""
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "pattern": "^[0-9A-Za-z]{3,12}$",
+                    "description": "the code the user received"
+                  }
+                },
+                "required": [
+                  "code"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The number, verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "own",
+                      "description": "the user's own phone number, verified to call from"
+                    },
+                    "number": {
+                      "type": "string",
+                      "description": "formatted for people"
+                    },
+                    "e164": {
+                      "type": "string"
+                    },
+                    "country": {
+                      "type": "string",
+                      "description": "ISO 3166-1 alpha-2"
+                    },
+                    "country_name": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "verified"
+                      ],
+                      "description": "pending: the code was sent and has not come back yet"
+                    },
+                    "method": {
+                      "type": "string",
+                      "enum": [
+                        "sms",
+                        "call"
+                      ],
+                      "description": "how the code was sent"
+                    },
+                    "verified_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "number",
+                    "e164",
+                    "country",
+                    "country_name",
+                    "status",
+                    "method",
+                    "verified_at"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/numbers/own/{number}": {
+      "delete": {
+        "operationId": "removeOwnNumber",
+        "description": "Stop calling from one of the user's own numbers, or drop one still waiting on its code. Verifying it again needs a new code. Only do this when the user asks.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "number",
+            "in": "path",
+            "required": true,
+            "description": "E.164, URL-encoded (+ as %2B)",
+            "schema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 40,
+              "description": "one of the user's own numbers on the account, e.g. \"+14155550123\""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The number removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "own",
+                      "description": "the user's own phone number, verified to call from"
+                    },
+                    "number": {
+                      "type": "string",
+                      "description": "formatted for people"
+                    },
+                    "e164": {
+                      "type": "string"
+                    },
+                    "country": {
+                      "type": "string",
+                      "description": "ISO 3166-1 alpha-2"
+                    },
+                    "country_name": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "verified"
+                      ],
+                      "description": "pending: the code was sent and has not come back yet"
+                    },
+                    "method": {
+                      "type": "string",
+                      "enum": [
+                        "sms",
+                        "call"
+                      ],
+                      "description": "how the code was sent"
+                    },
+                    "verified_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "number",
+                    "e164",
+                    "country",
+                    "country_name",
+                    "status",
+                    "method",
+                    "verified_at"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
             "description": "Request failed",
             "content": {
               "application/json": {
