@@ -118,7 +118,7 @@ export function llmsTxt(site: string, pricePerMinuteCents: number, posts: PostEn
     '',
     `- [Home](${site}/): what call4me does, pricing, and the install prompt`,
     `- [Examples](${site}/examples): real call recordings with edited excerpts, outcomes, and transcripts`,
-    `- [Install MCP](${site}/mcp): one prompt for Claude Code, Codex, Claude Desktop, claude.ai, and ChatGPT`,
+    `- [Install MCP](${site}/mcp): one prompt for Claude Code, Codex, Claude Desktop, claude.ai, ChatGPT, Muse, and Grok Bot`,
     `- [Rules](${site}/rules): what call4me will and will not call for`,
     `- [Blog](${site}/blog): notes on AI agents that make phone calls, what call4me is good at, what changed (Atom feed at ${site}/blog/feed.xml)`,
     ...posts.map((p) => `  - [${p.title}](${site}/blog/${p.slug}): ${p.description}`),

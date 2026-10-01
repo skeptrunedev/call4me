@@ -30,6 +30,8 @@ call4me is an MCP server at ${site}/mcp (Streamable HTTP). Every tool acts for a
 - Claude Code: \`claude mcp add --scope user --transport http call4me ${site}/mcp\`, then \`/mcp\`, pick call4me, and authenticate.
 - Codex: \`codex mcp add call4me --url ${site}/mcp\`, then \`codex mcp login call4me\`.
 - Claude Desktop, claude.ai, or ChatGPT: add a custom connector with the URL ${site}/mcp and sign in when it asks.
+- Muse: create a Custom Connector for a remote MCP server (streamable HTTP) named call4me with the URL ${site}/mcp and OAuth.
+- Grok Bot: add a custom remote MCP server named call4me with the URL ${site}/mcp; the user approves the Add MCP Server card. On grok.com: grok.com/connectors, New Connector, Custom.
 
 The user signs in with Google or X. If they gave you a call4me key instead, use \`${site}/mcp/<key>\` as the URL (the key is a secret; don't paste it anywhere else). No credits yet: they load some at ${site}, or you get a checkout link with \`call4me_add_funds\`. Check the connection with \`call4me_get_balance\`.
 

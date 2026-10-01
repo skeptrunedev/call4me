@@ -138,7 +138,18 @@ const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ p
       </details>
       <details>
         <summary>which agents does it work with?</summary>
-        <p>claude code, codex, claude desktop, claude.ai, chatgpt, and anything else that speaks mcp. paste the prompt above and your agent sets itself up.</p>
+        <p>claude code, codex, claude desktop, claude.ai, chatgpt, muse, grok bot, and anything else that speaks mcp. paste the prompt above and your agent sets itself up.</p>
+      </details>
+      <details>
+        <summary>can i use it with muse?</summary>
+        <p>yes. paste the prompt above into muse and it adds call4me as a custom connector, then makes calls for you from the chat.</p>
+      </details>
+      <details>
+        <summary>can i use it with grok bot?</summary>
+        <p>
+          yes. paste the prompt above into grok bot, approve the "add mcp server" card it shows, and it can make calls for you. on grok.com you can also add it under
+          connectors → new connector → custom.
+        </p>
       </details>
       <details>
         <summary>can i jump on the call myself?</summary>

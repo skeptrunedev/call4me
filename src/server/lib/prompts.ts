@@ -1,7 +1,7 @@
 /**
  * The text a person pastes into their coding agent. With a key it installs call4me;
  * without one it explains how to get one. The MCP URL carries the key so a single
- * line works in Claude Code, Codex, Claude Desktop, claude.ai and ChatGPT alike.
+ * line works in Claude Code, Codex, Claude Desktop, claude.ai, ChatGPT, Muse and Grok Bot alike.
  */
 
 export const mcpUrl = (origin: string, key: string) => `${origin}/mcp/${key}`;
@@ -15,10 +15,15 @@ function clientSteps(origin: string, key: string | null): string {
     ? `   - Claude Code:  claude mcp add --scope user --transport http call4me ${mcpUrl(origin, key)}
    - Codex:        codex mcp add call4me --url ${mcpUrl(origin, key)}
    - Claude Desktop, claude.ai, or ChatGPT: add a custom connector with the URL ${mcpUrl(origin, key)} (tell me to do this if you can't).
+   - Muse: create a Custom Connector for a remote MCP server (streamable HTTP) named call4me with the URL ${mcpUrl(origin, key)} and no other authentication.
+   - Grok Bot: add a custom remote MCP server named call4me with the URL ${mcpUrl(origin, key)} and no headers, then I approve the Add MCP Server card. On grok.com it's grok.com/connectors, New Connector, Custom.
    This URL contains my secret key, so don't paste it anywhere else.`
     : `   - Claude Code:  claude mcp add --scope user --transport http call4me ${origin}/mcp  (then I run /mcp, pick call4me, and choose authenticate)
    - Codex:        codex mcp add call4me --url ${origin}/mcp  then  codex mcp login call4me
    - Claude Desktop, claude.ai, or ChatGPT: add a custom connector with the URL ${origin}/mcp and sign in when it asks.
+   - Muse: create a Custom Connector for a remote MCP server (streamable HTTP) named call4me with the URL ${origin}/mcp and OAuth, and give me the sign-in link.
+   - Grok Bot: add a custom remote MCP server named call4me with the URL ${origin}/mcp, then I approve the Add MCP Server card and sign in. On grok.com it's grok.com/connectors, New Connector, Custom.
+   - If you can't sign me in, I copy my personal server URL from ${origin}/account and you use that instead.
    I sign in with Google or X.`;
 }
 

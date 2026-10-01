@@ -37,7 +37,7 @@ export interface PageOverride {
 export const PAGES = {
   home: { description: SITE_DESCRIPTION, card: 'site', path: '/' },
   examples: { description: 'listen to real call4me calls: booking and canceling dinner reservations, home internet questions, and an expedited support review. original voices, edited excerpts, and transcripts.', card: 'examples', path: '/examples' },
-  mcp: { description: 'install call4me in claude code, codex, claude desktop, claude.ai, or chatgpt with one prompt. your agent gets a tool that makes phone calls.', card: 'mcp', path: '/mcp' },
+  mcp: { description: 'install call4me in claude code, codex, claude desktop, claude.ai, chatgpt, muse, or grok bot with one prompt. your agent gets a tool that makes phone calls.', card: 'mcp', path: '/mcp' },
   login: { description: 'sign in to call4me with google or x to load credits and connect your AI agent.', card: 'login', path: '/login' },
   account: { description: 'your call4me balance, monthly reload, key, and every call with its transcript.', card: 'account', path: '/account' },
   call: { description: 'the outcome and transcript of a call call4me made for you.', card: 'call', path: '/account' },
@@ -58,7 +58,7 @@ export type PageKey = keyof typeof PAGES;
 export const CARDS: Record<string, OgCard> = {
   examples: { title: 'listen to real calls', subtitle: 'hear the agent ask questions and get things done before you buy', footer: 'original voices · edited excerpts · transcripts' },
   site: { title: 'book dinners, doctor appointments, call dealerships', subtitle: 'one prompt installs it in claude code, codex, claude desktop, or chatgpt', footer: 'prepaid credits from $10' },
-  mcp: { title: 'install call4me in your agent', subtitle: 'one prompt for claude code, codex, claude desktop, claude.ai, and chatgpt', footer: 'your agent gets a make-a-phone-call tool' },
+  mcp: { title: 'install call4me in your agent', subtitle: 'one prompt for claude code, codex, claude desktop, claude.ai, chatgpt, muse, and grok bot', footer: 'your agent gets a make-a-phone-call tool' },
   login: { title: 'sign in', subtitle: 'with google or x, to load credits and connect your agent', footer: 'no passwords' },
   account: { title: 'my account', subtitle: 'balance, monthly reload, your key, and every call with its transcript', footer: 'private to you' },
   call: { title: 'a call call4me made', subtitle: 'the outcome and the full transcript', footer: 'private to the account that placed it' },

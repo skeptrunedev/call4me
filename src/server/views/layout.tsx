@@ -43,7 +43,7 @@ const WEBMCP_SCRIPT = `
     { name: 'call4me_read_page', description: 'Read a call4me page as markdown: home (what call4me does and pricing), examples (real call excerpts and transcripts), mcp (how to install), blog (posts and the newsletter), rules, privacy, terms, or account (balance and calls; needs the person signed in).',
       inputSchema: pageArg,
       execute: function (a) { return fetch(PAGES[a.page] || '/', { headers: { accept: 'text/markdown' } }).then(function (r) { return r.text(); }); } },
-    { name: 'call4me_get_install_prompt', description: 'The prompt that installs the call4me MCP server in Claude Code, Codex, Claude Desktop, claude.ai, or ChatGPT and signs the person in; the agent then gets tools to place phone calls.',
+    { name: 'call4me_get_install_prompt', description: 'The prompt that installs the call4me MCP server in Claude Code, Codex, Claude Desktop, claude.ai, ChatGPT, Muse, or Grok Bot and signs the person in; the agent then gets tools to place phone calls.',
       inputSchema: { type: 'object', properties: {} },
       execute: function () { return fetch('/mcp').then(function (r) { return r.text(); }).then(function (h) { var t = new DOMParser().parseFromString(h, 'text/html').getElementById('install-prompt'); return { prompt: t ? t.textContent : '' }; }); } },
     { name: 'call4me_open_page', description: 'Navigate this tab to a call4me page.', inputSchema: pageArg,
