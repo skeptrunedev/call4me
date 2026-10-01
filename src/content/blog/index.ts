@@ -13,6 +13,11 @@ import rescheduleDentist from './reschedule-dentist-appointment.md';
 import wayfairCustomerService from './wayfair-customer-service.md';
 import grokConnectorsMcp from './grok-connectors-mcp-phone-calls.md';
 import metaMuseAgent from './meta-muse-ai-agent-phone-calls.md';
+import etihadCustomerService from './etihad-customer-service.md';
+import lawyerConsultationFee from './lawyer-consultation-fee.md';
+import americanAirlinesFlightCredit from './american-airlines-flight-credit.md';
+import adderallShortage from './adderall-shortage.md';
+import newPrimaryCareDoctor from './how-to-find-a-new-primary-care-doctor.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -34,4 +39,9 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'amazon-pharmacy-phone-number', markdown: amazonPharmacyPhone },
   { slug: 'grok-connectors-mcp-phone-calls', markdown: grokConnectorsMcp },
   { slug: 'meta-muse-ai-agent-phone-calls', markdown: metaMuseAgent },
+  { slug: 'etihad-customer-service', markdown: etihadCustomerService },
+  { slug: 'lawyer-consultation-fee', markdown: lawyerConsultationFee },
+  { slug: 'american-airlines-flight-credit', markdown: americanAirlinesFlightCredit },
+  { slug: 'adderall-shortage', markdown: adderallShortage },
+  { slug: 'how-to-find-a-new-primary-care-doctor', markdown: newPrimaryCareDoctor },
 ];

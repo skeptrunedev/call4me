@@ -10,7 +10,9 @@ The examples use the founder's historical TAO booking and cancellation,
 Monkeybrains, Amazon Pharmacy, and same day eye exam calls, plus customer calls
 published with the account owners' permission: a dentist reschedule, a Costco
 Tire Center order lookup, a junk removal quote and booking, a doctor's visit
-switched to video, and a private dining room quote. For a customer call, first
+switched to video, a private dining room quote, a lawyer consultation booked
+at a negotiated fee, a pharmacy stock check for a medication in shortage, an Etihad complaint
+follow-up, and a new patient booking at a primary care practice. For a customer call, first
 confirm the dialed number is the business's published number and not the
 account's own phone: one "pizzeria" order turned out to be the owner's phone.
 For medical calls, also mute anything that would identify the practice's
@@ -42,6 +44,15 @@ The Amazon export retains the entire call through the representative's goodbye
 at 5:46. Its remaining 24 minutes 9 seconds of automated feedback survey and
 repeated survey prompts are omitted and marked after the goodbye in the
 transcript. No business conversation, phone menu, or hold was shortened.
+
+Blog posts built from customer calls embed a recording for every call they
+use, including short hang-ups and failed calls. Dead air longer than about 3
+seconds, where nobody speaks, may be shortened to about 1 second; never remove
+conversation, hold music, hold messages or menu prompts, and mark each cut in
+the transcript. Routes, cities and prices are not private and stay audible, as
+does a medication when the post is about that medication. Mute the business
+name wherever it would show where the customer goes (the firm or practice they
+booked) and, for stock checks of a sensitive medication, every pharmacy's name.
 
 Exports use original voices at normal speed, FFmpeg loudness normalization at
 16 LUFS below full scale, a true peak limit of 1.5 dB below full scale, and mono
