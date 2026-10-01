@@ -83,7 +83,7 @@ function instructions(surface: Surface): string {
 During setup, call call4me_get_balance and show the user their actual call4me numbers. Suggest saving them as a contact named call4me. These are separate from the user's personal phone in call4me_get_profile: call4me may ring that personal phone when a business needs them to verify their account, or when they ask to join a call. Explain that they answer and press 1 to join, and press * or hang up to hand the call back. If phone_number is null and numbers is empty, explain that the free US number is assigned on the first call; never invent a number or buy an extra number for setup.
 
 The caller can only say what you give it, so everything is collected BEFORE dialing:
-1. Once, up front: call4me_get_profile. If it's missing things, ask the user in one message for their full legal name, date of birth, phone, home address, ${agents ? 'health and dental insurance (carrier + member ID, or self-pay), ' : ''}and car (year/make/model/mileage, VIN) if they have one, and save them with call4me_save_profile. Skip what they decline.
+1. ${agents ? `Once, up front: call4me_get_profile. If it's missing things, ask the user in one message for their full legal name, date of birth, phone, home address, health and dental insurance (carrier + member ID, or self-pay), and car (year/make/model/mileage, VIN) if they have one, and save them with call4me_save_profile. Skip what they decline.` : `Collect only what the call at hand needs: step 2 lists it. call4me_get_profile shows what is already saved; offer to save details that will come up again (name, phone) with call4me_save_profile, and skip anything the user declines.`}
 2. For each call: pick the category and call call4me_get_requirements(category). Ask the user for every required field that isn't already known (one message, not one question at a time), plus the per-call details (reason, dates and times that work, party size...).
 3. Find the right number (search the web if needed; check it is the right location).
 4. call4me_place_call with the category and details. If it answers "Not calling yet", ask the user exactly what it lists and try again. Show its calling_number so the user knows which call4me number may ring them; suggest saving it if this is their first call or a different number than before. It is the call4me number, not number (the business's number).
@@ -300,8 +300,8 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     {
       title: 'Answer the caller\'s question',
       description: 'Answer a question the caller asked mid-call (listed in open_questions). The caller relays it on the line within a second or two. Answer in a few plain words.',
-      inputSchema: z.object({ call_id: callIdArg, question_id: z.string().min(1).max(40), answer: z.string().min(1).max(1000).describe('e.g. "Yes, 8:15 works." or "DOB 03/14/1990"') }),
-      annotations: { ...OPEN, openWorldHint: false },
+      inputSchema: z.object({ call_id: callIdArg, question_id: z.string().min(1).max(40), answer: z.string().min(1).max(1000).describe('e.g. "Yes, 8:15 works." or "The reservation is under Khami."') }),
+      annotations: OPEN,
     },
     (async (args: { call_id: string; question_id: string; answer: string }) =>
       guard(async () => {
@@ -419,7 +419,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       title: 'Save caller profile',
       description: 'Save facts that are the same on every call, so they never have to be asked again. Merges into what is saved; an empty string removes a field. Only save what the user gave you.',
       inputSchema: z.object(Object.fromEntries(intake.profileKeys.map((k) => [k, z.string().max(500).optional().describe(PROFILE_FIELDS[k].label)]))),
-      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+      annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
     },
     (async (args: Record<string, string | undefined>) =>
       guard(async () => {

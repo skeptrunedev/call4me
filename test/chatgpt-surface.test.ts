@@ -72,3 +72,18 @@ test('every tool states each hint explicitly', async () => {
     for (const hint of ['readOnlyHint', 'destructiveHint', 'openWorldHint']) assert.equal(typeof tool.annotations?.[hint], 'boolean', `${tool.name} ${hint}`);
   }
 });
+
+test('relaying an answer to the business is open-world, and saving the profile can remove fields', async () => {
+  const list = await tools('chatgpt');
+  assert.equal(list.find((t) => t.name === 'call4me_answer_question')!.annotations?.openWorldHint, true);
+  assert.equal(list.find((t) => t.name === 'call4me_save_profile')!.annotations?.destructiveHint, true);
+});
+
+test('the ChatGPT instructions ask only for what a call needs', async () => {
+  const handler = (await import('@modelcontextprotocol/server')).createMcpHandler(() => createCall4meServer({ env: {} as Env, origin: 'https://call4.me', account, stripe: () => { throw new Error('no stripe'); }, surface: 'chatgpt' }), { legacy: 'stateless' });
+  const res = await handler.fetch(new Request('https://call4.me/chatgpt/mcp', { method: 'POST', headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 't', version: '1' } } }) }));
+  const text = await res.text();
+  const json = JSON.parse(text.startsWith('{') ? text : text.split('\n').find((l) => l.startsWith('data: '))!.slice(6)) as { result: { instructions: string } };
+  assert.doesNotMatch(json.result.instructions, /date of birth|insurance|home address/i);
+  assert.doesNotMatch(json.result.instructions, /\bVIN\b/);
+});
