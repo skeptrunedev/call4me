@@ -12,15 +12,8 @@ interface Env {
   RAINDROP_PROJECT_ID?: string;
   /** Optional GA4 Measurement Protocol API secret (the call4me web stream). Unset disables server-side GA events. */
   GA_API_SECRET?: string;
-  /**
-   * Optional Meta Pixel id. Public, but set with `wrangler secret put` like the rest: `wrangler deploy`
-   * replaces plain vars set outside wrangler.jsonc, and an empty var there would type as "". Unset disables the Pixel.
-   */
-  META_PIXEL_ID?: string;
-  /** Optional Conversions API access token for that Pixel (Events Manager → Settings). Unset disables server-side Meta events. */
+  /** Optional Conversions API access token for META_PIXEL_ID (Events Manager → Settings). Unset disables server-side Meta events. */
   META_CAPI_TOKEN?: string;
-  /** Optional Meta domain verification code, rendered as <meta name="facebook-domain-verification">. Unset renders nothing. */
-  META_DOMAIN_VERIFICATION?: string;
   TELNYX_API_KEY: string;
   /** Base64 Ed25519 public key from the Telnyx portal (API keys → public key), for webhook signatures. */
   TELNYX_PUBLIC_KEY: string;

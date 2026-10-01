@@ -121,7 +121,8 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
     await db.finish(call.id, { status: 'failed', error: String(err), pricePerMinuteCents: price });
     throw new CallError(`could not place the call (${call.id}): the phone carrier refused it. nothing was charged; try again shortly.`, 502);
   }
-  await analytics(env).track(account, [{ name: 'call_placed', params: { surface, category: input.category } }]);
+  // No category: some (doctor, dentist) are health information, which ad platforms must not get.
+  await analytics(env).track(account, [{ name: 'call_placed', params: { surface } }]);
   return (await db.byId(call.id))!;
 }
 
