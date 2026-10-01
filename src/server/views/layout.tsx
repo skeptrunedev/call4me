@@ -115,6 +115,7 @@ export const Layout: FC<{
         <meta name="twitter:image:alt" content={alt} />
         <link rel="stylesheet" href="/static/style.css" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <script src="https://analytics.ahrefs.com/analytics.js" data-key="Sy+Jmk5GRDykk/0THUQjsg" async></script>
       </head>
       <body>
         <div id="masthead">
