@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // The voice Worker: call sessions (CallSession) and Telnyx's media streams. Deploying a Worker
+  // resets the durable objects it defines, so this one deploys only when its bundle changes and
+  // no call is up (scripts/deploy-voice.sh); the site (wrangler.jsonc) deploys freely.
+  "name": "call4me-voice",
+  "main": "src/server/voice/worker.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "routes": [{ "pattern": "voice.call4.me", "custom_domain": true }],
+  "d1_databases": [
+    { "binding": "DB", "database_name": "callbay", "database_id": "34bce7a3-4d5d-46cf-af21-bddecf0c1f93", "migrations_dir": "migrations" }
+  ],
+  "durable_objects": {
+    "bindings": [{ "name": "CALL_SESSION", "class_name": "CallSession" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CallSession"] }],
+  // Secrets: OPENAI_API_KEY, TELNYX_API_KEY, TELNYX_CONNECTION_ID, RAINDROP_WRITE_KEY, and
+  // STREAM_SECRET (the same value as the site's, which signs the stream URLs).
+  "vars": {
+    "VOICE_MODEL": "gpt-live-1",
+    "BACK_OFFICE_MODEL": "gpt-5.5"
+  },
+  "observability": { "enabled": true }
+}

@@ -15,8 +15,10 @@ interface Env {
   TELNYX_PUBLIC_KEY: string;
   /** The Call Control application id: numbers are attached to it and calls are placed through it. */
   TELNYX_CONNECTION_ID: string;
-  /** Random secret for signing media stream URLs. */
+  /** Random secret for signing media stream URLs. The site and the voice Worker share it. */
   STREAM_SECRET: string;
+  /** Voice Worker only: the bundle hash it was deployed from (scripts/deploy-voice.sh). */
+  VOICE_BUILD?: string;
   BETTER_AUTH_SECRET: string;
   GOOGLE_CLIENT_ID?: string;
   GOOGLE_CLIENT_SECRET?: string;

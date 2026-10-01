@@ -71,6 +71,16 @@ subscription; `invoice.paid` adds the credits). A call holds its maximum cost be
 conditional insert so parallel calls can't overspend, and settles to the real talk time when it ends.
 4. Secrets (`wrangler secret put`): see `src/server/env.d.ts`.
 
+## Two Workers
+
+Call sessions run in their own Worker, `call4me-voice` (`wrangler.voice.jsonc`, `src/server/voice/worker.ts`),
+which also takes Telnyx's media streams on `voice.call4.me`. Deploying a Worker resets the durable objects it
+defines, so with the sessions split out the site deploys freely without dropping a call. CI deploys the voice
+Worker with `scripts/deploy-voice.sh`, which skips an unchanged bundle and otherwise waits until no call is up,
+holds new calls for the few seconds the deploy takes, then deploys. The voice Worker's secrets are
+`OPENAI_API_KEY`, `TELNYX_API_KEY`, `TELNYX_CONNECTION_ID`, `RAINDROP_WRITE_KEY` and `STREAM_SECRET` (the same
+value as the site's): `npx wrangler secret put <NAME> -c wrangler.voice.jsonc`.
+
 ## Blog
 
 `/blog` is markdown files in `src/content/blog` (one per post, listed in `index.ts`, headline image at

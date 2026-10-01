@@ -17,9 +17,26 @@ export const ASSISTANT_NAMES: Record<Voice, string | null> = { marin: 'Sarah Har
 
 export const pricePerMinute = (env: Env) => Number(env.PRICE_PER_MINUTE_CENTS || 25);
 
-export async function streamUrl(env: Env, origin: string, callId: string): Promise<string> {
-  const host = new URL(origin).host;
-  return `wss://${host}/voice/stream/${callId}/${await hmacHex(env.STREAM_SECRET, callId)}`;
+/** Telnyx's media stream for a call, on the voice Worker's own host (src/server/voice/worker.ts). */
+export async function streamUrl(env: Env, callId: string): Promise<string> {
+  return `wss://${env.VOICE_HOST}/voice/stream/${callId}/${await hmacHex(env.STREAM_SECRET, callId)}`;
+}
+
+/** How long a new call waits on a voice Worker deploy before going ahead anyway. */
+const VOICE_DEPLOY_WAIT_MS = 60_000;
+
+/**
+ * A voice Worker deploy resets every call session (scripts/deploy-voice.sh). The deploy locks
+ * only once no call is up, and the call's row is already written when this runs, so either the
+ * deploy sees this call and backs off, or this call sees the lock and waits it out.
+ */
+async function voiceDeployDone(env: Env): Promise<void> {
+  const until = Date.now() + VOICE_DEPLOY_WAIT_MS;
+  while (Date.now() < until) {
+    const lock = await env.DB.prepare(`SELECT locked_until FROM voice_deploys WHERE id = 1`).first<{ locked_until: number }>();
+    if (!lock || lock.locked_until <= Date.now()) return;
+    await new Promise((r) => setTimeout(r, 1_000));
+  }
 }
 
 /** The account's owner, who can be patched into any of its calls: their name and their own phone. */
@@ -39,6 +56,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
   if (!account.display_name) await accounts(env.DB).setDisplayName(account.id, brief.on_behalf_of);
 
   try {
+    await voiceDeployDone(env);
     const from = await numbers(env).callerId(account, to, input.from);
     await env.DB.prepare(`UPDATE calls SET from_number = ? WHERE id = ?`).bind(from, call.id).run();
     const person = await personFor(env, origin, account, from, brief.connect_when ?? null, brief.listen_in ?? false);
@@ -56,7 +74,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       connectWhen: brief.connect_when ?? null,
       assistantName: ASSISTANT_NAMES[input.voice ?? 'marin'],
     };
-    const stream = await streamUrl(env, origin, call.id);
+    const stream = await streamUrl(env, call.id);
     const setup: SessionSetup = {
       callId: call.id,
       streamUrl: stream,
@@ -159,6 +177,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     )
     .run();
 
+  await voiceDeployDone(env);
   const ordered = likely ? [likely, ...tasks.filter((t) => t !== likely)] : tasks;
   const setup: SessionSetup = {
     callId: id,
@@ -181,7 +200,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     maxSeconds: maxMinutes * 60,
     pricePerMinuteCents: price,
     controlId: opts.controlId,
-    streamUrl: await streamUrl(env, origin, id),
+    streamUrl: await streamUrl(env, id),
   };
   await sessionFor(env, id).fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
   await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: setup.streamUrl!, callId: id, timeLimitSecs: setup.maxSeconds });

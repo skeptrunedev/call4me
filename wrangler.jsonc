@@ -27,12 +27,19 @@
   "d1_databases": [
     { "binding": "DB", "database_name": "callbay", "database_id": "34bce7a3-4d5d-46cf-af21-bddecf0c1f93", "migrations_dir": "migrations" }
   ],
+  // Call sessions live in the voice Worker (wrangler.voice.jsonc), so deploying the site never
+  // resets a live call. CallSession was defined here until v2.
   "durable_objects": {
-    "bindings": [{ "name": "CALL_SESSION", "class_name": "CallSession" }]
+    "bindings": [{ "name": "CALL_SESSION", "class_name": "CallSession", "script_name": "call4me-voice" }]
   },
-  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CallSession"] }],
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["CallSession"] },
+    { "tag": "v2", "deleted_classes": ["CallSession"] }
+  ],
   "vars": {
     "CANONICAL_HOST": "call4.me",
+    // The voice Worker's host: Telnyx's media streams attach there (services/dialer.ts streamUrl).
+    "VOICE_HOST": "voice.call4.me",
     // IndexNow key (services/indexnow.ts). Public by design: served at /<key>.txt.
     "INDEXNOW_KEY": "3d15f1882b0b7931273db1a9e4f5ef35",
     // Hosts callbay used to live on (comma-separated). Pages there redirect to

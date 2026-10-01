@@ -2,7 +2,6 @@
 import './zod-first';
 import { Hono } from 'hono';
 import { canonicalRedirect, type AppEnv } from './lib/context';
-import { hmacHex, safeEqual } from './lib/keys';
 import { mcp } from './routes/mcp';
 import { pub } from './routes/public';
 import { authRoutes } from './routes/auth';
@@ -19,7 +18,6 @@ import { discovery } from './routes/discovery';
 import { siteUrl } from './lib/auth-options';
 import { API_CATALOG_LINK, API_CATALOG_MEDIA_TYPE, buildApiCatalog } from './lib/discovery';
 import { MessagePage } from './views/public';
-import { sessionFor } from './voice/session';
 import { makeMessenger } from './lib/messaging';
 import { runDrip } from './services/drip';
 import { numbers } from './services/numbers';
@@ -31,8 +29,6 @@ import { admin } from './routes/admin';
 import { BlogError } from './services/blog';
 import { EXAMPLES } from '../content/examples';
 import { exampleAudio } from './lib/example-audio';
-
-export { CallSession } from './voice/session';
 
 const app = new Hono<AppEnv>();
 
@@ -57,25 +53,6 @@ app.get('/static/*', (c) => c.env.ASSETS.fetch(c.req.raw));
 app.get('/favicon.svg', (c) => c.env.ASSETS.fetch(c.req.raw));
 // Link-preview cards (lib/pages.ts).
 app.route('/og', og);
-
-// Telnyx's media stream for a call. The path carries an HMAC of the call id, so only the
-// URL we handed Telnyx when dialing can attach audio to a call.
-// Cloudflare can reset the session mid-call ("This script has been upgraded"); Telnyx then
-// reconnects the stream once, and a reconnect that lands on the instance being reset is retried
-// on a fresh stub, which resumes the call (CallSession.acceptStream).
-app.get('/voice/stream/:callId/:sig', async (c) => {
-  const { callId, sig } = c.req.param();
-  if (!safeEqual(sig, await hmacHex(c.env.STREAM_SECRET, callId))) return c.text('forbidden', 403);
-  for (let attempt = 1; ; attempt++) {
-    try {
-      return await sessionFor(c.env, callId).fetch(new Request('https://session/stream', c.req.raw));
-    } catch (err) {
-      if (!(err as { retryable?: boolean }).retryable || attempt >= 3) throw err;
-      console.warn('stream attach retry', callId, attempt, String(err));
-      await new Promise((r) => setTimeout(r, 300 * attempt));
-    }
-  }
-});
 
 app.route('/webhooks', webhooks);
 // robots.txt, sitemap, llms.txt, auth.md, agent cards, and the root-level OAuth discovery

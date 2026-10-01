@@ -26,12 +26,14 @@ jobs:
       - run: npm test
       - run: npm run openapi:generate && git diff --exit-code -- openapi.json
       - run: npx wrangler deploy --dry-run
+      - run: npx wrangler deploy -c wrangler.voice.jsonc --dry-run
 
   deploy:
     needs: verify
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # The voice worker waits for live calls to end (calls run 30 minutes at most).
+    timeout-minutes: 60
     environment: production
     steps:
       - uses: actions/checkout@v4
@@ -46,7 +48,13 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      - name: Deploy to Cloudflare Workers
+      # Before the site, so the site never calls a session route the voice worker lacks yet.
+      - name: Deploy the voice worker once no call is up
+        run: scripts/deploy-voice.sh
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Deploy the site
         run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
