@@ -1,27 +1,11 @@
 import assert from 'node:assert/strict';
-import { readdirSync, readFileSync } from 'node:fs';
-import { DatabaseSync, type SQLInputValue } from 'node:sqlite';
 import test, { beforeEach } from 'node:test';
 import { CODE_ATTEMPTS, VERIFICATIONS_PER_DAY } from '../src/server/lib/number-schema';
 import { checkDialable } from '../src/server/lib/phone';
 import type { Account } from '../src/server/services/accounts';
 import { NumberError, numbers, ownNumberRefusal } from '../src/server/services/numbers';
 import { callInstructions, type CallBrief } from '../src/server/voice/prompt';
-
-// Verification hangs on a partial unique index and status changes, so these run the real
-// migrations on SQLite behind a D1-shaped wrapper instead of a hand-written fake.
-function d1(): D1Database {
-  const sqlite = new DatabaseSync(':memory:');
-  for (const f of readdirSync(new URL('../migrations', import.meta.url)).sort()) sqlite.exec(readFileSync(new URL(`../migrations/${f}`, import.meta.url), 'utf8'));
-  sqlite.exec(`INSERT INTO accounts (id, email, created_at) VALUES ('acct_alice', 'alice@example.com', 0), ('acct_bob', 'bob@example.com', 0)`);
-  const statement = (sql: string, args: SQLInputValue[] = []) => ({
-    bind: (...next: unknown[]) => statement(sql, next as SQLInputValue[]),
-    first: async () => sqlite.prepare(sql).get(...args) ?? null,
-    all: async () => ({ results: sqlite.prepare(sql).all(...args) }),
-    run: async () => ({ meta: { changes: Number(sqlite.prepare(sql).run(...args).changes) } }),
-  });
-  return { prepare: (sql: string) => statement(sql) } as unknown as D1Database;
-}
+import { d1 } from './sqlite-d1';
 
 /** Telnyx as these tests need it: which numbers it lists as verified, the codes it sent, and every request. */
 const carrier = { verified: new Set<string>(), codes: new Map<string, string>(), requests: [] as { method: string; path: string; body: Record<string, unknown> | null }[] };
@@ -72,7 +56,7 @@ async function verify(account: Account, number = mine) {
 test('a number is the account\'s once the code the carrier sent comes back', async () => {
   const n = numbers(env);
   const pending = await n.startVerification(alice, { number: '(202) 555-0123', method: 'sms' });
-  assert.deepEqual([pending.kind, pending.e164, pending.status], ['own', mine, 'pending']);
+  assert.deepEqual([pending.e164, pending.status], [mine, 'pending']);
   assert.deepEqual(sent('POST', '/verified_numbers').map((r) => r.body), [{ phone_number: mine, verification_method: 'sms' }]);
   const verified = await n.confirmVerification(alice, mine, '123456');
   assert.equal(verified.status, 'verified');

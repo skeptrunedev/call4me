@@ -485,7 +485,8 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
           ...(own.length ? [`the user's own numbers (calls use one only when from names it):\n${own.map((v) => `- ${ownNumberText(v)}`).join('\n')}`] : []),
           `countries (number price today, then monthly; calls there cost ${dollars(pricePerMinute(env))}/min unless noted):\n${countries.map((c) => `- ${c.country} ${c.name} (${c.type}): ${c.available ? `${c.price}, then ${c.monthly}/month${DESTINATION_PRICE_CENTS[c.country] ? `; calls ${dollars(DESTINATION_PRICE_CENTS[c.country]!)}/min` : ''}` : c.reason}`).join('\n')}`,
         ].join('\n\n');
-        return ok(text, { numbers: owned, own_numbers: own, countries });
+        // Without own numbers, exactly the shape clients cached before own numbers existed.
+        return ok(text, { numbers: owned, ...(own.length ? { own_numbers: own } : {}), countries });
       })()) as never,
   );
 

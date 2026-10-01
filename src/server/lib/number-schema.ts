@@ -3,8 +3,9 @@ import { UAE_CALLING } from './rates';
 
 /** Shared by the MCP number tools, the /api/numbers routes and the OpenAPI document. */
 
-export const numberView = z.object({
-  kind: z.literal('call4me').describe('a number call4me holds for the account'),
+// Output shapes are loose: MCP clients cache a tool's outputSchema and reject keys it doesn't
+// list, so a field added later must not break a client that cached the older schema.
+export const numberView = z.looseObject({
   number: z.string().describe('formatted for people'),
   e164: z.string(),
   country: z.string().describe('ISO 3166-1 alpha-2'),
@@ -18,7 +19,7 @@ export const numberView = z.object({
   release_after: z.string().nullable().describe('when an overdue number is released unless credits are added'),
 });
 
-export const countryOffer = z.object({
+export const countryOffer = z.looseObject({
   country: z.string(),
   name: z.string(),
   type: z.string(),
@@ -30,8 +31,7 @@ export const countryOffer = z.object({
   monthly: z.string().nullable(),
 });
 
-export const ownNumberView = z.object({
-  kind: z.literal('own').describe('the user\'s own phone number, verified to call from'),
+export const ownNumberView = z.looseObject({
   number: z.string().describe('formatted for people'),
   e164: z.string(),
   country: z.string().describe('ISO 3166-1 alpha-2'),
@@ -41,9 +41,12 @@ export const ownNumberView = z.object({
   verified_at: z.string().nullable(),
 });
 
-export const numbersOutput = z.object({
+export const numbersOutput = z.looseObject({
   numbers: z.array(numberView),
-  own_numbers: z.array(ownNumberView).describe('the user\'s own phone numbers: calls go out from one only when place_call names it in from'),
+  own_numbers: z
+    .array(ownNumberView)
+    .optional()
+    .describe('the user\'s own phone numbers, verified to call from: calls go out from one only when place_call names it in from. Omitted when the account has none'),
   countries: z.array(countryOffer),
 });
 

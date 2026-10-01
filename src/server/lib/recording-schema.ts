@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
 export const recordingInput = z.object({ call_id: z.string().min(1).max(40).describe('The call id returned when placing or listing calls.') });
-export const recordingOutput = z.object({
+// Loose, like the number outputs (lib/number-schema.ts): a cached outputSchema must accept fields added later.
+export const recordingOutput = z.looseObject({
   call_id: z.string(),
-  recordings: z.array(z.object({
+  recordings: z.array(z.looseObject({
     id: z.string(),
-    download_urls: z.object({ mp3: z.url().optional(), wav: z.url().optional() }),
+    download_urls: z.looseObject({ mp3: z.url().optional(), wav: z.url().optional() }),
     duration_millis: z.number().nonnegative().nullable(),
     started_at: z.string().nullable(),
     ended_at: z.string().nullable(),

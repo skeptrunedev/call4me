@@ -79,7 +79,6 @@ export interface NumberRow {
 }
 
 export interface NumberView {
-  kind: 'call4me';
   number: string;
   e164: string;
   country: string;
@@ -110,7 +109,6 @@ export interface VerifiedNumberRow {
 }
 
 export interface OwnNumberView {
-  kind: 'own';
   number: string;
   e164: string;
   country: string;
@@ -151,7 +149,6 @@ const day = (ms: number) => new Date(ms).toISOString().slice(0, 10);
 export function numberView(r: NumberRow, at = now()): NumberView {
   const overdue = !r.included && r.paid_through !== null && r.paid_through <= at;
   return {
-    kind: 'call4me',
     number: formatPhone(r.phone_number),
     e164: r.phone_number,
     country: r.country,
@@ -168,7 +165,6 @@ export function numberView(r: NumberRow, at = now()): NumberView {
 
 export function ownNumberView(r: VerifiedNumberRow): OwnNumberView {
   return {
-    kind: 'own',
     number: formatPhone(r.phone_number),
     e164: r.phone_number,
     country: r.country,

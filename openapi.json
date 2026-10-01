@@ -43,11 +43,6 @@
                       "items": {
                         "type": "object",
                         "properties": {
-                          "kind": {
-                            "type": "string",
-                            "const": "call4me",
-                            "description": "a number call4me holds for the account"
-                          },
                           "number": {
                             "type": "string",
                             "description": "formatted for people"
@@ -98,7 +93,6 @@
                           }
                         },
                         "required": [
-                          "kind",
                           "number",
                           "e164",
                           "country",
@@ -111,19 +105,15 @@
                           "overdue",
                           "release_after"
                         ],
-                        "additionalProperties": false
+                        "additionalProperties": {}
                       }
                     },
                     "own_numbers": {
+                      "description": "the user's own phone numbers, verified to call from: calls go out from one only when place_call names it in from. Omitted when the account has none",
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
-                          "kind": {
-                            "type": "string",
-                            "const": "own",
-                            "description": "the user's own phone number, verified to call from"
-                          },
                           "number": {
                             "type": "string",
                             "description": "formatted for people"
@@ -162,7 +152,6 @@
                           }
                         },
                         "required": [
-                          "kind",
                           "number",
                           "e164",
                           "country",
@@ -171,9 +160,8 @@
                           "method",
                           "verified_at"
                         ],
-                        "additionalProperties": false
-                      },
-                      "description": "the user's own phone numbers: calls go out from one only when place_call names it in from"
+                        "additionalProperties": {}
+                      }
                     },
                     "countries": {
                       "type": "array",
@@ -248,16 +236,15 @@
                           "price",
                           "monthly"
                         ],
-                        "additionalProperties": false
+                        "additionalProperties": {}
                       }
                     }
                   },
                   "required": [
                     "numbers",
-                    "own_numbers",
                     "countries"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties": {}
                 }
               }
             }
@@ -326,11 +313,6 @@
                   "$schema": "https://json-schema.org/draft/2020-12/schema",
                   "type": "object",
                   "properties": {
-                    "kind": {
-                      "type": "string",
-                      "const": "call4me",
-                      "description": "a number call4me holds for the account"
-                    },
                     "number": {
                       "type": "string",
                       "description": "formatted for people"
@@ -381,7 +363,6 @@
                     }
                   },
                   "required": [
-                    "kind",
                     "number",
                     "e164",
                     "country",
@@ -394,7 +375,7 @@
                     "overdue",
                     "release_after"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties": {}
                 }
               }
             }
@@ -543,11 +524,6 @@
                   "$schema": "https://json-schema.org/draft/2020-12/schema",
                   "type": "object",
                   "properties": {
-                    "kind": {
-                      "type": "string",
-                      "const": "call4me",
-                      "description": "a number call4me holds for the account"
-                    },
                     "number": {
                       "type": "string",
                       "description": "formatted for people"
@@ -598,7 +574,6 @@
                     }
                   },
                   "required": [
-                    "kind",
                     "number",
                     "e164",
                     "country",
@@ -611,7 +586,7 @@
                     "overdue",
                     "release_after"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties": {}
                 }
               }
             }
@@ -747,11 +722,6 @@
                   "$schema": "https://json-schema.org/draft/2020-12/schema",
                   "type": "object",
                   "properties": {
-                    "kind": {
-                      "type": "string",
-                      "const": "own",
-                      "description": "the user's own phone number, verified to call from"
-                    },
                     "number": {
                       "type": "string",
                       "description": "formatted for people"
@@ -790,7 +760,6 @@
                     }
                   },
                   "required": [
-                    "kind",
                     "number",
                     "e164",
                     "country",
@@ -799,7 +768,7 @@
                     "method",
                     "verified_at"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties": {}
                 }
               }
             }
@@ -952,11 +921,6 @@
                   "$schema": "https://json-schema.org/draft/2020-12/schema",
                   "type": "object",
                   "properties": {
-                    "kind": {
-                      "type": "string",
-                      "const": "own",
-                      "description": "the user's own phone number, verified to call from"
-                    },
                     "number": {
                       "type": "string",
                       "description": "formatted for people"
@@ -995,7 +959,6 @@
                     }
                   },
                   "required": [
-                    "kind",
                     "number",
                     "e164",
                     "country",
@@ -1004,7 +967,7 @@
                     "method",
                     "verified_at"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties": {}
                 }
               }
             }
@@ -1135,11 +1098,6 @@
                   "$schema": "https://json-schema.org/draft/2020-12/schema",
                   "type": "object",
                   "properties": {
-                    "kind": {
-                      "type": "string",
-                      "const": "own",
-                      "description": "the user's own phone number, verified to call from"
-                    },
                     "number": {
                       "type": "string",
                       "description": "formatted for people"
@@ -1178,7 +1136,6 @@
                     }
                   },
                   "required": [
-                    "kind",
                     "number",
                     "e164",
                     "country",
@@ -1187,7 +1144,7 @@
                     "method",
                     "verified_at"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties": {}
                 }
               }
             }
@@ -1304,7 +1261,7 @@
                                 "format": "uri"
                               }
                             },
-                            "additionalProperties": false
+                            "additionalProperties": {}
                           },
                           "duration_millis": {
                             "anyOf": [
@@ -1337,7 +1294,7 @@
                           "started_at",
                           "ended_at"
                         ],
-                        "additionalProperties": false
+                        "additionalProperties": {}
                       }
                     },
                     "message": {
@@ -1349,7 +1306,7 @@
                     "recordings",
                     "message"
                   ],
-                  "additionalProperties": false
+                  "additionalProperties": {}
                 }
               }
             }
