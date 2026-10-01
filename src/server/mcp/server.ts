@@ -202,7 +202,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     titled({
       title: 'Place a phone call',
       description:
-        `Call a business for the user (US, Canada, Europe, the UAE at ${dollars(DESTINATION_PRICE_CENTS.AE)}/min, or any other country the account holds a number in; see ${agents ? 'call4me_list_numbers' : 'call4me_get_balance'}) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category's required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with call4me_get_call. Credits for the maximum length are held up front; billed per minute of talk time; unanswered calls are free.`,
+        `Call a business for the user (US, Canada, Europe, the UAE at ${dollars(DESTINATION_PRICE_CENTS.AE)}/min, or any other country the account holds a number in, some at their own per-minute price: ${Object.entries(DESTINATION_PRICE_CENTS).map(([c, cents]) => `${c} ${dollars(cents)}`).join(', ')}; see ${agents ? 'call4me_list_numbers' : 'call4me_get_balance'}) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category's required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with call4me_get_call. Credits for the maximum length are held up front; billed per minute of talk time; unanswered calls are free.`,
       inputSchema: z.object({
         to: z.string().min(3).max(40).describe('the number to call, e.g. "+14155550123", "(415) 555-0123", or abroad with its country code, e.g. "+31 20 123 4567"'),
         business: z.string().min(1).max(120).describe('who you are calling, as a person would say it: "Nopa", "Dr. Chen\'s office", "Toyota of Berkeley service"'),
@@ -474,7 +474,7 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
         const [owned, countries] = await Promise.all([n.views(account.id), n.offers()]);
         const text = [
           owned.length ? `your numbers:\n${owned.map((v) => `- ${numberText(v)}`).join('\n')}` : 'no numbers yet: the free US number is bought on the first call.',
-          `countries (price today, then monthly):\n${countries.map((c) => `- ${c.country} ${c.name} (${c.type}): ${c.available ? `${c.price}, then ${c.monthly}/month` : c.reason}`).join('\n')}`,
+          `countries (number price today, then monthly; calls there cost ${dollars(pricePerMinute(env))}/min unless noted):\n${countries.map((c) => `- ${c.country} ${c.name} (${c.type}): ${c.available ? `${c.price}, then ${c.monthly}/month${DESTINATION_PRICE_CENTS[c.country] ? `; calls ${dollars(DESTINATION_PRICE_CENTS[c.country]!)}/min` : ''}` : c.reason}`).join('\n')}`,
         ].join('\n\n');
         return ok(text, { numbers: owned, countries });
       })()) as never,

@@ -1,9 +1,10 @@
 import type { FC } from 'hono/jsx';
 import { dollars } from '../services/accounts';
-import { COUNTRIES, type CountryOffer, type NumberView } from '../services/numbers';
+import { COUNTRIES, isAwaitingApproval, type CountryOffer, type NumberView } from '../services/numbers';
 import { MIN_TOPUP_CENTS } from '../services/topups';
 import { MonthlyBox } from './account';
 import { SITE, SITE_DESCRIPTION } from '../lib/pages';
+import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { CopyBlock, Layout } from './layout';
 import { CallOnboarding } from './onboarding';
 
@@ -28,11 +29,21 @@ export const BuyForm: FC<{ signedIn: boolean; error?: string; amount?: string }>
 );
 
 const names = (cs: CountryOffer[]) => cs.map((c) => c.name.toLowerCase()).join(', ');
+const regionName = new Intl.DisplayNames(['en'], { type: 'region' });
 
-/** Countries with numbers for sale now, and the ones held back only by regulator paperwork. */
-function offers(countries: CountryOffer[]): { live: CountryOffer[]; soon: CountryOffer[] } {
-  // Only countries held back by regulator paperwork are "coming soon"; a missing quote is not.
-  return { live: countries.filter((c) => c.available), soon: countries.filter((c) => !c.available && COUNTRIES[c.country]?.requirementGroup) };
+/** "the uae at $0.40/min": destinations billed above the standard rate (lib/rates.ts). */
+const pricierDestinations = () =>
+  Object.entries(DESTINATION_PRICE_CENTS)
+    .map(([country, cents]) => `${country === 'AE' ? 'the uae' : (regionName.of(country) ?? country).toLowerCase()} at ${dollars(cents)}/min`)
+    .join(', ');
+
+/** Countries with numbers for sale now, the ones held back by regulator paperwork, and approved ones the carrier has none of today. */
+function offers(countries: CountryOffer[]): { live: CountryOffer[]; soon: CountryOffer[]; outOfStock: CountryOffer[] } {
+  return {
+    live: countries.filter((c) => c.available),
+    soon: countries.filter(isAwaitingApproval),
+    outOfStock: countries.filter((c) => !c.available && !isAwaitingApproval(c) && COUNTRIES[c.country]?.requirementGroup && !COUNTRIES[c.country]?.paused),
+  };
 }
 
 export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; countries: CountryOffer[]; error?: string; amount?: string }> = (p) => {
@@ -69,6 +80,7 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
           <li>flight rebooking after a cancellation or delay, date changes, refunds</li>
           <li>store hours, stock checks, quotes, "do you do X"</li>
           <li>sitting through phone menus and hold music</li>
+          <li>businesses abroad: europe and the uae from your free us number, plus a local number in any of {offers(p.countries).live.length} countries (see the <a href="#faq">faq</a>)</li>
         </ul>
         <h3>how it sounds</h3>
         <p><a href="/examples">hear the agent on real calls</a></p>
@@ -92,7 +104,8 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
 
 /** The faq on the home page and the rules page. */
 const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ pricePerMinuteCents, countries }) => {
-  const { live, soon } = offers(countries);
+  const { live, soon, outOfStock } = offers(countries);
+  const extra = pricierDestinations();
   return (
   <>
     <h3 id="faq">faq</h3>
@@ -100,10 +113,12 @@ const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ p
       <details>
         <summary>which countries can it call?</summary>
         <p>
-          every account can call businesses in the us, canada, and europe. european calls go out from your european call4me number if you have one, otherwise from
-          your us number. anywhere else, buy a call4me number in that country and calls there go out from it. a local number also means the business sees a familiar
-          number and can call you back cheaply.{live.length > 0 && <> numbers you can buy today: {names(live)}.</>}
-          {soon.length > 0 && <> waiting on regulator approval, usually a few days: {names(soon)}.</>} calls abroad cost the same {dollars(pricePerMinuteCents)}/min as calls at home.
+          every account can call businesses in the us, canada, europe, and the uae from its free us number. european calls go out from your european call4me number if
+          you have one. anywhere else, buy a call4me number in that country and calls there go out from it, so the business sees a local number it can call back
+          cheaply.{live.length > 0 && <> you can buy numbers in {live.length} countries today: {names(live)}.</>}
+          {outOfStock.length > 0 && <> approved, but none in stock right now: {names(outOfStock)}.</>}
+          {soon.length > 0 && <> waiting on regulator approval, usually a few days: {names(soon)}.</>} calls cost {dollars(pricePerMinuteCents)}/min wherever you call
+          {extra ? <>, except {extra}</> : null}.
         </p>
       </details>
       <details>

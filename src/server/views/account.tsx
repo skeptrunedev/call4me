@@ -5,6 +5,7 @@ import type { recordingOutput } from '../lib/recording-schema';
 import type { callView } from '../mcp/server';
 import { dollars, type Account } from '../services/accounts';
 import type { CountryOffer, NumberView } from '../services/numbers';
+import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { MIN_TOPUP_CENTS, type Reload } from '../services/topups';
 import { CopyBlock, Layout } from './layout';
 import { CallOnboarding } from './onboarding';
@@ -149,7 +150,7 @@ export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerM
       <select id="country" name="country">
         {p.offers.map((o) => (
           <option value={o.country} disabled={!o.available}>
-            {o.name} ({o.type.replace('_', ' ')}): {o.available ? `${o.price} now, then ${o.monthly}/month` : o.reason}
+            {o.name} ({o.type.replace('_', ' ')}): {o.available ? `${o.price} now, then ${o.monthly}/month${DESTINATION_PRICE_CENTS[o.country] ? `; calls ${dollars(DESTINATION_PRICE_CENTS[o.country]!)}/min` : ''}` : o.reason}
           </option>
         ))}
       </select>{' '}

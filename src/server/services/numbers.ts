@@ -16,7 +16,7 @@ import { accounts, dollars, type Account } from './accounts';
  * regulator requires paperwork, the Telnyx requirement group holding it. A country with a
  * requirement group sells numbers only once Telnyx has approved that group.
  */
-export const COUNTRIES: Record<string, { name: string; type: string; requirementGroup?: string }> = {
+export const COUNTRIES: Record<string, { name: string; type: string; requirementGroup?: string; /** Why sales are on hold, e.g. the carrier's calling rate isn't known yet. */ paused?: string }> = {
   US: { name: 'United States', type: 'local' },
   CA: { name: 'Canada', type: 'local' },
   PR: { name: 'Puerto Rico', type: 'local' },
@@ -37,7 +37,7 @@ export const COUNTRIES: Record<string, { name: string; type: string; requirement
   CO: { name: 'Colombia', type: 'local', requirementGroup: '37f32e5f-e406-44fd-b37c-4760eae74b90' },
   PA: { name: 'Panama', type: 'local', requirementGroup: '90eaa1a5-2536-4b02-9a6a-61aba8036f6c' },
   BO: { name: 'Bolivia', type: 'national', requirementGroup: '5b04967d-b4cd-46d6-9063-f04f9396afcc' },
-  NI: { name: 'Nicaragua', type: 'mobile', requirementGroup: 'f59a2236-08ed-4514-a067-216b7d6fa2a4' },
+  NI: { name: 'Nicaragua', type: 'mobile', requirementGroup: 'f59a2236-08ed-4514-a067-216b7d6fa2a4', paused: 'its calling rate is not published yet, so calls there cannot be priced' },
 };
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -142,6 +142,12 @@ export const EUROPE = new Set([
  * and the UAE, where no carrier sells numbers to a company outside the country, so a US caller ID
  * is the only way in. A call to the UAE costs more (lib/rates.ts).
  */
+/** The reason a country isn't sold yet while its regulatory paperwork is pending. */
+const awaitingApproval = (name: string) => `${name} numbers are waiting on regulatory approval`;
+
+/** Whether an unavailable offer is held back by regulator paperwork, as opposed to the carrier having none in stock. */
+export const isAwaitingApproval = (offer: CountryOffer) => !offer.available && offer.reason === awaitingApproval(offer.name);
+
 export const FROM_HOME = new Set([...EUROPE, 'AE']);
 
 /** Every country some account may call: the telephone carrier must allow each of them. */
@@ -169,7 +175,8 @@ export function numbers(env: Env) {
   async function blocked(country: string): Promise<string | null> {
     const c = COUNTRIES[country];
     if (!c) return `numbers are not sold in ${country}; available: ${Object.keys(COUNTRIES).join(', ')}`;
-    if (c.requirementGroup && (await provider.requirementGroupStatus(c.requirementGroup)) !== 'approved') return `${c.name} numbers are waiting on regulatory approval`;
+    if (c.paused) return `${c.name} numbers are on hold: ${c.paused}`;
+    if (c.requirementGroup && (await provider.requirementGroupStatus(c.requirementGroup)) !== 'approved') return awaitingApproval(c.name);
     return null;
   }
 
