@@ -1,6 +1,6 @@
 ---
-title: "Meta Muse AI agent: what it is, how its connectors work, and how to give it a phone"
-seoTitle: Meta Muse AI agent and connectors, explained
+title: "How to use Meta Muse with custom connectors (and give it a phone)"
+seoTitle: How to use Meta Muse with custom connectors
 subtitle: Muse is Meta's personal AI agent, and it can't install an MCP server the way Claude Code can. It builds its own connectors instead. Here's what Muse is, how it connects to other services, and the exact message that gets it making phone calls.
 description: What Meta's Muse AI agent is, how Muse connectors and custom connectors work, and how to set Muse up to make phone calls with call4me, keeping your key out of the chat.
 date: 2026-10-01
@@ -51,7 +51,7 @@ Not as a setting. Claude Code, Codex, ChatGPT, and grok.com all have a place whe
 
 But MCP is just an API, and Muse can write a connector for any API. So the working approach is to ask Muse to build a connector to the MCP server, using the official MCP SDK, rather than to "install" one.
 
-## How to make phone calls with Muse
+## How to use Meta Muse with a custom connector: phone calls
 
 This is the exact message we sent Muse today:
 

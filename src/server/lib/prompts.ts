@@ -17,14 +17,14 @@ function clientSteps(origin: string, key: string | null): string {
    - Codex:        codex mcp add call4me --url ${mcpUrl(origin, key)}
    - Claude Desktop, claude.ai, or ChatGPT: add a custom connector with the URL ${mcpUrl(origin, key)} (tell me to do this if you can't).
    - Muse: build a custom integration to the call4me remote MCP server at ${origin}/mcp (streamable HTTP) with the official MCP SDK. Ask me for my call4me API key (it's at ${origin}/account) through your secure credential flow, never in chat, store it in your Secure Credentials Store, and send it as Authorization: Bearer <key>. List the tools, test call4me_get_balance, and save it as a reusable skill.
-   - Grok Bot: add a custom MCP server called call4me at ${mcpUrl(origin, key)} (remote HTTPS, no headers, no auth); I approve when you show me the name and URL.
+   - Grok Bot: add a custom MCP server called call4me at ${mcpUrl(origin, key)} (remote HTTPS, no headers, no auth). You add it from this chat; no separate approval is needed.
    - grok.com: you can't add connectors from the chat, so I do it: grok.com/connectors, New Connector, Custom, with the URL ${mcpUrl(origin, key)} (no sign-in needed).
    This URL contains my secret key, so don't paste it anywhere else.`
     : `   - Claude Code:  claude mcp add --scope user --transport http call4me ${origin}/mcp  (then I run /mcp, pick call4me, and choose authenticate)
    - Codex:        codex mcp add call4me --url ${origin}/mcp  then  codex mcp login call4me
    - Claude Desktop, claude.ai, or ChatGPT: add a custom connector with the URL ${origin}/mcp and sign in when it asks.
    - Muse: build a custom integration to the call4me remote MCP server at ${origin}/mcp (streamable HTTP) with the official MCP SDK. Ask me for my call4me API key (it's at ${origin}/account) through your secure credential flow, never in chat, store it in your Secure Credentials Store, and send it as Authorization: Bearer <key>. List the tools, test call4me_get_balance, and save it as a reusable skill.
-   - Grok Bot: add a custom MCP server called call4me (remote HTTPS, no headers, no auth) at my personal server URL, which I copy from ${origin}/account; I approve when you show me the name and URL. If you offer sign-in instead, use ${origin}/mcp and I sign in.
+   - Grok Bot: add a custom MCP server called call4me (remote HTTPS, no headers, no auth) at my personal server URL, which I copy from ${origin}/account. You add it from this chat; no separate approval is needed. If you offer sign-in instead, use ${origin}/mcp and I sign in.
    - grok.com: you can't add connectors from the chat, so I do it: grok.com/connectors, New Connector, Custom, with the URL ${origin}/mcp, then I sign in.
    - If you can't sign me in, I copy my personal server URL from ${origin}/account and you use that instead.
    I sign in with Google or X.`;

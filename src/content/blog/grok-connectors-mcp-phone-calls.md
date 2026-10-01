@@ -26,12 +26,14 @@ There are two kinds:
 
 ## Does Grok support MCP?
 
+Yes. Grok's MCP support covers all three xAI products: the grok.com chat (custom connectors), Grok Bot (custom MCP servers), and the xAI API (remote MCP tools). Here's how xAI MCP support works in each.
+
 Yes, in all three places Grok runs, though each one sets it up differently:
 
 | Where you use Grok | How you add an MCP server | Who adds it |
 |---|---|---|
 | Grok chat on grok.com | grok.com/connectors, **New Connector**, **Custom** | You, in settings |
-| Grok Bot (desktop and mobile app) | Ask the Bot in chat, or **Setup**, **Plugins**, **Add** on a Team Bot | The Bot, after you approve |
+| Grok Bot (desktop and mobile app) | Ask the Bot in chat, or **Setup**, **Plugins**, **Add** on a Team Bot | The Bot, from your chat message |
 | xAI API | A `"type": "mcp"` entry in the request's `tools` array | Your code |
 
 Two rules apply everywhere:
@@ -50,6 +52,17 @@ Grok then finds the tools the server offers and makes them available in your cha
 One thing that trips people up: **the Grok chat can't add a connector for you.** If you paste a setup prompt into grok.com that says "add this MCP server", Grok has no tool to do it. You do this step yourself in settings, then come back to the chat.
 
 On **Grok Business and Enterprise** plans there's an extra step first. According to xAI's [connector management page](https://docs.x.ai/grok/connector-management), a team admin adds the server in the xAI console (console.x.ai, **Grok Business**, **Connectors**, **+ Add Connector**, **Other**, then the MCP server URL). After that, team members connect it on grok.com/connectors.
+
+## What is Grok Bot?
+
+Grok Bot is xAI's app for AI teammates you keep around. In xAI's words, it "gives you Bots you can keep around: AI teammates with names, jobs, and context that compounds over time" ([Grok Bot docs](https://docs.x.ai/grok-bot)). The parts that matter for adding tools:
+
+- **Each Bot has its own computer.** Bots work on a persistent cloud computer with a browser, files, and a terminal, and keep working while your laptop is closed.
+- **You set it up by messaging it.** "Setup is a message, not a workflow builder." That's also how you add a custom MCP server, as shown below.
+- **It runs everywhere.** macOS, Windows, Linux, iOS, and Android.
+- **It comes with Cursor or SuperGrok.** It's included with every paid individual Cursor plan and the Cursor Teams plan, and you can link a SuperGrok, SuperGrok Plus, or SuperGrok Heavy subscription instead.
+
+That makes it different from the grok.com chat: grok.com answers questions and uses the connectors you add in settings, while a Bot does multi-step work and can wire up its own tools when you ask.
 
 ## How to add an MCP server to Grok Bot
 
@@ -75,7 +88,7 @@ We ran this on October 1, 2026 in the Grok Bot desktop app on a Mac, with a real
 3. **The chat did all of it.** We asked the Bot to add a custom remote server named `call4me` at our personal call4me URL, HTTPS, no headers, no extra authentication. There was no separate approval dialog. The Bot set it up from the conversation and reported that `call4me` was connected and exposed **15 tools**.
 4. **Then we asked it something real:** "Use call4me to check my balance." The Bot called the new tool and came back with the balance, worked out that it was about 32 minutes of calls at $0.25 a minute, noted that UAE calls cost $0.40 a minute, confirmed the monthly reload was off, and listed the account's calling numbers. That last part is the giveaway that it was reading live account data, not echoing our prompt back.
 
-[Composio's walkthrough](https://composio.dev/content/how-to-add-mcp-servers-to-grok-bot) describes the Bot showing the name and URL to confirm first. In our run it connected without asking, so check the URL is right before you send the message, not after.
+That's the whole setup: one message, and the Bot connects it. Check the URL is right before you send it.
 
 Treat that personal URL like a password: it has your key in it. Paste it only into the Bot's chat, not into anything you share.
 
@@ -134,7 +147,7 @@ call4me is an MCP server that places real phone calls. Your agent hands it a goa
 **2. Add it to Grok.**
 
 - **grok.com:** go to grok.com/connectors, **New Connector**, **Custom**, and paste your personal URL. Or paste `https://call4.me/mcp` and sign in to call4me when asked.
-- **Grok Bot:** tell your Bot "Add a custom MCP server called call4me at [your personal URL] (remote HTTPS, no headers, no auth)" and approve it. On a Team Bot, use `https://call4.me/mcp` instead (see the credential trap above).
+- **Grok Bot:** tell your Bot "Add a custom MCP server called call4me at [your personal URL] (remote HTTPS, no headers, no auth)". On a Team Bot, use `https://call4.me/mcp` instead (see the credential trap above).
 - **xAI API:** the `tools` entry in the example above, with your key in the URL.
 
 **3. Check the tools showed up.** Once connected, Grok can see tools like these:
