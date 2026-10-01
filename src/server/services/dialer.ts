@@ -121,7 +121,8 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       callbackRingsOwner: caller.own,
       localTime: localTimeIn(brief.timezone),
       owner: person.name,
-      assistantName: assistantNameOf(profile),
+      assistantName: brief.caller_name || assistantNameOf(profile),
+      callingAs: brief.calling_as ?? null,
       connectWhen: brief.connect_when ?? null,
     };
     const stream = await streamUrl(env, call.id);
@@ -182,14 +183,16 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
   }
   const owner = account.display_name || 'the person you reached';
   const db = calls(env.DB);
+  // A callback only knows the calls placed from the number it rang, and answers as they were made:
+  // an account calling for several companies gives each its own number.
   const { results: recent } = await env.DB.prepare(
-    `SELECT business, goal, outcome, created_at FROM calls WHERE account_id = ? AND direction = 'outbound' AND answered_at IS NOT NULL ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 5`,
+    `SELECT business, goal, outcome, created_at FROM calls WHERE account_id = ? AND direction = 'outbound' AND from_number = ? AND answered_at IS NOT NULL ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 5`,
   )
-    .bind(account.id, opts.from)
+    .bind(account.id, opts.to, opts.from)
     .all<{ business: string; goal: string; outcome: string | null; created_at: number }>();
   const earlier = await env.DB.prepare(`SELECT business FROM calls WHERE account_id = ? AND to_number = ? ORDER BY created_at DESC LIMIT 1`).bind(account.id, opts.from).first<{ business: string }>();
   // A business calling back after a voicemail gets the original task finished, not a message taken.
-  const tasks = openTasks(await db.unfinished(account.id), opts.from).slice(0, 3);
+  const tasks = openTasks((await db.unfinished(account.id)).filter((r) => r.from_number === opts.to), opts.from).slice(0, 3);
   const likely = likelyTask(tasks, opts.from);
   const openTask = (r: CallRow): OpenTask => {
     const b = JSON.parse(r.brief) as Brief;
@@ -214,7 +217,16 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
   }
   // A callback on a known task carries that task's brief, so its recap is judged against the goal.
   const likelyBrief = likely ? (JSON.parse(likely.brief) as Brief) : null;
-  const brief: Brief = likelyBrief ? { ...likelyBrief, max_minutes: maxMinutes } : { on_behalf_of: owner, facts: '', flexibility: '', timezone: null, max_minutes: maxMinutes };
+  // Who answers: the identity of the call being returned, else of the latest call placed from this number.
+  const latest = likelyBrief
+    ? null
+    : await env.DB.prepare(`SELECT brief FROM calls WHERE account_id = ? AND direction = 'outbound' AND from_number = ? ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 1`)
+        .bind(account.id, opts.to, opts.from)
+        .first<{ brief: string }>();
+  const identity: Pick<Brief, 'caller_name' | 'calling_as'> = likelyBrief ?? (latest ? (JSON.parse(latest.brief) as Brief) : {});
+  const brief: Brief = likelyBrief
+    ? { ...likelyBrief, max_minutes: maxMinutes }
+    : { on_behalf_of: owner, facts: '', flexibility: '', timezone: null, max_minutes: maxMinutes, caller_name: identity.caller_name ?? null, calling_as: identity.calling_as ?? null };
   await env.DB.prepare(
     `INSERT INTO calls (id, account_id, direction, to_number, from_number, business, goal, brief, status, telnyx_call_control_id, hold_cents, callback_for, created_at) VALUES (?, ?, 'inbound', ?, ?, ?, ?, ?, 'dialing', ?, ?, ?, ?)`,
   )
@@ -247,7 +259,8 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     callId: id,
     instructions: inboundInstructions({
       owner,
-      assistantName: assistantNameOf(profile),
+      assistantName: identity.caller_name || assistantNameOf(profile),
+      callingAs: identity.calling_as ?? null,
       tasks: ordered.map(openTask),
       likely: Boolean(likely),
       localTime: localTimeIn(likelyBrief?.timezone ?? null),

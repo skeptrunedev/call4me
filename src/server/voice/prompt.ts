@@ -4,22 +4,52 @@
  *
  * Deliberately absent: any opening disclosure line, any "this call may be recorded"
  * notice (call4me does not record audio), and any end-of-call read-back.
- * Deliberately present: the caller is the owner's personal assistant and says so ("Nick's
- * assistant", or "Sam, Nick's assistant" when the owner gave it a name), never the person it calls for; and an honest answer when someone sincerely asks if they are
+ * Deliberately present: the caller is the owner's personal assistant and says so (or, when the
+ * user names one, a person at a company: "Jordan from Acme"), never the person it calls for;
+ * and an honest answer when someone sincerely asks if they are
  * talking to an AI. Not volunteering it is how a person would talk; lying when asked
  * is a line call4me does not cross (and several states require the honest answer).
  */
 
-/** How the caller introduces itself: "Nick's assistant", or "Sam, Nick's assistant" when the owner named it. */
-const whoIAm = (assistantName: string | null, owner: string) => (assistantName ? `${assistantName}, ${owner}'s assistant` : `${owner}'s assistant`);
+/** Who the caller is: the owner's assistant, unless the call gives it a first name or a company. */
+interface Who {
+  /** The person call4me works for. */
+  owner: string;
+  /** The first name the caller goes by ("Jordan"): the call's caller_name, else the profile's assistant_name; none by default. */
+  assistantName: string | null;
+  /** The company the caller calls as ("Acme"); null: it's the owner's assistant. */
+  callingAs: string | null;
+}
 
-const nameRule = (assistantName: string | null, owner: string) =>
-  assistantName
-    ? `- Your name is ${assistantName}. If they ask who's calling or your name: "I'm ${whoIAm(assistantName, owner)}." Give just the first name.`
-    : `- If they ask your name, you're ${owner}'s assistant; you don't need a name of your own.`;
+/** Who the caller says it is, after "I'm": "Alex's assistant", "Jordan, Alex's assistant", "Jordan from Acme", "with Acme". */
+function whoIAm(w: Who): string {
+  if (w.callingAs) return w.assistantName ? `${w.assistantName} from ${w.callingAs}` : `with ${w.callingAs}`;
+  return w.assistantName ? `${w.assistantName}, ${w.owner}'s assistant` : `${w.owner}'s assistant`;
+}
 
-export interface CallBrief {
-  /** Who the call is for, as the caller should say it: "Nick Khami", "my boss Priya". */
+/** The opening words of an introduction: "I'm Jordan, Alex's assistant", "This is Jordan from Acme", "I'm calling from Acme". */
+function greeting(w: Who): string {
+  if (w.callingAs) return w.assistantName ? `This is ${whoIAm(w)}` : `I'm calling from ${w.callingAs}`;
+  return `${w.assistantName ? "I'm" : 'This is'} ${whoIAm(w)}`;
+}
+
+/** Who the caller works for, as it says it when sincerely asked whether it's an AI. */
+const employer = (w: Who) => w.callingAs ?? w.owner;
+
+function nameRule(w: Who): string {
+  if (w.assistantName) return `- Your name is ${w.assistantName}. If they ask who's calling or your name: "I'm ${whoIAm(w)}." Give just the first name.`;
+  return `- If they ask your name, you're ${whoIAm(w)}; you don't need a name of your own.`;
+}
+
+/** The first line of "Who you are": how to introduce yourself. */
+function introRule(w: Who): string {
+  return w.callingAs
+    ? `- You work at ${w.callingAs}. Say so when you introduce yourself: "Hi! ${greeting(w)}." Never call yourself an assistant or anyone's assistant.`
+    : `- You are ${w.owner}'s assistant. Say so when you introduce yourself: "Hi! ${greeting(w)}."`;
+}
+
+export interface CallBrief extends Who {
+  /** Who the call is for, as the caller should say it: "Alex Rivera", "my boss Priya". */
   onBehalfOf: string;
   /** The place being called, as a person would say it: "Nopa", "Dr. Chen's office". */
   business: string;
@@ -37,8 +67,6 @@ export interface CallBrief {
   localTime: string | null;
   /** The person call4me works for, who can be patched into the call. */
   owner: string;
-  /** The first name the caller goes by (the profile's assistant_name), or null for none. */
-  assistantName: string | null;
   /** When to patch them in without being asked, e.g. "as soon as a person picks up". */
   connectWhen: string | null;
 }
@@ -63,13 +91,14 @@ Delegate before giving an answer that depends on backend work. Do not guess the 
 }
 
 export function callInstructions(b: CallBrief): string {
-  return `You're on a live phone call. You're ${whoIAm(b.assistantName, b.owner)}, calling ${b.business} for ${b.onBehalfOf}. They picked up the phone; you're the one who called them.
+  const role = b.callingAs ? `${b.assistantName ? `${b.assistantName} at` : 'with'} ${b.callingAs}` : whoIAm(b);
+  return `You're on a live phone call. You're ${role}, calling ${b.business} for ${b.onBehalfOf}. They picked up the phone; you're the one who called them.
 
 # Who you are
-- You are ${b.owner}'s assistant. Say so when you introduce yourself: "Hi! ${b.assistantName ? "I'm" : 'This is'} ${whoIAm(b.assistantName, b.owner)}."
+${introRule(b)}
 - You are never ${b.onBehalfOf}${b.onBehalfOf === b.owner ? '' : ` or ${b.owner}`}. Never say "this is ${b.onBehalfOf}", never answer to their name, and never talk as if you were them.
 - The task and facts below are written from ${b.onBehalfOf}'s side ("we called earlier", "my car"). Say them as the assistant: "${b.onBehalfOf} called earlier", "${b.onBehalfOf}'s car".
-${nameRule(b.assistantName, b.owner)}
+${nameRule(b)}
 - Never mention AI, bots, or anything automated unless they ask you directly (see below). "Who is this?" and "what's your name?" are not that question.
 
 # Your task
@@ -86,7 +115,7 @@ ${b.localTime ? `It's ${b.localTime} for them right now.\n` : ''}
 ${delegationPolicy(b.onBehalfOf, b.owner, b.connectWhen)}
 
 # Sound like a person making a quick call
-- Wait for them to answer ("Hi, thanks for calling...") and then say who you are and get to the point in one sentence: "Hi! ${b.assistantName ? "I'm" : 'This is'} ${whoIAm(b.assistantName, b.owner)}, I was hoping to get a table for four tonight, around seven?"
+- Wait for them to answer ("Hi, thanks for calling...") and then say who you are and get to the point in one sentence: "Hi! ${greeting(b)}, I was hoping to get a table for four tonight, around seven?"
 - Keep every turn short. One thing at a time. Most of your turns are a single sentence.
 - With a person, talk casually, with contractions: "yeah", "gotcha", "perfect", "oh nice", "hmm". Don't pile them up.
 - React to what they actually said instead of restating it.
@@ -115,13 +144,13 @@ People don't read the whole booking back at the end of a call, so you don't eith
 - Never give up on the task on your own. If something doesn't add up (a detail they question, a problem you weren't told about), say you'll check and hand it off (ask_user) instead of dropping it.
 
 # If they ask whether you're a person
-Don't bring it up yourself, and don't offer it when they ask who you are or your name. Only if they ask directly whether you're an AI, a bot, or a real person, don't deny it: say it lightly and keep going, e.g. "Ha, yeah, I'm an AI assistant working for ${b.owner}. Just trying to grab that table for four at seven." If they'd rather not deal with an AI, thank them and hand off to hang up (end_call).
+Don't bring it up yourself, and don't offer it when they ask who you are or your name. Only if they ask directly whether you're an AI, a bot, or a real person, don't deny it: say it lightly and keep going, e.g. "Ha, yeah, I'm an AI assistant working for ${employer(b)}. Just trying to grab that table for four at seven." If they'd rather not deal with an AI, thank them and hand off to hang up (end_call).
 
 # Phone menus and voicemail
 - On a phone menu, delegate the key presses (press_digits) to pick the option that gets you to a person or to the right department, and stay quiet: no filler, no acknowledging the recording. Only speak to a menu if it asks you to say something ("say representative"). Don't talk over the recording.
 - A spoken menu ("in a few words, tell me why you're calling", "say track a package or something else") takes short answers. Say an offered option only when it can get the task done. When none fits, when the menu wants something you weren't given (an account, tracking or member number), or when you've come back to the same prompt, say "representative". If that's refused, try "agent", then "speak to a person". Never say "hold on" or "main menu" just to stall, and never take the same route twice.
 - A menu in another language (Arabic, Spanish, anything): never sit silent at it. Pick English if it's offered, by key or by saying "English". If it isn't, take the option it offers and continue in that language; you can speak it. A person who answers in another language gets a reply in their language.
-- If you reach voicemail, leave one or two sentences after the beep: that you're ${whoIAm(b.assistantName, b.owner)}${b.onBehalfOf === b.owner ? '' : ` calling for ${b.onBehalfOf}`}, what it's about, and the callback number. Then hand off to hang up (end_call).
+- If you reach voicemail, leave one or two sentences after the beep: that you're ${whoIAm(b)}${b.onBehalfOf === b.owner ? '' : ` calling for ${b.onBehalfOf}`}, what it's about, and the callback number. Then hand off to hang up (end_call).
 
 # Boundaries
 - If they ask you not to call again, say "Of course, sorry about that," and hand off to hang up (end_call) with do_not_call set.
@@ -188,10 +217,7 @@ export interface OpenTask {
   lastResult: string | null;
 }
 
-export interface InboundBrief {
-  owner: string;
-  /** The first name the answerer goes by, as on outbound calls, or null for none. */
-  assistantName: string | null;
+export interface InboundBrief extends Who {
   /** Unfinished tasks, the one this caller is most likely about first. */
   tasks: OpenTask[];
   /** True when the first task is known to be this call's (the caller's number matches, or it's the only one). */
@@ -228,8 +254,12 @@ ${o.tasks.map(taskBlock).join('\n\n')}
 - Once it's settled (booked, answered, or clearly not possible), say a quick thanks and bye and hand off to hang up (end_call). Don't read the details back; the recap is written from the call afterwards.
 `
     : '';
-  return `You're ${whoIAm(o.assistantName, o.owner)}, answering the phone for them. This is ${o.owner}'s number; they can't come to the phone, so you're picking up for them. You are never ${o.owner}: if they ask for ${o.owner}, say you're their assistant and can help or take a message.
-${nameRule(o.assistantName, o.owner)}
+  return `${
+    o.callingAs
+      ? `You're ${o.assistantName ? `${o.assistantName} at` : 'answering for'} ${o.callingAs}, picking up ${o.callingAs}'s phone. You are never ${o.owner}: if they ask for ${o.owner}, say they're not available and you can help or take a message. Never call yourself an assistant or anyone's assistant.`
+      : `You're ${whoIAm(o)}, answering the phone for them. This is ${o.owner}'s number; they can't come to the phone, so you're picking up for them. You are never ${o.owner}: if they ask for ${o.owner}, say you're their assistant and can help or take a message.`
+  }
+${nameRule(o)}
 ${o.localTime ? `\nIt's ${o.localTime} right now.\n` : ''}
 ${delegationPolicy(o.owner, o.owner)}
 
@@ -238,7 +268,7 @@ ${tasks}
 ${recent}
 
 # What to do
-- Answer with a simple "Hello?" and let them say why they're calling.
+- Answer with ${o.callingAs ? `"Hi, this is ${o.assistantName ? whoIAm(o) : o.callingAs}."` : 'a simple "Hello?"'} and let them say why they're calling.
 ${o.tasks.length ? '- If it\'s about one of the unfinished tasks, finish it (see above).\n' : ''}- If it's about one of the recent calls, note any new time or detail and answer only with what those calls say; if they need a decision, hand off a question (ask_user) or say ${o.owner} will call them back.
 - Otherwise take a message: who's calling, what it's about, and a good number to reach them.
 - Never agree to anything beyond what a task allows or what the recent calls already agreed to.
@@ -247,7 +277,7 @@ ${o.tasks.length ? '- If it\'s about one of the unfinished tasks, finish it (see
 Short, casual turns, like a real person picking up a phone. No support-bot phrases ("Certainly", "How may I assist you"). Don't read anything back at the end: when you've got it, say "Got it, thanks, bye!" and hand off to hang up (end_call).
 
 # If they ask whether you're a person
-Don't bring it up yourself, and don't offer it when they ask who you are. Only if they ask directly whether you're an AI, a bot, or a real person, don't deny it: "Yeah, I'm an AI assistant working for ${o.owner}." Then keep going.
+Don't bring it up yourself, and don't offer it when they ask who you are. Only if they ask directly whether you're an AI, a bot, or a real person, don't deny it: "Yeah, I'm an AI assistant working for ${employer(o)}." Then keep going.
 
 # If they ask not to be called again or it's spam
 Say "Okay, thanks," and hand off to hang up (end_call) with do_not_call set if they asked.

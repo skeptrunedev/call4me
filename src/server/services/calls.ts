@@ -1,7 +1,7 @@
 import { newId, now } from '../lib/ids';
 import { checkDialable, type PhoneCheck } from '../lib/phone';
 import { accounts, type Account } from './accounts';
-import { catalog, missingMessage, resolveIntake, type Surface } from './intake';
+import { catalog, missingMessage, PROFILE_FIELDS, resolveIntake, type Surface } from './intake';
 import { mayCall, ownNumberRefusal } from './numbers';
 import { profiles } from './profiles';
 
@@ -21,6 +21,10 @@ export interface Brief {
   connect_when?: string | null;
   /** Ring the user to listen in as soon as the business answers. */
   listen_in?: boolean;
+  /** The first name the caller goes by ("Jordan"); none by default. */
+  caller_name?: string | null;
+  /** The company the caller calls as ("Acme"); callbacks to the number it called from answer the same way. */
+  calling_as?: string | null;
 }
 
 export interface TranscriptLine {
@@ -129,6 +133,10 @@ export interface PlaceCallInput {
   listen_in?: boolean;
   /** Which of the account's numbers to call from; by default one in the callee's country. */
   from?: string;
+  /** The first name the caller introduces itself with. */
+  caller_name?: string;
+  /** The company the caller calls from: "Jordan from Acme" rather than "Alex's assistant". */
+  calling_as?: string;
 }
 
 /** What a per-call secret looks like wherever the call is stored. */
@@ -176,6 +184,10 @@ export function calls(db: D1Database) {
         const refusal = own && ownNumberRefusal(own, to);
         if (refusal) throw new CallError(refusal, 422);
       }
+      const callerName = input.caller_name?.trim() || null;
+      const nameProblem = callerName && PROFILE_FIELDS.assistant_name.check?.(callerName);
+      if (nameProblem) throw new CallError(`caller_name: ${nameProblem}`);
+      const callingAs = input.calling_as?.trim() || null;
       if (input.timezone && !validTimeZone(input.timezone)) throw new CallError(`timezone: "${input.timezone}" is not an IANA time zone like America/New_York`);
 
       const blocked = await db.prepare(`SELECT reason FROM blocked_numbers WHERE number = ?`).bind(to.e164).first<{ reason: string }>();
@@ -198,6 +210,8 @@ export function calls(db: D1Database) {
         max_minutes: maxMinutes,
         connect_when: input.connect_when?.trim() || null,
         ...(input.listen_in ? { listen_in: true } : {}),
+        ...(callerName ? { caller_name: callerName } : {}),
+        ...(callingAs ? { calling_as: callingAs } : {}),
       };
       const id = `call_${newId()}`;
       if (!(await accounts(db).hold(account.id, holdCents, `hold:${id}`, `up to ${maxMinutes} min to ${input.business.trim()}`))) {
