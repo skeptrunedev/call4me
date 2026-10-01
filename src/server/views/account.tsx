@@ -85,7 +85,6 @@ export const AccountPage: FC<{ account: Account; balanceCents: number; pricePerM
     <p class="small">
       {p.account.email} · {dollars(p.pricePerMinuteCents)}/min · about {Math.floor(p.balanceCents / p.pricePerMinuteCents)} minutes left
     </p>
-    <CallOnboarding numbers={p.numbers} />
     <CopyBlock id="agent-prompt" text={p.agentPrompt} rows={12} hidden />
     {p.reload ? (
       <form method="post" action="/account/reload/stop" class="inline">
