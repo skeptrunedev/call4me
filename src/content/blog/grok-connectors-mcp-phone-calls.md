@@ -64,7 +64,20 @@ The quickest way is to ask in chat:
 
 > Add a custom MCP server called call4me at https://call4.me/mcp/YOUR-KEY (remote HTTPS, no headers, no auth).
 
-Say "custom MCP server" so the Bot doesn't go looking for a ready-made plugin with a similar name instead. [Composio's walkthrough](https://composio.dev/content/how-to-add-mcp-servers-to-grok-bot) describes the Bot showing you the name and URL to confirm before it adds the server. We haven't confirmed the exact wording of that confirmation in xAI's own docs, so just check the URL is right before you approve.
+Say "custom MCP server" so the Bot doesn't go looking for a ready-made plugin with a similar name instead.
+
+### What happened when we tried it
+
+We ran this on October 1, 2026 in the Grok Bot desktop app on a Mac, with a real call4me account.
+
+1. **The app wanted an update first.** It opened to a mandatory "Restart to update" screen, so we restarted it before doing anything else.
+2. **There was no form for this.** We looked through the integrations marketplace and the installed plugins screen and found no obvious place to type in a custom MCP server. So we went back to the chat.
+3. **The chat did all of it.** We asked the Bot to add a custom remote server named `call4me` at our personal call4me URL, HTTPS, no headers, no extra authentication. There was no separate approval dialog. The Bot set it up from the conversation and reported that `call4me` was connected and exposed **15 tools**.
+4. **Then we asked it something real:** "Use call4me to check my balance." The Bot called the new tool and came back with the balance, worked out that it was about 32 minutes of calls at $0.25 a minute, noted that UAE calls cost $0.40 a minute, confirmed the monthly reload was off, and listed the account's calling numbers. That last part is the giveaway that it was reading live account data, not echoing our prompt back.
+
+[Composio's walkthrough](https://composio.dev/content/how-to-add-mcp-servers-to-grok-bot) describes the Bot showing the name and URL to confirm first. In our run it connected without asking, so check the URL is right before you send the message, not after.
+
+Treat that personal URL like a password: it has your key in it. Paste it only into the Bot's chat, not into anything you share.
 
 ### The Team Bot credential trap
 

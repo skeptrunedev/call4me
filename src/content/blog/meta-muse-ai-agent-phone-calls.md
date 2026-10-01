@@ -75,7 +75,7 @@ We ran exactly these steps in a fresh Muse chat on October 1, 2026. After the ke
 Its report, in short:
 
 - **Balance check passed.** It called `call4me_get_balance` and read back the account's real balance, minutes left at $0.25/min, and the account's call4me phone numbers, all matching the account page.
-- **14 tools available**: placing calls, checking status and transcripts, answering the caller's questions mid-call, patching you in or hanging up, listings, recordings, your calling profile, adding funds, and managing numbers.
+- **All of call4me's tools available**: placing calls, checking status and transcripts, answering the caller's questions mid-call, patching you in or hanging up, listings, recordings, your calling profile, adding funds, and managing numbers.
 - **The key never touched the chat.** Muse said the key went "straight into the Secure Vault via the connector page", and at call time a one-time stand-in is swapped for the real key on the way out, sent as an `Authorization: Bearer` header.
 - **Saved as a reusable skill** named `call4me`, so any future Muse conversation can place calls.
 
