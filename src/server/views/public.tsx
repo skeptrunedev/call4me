@@ -1,6 +1,6 @@
 import type { FC } from 'hono/jsx';
 import { dollars } from '../services/accounts';
-import { COUNTRIES, isAwaitingApproval, type CountryOffer, type NumberView } from '../services/numbers';
+import { isAwaitingApproval, type CountryOffer, type NumberView } from '../services/numbers';
 import { MIN_TOPUP_CENTS } from '../services/topups';
 import { MonthlyBox } from './account';
 import { SITE, SITE_DESCRIPTION } from '../lib/pages';
@@ -37,13 +37,9 @@ const pricierDestinations = () =>
     .map(([country, cents]) => `${country === 'AE' ? 'the uae' : (regionName.of(country) ?? country).toLowerCase()} at ${dollars(cents)}/min`)
     .join(', ');
 
-/** Countries with numbers for sale now, the ones held back by regulator paperwork, and approved ones the carrier has none of today. */
-function offers(countries: CountryOffer[]): { live: CountryOffer[]; soon: CountryOffer[]; outOfStock: CountryOffer[] } {
-  return {
-    live: countries.filter((c) => c.available),
-    soon: countries.filter(isAwaitingApproval),
-    outOfStock: countries.filter((c) => !c.available && !isAwaitingApproval(c) && COUNTRIES[c.country]?.requirementGroup && !COUNTRIES[c.country]?.paused),
-  };
+/** Countries with numbers for sale now, and the ones held back by regulator paperwork. */
+function offers(countries: CountryOffer[]): { live: CountryOffer[]; soon: CountryOffer[] } {
+  return { live: countries.filter((c) => c.available), soon: countries.filter(isAwaitingApproval) };
 }
 
 export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; countries: CountryOffer[]; error?: string; amount?: string }> = (p) => {
@@ -104,7 +100,7 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
 
 /** The faq on the home page and the rules page. */
 const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ pricePerMinuteCents, countries }) => {
-  const { live, soon, outOfStock } = offers(countries);
+  const { live, soon } = offers(countries);
   const extra = pricierDestinations();
   return (
   <>
@@ -116,7 +112,6 @@ const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ p
           every account can call businesses in the us, canada, europe, and the uae from its free us number. european calls go out from your european call4me number if
           you have one. anywhere else, buy a call4me number in that country and calls there go out from it, so the business sees a local number it can call back
           cheaply.{live.length > 0 && <> you can buy numbers in {live.length} countries today: {names(live)}.</>}
-          {outOfStock.length > 0 && <> approved, but none in stock right now: {names(outOfStock)}.</>}
           {soon.length > 0 && <> waiting on regulator approval, usually a few days: {names(soon)}.</>} calls cost {dollars(pricePerMinuteCents)}/min wherever you call
           {extra ? <>, except {extra}</> : null}.
         </p>
