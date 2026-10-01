@@ -20,7 +20,23 @@ export const blog = new Hono<AppEnv>();
 let cache: Post[] | null = null;
 export const posts = (): Post[] => (cache ??= renderAll(POST_SOURCES));
 
-const svc = (c: AppContext) => blogService(c.env.DB, messengerFor(c.env), c.env.APP_NAME, origin(c));
+const svc = (c: AppContext, db: D1Database | D1DatabaseSession = c.env.DB) => blogService(db, messengerFor(c.env), c.env.APP_NAME, origin(c));
+
+/**
+ * Pages read likes, comments, and counts from the nearest D1 replica; the primary is in one
+ * region and a reader on another continent would wait on it. After a like or comment the
+ * write's bookmark rides a short cookie, so that reader's next page is at least that fresh.
+ */
+const BOOKMARK_COOKIE = 'cb_d1';
+const replica = (c: AppContext) => {
+  const bookmark = getCookie(c, BOOKMARK_COOKIE);
+  return c.env.DB.withSession(bookmark && /^[0-9a-f-]{8,200}$/i.test(bookmark) ? bookmark : 'first-unconstrained');
+};
+const writer = (c: AppContext) => c.env.DB.withSession('first-primary');
+function keepBookmark(c: AppContext, db: D1DatabaseSession) {
+  const bookmark = db.getBookmark();
+  if (bookmark) setCookie(c, BOOKMARK_COOKIE, bookmark, { path: '/blog', httpOnly: true, sameSite: 'Lax', secure: new URL(c.req.url).protocol === 'https:', maxAge: 600 });
+}
 const supportOf = (c: AppContext) => supporters(c.env.DB, stripeFor(c), c.env);
 const CACHE = { 'cache-control': 'public, max-age=600' };
 const READER_COOKIE = 'cb_reader';
@@ -47,7 +63,8 @@ blog.get('/', async (c) => {
   const all = posts();
   const tab = (['latest', 'top'].includes(c.req.query('tab') ?? '') ? c.req.query('tab') : 'latest') as Tab;
   const q = (c.req.query('q') ?? '').trim().slice(0, 100);
-  const [engagement, subscribers] = await Promise.all([svc(c).engagement(all.map((p) => p.slug)), svc(c).subscriberCount()]);
+  const s = svc(c, replica(c));
+  const [engagement, subscribers] = await Promise.all([s.engagement(all.map((p) => p.slug)), s.subscriberCount()]);
   let list = q ? searchPosts(all, q) : all;
   const score = (p: Post) => {
     const e = engagement.get(p.slug)!;
@@ -60,7 +77,7 @@ blog.get('/', async (c) => {
 
 blog.get('/archive', async (c) => {
   const all = posts();
-  return c.html(<BlogArchive signedIn={Boolean(c.get('account'))} groups={archive(all)} engagement={await svc(c).engagement(all.map((p) => p.slug))} agentPrompt={blogPrompt(origin(c), await viewerKey(c))} />);
+  return c.html(<BlogArchive signedIn={Boolean(c.get('account'))} groups={archive(all)} engagement={await svc(c, replica(c)).engagement(all.map((p) => p.slug))} agentPrompt={blogPrompt(origin(c), await viewerKey(c))} />);
 });
 
 blog.get('/feed.xml', (c) => c.body(atomFeed(origin(c), posts()), 200, { 'content-type': 'application/atom+xml; charset=utf-8', ...CACHE }));
@@ -146,7 +163,7 @@ function find(slug: string): { post: Post; i: number; all: Post[] } {
 
 async function render(c: AppContext, slug: string, extra: { commentValues?: Record<string, string | undefined>; commentError?: string } = {}, status: 200 | 400 | 429 = 200) {
   const { post, i, all } = find(slug);
-  const s = svc(c);
+  const s = svc(c, replica(c));
   const r = reader(c);
   const [engagement, liked, comments, subscribers, who, key] = await Promise.all([s.engagement([slug]), s.liked(slug, r), s.comments(slug), s.subscriberCount(), standing(c), viewerKey(c)]);
   return c.html(
@@ -174,7 +191,9 @@ blog.get('/:slug', (c) => render(c, c.req.param('slug')));
 
 blog.post('/:slug/like', async (c) => {
   const { post } = find(c.req.param('slug'));
-  await svc(c).toggleLike(post.slug, reader(c));
+  const db = writer(c);
+  await svc(c, db).toggleLike(post.slug, reader(c));
+  keepBookmark(c, db);
   return c.redirect(`/blog/${post.slug}`, 303);
 });
 
@@ -185,7 +204,9 @@ blog.post('/:slug/comments', async (c) => {
   // The hidden "website" field is a honeypot: people never see it, bots fill it.
   if (field(form, 'website', 200)) return c.redirect(`/blog/${post.slug}#comments`, 303);
   try {
-    const row = await svc(c).addComment(post.slug, values, clientIp(c));
+    const db = writer(c);
+    const row = await svc(c, db).addComment(post.slug, values, clientIp(c));
+    keepBookmark(c, db);
     return c.redirect(`/blog/${post.slug}#c-${row.id}`, 303);
   } catch (err) {
     if (err instanceof BlogError && (err.status === 400 || err.status === 429)) return render(c, post.slug, { commentValues: values, commentError: err.message }, err.status);

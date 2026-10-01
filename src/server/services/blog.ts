@@ -63,7 +63,7 @@ export function validateComment(raw: { name: string; email: string; body: string
   return { name, email, body };
 }
 
-export function blog(db: D1Database, messenger: Messenger, appName: string, origin: string) {
+export function blog(db: D1Database | D1DatabaseSession, messenger: Messenger, appName: string, origin: string) {
   async function assertRate(table: 'blog_comments' | 'subscribers', ip: string | null, max: number, what: string) {
     if (!ip) return;
     const recent = await db.prepare(`SELECT COUNT(*) AS n FROM ${table} WHERE ip = ? AND created_at > ?`).bind(ip, now() - 3600 * 1000).first<{ n: number }>();
