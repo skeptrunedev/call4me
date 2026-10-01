@@ -3,7 +3,8 @@ import { getCookie, setCookie } from 'hono/cookie';
 import { POST_SOURCES } from '../../content/blog/index';
 import { isAdmin } from '../lib/auth';
 import { archive, atomFeed, related, renderAll, searchPosts, type Post } from '../lib/blog';
-import { clientIp, field, origin, safeNext, stripeFor, type AppContext, type AppEnv } from '../lib/context';
+import { clientIp, field, origin, safeNext, stripeFor, viewerKey, type AppContext, type AppEnv } from '../lib/context';
+import { blogPrompt, postPrompt } from '../lib/prompts';
 import { messengerFor } from '../lib/messaging';
 import { blog as blogService, BlogError } from '../services/blog';
 import { supporters } from '../services/supporters';
@@ -53,12 +54,13 @@ blog.get('/', async (c) => {
     return e.likes * 10 + e.comments;
   };
   if (!q && tab !== 'latest') list = [...list].sort((a, b) => score(b) - score(a) || (a.date < b.date ? 1 : -1));
-  return c.html(<BlogIndex signedIn={Boolean(c.get('account'))} posts={list} all={all} engagement={engagement} tab={tab} q={q} subscribers={subscribers} subscribed={c.req.query('subscribed')} />);
+  const agentPrompt = blogPrompt(origin(c), await viewerKey(c));
+  return c.html(<BlogIndex signedIn={Boolean(c.get('account'))} posts={list} all={all} engagement={engagement} tab={tab} q={q} subscribers={subscribers} subscribed={c.req.query('subscribed')} agentPrompt={agentPrompt} />);
 });
 
 blog.get('/archive', async (c) => {
   const all = posts();
-  return c.html(<BlogArchive signedIn={Boolean(c.get('account'))} groups={archive(all)} engagement={await svc(c).engagement(all.map((p) => p.slug))} />);
+  return c.html(<BlogArchive signedIn={Boolean(c.get('account'))} groups={archive(all)} engagement={await svc(c).engagement(all.map((p) => p.slug))} agentPrompt={blogPrompt(origin(c), await viewerKey(c))} />);
 });
 
 blog.get('/feed.xml', (c) => c.body(atomFeed(origin(c), posts()), 200, { 'content-type': 'application/atom+xml; charset=utf-8', ...CACHE }));
@@ -146,7 +148,7 @@ async function render(c: AppContext, slug: string, extra: { commentValues?: Reco
   const { post, i, all } = find(slug);
   const s = svc(c);
   const r = reader(c);
-  const [engagement, liked, comments, subscribers, who] = await Promise.all([s.engagement([slug]), s.liked(slug, r), s.comments(slug), s.subscriberCount(), standing(c)]);
+  const [engagement, liked, comments, subscribers, who, key] = await Promise.all([s.engagement([slug]), s.liked(slug, r), s.comments(slug), s.subscriberCount(), standing(c), viewerKey(c)]);
   return c.html(
     <BlogPost
       signedIn={who.signedIn}
@@ -161,6 +163,7 @@ async function render(c: AppContext, slug: string, extra: { commentValues?: Reco
       subscribers={subscribers}
       unlocked={!post.paid || who.unlocked}
       subscribed={c.req.query('subscribed')}
+      agentPrompt={postPrompt(origin(c), key, post.slug, post.title)}
       {...extra}
     />,
     status,

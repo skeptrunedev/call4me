@@ -238,9 +238,10 @@ export const UnsubscribePage: FC<{ accountId: string; sig: string }> = ({ accoun
   </Layout>
 );
 
-export const RulesPage: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ signedIn, pricePerMinuteCents, countries }) => (
+export const RulesPage: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries: CountryOffer[]; agentPrompt: string }> = ({ signedIn, agentPrompt, pricePerMinuteCents, countries }) => (
   <Layout title="rules" page="rules" signedIn={signedIn}>
     <h1>rules</h1>
+    <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
     <p>call4me places calls a person would make themselves: bookings, appointments, questions for a business. it is not for anything else.</p>
     <ul>
       <li>US, Canadian and European numbers, and numbers in other countries where your account holds a call4me number. no emergency numbers, no premium-rate or shared-cost numbers.</li>
@@ -266,14 +267,35 @@ export const PrivacyPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ si
       <li>our phone carrier (Telnyx) records and stores call audio. audio also passes through our speech model provider (OpenAI) while the call is live. after a call ends, you can play or save available recordings from <a href="/account">my account</a>, or ask your agent for them. recording links can expire and anyone you share a link with can use it.</li>
       <li>payments are handled by Stripe; we never see your card.</li>
       <li>on the blog, a cookie remembers which posts you liked. a comment stores the name and email you give (the email is never shown), and the newsletter stores your email until you unsubscribe.</li>
-      <li>email us to delete your account and its call history.</li>
+      <li>
+        email <a href="mailto:me@call4.me">me@call4.me</a> to delete your account and its call history.
+      </li>
     </ul>
   </Layout>
 );
 
-export const TermsPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
+export const SupportPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ signedIn, agentPrompt }) => (
+  <Layout title="support" page="support" signedIn={signedIn}>
+    <h1>support</h1>
+    <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
+    <p>
+      email <a href="mailto:me@call4.me">me@call4.me</a> with what happened and, for a call, its id (call_...) from your agent or <a href="/account">my account</a>. a person
+      answers, usually the same day.
+    </p>
+    <ul>
+      <li>a call went wrong: open it in <a href="/account">my account</a> for the outcome and the full transcript, and send us the call id. talk time is billed from pickup; unanswered, busy and failed calls are free.</li>
+      <li>credits and the monthly reload: your balance and reload are in <a href="/account">my account</a>, where you can stop the reload anytime. credits already loaded stay and don't expire.</li>
+      <li>connecting your agent: the <a href="/mcp">install page</a> has the steps for each app. in chatgpt, add call4me from the plugins directory and sign in when it asks.</li>
+      <li>someone you don't know called from a call4me number: tell us the number and we stop calls to yours.</li>
+      <li>deleting your account: email us from the address you signed in with, and we delete the account, its calling profile and its call history.</li>
+    </ul>
+  </Layout>
+);
+
+export const TermsPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ signedIn, agentPrompt }) => (
   <Layout title="terms" page="terms" signedIn={signedIn}>
     <h1>terms</h1>
+    <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
     <ul>
       <li>credits are prepaid and don't expire. a call holds its maximum cost from your balance before it dials and settles when it ends: talk time from pickup, rounded up to the minute. the rest of the hold comes back.</li>
       <li>by default, what you load reloads every month: the same amount is charged to your card and added as credits. stop it anytime from your account; credits already loaded stay.</li>

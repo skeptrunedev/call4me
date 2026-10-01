@@ -99,3 +99,66 @@ ${connect(origin, key)}
 - My calls, each with the brief you sent, the outcome, and a transcript: call4me_list_calls, then call4me_get_call for any one.
 - Deleting the whole account and its call history is done by email, as the privacy page says; there is no tool for it. Tell me that, and don't try to delete anything else on my behalf.`;
 }
+
+/** Rules: check a call against them before placing it. */
+export function rulesPrompt(origin: string, key: string | null): string {
+  return `Help me use call4me within its rules (${origin}/rules).
+
+${connect(origin, key)}
+
+Before placing any call for me with call4me_place_call, check it against the rules page:
+- Only businesses and services I want to reach. Never a personal number that isn't expecting the call.
+- No telemarketing, surveys, collections, or pretending to be me: the caller calls for me and says so if asked.
+- No emergency or premium-rate numbers. US, Canadian and European numbers work, plus countries my account holds a call4me number in (call4me_get_balance lists my numbers).
+If something I ask for breaks a rule, tell me which one and don't call. Otherwise check call4me_get_requirements for the category and ask me for anything missing in one message before dialing.`;
+}
+
+/** Terms: what a call costs and where the account stands. */
+export function termsPrompt(origin: string, key: string | null): string {
+  return `Explain how call4me billing works for me (${origin}/terms) and show me where I stand.
+
+${connect(origin, key)}
+
+Call call4me_get_balance and tell me my balance, the price per minute, about how many minutes that is, and my monthly reload if I have one. Then explain in a few lines: a call holds its maximum cost before it dials and settles when it ends; talk time counts from pickup, rounded up to the minute; unanswered, busy and failed calls are free; credits don't expire; the monthly reload can be stopped anytime at ${origin}/account and the credits already loaded stay.`;
+}
+
+/** Support: work out what went wrong, then hand off to a person with the details. */
+export function supportPrompt(origin: string, key: string | null): string {
+  return `Help me sort out a problem with call4me (${origin}/support).
+
+${connect(origin, key)}
+
+- A call went wrong: call4me_list_calls to find it, then call4me_get_call with its call_id for the outcome and transcript. Tell me in a few lines what happened and why it didn't get done, and offer to try again with what was missing.
+- Credits or the monthly reload: call4me_get_balance shows the balance, price per minute and reload. The reload is stopped at ${origin}/account.
+- Anything that needs a person (a refund, deleting my account, a number that keeps getting called): draft a short email to me@call4.me with the call id and what happened, and show it to me before I send it.`;
+}
+
+/** Examples: hear what a call sounds like, then make one. */
+export function examplesPrompt(origin: string, key: string | null): string {
+  return `I listened to the example calls at ${origin}/examples. Make a call like that for me.
+
+${connect(origin, key)}
+
+1. Ask me what I want done and where (book or cancel a table, ask a business a question, an appointment...).
+2. Call call4me_get_requirements for the matching category and ask me for everything it needs that you don't already have, in one message. Find the business's number (web search if needed) and check it's the right location.
+3. Place the call with call4me_place_call, show me the calling_number it returns, then keep calling call4me_get_call with wait_seconds until it finishes. Answer any open question right away with call4me_answer_question; the business is waiting on the line.
+4. Tell me the result in one or two lines.`;
+}
+
+/** The blog: find the post that fits a chore, then do it. */
+export function blogPrompt(origin: string, key: string | null): string {
+  return `Read the call4me blog (${origin}/blog, every post as markdown in ${origin}/llms.txt) and help me get a phone chore done with call4me.
+
+${connect(origin, key)}
+
+Ask me what I need called for. If a post covers it, use its tips. Then call call4me_get_requirements for the category, ask me in one message for anything missing, place the call with call4me_place_call, follow it with call4me_get_call until it finishes, and tell me the result in one or two lines.`;
+}
+
+/** One blog post: do what it describes, for me. */
+export function postPrompt(origin: string, key: string | null, slug: string, title: string): string {
+  return `Read "${title}" (${origin}/blog/${slug}, send Accept: text/markdown for the markdown) and do what it describes for me with call4me.
+
+${connect(origin, key)}
+
+Ask me for my own details for the call (the business, what I want, which times or prices work for me). Call call4me_get_requirements for the category and ask me in one message for anything it needs that you don't have. Then place the call with call4me_place_call, follow it with call4me_get_call until it finishes (answer open questions right away with call4me_answer_question), and tell me the result in one or two lines.`;
+}

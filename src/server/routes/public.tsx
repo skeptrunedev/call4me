@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { field, origin, ownerKey, stripeFor, viewerKey, type AppContext, type AppEnv } from '../lib/context';
-import { accountPrompt, callPrompt, installPrompt, privacyPrompt } from '../lib/prompts';
+import { accountPrompt, callPrompt, examplesPrompt, installPrompt, privacyPrompt, rulesPrompt, supportPrompt, termsPrompt } from '../lib/prompts';
 import { callView } from '../mcp/server';
 import { accounts, type Account } from '../services/accounts';
 import { ACTIVE, calls, CallError } from '../services/calls';
@@ -10,7 +10,7 @@ import { MIN_TOPUP_CENTS, parseAmountCents, reloadOf, topups, TopupError } from 
 import { validUnsubscribe } from '../services/drip';
 import { getCallRecordings, recordingUrl } from '../services/recordings';
 import { AccountPage, CallPage, NewKeyPage, type CallRecordings } from '../views/account';
-import { HomePage, MessagePage, PrivacyPage, RulesPage, TermsPage, UnsubscribePage, WelcomePage } from '../views/public';
+import { HomePage, MessagePage, PrivacyPage, RulesPage, SupportPage, TermsPage, UnsubscribePage, WelcomePage } from '../views/public';
 import { ExamplesPage } from '../views/examples';
 
 export const pub = new Hono<AppEnv>();
@@ -23,7 +23,7 @@ const home = async (c: AppContext, extra: { error?: string; amount?: string } = 
   );
 
 pub.get('/', (c) => home(c));
-pub.get('/examples', (c) => c.html(<ExamplesPage signedIn={signedIn(c)} />));
+pub.get('/examples', async (c) => c.html(<ExamplesPage signedIn={signedIn(c)} agentPrompt={examplesPrompt(origin(c), await viewerKey(c))} />));
 
 /**
  * "add funds": straight to Stripe, signed in or not. Credits come in $10 units (the buyer
@@ -221,6 +221,7 @@ pub.post('/unsubscribe', async (c) => {
   return c.html(<MessagePage title="unsubscribed" message="you won't get these emails anymore. your account and credits are unchanged." />);
 });
 
-pub.get('/rules', async (c) => c.html(<RulesPage signedIn={signedIn(c)} pricePerMinuteCents={pricePerMinute(c.env)} countries={await numbers(c.env).offers()} />));
+pub.get('/rules', async (c) => c.html(<RulesPage signedIn={signedIn(c)} pricePerMinuteCents={pricePerMinute(c.env)} countries={await numbers(c.env).offers()} agentPrompt={rulesPrompt(origin(c), await viewerKey(c))} />));
 pub.get('/privacy', async (c) => c.html(<PrivacyPage signedIn={signedIn(c)} agentPrompt={privacyPrompt(origin(c), await viewerKey(c))} />));
-pub.get('/terms', (c) => c.html(<TermsPage signedIn={signedIn(c)} />));
+pub.get('/terms', async (c) => c.html(<TermsPage signedIn={signedIn(c)} agentPrompt={termsPrompt(origin(c), await viewerKey(c))} />));
+pub.get('/support', async (c) => c.html(<SupportPage signedIn={signedIn(c)} agentPrompt={supportPrompt(origin(c), await viewerKey(c))} />));

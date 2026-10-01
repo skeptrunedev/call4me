@@ -4,7 +4,7 @@ import { RECOMMENDATIONS } from '../../content/blog/recommendations';
 import { longDate, postDate, shortPostDate, type Post } from '../lib/blog';
 import { SITE } from '../lib/pages';
 import type { CommentRow, Engagement } from '../services/blog';
-import { Layout } from './layout';
+import { CopyBlock, Layout } from './layout';
 
 /**
  * The blog, laid out the way a newsletter site is (featured posts with headline images,
@@ -83,7 +83,8 @@ export const BlogIndex: FC<{
   q: string;
   subscribers: number;
   subscribed?: 'sent' | string;
-}> = ({ signedIn, posts, all, engagement, tab, q, subscribers, subscribed }) => {
+  agentPrompt: string;
+}> = ({ signedIn, posts, all, engagement, tab, q, subscribers, subscribed, agentPrompt }) => {
   const featured = !q && tab === 'latest' ? all.slice(0, 3) : [];
   const rest = featured.length ? posts.filter((p) => !featured.includes(p)) : posts;
   return (
@@ -104,6 +105,7 @@ export const BlogIndex: FC<{
     >
       <div class="blog-head">
         <h1>call4me blog</h1>
+        <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
         <p class="muted">notes on AI agents that make phone calls for you.</p>
         <SubscribeBox count={subscribers} next="/blog" compact anchor sent={subscribed === 'sent'} error={subscribed && subscribed !== 'sent' ? subscribed : undefined} />
       </div>
@@ -156,12 +158,13 @@ export const BlogIndex: FC<{
   );
 };
 
-export const BlogArchive: FC<{ signedIn: boolean; groups: { month: string; posts: Post[] }[]; engagement: Map<string, Engagement> }> = ({ signedIn, groups, engagement }) => (
+export const BlogArchive: FC<{ signedIn: boolean; groups: { month: string; posts: Post[] }[]; engagement: Map<string, Engagement>; agentPrompt: string }> = ({ signedIn, groups, engagement, agentPrompt }) => (
   <Layout title="archive" page="blogArchive" signedIn={signedIn}>
     <p class="small">
       <a href="/blog">blog</a> &gt; archive
     </p>
     <h1>archive</h1>
+    <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
     {groups.length === 0 && (
       <p class="muted">
         no posts yet. <a href="/blog">subscribe</a> to get the first one.
@@ -238,7 +241,8 @@ export const BlogPost: FC<{
   commentValues?: Record<string, string | undefined>;
   commentError?: string;
   subscribed?: 'sent' | string;
-}> = ({ signedIn, supporter, post, older, newer, related, engagement, liked, comments, subscribers, unlocked, commentValues = {}, commentError, subscribed }) => {
+  agentPrompt: string;
+}> = ({ signedIn, supporter, post, older, newer, related, engagement, liked, comments, subscribers, unlocked, commentValues = {}, commentError, subscribed, agentPrompt }) => {
   const v = (k: string) => commentValues[k] ?? '';
   const [first, more] = splitAfterFirstSection(post.html);
   const here = `/blog/${post.slug}`;
@@ -287,6 +291,7 @@ export const BlogPost: FC<{
       <article class="post">
         <h1>{post.title}</h1>
         <p class="dek">{post.subtitle}</p>
+        <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
         <div class="byline">
           {post.authors.map((a) => (
             <a href={a.url} rel="author me noopener" class="author">

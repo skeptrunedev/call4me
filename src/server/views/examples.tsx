@@ -1,7 +1,7 @@
 import type { FC } from 'hono/jsx';
 import { raw } from 'hono/html';
 import { EXAMPLES } from '../../content/examples';
-import { Layout } from './layout';
+import { CopyBlock, Layout } from './layout';
 
 /** Keep one conversation audible at a time, including playback from native controls. */
 const AUDIO_SCRIPT = `document.addEventListener('play', function (event) {
@@ -11,10 +11,11 @@ const AUDIO_SCRIPT = `document.addEventListener('play', function (event) {
   });
 }, true);`;
 
-export const ExamplesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
+export const ExamplesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ signedIn, agentPrompt }) => (
   <Layout title="examples" page="examples" signedIn={signedIn}>
     <main class="examples">
       <h1>listen to real calls</h1>
+      <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
       <p>hear the agent talk to a business, ask questions, and get an answer before you buy.</p>
       <p class="small">real recordings at normal speed. private details muted, shown in brackets.</p>
       <p class="small">jump to: {EXAMPLES.map((example, i) => <>{i > 0 && ' · '}<a href={`#${example.slug}`}>{example.title}</a></>)}</p>

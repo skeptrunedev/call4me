@@ -46,6 +46,7 @@ export const PAGES = {
   consent: { description: 'let an AI agent make phone calls from your call4me account.', card: 'connect', path: '/oauth/consent' },
   rules: { description: 'what call4me will and will not call for: bookings, appointments, questions for a business. no telemarketing, no pretending to be you.', card: 'rules', path: '/rules' },
   privacy: { description: 'what call4me stores (your email, balance history, call briefs, outcomes, transcripts) and what it never records.', card: 'privacy', path: '/privacy' },
+  support: { description: 'help with call4me: credits and the monthly reload, a call that went wrong, connecting your agent, and deleting your account. email me@call4.me.', card: 'support', path: '/support' },
   terms: { description: 'call4me terms: prepaid credits that never expire, talk time billed from pickup, unanswered calls free, monthly reload you can stop anytime.', card: 'terms', path: '/terms' },
   blog: { description: 'notes from call4me on AI agents that make phone calls for you: what they are good at, how they sound, and what changed.', card: 'blog', path: '/blog' },
   blogArchive: { description: 'every post on the call4me blog, by month, from the first one to the latest.', card: 'blog', path: '/blog/archive' },
@@ -67,6 +68,7 @@ export const CARDS: Record<string, OgCard> = {
   connect: { title: 'connect your agent', subtitle: 'let an AI agent make phone calls from your call4me account', footer: 'you approve each agent that connects' },
   rules: { title: 'rules', subtitle: 'bookings, appointments, questions for a business. nothing else.', footer: 'the caller calls for you; it never claims to be you' },
   privacy: { title: 'privacy', subtitle: 'what call4me stores, and why it never records call audio', footer: 'payments handled by stripe' },
+  support: { title: 'support', subtitle: 'credits, calls that went wrong, connecting your agent, deleting your account', footer: 'email me@call4.me' },
   terms: { title: 'terms', subtitle: 'prepaid credits that never expire. unanswered calls are free.', footer: 'talk time billed from pickup' },
   blog: { title: 'call4me blog', subtitle: 'notes on AI agents that make phone calls for you', footer: 'by @skeptrune · new posts by email or atom feed' },
 };
