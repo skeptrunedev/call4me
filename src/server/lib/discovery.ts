@@ -60,6 +60,7 @@ export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: stri
   { page: 'examples', changefreq: 'monthly', priority: '0.9' },
   { page: 'mcp', changefreq: 'monthly', priority: '0.9' },
   { page: 'blog', changefreq: 'weekly', priority: '0.7' },
+  { page: 'blogArchive', changefreq: 'weekly' },
   { page: 'rules', changefreq: 'monthly' },
   { page: 'privacy', changefreq: 'yearly' },
   { page: 'support', changefreq: 'yearly' },

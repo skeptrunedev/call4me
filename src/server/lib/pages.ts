@@ -49,7 +49,7 @@ export const PAGES = {
   support: { description: 'help with call4me: credits and the monthly reload, a call that went wrong, connecting your agent, and deleting your account. email me@call4.me.', card: 'support', path: '/support' },
   terms: { description: 'call4me terms: prepaid credits that never expire, talk time billed from pickup, unanswered calls free, monthly reload you can stop anytime.', card: 'terms', path: '/terms' },
   blog: { description: 'notes from call4me on AI agents that make phone calls for you: what they are good at, how they sound, and what changed.', card: 'blog', path: '/blog' },
-  blogArchive: { description: 'every post on the call4me blog, by month, from the first one to the latest.', card: 'blog', path: '/blog/archive' },
+  blogArchive: { description: 'every post on the call4me blog, by month: real recorded calls to businesses, phone trees, what to say, and what AI phone agents can do.', card: 'blog', path: '/blog/archive' },
   message: { description: SITE_DESCRIPTION, card: 'site', path: '/' },
 } satisfies Record<string, PageMeta>;
 

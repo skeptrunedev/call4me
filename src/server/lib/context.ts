@@ -42,11 +42,14 @@ export const legacyHosts = (env: Pick<Env, 'LEGACY_HOSTS'>): string[] =>
  */
 const LEGACY_PASSTHROUGH = ['/mcp', '/api', '/.well-known/', '/auth.md', '/a2a', '/oauth/', '/login', '/logout', '/webhooks/', '/voice/'];
 
-/** Where a request belongs if it's on the wrong host, or null to serve it here. */
+/** Where a request belongs if it's on the wrong host or plain http, or null to serve it here. */
 export function canonicalRedirect(url: URL, env: Pick<Env, 'CANONICAL_HOST' | 'LEGACY_HOSTS'>): string | null {
   const canonical = env.CANONICAL_HOST;
-  if (!canonical || url.hostname === canonical || url.hostname === 'localhost') return null;
-  if (legacyHosts(env).includes(url.hostname) && LEGACY_PASSTHROUGH.some((p) => url.pathname.startsWith(p))) return null;
+  if (!canonical || url.hostname === 'localhost') return null;
+  const onCanonical = url.hostname === canonical;
+  if (onCanonical && url.protocol === 'https:') return null;
+  // Machine clients don't follow redirects, so they keep answering on a legacy host or over http.
+  if ((onCanonical || legacyHosts(env).includes(url.hostname)) && LEGACY_PASSTHROUGH.some((p) => url.pathname.startsWith(p))) return null;
   const to = new URL(url);
   to.hostname = canonical;
   to.protocol = 'https:';

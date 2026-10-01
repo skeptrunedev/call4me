@@ -89,7 +89,7 @@ export const BlogIndex: FC<{
   const rest = featured.length ? posts.filter((p) => !featured.includes(p)) : posts;
   return (
     <Layout
-      title="blog"
+      title="blog: real calls to businesses, recorded"
       page="blog"
       signedIn={signedIn}
       meta={{
@@ -278,8 +278,8 @@ export const BlogPost: FC<{
           isAccessibleForFree: !post.paid,
           ...(post.paid ? { hasPart: { '@type': 'WebPageElement', isAccessibleForFree: false, cssSelector: '.paid' } } : {}),
           interactionStatistic: [
-            { '@type': 'InteractionCounter', interactionType: 'https://schema.org/LikeAction', userInteractionCount: engagement.likes },
-            { '@type': 'InteractionCounter', interactionType: 'https://schema.org/CommentAction', userInteractionCount: engagement.comments },
+            { '@type': 'InteractionCounter', interactionType: { '@type': 'LikeAction' }, userInteractionCount: engagement.likes },
+            { '@type': 'InteractionCounter', interactionType: { '@type': 'CommentAction' }, userInteractionCount: engagement.comments },
           ],
           commentCount: engagement.comments,
         },
