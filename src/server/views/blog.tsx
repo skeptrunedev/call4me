@@ -142,7 +142,6 @@ export const BlogIndex: FC<{
       ))}
 
       <h3>recommendations</h3>
-      <p class="small muted">other places worth reading on agents.</p>
       <ul class="recs">
         {RECOMMENDATIONS.map((r) => (
           <li>
