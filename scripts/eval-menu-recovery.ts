@@ -16,7 +16,7 @@ const brief: CallBrief = {
   goal: 'Reach a live representative to submit an authorized refund and obtain a confirmation. Recorded refund instructions do not accomplish the task.',
   facts: 'Order number: 1234567890. The item was not installed. No Social Security number was supplied and none may be shared.',
   flexibility: 'Submit the refund only after the representative verifies no refund is already pending. Do not make any purchases.',
-  callbackNumber: '+12025550100', localTime: null, connectWhen: null, assistantName: null,
+  callbackNumber: '+12025550100', localTime: null, connectWhen: null,
 };
 
 type Scenario = { name: string; before?: { prompt: string; digits: string }[]; prompt: string; goal?: string; expected: { tool: string; digits?: string }[] };

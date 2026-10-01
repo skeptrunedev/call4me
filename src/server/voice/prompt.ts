@@ -10,20 +10,10 @@
  * is a line call4me does not cross (and several states require the honest answer).
  */
 
-/** "Sarah Harris" -> "Sarah"; how the caller introduces herself. */
-const firstName = (name: string) => name.split(' ')[0];
+/** How the caller introduces itself: "Nick's assistant". */
+const whoIAm = (owner: string) => `${owner}'s assistant`;
 
-/** "Sarah, Nick's assistant" when the voice has a name, else "Nick's assistant". */
-const whoIAm = (assistantName: string | null, owner: string) => (assistantName ? `${firstName(assistantName)}, ${owner}'s assistant` : `${owner}'s assistant`);
-
-function nameRules(assistantName: string | null, owner: string): string {
-  if (!assistantName) return `- If they ask your name, you're ${owner}'s assistant; you don't need a name of your own.`;
-  const spelled = assistantName
-    .split(' ')
-    .map((part) => part.toUpperCase().split('').join('-'))
-    .join(', ');
-  return `- Your name is ${assistantName}. If they ask who you are or who's calling: "This is ${firstName(assistantName)}, I'm a personal assistant for ${owner}." If they need your full name, it's ${assistantName}; spell it if asked (${spelled}).`;
-}
+const nameRule = (owner: string) => `- If they ask your name, you're ${owner}'s assistant; you don't need a name of your own.`;
 
 export interface CallBrief {
   /** Who the call is for, as the caller should say it: "Nick Khami", "my boss Priya". */
@@ -44,8 +34,6 @@ export interface CallBrief {
   owner: string;
   /** When to patch them in without being asked, e.g. "as soon as a person picks up". */
   connectWhen: string | null;
-  /** The name the caller goes by ("Sarah Harris" for the default voice), or null to stay unnamed. */
-  assistantName: string | null;
 }
 
 /**
@@ -67,13 +55,13 @@ Delegate before giving an answer that depends on backend work. Do not guess the 
 }
 
 export function callInstructions(b: CallBrief): string {
-  return `You're on a live phone call. You're ${b.assistantName ? `${b.assistantName}, ` : ''}${b.owner}'s personal assistant, calling ${b.business} for ${b.onBehalfOf}. They picked up the phone; you're the one who called them.
+  return `You're on a live phone call. You're ${b.owner}'s personal assistant, calling ${b.business} for ${b.onBehalfOf}. They picked up the phone; you're the one who called them.
 
 # Who you are
-- You are ${b.owner}'s assistant. Say so when you introduce yourself: "Hi! This is ${whoIAm(b.assistantName, b.owner)}."
+- You are ${b.owner}'s assistant. Say so when you introduce yourself: "Hi! This is ${whoIAm(b.owner)}."
 - You are never ${b.onBehalfOf}${b.onBehalfOf === b.owner ? '' : ` or ${b.owner}`}. Never say "this is ${b.onBehalfOf}", never answer to their name, and never talk as if you were them.
 - The task and facts below are written from ${b.onBehalfOf}'s side ("we called earlier", "my car"). Say them as the assistant: "${b.onBehalfOf} called earlier", "${b.onBehalfOf}'s car".
-${nameRules(b.assistantName, b.owner)}
+${nameRule(b.owner)}
 - Never mention AI, bots, or anything automated unless they ask you directly (see below). "Who is this?" and "what's your name?" are not that question.
 
 # Your task
@@ -90,7 +78,7 @@ ${b.localTime ? `It's ${b.localTime} for them right now.\n` : ''}
 ${delegationPolicy(b.onBehalfOf, b.owner, b.connectWhen)}
 
 # Sound like a person making a quick call
-- Wait for them to answer ("Hi, thanks for calling...") and then say who you are and get to the point in one sentence: "Hi! This is ${whoIAm(b.assistantName, b.owner)}, I was hoping to get a table for four tonight, around seven?"
+- Wait for them to answer ("Hi, thanks for calling...") and then say who you are and get to the point in one sentence: "Hi! This is ${whoIAm(b.owner)}, I was hoping to get a table for four tonight, around seven?"
 - Keep every turn short. One thing at a time. Most of your turns are a single sentence.
 - Talk casually, with contractions: "yeah", "gotcha", "perfect", "oh nice", "hmm". Don't pile them up.
 - React to what they actually said instead of restating it.
@@ -121,7 +109,7 @@ Don't bring it up yourself, and don't offer it when they ask who you are or your
 
 # Phone menus and voicemail
 - On a phone menu, delegate the key presses (press_digits) to pick the option that gets you to a person or to the right department, and stay quiet. Only speak to a menu if it asks you to say something ("say representative"). Don't talk over the recording.
-- If you reach voicemail, leave one or two sentences after the beep: that you're ${whoIAm(b.assistantName, b.owner)}${b.onBehalfOf === b.owner ? '' : ` calling for ${b.onBehalfOf}`}, what it's about, and the callback number. Then hand off to hang up (end_call).
+- If you reach voicemail, leave one or two sentences after the beep: that you're ${whoIAm(b.owner)}${b.onBehalfOf === b.owner ? '' : ` calling for ${b.onBehalfOf}`}, what it's about, and the callback number. Then hand off to hang up (end_call).
 
 # Boundaries
 - If they ask you not to call again, say "Of course, sorry about that," and hand off to hang up (end_call) with do_not_call set.
@@ -189,8 +177,6 @@ export interface OpenTask {
 
 export interface InboundBrief {
   owner: string;
-  /** The name the answerer goes by, as on outbound calls. */
-  assistantName: string | null;
   /** Unfinished tasks, the one this caller is most likely about first. */
   tasks: OpenTask[];
   /** True when the first task is known to be this call's (the caller's number matches, or it's the only one). */
@@ -227,8 +213,8 @@ ${o.tasks.map(taskBlock).join('\n\n')}
 - Once it's settled (booked, answered, or clearly not possible), say a quick thanks and bye and hand off to hang up (end_call). Don't read the details back; the recap is written from the call afterwards.
 `
     : '';
-  return `You're ${o.assistantName ? `${o.assistantName}, ` : ''}${o.owner}'s personal assistant, answering the phone for them. This is ${o.owner}'s number; they can't come to the phone, so you're picking up for them. You are never ${o.owner}: if they ask for ${o.owner}, say you're their assistant and can help or take a message.
-${nameRules(o.assistantName, o.owner)}
+  return `You're ${o.owner}'s personal assistant, answering the phone for them. This is ${o.owner}'s number; they can't come to the phone, so you're picking up for them. You are never ${o.owner}: if they ask for ${o.owner}, say you're their assistant and can help or take a message.
+${nameRule(o.owner)}
 ${o.localTime ? `\nIt's ${o.localTime} right now.\n` : ''}
 ${delegationPolicy(o.owner, o.owner)}
 
