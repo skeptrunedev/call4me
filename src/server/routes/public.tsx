@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { field, origin, ownerKey, stripeFor, viewerKey, type AppContext, type AppEnv } from '../lib/context';
-import { accountPrompt, callPrompt, examplesPrompt, installPrompt, privacyPrompt, rulesPrompt, supportPrompt, termsPrompt } from '../lib/prompts';
+import { accountPrompt, callPrompt, examplesPrompt, voicesPrompt, installPrompt, privacyPrompt, rulesPrompt, supportPrompt, termsPrompt } from '../lib/prompts';
 import { callView } from '../mcp/server';
 import { accounts, type Account } from '../services/accounts';
 import { ACTIVE, calls, CallError } from '../services/calls';
@@ -12,6 +12,7 @@ import { getCallRecordings, recordingUrl } from '../services/recordings';
 import { AccountPage, CallPage, NewKeyPage, type CallRecordings } from '../views/account';
 import { HomePage, MessagePage, PrivacyPage, RulesPage, SupportPage, TermsPage, UnsubscribePage, WelcomePage } from '../views/public';
 import { ExamplesPage } from '../views/examples';
+import { VoicesPage } from '../views/voices';
 
 export const pub = new Hono<AppEnv>();
 
@@ -24,6 +25,7 @@ const home = async (c: AppContext, extra: { error?: string; amount?: string } = 
 
 pub.get('/', (c) => home(c));
 pub.get('/examples', async (c) => c.html(<ExamplesPage signedIn={signedIn(c)} agentPrompt={examplesPrompt(origin(c), await viewerKey(c))} />));
+pub.get('/voices', async (c) => c.html(<VoicesPage signedIn={signedIn(c)} agentPrompt={voicesPrompt(origin(c), await viewerKey(c))} />));
 
 /**
  * "add funds": straight to Stripe, signed in or not. Credits come in $10 units (the buyer

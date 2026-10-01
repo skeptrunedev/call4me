@@ -141,6 +141,7 @@ export const Layout: FC<{
           <a href="/terms">terms</a>
           <a href="/support">support</a>
           <a href="/blog">blog</a>
+          <a href="/voices">voices</a>
           <span> · © call4me</span>
         </footer>
         <script>{raw(COPY_SCRIPT)}</script>

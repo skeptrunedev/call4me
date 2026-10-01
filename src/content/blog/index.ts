@@ -3,6 +3,7 @@ import cancelPlanetFitness from './cancel-planet-fitness.md';
 import costcoTireAppointment from './costco-tire-appointment-cancel-refund.md';
 import experianPhoneNumber from './experian-phone-number.md';
 import junkRemovalCost from './junk-removal-cost.md';
+import openaiRealtimeVoices from './openai-realtime-voices-phone-calls.md';
 import rescheduleDentist from './reschedule-dentist-appointment.md';
 import wayfairCustomerService from './wayfair-customer-service.md';
 
@@ -18,4 +19,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'costco-tire-appointment-cancel-refund', markdown: costcoTireAppointment },
   { slug: 'reschedule-dentist-appointment', markdown: rescheduleDentist },
   { slug: 'junk-removal-cost', markdown: junkRemovalCost },
+  { slug: 'openai-realtime-voices-phone-calls', markdown: openaiRealtimeVoices },
 ];

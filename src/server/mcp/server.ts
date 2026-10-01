@@ -209,7 +209,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         connect_when: z.string().max(300).optional().describe('when to ring the user and patch them into the call without being asked, e.g. "as soon as a person picks up" (skip the hold) or "if they need to speak to me". Rings the phone in their profile. They hand the call back to the caller by pressing * or hanging up.'),
         listen_in: z.boolean().optional().describe('ring the user as soon as the business answers so they can listen in: nobody on the call hears them and the caller keeps working. They press 1 anytime to take over, or hang up to stop listening. Rings the phone in their profile.'),
         max_minutes: z.number().int().min(1).max(LIMITS.maxMinutes).optional().describe(`hard cap on talk time (default ${LIMITS.defaultMaxMinutes})`),
-        voice: z.enum(VOICES).optional().describe('caller voice (default marin)'),
+        voice: z.enum(VOICES).optional().describe('caller voice (default marin); hear each at https://call4.me/voices'),
         from: z.string().max(40).optional().describe('which of the account\'s numbers to call from (default: one in the callee\'s country)'),
       }),
       annotations: DIALS,

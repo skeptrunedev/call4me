@@ -40,7 +40,7 @@ export const ExamplesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
         </article>
       ))}
       <h2>let your agent make the next call</h2>
-      <p><a href="/#buy">add credits</a> · <a href="/mcp">see how to install it</a></p>
+      <p><a href="/#buy">add credits</a> · <a href="/mcp">see how to install it</a> · <a href="/voices">hear every caller voice</a></p>
     </main>
     <script>{raw(AUDIO_SCRIPT)}</script>
   </Layout>

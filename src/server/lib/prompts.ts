@@ -145,6 +145,18 @@ ${connect(origin, key)}
 4. Tell me the result in one or two lines.`;
 }
 
+/** Voices: pick the caller voice, then make a call with it. */
+export function voicesPrompt(origin: string, key: string | null): string {
+  return `I listened to the caller voices at ${origin}/voices. Use the voice I pick for my calls.
+
+${connect(origin, key)}
+
+1. Ask me which voice I want (marin, cedar, gleam, or meridian) and what call to make.
+2. Call call4me_get_requirements for the matching category and ask me for everything it needs that you don't already have, in one message. Find the business's number (web search if needed) and check it's the right location.
+3. Place the call with call4me_place_call and the voice I picked, show me the calling_number it returns, then keep calling call4me_get_call with wait_seconds until it finishes. Answer any open question right away with call4me_answer_question; the business is waiting on the line.
+4. Tell me the result in one or two lines, and keep using that voice for my calls unless I say otherwise.`;
+}
+
 /** The blog: find the post that fits a chore, then do it. */
 export function blogPrompt(origin: string, key: string | null): string {
   return `Read the call4me blog (${origin}/blog, every post as markdown in ${origin}/llms.txt) and help me get a phone chore done with call4me.
