@@ -16,7 +16,14 @@ interface Step {
   id: string;
   /** How long after signup the step is due, in ms. */
   after: number;
-  email: (ctx: { origin: string }) => DripEmail;
+  email: (ctx: DripContext) => DripEmail;
+}
+
+interface DripContext {
+  /** The site's host as people type it ("call4.me"). */
+  host: string;
+  /** This account's add-credits link, without the scheme ("call4.me/add/..."). */
+  addCredits: string;
 }
 
 /** The emails, in Nick's words. Add a step here to extend the drip. */
@@ -24,15 +31,11 @@ export const STEPS: Step[] = [
   {
     id: 'welcome',
     after: 0,
-    email: ({ origin }) => ({
+    email: ({ host, addCredits }) => ({
       subject: 'welcome to Call for Me',
-      body: `hey, I'm Nick. I built Call for Me because I was trying to book some doctors' appointments and realized how silly it was that I still had to call into everything manually when AI was fully capable.
+      body: `hey, I'm Nick. thank you so much for signing up! to get started, add credits at ${addCredits} and paste the prompt from ${host} into your agent.
 
-I went to go and try to find another service that could do this, but there was nothing that just worked out of the box. Call for Me does.
-
-Hotels, airlines, restaurants, or anything else where it's easiest to just make a phone call. You can now have Call for Me do that on your behalf. It's really easy to use. Just visit the website (${origin}), load up some credits, and then copy the prompt into your coding agent of choice.
-
-If you reply and send me feedback, I'm happy to give you $25 in credits. Anything about your experience would be useful, including how you found it and why you decided to sign up.
+If you reply with feedback, I'm happy to give you $25 in credits. Anything helps, including how you found it and why you signed up.
 
 Here's my cell # for imessage or whatsapp - 7379832612 .
 
@@ -50,14 +53,40 @@ export async function validUnsubscribe(secret: string, accountId: string, sig: s
   return safeEqual(sig, await hmacHex(secret, `unsubscribe:${accountId}`));
 }
 
+/** Signature characters in an add-credits code: 64 bits, short enough to read in an email. */
+const ADD_SIG_LENGTH = 16;
+
+const addSig = async (secret: string, accountId: string) => (await hmacHex(secret, `add-credits:${accountId}`)).slice(0, ADD_SIG_LENGTH);
+
+/**
+ * The add-credits path for an account (/add/<account>-<signature>), signed so a link can only
+ * buy credits for the account it was sent to.
+ */
+export async function addCreditsPath(secret: string, accountId: string): Promise<string> {
+  return `/add/${encodeURIComponent(accountId)}-${await addSig(secret, accountId)}`;
+}
+
+/** The account an add-credits code is for, or null when it isn't one we signed. */
+export async function addCreditsAccount(secret: string, code: string): Promise<string | null> {
+  const cut = code.lastIndexOf('-');
+  if (cut <= 0) return null;
+  const accountId = code.slice(0, cut);
+  return safeEqual(code.slice(cut + 1), await addSig(secret, accountId)) ? accountId : null;
+}
+
 const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+/** Links in an email body: full https URLs, and the site's own host written bare ("call4.me/add/..."). */
+const linkPattern = (host: string) => new RegExp(`https://[^\\s)<]*[^\\s)<.,!?]|\\b${host.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:/[^\\s)<]*[^\\s)<.,!?])?`, 'g');
 
 /**
  * The email as sent: plain text plus an HTML version, where the unsubscribe link is just
  * the word "unsubscribe" (plain text can't hide a URL behind a word, so it shows it).
+ * Links to the site are written without the scheme; the HTML version links them.
  */
-export function render(email: DripEmail, unsubscribe: string): { subject: string; text: string; html: string } {
-  const paragraphs = email.body.split(/\n\s*\n/).map((p) => `<p>${esc(p).replace(/https:\/\/[^\s)<]+/g, (u) => `<a href="${u}">${u}</a>`).replace(/\n/g, '<br>')}</p>`);
+export function render(email: DripEmail, unsubscribe: string, host = 'call4.me'): { subject: string; text: string; html: string } {
+  const link = (u: string) => `<a href="${u.startsWith('https://') ? u : `https://${u}`}">${u}</a>`;
+  const paragraphs = email.body.split(/\n\s*\n/).map((p) => `<p>${esc(p).replace(linkPattern(host), link).replace(/\n/g, '<br>')}</p>`);
   return {
     subject: email.subject,
     text: `${email.body}\n\nunsubscribe: ${unsubscribe}`,
@@ -100,7 +129,9 @@ export async function runDrip(opts: {
       const claim = await opts.db.prepare(`INSERT OR IGNORE INTO drip_sends (account_id, step, sent_at) VALUES (?, ?, ?)`).bind(a.id, step.id, t).run();
       if (!claim.meta.changes) continue;
       try {
-        const { subject, text, html } = render(step.email({ origin: opts.origin }), await unsubscribeUrl(opts.origin, opts.secret, a.id));
+        const host = new URL(opts.origin).host;
+        const email = step.email({ host, addCredits: `${host}${await addCreditsPath(opts.secret, a.id)}` });
+        const { subject, text, html } = render(email, await unsubscribeUrl(opts.origin, opts.secret, a.id), host);
         await opts.messenger.sendEmail(a.email, subject, text, html);
         tally.sent++;
       } catch (err) {

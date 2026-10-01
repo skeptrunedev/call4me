@@ -7,10 +7,10 @@ import { ACTIVE, calls, CallError } from '../services/calls';
 import { pricePerMinute } from '../services/dialer';
 import { NumberError, numbers } from '../services/numbers';
 import { MIN_TOPUP_CENTS, parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
-import { validUnsubscribe } from '../services/drip';
+import { addCreditsAccount, addCreditsPath, validUnsubscribe } from '../services/drip';
 import { getCallRecordings, recordingUrl } from '../services/recordings';
 import { AccountPage, CallPage, NewKeyPage, type CallRecordings } from '../views/account';
-import { HomePage, MessagePage, PrivacyPage, RulesPage, SupportPage, TermsPage, UnsubscribePage, WelcomePage } from '../views/public';
+import { AddCreditsPage, HomePage, MessagePage, PrivacyPage, RulesPage, SupportPage, TermsPage, UnsubscribePage, WelcomePage } from '../views/public';
 import { ExamplesPage } from '../views/examples';
 import { VoicesPage } from '../views/voices';
 
@@ -204,6 +204,30 @@ pub.post('/account/key', async (c) => {
   const key = await accounts(c.env.DB).rotateKey(account.id, c.env.BETTER_AUTH_SECRET);
   c.header('cache-control', 'private, no-store');
   return c.html(<NewKeyPage apiKey={key} installPrompt={installPrompt(origin(c), key)} />);
+});
+
+/**
+ * The welcome email's add-credits link (/add/<account>-<signature>). GET only shows a page that
+ * posts itself: mail scanners open every link, and a Stripe session per scan would pile up
+ * abandoned checkouts. The POST starts the checkout for the signed account, so the credits land
+ * there whatever email is used at Stripe.
+ */
+const invalidAddLink = (c: AppContext) =>
+  c.html(<MessagePage title="link not valid" message="this add-credits link is not valid. you can add credits at call4.me." />, 400);
+
+pub.get('/add/:code', async (c) => {
+  const accountId = await addCreditsAccount(c.env.BETTER_AUTH_SECRET, c.req.param('code'));
+  if (!accountId) return invalidAddLink(c);
+  c.header('cache-control', 'private, no-store');
+  return c.html(<AddCreditsPage path={await addCreditsPath(c.env.BETTER_AUTH_SECRET, accountId)} />);
+});
+
+pub.post('/add/:code', async (c) => {
+  const accountId = await addCreditsAccount(c.env.BETTER_AUTH_SECRET, c.req.param('code'));
+  const account = accountId ? await accounts(c.env.DB).byId(accountId) : null;
+  if (!account) return invalidAddLink(c);
+  const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: MIN_TOPUP_CENTS, monthly: true, adjustable: true, origin: origin(c), account, from: visitor(c) });
+  return c.redirect(url, 303);
 });
 
 // Drip unsubscribe. GET only shows a confirm button: mail scanners open every link in an

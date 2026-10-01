@@ -27,7 +27,7 @@ export const AI_CRAWLERS = [
  * /mcp/ (with the slash) is the key-in-URL form of the MCP endpoint; the /mcp page stays open.
  */
 export const DISALLOW = [
-  '/account', '/welcome', '/login', '/logout', '/oauth/', '/add-funds', '/buy', '/unsubscribe', '/mcp/', '/api/auth/', '/webhooks/', '/voice/',
+  '/account', '/welcome', '/login', '/logout', '/oauth/', '/add-funds', '/add/', '/buy', '/unsubscribe', '/mcp/', '/api/auth/', '/webhooks/', '/voice/',
   // The blog's checkout, emailed-link pages, and back office; the posts themselves are open.
   '/blog/support', '/blog/subscribe/', '/blog/unsubscribe', '/admin/',
   // Blog search, tag, and sort results: /blog with a query, each canonical to /blog itself.

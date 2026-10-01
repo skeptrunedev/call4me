@@ -1,4 +1,5 @@
 import type { FC } from 'hono/jsx';
+import { raw } from 'hono/html';
 import { dollars } from '../services/accounts';
 import { isAwaitingApproval, type CountryOffer, type NumberView } from '../services/numbers';
 import { MIN_TOPUP_CENTS } from '../services/topups';
@@ -233,6 +234,22 @@ export const MessagePage: FC<{ title: string; message: string; signedIn?: boolea
     <p>
       <a href="/">back to call4me</a>
     </p>
+  </Layout>
+);
+
+/**
+ * The welcome email's add-credits link. Opening it creates nothing: mail scanners open every
+ * link in an email, so the checkout starts only when a browser posts the form (on its own,
+ * via the script, or from the button).
+ */
+export const AddCreditsPage: FC<{ path: string }> = ({ path }) => (
+  <Layout title="add credits">
+    <h1>add credits</h1>
+    <p>taking you to checkout. credits reload monthly, and you can stop that anytime from your account.</p>
+    <form method="post" action={path} id="add-credits" class="inline">
+      <button type="submit">continue to checkout</button>
+    </form>
+    <script>{raw("document.getElementById('add-credits').submit();")}</script>
   </Layout>
 );
 
