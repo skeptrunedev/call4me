@@ -103,9 +103,11 @@ Weekends are agent-only: builds, fixes and logs, with no calls (most phone lines
 
 **Wed Sep 30 (launch day), done:**
 - call4me rename live; Google Search Console and Bing Webmaster Tools set up, sitemap submitted to Bing, home, /examples and /mcp submitted to Brave.
-- IndexNow key live at call4.me. The Worker's own pings get 429 from api.indexnow.org from Cloudflare's IPs, so pings go out by hand from a laptop until they move into the deploy step.
+- IndexNow key live at call4.me. api.indexnow.org and Bing return 429 to Workers' shared IPs, so the cron submits through yandex.com/indexnow, which shares with Bing. The cron only sends a URL when its sitemap lastmod changes: after editing a published post, set `updated:` in its frontmatter.
 - 5 posts live, each built on real recorded calls, private details muted in place: [Experian phone number](https://call4.me/blog/experian-phone-number), [cancel Planet Fitness](https://call4.me/blog/cancel-planet-fitness), [Wayfair customer service](https://call4.me/blog/wayfair-customer-service), [Costco tire appointment](https://call4.me/blog/costco-tire-appointment-cancel-refund), [reschedule a dentist appointment](https://call4.me/blog/reschedule-dentist-appointment).
 - 2 customer calls added to /examples with permission (dentist reschedule, Costco tire order).
+- 6th post from a customer's junk removal calls ([junk removal cost](https://call4.me/blog/junk-removal-cost)), and the booking call on /examples.
+- Ahrefs Site Audit project (free Webmaster Tools, verified through Search Console, weekly crawl Wednesdays 8pm PT). First crawl: health 99, 2 errors, 26 warnings. After fixes: health 100, 0 errors. Fixed: http served pages instead of redirecting to https, titles and meta descriptions too long, homepage had no h1, blog BlogPosting schema errors, archive missing from the sitemap, and slow pages (every request built the auth instance, whose OAuth plugin queried D1 three times; blog pages now read from the nearest D1 replica).
 - Call fixes found while testing: joining a call by pressing 1, relaying the user's keypad to the business, surviving session resets, reattaching a stream that never sends audio, no per-number daily limits.
 
 ## The days
