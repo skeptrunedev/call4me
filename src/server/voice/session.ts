@@ -1004,9 +1004,4 @@ export class VoiceSession extends DurableObject<Env> {
   }
 }
 
-/** The durable object for a call id; placed near Telnyx's and OpenAI's US regions. */
-export function sessionFor(env: Env, callId: string): DurableObjectStub<VoiceSession> {
-  return env.VOICE_SESSION.get(env.VOICE_SESSION.idFromName(callId), { locationHint: 'enam' });
-}
-
 export type { CallRow };

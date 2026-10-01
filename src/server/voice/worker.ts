@@ -1,7 +1,8 @@
 import { hmacHex, safeEqual } from '../lib/keys';
-import { sessionFor } from './session';
+import { sessionFor } from './stub';
 
 export { VoiceSession } from './session';
+export { RecapLog } from './recap-log';
 
 /**
  * The voice Worker (wrangler.voice.jsonc): the VoiceSession durable objects and Telnyx's media

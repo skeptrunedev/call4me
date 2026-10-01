@@ -8,7 +8,7 @@ import { ACTIVE, CallError, calls, LIMITS, type CallRow, type Outcome, type Ques
 import { placeCall, pricePerMinute, VOICES } from '../services/dialer';
 import { parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
 import { checkDialable } from '../lib/phone';
-import { sessionFor } from '../voice/session';
+import { sessionFor } from '../voice/stub';
 import { catalog, PROFILE_FIELDS, type Surface } from '../services/intake';
 import { ProfileError, profiles } from '../services/profiles';
 import { recordingDescription, recordingInput, recordingOutput } from '../lib/recording-schema';

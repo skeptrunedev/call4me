@@ -35,6 +35,9 @@
   "durable_objects": {
     "bindings": [{ "name": "VOICE_SESSION", "class_name": "VoiceSession", "script_name": "call4me-voice" }]
   },
+  // Call recaps are logged to Raindrop by the voice Worker (voice/recap-log.ts), which already
+  // ships the SDK; bundling it here doubled every cold start.
+  "services": [{ "binding": "RECAP_LOG", "service": "call4me-voice", "entrypoint": "RecapLog" }],
   "migrations": [
     { "tag": "v1", "new_sqlite_classes": ["CallSession"] },
     { "tag": "v2", "deleted_classes": ["CallSession"] }

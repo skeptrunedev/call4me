@@ -1,5 +1,4 @@
 import { Hono } from 'hono';
-import { Raindrop, type Interaction } from 'raindrop-ai';
 import type Stripe from 'stripe';
 import { stripeFor, type AppEnv } from '../lib/context';
 import { now } from '../lib/ids';
@@ -9,7 +8,7 @@ import { summarizeCall, summaryPrompt } from '../services/summary';
 import { answerInbound, pricePerMinute } from '../services/dialer';
 import { isSupporterObject, supporters } from '../services/supporters';
 import { topups, verifyWebhook } from '../services/topups';
-import { sessionFor } from '../voice/session';
+import { sessionFor } from '../voice/stub';
 
 export const webhooks = new Hono<AppEnv>();
 
@@ -19,30 +18,19 @@ async function writeRecap(env: Env, callId: string): Promise<void> {
   const row = await db.byId(callId);
   if (!row || row.outcome) return;
   const transcript = row.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [];
-  let raindrop: Raindrop | undefined;
-  let interaction: Interaction | undefined;
   const startedAt = Date.now();
+  let prompt = '';
+  const log = (status: 'completed' | 'error', output: string) =>
+    env.RECAP_LOG.record({ accountId: row.account_id, callId, model: env.BACK_OFFICE_MODEL || 'gpt-5.5', input: prompt, output, status, durationMs: Date.now() - startedAt }).catch(() => console.warn('raindrop recap delivery failed', callId));
   try {
-    const prompt = summaryPrompt(row, JSON.parse(row.brief) as Brief, transcript);
-    try {
-      if (env.RAINDROP_WRITE_KEY) {
-        raindrop = new Raindrop({ writeKey: env.RAINDROP_WRITE_KEY, projectId: env.RAINDROP_PROJECT_ID, redactPii: true, useExternalOtel: true, appGit: false, localWorkshopUrl: false });
-        raindrop.setUserDetails({ userId: row.account_id, traits: {} });
-        interaction = raindrop.begin({ eventId: crypto.randomUUID(), event: 'callbay_call_recap', userId: row.account_id, convoId: callId, model: env.BACK_OFFICE_MODEL || 'gpt-5.5', input: prompt });
-      }
-    } catch {
-      console.warn('raindrop recap initialization failed', callId);
-    }
+    prompt = summaryPrompt(row, JSON.parse(row.brief) as Brief, transcript);
     const outcome = await summarizeCall(env, prompt);
     await db.saveOutcome(callId, outcome);
-    await interaction?.finish({ output: JSON.stringify(outcome), properties: { status: 'completed', duration_ms: Date.now() - startedAt } }).catch(() => console.warn('raindrop recap delivery failed', callId));
+    await log('completed', JSON.stringify(outcome));
   } catch (err) {
     console.error('recap failed', callId, err);
     await env.DB.prepare(`UPDATE calls SET error = COALESCE(error, ?) WHERE id = ?`).bind(`recap failed: ${String(err).slice(0, 300)}`, callId).run();
-    await interaction?.finish({ output: String(err), properties: { status: 'error', duration_ms: Date.now() - startedAt } }).catch(() => console.warn('raindrop recap delivery failed', callId));
-  } finally {
-    // writeRecap already runs under the webhook's executionCtx.waitUntil.
-    await raindrop?.close().catch(() => console.warn('raindrop recap flush failed', callId));
+    if (prompt) await log('error', String(err));
   }
 }
 
