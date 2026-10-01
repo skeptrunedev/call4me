@@ -11,10 +11,13 @@ export interface Account {
   ga_client_id: string | null;
   /** When GA was sent this account's sign_up; null until its first tracked activity. */
   ga_signup_at: number | null;
+  /** Meta's browser id and latest ad click from the account's signed-in browser (lib/meta.ts). */
+  meta_fbp: string | null;
+  meta_fbc: string | null;
 }
 
 /** The columns every Account is read with. */
-export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at`;
+export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc`;
 
 export type LedgerKind = 'topup' | 'reload' | 'hold' | 'release' | 'call' | 'refund' | 'adjustment' | 'number';
 

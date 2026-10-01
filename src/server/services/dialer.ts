@@ -131,7 +131,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
  */
 export async function answerInbound(env: Env, origin: string, opts: { controlId: string; from: string; to: string }): Promise<void> {
   const account = await env.DB.prepare(
-    `SELECT a.id, a.email, a.display_name, a.key_prefix, a.created_at, a.ga_client_id, a.ga_signup_at FROM accounts a JOIN numbers n ON n.account_id = a.id WHERE n.phone_number = ? AND n.status = 'active'`,
+    `SELECT a.id, a.email, a.display_name, a.key_prefix, a.created_at, a.ga_client_id, a.ga_signup_at, a.meta_fbp, a.meta_fbc FROM accounts a JOIN numbers n ON n.account_id = a.id WHERE n.phone_number = ? AND n.status = 'active'`,
   )
     .bind(opts.to)
     .first<Account>();

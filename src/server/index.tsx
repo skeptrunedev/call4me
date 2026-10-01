@@ -2,7 +2,7 @@
 import './zod-first';
 import { Hono } from 'hono';
 import { contextStorage } from 'hono/context-storage';
-import { canonicalRedirect, type AppEnv } from './lib/context';
+import { canonicalRedirect, visitor, type AppEnv } from './lib/context';
 import { directoryMcp, mcp } from './routes/mcp';
 import { pub } from './routes/public';
 import { authRoutes } from './routes/auth';
@@ -29,12 +29,11 @@ import { blog, posts } from './routes/blog';
 import { admin } from './routes/admin';
 import { BlogError } from './services/blog';
 import { exampleAudio } from './lib/example-audio';
-import { gaClient } from './lib/ga';
 import { analytics } from './services/analytics';
 
 const app = new Hono<AppEnv>();
 
-// Lets the page layout read the signed-in account (GA's user_id) without every page passing it.
+// Lets the page layout read the signed-in account (GA's user_id, Meta's external_id) and the Pixel id without every page passing them.
 app.use('*', contextStorage());
 
 // Pages answer on the canonical host; workers.dev and legacy hosts redirect there.
@@ -103,7 +102,7 @@ for (const s of DIRECTORY_SERVERS) app.route(s.path, directoryMcp(s.path));
 app.use('*', async (c, next) => {
   const account = await sessionAccount(c);
   c.set('account', account);
-  if (account) c.executionCtx.waitUntil(analytics(c.env).seen(account, gaClient(c.req.header('cookie'))));
+  if (account) c.executionCtx.waitUntil(analytics(c.env).seen(account, visitor(c)));
   await next();
 });
 

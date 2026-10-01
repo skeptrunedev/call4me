@@ -40,6 +40,26 @@ gtag('js', new Date());
 gtag('config', '${GA_MEASUREMENT_ID}'${userId ? `, ${JSON.stringify({ user_id: userId }).replace(/</g, '\\u003c')}` : ''});
 `;
 
+/** A value written into an inline script, unable to close the script tag. */
+const scriptValue = (v: unknown) => JSON.stringify(v).replace(/</g, '\\u003c');
+
+/**
+ * Meta Pixel (lib/meta.ts), Meta's base code. Signed in, advanced matching passes the account id as
+ * external_id, which the Pixel hashes before sending; nothing else about the person.
+ */
+const metaPixelScript = (pixelId: string, externalId: string | null) => `
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', ${scriptValue(pixelId)}${externalId ? `, ${scriptValue({ external_id: externalId })}` : ''});
+fbq('track', 'PageView');
+`;
+
 /**
  * WebMCP (webmachinelearning.github.io/webmcp): the site's key actions as in-page tools for
  * browser agents. Placing calls needs the MCP server (signed in); these read the site, hand
@@ -84,6 +104,9 @@ export const Layout: FC<{
   const url = `${SITE}${path ?? meta.path}`;
   const image = `${SITE}${override?.image ?? `/og/${meta.card}.png`}`;
   const alt = override?.imageAlt ?? `call4me: ${title ?? 'your AI agent makes phone calls for you'}`;
+  const ctx = tryGetContext<AppEnv>();
+  const accountId = ctx?.get('account')?.id ?? null;
+  const pixelId = ctx?.env.META_PIXEL_ID;
   return (
   <>
     {raw('<!DOCTYPE html>')}
@@ -94,6 +117,7 @@ export const Layout: FC<{
         <title>{fullTitle}</title>
         <meta name="description" content={description} />
         <meta name="theme-color" content="#551a8b" />
+        {ctx?.env.META_DOMAIN_VERIFICATION && <meta name="facebook-domain-verification" content={ctx.env.META_DOMAIN_VERIFICATION} />}
         <link rel="canonical" href={url} />
         <link rel="alternate" type="application/atom+xml" href="/blog/feed.xml" title="call4me blog" />
         {override?.published && <meta property="article:published_time" content={override.published} />}
@@ -128,9 +152,15 @@ export const Layout: FC<{
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <script src="https://analytics.ahrefs.com/analytics.js" data-key="Sy+Jmk5GRDykk/0THUQjsg" async></script>
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
-        <script>{raw(gaScript(tryGetContext<AppEnv>()?.get('account')?.id ?? null))}</script>
+        <script>{raw(gaScript(accountId))}</script>
+        {pixelId && <script>{raw(metaPixelScript(pixelId, accountId))}</script>}
       </head>
       <body>
+        {pixelId && (
+          <noscript>
+            <img height="1" width="1" style="display:none" alt="" src={`https://www.facebook.com/tr?id=${encodeURIComponent(pixelId)}&ev=PageView&noscript=1`} />
+          </noscript>
+        )}
         <div id="masthead">
           <a class="logo" href="/">call4me</a>
           {page === 'home' ? <h1 class="bc">your AI agent makes phone calls for you</h1> : <span class="bc">your AI agent makes phone calls for you</span>}

@@ -36,7 +36,7 @@ async function writeRecap(env: Env, callId: string): Promise<void> {
   }
 }
 
-/** How the call ended, for GA (services/analytics.ts). No numbers, names or transcript. */
+/** How the call ended, for GA (services/analytics.ts; Meta does not get it). No numbers, names or transcript. */
 async function reportCallEnded(env: Env, callId: string): Promise<void> {
   const row = await calls(env.DB).byId(callId);
   const account = row && (await accounts(env.DB).byId(row.account_id));
@@ -79,8 +79,13 @@ webhooks.post('/stripe', async (c) => {
       else {
         const done = await t.fulfill(session.id);
         // Reported here, once per Stripe event, never from the welcome page that also fulfills.
-        const client = done?.topup.ga_client_id ? { clientId: done.topup.ga_client_id, sessionId: done.topup.ga_session_id } : null;
-        if (done) c.executionCtx.waitUntil(analytics(c.env).purchase(done.account, { transactionId: session.id, cents: done.topup.amount_cents, reload: false, client }));
+        if (done) {
+          const { topup } = done;
+          const ga = topup.ga_client_id ? { clientId: topup.ga_client_id, sessionId: topup.ga_session_id } : null;
+          // The checkout's browser, which finishes the purchase on the welcome page.
+          const meta = { fbp: topup.meta_fbp, fbc: topup.meta_fbc, ip: topup.meta_ip, userAgent: topup.meta_user_agent, url: `https://${c.env.CANONICAL_HOST}/welcome` };
+          c.executionCtx.waitUntil(analytics(c.env).purchase(done.account, { transactionId: session.id, cents: topup.amount_cents, reload: false, from: { ga, meta } }));
+        }
       }
       break;
     }

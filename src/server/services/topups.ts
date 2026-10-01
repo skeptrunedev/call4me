@@ -2,7 +2,7 @@ import Stripe from 'stripe';
 import { newId, now } from '../lib/ids';
 import { accounts, type Account } from './accounts';
 import { realEmail } from '../lib/auth-options';
-import type { GaClient } from '../lib/ga';
+import type { Visitor } from './analytics';
 
 export const MIN_TOPUP_CENTS = 1000;
 /** "Add funds" sells credits in $10 units; the buyer picks how many on Stripe's page. */
@@ -34,6 +34,10 @@ interface TopupRow {
   key_revealed: number;
   ga_client_id: string | null;
   ga_session_id: string | null;
+  meta_fbp: string | null;
+  meta_fbc: string | null;
+  meta_ip: string | null;
+  meta_user_agent: string | null;
 }
 
 export interface Reload {
@@ -97,9 +101,10 @@ export function topups(db: D1Database, stripe: Stripe) {
     /**
      * A Checkout session that adds `amountCents` now and, when `monthly`, again every month
      * (a subscription for that amount). New buyers give an email; existing accounts are passed in.
-     * `ga` is the browser it started in, so the purchase lands in that visit (lib/ga.ts).
+     * `from` is the browser it started in, so the purchase lands in that visit (lib/ga.ts) and
+     * matches its ad click (lib/meta.ts).
      */
-    async checkout(opts: { amountCents: number; monthly: boolean; origin: string; email?: string; account?: Account; adjustable?: boolean; ga?: GaClient | null }): Promise<string> {
+    async checkout(opts: { amountCents: number; monthly: boolean; origin: string; email?: string; account?: Account; adjustable?: boolean; from?: Visitor }): Promise<string> {
       const id = newId();
       // X sign-ins may have only a placeholder address; then Checkout asks for one.
       const email = realEmail(opts.account?.email ?? opts.email?.trim().toLowerCase()) ?? undefined;
@@ -129,9 +134,13 @@ export function topups(db: D1Database, stripe: Stripe) {
               ...(customer ? {} : { customer_creation: 'always' as const }),
             }),
       });
+      const { ga, meta } = opts.from ?? { ga: null, meta: null };
       await db
-        .prepare(`INSERT INTO topups (id, account_id, email, amount_cents, monthly, stripe_session_id, ga_client_id, ga_session_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-        .bind(id, opts.account?.id ?? null, email ?? null, opts.amountCents, opts.monthly ? 1 : 0, session.id, opts.ga?.clientId ?? null, opts.ga?.sessionId ?? null, now())
+        .prepare(
+          `INSERT INTO topups (id, account_id, email, amount_cents, monthly, stripe_session_id, ga_client_id, ga_session_id, meta_fbp, meta_fbc, meta_ip, meta_user_agent, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        )
+        .bind(id, opts.account?.id ?? null, email ?? null, opts.amountCents, opts.monthly ? 1 : 0, session.id, ga?.clientId ?? null, ga?.sessionId ?? null, meta?.fbp ?? null, meta?.fbc ?? null, meta?.ip ?? null, meta?.userAgent ?? null, now())
         .run();
       return session.url!;
     },
