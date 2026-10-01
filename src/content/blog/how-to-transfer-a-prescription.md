@@ -11,7 +11,7 @@ imageAlt: How to transfer a prescription from Amazon Pharmacy to Walgreens, thre
 
 **The short answer:** to transfer a prescription, call the new pharmacy first and ask whether they have it **in stock**. If they do, they register you as a patient (name, date of birth, phone, address, insurance or self-pay) and request the transfer from your old pharmacy, which needs **the old pharmacy's name and phone number**. You can also call the old pharmacy yourself. Amazon Pharmacy's phone menu said the new pharmacy has to ask, but its customer care representative **transferred the prescription out to Walgreens in under five minutes** on the third call below, once we gave the store's name, ZIP code, address and phone number.
 
-These are my own calls, made on Monday, September 28, 2026 by call4me, my AI phone assistant. Amazon Pharmacy had my prescription out of stock, and a Walgreens near me had it on the shelf. It took three calls in about half an hour:
+These are my own calls, made on Monday, September 28, 2026 by call4me, my AI phone assistant. Amazon Pharmacy had my prescription out of stock, and a Walgreens near me had it on the shelf. (Earlier that morning, another call got my other prescriptions out of Amazon's pharmacist review; that's in [Amazon Pharmacy phone number: what happens when you call](/blog/amazon-pharmacy-phone-number).) It took three calls in about half an hour:
 
 1. **11:50 am PT, Walgreens:** is it in stock? Yes. They started registering me, and the call dropped partway through. (3 minutes 37 seconds)
 2. **11:54 am PT, Walgreens again:** finished the registration, asked them to request the transfer, got a self-pay price. (8 minutes 26 seconds)

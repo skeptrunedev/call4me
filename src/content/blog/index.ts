@@ -7,6 +7,7 @@ import eyeExamCost from './eye-exam-cost-without-insurance.md';
 import followUpTelehealth from './follow-up-appointment-telehealth.md';
 import privateDiningRoomCost from './private-dining-room-cost.md';
 import transferPrescription from './how-to-transfer-a-prescription.md';
+import amazonPharmacyPhone from './amazon-pharmacy-phone-number.md';
 import openaiRealtimeVoices from './openai-realtime-voices-phone-calls.md';
 import rescheduleDentist from './reschedule-dentist-appointment.md';
 import wayfairCustomerService from './wayfair-customer-service.md';
@@ -28,4 +29,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'follow-up-appointment-telehealth', markdown: followUpTelehealth },
   { slug: 'private-dining-room-cost', markdown: privateDiningRoomCost },
   { slug: 'how-to-transfer-a-prescription', markdown: transferPrescription },
+  { slug: 'amazon-pharmacy-phone-number', markdown: amazonPharmacyPhone },
 ];

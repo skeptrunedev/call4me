@@ -116,7 +116,7 @@ export const EXAMPLES: CallExample[] = [
     business: 'Amazon Pharmacy',
     date: 'September 28, 2026',
     request: 'three of my prescriptions have been stuck in pharmacist review for over a day. find out what is holding them up and ask support to move them along.',
-    outcome: 'the representative agreed to mark the pending items as important. she estimated about an hour for review and said an email would follow when they were ready. this call does not confirm the review finished.',
+    outcome: 'the representative agreed to mark the pending items as important. she estimated about an hour for review and said an email would follow when they were ready. amazon\'s "ready to order" email for two of the three arrived 42 minutes after the representative said goodbye.',
     audio: '/static/examples/expedite-review.mp3',
     duration: '5 minutes 46 seconds',
     transcript: [
