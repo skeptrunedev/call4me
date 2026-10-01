@@ -1,6 +1,8 @@
 import type { PostSource } from '../../server/lib/blog';
 import cancelPlanetFitness from './cancel-planet-fitness.md';
+import costcoTireAppointment from './costco-tire-appointment-cancel-refund.md';
 import experianPhoneNumber from './experian-phone-number.md';
+import rescheduleDentist from './reschedule-dentist-appointment.md';
 import wayfairCustomerService from './wayfair-customer-service.md';
 
 /**
@@ -12,4 +14,6 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'experian-phone-number', markdown: experianPhoneNumber },
   { slug: 'cancel-planet-fitness', markdown: cancelPlanetFitness },
   { slug: 'wayfair-customer-service', markdown: wayfairCustomerService },
+  { slug: 'costco-tire-appointment-cancel-refund', markdown: costcoTireAppointment },
+  { slug: 'reschedule-dentist-appointment', markdown: rescheduleDentist },
 ];

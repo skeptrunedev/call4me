@@ -7,7 +7,12 @@ speed. Its route uses the shared layout and sign in state. Content lives in
 requests, or call history queries to render.
 
 The examples use the founder's historical TAO booking and cancellation,
-Monkeybrains, and Amazon Pharmacy calls. Original audio was verified against
+Monkeybrains, and Amazon Pharmacy calls, plus two customer calls published with
+the account owners' permission: a dentist reschedule and a Costco Tire Center
+order lookup. For customer calls, also mute the business name when it would
+identify where the customer goes (the dental practice), the procedure, and
+every reading of an order number; check the saved transcript for words the
+recording buries under crosstalk, since independent transcription can miss them. Original audio was verified against
 Telnyx recordings and saved call transcripts. Each outcome is supported by its
 conversation. The internet call did not schedule installation, and the Amazon
 call did not prove the review finished. Prices and availability in the audio
