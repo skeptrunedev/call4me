@@ -16,6 +16,7 @@
     "grant": "node scripts/grant-credits.mjs",
     "transfer": "node scripts/transfer-credits.mjs",
     "password-user": "node scripts/create-password-user.mjs",
+    "plugin:zip": "rm -f dist/call4me-chatgpt-plugin.zip && mkdir -p dist && cd chatgpt-plugin && zip -qr ../dist/call4me-chatgpt-plugin.zip . -x '*.svg'",
     "openapi:generate": "tsx scripts/generate-openapi.ts",
     "test": "node --import tsx --test test/*.test.ts",
     "test:menu:live": "tsx scripts/eval-menu-recovery.ts"

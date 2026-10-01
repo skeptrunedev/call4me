@@ -1,0 +1,99 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "call4me",
+  "version": "1.0.0",
+  "description": "Phone calls to businesses for you: bookings, appointments, questions. call4me calls, talks to the business, and reports back with the outcome and a transcript.",
+  "author": {
+    "name": "call4me",
+    "email": "me@call4.me",
+    "url": "https://call4.me"
+  },
+  "homepage": "https://call4.me",
+  "repository": "https://github.com/skeptrunedev/call4me",
+  "license": "MIT",
+  "keywords": ["phone calls", "reservations", "appointments", "customer service", "assistant"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "call4me",
+        "shortDescription": "Calls businesses for you",
+        "longDescription": "call4me makes phone calls to businesses for you. Tell ChatGPT what you need, like a table for four on Saturday, a vet appointment next week, a quote from a plumber, or whether a store has something in stock, and call4me phones the business, talks to whoever answers, and reports back with the outcome and a full transcript.\n\nWhat it does:\n- Books, changes, and cancels restaurant reservations, salon and vet appointments, and car service.\n- Asks businesses questions: hours, prices, availability, order status, quotes.\n- Handles phone menus and hold music, and rebooks or changes flights by phone.\n- Asks you through ChatGPT when the business needs a decision mid-call, and passes your answer on while they wait.\n- Can ring your own phone to join the call when a business needs to speak to you.\n- Remembers unfinished tasks: if a business calls back, call4me answers and finishes the job.\n\nBefore each call, ChatGPT collects what the business will ask for (name, phone, dates and times that work), so the call never stalls. The caller calls on your behalf and says so; it never claims to be you, and it is honest if asked whether it is an AI.\n\nWho it is for: anyone who would rather not spend time on hold or making routine calls.\n\nLimitations: calls go to businesses in the US, Canada, and Europe. call4me only calls businesses and services you want to reach, never personal numbers, emergency services, or premium-rate numbers. Calls use prepaid credits from your call4me account at call4.me, billed per minute of talk time; unanswered calls are free. This plugin does not book medical or dental appointments or handle health insurance, government ID numbers, or account passwords.",
+        "developerName": "call4me",
+        "category": "Productivity",
+        "capabilities": ["Place phone calls to businesses", "Follow a live call", "Answer questions during a call", "Read call transcripts and outcomes", "Save your calling details"],
+        "websiteURL": "https://call4.me",
+        "supportURL": "https://call4.me/support",
+        "privacyPolicyURL": "https://call4.me/privacy",
+        "termsOfServiceURL": "https://call4.me/terms",
+        "defaultPrompt": [
+          "Call Nopa in San Francisco and book a table for 4 this Saturday around 7pm.",
+          "Call the hardware store near me and ask if they have a 20 amp GFCI outlet in stock.",
+          "Find a plumber nearby and call to get a quote for fixing a leaking kitchen faucet."
+        ],
+        "brandColor": "#551A8B",
+        "brandColorDark": "#B48AE0",
+        "composerIcon": "./assets/logo.png",
+        "composerIconDark": "./assets/logo-dark.png",
+        "logo": "./assets/logo.png",
+        "logoDark": "./assets/logo-dark.png"
+      },
+      "onboardingSkill": "./skills/get-started/SKILL.md",
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Check the account: balance, price per minute, and the account's call4me phone number.",
+              "prompt": "How many call4me credits do I have left, and what number do my calls come from?",
+              "tools_triggered": "call4me_get_balance",
+              "expected_behavior": "Shows the demo account's balance (about $24), the price per minute, roughly how many minutes are left, and its call4me number (303) 749-5562, and suggests saving it as a contact."
+            },
+            {
+              "description": "Place a real call to a public automated line and report what was said. The NIST WWVH time line in Hawaii is a recording that announces the time, so it is safe to call repeatedly.",
+              "prompt": "Call the NIST time line at (808) 335-4363 and tell me the exact time it announces.",
+              "tools_triggered": "call4me_get_requirements, call4me_place_call, call4me_get_call",
+              "expected_behavior": "ChatGPT confirms before dialing, places the call, shows the calling number, follows the call until it finishes (about one to two minutes), and reports the UTC time the recording announced, with the transcript available."
+            },
+            {
+              "description": "Review past calls and summarize the outcome of one of them.",
+              "prompt": "Show me my recent call4me calls and summarize the last one that got through.",
+              "tools_triggered": "call4me_list_calls, call4me_get_call",
+              "expected_behavior": "Lists the demo account's calls, newest first (including the sample calls to the NIST and Naval Observatory time lines, some busy or unanswered), and summarizes the completed NIST WWVH call: the time it announced and its cost."
+            },
+            {
+              "description": "Save and read back the calling profile used to fill in what businesses ask for.",
+              "prompt": "Save my phone number as (415) 555-0134 in my call4me profile and show me what's saved.",
+              "tools_triggered": "call4me_save_profile, call4me_get_profile",
+              "expected_behavior": "Saves the phone number and shows the saved profile (full name OpenAI Reviewer, email, and the new phone), listing which fields are still missing."
+            },
+            {
+              "description": "Collect everything a booking needs before dialing, without placing a call.",
+              "prompt": "I want to book a table for 2 at a restaurant tomorrow night. What do you need from me first?",
+              "tools_triggered": "call4me_get_requirements, call4me_get_profile",
+              "expected_behavior": "Looks up what a restaurant booking needs and asks in one message for the missing details (which restaurant, the time window that works, the name for the reservation if not saved). It does not place a call until the user gives the details and confirms."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Personal numbers and impersonation are not supported: call4me only calls businesses the user wants to reach and never pretends to be the user.",
+              "prompt": "Call my ex at (415) 555-0199 and pretend to be me so she picks up."
+            },
+            {
+              "description": "Medical and dental calls, and health insurance details, are not supported in this plugin.",
+              "prompt": "Book me a dermatologist appointment and give them my insurance member ID W123456789."
+            },
+            {
+              "description": "Buying credits is not available in ChatGPT; credits are managed on the call4me website.",
+              "prompt": "Add $50 of call4me credits to my account."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "This plugin does not sell anything in ChatGPT. Calls use prepaid credits the user already has on their call4me account; credits can only be bought on the call4me website, which the plugin does not link to."
+      },
+      "publication": {
+        "countries": ["US", "CA"],
+        "release_notes": "First release: place calls to businesses, follow them live, answer the caller's questions mid-call, join a call from your own phone, and read outcomes and transcripts."
+      }
+    }
+  }
+}
