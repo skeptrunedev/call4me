@@ -36,7 +36,7 @@ So Month 1 is about the top of the list, done well. The top 150 alone cover 60% 
 | Cancel | 329 | "how to cancel planet fitness membership" (173,000 across 28) | Best fit. We weight these 1.5x when ranking. |
 | Refund / return policy | 366 | "best buy return policy" (28,700) | Traffic, weaker fit. Month 2. |
 
-**Ranking formula** in `targets.csv`: volume × fit (cancel 1.5, call 1.0, refund 0.6) ÷ (1 + difficulty/10). The top 10 are Verizon, FedEx, Planet Fitness cancel, Delta, USAA, PayPal, Expedia, Adobe cancel, Wayfair and Audible cancel.
+**Ranking formula** in `targets.csv`: volume × fit (cancel 1.5, call 1.0, refund 0.6) ÷ (1 + difficulty/10). On Oct 1 we added 15 chores people named in the launch-post replies (Ahrefs US data), with new jobs: retention (haggling a bill by threatening to cancel, fit 1.5), change flight, insurance claim, lost package, charge dispute and hotel upgrade (fit 1.0). The best are "how to cancel a subscription" (#244), UnitedHealthcare (#300), United flight changes (#425) and Spectrum retention (#488); none reach the top 150. The top 10 are Verizon, FedEx, Planet Fitness cancel, Delta, USAA, PayPal, Expedia, Adobe cancel, Wayfair and Audible cancel.
 
 **Some results can't be won and get skipped.** Searches where the brand's own site or forums hold the whole first page stay off the list even if they're big: "xfinity customer service number" (Reddit and Facebook), "costco return policy" (costco.com) and "united airlines customer service" (united.com, 7 of 10 results). Checking the top 10 results (`ahrefs keyword-serp`) before each batch catches these.
 
@@ -111,13 +111,12 @@ Weekends are agent-only: builds, fixes and logs, with no calls (most phone lines
 - Call fixes found while testing: joining a call by pressing 1, relaying the user's keypad to the business, surviving session resets, reattaching a stream that never sends audio, no per-number daily limits.
 
 **Thu Oct 1, done:**
-- All 5 test calls placed ($12 across 9 calls). Numbers confirmed on each company's own site first.
-- **Reached a person:** USAA (press 1 for non-member, 2 for joining, say "membership", about a 2 minute hold) and UPS (say "representative" twice at the tracking number prompt, about 3 minutes of hold).
-- **Walled without an account:** Verizon's AI assistant needs the account's mobile or account number; FedEx won't connect without a tracking or door tag number; FPL answers "representative" with "That option is not available" and routes new customers into an automated signup that needs the new address.
-- **Lesson for the template:** "a real question, no account" works for membership and policy questions but not for carriers, telcos and utilities. Those pages wait until a call with a real account, package or address reaches a person; the wall can be a section inside them. Verizon reached a rep the same day on Nick's own account (5G Do More at $219.08 a month, Unlimited Welcome quoted at $170.58).
-- 5 drafts written from the recordings, awaiting Nick's review: `usaa-phone-number`, `ups-contact-number`, `verizon-customer-service`, `fedex-customer-service-number`, `fpl-phone-number`.
-- Caller fixes shipped from these calls: ask a spoken menu for a representative instead of looping its routes; never think out loud on the line; never guess where the user is calling from. Still open: the caller stalls ("hold on") and repeats failed routes on spoken menus, which needs spoken-menu cases in `test:menu:live`; and some caller lines in the saved transcript are silent on the recording.
-- The 2-calls-at-once limit per account is removed (each call already holds its full cost from the balance before dialing), so Week 3 and 4 calls can run in parallel.
+- 5 posts pushed (the deploy waits for live customer calls to end), each built on a recorded call that reached a person: [USAA phone number](https://call4.me/blog/usaa-phone-number), [UPS contact number](https://call4.me/blog/ups-contact-number), [Verizon customer service](https://call4.me/blog/verizon-customer-service), [FPL phone number](https://call4.me/blog/fpl-phone-number), [FedEx customer service number](https://call4.me/blog/fedex-customer-service-number). 17 calls ($26.75), 3 of them callbacks from the business. Numbers confirmed on each company's own site first.
+- **Routes that reached a person:** USAA, press 1 (not a member), 2 (joining), say "membership". UPS, say "representative" twice at the tracking number prompt. Verizon, the account's mobile number and Account PIN, then "An agent, please". FPL, on the fifth call: the new-service signup ("open a new account", "get started"), then "speak to a person" (anywhere else, "representative" gets "That option is not available"). FedEx, a real tracking number, then ask for a representative and press 1 for the callback, which came within seconds.
+- **New rule:** a page only goes up if one of its calls reached a person. "A real question, no account" works for membership and policy questions but not for carriers, telcos and utilities; those needed Nick's real Verizon account, a real FedEx tracking number, or the one menu route that hands off. Walled calls stay in the page as "what happens without X".
+- Each post also targets its second-biggest search: "usaa customer service", "ups customer service number", "verizon phone number", "fedex phone number".
+- Caller fixes shipped: ask a spoken menu for a representative instead of looping; never think out loud on the line; never guess where the user is calling from; the 2-calls-at-once limit per account is removed (each call already holds its full cost before dialing).
+- Still open: on phone menus, some caller lines are in the transcript but silent on the recording, and a Verizon callback heard nothing from our caller. Diagnosing both needs the voice worker's past logs (`cflogs query` now reads Workers Observability; it needs a call4me-account token with Workers Observability: Read). The caller also still stalls with "hold on" and "let me check" at menus.
 
 **Thu Oct 1, done:**
 - 5 posts from customers' overnight calls, each aimed at a keyword picked with the Ahrefs CLI before drafting (US volume and difficulty pulled that morning): [Adderall shortage](https://call4.me/blog/adderall-shortage) (9,500/mo, KD 25, 11 pharmacies), [Etihad customer service](https://call4.me/blog/etihad-customer-service) (3,000, KD 0), [American Airlines flight credit](https://call4.me/blog/american-airlines-flight-credit) (2,800, KD 0), [lawyer consultation fee](https://call4.me/blog/lawyer-consultation-fee) (3,100, KD 0), [how to find a new primary care doctor](https://call4.me/blog/how-to-find-a-new-primary-care-doctor) (600, KD 0, 15 calls). Restaurant booking, store stock and shoe hold calls were skipped: no measurable search volume.
@@ -142,7 +141,7 @@ Calls start around 6 to 7am Pacific (all five are Eastern or Central businesses)
 
 Verizon goes first. If USAA walls us behind member verification the way Experian did, the wall is the post.
 
-Still open from launch day: analytics with signup source tracking; Nick to create the Ahrefs Brand Radar report and add the chores from the 76 launch replies to `targets.csv`.
+Still open from launch day: analytics with signup source tracking; Nick to create the Ahrefs Brand Radar report. (The launch-reply chores were added to `targets.csv` on Oct 1.)
 
 **Fri Oct 2: launch links + first test call**
 - Submit to the MCP Registry, Smithery, Glama, mcp.so and PulseMCP. The agent drafts, Nick submits.
