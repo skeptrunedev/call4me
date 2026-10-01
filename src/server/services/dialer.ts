@@ -28,6 +28,15 @@ export function pricePerMinuteTo(env: Env, to: string): number {
 /** The per-minute price a call is billed at: by destination when we placed it, the standard one for a call that came in. */
 export const callPrice = (env: Env, row: Pick<CallRow, 'direction' | 'to_number'>) => (row.direction === 'outbound' ? pricePerMinuteTo(env, row.to_number) : pricePerMinute(env));
 
+/**
+ * Whether keypad presses on a call with `other` should be tones in the audio: anywhere but a +1
+ * number, since some international routes drop Telnyx's RFC 2833 key events (voice/dtmf.ts).
+ */
+export function inbandKeysFor(other: string): boolean {
+  const p = checkDialable(other);
+  return p.ok && !p.home;
+}
+
 /** Telnyx's media stream for a call, on the voice Worker's own host (src/server/voice/worker.ts). */
 export async function streamUrl(env: Env, callId: string): Promise<string> {
   return `wss://${env.VOICE_HOST}/voice/stream/${callId}/${await hmacHex(env.STREAM_SECRET, callId)}`;
@@ -92,6 +101,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       maxSeconds: brief.max_minutes * 60,
       pricePerMinuteCents: price,
       redact: secrets.map((sec) => sec.value),
+      inbandKeys: inbandKeysFor(call.to_number),
     };
     const session = sessionFor(env, call.id);
     await session.fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
@@ -202,6 +212,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
       })),
     }),
     backOffice: inboundBackOfficeInstructions(owner, ordered.map(openTask)),
+    inbandKeys: inbandKeysFor(opts.from),
     person: await personFor(env, origin, account, opts.to),
     voice: 'marin',
     maxSeconds: maxMinutes * 60,

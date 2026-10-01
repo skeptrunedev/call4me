@@ -2,6 +2,7 @@ import { DurableObject } from 'cloudflare:workers';
 import { Raindrop, type Interaction } from 'raindrop-ai';
 import { ACTIVE, calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
+import { dtmfFrames, FRAME_MS } from './dtmf';
 import { connectCheckMessage, forcedHandoffMessage, MenuRecovery, missedHandoff } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { BACK_OFFICE_TOOLS } from './prompt';
@@ -74,6 +75,12 @@ export interface SessionSetup {
   streamUrl?: string;
   /** Per-call secrets (account PINs) to mask in the stored transcript. */
   redact?: string[];
+  /**
+   * Keypad presses go out as tones in our own audio instead of Telnyx send_dtmf. Set for calls
+   * whose other side isn't a +1 number: some international routes drop send_dtmf's RFC 2833
+   * events (voice/dtmf.ts).
+   */
+  inbandKeys?: boolean;
   /** Who can be patched into the call (call4me's user), from which number, and where their leg reports. */
   person?: { name: string; phone: string | null; from: string; webhookUrl: string; connectWhen?: string | null; listenIn?: boolean };
 }
@@ -122,6 +129,8 @@ export class VoiceSession extends DurableObject<Env> {
   private heardThem = false;
   /** Wall-clock time when the audio already sent to Telnyx will finish playing. */
   private playbackEndsAt = 0;
+  /** Until when keypad tones are playing; the caller's audio is held off the line until then. */
+  private keysPlayingUntil = 0;
   private lastOutputAt = 0;
   private endingCall = false;
   /** Back-office bookkeeping for starting it ourselves when the voice model skips a hand-off (handoff.ts). */
@@ -420,7 +429,7 @@ export class VoiceSession extends DurableObject<Env> {
       case 'session.output_audio.delta': {
         // After the hang-up hand-off the goodbye has already been said; anything more is
         // the model filling the silence before the line drops, so it never reaches the phone.
-        if (this.endingCall || this.personOn) break;
+        if (this.endingCall || this.personOn || Date.now() < this.keysPlayingUntil) break;
         const e = ev as { delta: string; start_ms: number; end_ms: number };
         if (this.framesOut++ === 0) this.mark('first caller audio');
         this.sendPhone({ event: 'media', media: { payload: e.delta } });
@@ -701,7 +710,7 @@ export class VoiceSession extends DurableObject<Env> {
     const s = await this.load();
     if (!s?.controlId || this.ended) return;
     const controlId = s.controlId;
-    this.keysOut = this.keysOut.then(() => telnyx(this.env).sendDtmf(controlId, digit)).catch(() => console.warn('relaying a key failed', s.callId));
+    this.keysOut = this.keysOut.then(() => this.pressKeys(s, controlId, digit)).catch(() => console.warn('relaying a key failed', s.callId));
     await this.keysOut;
   }
 
@@ -807,7 +816,7 @@ export class VoiceSession extends DurableObject<Env> {
         if (digits && !s.controlId) output = 'no phone connection; keypad input was not submitted';
         if (digits && s.controlId) {
           const snapshot = this.menuRecovery.snapshot();
-          await telnyx(this.env).sendDtmf(s.controlId, digits);
+          await this.pressKeys(s, s.controlId, digits);
           this.menuRecovery.submitted(digits, snapshot);
           output = `keypad submitted: ${digits}; wait for the next prompt to confirm it worked`;
         }
@@ -824,6 +833,22 @@ export class VoiceSession extends DurableObject<Env> {
       this.lastHandoffAt = Date.now();
       this.sendLive({ type: 'response.create' });
     }
+  }
+
+  /**
+   * Press keys on the other side's phone menu: RFC 2833 events through Telnyx for +1 numbers,
+   * tones in our own audio elsewhere (only one of the two, so no menu hears a key twice).
+   * Any of the caller's speech still queued at Telnyx is cleared first so it doesn't mask the tones.
+   */
+  private async pressKeys(s: Stored, controlId: string, digits: string): Promise<void> {
+    if (!s.inbandKeys) return telnyx(this.env).sendDtmf(controlId, digits);
+    const frames = dtmfFrames(digits);
+    const now = Date.now();
+    this.sendPhone({ event: 'clear' });
+    for (const payload of frames) this.sendPhone({ event: 'media', media: { payload } });
+    this.playbackEndsAt = now + frames.length * FRAME_MS;
+    this.keysPlayingUntil = this.playbackEndsAt;
+    this.mark(`played keypad tones ${digits}`);
   }
 
   private async endCall(s: Stored, args: Record<string, unknown>): Promise<string> {
