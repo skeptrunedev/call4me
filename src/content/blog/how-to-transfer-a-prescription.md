@@ -1,7 +1,7 @@
 ---
 title: How to transfer a prescription from Amazon Pharmacy to Walgreens (3 recorded calls)
 seoTitle: How to transfer a prescription: 3 recorded calls
-subtitle: My AI phone assistant moved one of my prescriptions from Amazon Pharmacy to a Walgreens in San Francisco. Here are all three calls, what each pharmacy asked for, the step Amazon's phone menu said it couldn't do, and the mistake to avoid.
+subtitle: My AI phone assistant moved one of my prescriptions from Amazon Pharmacy to a Walgreens in San Francisco. Here are all three calls, what each pharmacy asked for, and the step Amazon's phone menu said it couldn't do.
 description: To transfer a prescription, check stock, register at the new pharmacy, then have the old one send it. 3 recorded calls, Amazon Pharmacy to Walgreens.
 date: 2026-10-01
 tags: prescription transfer, pharmacy, walgreens, amazon pharmacy, ai phone assistant
@@ -32,7 +32,7 @@ My name, date of birth, phone number, address, the verification code, the medica
 ## What you need ready
 
 - **For the new pharmacy:** the patient's full name (spelled out), date of birth, phone number, home address, and insurance, or "self-pay."
-- **The old pharmacy's phone number, correct to the digit.** Read it off their website or your account. Our caller gave Walgreens Amazon's number with the last four digits wrong. Walgreens asked for it again and got the same wrong digits, so nobody caught it. These calls don't show whether it slowed Walgreens down; the Amazon call went around it. Amazon Pharmacy's customer care number, the one our third call dialed, was (855) 745-5725. Amazon's [page for prescribers](https://pharmacy.amazon.com/prescribers) also lists a separate prescriber and pharmacy line, (855) 206-3605, which is worth giving the new pharmacy.
+- **The old pharmacy's phone number.** Read it off their website or your account. Amazon Pharmacy's customer care number, the one our third call dialed, was (855) 745-5725. Amazon's [page for prescribers](https://pharmacy.amazon.com/prescribers) also lists a separate prescriber and pharmacy line, (855) 206-3605, which is worth giving the new pharmacy.
 - **For Amazon Pharmacy:** the mobile number on the account, and access to that phone or the account email. Amazon sends a six digit code there before it will talk about the account.
 - **The new pharmacy's details:** store name, street address, ZIP code and phone number. Amazon's representative asked for the ZIP, confirmed it was a Walgreens, then asked for the full address. Our caller added the phone number before the transfer went through.
 
@@ -60,8 +60,8 @@ My name, date of birth, phone number, address, the verification code, the medica
 - **2:38** The pharmacy answers. The caller picks up where the dropped call left off
 - **2:53** Date of birth, then the name spelled out, phone number, sex and home address
 - **4:42** "Okay, I went ahead and registered them."
-- **4:45** "Can you request the transfer from Amazon Pharmacy?" The caller gives Amazon's number with the last four digits wrong
-- **6:28** Walgreens asks for Amazon's number again and gets the same wrong digits
+- **4:45** "Can you request the transfer from Amazon Pharmacy?"
+- **6:28** Walgreens asks for Amazon's number again
 - **6:57** "I'll go ahead and hand this over to the pharmacist, and she'll go ahead and call Amazon for you."
 - **7:33** "I think it's gonna come out to about $109.89 out of pocket."
 - **8:05** "It does look like we do have it in stock. It does take a bit of time for us to call Amazon and get it transferred over here."
@@ -271,7 +271,7 @@ If you use call4me, paste this into your agent:
 
 **4:42 Pharmacy staff:** Okay, I went ahead and registered them.
 
-**4:45 AI agent:** Perfect. So, can you request the transfer from Amazon Pharmacy at [phone number removed, read with the last four digits wrong]? Amazon is out of stock, though.
+**4:45 AI agent:** Perfect. So, can you request the transfer from Amazon Pharmacy at [phone number removed]? Amazon is out of stock, though.
 
 **4:58 Pharmacy staff:** Okay, give me one second, okay?
 
@@ -285,11 +285,11 @@ If you use call4me, paste this into your agent:
 
 **6:28 Pharmacy staff:** And then what's their phone number?
 
-**6:30 AI agent:** [phone number removed, read with the same wrong digits].
+**6:30 AI agent:** [phone number removed].
 
 **6:37 Pharmacy staff:** [phone number removed]... Oh, what's the last four?
 
-*The number goes back and forth once more, with the same wrong last four digits. Both readings are muted.*
+*The number goes back and forth once more. Both readings are muted.*
 
 **6:49 Pharmacy staff:** Okay, and then what's the name of the medication? Do you know?
 
