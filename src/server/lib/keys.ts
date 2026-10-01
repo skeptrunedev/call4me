@@ -51,9 +51,9 @@ export function describeKey(raw: string): string {
   const got = `we received ${raw.length} characters starting "${keyHint(raw)}"`;
   const problems: string[] = [];
   if (ESCAPE.test(raw)) problems.push(`it was URL-encoded (${raw.match(ESCAPE)![0]}), so whatever sent it encoded the key${key !== raw ? `; decoded it is ${key.length} characters` : ''}`);
-  if (/\s/.test(raw.trim())) problems.push('it has whitespace or a line break inside it');
+  if (/\s/.test(raw)) problems.push('it has whitespace or a line break in it');
   if (KEY_SHAPE.test(key)) {
-    problems.push(`that is a well-formed call4me key, but no account has it: it was regenerated or never existed. Copy your current key from the account page`);
+    problems.push(`that is a well-formed call4me key, but no account has it: it was regenerated or never existed`);
   } else {
     if (!key.startsWith(KEY_PREFIX)) problems.push(`call4me keys start with ${KEY_PREFIX}`);
     if (key.length !== KEY_LENGTH) problems.push(`call4me keys are ${KEY_LENGTH} characters, this is ${key.length}`);
