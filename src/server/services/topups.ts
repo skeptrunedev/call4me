@@ -2,6 +2,7 @@ import Stripe from 'stripe';
 import { newId, now } from '../lib/ids';
 import { accounts, type Account } from './accounts';
 import { realEmail } from '../lib/auth-options';
+import type { GaClient } from '../lib/ga';
 
 export const MIN_TOPUP_CENTS = 1000;
 /** "Add funds" sells credits in $10 units; the buyer picks how many on Stripe's page. */
@@ -31,6 +32,8 @@ interface TopupRow {
   monthly: number;
   status: 'pending' | 'paid' | 'refunded';
   key_revealed: number;
+  ga_client_id: string | null;
+  ga_session_id: string | null;
 }
 
 export interface Reload {
@@ -94,8 +97,9 @@ export function topups(db: D1Database, stripe: Stripe) {
     /**
      * A Checkout session that adds `amountCents` now and, when `monthly`, again every month
      * (a subscription for that amount). New buyers give an email; existing accounts are passed in.
+     * `ga` is the browser it started in, so the purchase lands in that visit (lib/ga.ts).
      */
-    async checkout(opts: { amountCents: number; monthly: boolean; origin: string; email?: string; account?: Account; adjustable?: boolean }): Promise<string> {
+    async checkout(opts: { amountCents: number; monthly: boolean; origin: string; email?: string; account?: Account; adjustable?: boolean; ga?: GaClient | null }): Promise<string> {
       const id = newId();
       // X sign-ins may have only a placeholder address; then Checkout asks for one.
       const email = realEmail(opts.account?.email ?? opts.email?.trim().toLowerCase()) ?? undefined;
@@ -126,8 +130,8 @@ export function topups(db: D1Database, stripe: Stripe) {
             }),
       });
       await db
-        .prepare(`INSERT INTO topups (id, account_id, email, amount_cents, monthly, stripe_session_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)`)
-        .bind(id, opts.account?.id ?? null, email ?? null, opts.amountCents, opts.monthly ? 1 : 0, session.id, now())
+        .prepare(`INSERT INTO topups (id, account_id, email, amount_cents, monthly, stripe_session_id, ga_client_id, ga_session_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+        .bind(id, opts.account?.id ?? null, email ?? null, opts.amountCents, opts.monthly ? 1 : 0, session.id, opts.ga?.clientId ?? null, opts.ga?.sessionId ?? null, now())
         .run();
       return session.url!;
     },
@@ -166,14 +170,18 @@ export function topups(db: D1Database, stripe: Stripe) {
       return { account, topup: { ...topup, account_id: account.id, amount_cents: paidCents, status: 'paid' } };
     },
 
-    /** A paid subscription invoice: the monthly reload (the first one is also credited by fulfill; same ref). */
-    async invoicePaid(invoice: Stripe.Invoice): Promise<void> {
+    /**
+     * A paid subscription invoice: the monthly reload (the first one is also credited by fulfill; same ref).
+     * Returns the account a monthly reload landed on, or null for anything else.
+     */
+    async invoicePaid(invoice: Stripe.Invoice): Promise<{ accountId: string; cents: number } | null> {
       const subId = subscriptionOf(invoice);
-      if (!subId || invoice.amount_paid <= 0) return;
+      if (!subId || invoice.amount_paid <= 0) return null;
       const row = await db.prepare(`SELECT id FROM accounts WHERE reload_subscription_id = ?`).bind(subId).first<{ id: string }>();
-      if (!row) return; // the first invoice can beat checkout.session.completed; fulfill credits it
+      if (!row) return null; // the first invoice can beat checkout.session.completed; fulfill credits it
       const kind = invoice.billing_reason === 'subscription_cycle' ? 'reload' : 'topup';
       await ledger.post(row.id, invoice.amount_paid, kind, `invoice:${invoice.id}`, kind === 'reload' ? 'monthly reload' : 'card, reloads monthly');
+      return kind === 'reload' ? { accountId: row.id, cents: invoice.amount_paid } : null;
     },
 
     syncSubscription: (sub: Stripe.Subscription) => syncSubscription(sub),

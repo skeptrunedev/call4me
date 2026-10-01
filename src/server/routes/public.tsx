@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { gaClient } from '../lib/ga';
 import { field, origin, ownerKey, stripeFor, viewerKey, type AppContext, type AppEnv } from '../lib/context';
 import { accountPrompt, callPrompt, examplesPrompt, voicesPrompt, installPrompt, privacyPrompt, rulesPrompt, supportPrompt, termsPrompt } from '../lib/prompts';
 import { callView } from '../mcp/server';
@@ -34,7 +35,7 @@ pub.get('/voices', async (c) => c.html(<VoicesPage signedIn={signedIn(c)} agentP
  * by signing in with it (or claims from the welcome page under another sign-in).
  */
 pub.post('/add-funds', async (c) => {
-  const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: MIN_TOPUP_CENTS, monthly: true, adjustable: true, origin: origin(c), account: c.get('account') ?? undefined });
+  const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: MIN_TOPUP_CENTS, monthly: true, adjustable: true, origin: origin(c), account: c.get('account') ?? undefined, ga: gaClient(c.req.header('cookie')) });
   return c.redirect(url, 303);
 });
 
@@ -43,7 +44,7 @@ pub.post('/buy', async (c) => {
   const form = await c.req.formData();
   const amount = field(form, 'amount', 20);
   try {
-    const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: parseAmountCents(amount), monthly: form.get('monthly') === 'on', origin: origin(c), account: c.get('account') ?? undefined });
+    const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: parseAmountCents(amount), monthly: form.get('monthly') === 'on', origin: origin(c), account: c.get('account') ?? undefined, ga: gaClient(c.req.header('cookie')) });
     return c.redirect(url, 303);
   } catch (err) {
     if (err instanceof TopupError) return home(c, { error: err.message, amount }, 400);
@@ -110,7 +111,7 @@ pub.post('/account/funds', async (c) => {
   if (!account) return c.redirect('/login?next=/account', 302);
   const form = await c.req.formData();
   try {
-    const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: parseAmountCents(field(form, 'amount', 20)), monthly: form.get('monthly') === 'on', origin: origin(c), account });
+    const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: parseAmountCents(field(form, 'amount', 20)), monthly: form.get('monthly') === 'on', origin: origin(c), account, ga: gaClient(c.req.header('cookie')) });
     return c.redirect(url, 303);
   } catch (err) {
     if (err instanceof TopupError) return accountPage(c, account, { error: err.message });

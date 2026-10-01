@@ -10,6 +10,8 @@ interface Env {
   RAINDROP_WRITE_KEY?: string;
   /** Optional Raindrop project slug; unset uses the write key's default project. */
   RAINDROP_PROJECT_ID?: string;
+  /** Optional GA4 Measurement Protocol API secret (the call4me web stream). Unset disables server-side GA events. */
+  GA_API_SECRET?: string;
   TELNYX_API_KEY: string;
   /** Base64 Ed25519 public key from the Telnyx portal (API keys → public key), for webhook signatures. */
   TELNYX_PUBLIC_KEY: string;

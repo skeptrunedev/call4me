@@ -1,5 +1,8 @@
 import type { Child, FC } from 'hono/jsx';
 import { raw } from 'hono/html';
+import { tryGetContext } from 'hono/context-storage';
+import type { AppEnv } from '../lib/context';
+import { GA_MEASUREMENT_ID } from '../lib/ga';
 import { PAGES, SITE, type PageKey, type PageOverride } from '../lib/pages';
 
 export { SITE_DESCRIPTION } from '../lib/pages';
@@ -29,13 +32,12 @@ const COPY_SCRIPT = `
 })();
 `;
 
-/** Google Analytics 4 (the call4me property under me@skeptrune.com). */
-const GA_ID = 'G-YST5YLB3KV';
-const GA_SCRIPT = `
+/** Google Analytics 4 (lib/ga.ts). Signed in, visits carry the account id as user_id, never an email. */
+const gaScript = (userId: string | null) => `
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', '${GA_ID}');
+gtag('config', '${GA_MEASUREMENT_ID}'${userId ? `, ${JSON.stringify({ user_id: userId }).replace(/</g, '\\u003c')}` : ''});
 `;
 
 /**
@@ -125,8 +127,8 @@ export const Layout: FC<{
         <link rel="stylesheet" href="/static/style.css" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <script src="https://analytics.ahrefs.com/analytics.js" data-key="Sy+Jmk5GRDykk/0THUQjsg" async></script>
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
-        <script>{raw(GA_SCRIPT)}</script>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+        <script>{raw(gaScript(tryGetContext<AppEnv>()?.get('account')?.id ?? null))}</script>
       </head>
       <body>
         <div id="masthead">

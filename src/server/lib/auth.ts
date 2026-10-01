@@ -4,7 +4,7 @@ import { createLocalJWKSet, jwtVerify, type JWTPayload } from 'jose';
 import { newId, now } from './ids';
 import { authOptions, COOKIE_PREFIX, DIRECTORY_SERVERS, mcpResource, mcpResourceAt as resourceAt, realEmail, siteResource, type McpPath } from './auth-options';
 import { origin, type AppContext, type AppEnv } from './context';
-import { accounts, type Account } from '../services/accounts';
+import { ACCOUNT_COLUMNS, accounts, type Account } from '../services/accounts';
 
 /**
  * A better-auth instance per request. Module-scope construction is unreliable on
@@ -63,8 +63,6 @@ export function withAuthCookies(res: Response, headers: Headers): Response {
   for (const cookie of headers.getSetCookie()) res.headers.append('set-cookie', cookie);
   return res;
 }
-
-const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at`;
 
 /**
  * The call4me account that belongs to a signed-in user. First sign-in adopts an account

@@ -9,6 +9,8 @@ import { answerInbound, callPrice, pricePerMinute } from '../services/dialer';
 import { isSupporterObject, supporters } from '../services/supporters';
 import { topups, verifyWebhook } from '../services/topups';
 import { sessionFor } from '../voice/stub';
+import { accounts } from '../services/accounts';
+import { analytics } from '../services/analytics';
 
 export const webhooks = new Hono<AppEnv>();
 
@@ -32,6 +34,15 @@ async function writeRecap(env: Env, callId: string): Promise<void> {
     await env.DB.prepare(`UPDATE calls SET error = COALESCE(error, ?) WHERE id = ?`).bind(`recap failed: ${String(err).slice(0, 300)}`, callId).run();
     if (prompt) await log('error', String(err));
   }
+}
+
+/** How the call ended, for GA (services/analytics.ts). No numbers, names or transcript. */
+async function reportCallEnded(env: Env, callId: string): Promise<void> {
+  const row = await calls(env.DB).byId(callId);
+  const account = row && (await accounts(env.DB).byId(row.account_id));
+  if (!row || !account) return;
+  const params = { status: row.status, direction: row.direction, talk_seconds: row.billed_seconds ?? 0, currency: 'USD', value: (row.cost_cents ?? 0) / 100 };
+  await analytics(env).track(account, [{ name: 'call_ended', params }]);
 }
 
 // ---- Stripe: card top-ups and the blog's supporter tier
@@ -65,13 +76,21 @@ webhooks.post('/stripe', async (c) => {
     case 'checkout.session.async_payment_succeeded': {
       const session = event.data.object;
       if (isSupporterObject(session.metadata)) await s().completeSession(session.id);
-      else await t.fulfill(session.id);
+      else {
+        const done = await t.fulfill(session.id);
+        // Reported here, once per Stripe event, never from the welcome page that also fulfills.
+        const client = done?.topup.ga_client_id ? { clientId: done.topup.ga_client_id, sessionId: done.topup.ga_session_id } : null;
+        if (done) c.executionCtx.waitUntil(analytics(c.env).purchase(done.account, { transactionId: session.id, cents: done.topup.amount_cents, reload: false, client }));
+      }
       break;
     }
     case 'invoice.paid': {
       const invoice = event.data.object;
       // A supporter renewal buys no credits; the subscription events keep its status.
-      if (!isSupporterObject(invoice.parent?.subscription_details?.metadata)) await t.invoicePaid(invoice);
+      if (isSupporterObject(invoice.parent?.subscription_details?.metadata)) break;
+      const reload = await t.invoicePaid(invoice);
+      const account = reload && (await accounts(c.env.DB).byId(reload.accountId));
+      if (reload && account) c.executionCtx.waitUntil(analytics(c.env).purchase(account, { transactionId: invoice.id!, cents: reload.cents, reload: true }));
       break;
     }
     case 'customer.subscription.created':
@@ -171,6 +190,7 @@ webhooks.post('/telnyx', async (c) => {
           .bind(p.call_leg_id, callId, p.call_control_id).run();
       }
       if (row?.answered_at) c.executionCtx.waitUntil(writeRecap(c.env, callId));
+      c.executionCtx.waitUntil(reportCallEnded(c.env, callId));
       break;
     }
     case 'streaming.failed':

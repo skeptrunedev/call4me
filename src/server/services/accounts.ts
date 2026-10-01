@@ -7,22 +7,29 @@ export interface Account {
   display_name: string | null;
   key_prefix: string | null;
   created_at: number;
+  /** gtag's client id from the account's latest signed-in browser (lib/ga.ts). */
+  ga_client_id: string | null;
+  /** When GA was sent this account's sign_up; null until its first tracked activity. */
+  ga_signup_at: number | null;
 }
+
+/** The columns every Account is read with. */
+export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at`;
 
 export type LedgerKind = 'topup' | 'reload' | 'hold' | 'release' | 'call' | 'refund' | 'adjustment' | 'number';
 
 export function accounts(db: D1Database) {
   return {
     async byKey(key: string): Promise<Account | null> {
-      return db.prepare(`SELECT id, email, display_name, key_prefix, created_at FROM accounts WHERE key_hash = ?`).bind(await sha256Hex(key)).first<Account>();
+      return db.prepare(`SELECT ${ACCOUNT_COLUMNS} FROM accounts WHERE key_hash = ?`).bind(await sha256Hex(key)).first<Account>();
     },
 
     async byId(id: string): Promise<Account | null> {
-      return db.prepare(`SELECT id, email, display_name, key_prefix, created_at FROM accounts WHERE id = ?`).bind(id).first<Account>();
+      return db.prepare(`SELECT ${ACCOUNT_COLUMNS} FROM accounts WHERE id = ?`).bind(id).first<Account>();
     },
 
     async byEmail(email: string): Promise<Account | null> {
-      return db.prepare(`SELECT id, email, display_name, key_prefix, created_at FROM accounts WHERE email = ?`).bind(email.toLowerCase()).first<Account>();
+      return db.prepare(`SELECT ${ACCOUNT_COLUMNS} FROM accounts WHERE email = ?`).bind(email.toLowerCase()).first<Account>();
     },
 
     /** The account for this email, created (without a key) if it does not exist yet. */

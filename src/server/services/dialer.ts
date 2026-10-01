@@ -11,6 +11,7 @@ import { mayCall, numbers } from './numbers';
 import { profiles } from './profiles';
 import type { Surface } from './intake';
 import { calls, CallError, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
+import { analytics } from './analytics';
 
 /** GPT-Live voices that read as a North American caller. marin is the model default. */
 export const VOICES = ['marin', 'cedar', 'gleam', 'meridian'] as const;
@@ -110,6 +111,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
     await db.finish(call.id, { status: 'failed', error: String(err), pricePerMinuteCents: price });
     throw new CallError(`could not place the call (${call.id}): the phone carrier refused it. nothing was charged; try again shortly.`, 502);
   }
+  await analytics(env).track(account, [{ name: 'call_placed', params: { surface, category: input.category } }]);
   return (await db.byId(call.id))!;
 }
 
@@ -119,7 +121,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
  */
 export async function answerInbound(env: Env, origin: string, opts: { controlId: string; from: string; to: string }): Promise<void> {
   const account = await env.DB.prepare(
-    `SELECT a.id, a.email, a.display_name, a.key_prefix, a.created_at FROM accounts a JOIN numbers n ON n.account_id = a.id WHERE n.phone_number = ? AND n.status = 'active'`,
+    `SELECT a.id, a.email, a.display_name, a.key_prefix, a.created_at, a.ga_client_id, a.ga_signup_at FROM accounts a JOIN numbers n ON n.account_id = a.id WHERE n.phone_number = ? AND n.status = 'active'`,
   )
     .bind(opts.to)
     .first<Account>();
