@@ -45,15 +45,42 @@ export async function streamUrl(env: Env, callId: string): Promise<string> {
 /**
  * A voice Worker deploy resets every call session (scripts/deploy-voice.sh). The deploy locks
  * only once no call is up, and the call's row is already written when this runs, so either the
- * deploy sees this call and backs off, or this call sees the lock and waits it out. The lock is
- * the only bound: a call never starts while it's held, and it expires on its own if a deploy dies.
+ * deploy sees this call and backs off, or this call sees the lock. A call that sees the lock is
+ * refused on the spot instead of waiting it out: the wait lived in the request that placed the
+ * call, and a request can end before a deploy does, which left the call queued for good with its
+ * hold taken (call_mrdx09t3kusxru6l). The lock expires on its own if a deploy dies.
  */
-async function voiceDeployDone(env: Env): Promise<void> {
-  for (;;) {
-    const lock = await env.DB.prepare(`SELECT locked_until FROM voice_deploys WHERE id = 1`).first<{ locked_until: number }>();
-    if (!lock || lock.locked_until <= Date.now()) return;
-    await new Promise((r) => setTimeout(r, 1_000));
+export class VoiceDeployLocked extends Error {
+  constructor(readonly retryInSeconds: number) {
+    super(`voice deploy in progress, retry in about ${retryInSeconds}s`);
   }
+}
+
+export async function assertVoiceUnlocked(db: D1Database, at = Date.now()): Promise<void> {
+  const lock = await db.prepare(`SELECT locked_until FROM voice_deploys WHERE id = 1`).first<{ locked_until: number }>();
+  if (lock && lock.locked_until > at) throw new VoiceDeployLocked(Math.ceil((lock.locked_until - at) / 1000));
+}
+
+/** How long an outbound call may sit queued before it can only be an orphan: dialing takes seconds. */
+export const NEVER_DIALED_MS = 5 * 60_000;
+
+/**
+ * Fails outbound calls still queued, with no carrier call, long after they were placed, releasing
+ * their holds. Placing a call either dials it or fails it, so one left behind means the request
+ * that placed it ended mid-way; the cron sweeps them so none stays queued, holding credits and
+ * looking live to the voice deploy.
+ */
+export async function failNeverDialed(env: Env, at = Date.now()): Promise<number> {
+  const { results } = await env.DB.prepare(
+    `SELECT id, direction, to_number FROM calls WHERE status = 'queued' AND telnyx_call_control_id IS NULL AND created_at < ?`,
+  )
+    .bind(at - NEVER_DIALED_MS)
+    .all<Pick<CallRow, 'id' | 'direction' | 'to_number'>>();
+  const db = calls(env.DB);
+  for (const row of results) {
+    await db.finish(row.id, { status: 'failed', error: 'never dialed: the request placing it ended before it dialed', pricePerMinuteCents: callPrice(env, row), at });
+  }
+  return results.length;
 }
 
 /** The account's owner, who can be patched into any of its calls: their name and their own phone. */
@@ -73,7 +100,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
   if (!account.display_name) await accounts(env.DB).setDisplayName(account.id, brief.on_behalf_of);
 
   try {
-    await voiceDeployDone(env);
+    await assertVoiceUnlocked(env.DB);
     const n = numbers(env);
     const caller = await n.callerId(account, to, input.from);
     const from = caller.number;
@@ -125,6 +152,9 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
     // The full carrier error stays on the call row for debugging; the agent gets the short version.
     console.error('place call failed', call.id, err);
     await db.finish(call.id, { status: 'failed', error: String(err), pricePerMinuteCents: price });
+    if (err instanceof VoiceDeployLocked) {
+      throw new CallError(`could not place the call (${call.id}): call4me is updating its phone service. nothing was charged; place it again in about ${err.retryInSeconds} seconds.`, 503);
+    }
     throw new CallError(`could not place the call (${call.id}): the phone carrier refused it. nothing was charged; try again shortly.`, 502);
   }
   // No category: some (doctor, dentist) are health information, which ad platforms must not get.
@@ -202,7 +232,14 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     )
     .run();
 
-  await voiceDeployDone(env);
+  try {
+    await assertVoiceUnlocked(env.DB);
+  } catch (err) {
+    // Mid-deploy a session can't hold the call; the business can call back in a few minutes.
+    await telnyx(env).reject(opts.controlId);
+    await db.finish(id, { status: 'failed', error: String(err), pricePerMinuteCents: price });
+    return;
+  }
   const ordered = likely ? [likely, ...tasks.filter((t) => t !== likely)] : tasks;
   const setup: SessionSetup = {
     callId: id,

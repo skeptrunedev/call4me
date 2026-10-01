@@ -21,6 +21,7 @@ import { API_CATALOG_LINK, API_CATALOG_MEDIA_TYPE, buildApiCatalog } from './lib
 import { MessagePage } from './views/public';
 import { makeMessenger } from './lib/messaging';
 import { runDrip } from './services/drip';
+import { failNeverDialed } from './services/dialer';
 import { numbers } from './services/numbers';
 import { notifySignups } from './services/signups';
 import { submitIndexNow } from './services/indexnow';
@@ -129,9 +130,10 @@ app.onError((err, c) => {
 
 export default {
   fetch: app.fetch,
-  // Number renewals (services/numbers.ts), signup notices, IndexNow pings for new or changed pages
+  // Number renewals (services/numbers.ts), calls that never dialed (services/dialer.ts), signup notices, IndexNow pings for new or changed pages
   // (services/indexnow.ts), and the signup drip (services/drip.ts), which is off while DRIP_START is empty.
   async scheduled(_event, env, ctx) {
+    ctx.waitUntil(failNeverDialed(env).then((n) => n && console.log('failed never-dialed calls', n)));
     const n = numbers(env);
     ctx.waitUntil(n.renewDue().then((r) => console.log('number renewals', JSON.stringify(r))));
     ctx.waitUntil(n.refreshOffers().then((r) => console.log('number offers', JSON.stringify(r))));

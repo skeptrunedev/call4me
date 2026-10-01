@@ -18,6 +18,7 @@ ROLLOUT_SECONDS=120     # longest to wait for the new version to answer /build
 GRACE_SECONDS=60        # Cloudflare can keep running the old version briefly after a deploy
 WAIT_SECONDS=3000       # longest to wait for calls to finish (calls run 30 minutes at most)
 STALE_SECONDS=7200      # active rows older than this are stuck, not live
+NEVER_DIALED_SECONDS=300 # queued with no carrier call this long never dialed (NEVER_DIALED_MS)
 
 out=$(mktemp -d)
 trap 'rm -rf "$out"' EXIT
@@ -32,7 +33,9 @@ echo "voice worker $live -> $build"
 
 d1() { npx wrangler d1 execute callbay --remote --json --command "$1"; }
 active() {
-  d1 "SELECT COUNT(*) AS n FROM calls WHERE status IN ('queued','dialing','in_progress') AND created_at > (unixepoch() - $STALE_SECONDS) * 1000" | jq -r '.[0].results[0].n'
+  # A queued call with no carrier call after NEVER_DIALED_SECONDS never dialed (its request
+  # ended; the cron fails it, services/dialer.ts failNeverDialed), so it isn't live.
+  d1 "SELECT COUNT(*) AS n FROM calls WHERE status IN ('queued','dialing','in_progress') AND created_at > (unixepoch() - $STALE_SECONDS) * 1000 AND NOT (status = 'queued' AND telnyx_call_control_id IS NULL AND created_at < (unixepoch() - $NEVER_DIALED_SECONDS) * 1000)" | jq -r '.[0].results[0].n'
 }
 lock() { d1 "INSERT INTO voice_deploys (id, locked_until) VALUES (1, (unixepoch() + $1) * 1000) ON CONFLICT (id) DO UPDATE SET locked_until = excluded.locked_until" >/dev/null; }
 
