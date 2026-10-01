@@ -102,7 +102,6 @@ export class CallError extends Error {
 
 /** Limits that keep one account from turning call4me into a robocaller. */
 export const LIMITS = {
-  concurrentPerAccount: 2,
   defaultMaxMinutes: 10,
   maxMinutes: 30,
 };
@@ -178,12 +177,6 @@ export function calls(db: D1Database) {
 
       const blocked = await db.prepare(`SELECT reason FROM blocked_numbers WHERE number = ?`).bind(to.e164).first<{ reason: string }>();
       if (blocked) throw new CallError('this number asked not to be called by call4me', 403);
-
-      const counts = await db
-        .prepare(`SELECT COUNT(*) AS active FROM calls WHERE account_id = ? AND status IN ('queued','dialing','in_progress')`)
-        .bind(account.id)
-        .first<{ active: number }>();
-      if (counts && counts.active >= LIMITS.concurrentPerAccount) throw new CallError(`at most ${LIMITS.concurrentPerAccount} calls at once; wait for one to finish`, 429);
 
       // Credits up front: the call holds its maximum cost now and settles when it ends.
       const balance = await accounts(db).balanceCents(account.id);
