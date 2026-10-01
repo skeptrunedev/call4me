@@ -111,6 +111,15 @@ Weekends are agent-only: builds, fixes and logs, with no calls (most phone lines
 - Call fixes found while testing: joining a call by pressing 1, relaying the user's keypad to the business, surviving session resets, reattaching a stream that never sends audio, no per-number daily limits.
 
 **Thu Oct 1, done:**
+- All 5 test calls placed (about $15 across 9 calls). Numbers confirmed on each company's own site first.
+- **Reached a person:** USAA (press 1 for non-member, 2 for joining, say "membership", about a 2 minute hold) and UPS (say "representative" twice at the tracking number prompt, about 3 minutes of hold).
+- **Walled without an account:** Verizon's AI assistant needs the account's mobile or account number; FedEx won't connect without a tracking or door tag number; FPL answers "representative" with "That option is not available" and routes new customers into an automated signup that needs the new address.
+- **Lesson for the template:** "a real question, no account" works for membership and policy questions but not for carriers, telcos and utilities. Those pages publish the wall (the exact phone tree and the identifier it demands) and get redone with a real account or package when we have one.
+- 5 drafts written from the recordings, awaiting Nick's review: `usaa-phone-number`, `ups-contact-number`, `verizon-customer-service`, `fedex-customer-service-number`, `fpl-phone-number`.
+- Caller fixes shipped from these calls: ask a spoken menu for a representative instead of looping its routes; never think out loud on the line; never guess where the user is calling from. Still open: the caller stalls ("hold on") and repeats failed routes on spoken menus, which needs spoken-menu cases in `test:menu:live`; and some caller lines in the saved transcript are silent on the recording.
+- The account can only run 2 calls at once, which caps the Week 3 and 4 pace (10 to 15 calls a day) unless it's raised.
+
+**Thu Oct 1, done:**
 - 5 posts from customers' overnight calls, each aimed at a keyword picked with the Ahrefs CLI before drafting (US volume and difficulty pulled that morning): [Adderall shortage](https://call4.me/blog/adderall-shortage) (9,500/mo, KD 25, 11 pharmacies), [Etihad customer service](https://call4.me/blog/etihad-customer-service) (3,000, KD 0), [American Airlines flight credit](https://call4.me/blog/american-airlines-flight-credit) (2,800, KD 0), [lawyer consultation fee](https://call4.me/blog/lawyer-consultation-fee) (3,100, KD 0), [how to find a new primary care doctor](https://call4.me/blog/how-to-find-a-new-primary-care-doctor) (600, KD 0, 15 calls). Restaurant booking, store stock and shoe hold calls were skipped: no measurable search volume.
 - 4 of those calls added to /examples. Rules for customer-call posts are in `docs/examples.md`: every call embedded, dead air trimmed, names and IDs muted, and the business muted where it shows where the customer goes.
 - Call bugs these calls surfaced, not yet fixed: our side hung up mid-question once, our caller went silent after a person answered, it spoke to keypad menus and talked over voice menus, and it gave a wrong callback number.
