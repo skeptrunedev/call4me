@@ -111,7 +111,7 @@ Weekends are agent-only: builds, fixes and logs, with no calls (most phone lines
 - Call fixes found while testing: joining a call by pressing 1, relaying the user's keypad to the business, surviving session resets, reattaching a stream that never sends audio, no per-number daily limits.
 
 **Thu Oct 1, done:**
-- All 5 test calls placed (about $15 across 9 calls). Numbers confirmed on each company's own site first.
+- All 5 test calls placed ($12 across 9 calls). Numbers confirmed on each company's own site first.
 - **Reached a person:** USAA (press 1 for non-member, 2 for joining, say "membership", about a 2 minute hold) and UPS (say "representative" twice at the tracking number prompt, about 3 minutes of hold).
 - **Walled without an account:** Verizon's AI assistant needs the account's mobile or account number; FedEx won't connect without a tracking or door tag number; FPL answers "representative" with "That option is not available" and routes new customers into an automated signup that needs the new address.
 - **Lesson for the template:** "a real question, no account" works for membership and policy questions but not for carriers, telcos and utilities. Those pages publish the wall (the exact phone tree and the identifier it demands) and get redone with a real account or package when we have one.
