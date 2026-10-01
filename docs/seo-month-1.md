@@ -99,15 +99,34 @@ Nobody else publishes this. GetHuman and Pine list a number and generic steps. O
 
 Weekends are agent-only: builds, fixes and logs, with no calls (most phone lines are closed or short-staffed) and no posting.
 
+## Progress log
+
+**Wed Sep 30 (launch day), done:**
+- call4me rename live; Google Search Console and Bing Webmaster Tools set up, sitemap submitted to Bing, home, /examples and /mcp submitted to Brave.
+- IndexNow key live at call4.me. The Worker's own pings get 429 from api.indexnow.org from Cloudflare's IPs, so pings go out by hand from a laptop until they move into the deploy step.
+- 5 posts live, each built on real recorded calls, private details muted in place: [Experian phone number](https://call4.me/blog/experian-phone-number), [cancel Planet Fitness](https://call4.me/blog/cancel-planet-fitness), [Wayfair customer service](https://call4.me/blog/wayfair-customer-service), [Costco tire appointment](https://call4.me/blog/costco-tire-appointment-cancel-refund), [reschedule a dentist appointment](https://call4.me/blog/reschedule-dentist-appointment).
+- 2 customer calls added to /examples with permission (dentist reschedule, Costco tire order).
+- Call fixes found while testing: joining a call by pressing 1, relaying the user's keypad to the business, surviving session resets, reattaching a stream that never sends audio, no per-number daily limits.
+
 ## The days
 
 ### Week 1: foundation, launch links, template (Oct 1 to 4)
 
-**Thu Oct 1: rename + measurement**
-- Ship the call4me rename (the `rename-call4me` worktree has 43 changed files that were never committed): titles, meta, OG cards, robots.txt, llms.txt, MCP server name.
-- Analytics with signup source tracking.
-- Google Search Console and Bing Webmaster Tools verified and sitemap submitted. IndexNow key published.
-- Nick: create the Brand Radar report in the Ahrefs UI (about 50 prompts). Go through the 76 launch replies and add the chores people mention to `targets.csv`.
+**Thu Oct 1: 5 posts from test calls**
+
+Calls start around 6 to 7am Pacific (all five are Eastern or Central businesses). For each: confirm the number on the company's own site (Brave browser if curl is blocked; if neither works, the post waits rather than using a third-party listing), check hours, run the Ahrefs keyword check before writing, place the test call, mute private details in place and verify with two transcription models, write the post, deploy only when no calls are live, ping IndexNow.
+
+| Post | Monthly searches | Who ranks now | Test call asks |
+|---|---:|---|---|
+| Verizon customer service | 884,000 (9 searches) | Verizon community threads, GetHuman #4, Yelp | how to switch to a cheaper plan, what cancelling a line takes |
+| USAA phone number | 99,500 | only GetHuman and an App Store listing | who qualifies for membership, what you need to join |
+| FedEx customer service number | 72,000 ("fedex customer service" itself is job listings) | GetHuman #1 | holding a package at a location, redirecting a delivery |
+| UPS contact number | 46,700 | a travel blog, Facebook, UPS regional pages, GetHuman #9 | changing or intercepting a delivery, and the cost |
+| FPL phone number | 40,100 | only GetHuman | starting service at a new address, the deposit |
+
+Verizon goes first. If USAA walls us behind member verification the way Experian did, the wall is the post.
+
+Still open from launch day: analytics with signup source tracking; Nick to create the Ahrefs Brand Radar report and add the chores from the 76 launch replies to `targets.csv`.
 
 **Fri Oct 2: launch links + first test call**
 - Submit to the MCP Registry, Smithery, Glama, mcp.so and PulseMCP. The agent drafts, Nick submits.
