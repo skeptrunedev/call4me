@@ -16,6 +16,9 @@
     { "pattern": "www.call4.me", "custom_domain": true },
     { "pattern": "callbay.skeptrune.com", "custom_domain": true }
   ],
+  // wrangler dev hands the Worker https://call4.me/... as in production; plain http would be
+  // redirected to https (lib/context.ts canonicalRedirect).
+  "dev": { "upstream_protocol": "https" },
   "assets": {
     "directory": "public",
     "binding": "ASSETS",

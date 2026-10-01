@@ -20,6 +20,9 @@ export interface AuthDeps {
   twitter: { clientId: string; clientSecret: string };
 }
 
+/** Prefix of better-auth's cookies (`callbay.session_token`); kept from before the rename so sessions survive. */
+export const COOKIE_PREFIX = 'callbay';
+
 export function authOptions(deps: AuthDeps) {
   return {
     appName: deps.appName,
@@ -44,7 +47,7 @@ export function authOptions(deps: AuthDeps) {
     },
     rateLimit: { enabled: true, storage: 'database' },
     advanced: {
-      cookiePrefix: 'callbay',
+      cookiePrefix: COOKIE_PREFIX,
       // Migrations are applied by wrangler from migrations/; skip per-instance introspection.
       database: { validateSchema: false, generateId: 'uuid' },
     },

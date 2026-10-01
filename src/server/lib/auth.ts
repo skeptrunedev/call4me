@@ -2,7 +2,7 @@ import { betterAuth } from 'better-auth';
 import type { Hono } from 'hono';
 import { createLocalJWKSet, jwtVerify, type JWTPayload } from 'jose';
 import { newId, now } from './ids';
-import { authOptions, chatgptMcpResource, mcpResource, realEmail, siteResource } from './auth-options';
+import { authOptions, chatgptMcpResource, COOKIE_PREFIX, mcpResource, realEmail, siteResource } from './auth-options';
 import { origin, type AppContext, type AppEnv } from './context';
 import { accounts, type Account } from '../services/accounts';
 
@@ -11,19 +11,42 @@ import { accounts, type Account } from '../services/accounts';
  * Workers (bindings are per-request and a cached instance can wedge if the first
  * request aborts), and construction is cheap.
  */
-export function createAuth(c: AppContext) {
-  const env = c.env;
-  return betterAuth(
+const buildAuth = (env: Env, baseURL: string) =>
+  betterAuth(
     authOptions({
       database: env.DB,
       secret: env.BETTER_AUTH_SECRET,
-      baseURL: origin(c),
+      baseURL,
       appName: env.APP_NAME,
       google: { clientId: env.GOOGLE_CLIENT_ID ?? '', clientSecret: env.GOOGLE_CLIENT_SECRET ?? '' },
       twitter: { clientId: env.X_CLIENT_ID ?? '', clientSecret: env.X_CLIENT_SECRET ?? '' },
     }),
   );
+
+/**
+ * One auth instance per database and origin, kept for the isolate's life. Building one runs the
+ * plugins' init, and the OAuth provider's seeds its resources with a D1 query each: per request,
+ * that put several round trips to the primary in front of every page.
+ */
+const instances = new WeakMap<D1Database, Map<string, ReturnType<typeof buildAuth>>>();
+
+export function createAuth(c: AppContext) {
+  const baseURL = origin(c);
+  let byOrigin = instances.get(c.env.DB);
+  if (!byOrigin) instances.set(c.env.DB, (byOrigin = new Map()));
+  let auth = byOrigin.get(baseURL);
+  if (!auth) {
+    const built = buildAuth(c.env, baseURL);
+    // A failed init (a D1 hiccup) is not kept: the next request builds afresh.
+    built.$context.catch(() => byOrigin.get(baseURL) === built && byOrigin.delete(baseURL));
+    byOrigin.set(baseURL, (auth = built));
+  }
+  return auth;
 }
+
+/** Whether a request carries anything getSession could resolve: our session cookie or a bearer token. */
+const SESSION_COOKIE = new RegExp(`(^|;\\s*)(__Secure-)?${COOKIE_PREFIX}\\.session_token=`);
+const hasCredentials = (headers: Headers) => headers.has('authorization') || SESSION_COOKIE.test(headers.get('cookie') ?? '');
 
 export function mountAuth(app: Hono<AppEnv>) {
   app.on(['GET', 'POST'], '/api/auth/*', (c) => createAuth(c).handler(c.req.raw));
@@ -62,6 +85,7 @@ export async function accountForUser(db: D1Database, user: { id: string; email: 
 
 /** The signed-in person's account (cookie session), or null. */
 export async function sessionAccount(c: AppContext): Promise<Account | null> {
+  if (!hasCredentials(c.req.raw.headers)) return null;
   const s = await createAuth(c).api.getSession({ headers: c.req.raw.headers });
   return s ? accountForUser(c.env.DB, { id: s.user.id, email: s.user.email, name: s.user.name }) : null;
 }
