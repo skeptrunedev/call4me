@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { gaClient, sendGa } from '../src/server/lib/ga';
+import { gaClient, gaEmailHash, sendGa } from '../src/server/lib/ga';
 import { analytics } from '../src/server/services/analytics';
 import type { Account } from '../src/server/services/accounts';
 
@@ -65,6 +65,23 @@ test('sign_up goes out once, ahead of the first tracked event', async () => {
     assert.deepEqual(names, [['sign_up', 'purchase'], ['purchase']]);
     assert.equal(f.bodies[0].client_id, '7.8');
     assert.deepEqual((f.bodies[0].events as { params: unknown }[])[0].params, { method: 'google' });
+  } finally {
+    f.restore();
+  }
+});
+
+test('gaEmailHash normalizes as GA expects before hashing', async () => {
+  // Dots before @gmail.com are dropped; elsewhere they stay.
+  assert.equal(await gaEmailHash('  Jane.Doe@Gmail.com '), 'd6117306485ed0e50afab3ac871e98f81699151f30281527d63ff5f233656c69');
+  assert.equal(await gaEmailHash('Jane.Doe@example.com'), '86e0b9e56c17cc4d12387e1949b85053fbe73bc3ce5a1188713a9d300cc6133d');
+});
+
+test('sendGa carries the hashed email as user_data, never the email', async () => {
+  const f = captureFetch();
+  try {
+    await sendGa({ GA_API_SECRET: 's3cret' }, { client: { clientId: '1.2', sessionId: null }, userId: 'acct1', emailHash: 'abc123', events: [{ name: 'purchase' }] });
+    assert.deepEqual(f.bodies[0].user_data, { sha256_email_address: ['abc123'] });
+    assert.ok(!JSON.stringify(f.bodies[0]).includes('@'));
   } finally {
     f.restore();
   }

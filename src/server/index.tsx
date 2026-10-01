@@ -29,7 +29,7 @@ import { blog, posts } from './routes/blog';
 import { admin } from './routes/admin';
 import { BlogError } from './services/blog';
 import { exampleAudio } from './lib/example-audio';
-import { analytics } from './services/analytics';
+import { analytics, emailHashOf } from './services/analytics';
 
 const app = new Hono<AppEnv>();
 
@@ -102,6 +102,7 @@ for (const s of DIRECTORY_SERVERS) app.route(s.path, directoryMcp(s.path, s.surf
 app.use('*', async (c, next) => {
   const account = await sessionAccount(c);
   c.set('account', account);
+  c.set('gaEmailHash', account ? await emailHashOf(account) : null);
   if (account) c.executionCtx.waitUntil(analytics(c.env).seen(account, visitor(c)));
   await next();
 });

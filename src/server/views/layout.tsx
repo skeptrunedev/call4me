@@ -32,12 +32,15 @@ const COPY_SCRIPT = `
 })();
 `;
 
-/** Google Analytics 4 (lib/ga.ts). Signed in, visits carry the account id as user_id, never an email. */
-const gaScript = (userId: string | null) => `
+/**
+ * Google Analytics 4 (lib/ga.ts). Signed in, visits carry the account id as user_id and the hashed
+ * email as user-provided data, set ahead of config so every hit has it; the email itself never.
+ */
+const gaScript = (userId: string | null, emailHash: string | null) => `
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${GA_MEASUREMENT_ID}'${userId ? `, ${JSON.stringify({ user_id: userId }).replace(/</g, '\\u003c')}` : ''});
+gtag('js', new Date());${emailHash ? `\ngtag('set', 'user_data', ${scriptValue({ sha256_email_address: emailHash })});` : ''}
+gtag('config', '${GA_MEASUREMENT_ID}'${userId ? `, ${scriptValue({ user_id: userId })}` : ''});
 `;
 
 /** A value written into an inline script, unable to close the script tag. */
@@ -152,7 +155,7 @@ export const Layout: FC<{
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <script src="https://analytics.ahrefs.com/analytics.js" data-key="Sy+Jmk5GRDykk/0THUQjsg" async></script>
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
-        <script>{raw(gaScript(accountId))}</script>
+        <script>{raw(gaScript(accountId, ctx?.get('gaEmailHash') ?? null))}</script>
         {pixelId && <script>{raw(metaPixelScript(pixelId, accountId))}</script>}
       </head>
       <body>

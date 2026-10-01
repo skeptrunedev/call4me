@@ -4,7 +4,8 @@
  * Meta's hashed external_id) and its browser's ids, so activity that happens with no browser
  * (webhooks, agents) still joins the visits and ad clicks that led to it.
  */
-import { sendGa, type GaClient, type GaEvent } from '../lib/ga';
+import { gaEmailHash, sendGa, type GaClient, type GaEvent } from '../lib/ga';
+import { realEmail } from '../lib/auth-options';
 import { newId, now } from '../lib/ids';
 import { sendMeta, type MetaBrowser, type MetaEvent } from '../lib/meta';
 import type { Account } from './accounts';
@@ -47,6 +48,12 @@ export interface Visitor {
   meta: MetaBrowser | null;
 }
 
+/** GA's hashed email for an account; none for X sign-ins known only by a placeholder address. */
+export const emailHashOf = async (account: Pick<Account, 'email'>): Promise<string | null> => {
+  const email = realEmail(account.email);
+  return email ? gaEmailHash(email) : null;
+};
+
 export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID' | 'META_CAPI_TOKEN'>) {
   const db = env.DB;
   const metaOn = Boolean(env.META_PIXEL_ID && env.META_CAPI_TOKEN);
@@ -77,7 +84,7 @@ export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID
       url: from.meta?.url ?? null,
     };
     const metaEvents = all.map(metaEvent).filter((e): e is MetaEvent => e !== null);
-    await Promise.all([sendGa(env, { client, userId: account.id, events: all }), sendMeta(env, { user: { externalId: account.id }, browser, events: metaEvents })]);
+    await Promise.all([sendGa(env, { client, userId: account.id, emailHash: await emailHashOf(account), events: all }), sendMeta(env, { user: { externalId: account.id }, browser, events: metaEvents })]);
   }
 
   return {

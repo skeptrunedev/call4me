@@ -11,6 +11,8 @@ export type AppEnv = {
   Variables: {
     /** The account behind the session cookie, if any. */
     account: Account | null;
+    /** The signed-in account's hashed email for GA's user-provided data (services/analytics.ts). */
+    gaEmailHash: string | null;
   };
 };
 

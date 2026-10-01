@@ -3,8 +3,11 @@
  * what happens off the page (sign-ups, purchases, calls placed by agents) is sent from here over the
  * Measurement Protocol (developers.google.com/analytics/devguides/collection/protocol/ga4).
  *
- * GA only ever sees the account's internal id as user_id, never an email or a phone number.
+ * GA sees the account's internal id as user_id. A real email goes only as GA's user-provided data:
+ * normalized and SHA-256 hashed here, never in the clear (Admin → Data collection has it turned on).
  */
+
+import { sha256Hex } from './keys';
 
 export const GA_MEASUREMENT_ID = 'G-YST5YLB3KV';
 
@@ -43,15 +46,29 @@ export function gaClient(cookieHeader: string | null | undefined, measurementId 
 }
 
 /**
+ * An email as GA's user-provided data wants it: trimmed, lowercased, spaces removed, dots dropped
+ * before @gmail.com and @googlemail.com, then hex SHA-256
+ * (developers.google.com/analytics/devguides/collection/ga4/uid-data).
+ */
+export async function gaEmailHash(email: string): Promise<string> {
+  const e = email.trim().toLowerCase().replace(/\s+/g, '');
+  const at = e.lastIndexOf('@');
+  const domain = e.slice(at + 1);
+  const local = domain === 'gmail.com' || domain === 'googlemail.com' ? e.slice(0, at).replace(/\./g, '') : e.slice(0, at);
+  return sha256Hex(`${local}@${domain}`);
+}
+
+/**
  * Send events for one browser (and account) to GA. Unset GA_API_SECRET disables it, as in
  * local dev and tests. Never throws: analytics must not fail a payment webhook or a call.
  */
-export async function sendGa(env: Pick<Env, 'GA_API_SECRET'>, opts: { client: GaClient; userId?: string; events: GaEvent[] }): Promise<void> {
+export async function sendGa(env: Pick<Env, 'GA_API_SECRET'>, opts: { client: GaClient; userId?: string; emailHash?: string | null; events: GaEvent[] }): Promise<void> {
   if (!env.GA_API_SECRET || opts.events.length === 0) return;
   const session: GaParams = opts.client.sessionId ? { session_id: opts.client.sessionId, engagement_time_msec: 1 } : {};
   const body = {
     client_id: opts.client.clientId,
     ...(opts.userId ? { user_id: opts.userId } : {}),
+    ...(opts.emailHash ? { user_data: { sha256_email_address: [opts.emailHash] } } : {}),
     events: opts.events.map((e) => ({ name: e.name, params: { ...session, ...e.params } })),
   };
   const url = `https://www.google-analytics.com/mp/collect?measurement_id=${GA_MEASUREMENT_ID}&api_secret=${encodeURIComponent(env.GA_API_SECRET)}`;
