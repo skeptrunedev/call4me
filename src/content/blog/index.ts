@@ -11,6 +11,8 @@ import amazonPharmacyPhone from './amazon-pharmacy-phone-number.md';
 import openaiRealtimeVoices from './openai-realtime-voices-phone-calls.md';
 import rescheduleDentist from './reschedule-dentist-appointment.md';
 import wayfairCustomerService from './wayfair-customer-service.md';
+import grokConnectorsMcp from './grok-connectors-mcp-phone-calls.md';
+import metaMuseAgent from './meta-muse-ai-agent-phone-calls.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -30,4 +32,6 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'private-dining-room-cost', markdown: privateDiningRoomCost },
   { slug: 'how-to-transfer-a-prescription', markdown: transferPrescription },
   { slug: 'amazon-pharmacy-phone-number', markdown: amazonPharmacyPhone },
+  { slug: 'grok-connectors-mcp-phone-calls', markdown: grokConnectorsMcp },
+  { slug: 'meta-muse-ai-agent-phone-calls', markdown: metaMuseAgent },
 ];
