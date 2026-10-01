@@ -29,6 +29,15 @@ const COPY_SCRIPT = `
 })();
 `;
 
+/** Google Analytics 4 (the call4me property under me@skeptrune.com). */
+const GA_ID = 'G-YST5YLB3KV';
+const GA_SCRIPT = `
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}');
+`;
+
 /**
  * WebMCP (webmachinelearning.github.io/webmcp): the site's key actions as in-page tools for
  * browser agents. Placing calls needs the MCP server (signed in); these read the site, hand
@@ -116,6 +125,8 @@ export const Layout: FC<{
         <link rel="stylesheet" href="/static/style.css" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <script src="https://analytics.ahrefs.com/analytics.js" data-key="Sy+Jmk5GRDykk/0THUQjsg" async></script>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
+        <script>{raw(GA_SCRIPT)}</script>
       </head>
       <body>
         <div id="masthead">
