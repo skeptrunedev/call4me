@@ -119,7 +119,7 @@ export const Layout: FC<{
       <body>
         <div id="masthead">
           <a class="logo" href="/">call4me</a>
-          <span class="bc">your AI agent makes phone calls for you</span>
+          {page === 'home' ? <h1 class="bc">your AI agent makes phone calls for you</h1> : <span class="bc">your AI agent makes phone calls for you</span>}
         </div>
         <div id="topnav">
           <a href="/">home</a>

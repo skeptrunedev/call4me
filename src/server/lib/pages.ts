@@ -36,7 +36,7 @@ export interface PageOverride {
 
 export const PAGES = {
   home: { description: SITE_DESCRIPTION, card: 'site', path: '/' },
-  examples: { description: 'listen to real call4me calls: booking and canceling dinner reservations, home internet questions, and an expedited support review. original voices, edited excerpts, and transcripts.', card: 'examples', path: '/examples' },
+  examples: { description: 'listen to real call4me calls: dinner reservations, a dentist reschedule, a junk removal quote, and more. original voices and full transcripts.', card: 'examples', path: '/examples' },
   mcp: { description: 'install call4me in claude code, codex, claude desktop, claude.ai, chatgpt, muse, or grok bot with one prompt. your agent gets a tool that makes phone calls.', card: 'mcp', path: '/mcp' },
   login: { description: 'sign in to call4me with google or x to load credits and connect your AI agent.', card: 'login', path: '/login' },
   account: { description: 'your call4me balance, monthly reload, key, and every call with its transcript.', card: 'account', path: '/account' },

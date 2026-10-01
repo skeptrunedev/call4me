@@ -248,7 +248,7 @@ export const BlogPost: FC<{
   const here = `/blog/${post.slug}`;
   return (
     <Layout
-      title={post.title}
+      title={post.seoTitle}
       page="blog"
       path={here}
       signedIn={signedIn}

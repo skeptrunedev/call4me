@@ -4,7 +4,7 @@ import { AUTHORS, type Author } from '../../content/blog/authors';
 
 /**
  * The blog: markdown files in src/content/blog, one per post, with YAML-ish frontmatter
- * (title, subtitle, description, date, updated, tags, authors, image, imageAlt,
+ * (title, seoTitle, subtitle, description, date, updated, tags, authors, image, imageAlt,
  * imageCaption, paid). Rendered at request time by marked; headings get stable ids so
  * sections can be linked and cited, images with a title become captioned figures, and
  * footnotes work the GitHub way. A `<!-- paywall -->` line splits a paid post into the
@@ -19,6 +19,8 @@ export interface PostSource {
 export interface Post {
   slug: string;
   title: string;
+  /** The page's <title> when the headline runs past what search results show (about 50 characters). */
+  seoTitle: string;
   /** The dek under the title (Substack's "subtitle"); also the default description. */
   subtitle: string;
   /** One or two sentences: the meta description and the feed summary. */
@@ -119,6 +121,7 @@ export function renderPost(src: PostSource): Post {
   return {
     slug: src.slug,
     title: meta.title,
+    seoTitle: meta.seoTitle ?? meta.title,
     subtitle: meta.subtitle ?? meta.description!,
     description: meta.description ?? meta.subtitle!,
     date: meta.date,

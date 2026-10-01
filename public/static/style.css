@@ -51,6 +51,7 @@ h1 .price { font-family: inherit; }
 #masthead .logo { font-size: 22px; font-weight: bold; color: #551a8b; }
 #masthead .logo:hover { text-decoration: none; }
 #masthead .bc { color: #666; }
+#masthead h1.bc { font: inherit; margin: 0; }
 #topnav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
 #topnav a::before { content: "[ "; color: #666; }
 #topnav a::after { content: " ]"; color: #666; }

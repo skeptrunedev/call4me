@@ -1,7 +1,8 @@
 ---
 title: How to reschedule a dentist appointment (and the 2 minute call an AI made to do it)
+seoTitle: How to reschedule a dentist appointment
 subtitle: A call4me user had his AI phone assistant call his dentist and move an appointment. Here's the full recording, the exact words that worked, and what to have ready when you reschedule or cancel.
-description: To reschedule a dentist appointment, call the office with the patient's name, the current appointment, and two or three times that work, and say whether you want to keep the same dentist. A real 2 minute call shows how it goes, including the office offering a different provider when the dentist was out.
+description: Call with the patient's name, the appointment, and two or three times that work. A real 2 minute call shows how it goes, with the recording and script.
 date: 2026-09-30
 tags: dentist, appointments, reschedule, ai phone assistant
 authors: nick

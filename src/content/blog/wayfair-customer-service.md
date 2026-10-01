@@ -1,7 +1,8 @@
 ---
 title: Wayfair customer service: the phone number, what happens when you call, and what returning a sofa costs
+seoTitle: Wayfair customer service: phone number and returns
 subtitle: We called Wayfair twice in one evening to ask how returning a big item works and who pays to ship it back. Here's the phone path to a person, what the agents said, and both recordings.
-description: Wayfair's customer service number is 844-403-5086. An AI virtual assistant answers and asks why you're calling; describing your question got us a live agent in about a minute. Returns are within 30 days of delivery, and if you just change your mind the return shipping comes out of your refund, about $30 to $45 on a $300 item in the agent's example.
+description: Wayfair's number is 844-403-5086. Describing our question got us a live agent in about a minute. What returning a sofa costs, from a real call.
 date: 2026-09-30
 tags: wayfair, customer service, returns, phone trees
 authors: nick
