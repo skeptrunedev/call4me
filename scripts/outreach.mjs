@@ -8,6 +8,7 @@
  *   npm run outreach -- draft <id> <message file>      save the message to send
  *   npm run outreach -- sent <id> [x|email|other]      mark sent (defaults to their channel)
  *   npm run outreach -- status <id> <status> [note]    replied, won, declined, ...
+ *   npm run outreach -- set <id> <email|other_contact|x_handle> <value>  fill in a contact we found later
  *   npm run outreach -- email <id> <subject> [body file] [--dry-run]
  *                                                      email them from me@skeptrune.com (gws-gmail
  *                                                      profile) and mark sent; body defaults to their
@@ -92,6 +93,12 @@ if (command === 'import') {
   const notes = note.length ? [p.notes, `${new Date(now).toISOString().slice(0, 10)}: ${note.join(' ')}`].filter(Boolean).join('\n') : p.notes;
   d1(`UPDATE outreach SET status = ${sql(status)}, notes = ${sql(notes)}, updated_at = ${now}${status === 'replied' ? `, replied_at = ${now}` : ''} WHERE id = ${sql(id)}`);
   console.log(`${p.name}: ${status}`);
+} else if (command === 'set') {
+  const [id, field, value] = rest;
+  if (!['email', 'other_contact', 'x_handle'].includes(field) || !value) fail('usage: set <id> <email|other_contact|x_handle> <value>');
+  const p = one(id);
+  d1(`UPDATE outreach SET ${field} = ${sql(value)}, updated_at = ${Date.now()} WHERE id = ${sql(id)}`);
+  console.log(`${p.name}: ${field} = ${value}`);
 } else if (command === 'email') {
   const [id, subject, file] = rest;
   if (!subject) fail('usage: email <id> <subject> [body file] [--dry-run]');
@@ -117,5 +124,5 @@ if (command === 'import') {
   d1(`UPDATE outreach SET status = 'sent', sent_via = 'email', sent_at = ${now}, notes = ${sql(notes)}, updated_at = ${now} WHERE id = ${sql(p.id)}`);
   console.log(`emailed ${p.name} <${p.email}>: ${gmailId}`);
 } else {
-  fail('usage: npm run outreach -- import|list|show|draft|sent|status|email ... (see scripts/outreach.mjs)');
+  fail('usage: npm run outreach -- import|list|show|draft|sent|status|set|email ... (see scripts/outreach.mjs)');
 }
