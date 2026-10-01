@@ -33,7 +33,7 @@ export function summaryPrompt(row: Pick<CallRow, 'direction' | 'business' | 'goa
 Report what happened to ${brief.on_behalf_of}, based only on the transcript below (speech-to-text, so allow for small transcription errors in names and numbers).
 
 - result: done (the task was fully achieved), partial (some of it), not_possible (they couldn't or wouldn't), voicemail (reached voicemail), call_back_later (needs a follow-up call).
-- summary: two or three plain sentences with every concrete detail that was agreed: date, time, the name it's under, price, confirmation number, anything to bring. Note any mismatch with the task (e.g. "6:30 instead of 7"), and when the result isn't done, say plainly which parts of the task were not done or not confirmed. For an incoming call: who called, about what, and how to reach them.
+- summary: two or three plain sentences with every concrete detail that was agreed: date, time, the name it's under, price, confirmation number, anything to bring. Note any mismatch with the task (e.g. "6:30 instead of 7"). For an incoming call: who called, about what, and how to reach them.
 - details: the key facts as field/value pairs (e.g. date, time, name, party_size, phone_given, confirmation).
 
 Transcript:

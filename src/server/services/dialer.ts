@@ -9,8 +9,8 @@ import { sessionFor } from '../voice/stub';
 import { accounts, type Account } from './accounts';
 import { mayCall, numbers } from './numbers';
 import { profiles } from './profiles';
-import { assistantNameOf, type Profile, type Surface } from './intake';
-import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
+import type { Surface } from './intake';
+import { calls, CallError, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 import { analytics } from './analytics';
 
 /** GPT-Live voices that read as a North American caller. marin is the model default. */
@@ -84,7 +84,8 @@ export async function failNeverDialed(env: Env, at = Date.now()): Promise<number
 }
 
 /** The account's owner, who can be patched into any of its calls: their name and their own phone. */
-async function personFor(env: Env, origin: string, account: Account, profile: Profile, from: string, connectWhen: string | null = null, listenIn = false): Promise<NonNullable<SessionSetup['person']>> {
+async function personFor(env: Env, origin: string, account: Account, from: string, connectWhen: string | null = null, listenIn = false): Promise<NonNullable<SessionSetup['person']>> {
+  const profile = await profiles(env.DB).get(account.id);
   // Profiles hold numbers as people type them; Telnyx dials E.164 only.
   const phone = profile.phone ? checkDialable(profile.phone) : null;
   const reachable = phone?.ok && (await mayCall(env.DB, account.id, phone)) ? phone.e164 : null;
@@ -106,8 +107,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
     // The user's phone always rings from a call4me number, never from their own.
     const ring = caller.own ? (await n.callerId(account, to)).number : from;
     await env.DB.prepare(`UPDATE calls SET from_number = ?, ring_number = ? WHERE id = ?`).bind(from, caller.own ? ring : null, call.id).run();
-    const profile = await profiles(env.DB).get(account.id);
-    const person = await personFor(env, origin, account, profile, ring, brief.connect_when ?? null, brief.listen_in ?? false);
+    const person = await personFor(env, origin, account, ring, brief.connect_when ?? null, brief.listen_in ?? false);
     const cb = {
       onBehalfOf: brief.on_behalf_of,
       business: call.business,
@@ -121,7 +121,6 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       callbackRingsOwner: caller.own,
       localTime: localTimeIn(brief.timezone),
       owner: person.name,
-      assistantName: assistantNameOf(profile),
       connectWhen: brief.connect_when ?? null,
     };
     const stream = await streamUrl(env, call.id);
@@ -206,7 +205,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
 
   const id = `call_${newId()}`;
   // Credits up front here too: the callback holds what it may cost before it is answered.
-  const maxMinutes = Math.min(LIMITS.maxMinutes, Math.floor(balance / price));
+  const maxMinutes = Math.min(10, Math.floor(balance / price));
   const holdCents = maxMinutes * price;
   if (!(await accounts(env.DB).hold(account.id, holdCents, `hold:${id}`, `up to ${maxMinutes} min callback`))) {
     await telnyx(env).reject(opts.controlId);
@@ -242,12 +241,10 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     return;
   }
   const ordered = likely ? [likely, ...tasks.filter((t) => t !== likely)] : tasks;
-  const profile = await profiles(env.DB).get(account.id);
   const setup: SessionSetup = {
     callId: id,
     instructions: inboundInstructions({
       owner,
-      assistantName: assistantNameOf(profile),
       tasks: ordered.map(openTask),
       likely: Boolean(likely),
       localTime: localTimeIn(likelyBrief?.timezone ?? null),
@@ -260,7 +257,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     }),
     backOffice: inboundBackOfficeInstructions(owner, ordered.map(openTask)),
     inbandKeys: inbandKeysFor(opts.from),
-    person: await personFor(env, origin, account, profile, opts.to),
+    person: await personFor(env, origin, account, opts.to),
     voice: 'marin',
     maxSeconds: maxMinutes * 60,
     pricePerMinuteCents: price,

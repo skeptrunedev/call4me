@@ -86,7 +86,7 @@ function instructions(surface: Surface): string {
 During setup, call call4me_get_balance and show the user their actual call4me numbers. Suggest saving them as a contact named call4me. These are separate from the user's personal phone in call4me_get_profile: call4me may ring that personal phone when a business needs them to verify their account, or when they ask to join a call. Explain that they answer and press 1 to join, and press * or hang up to hand the call back. If phone_number is null and numbers is empty, explain that the free US number is assigned on the first call; never invent a number or buy an extra number for setup.
 
 The caller can only say what you give it, so everything is collected BEFORE dialing:
-1. ${agents ? `Once, up front: call4me_get_profile. If it's missing things, ask the user in one message for their full legal name, date of birth, phone, home address, health and dental insurance (carrier + member ID, or self-pay), and car (year/make/model/mileage, VIN) if they have one, plus the first name their assistant should introduce itself with (default Sam), and save them with call4me_save_profile. Skip what they decline.` : `Collect only what the call at hand needs: step 2 lists it. call4me_get_profile shows what is already saved; offer to save details that will come up again (name, phone) with call4me_save_profile, and skip anything the user declines.`}
+1. ${agents ? `Once, up front: call4me_get_profile. If it's missing things, ask the user in one message for their full legal name, date of birth, phone, home address, health and dental insurance (carrier + member ID, or self-pay), and car (year/make/model/mileage, VIN) if they have one, and save them with call4me_save_profile. Skip what they decline.` : `Collect only what the call at hand needs: step 2 lists it. call4me_get_profile shows what is already saved; offer to save details that will come up again (name, phone) with call4me_save_profile, and skip anything the user declines.`}
 2. For each call: pick the category and call call4me_get_requirements(category). Ask the user for every required field that isn't already known (one message, not one question at a time), plus the per-call details (reason, dates and times that work, party size...).
 3. Find the right number (search the web if needed; check it is the right location).
 4. call4me_place_call with the category and details. If it answers "Not calling yet", ask the user exactly what it lists and try again. Show its calling_number so the user knows which call4me number may ring them; suggest saving it if this is their first call or a different number than before. It is the call4me number, not number (the business's number).
@@ -244,7 +244,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         timezone: z.string().max(60).optional().describe('IANA time zone of the business, e.g. "America/Los_Angeles", so "tomorrow" is unambiguous'),
         connect_when: z.string().max(300).optional().describe('when to ring the user and patch them into the call without being asked, e.g. "as soon as a person picks up" (skip the hold) or "if they need to speak to me". Rings the phone in their profile. They hand the call back to the caller by pressing * or hanging up.'),
         listen_in: z.boolean().optional().describe('ring the user as soon as the business answers so they can listen in: nobody on the call hears them and the caller keeps working. They press 1 anytime to take over, or hang up to stop listening. Rings the phone in their profile.'),
-        max_minutes: z.number().int().min(1).max(LIMITS.maxMinutes).optional().describe(`optional cap on talk time. Without it a call runs as long as the balance covers (up to ${LIMITS.maxMinutes / 60} hours) and holds that much; set it to leave credits free for a second call at the same time`),
+        max_minutes: z.number().int().min(1).max(LIMITS.maxMinutes).optional().describe(`hard cap on talk time (default ${LIMITS.defaultMaxMinutes})`),
         voice: z.enum(VOICES).optional().describe('caller voice (default marin); hear each at https://call4.me/voices'),
         from: z.string().max(40).optional().describe(`which of the account's numbers to call from (default: a call4me number in the callee's country)${agents ? '. May be one of the user\'s own verified numbers (call4me_verify_number), for businesses in its country: they see it and call back the user directly' : ''}`),
       }),
@@ -442,10 +442,9 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       guard(async () => {
         const saved = await profiles(env.DB).get(account.id);
         const profile = Object.fromEntries(intake.profileKeys.filter((k) => saved[k]).map((k) => [k, saved[k]]));
-        const missing = intake.profileKeys.filter((k) => !profile[k] && !PROFILE_FIELDS[k].fallback);
+        const missing = intake.profileKeys.filter((k) => !profile[k]);
         const text = [
           ...Object.entries(profile).map(([k, v]) => `${k}: ${v}`),
-          ...intake.profileKeys.filter((k) => !profile[k] && PROFILE_FIELDS[k].fallback).map((k) => `${k}: ${PROFILE_FIELDS[k].fallback} (default)`),
           missing.length ? `missing: ${missing.map((k) => `${k} (${PROFILE_FIELDS[k].ask})`).join('; ')}` : 'complete',
         ].join('\n');
         return ok(text, { profile, missing });
