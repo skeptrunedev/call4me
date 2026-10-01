@@ -102,6 +102,9 @@ The caller sounds like a normal person calling for the user. It keeps turns shor
 Only call businesses and services the user wants to reach, never personal numbers they don't expect a call from.`;
 }
 
+/** The title in annotations too: Claude's connector directory reads it there, other hosts read the top-level one. */
+const titled = <C extends { title: string; annotations?: ToolAnnotations }>(config: C): C => ({ ...config, annotations: { ...config.annotations, title: config.title } });
+
 const RO: ToolAnnotations = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
 const OPEN: ToolAnnotations = { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true };
 /** Dialing a business can't be taken back: hosts that confirm irreversible actions ask the user first. */
@@ -184,7 +187,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
 
   server.registerTool(
     'call4me_get_recordings',
-    { title: 'Get call recordings', description: recordingDescription, inputSchema: recordingInput, outputSchema: recordingOutput, annotations: RO },
+    titled({ title: 'Get call recordings', description: recordingDescription, inputSchema: recordingInput, outputSchema: recordingOutput, annotations: RO }),
     (async (args: { call_id: string }) => guard(async () => {
       const result = await getCallRecordings(env, account.id, args.call_id);
       const links = result.recordings.flatMap((r) => Object.entries(r.download_urls).map(([format, url]) => `${r.id} (${format}): ${url}`));
@@ -194,10 +197,10 @@ export function createCall4meServer(deps: McpDeps): McpServer {
 
   server.registerTool(
     'call4me_place_call',
-    {
+    titled({
       title: 'Place a phone call',
       description:
-        `Call a business for the user (US, Canada, Europe, the UAE at ${dollars(DESTINATION_PRICE_CENTS.AE)}/min, or any other country the account holds a number in; see call4me_list_numbers) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category's required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with call4me_get_call. Credits for the maximum length are held up front; billed per minute of talk time; unanswered calls are free.`,
+        `Call a business for the user (US, Canada, Europe, the UAE at ${dollars(DESTINATION_PRICE_CENTS.AE)}/min, or any other country the account holds a number in; see ${agents ? 'call4me_list_numbers' : 'call4me_get_balance'}) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category's required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with call4me_get_call. Credits for the maximum length are held up front; billed per minute of talk time; unanswered calls are free.`,
       inputSchema: z.object({
         to: z.string().min(3).max(40).describe('the number to call, e.g. "+14155550123", "(415) 555-0123", or abroad with its country code, e.g. "+31 20 123 4567"'),
         business: z.string().min(1).max(120).describe('who you are calling, as a person would say it: "Nopa", "Dr. Chen\'s office", "Toyota of Berkeley service"'),
@@ -215,7 +218,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         from: z.string().max(40).optional().describe('which of the account\'s numbers to call from (default: one in the callee\'s country)'),
       }),
       annotations: DIALS,
-    },
+    }),
     (async (args: Parameters<typeof placeCall>[3]) =>
       guard(async () => {
         const row = await placeCall(env, deps.origin, account, args, surface);
@@ -226,13 +229,13 @@ export function createCall4meServer(deps: McpDeps): McpServer {
 
   server.registerTool(
     'call4me_get_call',
-    {
+    titled({
       title: 'Check on a call',
       description:
         'Status, open questions, live transcript, and (when finished) the outcome of a call. With wait_seconds it waits for something to change (a new question, the call ending) before returning, so poll with wait_seconds: 30.',
       inputSchema: z.object({ call_id: callIdArg, wait_seconds: z.number().int().min(0).max(50).default(0).describe('wait up to this long for the call to finish or ask a question') }),
       annotations: RO,
-    },
+    }),
     (async (args: { call_id: string; wait_seconds: number }) =>
       guard(async () => {
         const deadline = Date.now() + args.wait_seconds * 1000;
@@ -251,7 +254,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
 
   server.registerTool(
     'call4me_connect_me',
-    {
+    titled({
       title: 'Patch the user into a live call',
       description:
         'Ring the user now and patch them into a call in progress, so they talk to the business directly while the caller goes quiet. Before calling this tool, give the user a heads up with the reason and calling_number from call4me_get_call. Rings the phone in their profile unless phone is given; they join by pressing 1 when they pick up (a voicemail never gets patched in). When they press * or hang up, the caller takes the call back and carries on with the task. With mode "listen" they only listen in: nobody on the call hears them, the caller keeps working, and they press 1 anytime to take over or hang up to stop listening.',
@@ -261,7 +264,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         mode: z.enum(['join', 'listen']).default('join').describe('"join" (default): they take the call over by pressing 1. "listen": they listen in while the caller keeps working, and can press 1 anytime to take over'),
       }),
       annotations: OPEN,
-    },
+    }),
     (async (args: { call_id: string; phone?: string; mode: 'join' | 'listen' }) =>
       guard(async () => {
         const row = await db.forAccount(account.id, args.call_id);
@@ -281,12 +284,12 @@ export function createCall4meServer(deps: McpDeps): McpServer {
 
   server.registerTool(
     'call4me_hang_up',
-    {
+    titled({
       title: 'Hang up a live call',
       description: 'End a call in progress now, e.g. when it is going nowhere or the user changed their mind. Talk time so far is billed as usual; call4me_get_call shows the final state.',
       inputSchema: z.object({ call_id: callIdArg }),
       annotations: { ...OPEN, destructiveHint: true },
-    },
+    }),
     (async (args: { call_id: string }) =>
       guard(async () => {
         const row = await db.forAccount(account.id, args.call_id);
@@ -299,12 +302,12 @@ export function createCall4meServer(deps: McpDeps): McpServer {
 
   server.registerTool(
     'call4me_answer_question',
-    {
+    titled({
       title: 'Answer the caller\'s question',
       description: 'Answer a question the caller asked mid-call (listed in open_questions). The caller relays it on the line within a second or two. Answer in a few plain words.',
       inputSchema: z.object({ call_id: callIdArg, question_id: z.string().min(1).max(40), answer: z.string().min(1).max(1000).describe('e.g. "Yes, 8:15 works." or "The reservation is under Khami."') }),
       annotations: OPEN,
-    },
+    }),
     (async (args: { call_id: string; question_id: string; answer: string }) =>
       guard(async () => {
         const q = await db.answer(account.id, args.call_id, args.question_id, args.answer.trim());
@@ -315,12 +318,12 @@ export function createCall4meServer(deps: McpDeps): McpServer {
 
   server.registerTool(
     'call4me_list_calls',
-    {
+    titled({
       title: 'List recent calls',
       description: 'Recent calls on this account, newest first, including callbacks the account\'s number answered (direction "inbound"): a callback about an unfinished task (callback_for) tried to finish it, anything else took a message.',
       inputSchema: z.object({ limit: z.number().int().min(1).max(50).default(10) }),
       annotations: RO,
-    },
+    }),
     (async (args: { limit: number }) =>
       guard(async () => {
         const rows = await db.list(account.id, args.limit);
@@ -334,12 +337,12 @@ export function createCall4meServer(deps: McpDeps): McpServer {
 
   server.registerTool(
     'call4me_get_balance',
-    {
+    titled({
       title: 'Balance and phone numbers',
       description: 'The prepaid balance, the per-minute price, and the account\'s own call4me phone numbers. During setup, show these numbers and suggest saving them as a contact named call4me. Call4me can ring the user\'s personal phone for account verification or to join a call, from that call\'s calling_number. The free US number is assigned on the first call; a null phone_number is normal before then. Callbacks to the calling number finish the unfinished task or take a message.',
       inputSchema: z.object({}),
       annotations: RO,
-    },
+    }),
     (async () =>
       guard(async () => {
         const balance = await accounts(env.DB).balanceCents(account.id);
@@ -365,12 +368,12 @@ export function createCall4meServer(deps: McpDeps): McpServer {
 
   server.registerTool(
     'call4me_get_requirements',
-    {
+    titled({
       title: 'What a call needs',
       description: 'The information a kind of call needs before dialing, and which of it the saved profile already has. Without a category, lists the categories.',
       inputSchema: z.object({ category: z.enum(intake.slugs).optional() }),
       annotations: RO,
-    },
+    }),
     (async (args: { category?: string }) =>
       guard(async () => {
         if (!args.category) {
@@ -398,12 +401,12 @@ export function createCall4meServer(deps: McpDeps): McpServer {
 
   server.registerTool(
     'call4me_get_profile',
-    {
+    titled({
       title: 'Saved caller profile',
       description: `The facts saved for every call (name, DOB, phone, address, ${agents ? 'insurance, ' : ''}car) and which are still missing.`,
       inputSchema: z.object({}),
       annotations: RO,
-    },
+    }),
     (async () =>
       guard(async () => {
         const saved = await profiles(env.DB).get(account.id);
@@ -419,12 +422,12 @@ export function createCall4meServer(deps: McpDeps): McpServer {
 
   server.registerTool(
     'call4me_save_profile',
-    {
+    titled({
       title: 'Save caller profile',
       description: 'Save facts that are the same on every call, so they never have to be asked again. Merges into what is saved; an empty string removes a field. Only save what the user gave you.',
       inputSchema: z.object(Object.fromEntries(intake.profileKeys.map((k) => [k, z.string().max(500).optional().describe(PROFILE_FIELDS[k].label)]))),
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
-    },
+    }),
     (async (args: Record<string, string | undefined>) =>
       guard(async () => {
         const saved = await profiles(env.DB).update(account.id, Object.fromEntries(Object.entries(args).filter(([, v]) => v !== undefined)) as Record<string, string>);
@@ -444,7 +447,7 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
 
   server.registerTool(
     'call4me_add_funds',
-    {
+    titled({
       title: 'Add funds',
       description:
         'A Stripe checkout link that adds credits now and reloads the same amount every month (replacing any current monthly reload). Give the link to the user to open; nothing is charged until they pay.',
@@ -452,7 +455,7 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
         amount_dollars: z.number().min(10).max(500).default(10),
       }),
       annotations: { ...OPEN, openWorldHint: false },
-    },
+    }),
     (async (args: { amount_dollars: number }) =>
       guard(async () => {
         const url = await topups(env.DB, deps.stripe()).checkout({ amountCents: parseAmountCents(args.amount_dollars), monthly: true, origin: deps.origin, account });
@@ -462,7 +465,7 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
 
   server.registerTool(
     'call4me_list_numbers',
-    { title: 'Phone numbers', description: listNumbersDescription, inputSchema: z.object({}), outputSchema: numbersOutput, annotations: { ...RO, openWorldHint: true } },
+    titled({ title: 'Phone numbers', description: listNumbersDescription, inputSchema: z.object({}), outputSchema: numbersOutput, annotations: { ...RO, openWorldHint: true } }),
     (async () =>
       guard(async () => {
         const n = numbers(env);
@@ -477,7 +480,7 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
 
   server.registerTool(
     'call4me_buy_number',
-    { title: 'Buy a phone number', description: buyNumberDescription, inputSchema: buyNumberInput, annotations: OPEN },
+    titled({ title: 'Buy a phone number', description: buyNumberDescription, inputSchema: buyNumberInput, annotations: OPEN }),
     (async (args: { country: string; area_code?: string }) =>
       guard(async () => {
         const bought = await numbers(env).buy(account, { country: args.country, areaCode: args.area_code });
@@ -488,7 +491,7 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
 
   server.registerTool(
     'call4me_release_number',
-    { title: 'Release a phone number', description: releaseNumberDescription, inputSchema: releaseNumberInput, annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true } },
+    titled({ title: 'Release a phone number', description: releaseNumberDescription, inputSchema: releaseNumberInput, annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true } }),
     (async (args: { number: string }) =>
       guard(async () => {
         const released = await numbers(env).release(account, args.number);

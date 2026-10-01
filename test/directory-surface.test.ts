@@ -34,7 +34,7 @@ async function rpc(surface: 'agents' | 'directory', method: string, params: Reco
   return (JSON.parse(json) as { result: Record<string, unknown> }).result;
 }
 
-type Tool = { name: string; annotations?: Record<string, boolean>; inputSchema: { properties?: Record<string, { enum?: string[] }> } };
+type Tool = { name: string; description?: string; annotations?: Record<string, boolean | string>; inputSchema: { properties?: Record<string, { enum?: string[] }> } };
 const tools = async (surface: 'agents' | 'directory') => (await rpc(surface, 'tools/list')).tools as Tool[];
 
 test('the directory server sells nothing: no credit or number purchase tools', async () => {
@@ -96,5 +96,19 @@ test('every directory server is its own OAuth resource with its own metadata', a
     const meta = directoryMcpProtectedResource('https://call4.me', s);
     assert.equal(meta.resource, mcpResourceAt(s.path, 'https://call4.me'));
     assert.equal(meta.resource_name, `call4me for ${s.host}`);
+  }
+});
+
+test('every tool carries its title in annotations too, for the Claude directory', async () => {
+  for (const surface of ['agents', 'directory'] as const) {
+    for (const tool of await tools(surface)) assert.equal(typeof tool.annotations?.title, 'string', `${surface} ${tool.name} has no annotations.title`);
+  }
+});
+
+test('directory tool descriptions only mention tools the directory server has', async () => {
+  const list = await tools('directory');
+  const names = new Set(list.map((t) => t.name));
+  for (const tool of list) {
+    for (const mentioned of tool.description?.match(/call4me_[a-z_]+/g) ?? []) assert.ok(names.has(mentioned), `${tool.name} mentions ${mentioned}`);
   }
 });
