@@ -18,6 +18,11 @@ import lawyerConsultationFee from './lawyer-consultation-fee.md';
 import americanAirlinesFlightCredit from './american-airlines-flight-credit.md';
 import adderallShortage from './adderall-shortage.md';
 import newPrimaryCareDoctor from './how-to-find-a-new-primary-care-doctor.md';
+import usaaPhoneNumber from './usaa-phone-number.md';
+import upsContactNumber from './ups-contact-number.md';
+import verizonCustomerService from './verizon-customer-service.md';
+import fplPhoneNumber from './fpl-phone-number.md';
+import fedexCustomerServiceNumber from './fedex-customer-service-number.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -44,4 +49,9 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'american-airlines-flight-credit', markdown: americanAirlinesFlightCredit },
   { slug: 'adderall-shortage', markdown: adderallShortage },
   { slug: 'how-to-find-a-new-primary-care-doctor', markdown: newPrimaryCareDoctor },
+  { slug: 'usaa-phone-number', markdown: usaaPhoneNumber },
+  { slug: 'ups-contact-number', markdown: upsContactNumber },
+  { slug: 'verizon-customer-service', markdown: verizonCustomerService },
+  { slug: 'fpl-phone-number', markdown: fplPhoneNumber },
+  { slug: 'fedex-customer-service-number', markdown: fedexCustomerServiceNumber },
 ];
