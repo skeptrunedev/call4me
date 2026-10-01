@@ -1,9 +1,10 @@
 ---
 title: OpenAI realtime voices on a real phone call: marin vs cedar vs gleam vs meridian
 seoTitle: OpenAI realtime voices on a real phone call
-subtitle: We recorded the same line in all four voices at phone quality, measured how each one speaks, and dropped the name our default voice used after 109 real calls. Here's what we found and which voice to pick.
-description: Hear marin, cedar, gleam, and meridian on a real phone line, with measured pitch and pace, which voice to pick, and why our caller no longer uses a name.
+subtitle: We recorded the same line in all four voices at phone quality in five languages, measured how each one speaks, and dropped the name our default voice used after 109 real calls. Here's what we found and which voice to pick.
+description: Hear marin, cedar, gleam, and meridian in five languages at phone quality, with measured pitch and pace, which voice to pick, and why none uses a name.
 date: 2026-09-30
+updated: 2026-10-01
 tags: ai voice, openai, phone calls, ai phone assistant
 authors: nick
 imageAlt: OpenAI realtime voices on a real phone call, four voices compared
@@ -52,6 +53,102 @@ One take per voice and one line, so treat the numbers as a description of these 
 
 - **gleam takes its time.** It's about 15% slower than the others and has the most melody in it. That's the voice our early user liked best after calling himself with three of them.
 - **cedar is quick and flat.** It's the fastest and moves its pitch the least. The same user said it sounded synthetic. A small difference in numbers, but on a phone line, where there's little else to go on, flat delivery is what people notice.
+
+## Every voice in the five most spoken languages
+
+All four voices speak the five most spoken languages by total speakers in Ethnologue 2025: English, Mandarin Chinese, Hindi, Spanish, and Standard Arabic. English is above. These samples were recorded the same way, from GPT-Live at 8 kHz, and a separate speech transcription model checked that every full line was spoken.
+
+### Mandarin Chinese
+
+> <span lang="zh">您好！我是Alex的助理。我想订今晚七点左右四个人的位子，请问还有空位吗？</span>
+
+Hello! I'm Alex's assistant. I'd like to book a table for four tonight around seven. Is there still space?
+
+**marin** (default)
+
+<audio controls preload="metadata" src="/static/voices/marin-zh.mp3" style="width:100%"><a href="/static/voices/marin-zh.mp3">listen to marin</a></audio>
+
+**cedar**
+
+<audio controls preload="metadata" src="/static/voices/cedar-zh.mp3" style="width:100%"><a href="/static/voices/cedar-zh.mp3">listen to cedar</a></audio>
+
+**gleam**
+
+<audio controls preload="metadata" src="/static/voices/gleam-zh.mp3" style="width:100%"><a href="/static/voices/gleam-zh.mp3">listen to gleam</a></audio>
+
+**meridian**
+
+<audio controls preload="metadata" src="/static/voices/meridian-zh.mp3" style="width:100%"><a href="/static/voices/meridian-zh.mp3">listen to meridian</a></audio>
+
+### Hindi
+
+> <span lang="hi">नमस्ते! Alex की तरफ़ से कॉल है। आज रात करीब सात बजे चार लोगों के लिए टेबल मिल सकती है क्या?</span>
+
+Hello! Calling for Alex. Could we get a table for four people tonight around seven?
+
+**marin** (default)
+
+<audio controls preload="metadata" src="/static/voices/marin-hi.mp3" style="width:100%"><a href="/static/voices/marin-hi.mp3">listen to marin</a></audio>
+
+**cedar**
+
+<audio controls preload="metadata" src="/static/voices/cedar-hi.mp3" style="width:100%"><a href="/static/voices/cedar-hi.mp3">listen to cedar</a></audio>
+
+**gleam**
+
+<audio controls preload="metadata" src="/static/voices/gleam-hi.mp3" style="width:100%"><a href="/static/voices/gleam-hi.mp3">listen to gleam</a></audio>
+
+**meridian**
+
+<audio controls preload="metadata" src="/static/voices/meridian-hi.mp3" style="width:100%"><a href="/static/voices/meridian-hi.mp3">listen to meridian</a></audio>
+
+### Spanish
+
+> <span lang="es">¡Hola! Llamo de parte de Alex. Quería reservar una mesa para cuatro esta noche, alrededor de las siete. ¿Tienen algo disponible?</span>
+
+Hi! I'm calling for Alex. I wanted to book a table for four tonight, around seven. Do you have anything available?
+
+**marin** (default)
+
+<audio controls preload="metadata" src="/static/voices/marin-es.mp3" style="width:100%"><a href="/static/voices/marin-es.mp3">listen to marin</a></audio>
+
+**cedar**
+
+<audio controls preload="metadata" src="/static/voices/cedar-es.mp3" style="width:100%"><a href="/static/voices/cedar-es.mp3">listen to cedar</a></audio>
+
+**gleam**
+
+<audio controls preload="metadata" src="/static/voices/gleam-es.mp3" style="width:100%"><a href="/static/voices/gleam-es.mp3">listen to gleam</a></audio>
+
+**meridian**
+
+<audio controls preload="metadata" src="/static/voices/meridian-es.mp3" style="width:100%"><a href="/static/voices/meridian-es.mp3">listen to meridian</a></audio>
+
+### Arabic
+
+> <span lang="ar" dir="rtl">مرحباً! أتصل من طرف أليكس. أودّ حجز طاولة لأربعة أشخاص الليلة حوالي الساعة السابعة. هل لديكم شيء متاح؟</span>
+
+Hello! I'm calling for Alex. I'd like to book a table for four tonight around seven. Do you have anything available?
+
+**marin** (default)
+
+<audio controls preload="metadata" src="/static/voices/marin-ar.mp3" style="width:100%"><a href="/static/voices/marin-ar.mp3">listen to marin</a></audio>
+
+**cedar**
+
+<audio controls preload="metadata" src="/static/voices/cedar-ar.mp3" style="width:100%"><a href="/static/voices/cedar-ar.mp3">listen to cedar</a></audio>
+
+**gleam**
+
+<audio controls preload="metadata" src="/static/voices/gleam-ar.mp3" style="width:100%"><a href="/static/voices/gleam-ar.mp3">listen to gleam</a></audio>
+
+**meridian**
+
+<audio controls preload="metadata" src="/static/voices/meridian-ar.mp3" style="width:100%"><a href="/static/voices/meridian-ar.mp3">listen to meridian</a></audio>
+
+Arabic taught us something useful: transcription models misheard our first wording, <span lang="ar" dir="rtl">أتصل نيابةً عن</span> ("calling on behalf of"), on phone audio for three of the four voices. We switched to the plainer <span lang="ar" dir="rtl">أتصل من طرف</span> ("calling for"), and all four came through clearly. Pick plain, common phrasing for calls in another language.
+
+French is sixth, but we've used it on real calls to businesses in Montreal. The caller held whole calls in French when asked to "speak French first", and once replied in French on its own when the business answered in French. To pick a language, tell your agent "speak Spanish first"; it puts that in the call request. There's no separate language parameter. The [voices page](/voices) has every voice in all five languages.
 
 ## Which voice to pick, and when
 
