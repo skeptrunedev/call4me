@@ -13,7 +13,7 @@
     { "binding": "DB", "database_name": "callbay", "database_id": "34bce7a3-4d5d-46cf-af21-bddecf0c1f93", "migrations_dir": "migrations" }
   ],
   "durable_objects": {
-    "bindings": [{ "name": "CALL_SESSION", "class_name": "VoiceSession" }]
+    "bindings": [{ "name": "VOICE_SESSION", "class_name": "VoiceSession" }]
   },
   "migrations": [
     { "tag": "v1", "new_sqlite_classes": ["CallSession"] },
