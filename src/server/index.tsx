@@ -97,7 +97,7 @@ app.use('*', async (c, next) => {
 
 // The MCP endpoint authenticates each request itself (OAuth token or key), not by cookie.
 app.route('/mcp', mcp);
-for (const s of DIRECTORY_SERVERS) app.route(s.path, directoryMcp(s.path));
+for (const s of DIRECTORY_SERVERS) app.route(s.path, directoryMcp(s.path, s.surface));
 
 app.use('*', async (c, next) => {
   const account = await sessionAccount(c);

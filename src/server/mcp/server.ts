@@ -69,18 +69,19 @@ export interface McpDeps {
   /** Built on first use: only the credit tools need Stripe. */
   stripe: () => Stripe;
   /**
-   * 'directory' is the server listed in the app directories (ChatGPT's plugins, Claude's
-   * connectors), whose rules forbid selling credits or numbers in the chat, executing purchases
-   * for the user, and collecting restricted data: it leaves out the purchase
-   * tools and the categories and profile fields that need health, government-ID or account-secret
-   * data (services/intake.ts catalog). Everyone else gets 'agents', the whole server.
+   * 'chatgpt' and 'claude' are the servers listed in those app directories, whose rules forbid
+   * selling credits or numbers in the chat and executing purchases for the user: they leave out
+   * the purchase tools. ChatGPT's also forbids collecting restricted data, so 'chatgpt' leaves out
+   * the categories and profile fields that need health, government-ID or account-secret data
+   * (services/intake.ts catalog). Everyone else gets 'agents', the whole server.
    */
   surface?: Surface;
 }
 
 function instructions(surface: Surface): string {
   const agents = surface === 'agents';
-  return `call4me places real phone calls for the user: ${agents ? 'doctor/dentist/vet appointments' : 'vet appointments'}, restaurant bookings, car service and dealership questions, home services, salons, and questions for any business.
+  const health = surface !== 'chatgpt';
+  return `call4me places real phone calls for the user: ${health ? 'doctor/dentist/vet appointments' : 'vet appointments'}, restaurant bookings, car service and dealership questions, home services, salons, and questions for any business.
 
 During setup, call call4me_get_balance and show the user their actual call4me numbers. Suggest saving them as a contact named call4me. These are separate from the user's personal phone in call4me_get_profile: call4me may ring that personal phone when a business needs them to verify their account, or when they ask to join a call. Explain that they answer and press 1 to join, and press * or hang up to hand the call back. If phone_number is null and numbers is empty, explain that the free US number is assigned on the first call; never invent a number or buy an extra number for setup.
 
@@ -171,6 +172,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
   const { env, account } = deps;
   const surface = deps.surface ?? 'agents';
   const agents = surface === 'agents';
+  const health = surface !== 'chatgpt';
   const intake = catalog(surface);
   const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION, title: 'call4me', websiteUrl: deps.origin }, { instructions: instructions(surface), jsonSchemaValidator: new CfWorkerJsonSchemaValidator() });
   const db = calls(env.DB);
@@ -206,7 +208,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         business: z.string().min(1).max(120).describe('who you are calling, as a person would say it: "Nopa", "Dr. Chen\'s office", "Toyota of Berkeley service"'),
         goal: z.string().min(5).max(1500).describe('what the call should achieve, in plain words: "Book a table for 4 tomorrow (Sat Oct 3) around 7pm under Khami."'),
         category: z.enum(intake.slugs).describe('the kind of call; decides what must be known first (see call4me_get_requirements)'),
-        details: z.record(z.string(), z.string().max(1000)).optional().describe(`answers to the category's fields by key, e.g. ${agents ? '{"reason":"annual physical","patient_status":"existing","availability":"weekday mornings next week"}' : '{"party_size":"4","date":"Sat Oct 3","time_window":"7pm, anything 6:30-8"}'}. Profile fields (${agents ? 'name, DOB, phone, insurance' : 'name, phone, address'}...) are filled from the saved profile only when the call is for the profile's owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner's are never used.`),
+        details: z.record(z.string(), z.string().max(1000)).optional().describe(`answers to the category's fields by key, e.g. ${health ? '{"reason":"annual physical","patient_status":"existing","availability":"weekday mornings next week"}' : '{"party_size":"4","date":"Sat Oct 3","time_window":"7pm, anything 6:30-8"}'}. Profile fields (${health ? 'name, DOB, phone, insurance' : 'name, phone, address'}...) are filled from the saved profile only when the call is for the profile's owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner's are never used.`),
         on_behalf_of: z.string().min(1).max(80).optional().describe('who the call is for, as the caller should say it (default: the profile\'s full_name). The caller calls FOR this person; it never claims to be them.'),
         facts: z.string().max(3000).optional().describe('anything else the caller may share beyond the category\'s fields, one per line'),
         flexibility: z.string().max(1500).optional().describe('what the caller may accept without asking: "any time 6:30-8pm", "a different day this week is fine", "up to $300". Anything outside this becomes a question to you.'),
@@ -403,7 +405,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     'call4me_get_profile',
     titled({
       title: 'Saved caller profile',
-      description: `The facts saved for every call (name, DOB, phone, address, ${agents ? 'insurance, ' : ''}car) and which are still missing.`,
+      description: `The facts saved for every call (name, DOB, phone, address, ${health ? 'insurance, ' : ''}car) and which are still missing.`,
       inputSchema: z.object({}),
       annotations: RO,
     }),

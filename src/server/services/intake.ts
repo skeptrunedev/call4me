@@ -278,12 +278,14 @@ export const CATEGORY_SLUGS = CATEGORIES.map((c) => c.slug) as [string, ...strin
 export const categoryBySlug = (slug: string) => CATEGORIES.find((c) => c.slug === slug);
 
 /**
- * Where the tools are served. Coding agents and custom connectors get everything; the app
- * directories (ChatGPT's plugins, Claude's connectors) forbid collecting restricted data (health
- * information, government identifiers, account secrets), so there the categories about it are
- * gone and the remaining categories never ask for or share those fields.
+ * Where the tools are served. Coding agents and custom connectors ('agents') get everything. The
+ * app directories leave out the purchase tools (mcp/server.ts). ChatGPT's plugin directory also
+ * forbids collecting restricted data (health information, government identifiers, account
+ * secrets), so on 'chatgpt' the categories about it are gone and the remaining categories never ask
+ * for or share those fields; Claude's connector directory allows it once declared, so 'claude'
+ * keeps every category.
  */
-export type Surface = 'agents' | 'directory';
+export type Surface = 'agents' | 'chatgpt' | 'claude';
 
 export interface Catalog {
   categories: Category[];
@@ -298,9 +300,11 @@ function buildCatalog(categories: Category[], profileKeys: ProfileKey[]): Catalo
 
 const restrictedField = (f: IntakeField) => Boolean(f.sensitive || (f.profile && PROFILE_FIELDS[f.profile].restricted));
 
+const FULL = buildCatalog(CATEGORIES, Object.keys(PROFILE_FIELDS) as ProfileKey[]);
 const CATALOGS: Record<Surface, Catalog> = {
-  agents: buildCatalog(CATEGORIES, Object.keys(PROFILE_FIELDS) as ProfileKey[]),
-  directory: buildCatalog(
+  agents: FULL,
+  claude: FULL,
+  chatgpt: buildCatalog(
     CATEGORIES.filter((c) => !c.restricted).map((c) => ({ ...c, fields: c.fields.filter((f) => !restrictedField(f)) })),
     (Object.keys(PROFILE_FIELDS) as ProfileKey[]).filter((k) => !PROFILE_FIELDS[k].restricted),
   ),

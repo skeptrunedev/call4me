@@ -96,8 +96,8 @@ export function mcpResource(baseURL: string): string {
  * per host so each host's token is bound to the URL it was listed with.
  */
 export const DIRECTORY_SERVERS = [
-  { path: '/chatgpt/mcp', host: 'ChatGPT' },
-  { path: '/claude/mcp', host: 'Claude' },
+  { path: '/chatgpt/mcp', host: 'ChatGPT', surface: 'chatgpt' },
+  { path: '/claude/mcp', host: 'Claude', surface: 'claude' },
 ] as const;
 export type McpPath = '/mcp' | (typeof DIRECTORY_SERVERS)[number]['path'];
 

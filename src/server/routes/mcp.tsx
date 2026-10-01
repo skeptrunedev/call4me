@@ -75,11 +75,11 @@ mcp.all('/:key', async (c) => {
 
 /**
  * A server listed in an app directory (DIRECTORY_SERVERS: /chatgpt/mcp, /claude/mcp). Same
- * accounts and sign-in, its own OAuth resource, and the directory tool set (McpDeps.surface).
+ * accounts and sign-in, its own OAuth resource, and that directory's tool set (McpDeps.surface).
  */
-export function directoryMcp(path: McpPath): Hono<AppEnv> {
+export function directoryMcp(path: McpPath, surface: Surface): Hono<AppEnv> {
   const app = new Hono<AppEnv>();
   app.get('/', (c) => (wantsHtml(c) ? c.redirect('/mcp', 302) : c.text('POST MCP requests here', 405)));
-  app.all('/', (c) => authorized(c, path, 'directory'));
+  app.all('/', (c) => authorized(c, path, surface));
   return app;
 }
