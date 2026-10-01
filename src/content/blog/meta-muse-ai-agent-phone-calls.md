@@ -66,7 +66,20 @@ Here's the whole setup, start to finish:
 3. **Click Connect** on the Call4me card and paste your key into Muse's secure page. Don't paste it into the chat itself.
 4. **Let Muse test it.** It lists the call4me tools and runs `call4me_get_balance`. If it reports your balance, it's connected.
 
-<!-- TODO after end-to-end test: tools listed + call4me_get_balance result -->
+### What happened when we ran it
+
+We ran exactly these steps in a fresh Muse chat on October 1, 2026. After the key went in through the Connect card, Muse worked on its own for about five minutes: it wrote a client with the official MCP SDK, hit an import error, fixed it, listed the server's tools, and saved the result. Then it came back with:
+
+> All done. The call4me integration is live and tested end to end.
+
+Its report, in short:
+
+- **Balance check passed.** It called `call4me_get_balance` and read back the account's real balance, minutes left at $0.25/min, and the account's call4me phone numbers, all matching the account page.
+- **14 tools available**: placing calls, checking status and transcripts, answering the caller's questions mid-call, patching you in or hanging up, listings, recordings, your calling profile, adding funds, and managing numbers.
+- **The key never touched the chat.** Muse said the key went "straight into the Secure Vault via the connector page", and at call time a one-time stand-in is swapped for the real key on the way out, sent as an `Authorization: Bearer` header.
+- **Saved as a reusable skill** named `call4me`, so any future Muse conversation can place calls.
+
+It also volunteered the one thing worth knowing before the first call: call4me may ring your own phone to verify you with a business or patch you in, so it said it would always give you a heads up first.
 
 ### What a call looks like from Muse
 
