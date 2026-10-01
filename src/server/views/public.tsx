@@ -36,7 +36,6 @@ function offers(countries: CountryOffer[]): { live: CountryOffer[]; soon: Countr
 }
 
 export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; countries: CountryOffer[]; error?: string; amount?: string }> = (p) => {
-  const { live, soon } = offers(p.countries);
   return (
   <Layout page="home" signedIn={p.signedIn} meta={{ jsonLd: HOME_LD }}>
     <p>
@@ -71,12 +70,6 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
           <li>store hours, stock checks, quotes, "do you do X"</li>
           <li>sitting through phone menus and hold music</li>
         </ul>
-        <h3>where it calls</h3>
-        <p class="small">
-          any business in the us, canada, and europe, from the free us number every account gets, or from a european number if you have one. anywhere else takes
-          a call4me number in that country, bought from your credits at the carrier's price.{live.length > 0 && <> numbers available now: {names(live)}.</>}
-          {soon.length > 0 && <> coming soon, with regulator paperwork in review: {names(soon)}.</>}
-        </p>
         <h3>how it sounds</h3>
         <p><a href="/examples">hear the agent on real calls</a></p>
         <ul>

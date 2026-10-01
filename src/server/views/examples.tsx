@@ -16,7 +16,7 @@ export const ExamplesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
     <main class="examples">
       <h1>listen to real calls</h1>
       <p>hear the agent talk to a business, ask questions, and get an answer before you buy.</p>
-      <p class="small">original recordings at normal speed, including greetings, phone menus, questions, and holds. private details are replaced with silence and marked in brackets in the transcript. the Amazon recording ends after the goodbye, before a repeating feedback survey. transcripts omit brief overlapping acknowledgments.</p>
+      <p class="small">real recordings at normal speed. private details muted, shown in brackets.</p>
       <p class="small">jump to: {EXAMPLES.map((example, i) => <>{i > 0 && ' · '}<a href={`#${example.slug}`}>{example.title}</a></>)}</p>
       {EXAMPLES.map((example) => (
         <article class="example" id={example.slug} aria-labelledby={`${example.slug}-title`}>

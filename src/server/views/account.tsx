@@ -348,7 +348,10 @@ can't sign in?   create a key at ${origin}/account and use ${origin}/mcp/<key>, 
         <code>call4me_list_calls</code> recent calls, including callbacks your number answered
       </li>
       <li>
-        <code>call4me_get_balance</code>, <code>call4me_add_funds</code>
+        <code>call4me_get_balance</code> balance, price per minute, and your call4me phone numbers
+      </li>
+      <li>
+        <code>call4me_add_funds</code> a checkout link that adds credits now and reloads the same amount every month
       </li>
     </ul>
   </Layout>
