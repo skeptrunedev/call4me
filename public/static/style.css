@@ -125,6 +125,7 @@ form.inline { margin: 6px 0; }
 .form .actions button { padding: 5px 14px; }
 .blog-head .subscribe.compact { margin: 8px 0 16px; }
 .subscribe { margin: 20px 0; }
+.subscribe-form { margin-left: 12px; }
 .subscribe-form input[type=email] { width: 240px; max-width: 60%; }
 .featured-row { display: flex; gap: 16px; margin: 12px 0 20px; }
 .featured-row .card { flex: 1; display: block; }
