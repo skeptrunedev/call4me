@@ -12,7 +12,7 @@ registerHooks({
     return nextResolve(specifier, context);
   },
 });
-const { CallSession } = await import('../src/server/voice/session');
+const { VoiceSession } = await import('../src/server/voice/session');
 
 class Socket {
   static OPEN = 1;
@@ -25,7 +25,7 @@ Object.defineProperty(globalThis, 'WebSocket', { value: Socket, configurable: tr
 function harness(t: TestContext) {
   t.mock.timers.enable({ apis: ['Date', 'setTimeout'], now: 10_000 });
   // Match the existing session tests: exercise real provider message handling, no live calls.
-  const session = new CallSession({ storage: {} } as any, { TELNYX_API_KEY: 'test-key' } as any) as any;
+  const session = new VoiceSession({ storage: {} } as any, { TELNYX_API_KEY: 'test-key' } as any) as any;
   session.setup = { callId: 'menu_test', controlId: 'test-control', redact: [] };
   session.live = new Socket();
   session.phone = new Socket();

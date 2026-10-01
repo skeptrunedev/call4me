@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Deploys the voice Worker (wrangler.voice.jsonc) without dropping a call.
 #
-# Deploying a Worker resets the durable objects it defines, and a reset CallSession loses its
+# Deploying a Worker resets the durable objects it defines, and a reset VoiceSession loses its
 # live call. So this deploys only when the voice bundle changed, and only once no call is up:
 # it waits for zero active calls, locks out new ones (services/dialer.ts voiceDeployDone waits
 # on the lock), checks again, deploys, and unlocks.

@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  // The voice Worker: call sessions (CallSession) and Telnyx's media streams. Deploying a Worker
+  // The voice Worker: call sessions (VoiceSession) and Telnyx's media streams. Deploying a Worker
   // resets the durable objects it defines, so this one deploys only when its bundle changes and
   // no call is up (scripts/deploy-voice.sh); the site (wrangler.jsonc) deploys freely.
   "name": "call4me-voice",
@@ -13,9 +13,12 @@
     { "binding": "DB", "database_name": "callbay", "database_id": "34bce7a3-4d5d-46cf-af21-bddecf0c1f93", "migrations_dir": "migrations" }
   ],
   "durable_objects": {
-    "bindings": [{ "name": "CALL_SESSION", "class_name": "CallSession" }]
+    "bindings": [{ "name": "CALL_SESSION", "class_name": "VoiceSession" }]
   },
-  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CallSession"] }],
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["CallSession"] },
+    { "tag": "v2", "renamed_classes": [{ "from": "CallSession", "to": "VoiceSession" }] }
+  ],
   // Secrets: OPENAI_API_KEY, TELNYX_API_KEY, TELNYX_CONNECTION_ID, RAINDROP_WRITE_KEY, and
   // STREAM_SECRET (the same value as the site's, which signs the stream URLs).
   "vars": {

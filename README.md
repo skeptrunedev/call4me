@@ -11,7 +11,7 @@ Prepaid credits from $10 via Stripe Checkout, reloading monthly by default; one 
 agent ──MCP──▶ worker ──POST /v2/calls──▶ Telnyx ──PSTN──▶ business
                   ▲                          │ media stream (PCMU, bidirectional RTP)
                   │ webhooks                 ▼
-                  └──────────────── CallSession (Durable Object) ◀──WS──▶ GPT-Live (gpt-live-1, audio/pcmu 8k)
+                  └──────────────── VoiceSession (Durable Object) ◀──WS──▶ GPT-Live (gpt-live-1, audio/pcmu 8k)
                                                                            └─ back office (Responses model):
                                                                               end_call · ask_user · press_digits
 ```

@@ -101,7 +101,7 @@ type TelnyxFrame =
   | { event: 'stop' }
   | { event: string };
 
-export class CallSession extends DurableObject<Env> {
+export class VoiceSession extends DurableObject<Env> {
   private setup: Stored | null = null;
   private phone: WebSocket | null = null;
   private live: WebSocket | null = null;
@@ -1005,7 +1005,7 @@ export class CallSession extends DurableObject<Env> {
 }
 
 /** The durable object for a call id; placed near Telnyx's and OpenAI's US regions. */
-export function sessionFor(env: Env, callId: string): DurableObjectStub<CallSession> {
+export function sessionFor(env: Env, callId: string): DurableObjectStub<VoiceSession> {
   return env.CALL_SESSION.get(env.CALL_SESSION.idFromName(callId), { locationHint: 'enam' });
 }
 

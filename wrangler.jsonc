@@ -28,9 +28,9 @@
     { "binding": "DB", "database_name": "callbay", "database_id": "34bce7a3-4d5d-46cf-af21-bddecf0c1f93", "migrations_dir": "migrations" }
   ],
   // Call sessions live in the voice Worker (wrangler.voice.jsonc), so deploying the site never
-  // resets a live call. CallSession was defined here until v2.
+  // resets a live call. They were the CallSession class here until v2.
   "durable_objects": {
-    "bindings": [{ "name": "CALL_SESSION", "class_name": "CallSession", "script_name": "call4me-voice" }]
+    "bindings": [{ "name": "CALL_SESSION", "class_name": "VoiceSession", "script_name": "call4me-voice" }]
   },
   "migrations": [
     { "tag": "v1", "new_sqlite_classes": ["CallSession"] },

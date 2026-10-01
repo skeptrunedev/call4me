@@ -1,10 +1,10 @@
 import { hmacHex, safeEqual } from '../lib/keys';
 import { sessionFor } from './session';
 
-export { CallSession } from './session';
+export { VoiceSession } from './session';
 
 /**
- * The voice Worker (wrangler.voice.jsonc): the CallSession durable objects and Telnyx's media
+ * The voice Worker (wrangler.voice.jsonc): the VoiceSession durable objects and Telnyx's media
  * stream, on their own host. Deploying a Worker resets the durable objects it defines, which
  * drops every live call, so they live apart from the site and only redeploy when the voice
  * bundle itself changes, and then only once no call is up (scripts/deploy-voice.sh).
@@ -18,7 +18,7 @@ export default {
     // URL we handed Telnyx when dialing can attach audio to a call.
     // Cloudflare can still reset a session mid-call ("This script has been upgraded"); Telnyx then
     // reconnects the stream once, and a reconnect that lands on the instance being reset is retried
-    // on a fresh stub, which resumes the call (CallSession.acceptStream).
+    // on a fresh stub, which resumes the call (VoiceSession.acceptStream).
     const m = url.pathname.match(/^\/voice\/stream\/([^/]+)\/([^/]+)$/);
     if (!m || req.method !== 'GET') return new Response('not found', { status: 404 });
     const [, callId, sig] = m;
