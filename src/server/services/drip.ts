@@ -33,7 +33,7 @@ export const STEPS: Step[] = [
     after: 0,
     email: ({ host, addCredits }) => ({
       subject: 'welcome to Call for Me',
-      body: `hey, I'm Nick. thank you so much for signing up! to get started, add credits at ${addCredits} and paste the prompt from ${host} into your agent.
+      body: `hey, I'm Nick, the creator of call4me. thank you so much for signing up! to get started, add credits at ${addCredits} and paste the prompt from ${host} into your agent.
 
 If you reply with feedback, I'm happy to give you $25 in credits. Anything helps, including how you found it and why you signed up.
 
