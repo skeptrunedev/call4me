@@ -196,6 +196,20 @@ document.querySelectorAll('.copy-link').forEach(function (b) {
   });
 });`;
 
+/** Timestamp links (lib/blog.ts linkTimestamps) seek the recording on the page instead of opening the file. */
+const SEEK_SCRIPT = `
+document.addEventListener('click', function (event) {
+  var link = event.target instanceof Element && event.target.closest('a.seek');
+  if (!link) return;
+  var audio = document.querySelector('audio[src="' + link.dataset.audio + '"]');
+  if (!audio) return;
+  event.preventDefault();
+  document.querySelectorAll('audio').forEach(function (other) { if (other !== audio) other.pause(); });
+  audio.currentTime = Number(link.dataset.t);
+  audio.play();
+  audio.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+});`;
+
 const Share: FC<{ post: Post }> = ({ post }) => {
   const url = `${SITE}/blog/${post.slug}`;
   const text = `${post.title} - ${post.subtitle}`;
@@ -455,6 +469,7 @@ export const BlogPost: FC<{
         <a href="/blog">all posts</a> · <a href="/blog/archive">archive</a> · <a href="/blog/feed.xml">atom feed</a>
       </p>
       <script>{raw(SHARE_SCRIPT)}</script>
+      <script>{raw(SEEK_SCRIPT)}</script>
     </Layout>
   );
 };

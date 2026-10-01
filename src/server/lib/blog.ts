@@ -91,6 +91,24 @@ function renderer(sections: { id: string; text: string }[]) {
   });
 }
 
+/**
+ * A bold timestamp ("**1:07**") after a recording becomes a link to that moment in it: the
+ * file with a media fragment (#t=67) without JavaScript, an in-page seek with it (SEEK_SCRIPT
+ * in views/blog.tsx). Each timestamp belongs to the nearest recording above it.
+ */
+function linkTimestamps(html: string): string {
+  let audio: string | null = null;
+  return html.replace(/<audio\b[^>]*\ssrc="([^"]+)"[^>]*>|<strong>(\d{1,2}):([0-5]\d)<\/strong>/g, (match, src: string | undefined, min: string | undefined, sec: string | undefined) => {
+    if (src) {
+      audio = src;
+      return match;
+    }
+    if (!audio) return match;
+    const t = Number(min) * 60 + Number(sec);
+    return `<a class="seek" href="${audio}#t=${t}" data-audio="${audio}" data-t="${t}">${match}</a>`;
+  });
+}
+
 export function renderPost(src: PostSource): Post {
   const { meta, body: full } = parseFrontmatter(src.markdown);
   if (!meta.title || !meta.date) throw new Error(`blog post ${src.slug}: frontmatter needs title and date`);
@@ -106,7 +124,7 @@ export function renderPost(src: PostSource): Post {
   // Plain letters only: underscores would turn into emphasis.
   const cutWord = 'PAYWALLCUTMARKERx7f3a';
   const marker = `<p>${cutWord}</p>`;
-  const rendered = md.parse(rest ? `${body}\n\n${cutWord}\n\n${rest}` : body, { async: false }) as string;
+  const rendered = linkTimestamps(md.parse(rest ? `${body}\n\n${cutWord}\n\n${rest}` : body, { async: false }) as string);
   const [html, paidHtml] = rest ? rendered.split(marker) : [rendered, ''];
   const words = full.split(/\s+/).filter(Boolean).length;
   const authors = (meta.authors ?? 'nick')
