@@ -8,6 +8,10 @@
  *   npm run outreach -- draft <id> <message file>      save the message to send
  *   npm run outreach -- sent <id> [x|email|other]      mark sent (defaults to their channel)
  *   npm run outreach -- status <id> <status> [note]    replied, won, declined, ...
+ *   npm run outreach -- email <id> <subject> [body file] [--dry-run]
+ *                                                      email them from me@skeptrune.com (gws-gmail
+ *                                                      profile) and mark sent; body defaults to their
+ *                                                      message, blank lines separate paragraphs
  *
  * Add --local to any command to use the local D1. The channel is the first contact we have:
  * X, then email, then other_contact.
@@ -21,7 +25,8 @@ const CHANNELS = ['x', 'email', 'other'];
 
 const args = process.argv.slice(2);
 const where = args.includes('--local') ? '--local' : '--remote';
-const [command, ...rest] = args.filter((a) => a !== '--local');
+const dryRun = args.includes('--dry-run');
+const [command, ...rest] = args.filter((a) => a !== '--local' && a !== '--dry-run');
 
 const sql = (v) => (v === null || v === undefined || v === '' ? 'NULL' : typeof v === 'number' ? String(v) : `'${String(v).replace(/'/g, "''")}'`);
 function d1(statement) {
@@ -87,6 +92,30 @@ if (command === 'import') {
   const notes = note.length ? [p.notes, `${new Date(now).toISOString().slice(0, 10)}: ${note.join(' ')}`].filter(Boolean).join('\n') : p.notes;
   d1(`UPDATE outreach SET status = ${sql(status)}, notes = ${sql(notes)}, updated_at = ${now}${status === 'replied' ? `, replied_at = ${now}` : ''} WHERE id = ${sql(id)}`);
   console.log(`${p.name}: ${status}`);
+} else if (command === 'email') {
+  const [id, subject, file] = rest;
+  if (!subject) fail('usage: email <id> <subject> [body file] [--dry-run]');
+  const p = one(id);
+  if (!p.email) fail(`${p.name} has no email`);
+  if (p.sent_via === 'email') fail(`${p.name} was already emailed`);
+  const text = (file ? readFileSync(file, 'utf8') : p.message ?? fail(`${p.name} has no message`)).trim();
+  const escape = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const html = text
+    .split(/\n\s*\n/)
+    .map((para) => `<div>${para.split('\n').map(escape).join('<br>')}</div>`)
+    .join('<div><br></div>');
+  const send = ['gmail', '+send', '--to', p.email, '--from', 'Nick Khami <me@skeptrune.com>', '--subject', subject, '--body', html, '--html'];
+  const env = { ...process.env, GOOGLE_WORKSPACE_CLI_KEYRING_BACKEND: 'file', GOOGLE_WORKSPACE_CLI_CONFIG_DIR: `${process.env.HOME}/.config/gws-gmail` };
+  if (dryRun) {
+    console.log(`to: ${p.email}\nsubject: ${subject}\n\n${text}`);
+    process.exit(0);
+  }
+  const out = execFileSync('gws', send, { encoding: 'utf8', env, stdio: ['ignore', 'pipe', 'inherit'] });
+  const gmailId = JSON.parse(out.slice(out.indexOf('{'))).id ?? fail(`gws returned no message id: ${out}`);
+  const now = Date.now();
+  const notes = [p.notes, `${new Date(now).toISOString().slice(0, 10)}: emailed ${p.email}, gmail id ${gmailId}`].filter(Boolean).join('\n');
+  d1(`UPDATE outreach SET status = 'sent', sent_via = 'email', sent_at = ${now}, notes = ${sql(notes)}, updated_at = ${now} WHERE id = ${sql(p.id)}`);
+  console.log(`emailed ${p.name} <${p.email}>: ${gmailId}`);
 } else {
-  fail('usage: npm run outreach -- import|list|show|draft|sent|status ... (see scripts/outreach.mjs)');
+  fail('usage: npm run outreach -- import|list|show|draft|sent|status|email ... (see scripts/outreach.mjs)');
 }
