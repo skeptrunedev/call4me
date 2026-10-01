@@ -8,7 +8,12 @@
 import type { SitemapEntry } from '../lib/discovery';
 import { now } from '../lib/ids';
 
-const ENDPOINT = 'https://api.indexnow.org/indexnow';
+/**
+ * Yandex's endpoint, not api.indexnow.org: that one and Bing's answer 429 to every request from
+ * Workers' shared egress IPs, so nothing was ever accepted. Participating engines share each
+ * submission with one another, so Bing still gets it.
+ */
+const ENDPOINT = 'https://yandex.com/indexnow';
 /** The protocol's limit per request. */
 const MAX_URLS = 10_000;
 
