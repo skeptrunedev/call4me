@@ -15,6 +15,8 @@ export default {
     const url = new URL(req.url);
     // The bundle hash this version was deployed from; deploy-voice.sh skips unchanged bundles.
     if (url.pathname === '/build') return new Response(env.VOICE_BUILD);
+    // The session interface this version serves; the site deploys ahead of it only when they match.
+    if (url.pathname === '/contract') return new Response(env.VOICE_CONTRACT);
     // Telnyx's media stream for a call. The path carries an HMAC of the call id, so only the
     // URL we handed Telnyx when dialing can attach audio to a call.
     // Cloudflare can still reset a session mid-call ("This script has been upgraded"); Telnyx then

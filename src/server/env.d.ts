@@ -23,6 +23,8 @@ interface Env {
   STREAM_SECRET: string;
   /** Voice Worker only: the bundle hash it was deployed from (scripts/deploy-voice.sh). */
   VOICE_BUILD?: string;
+  /** Voice Worker only: hash of the site-facing session interface it serves (scripts/voice-contract.sh). */
+  VOICE_CONTRACT?: string;
   BETTER_AUTH_SECRET: string;
   GOOGLE_CLIENT_ID?: string;
   GOOGLE_CLIENT_SECRET?: string;

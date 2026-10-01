@@ -56,7 +56,7 @@ while :; do
   echo "waiting on $n active call(s)"
   sleep 15
 done
-if ! npx wrangler deploy -c "$CONFIG" --var "VOICE_BUILD:$build"; then
+if ! npx wrangler deploy -c "$CONFIG" --var "VOICE_BUILD:$build" --var "VOICE_CONTRACT:$(scripts/voice-contract.sh)"; then
   lock 0   # nothing was deployed, so nothing to wait out
   exit 1
 fi
