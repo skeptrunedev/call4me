@@ -45,7 +45,7 @@ app.use('*', async (c, next) => {
 
 // The asset binding returns complete files. Supply ranges for the reviewed audio only:
 // the example calls (also embedded in blog posts), the voice samples, and the other blog recordings.
-for (const path of ['/static/examples/:file{[a-z0-9-]+\\.mp3}', '/static/blog/:file{[a-z0-9-]+\\.mp3}', '/static/voices/:file{[a-z]+\\.mp3}']) {
+for (const path of ['/static/examples/:file{[a-z0-9-]+\\.mp3}', '/static/blog/:file{[a-z0-9-]+\\.mp3}', '/static/voices/:file{[a-z-]+\\.mp3}']) {
   app.on(['GET', 'HEAD'], path, async (c) => {
     const request = new Request(c.req.raw, { method: 'GET' });
     request.headers.delete('range');
