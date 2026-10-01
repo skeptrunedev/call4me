@@ -19,6 +19,8 @@ export interface Brief {
   max_minutes: number;
   /** When to patch the user in without being asked. */
   connect_when?: string | null;
+  /** Ring the user to listen in as soon as the business answers. */
+  listen_in?: boolean;
 }
 
 export interface TranscriptLine {
@@ -119,6 +121,8 @@ export interface PlaceCallInput {
   max_minutes?: number;
   /** When to patch the user in without being asked, e.g. "as soon as a person picks up". */
   connect_when?: string;
+  /** Ring the user as soon as the business answers so they can listen in (press 1 to take over). */
+  listen_in?: boolean;
   /** Which of the account's numbers to call from; by default one in the callee's country. */
   from?: string;
 }
@@ -190,6 +194,7 @@ export function calls(db: D1Database) {
         timezone: input.timezone ?? null,
         max_minutes: maxMinutes,
         connect_when: input.connect_when?.trim() || null,
+        ...(input.listen_in ? { listen_in: true } : {}),
       };
       const id = `call_${newId()}`;
       if (!(await accounts(db).hold(account.id, holdCents, `hold:${id}`, `up to ${maxMinutes} min to ${input.business.trim()}`))) {

@@ -23,12 +23,12 @@ export async function streamUrl(env: Env, origin: string, callId: string): Promi
 }
 
 /** The account's owner, who can be patched into any of its calls: their name and their own phone. */
-async function personFor(env: Env, origin: string, account: Account, from: string, connectWhen: string | null = null): Promise<NonNullable<SessionSetup['person']>> {
+async function personFor(env: Env, origin: string, account: Account, from: string, connectWhen: string | null = null, listenIn = false): Promise<NonNullable<SessionSetup['person']>> {
   const profile = await profiles(env.DB).get(account.id);
   // Profiles hold numbers as people type them; Telnyx dials E.164 only.
   const phone = profile.phone ? checkDialable(profile.phone) : null;
   const reachable = phone?.ok && (await mayCall(env.DB, account.id, phone)) ? phone.e164 : null;
-  return { name: profile.full_name || account.display_name || 'the account owner', phone: reachable, from, webhookUrl: `${origin}/webhooks/telnyx`, connectWhen };
+  return { name: profile.full_name || account.display_name || 'the account owner', phone: reachable, from, webhookUrl: `${origin}/webhooks/telnyx`, connectWhen, listenIn };
 }
 
 export async function placeCall(env: Env, origin: string, account: Account, input: PlaceCallInput & { voice?: Voice }): Promise<CallRow> {
@@ -41,7 +41,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
   try {
     const from = await numbers(env).callerId(account, to, input.from);
     await env.DB.prepare(`UPDATE calls SET from_number = ? WHERE id = ?`).bind(from, call.id).run();
-    const person = await personFor(env, origin, account, from, brief.connect_when ?? null);
+    const person = await personFor(env, origin, account, from, brief.connect_when ?? null, brief.listen_in ?? false);
     const cb = {
       onBehalfOf: brief.on_behalf_of,
       business: call.business,

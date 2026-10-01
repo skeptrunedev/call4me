@@ -81,7 +81,7 @@ The caller can only say what you give it, so everything is collected BEFORE dial
 5. Poll call4me_get_call with wait_seconds until finished. If it shows an open question, the business is waiting on the line: answer right away with call4me_answer_question.
 6. Tell the user the outcome in a line or two.
 
-To put the user on a call themselves: pass connect_when to call4me_place_call (e.g. "as soon as a person picks up", to skip a long hold), or call call4me_connect_me mid-call. Give the user a heads up before placing a call that may ring them, and before call4me_connect_me. Tell them why and use the actual call's calling_number from call4me_get_call; for a new call, use the selected owned number when known and confirm it from the place_call result. If the first number has not been assigned yet, explain that upfront and show it as soon as place_call returns. Their phone rings and they join the call by pressing 1; the caller goes quiet, and takes over again when they press * or hang up. To end a call early, use call4me_hang_up.
+To put the user on a call themselves: pass connect_when to call4me_place_call (e.g. "as soon as a person picks up", to skip a long hold), or call call4me_connect_me mid-call. Give the user a heads up before placing a call that may ring them, and before call4me_connect_me. Tell them why and use the actual call's calling_number from call4me_get_call; for a new call, use the selected owned number when known and confirm it from the place_call result. If the first number has not been assigned yet, explain that upfront and show it as soon as place_call returns. Their phone rings and they join the call by pressing 1; the caller goes quiet, and takes over again when they press * or hang up. To have them listen in without taking over, pass listen_in: true to call4me_place_call (they hear the call from the moment the business answers) or mode: "listen" to call4me_connect_me: nobody on the call hears them, the caller keeps working, and they press 1 anytime to take over. To end a call early, use call4me_hang_up.
 
 Calls go out from the account's own numbers: its free US number, plus any it bought (call4me_list_numbers, call4me_buy_number). Businesses in the US, Canada and Europe can always be called (Europe from a European number when the account holds one, else from its US number); anywhere else, once the account holds a number in that country, and the call goes out from it.
 
@@ -192,6 +192,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         flexibility: z.string().max(1500).optional().describe('what the caller may accept without asking: "any time 6:30-8pm", "a different day this week is fine", "up to $300". Anything outside this becomes a question to you.'),
         timezone: z.string().max(60).optional().describe('IANA time zone of the business, e.g. "America/Los_Angeles", so "tomorrow" is unambiguous'),
         connect_when: z.string().max(300).optional().describe('when to ring the user and patch them into the call without being asked, e.g. "as soon as a person picks up" (skip the hold) or "if they need to speak to me". Rings the phone in their profile. They hand the call back to the caller by pressing * or hanging up.'),
+        listen_in: z.boolean().optional().describe('ring the user as soon as the business answers so they can listen in: nobody on the call hears them and the caller keeps working. They press 1 anytime to take over, or hang up to stop listening. Rings the phone in their profile.'),
         max_minutes: z.number().int().min(1).max(LIMITS.maxMinutes).optional().describe(`hard cap on talk time (default ${LIMITS.defaultMaxMinutes})`),
         voice: z.enum(VOICES).optional().describe('caller voice (default marin)'),
         from: z.string().max(40).optional().describe('which of the account\'s numbers to call from (default: one in the callee\'s country)'),
@@ -236,11 +237,15 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     {
       title: 'Patch the user into a live call',
       description:
-        'Ring the user now and patch them into a call in progress, so they talk to the business directly while the caller goes quiet. Before calling this tool, give the user a heads up with the reason and calling_number from call4me_get_call. Rings the phone in their profile unless phone is given; they join by pressing 1 when they pick up (a voicemail never gets patched in). When they press * or hang up, the caller takes the call back and carries on with the task.',
-      inputSchema: z.object({ call_id: callIdArg, phone: z.string().max(40).optional().describe('a different number to ring, e.g. "(415) 555-0123"') }),
+        'Ring the user now and patch them into a call in progress, so they talk to the business directly while the caller goes quiet. Before calling this tool, give the user a heads up with the reason and calling_number from call4me_get_call. Rings the phone in their profile unless phone is given; they join by pressing 1 when they pick up (a voicemail never gets patched in). When they press * or hang up, the caller takes the call back and carries on with the task. With mode "listen" they only listen in: nobody on the call hears them, the caller keeps working, and they press 1 anytime to take over or hang up to stop listening.',
+      inputSchema: z.object({
+        call_id: callIdArg,
+        phone: z.string().max(40).optional().describe('a different number to ring, e.g. "(415) 555-0123"'),
+        mode: z.enum(['join', 'listen']).default('join').describe('"join" (default): they take the call over by pressing 1. "listen": they listen in while the caller keeps working, and can press 1 anytime to take over'),
+      }),
       annotations: OPEN,
     },
-    (async (args: { call_id: string; phone?: string }) =>
+    (async (args: { call_id: string; phone?: string; mode: 'join' | 'listen' }) =>
       guard(async () => {
         const row = await db.forAccount(account.id, args.call_id);
         if (!ACTIVE.includes(row.status) || !row.answered_at) throw new CallError('the call is not live');
@@ -251,7 +256,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
           if (!(await mayCall(env.DB, account.id, p))) throw new CallError(`phone: calling ${p.country} needs a number there (call4me_buy_number)`);
           phone = p.e164;
         }
-        const res = await sessionFor(env, row.id).fetch('https://session/connect-person', { method: 'POST', body: JSON.stringify({ phone }) });
+        const res = await sessionFor(env, row.id).fetch('https://session/connect-person', { method: 'POST', body: JSON.stringify({ phone, mode: args.mode }) });
         const { message } = (await res.json()) as { message: string };
         return ok(message, { call_id: row.id, message });
       })()) as never,
@@ -335,7 +340,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
           monthly_reload: reload ? { amount: dollars(reload.cents), status: reload.status, next: reload.renewsAt ? new Date(reload.renewsAt).toISOString().slice(0, 10) : null } : null,
         };
         const reloadText = out.monthly_reload ? `reloads ${out.monthly_reload.amount} monthly${out.monthly_reload.next ? ` (next ${out.monthly_reload.next})` : ''}` : 'no monthly reload';
-        return ok(`balance ${out.balance} (~${out.minutes_left} min at ${out.price_per_minute}/min), ${reloadText}. ${owned.length ? `numbers: ${owned.map(numberText).join('; ')}. Show these to the user and suggest saving them as a contact named call4me` : 'number: assigned on the first call. Explain this during setup, then show calling_number from the first call result'}. Call4me may ring the personal phone in the user's profile if a business needs account verification or the user asks to join. Answer and press 1 to join; press * or hang up to hand the call back. Give a heads up before a call that may ring them and before connecting them.`, out);
+        return ok(`balance ${out.balance} (~${out.minutes_left} min at ${out.price_per_minute}/min), ${reloadText}. ${owned.length ? `numbers: ${owned.map(numberText).join('; ')}. Show these to the user and suggest saving them as a contact named call4me` : 'number: assigned on the first call. Explain this during setup, then show calling_number from the first call result'}. Call4me may ring the personal phone in the user's profile if a business needs account verification or the user asks to join. Answer and press 1 to join; press * or hang up to hand the call back. They can also just listen in (listen_in on call4me_place_call, or mode "listen" on call4me_connect_me) and press 1 to take over. Give a heads up before a call that may ring them and before connecting them.`, out);
       })()) as never,
   );
 

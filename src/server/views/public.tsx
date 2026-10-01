@@ -145,6 +145,7 @@ const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ p
         <p>
           yes. tell your agent to connect you "as soon as a person picks up" to skip the hold music, or ask during the call. call4me may also ring you if the business needs
           you to verify your account. your agent should tell you what number to expect. answer and press 1 to join (so your voicemail never ends up on it); press * or hang up to hand it back.
+          or ask to just listen in: nobody on the call hears you, the agent keeps working, and you press 1 anytime to take over.
         </p>
       </details>
       <details>

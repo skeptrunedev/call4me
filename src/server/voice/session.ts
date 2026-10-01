@@ -3,7 +3,7 @@ import { Raindrop, type Interaction } from 'raindrop-ai';
 import { ACTIVE, calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
 import { connectCheckMessage, forcedHandoffMessage, MenuRecovery, missedHandoff } from './handoff';
-import { alreadyUnreachable, JOIN_WAIT_MS, mergeTranscript, resumeNote, unreachableMessage } from './person';
+import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { BACK_OFFICE_TOOLS } from './prompt';
 
 /**
@@ -75,7 +75,7 @@ export interface SessionSetup {
   /** Per-call secrets (account PINs) to mask in the stored transcript. */
   redact?: string[];
   /** Who can be patched into the call (call4me's user), from which number, and where their leg reports. */
-  person?: { name: string; phone: string | null; from: string; webhookUrl: string; connectWhen?: string | null };
+  person?: { name: string; phone: string | null; from: string; webhookUrl: string; connectWhen?: string | null; listenIn?: boolean };
 }
 
 type Stored = SessionSetup;
@@ -139,6 +139,8 @@ export class CallSession extends DurableObject<Env> {
   /** The person's own phone leg while it rings or is on the call; the caller stays silent while they talk. */
   private personLeg: string | null = null;
   private personOn = false;
+  /** Why their leg was rung: to join (press 1 or it's hung up) or to listen in for as long as they like. */
+  private personMode: PersonMode = 'join';
   /** Keys relayed from the person's phone to the business, one after another. */
   private keysOut: Promise<void> = Promise.resolve();
   /** Once they've been rung, the connect condition is settled; lines already checked against it. */
@@ -187,6 +189,8 @@ export class CallSession extends DurableObject<Env> {
         this.mark('answered');
         this.startWatchdog();
         await this.startLive();
+        // place_call's listen_in: they hear the call from the moment the business answers.
+        if (this.setup?.person?.listenIn) void this.connectPerson(undefined, 'listen');
         return new Response('ok');
       }
       case '/ended': {
@@ -194,8 +198,8 @@ export class CallSession extends DurableObject<Env> {
         return new Response('ok');
       }
       case '/connect-person': {
-        const { phone } = (await req.json()) as { phone?: string };
-        return Response.json({ message: await this.connectPerson(phone) });
+        const { phone, mode } = (await req.json()) as { phone?: string; mode?: PersonMode };
+        return Response.json({ message: await this.connectPerson(phone, mode) });
       }
       case '/person-answered':
         this.personAnswered();
@@ -596,7 +600,7 @@ export class CallSession extends DurableObject<Env> {
 
   private checkMissedHandoff(): void {
     this.handoffTimer = null;
-    if (this.ended || this.endingCall || this.personLeg || this.forcedHandoffs.size + this.forcedMenus >= MAX_FORCED_HANDOFFS) return;
+    if (this.ended || this.endingCall || this.personHolds() || this.forcedHandoffs.size + this.forcedMenus >= MAX_FORCED_HANDOFFS) return;
     // A running function still owes the back office its output; GPT-Live rejects a new response until then.
     if (this.toolsRunning || (this.backOfficeBusy && Date.now() - this.lastHandoffAt < BACK_OFFICE_STALE_MS)) return;
     const menu = this.menuRecovery.pending();
@@ -629,11 +633,22 @@ export class CallSession extends DurableObject<Env> {
     this.sendLive({ type: 'response.create' });
   }
 
-  /** Ring the person's phone; they join once they answer and press 1 (person-gate). Returns what happened. */
-  private async connectPerson(phoneOverride?: string): Promise<string> {
+  /** Whether the caller holds back for the person: ringing them to join, or they're on the call. Listening doesn't count. */
+  private personHolds(): boolean {
+    return callerHoldsFor({ ringing: !!this.personLeg, on: this.personOn, mode: this.personMode });
+  }
+
+  /**
+   * Ring the person's phone. To join, they answer and press 1; to listen, they hear the call until
+   * they hang up, and can press 1 anytime to take over. Returns what happened.
+   */
+  private async connectPerson(phoneOverride?: string, mode: PersonMode = 'join'): Promise<string> {
     const s = await this.load();
     if (!s?.person || !s.controlId || this.ended) return 'the call is not live';
-    if (this.personLeg) return this.personOn ? `${s.person.name} is already on the call` : `already ringing ${s.person.name}`;
+    if (this.personLeg) {
+      if (this.personOn) return `${s.person.name} is already on the call`;
+      return this.personMode === 'listen' ? listeningMessage(s.person.name) : `already ringing ${s.person.name}`;
+    }
     const phone = phoneOverride || s.person.phone;
     if (!phone) return `no phone number for ${s.person.name}; save one with call4me_save_profile or pass phone`;
     const remaining = Math.max(60, s.maxSeconds - Math.round((Date.now() - (this.answeredAt || Date.now())) / 1000));
@@ -645,22 +660,33 @@ export class CallSession extends DurableObject<Env> {
       return `couldn't ring ${s.person.name}: ${String(err).slice(0, 200)}`;
     }
     this.personRung = true;
+    this.personMode = mode;
+    if (mode === 'listen') {
+      this.note(`ringing ${s.person.name} to listen in`);
+      return `ringing ${s.person.name} to listen in; nobody on the call hears them, and they take over if they press 1`;
+    }
     this.note(`ringing ${s.person.name} to join the call`);
     return `ringing ${s.person.name}; they join once they pick up and press 1`;
   }
 
   /**
    * Their phone answered, which a voicemail also does: they stay listen-only until they press 1.
-   * A leg still listening after JOIN_WAIT_MS is taken for voicemail and hung up; person-left tells the caller.
+   * Ringing to join, a leg still listening after JOIN_WAIT_MS is taken for voicemail and hung up;
+   * person-left tells the caller. Ringing to listen, the leg stays for as long as they like.
    */
   private personAnswered(): void {
     const leg = this.personLeg;
     if (!leg || this.ended) return;
+    const wait = joinWaitMs(this.personMode);
+    if (wait === null) {
+      this.note(`${this.setup?.person?.name ?? 'the person'} is listening in`);
+      return;
+    }
     setTimeout(() => {
       if (this.personLeg !== leg || this.personOn || this.ended) return;
       console.log('person leg never pressed 1', this.setup?.callId);
       void telnyx(this.env).hangup(leg).catch((err) => console.warn('person hangup', String(err)));
-    }, JOIN_WAIT_MS);
+    }, wait);
   }
 
   /**
@@ -709,19 +735,26 @@ export class CallSession extends DurableObject<Env> {
   }
 
   private personLeft(): void {
-    const wasOn = this.personOn;
+    const ended = legEnded(this.personMode, this.personOn);
     this.personOn = false;
     this.personLeg = null;
-    if (!wasOn) this.personUnreachable = true;
+    this.personMode = 'join';
+    if (ended === 'unreachable') this.personUnreachable = true;
     if (this.ended || this.endingCall) return;
     const name = this.setup?.person?.name ?? 'the person';
-    this.note(wasOn ? `${name} handed the call back` : `${name} didn't join (no answer or voicemail)`);
+    // The caller never stopped for a listener, so there's nothing to hand back.
+    if (ended === 'stopped-listening') {
+      this.note(`${name} stopped listening`);
+      return;
+    }
+    this.note(ended === 'handed-back' ? `${name} handed the call back` : `${name} didn't join (no answer or voicemail)`);
     this.sendLive({
       type: 'session.instructions.append',
       delegation_id: null,
-      content: wasOn
-        ? `${name} has left the call and handed it back to you. Pick up where they left off: say something short like "Hi, I'm back on for ${name}", then keep working on the task. If it's already done, say bye and hand off to hang up.`
-        : unreachableMessage(name),
+      content:
+        ended === 'handed-back'
+          ? `${name} has left the call and handed it back to you. Pick up where they left off: say something short like "Hi, I'm back on for ${name}", then keep working on the task. If it's already done, say bye and hand off to hang up.`
+          : unreachableMessage(name),
     });
   }
 

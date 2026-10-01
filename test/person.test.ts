@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test, { type TestContext } from 'node:test';
 import { readClientState, telnyx } from '../src/server/lib/telnyx';
 import type { TranscriptLine } from '../src/server/services/calls';
-import { alreadyUnreachable, mergeTranscript, unreachableMessage } from '../src/server/voice/person';
+import { alreadyUnreachable, callerHoldsFor, JOIN_WAIT_MS, joinWaitMs, legEnded, listeningMessage, mergeTranscript, unreachableMessage } from '../src/server/voice/person';
 
 const env = { TELNYX_API_KEY: 'test_api_key', TELNYX_CONNECTION_ID: 'test_connection' } as Env;
 
@@ -46,4 +46,34 @@ test('a session restarted mid-call keeps the stored transcript and adds its own 
   assert.deepEqual(mergeTranscript([], restarted), restarted);
   // Lines the stored copy already has are not duplicated.
   assert.deepEqual(mergeTranscript(stored, [stored[1], ...restarted]), [...stored, ...restarted]);
+});
+
+test('a leg rung to join is hung up if they never press 1; a listening leg is kept', () => {
+  assert.equal(joinWaitMs('join'), JOIN_WAIT_MS);
+  assert.equal(joinWaitMs('listen'), null);
+});
+
+test('the caller keeps working while the person only listens, and holds back once they join', () => {
+  // Listening, ringing or answered: the caller carries on (forced hand-offs stay on).
+  assert.equal(callerHoldsFor({ ringing: true, on: false, mode: 'listen' }), false);
+  // Pressing 1 while listening puts them on the call, and the caller holds back.
+  assert.equal(callerHoldsFor({ ringing: true, on: true, mode: 'listen' }), true);
+  // Join mode is unchanged: the caller holds back from the first ring.
+  assert.equal(callerHoldsFor({ ringing: true, on: false, mode: 'join' }), true);
+  assert.equal(callerHoldsFor({ ringing: true, on: true, mode: 'join' }), true);
+  assert.equal(callerHoldsFor({ ringing: false, on: false, mode: 'join' }), false);
+});
+
+test('hanging up while only listening tells the caller nothing; after taking over it hands back', () => {
+  assert.equal(legEnded('listen', false), 'stopped-listening');
+  assert.equal(legEnded('listen', true), 'handed-back');
+  // Join mode is unchanged.
+  assert.equal(legEnded('join', false), 'unreachable');
+  assert.equal(legEnded('join', true), 'handed-back');
+});
+
+test('connect_person while they listen says they take over by pressing 1', () => {
+  assert.match(listeningMessage('Dhanur'), /listening in/);
+  assert.match(listeningMessage('Dhanur'), /press 1/);
+  assert.doesNotMatch(listeningMessage('Dhanur'), /stay (completely )?silent/i);
 });
