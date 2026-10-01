@@ -77,7 +77,8 @@ Call sessions run in their own Worker, `call4me-voice` (`wrangler.voice.jsonc`, 
 which also takes Telnyx's media streams on `voice.call4.me`. Deploying a Worker resets the durable objects it
 defines, so with the sessions split out the site deploys freely without dropping a call. CI deploys the voice
 Worker with `scripts/deploy-voice.sh`, which skips an unchanged bundle and otherwise waits until no call is up,
-holds new calls for the few seconds the deploy takes, then deploys. The voice Worker's secrets are
+deploys, and holds new calls until the new version is serving plus a minute for Cloudflare to retire the old
+one. Never deploy it or change its secrets any other way: either restarts every live call. The voice Worker's secrets are
 `OPENAI_API_KEY`, `TELNYX_API_KEY`, `TELNYX_CONNECTION_ID`, `RAINDROP_WRITE_KEY` and `STREAM_SECRET` (the same
 value as the site's): `npx wrangler secret put <NAME> -c wrangler.voice.jsonc`.
 

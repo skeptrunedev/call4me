@@ -4,13 +4,18 @@
 # Deploying a Worker resets the durable objects it defines, and a reset VoiceSession loses its
 # live call. So this deploys only when the voice bundle changed, and only once no call is up:
 # it waits for zero active calls, locks out new ones (services/dialer.ts voiceDeployDone waits
-# on the lock), checks again, deploys, and unlocks.
+# on the lock), checks again, deploys, and unlocks only once the new version is serving and
+# Cloudflare has had time to retire the old one.
+#
+# Never deploy the voice Worker or change its secrets any other way: either restarts every call.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
 CONFIG=wrangler.voice.jsonc
 HOST=voice.call4.me
-LOCK_SECONDS=180        # new calls wait at most this long on a stuck deploy
+LOCK_SECONDS=300        # outlasts deploy + rollout + grace; expires on its own if this dies
+ROLLOUT_SECONDS=120     # longest to wait for the new version to answer /build
+GRACE_SECONDS=60        # Cloudflare can keep running the old version briefly after a deploy
 WAIT_SECONDS=3000       # longest to wait for calls to finish (calls run 30 minutes at most)
 STALE_SECONDS=7200      # active rows older than this are stuck, not live
 
@@ -48,5 +53,20 @@ while :; do
   echo "waiting on $n active call(s)"
   sleep 15
 done
-trap 'lock 0; rm -rf "$out"' EXIT
-npx wrangler deploy -c "$CONFIG" --var "VOICE_BUILD:$build"
+if ! npx wrangler deploy -c "$CONFIG" --var "VOICE_BUILD:$build"; then
+  lock 0   # nothing was deployed, so nothing to wait out
+  exit 1
+fi
+# Calls stay locked out until the new version answers and the old one has had time to retire. If
+# the new version never shows up, the lock is left to expire rather than lifted early.
+rollout=$((SECONDS + ROLLOUT_SECONDS))
+until [ "$(curl -fsS --max-time 10 "https://$HOST/build" || true)" = "$build" ]; do
+  if [ "$SECONDS" -ge "$rollout" ]; then
+    echo "deployed, but $HOST still isn't serving $build; leaving the lock to expire" >&2
+    exit 1
+  fi
+  sleep 5
+done
+sleep "$GRACE_SECONDS"
+lock 0
+echo "voice worker $build live, calls unlocked"

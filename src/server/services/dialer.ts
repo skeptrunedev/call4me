@@ -22,17 +22,14 @@ export async function streamUrl(env: Env, callId: string): Promise<string> {
   return `wss://${env.VOICE_HOST}/voice/stream/${callId}/${await hmacHex(env.STREAM_SECRET, callId)}`;
 }
 
-/** How long a new call waits on a voice Worker deploy before going ahead anyway. */
-const VOICE_DEPLOY_WAIT_MS = 60_000;
-
 /**
  * A voice Worker deploy resets every call session (scripts/deploy-voice.sh). The deploy locks
  * only once no call is up, and the call's row is already written when this runs, so either the
- * deploy sees this call and backs off, or this call sees the lock and waits it out.
+ * deploy sees this call and backs off, or this call sees the lock and waits it out. The lock is
+ * the only bound: a call never starts while it's held, and it expires on its own if a deploy dies.
  */
 async function voiceDeployDone(env: Env): Promise<void> {
-  const until = Date.now() + VOICE_DEPLOY_WAIT_MS;
-  while (Date.now() < until) {
+  for (;;) {
     const lock = await env.DB.prepare(`SELECT locked_until FROM voice_deploys WHERE id = 1`).first<{ locked_until: number }>();
     if (!lock || lock.locked_until <= Date.now()) return;
     await new Promise((r) => setTimeout(r, 1_000));
