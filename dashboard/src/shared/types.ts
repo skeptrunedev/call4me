@@ -3,6 +3,10 @@ export interface AccountRow {
   id: string;
   email: string | null;
   created_at: number;
+  /** The account's monthly reload, synced from Stripe: active, canceled, past_due, ... */
+  reload_status: string | null;
+  reload_cents: number | null;
+  reload_renews_at: number | null;
 }
 export interface TopupRow {
   account_id: string;
@@ -23,6 +27,10 @@ export interface LedgerRow {
   account_id: string;
   balance_cents: number;
   granted_cents: number;
+  /** Credits bought: top-ups and monthly reloads. */
+  funded_cents: number;
+  /** Credits used: calls and phone numbers, less refunds. Holds cancel out and aren't counted. */
+  spent_cents: number;
 }
 
 export interface Day {
@@ -55,6 +63,24 @@ export interface UserRow {
   lastCallAt: number | null;
 }
 
+export type CreditStatus = "cancelled" | "not started" | "behind" | "on pace" | "running low";
+
+/** How fast a paying user is using their credits, against how far they are into their billing month. */
+export interface CreditRow {
+  email: string;
+  plan: "monthly" | "cancelled" | "one-time";
+  /** Monthly plans: the renewal Stripe has scheduled. Others: 30 days after their latest purchase. */
+  periodEnd: number;
+  creditsCents: number;
+  spentCents: number;
+  balanceCents: number;
+  usedPct: number;
+  elapsedPct: number;
+  calls: number;
+  lastCallAt: number | null;
+  status: CreditStatus;
+}
+
 export interface Metrics {
   generatedAt: number;
   summary: {
@@ -66,6 +92,7 @@ export interface Metrics {
     grossCents: number;
     mrrCents: number;
     monthlyPlans: number;
+    cancelledPlans: number;
     repeatBuyers: number;
     spentCents: number;
     medianMinutesToPay: number | null;
@@ -75,4 +102,5 @@ export interface Metrics {
   days: Day[];
   cohorts: Cohort[];
   users: UserRow[];
+  credits: CreditRow[];
 }

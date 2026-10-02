@@ -9,6 +9,8 @@
   --accent: #1f6f5c;
   --money: #c98a1b;
   --good: #2f8f46;
+  --warn: #c2610c;
+  --bad: #c0392b;
   --sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --mono: "Geist Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
   color-scheme: light;
@@ -24,6 +26,8 @@
     --accent: #4fb89b;
     --money: #e0a943;
     --good: #5cc176;
+    --warn: #ec8a3a;
+    --bad: #ec6a5c;
     color-scheme: dark;
   }
 }
@@ -153,3 +157,18 @@ tbody tr:hover { background: var(--hover); }
   .meter { grid-template-columns: 100px minmax(0, 1fr) 64px; }
   .kpi .value { font-size: 22px; }
 }
+
+.burn { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 6fr); gap: 20px; align-items: start; }
+@media (max-width: 1240px) { .burn { grid-template-columns: minmax(0, 1fr); } }
+.burn-table { max-height: 380px; overflow-y: auto; }
+.burn-table thead th { position: sticky; top: 0; background: var(--panel); }
+.status {
+  display: inline-block;
+  padding: 1px 7px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.tip { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border: 1px solid; border-radius: 6px; font-size: 12px; }
+.burn-table .email { max-width: 200px; }

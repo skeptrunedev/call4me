@@ -1,11 +1,20 @@
-import type { AccountRow, CallRow, Cohort, Day, LedgerRow, Metrics, TopupRow, UserRow } from "../shared/types";
+import type { AccountRow, CallRow, Cohort, CreditRow, CreditStatus, Day, LedgerRow, Metrics, TopupRow, UserRow } from "../shared/types";
 
 const DAY = 24 * 60 * 60 * 1000;
 const COHORT_DAYS = 7;
-// A monthly plan counts toward MRR for 31 days after each payment, so every live subscription is counted once.
-const MRR_WINDOW = 31 * DAY;
+// Stripe statuses that still charge: the reload renews (past_due is retrying the card).
+const LIVE_RELOAD = new Set(["active", "trialing", "past_due"]);
+// Below this, a user has to buy more (or their reload has to land) before the next call of any length.
+const LOW_BALANCE_CENTS = 200;
 
 const utcDate = (ms: number) => new Date(ms).toISOString().slice(0, 10);
+
+/** The same moment one calendar month earlier, as Stripe bills monthly plans. */
+function monthBefore(ms: number): number {
+  const d = new Date(ms);
+  d.setUTCMonth(d.getUTCMonth() - 1);
+  return d.getTime();
+}
 
 function median(values: number[]): number | null {
   if (!values.length) return null;
@@ -46,7 +55,7 @@ export function computeMetrics(
   const activated = accounts.filter((a) => callsBy.has(a.id));
   const returning = activated.filter((a) => activeDays(a.id).size >= 2);
   const paying = accounts.filter((a) => topupsBy.has(a.id));
-  const monthlyLive = topups.filter((t) => t.monthly && now - t.paid_at < MRR_WINDOW);
+  const monthlyLive = accounts.filter((a) => a.reload_status && LIVE_RELOAD.has(a.reload_status));
   const firstPaid = (id: string) => Math.min(...topupsBy.get(id)!.map((t) => t.paid_at));
 
   const summary: Metrics["summary"] = {
@@ -56,8 +65,9 @@ export function computeMetrics(
     returning: returning.length,
     activeLast7: new Set(calls.filter((c) => now - c.created_at < 7 * DAY).map((c) => c.account_id)).size,
     grossCents: topups.reduce((s, t) => s + t.amount_cents, 0),
-    mrrCents: monthlyLive.reduce((s, t) => s + t.amount_cents, 0),
+    mrrCents: monthlyLive.reduce((s, a) => s + (a.reload_cents ?? 0), 0),
     monthlyPlans: monthlyLive.length,
+    cancelledPlans: accounts.filter((a) => a.reload_status === "canceled").length,
     repeatBuyers: paying.filter((a) => topupsBy.get(a.id)!.length >= 2).length,
     spentCents: calls.reduce((s, c) => s + (c.cost_cents ?? 0), 0),
     medianMinutesToPay: median(paying.map((a) => Math.max(0, firstPaid(a.id) - a.created_at) / 60000)),
@@ -133,5 +143,43 @@ export function computeMetrics(
     })
     .sort((a, b) => b.signedUpAt - a.signedUpAt);
 
-  return { generatedAt: now, summary, funnel, outcomes, days, cohorts, users };
+  const credits: CreditRow[] = paying.map((a) => {
+    const l = ledger.get(a.id);
+    const own = callsBy.get(a.id) ?? [];
+    const live = !!a.reload_status && LIVE_RELOAD.has(a.reload_status) && !!a.reload_renews_at;
+    const plan: CreditRow["plan"] = live ? "monthly" : a.reload_status === "canceled" ? "cancelled" : "one-time";
+    // A monthly plan's period is the month before its scheduled renewal; anything else gets 30 days from its latest purchase.
+    const periodEnd = live ? a.reload_renews_at! : Math.max(...topupsBy.get(a.id)!.map((t) => t.paid_at)) + 30 * DAY;
+    const periodStart = live ? monthBefore(periodEnd) : periodEnd - 30 * DAY;
+    const creditsCents = (l?.funded_cents ?? 0) + (l?.granted_cents ?? 0);
+    const spentCents = l?.spent_cents ?? 0;
+    const balanceCents = l?.balance_cents ?? 0;
+    const usedPct = creditsCents ? Math.min(100, (spentCents / creditsCents) * 100) : 0;
+    const elapsedPct = Math.min(100, Math.max(0, ((now - periodStart) / (periodEnd - periodStart)) * 100));
+    const status: CreditStatus =
+      plan === "cancelled"
+        ? "cancelled"
+        : spentCents === 0
+          ? "not started"
+          : balanceCents < LOW_BALANCE_CENTS
+            ? "running low"
+            : usedPct >= elapsedPct
+              ? "on pace"
+              : "behind";
+    return {
+      email: a.email ?? a.id,
+      plan,
+      periodEnd,
+      creditsCents,
+      spentCents,
+      balanceCents,
+      usedPct,
+      elapsedPct,
+      calls: own.length,
+      lastCallAt: own.length ? Math.max(...own.map((c) => c.created_at)) : null,
+      status,
+    };
+  });
+
+  return { generatedAt: now, summary, funnel, outcomes, days, cohorts, users, credits };
 }

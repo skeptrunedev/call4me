@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from "react";
-import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import type { Cohort, Metrics, UserRow } from "../shared/types";
+import { Bar, BarChart, CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis } from "recharts";
+import type { Cohort, CreditRow, CreditStatus, Metrics, UserRow } from "../shared/types";
 
 const usd = (cents: number) => {
   const digits = cents % 100 ? 2 : 0;
@@ -18,7 +18,7 @@ const ago = (ms: number, now: number) => {
 };
 
 // SVG fill and stroke attributes can't read CSS variables, so charts get the resolved theme colors.
-const TOKENS = ["accent", "money", "good", "muted", "line", "fg", "panel", "hover"] as const;
+const TOKENS = ["accent", "money", "good", "warn", "bad", "muted", "line", "fg", "panel", "hover"] as const;
 type Palette = Record<(typeof TOKENS)[number], string>;
 const readPalette = (): Palette => {
   const style = getComputedStyle(document.documentElement);
@@ -101,8 +101,10 @@ function Dashboard({ m }: { m: Metrics }) {
         <Kpi label="Activated" value={s.activated} note={`${pct(s.activated, s.users)} placed at least one call`} />
         <Kpi label="Returning" value={s.returning} note={`${pct(s.returning, s.activated)} of callers came back another day`} tone="key" />
         <Kpi label="Gross" value={usd(s.grossCents)} note={`${s.repeatBuyers} bought again · ${usd(s.spentCents)} spent on calls`} />
-        <Kpi label="MRR" value={usd(s.mrrCents)} note={`${s.monthlyPlans} monthly plans paid in the last 31 days`} />
+        <Kpi label="MRR" value={usd(s.mrrCents)} note={`${s.monthlyPlans} active monthly plans · ${s.cancelledPlans} cancelled`} />
       </section>
+
+      <CreditBurn credits={m.credits} now={m.generatedAt} c={c} />
 
       <section className="grid">
         <Panel title="Signups and new paying users" legend={[["var(--accent)", "Signups"], ["var(--money)", "New paying"]]}>
@@ -168,6 +170,131 @@ function Dashboard({ m }: { m: Metrics }) {
 
       <Users users={m.users} now={m.generatedAt} />
     </>
+  );
+}
+
+// Most at risk of not renewing first.
+const STATUSES: { key: CreditStatus; label: string; tone: keyof Palette; meaning: string }[] = [
+  { key: "cancelled", label: "Cancelled", tone: "muted", meaning: "turned off their monthly reload" },
+  { key: "not started", label: "Not started", tone: "bad", meaning: "paid but hasn't used any credits" },
+  { key: "behind", label: "Behind", tone: "warn", meaning: "using credits slower than the month is passing" },
+  { key: "on pace", label: "On pace", tone: "good", meaning: "will use their credits by renewal" },
+  { key: "running low", label: "Running low", tone: "money", meaning: "under $2 left, needs more soon" },
+];
+const daysUntil = (ms: number, now: number) => {
+  const d = Math.round((ms - now) / 86_400_000);
+  return d <= 0 ? "today" : d === 1 ? "in 1 day" : `in ${d} days`;
+};
+
+function CreditBurn({ credits, now, c }: { credits: CreditRow[]; now: number; c: Palette }) {
+  const xMax = Math.max(10, Math.ceil(Math.max(0, ...credits.map((r) => r.elapsedPct)) / 10) * 10);
+  const rank = (st: CreditStatus) => STATUSES.findIndex((x) => x.key === st);
+  const rows = [...credits].sort((a, b) => rank(a.status) - rank(b.status) || a.periodEnd - b.periodEnd);
+  return (
+    <section className="panel wide">
+      <div className="panel-head">
+        <h2>Credit burn: who's on track to renew</h2>
+        <div className="legend">
+          {STATUSES.map((st) => (
+            <span key={st.key} title={st.meaning}>
+              <i style={{ background: c[st.tone] }} />
+              {st.label} {credits.filter((r) => r.status === st.key).length}
+            </span>
+          ))}
+        </div>
+      </div>
+      <div className="burn">
+        <div className="burn-chart">
+          <ResponsiveContainer width="100%" height={300}>
+            <ScatterChart margin={{ top: 8, right: 16, bottom: 20, left: 12 }}>
+              <CartesianGrid stroke={c.line} />
+              <XAxis
+                type="number"
+                dataKey="elapsedPct"
+                domain={[0, xMax]}
+                tickFormatter={(v) => `${v}%`}
+                stroke={c.muted}
+                fontSize={11}
+                tickLine={false}
+                label={{ value: "Billing month elapsed", position: "insideBottom", offset: -12, fill: c.muted, fontSize: 11 }}
+              />
+              <YAxis
+                type="number"
+                dataKey="usedPct"
+                domain={[0, 100]}
+                tickFormatter={(v) => `${v}%`}
+                stroke={c.muted}
+                fontSize={11}
+                tickLine={false}
+                width={40}
+                label={{ value: "Credits used", angle: -90, position: "left", offset: 0, fill: c.muted, fontSize: 11 }}
+              />
+              <ZAxis range={[60, 60]} />
+              <ReferenceLine segment={[{ x: 0, y: 0 }, { x: xMax, y: xMax }]} stroke={c.muted} strokeDasharray="4 4" ifOverflow="hidden" />
+              <Tooltip
+                cursor={{ stroke: c.line }}
+                content={({ payload }) => {
+                  const r = payload?.[0]?.payload as CreditRow | undefined;
+                  if (!r) return null;
+                  return (
+                    <div className="tip" style={{ background: c.panel, borderColor: c.line, color: c.fg }}>
+                      <strong>{r.email}</strong>
+                      <span>
+                        {Math.round(r.usedPct)}% of {usd(r.creditsCents)} used · {Math.round(r.elapsedPct)}% into the month
+                      </span>
+                      <span>
+                        {r.plan === "monthly" ? `Renews ${daysUntil(r.periodEnd, now)}` : r.plan === "cancelled" ? "Monthly reload cancelled" : "One-time purchase"}
+                      </span>
+                    </div>
+                  );
+                }}
+              />
+              {STATUSES.map((st) => (
+                <Scatter key={st.key} isAnimationActive={false} data={credits.filter((r) => r.status === st.key)} fill={c[st.tone]} fillOpacity={0.85} />
+              ))}
+            </ScatterChart>
+          </ResponsiveContainer>
+          <p className="foot">
+            Each dot is a paying user. Above the dashed line, they'll use their credits before renewal. Monthly plans use the renewal Stripe has scheduled; one-time buyers get 30 days from their latest purchase.
+          </p>
+        </div>
+        <div className="scroll burn-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Plan</th>
+                <th className="num">Used</th>
+                <th className="num">Left</th>
+                <th>Last call</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => {
+                const st = STATUSES[rank(r.status)];
+                return (
+                  <tr key={r.email}>
+                    <td className="email" title={r.email}>{r.email}</td>
+                    <td>
+                      <span className="status" style={{ color: c[st.tone], borderColor: c[st.tone] }} title={st.meaning}>
+                        {st.label}
+                      </span>
+                    </td>
+                    <td>{r.plan === "monthly" ? `monthly, renews ${daysUntil(r.periodEnd, now)}` : r.plan}</td>
+                    <td className="num">
+                      {usd(r.spentCents)} <span className="muted">/ {usd(r.creditsCents)}</span>
+                    </td>
+                    <td className="num">{usd(r.balanceCents)}</td>
+                    <td>{r.lastCallAt ? ago(r.lastCallAt, now) : <span className="muted">never</span>}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
   );
 }
 

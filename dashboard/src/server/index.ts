@@ -60,13 +60,17 @@ app.use("*", async (c, next) => {
 
 app.get("/api/metrics", async (c) => {
   const [accounts, topups, calls, ledger] = await c.env.DB.batch([
-    c.env.DB.prepare("SELECT id, email, created_at FROM accounts"),
+    c.env.DB.prepare("SELECT id, email, created_at, reload_status, reload_cents, reload_renews_at FROM accounts"),
     c.env.DB.prepare("SELECT account_id, amount_cents, paid_at, monthly FROM topups WHERE status = 'paid' AND account_id IS NOT NULL"),
     c.env.DB.prepare(
       "SELECT account_id, created_at, direction, status, billed_seconds, cost_cents, json_extract(outcome, '$.result') AS result FROM calls",
     ),
     c.env.DB.prepare(
-      "SELECT account_id, SUM(amount_cents) AS balance_cents, SUM(CASE WHEN kind = 'adjustment' THEN amount_cents ELSE 0 END) AS granted_cents FROM ledger GROUP BY account_id",
+      `SELECT account_id, SUM(amount_cents) AS balance_cents,
+         SUM(CASE WHEN kind = 'adjustment' THEN amount_cents ELSE 0 END) AS granted_cents,
+         SUM(CASE WHEN kind IN ('topup', 'reload') THEN amount_cents ELSE 0 END) AS funded_cents,
+         -SUM(CASE WHEN kind IN ('call', 'number', 'refund') THEN amount_cents ELSE 0 END) AS spent_cents
+       FROM ledger GROUP BY account_id`,
     ),
   ]);
   return c.json(
