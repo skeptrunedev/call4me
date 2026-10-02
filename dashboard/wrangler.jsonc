@@ -1,0 +1,28 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "call4me-dashboard",
+  "main": "src/server/index.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  // Only reachable through Cloudflare Access on dash.call4.me: no workers.dev or preview URLs.
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "dash.call4.me", "custom_domain": true }],
+  "assets": {
+    "directory": "dist/client",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    // Every request, assets included, passes the Access check in the Worker first.
+    "run_worker_first": true
+  },
+  // The callbay production database, read only from here.
+  "d1_databases": [{ "binding": "DB", "database_name": "callbay", "database_id": "34bce7a3-4d5d-46cf-af21-bddecf0c1f93" }],
+  "observability": { "enabled": true },
+  "vars": {
+    // Public values: the Access team's issuer and this app's audience tag (npm run access:configure).
+    "ACCESS_TEAM_DOMAIN": "https://skeptrune.cloudflareaccess.com",
+    "ACCESS_AUD": "db844f48972cad87f7f5e7fc1a7579c134bfcf9251d4677cc36ffa32dd8eeac3",
+    "ALLOWED_EMAILS": "nick@morphllm.com,me@skeptrune.com,nicholas.khami@gmail.com",
+    "INTERNAL_EMAILS": "me@skeptrune.com,nicholas.khami@gmail.com,khamikeira@gmail.com,chatgpt-review@call4.me,claude-review@call4.me"
+  }
+}
