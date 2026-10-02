@@ -124,6 +124,13 @@ Weekends are agent-only: builds, fixes and logs, with no calls (most phone lines
 - 4 of those calls added to /examples. Rules for customer-call posts are in `docs/examples.md`: every call embedded, dead air trimmed, names and IDs muted, and the business muted where it shows where the customer goes.
 - Call bugs these calls surfaced, not yet fixed: our side hung up mid-question once, our caller went silent after a person answered, it spoke to keypad menus and talked over voice menus, and it gave a wrong callback number.
 
+**Fri Oct 2, done:**
+- 3 posts from test calls placed at about 2:18 pm Pacific, all three reaching a person ($5.25): [Allstate customer service number](https://call4.me/blog/allstate-customer-service-number) (leads with "allstate phone number", 50,000/mo, KD 0), [cancel Audible](https://call4.me/blog/cancel-audible) (about 70,000/mo across the cancel searches, KD 0) and [Fabletics customer service](https://call4.me/blog/fabletics-customer-service) (24,000/mo plus "how to cancel fabletics membership", 8,800, both KD 0; no fabletics.com page in the top 10).
+- Top 10 check before dialing dropped Delta (delta.com holds 6 of 10) and PayPal (paypal.com holds 4 of 5). Expedia and Priceline were dropped because neither publishes a phone number on its own site (sign-in flows and an AI agent), so the number can't be confirmed first.
+- **Routes that reached a person:** Allstate, say "no" to claims, give a reason, answer the ZIP and home-ownership questions (it guessed "Michigan" from our 248 area code). Audible, press the 3 digits it reads out (270, then 550 after it warns it will disconnect), and 2 for pause or cancel. Fabletics, say you don't have the account's phone number twice and it transfers to a person.
+- Allstate's claims page lists 800-255-7828 (1-800-ALLSTATE) separately from the 800-726-6033 call center; the post gives both.
+- The OpenAI account behind call4me ran out of credit during these calls (`credit_balance_exhausted`; the Fabletics recap failed on it).
+
 ## The days
 
 ### Week 1: foundation, launch links, template (Oct 1 to 4)
