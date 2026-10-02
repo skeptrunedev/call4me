@@ -13,7 +13,8 @@ Tire Center order lookup, a junk removal quote and booking, a doctor's visit
 switched to video, a private dining room quote, a lawyer consultation booked
 at a negotiated fee, a pharmacy stock check for a medication in shortage, an Etihad complaint
 follow-up, a new patient booking at a primary care practice, and a pair of dress
-shoes put on hold at a Men's Wearhouse for same day pickup. For a customer call, first
+shoes put on hold at a Men's Wearhouse for same day pickup, and a Spectrum retention call
+published only up to where the user joined it. For a customer call, first
 confirm the dialed number is the business's published number and not the
 account's own phone: one "pizzeria" order turned out to be the owner's phone.
 For medical calls, also mute anything that would identify the practice's
