@@ -3,7 +3,7 @@ import { Raindrop, type Interaction } from 'raindrop-ai';
 import { ACTIVE, calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
 import { dtmfFrames, FRAME_MS } from './dtmf';
-import { connectCheckMessage, forcedHandoffMessage, MenuRecovery, missedHandoff } from './handoff';
+import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, missedHandoff } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { BACK_OFFICE_TOOLS } from './prompt';
 
@@ -52,6 +52,10 @@ const MENU_QUIET_MS = 3_000;
 /** A back-office run that never reports back stops blocking new ones after this long. */
 const BACK_OFFICE_STALE_MS = QUESTION_WAIT_MS + 15_000;
 const MAX_FORCED_HANDOFFS = 12;
+/** While a question is out to the person: quiet before the caller says it's still checking, then how often it repeats. */
+const HOLDING_LINE_QUIET_MS = 8_000;
+const HOLDING_LINE_REPEAT_MS = 15_000;
+const MAX_HOLDING_LINES = 4;
 /**
  * The alarm doubles as a heartbeat that outlives this instance: Cloudflare can reset a session
  * mid-call, and a fresh instance with no phone stream first asks Telnyx to reattach it, then
@@ -145,6 +149,9 @@ export class VoiceSession extends DurableObject<Env> {
   private toolsRunning = 0;
   /** ask_user calls waiting on the person, by question id. */
   private waiting = new Map<string, (answer: string) => void>();
+  /** The latest question still out to the person, and how many "still checking" lines it has had. */
+  private holding: { question: string; lines: number; lastAt: number } | null = null;
+  private holdingTimer: ReturnType<typeof setTimeout> | null = null;
   /** The person's own phone leg while it rings or is on the call; the caller stays silent while they talk. */
   private personLeg: string | null = null;
   private personOn = false;
@@ -445,6 +452,7 @@ export class VoiceSession extends DurableObject<Env> {
         this.appendTranscript('them', delta);
         if (delta) this.menuRecovery.observe(delta, Date.now());
         this.scheduleHandoffCheck();
+        this.scheduleHoldingLine();
         // Barge-in: GPT-Live stops generating when talked over, but audio already queued at
         // Telnyx keeps playing. If the model has gone quiet while playback is still ahead,
         // that queued audio is stale: flush it.
@@ -459,6 +467,7 @@ export class VoiceSession extends DurableObject<Env> {
         if (!this.endingCall && !this.personOn) {
           this.appendTranscript('caller', (ev as { delta: string }).delta);
           this.scheduleHandoffCheck();
+          this.scheduleHoldingLine();
         }
         break;
       case 'session.delegation.created':
@@ -869,6 +878,8 @@ export class VoiceSession extends DurableObject<Env> {
     if (!question) return 'no question given';
     const db = calls(this.env.DB);
     const qid = await db.ask(s.callId, question);
+    this.holding = { question, lines: 0, lastAt: 0 };
+    this.scheduleHoldingLine();
     const answer = await new Promise<string | null>((resolve) => {
       const timer = setTimeout(() => resolve(null), QUESTION_WAIT_MS);
       this.waiting.set(qid, (a) => {
@@ -877,6 +888,7 @@ export class VoiceSession extends DurableObject<Env> {
       });
     });
     this.waiting.delete(qid);
+    if (!this.waiting.size) this.holding = null;
     return answer === null
       ? 'No answer came in time. Tell them you will check and call back about that, and carry on with anything else. If it comes in later, the caller is told directly.'
       : `Answer: ${answer} (the caller has already been given it to say)`;
@@ -898,6 +910,37 @@ export class VoiceSession extends DurableObject<Env> {
 
   private hangup(reason: string): Promise<void> {
     return this.shutdown(reason);
+  }
+
+  // ---- keeping the line warm while the person answers
+
+  /** Check for dead air once the line has been quiet long enough since the last words, our audio, or the last holding line. */
+  private scheduleHoldingLine(): void {
+    if (!this.holding || this.ended || this.endingCall) return;
+    if (this.holdingTimer) clearTimeout(this.holdingTimer);
+    const quietSince = Math.max(this.lastTranscriptAt, this.playbackEndsAt);
+    const due = Math.max(quietSince + HOLDING_LINE_QUIET_MS, this.holding.lastAt + HOLDING_LINE_REPEAT_MS);
+    this.holdingTimer = setTimeout(() => this.holdingLine(), Math.max(0, due - Date.now()));
+  }
+
+  /**
+   * The voice model is told to keep chatting while it waits for an answer, but it only speaks when
+   * it hears something. If someone is waiting on us (not a hold, a transfer or a phone menu), have
+   * it say it's still checking. New words on the line reschedule this; nothing fires on hold.
+   */
+  private holdingLine(): void {
+    this.holdingTimer = null;
+    const h = this.holding;
+    if (!h || !this.waiting.size || this.ended || this.endingCall || this.personHolds() || h.lines >= MAX_HOLDING_LINES) return;
+    const quietSince = Math.max(this.lastTranscriptAt, this.playbackEndsAt);
+    if (Date.now() - quietSince < HOLDING_LINE_QUIET_MS) return this.scheduleHoldingLine();
+    const lastThem = [...this.transcript].reverse().find((l) => l.role === 'them');
+    if (!lastThem || isPhoneMenu(lastThem.text) || asksUsToWait(lastThem.text) || this.menuRecovery.pending()) return;
+    this.mark(`line quiet ${Math.round((Date.now() - quietSince) / 1000)}s while a question is out; saying the caller is still checking`);
+    this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: holdingLineMessage(h.question, this.setup?.person?.name ?? 'the person you work for', h.lines) });
+    h.lines++;
+    h.lastAt = Date.now();
+    this.scheduleHoldingLine();
   }
 
   // ---- transcript
@@ -993,6 +1036,7 @@ export class VoiceSession extends DurableObject<Env> {
   private async teardown(reason: string): Promise<void> {
     this.ended = true;
     if (this.handoffTimer) clearTimeout(this.handoffTimer);
+    if (this.holdingTimer) clearTimeout(this.holdingTimer);
     console.log('call session ending:', reason);
     const s = await this.load();
     if (s?.controlId && reason !== 'hangup webhook') {

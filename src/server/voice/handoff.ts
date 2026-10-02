@@ -26,6 +26,17 @@ export function isPhoneMenu(text: string): boolean {
   return MENU.some((re) => re.test(text));
 }
 
+const HOLD_REQUEST = /\b(?:please hold|on hold|hold on|hold time|wait time|next available|in (?:the )?queue|caller number|hang on|bear with me|stay on the line|remain on the line|(?:one|just a|give me a) (?:sec(?:ond)?|moment|minute)|let me (?:check|see|look|pull)|(?:being )?transferr?(?:ed|ing))\b/i;
+
+/**
+ * The other side's latest sentence asked us to wait (a hold, a transfer, "let me check"), so any
+ * quiet that follows is theirs to break, not ours.
+ */
+export function asksUsToWait(text: string): boolean {
+  const sentences = text.trim().split(/[.?!]+\s+/);
+  return HOLD_REQUEST.test(sentences[sentences.length - 1] ?? '');
+}
+
 const PROMISES = [
   /\b(?:let me|lemme) (?:check|see|look|find out)\b/i,
   /\b(?:one|just a) (?:sec(?:ond)?|moment|minute)\b/i,
@@ -143,6 +154,16 @@ export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[
 
 Latest conversation:
 ${recent}`;
+}
+
+/**
+ * A question is out to the person and the line has gone quiet with someone waiting on us. GPT-Live
+ * only speaks when it hears something, so without this it sits silent until the answer lands
+ * (Spectrum heard 41s of nothing after "Already sent" while a one-time code came back).
+ */
+export function holdingLineMessage(question: string, owner: string, nth: number): string {
+  const line = nth === 0 ? '"Sorry, still checking on that, one sec."' : '"Still waiting to hear back, thanks for bearing with me."';
+  return `You're still waiting on ${owner}'s answer to: "${question.slice(0, 300)}". The line has gone quiet and they're waiting on you. Say one short casual line like ${line} and then wait. Don't make up the answer.`;
 }
 
 /**
