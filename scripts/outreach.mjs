@@ -12,7 +12,8 @@
  *   npm run outreach -- email <id> <subject> [body file] [--dry-run]
  *                                                      email them from me@skeptrune.com (gws-gmail
  *                                                      profile) and mark sent; body defaults to their
- *                                                      message, blank lines separate paragraphs
+ *                                                      message, blank lines separate paragraphs; someone
+ *                                                      who already replied or was won keeps that status
  *
  * Add --local to any command to use the local D1. The channel is the first contact we have:
  * X, then email, then other_contact.
@@ -121,7 +122,9 @@ if (command === 'import') {
   const gmailId = JSON.parse(out.slice(out.indexOf('{'))).id ?? fail(`gws returned no message id: ${out}`);
   const now = Date.now();
   const notes = [p.notes, `${new Date(now).toISOString().slice(0, 10)}: emailed ${p.email}, gmail id ${gmailId}`].filter(Boolean).join('\n');
-  d1(`UPDATE outreach SET status = 'sent', sent_via = 'email', sent_at = ${now}, notes = ${sql(notes)}, updated_at = ${now} WHERE id = ${sql(p.id)}`);
+  // A follow-up to someone who already answered keeps their status; only a first touch becomes 'sent'.
+  const status = ['replied', 'won'].includes(p.status) ? p.status : 'sent';
+  d1(`UPDATE outreach SET status = ${sql(status)}, sent_via = 'email', sent_at = ${now}, notes = ${sql(notes)}, updated_at = ${now} WHERE id = ${sql(p.id)}`);
   console.log(`emailed ${p.name} <${p.email}>: ${gmailId}`);
 } else {
   fail('usage: npm run outreach -- import|list|show|draft|sent|status|set|email ... (see scripts/outreach.mjs)');
