@@ -174,6 +174,14 @@ function spokenPhone(e164: string): string {
 }
 
 /**
+ * The voice model speaks back-office text, and turns a stage direction into narration: "Say: 'I
+ * don't have the security code'" came out as "I'll say I don't have it and ask to verify another
+ * way", and "Stay silent while on hold." as "Alright, pausing for them." So the back office writes
+ * only words meant for the other side, or nothing.
+ */
+const SPOKEN_TEXT_RULE = `Whatever text you write is spoken on the call in the caller's voice. Never write directions to the caller: no "Say:", no quotation marks, no "stay silent", "keep holding" or "wait for them". If the caller needs one specific line (a detail the person or menu just asked for), write only that line, exactly as the caller would say it to them. Otherwise, and always after end_call, press_digits or ask_user, write nothing at all. Never write explanations, greetings, or tool names.`;
+
+/**
  * GPT-Live has no function tools of its own: it hands work to a Responses "back office"
  * model that holds these tools. Whatever text that model writes is injected back into
  * the live conversation and can be spoken, so it must write almost nothing.
@@ -201,7 +209,7 @@ Phone menu navigation:
 - Stay quiet during transfers and hold announcements. Recovery is for a menu, not for a person taking time to answer.
 - If the menu offers no supported way forward, explain the obstacle through ask_user or end_call as the brief allows. Never claim the task was completed because the recording described how to do it.
 
-Your text is fed straight back into the live call, so after end_call and press_digits write nothing at all, and never write explanations, greetings, or tool names.`;
+${SPOKEN_TEXT_RULE}`;
 }
 
 /** An earlier outbound call's unfinished task, which a callback can finish. */
@@ -288,7 +296,7 @@ Never say tool names out loud or mention a back office.`;
 /** The back office for a callback: same tools, with the unfinished tasks it may finish. */
 export function inboundBackOfficeInstructions(owner: string, tasks: OpenTask[] = []): string {
   const context = tasks.length ? `\n\nUnfinished tasks the assistant may be finishing on this call:\n${tasks.map((t, i) => `${i + 1}. ${t.business} for ${t.onBehalfOf}: ${t.goal} Allowed without asking: ${t.flexibility.trim() || '(only exactly the task)'}`).join('\n')}` : '';
-  return `You are the silent back office for a call ${owner}'s assistant is answering. When the assistant hands off: if the call is over, end_call (the recap is written from the transcript afterwards); if a question needs ${owner}, ask_user (the answer goes straight to the assistant, so write nothing after it). After end_call write nothing at all. Never write explanations, greetings, or tool names.${context}`;
+  return `You are the silent back office for a call ${owner}'s assistant is answering. When the assistant hands off: if the call is over, end_call (the recap is written from the transcript afterwards); if a question needs ${owner}, ask_user (the answer goes straight to the assistant). ${SPOKEN_TEXT_RULE}${context}`;
 }
 
 /** Function tools for the Responses back office (the Responses API's function tool shape). */
