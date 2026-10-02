@@ -16,6 +16,7 @@ import { recordingDescription, recordingInput, recordingOutput } from '../lib/re
 import { buyNumberDescription, buyNumberInput, listNumbersDescription, numbersOutput, ownNumberInput, releaseNumberDescription, releaseNumberInput, removeOwnNumberDescription, verifyNumberDescription, verifyNumberInput } from '../lib/number-schema';
 import { mayCall, NumberError, numbers, type NumberView, type OwnNumberView } from '../services/numbers';
 import { getCallRecordings } from '../services/recordings';
+import { isScheduledId, scheduledCalls, scheduledText, scheduledView, type ScheduledInput, type ScheduledView } from '../services/scheduled';
 
 /**
  * The call4me MCP server: the handful of tools a coding agent needs to make a phone call
@@ -94,6 +95,8 @@ The caller can only say what you give it, so everything is collected BEFORE dial
 6. Tell the user the outcome in a line or two.
 
 To put the user on a call themselves: pass connect_when to call4me_place_call (e.g. "as soon as a person picks up", to skip a long hold), or call call4me_connect_me mid-call. Give the user a heads up before placing a call that may ring them, and before call4me_connect_me. Tell them why and use the actual call's calling_number from call4me_get_call; for a new call, use the selected owned number when known and confirm it from the place_call result. If the first number has not been assigned yet, explain that upfront and show it as soon as place_call returns. Their phone rings and they join the call by pressing 1; the caller goes quiet, and takes over again when they press * or hang up. To have them listen in without taking over, pass listen_in: true to call4me_place_call (they hear the call from the moment the business answers) or mode: "listen" to call4me_connect_me: nobody on the call hears them, the caller keeps working, and they press 1 anytime to take over. To end a call early, use call4me_hang_up.
+
+To make a call later (the business is closed now, or the user wants it at a set time), gather everything the same way and use call4me_schedule_call with call_at in the business's hours. It is checked now and dialed then, when nobody may be following it, so give it every fact and all the flexibility it needs. Tell the user when it will dial. call4me_list_calls shows what is scheduled, call4me_get_call with its sched_ id shows how it went, and call4me_cancel_scheduled_call calls it off.
 
 Calls go out from the account's own numbers: its free US number, plus any it bought (${agents ? 'call4me_list_numbers, call4me_buy_number' : 'call4me_get_balance lists them'}). Businesses in the US, Canada and Europe can always be called (Europe from a European number when the account holds one, else from its US number), and ${ABROAD_CALLING}; anywhere else, once the account holds a number in that country, and the call goes out from it.
 
@@ -205,6 +208,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
   const intake = catalog(surface);
   const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION, title: 'call4me', websiteUrl: deps.origin }, { instructions: instructions(surface), jsonSchemaValidator: new CfWorkerJsonSchemaValidator() });
   const db = calls(env.DB);
+  const sched = scheduledCalls(env.DB);
 
   const guard = (fn: () => Promise<CallToolResult>) => async (): Promise<CallToolResult> => {
     try {
@@ -215,6 +219,26 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       return fail('something broke on the server; try again in a moment.');
     }
   };
+
+  // What a call needs, shared by call4me_place_call and call4me_schedule_call.
+  const placeInput = z.object({
+    to: z.string().min(3).max(40).describe('the number to call, e.g. "+14155550123", "(415) 555-0123", or abroad with its country code, e.g. "+31 20 123 4567"'),
+    business: z.string().min(1).max(120).describe('who you are calling, as a person would say it: "Nopa", "Dr. Chen\'s office", "Toyota of Berkeley service"'),
+    goal: z.string().min(5).max(1500).describe('what the call should achieve, in plain words: "Book a table for 4 tomorrow (Sat Oct 3) around 7pm under Khami."'),
+    category: z.enum(intake.slugs).describe('the kind of call; decides what must be known first (see call4me_get_requirements)'),
+    details: z.record(z.string(), z.string().max(1000)).optional().describe(`answers to the category's fields by key, e.g. ${health ? '{"reason":"annual physical","patient_status":"existing","availability":"weekday mornings next week"}' : '{"party_size":"4","date":"Sat Oct 3","time_window":"7pm, anything 6:30-8"}'}. Profile fields (${health ? 'name, DOB, phone, insurance' : 'name, phone, address'}...) are filled from the saved profile only when the call is for the profile's owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner's are never used.`),
+    on_behalf_of: z.string().min(1).max(80).optional().describe('who the call is for, as the caller should say it (default: the profile\'s full_name). The caller calls FOR this person; it never claims to be them.'),
+    facts: z.string().max(3000).optional().describe('anything else the caller may share beyond the category\'s fields, one per line'),
+    flexibility: z.string().max(1500).optional().describe('what the caller may accept without asking: "any time 6:30-8pm", "a different day this week is fine", "up to $300". Anything outside this becomes a question to you.'),
+    timezone: z.string().max(60).optional().describe('IANA time zone of the business, e.g. "America/Los_Angeles", so "tomorrow" is unambiguous'),
+    connect_when: z.string().max(300).optional().describe('when to ring the user and patch them into the call without being asked, e.g. "as soon as a person picks up" (skip the hold) or "if they need to speak to me". Rings the phone in their profile. They hand the call back to the caller by pressing * or hanging up.'),
+    listen_in: z.boolean().optional().describe('ring the user as soon as the business answers so they can listen in: nobody on the call hears them and the caller keeps working. They press 1 anytime to take over, or hang up to stop listening. Rings the phone in their profile.'),
+    max_minutes: z.number().int().min(1).max(LIMITS.maxMinutes).optional().describe(`optional cap on talk time. Without it a call runs as long as the balance covers (up to ${LIMITS.maxMinutes / 60} hours) and holds that much; set it to leave credits free for a second call at the same time`),
+    voice: z.enum(VOICES).optional().describe('caller voice (default marin); hear each at https://call4.me/voices'),
+    caller_name: z.string().max(30).optional().describe('a first name the caller introduces itself with, e.g. "Jordan", for this call only (default: the profile\'s assistant_name, else none: just "<user>\'s assistant"). Put the caller\'s name and company here, never in the goal: the caller\'s identity comes only from these fields.'),
+    calling_as: z.string().min(1).max(80).optional().describe('a company the caller calls from, e.g. "Acme": it introduces itself as "Jordan from Acme" (or "calling from Acme" without caller_name) instead of "<user>\'s assistant", and callbacks to the number it called from answer as that company. Calling for several companies: pass the company on every call and give each one its own number (from), so callbacks reach the right identity.'),
+    from: z.string().max(40).optional().describe(`which of the account's numbers to call from (default: a call4me number in the callee's country)${agents ? '. May be one of the user\'s own verified numbers (call4me_verify_number), for businesses in its country: they see it and call back the user directly' : ''}`),
+  });
 
   server.registerTool(
     'call4me_get_recordings',
@@ -232,24 +256,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       title: 'Place a phone call',
       description:
         `Call a business for the user (US, Canada, Europe, the UAE and Japan, or any other country the account holds a number in, some at their own per-minute price: ${Object.entries(DESTINATION_PRICE_CENTS).map(([c, cents]) => `${c} ${dollars(cents)}`).join(', ')}; see ${agents ? 'call4me_list_numbers' : 'call4me_get_balance'}) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category's required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with call4me_get_call. Credits for the maximum length are held up front; billed per minute of talk time; unanswered calls are free.`,
-      inputSchema: z.object({
-        to: z.string().min(3).max(40).describe('the number to call, e.g. "+14155550123", "(415) 555-0123", or abroad with its country code, e.g. "+31 20 123 4567"'),
-        business: z.string().min(1).max(120).describe('who you are calling, as a person would say it: "Nopa", "Dr. Chen\'s office", "Toyota of Berkeley service"'),
-        goal: z.string().min(5).max(1500).describe('what the call should achieve, in plain words: "Book a table for 4 tomorrow (Sat Oct 3) around 7pm under Khami."'),
-        category: z.enum(intake.slugs).describe('the kind of call; decides what must be known first (see call4me_get_requirements)'),
-        details: z.record(z.string(), z.string().max(1000)).optional().describe(`answers to the category's fields by key, e.g. ${health ? '{"reason":"annual physical","patient_status":"existing","availability":"weekday mornings next week"}' : '{"party_size":"4","date":"Sat Oct 3","time_window":"7pm, anything 6:30-8"}'}. Profile fields (${health ? 'name, DOB, phone, insurance' : 'name, phone, address'}...) are filled from the saved profile only when the call is for the profile's owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner's are never used.`),
-        on_behalf_of: z.string().min(1).max(80).optional().describe('who the call is for, as the caller should say it (default: the profile\'s full_name). The caller calls FOR this person; it never claims to be them.'),
-        facts: z.string().max(3000).optional().describe('anything else the caller may share beyond the category\'s fields, one per line'),
-        flexibility: z.string().max(1500).optional().describe('what the caller may accept without asking: "any time 6:30-8pm", "a different day this week is fine", "up to $300". Anything outside this becomes a question to you.'),
-        timezone: z.string().max(60).optional().describe('IANA time zone of the business, e.g. "America/Los_Angeles", so "tomorrow" is unambiguous'),
-        connect_when: z.string().max(300).optional().describe('when to ring the user and patch them into the call without being asked, e.g. "as soon as a person picks up" (skip the hold) or "if they need to speak to me". Rings the phone in their profile. They hand the call back to the caller by pressing * or hanging up.'),
-        listen_in: z.boolean().optional().describe('ring the user as soon as the business answers so they can listen in: nobody on the call hears them and the caller keeps working. They press 1 anytime to take over, or hang up to stop listening. Rings the phone in their profile.'),
-        max_minutes: z.number().int().min(1).max(LIMITS.maxMinutes).optional().describe(`optional cap on talk time. Without it a call runs as long as the balance covers (up to ${LIMITS.maxMinutes / 60} hours) and holds that much; set it to leave credits free for a second call at the same time`),
-        voice: z.enum(VOICES).optional().describe('caller voice (default marin); hear each at https://call4.me/voices'),
-        caller_name: z.string().max(30).optional().describe('a first name the caller introduces itself with, e.g. "Jordan", for this call only (default: the profile\'s assistant_name, else none: just "<user>\'s assistant"). Put the caller\'s name and company here, never in the goal: the caller\'s identity comes only from these fields.'),
-        calling_as: z.string().min(1).max(80).optional().describe('a company the caller calls from, e.g. "Acme": it introduces itself as "Jordan from Acme" (or "calling from Acme" without caller_name) instead of "<user>\'s assistant", and callbacks to the number it called from answer as that company. Calling for several companies: pass the company on every call and give each one its own number (from), so callbacks reach the right identity.'),
-        from: z.string().max(40).optional().describe(`which of the account's numbers to call from (default: a call4me number in the callee's country)${agents ? '. May be one of the user\'s own verified numbers (call4me_verify_number), for businesses in its country: they see it and call back the user directly' : ''}`),
-      }),
+      inputSchema: placeInput,
       annotations: DIALS,
     }),
     (async (args: Parameters<typeof placeCall>[3]) =>
@@ -261,27 +268,68 @@ export function createCall4meServer(deps: McpDeps): McpServer {
   );
 
   server.registerTool(
+    'call4me_schedule_call',
+    titled({
+      title: 'Schedule a phone call',
+      description:
+        'Place a call later instead of now: when the business is closed, or the user wants it made at a set time ("call Canby Utility Monday morning to register the meters"). Takes everything call4me_place_call takes, plus call_at, and checks it the same way now, so "Not calling yet" comes back while the user is here. At call_at, call4me places it exactly as call4me_place_call would: credits are held then, not now. Nobody may be following the call when it runs, so give the caller every fact (details, facts) and everything it may accept (flexibility) up front; a question nobody answers ends with the caller saying the user will call back. Returns a scheduled id (sched_...): call4me_get_call with it shows whether it dialed and then the call itself, and call4me_cancel_scheduled_call cancels it before it dials. A call that needs an account PIN can\'t be scheduled, since call4me never stores one.',
+      inputSchema: placeInput.extend({
+        call_at: z.string().min(10).max(40).describe('when to dial: the business\'s local time like "2026-10-05T09:15" together with timezone, or an ISO time with its offset like "2026-10-05T09:15:00-07:00". Pick a time the business is open and answering (a little after opening beats right at it). Up to 60 days ahead; dials within a minute of it.'),
+      }),
+      annotations: DIALS,
+    }),
+    (async (args: ScheduledInput & { call_at: string }) =>
+      guard(async () => {
+        const { call_at, ...input } = args;
+        const v = scheduledView(await sched.schedule(account, input, call_at, surface));
+        return ok(`scheduled ${v.id}: call4me calls ${v.business} at ${v.number} ${v.call_at_local ?? v.call_at} (${v.call_at}). Tell the user when it will happen. Check on it with call4me_get_call ${v.id}; cancel with call4me_cancel_scheduled_call.`, v);
+      })()) as never,
+  );
+
+  server.registerTool(
+    'call4me_cancel_scheduled_call',
+    titled({
+      title: 'Cancel a scheduled call',
+      description: 'Cancel a call made with call4me_schedule_call before it dials. Once it has dialed, it is a live call: end it with call4me_hang_up.',
+      inputSchema: z.object({ scheduled_id: z.string().min(1).max(40).describe('the id from call4me_schedule_call, e.g. "sched_ab12..."') }),
+      annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+    }),
+    (async (args: { scheduled_id: string }) =>
+      guard(async () => {
+        const v = scheduledView(await sched.cancel(account.id, args.scheduled_id));
+        return ok(scheduledText(v), v);
+      })()) as never,
+  );
+
+  server.registerTool(
     'call4me_get_call',
     titled({
       title: 'Check on a call',
       description:
-        'Status, open questions, live transcript, and (when finished) the outcome of a call. With wait_seconds it waits for something to change (a new question, the call ending) before returning, so poll with wait_seconds: 30.',
-      inputSchema: z.object({ call_id: callIdArg, wait_seconds: z.number().int().min(0).max(50).default(0).describe('wait up to this long for the call to finish or ask a question') }),
+        'Status, open questions, live transcript, and (when finished) the outcome of a call. With wait_seconds it waits for something to change (a new question, the call ending) before returning, so poll with wait_seconds: 30. Takes a scheduled id (sched_...) too: before it dials, when it will; after, the call it became.',
+      inputSchema: z.object({ call_id: z.string().min(1).max(40).describe('the call id from call4me_place_call ("call_ab12..."), or the scheduled id from call4me_schedule_call ("sched_ab12...")'), wait_seconds: z.number().int().min(0).max(50).default(0).describe('wait up to this long for the call to finish or ask a question') }),
       annotations: RO,
     }),
     (async (args: { call_id: string; wait_seconds: number }) =>
       guard(async () => {
+        let callId = args.call_id;
+        let scheduled: ScheduledView | null = null;
+        if (isScheduledId(callId)) {
+          scheduled = scheduledView(await sched.forAccount(account.id, callId));
+          if (!scheduled.call_id) return ok(scheduledText(scheduled), { scheduled, finished: ['failed', 'canceled'].includes(scheduled.status) });
+          callId = scheduled.call_id;
+        }
         const deadline = Date.now() + args.wait_seconds * 1000;
-        let row = await db.forAccount(account.id, args.call_id);
+        let row = await db.forAccount(account.id, callId);
         let qs = await db.questions(row.id);
         const openAtStart = qs.filter((q) => !q.answer).length;
         while (Date.now() < deadline && !callView(row, qs).finished && qs.filter((q) => !q.answer).length <= openAtStart) {
           await new Promise((r) => setTimeout(r, 1500));
-          row = await db.forAccount(account.id, args.call_id);
+          row = await db.forAccount(account.id, callId);
           qs = await db.questions(row.id);
         }
         const v = callView(row, qs, await db.callbacksFor(row.id));
-        return ok(callText(v), v);
+        return scheduled ? ok(`${scheduledText(scheduled)}\n\n${callText(v)}`, { ...v, scheduled }) : ok(callText(v), v);
       })()) as never,
   );
 
@@ -353,18 +401,20 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     'call4me_list_calls',
     titled({
       title: 'List recent calls',
-      description: 'Recent calls on this account, newest first, including callbacks the account\'s number answered (direction "inbound"): a callback about an unfinished task (callback_for) tried to finish it, anything else took a message.',
+      description: 'Recent calls on this account, newest first, including callbacks the account\'s number answered (direction "inbound"): a callback about an unfinished task (callback_for) tried to finish it, anything else took a message. Calls scheduled for later (call4me_schedule_call) that have not dialed yet come first.',
       inputSchema: z.object({ limit: z.number().int().min(1).max(50).default(10) }),
       annotations: RO,
     }),
     (async (args: { limit: number }) =>
       guard(async () => {
-        const rows = await db.list(account.id, args.limit);
+        const [rows, upcoming] = await Promise.all([db.list(account.id, args.limit), sched.upcoming(account.id)]);
         const views = rows.map((r) => callView(r, []));
-        const text = views.length
-          ? views.map((v) => `${v.id} · ${v.created_at.slice(0, 16).replace('T', ' ')} · ${v.direction} · ${v.status} · ${v.business} ${v.number}${v.callback_for ? ` · callback for ${v.callback_for}` : ''}${v.outcome ? ` · ${v.outcome.summary}` : ''}`).join('\n')
-          : 'no calls yet';
-        return ok(text, { calls: views.map((v) => ({ ...v, transcript: undefined })) });
+        const scheduled = upcoming.map(scheduledView);
+        const lines = [
+          ...scheduled.map(scheduledText),
+          ...views.map((v) => `${v.id} · ${v.created_at.slice(0, 16).replace('T', ' ')} · ${v.direction} · ${v.status} · ${v.business} ${v.number}${v.callback_for ? ` · callback for ${v.callback_for}` : ''}${v.outcome ? ` · ${v.outcome.summary}` : ''}`),
+        ];
+        return ok(lines.join('\n') || 'no calls yet', { calls: views.map((v) => ({ ...v, transcript: undefined })), ...(scheduled.length ? { scheduled } : {}) });
       })()) as never,
   );
 

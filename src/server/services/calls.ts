@@ -103,6 +103,8 @@ export class CallError extends Error {
   constructor(
     message: string,
     public status = 400,
+    /** The call row this refusal left behind (failed), when it got that far. */
+    public callId: string | null = null,
   ) {
     super(message);
   }
@@ -151,12 +153,12 @@ export const billedCents = (talkSeconds: number, pricePerMinuteCents: number) =>
 
 export function calls(db: D1Database) {
   return {
-    /** Validate, check money and limits, and record the call as queued. Dialing is the caller's next step. */
     /**
-     * Returns the call plus its per-call secrets (account PINs): those reach the caller's
-     * instructions but are never written to the database.
+     * Everything placing this call would refuse, short of money: the category's intake, who it is
+     * for, the numbers, and the caller's name. Scheduling a call checks it now, and placing it
+     * checks it again when it dials.
      */
-    async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number, surface: Surface = 'agents'): Promise<{ call: CallRow; secrets: { label: string; value: string }[]; to: Dialable }> {
+    async validate(account: Account, input: PlaceCallInput, surface: Surface = 'agents', tool = 'call4me_place_call') {
       const { bySlug, slugs } = catalog(surface);
       const category = bySlug(input.category);
       if (!category) throw new CallError(`category must be one of: ${slugs.join(', ')}`);
@@ -165,7 +167,7 @@ export function calls(db: D1Database) {
       // must never borrow the owner's address, insurance or date of birth to fill that person's gaps.
       const forSomeoneElse = isSomeoneElse(input.on_behalf_of, profile.full_name);
       const intake = resolveIntake(category, input.details ?? {}, forSomeoneElse ? {} : profile);
-      if (intake.missing.length || intake.invalid.length) throw new CallError(missingMessage(category, intake, forSomeoneElse ? input.on_behalf_of!.trim() : null), 422);
+      if (intake.missing.length || intake.invalid.length) throw new CallError(missingMessage(category, intake, forSomeoneElse ? input.on_behalf_of!.trim() : null, tool), 422);
       const onBehalfOf = input.on_behalf_of?.trim() || profile.full_name || account.display_name;
       if (!onBehalfOf) throw new CallError('on_behalf_of: who is this call for? Pass their name, or save full_name with call4me_save_profile.', 422);
 
@@ -192,6 +194,16 @@ export function calls(db: D1Database) {
 
       const blocked = await db.prepare(`SELECT reason FROM blocked_numbers WHERE number = ?`).bind(to.e164).first<{ reason: string }>();
       if (blocked) throw new CallError('this number asked not to be called by call4me', 403);
+      return { category, intake, onBehalfOf, to, callerName, callingAs };
+    },
+
+    /** Validate, check money and limits, and record the call as queued. Dialing is the caller's next step. */
+    /**
+     * Returns the call plus its per-call secrets (account PINs): those reach the caller's
+     * instructions but are never written to the database.
+     */
+    async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number, surface: Surface = 'agents'): Promise<{ call: CallRow; secrets: { label: string; value: string }[]; to: Dialable }> {
+      const { category, intake, onBehalfOf, to, callerName, callingAs } = await this.validate(account, input, surface);
 
       // Credits up front: the call holds its maximum cost now and settles when it ends.
       const balance = await accounts(db).balanceCents(account.id);

@@ -363,8 +363,8 @@ function alternatives(category: Category, f: IntakeField): string {
 }
 
 /** The message an agent gets back when it tried to call too early: exactly what to ask. */
-export function missingMessage(category: Category, r: Resolved, forSomeoneElse: string | null = null): string {
-  const lines = [`Not calling yet: a ${category.name.toLowerCase()} call needs more information from the user. Ask them (in one message), then call call4me_place_call again with the answers in "details":`];
+export function missingMessage(category: Category, r: Resolved, forSomeoneElse: string | null = null, tool = 'call4me_place_call'): string {
+  const lines = [`Not calling yet: a ${category.name.toLowerCase()} call needs more information from the user. Ask them (in one message), then call ${tool} again with the answers in "details":`];
   for (const f of r.missing) lines.push(`- ${f.key}${alternatives(category, f)}: ${f.ask}`);
   for (const { field, problem } of r.invalid) lines.push(`- ${field.key}: ${problem}`);
   if (forSomeoneElse) {
