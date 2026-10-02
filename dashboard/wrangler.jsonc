@@ -15,8 +15,9 @@
     // Every request, assets included, passes the Access check in the Worker first.
     "run_worker_first": true
   },
-  // The callbay production database, read only from here.
-  "d1_databases": [{ "binding": "DB", "database_name": "callbay", "database_id": "34bce7a3-4d5d-46cf-af21-bddecf0c1f93" }],
+  // The callbay production database, read only from here. "remote" makes local dev (npm run dev) read
+  // the real data too, since a local copy would be empty.
+  "d1_databases": [{ "binding": "DB", "database_name": "callbay", "database_id": "34bce7a3-4d5d-46cf-af21-bddecf0c1f93", "remote": true }],
   "observability": { "enabled": true },
   "vars": {
     // Public values: the Access team's issuer and this app's audience tag (npm run access:configure).

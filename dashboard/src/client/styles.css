@@ -104,7 +104,6 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .bars { display: flex; flex-direction: column; gap: 10px; }
 .meter { display: grid; grid-template-columns: 130px minmax(0, 1fr) 80px; align-items: center; gap: 10px; font-size: 13px; }
-.meter-label { text-transform: capitalize; }
 .meter-track { height: 10px; background: var(--hover); border-radius: 3px; overflow: hidden; }
 .meter-fill { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
 .meter-fill.good { background: var(--good); }

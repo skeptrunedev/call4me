@@ -2,7 +2,11 @@ import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } 
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import type { Cohort, Metrics, UserRow } from "../shared/types";
 
-const usd = (cents: number) => `$${(cents / 100).toLocaleString("en-US", { maximumFractionDigits: cents % 100 ? 2 : 0 })}`;
+const usd = (cents: number) => {
+  const digits = cents % 100 ? 2 : 0;
+  return `$${(cents / 100).toLocaleString("en-US", { minimumFractionDigits: digits, maximumFractionDigits: digits })}`;
+};
+const sentence = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).replace(/_/g, " ");
 const minutes = (m: number | null) => (m === null ? "–" : m < 1 ? "under a minute" : `${Math.round(m)} min`);
 const pct = (n: number, d: number) => (d ? `${Math.round((n / d) * 100)}%` : "–");
 const shortDate = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
@@ -13,12 +17,23 @@ const ago = (ms: number, now: number) => {
   return m < 60 ? `${m}m ago` : m < 48 * 60 ? `${Math.round(m / 60)}h ago` : `${Math.round(m / 1440)}d ago`;
 };
 
-const axis = { stroke: "var(--muted)", fontSize: 11, tickLine: false, axisLine: false } as const;
-const tooltip = {
-  contentStyle: { background: "var(--panel)", border: "1px solid var(--line)", borderRadius: 6, fontSize: 12 },
-  labelStyle: { color: "var(--fg)" },
-  cursor: { fill: "var(--hover)" },
-} as const;
+// SVG fill and stroke attributes can't read CSS variables, so charts get the resolved theme colors.
+const TOKENS = ["accent", "money", "good", "muted", "line", "fg", "panel", "hover"] as const;
+type Palette = Record<(typeof TOKENS)[number], string>;
+const readPalette = (): Palette => {
+  const style = getComputedStyle(document.documentElement);
+  return Object.fromEntries(TOKENS.map((t) => [t, style.getPropertyValue(`--${t}`).trim()])) as Palette;
+};
+function usePalette(): Palette {
+  const [palette, setPalette] = useState(readPalette);
+  useEffect(() => {
+    const scheme = matchMedia("(prefers-color-scheme: dark)");
+    const update = () => setPalette(readPalette());
+    scheme.addEventListener("change", update);
+    return () => scheme.removeEventListener("change", update);
+  }, []);
+  return palette;
+}
 
 export function App() {
   const [data, setData] = useState<Metrics | null>(null);
@@ -70,6 +85,13 @@ export function App() {
 
 function Dashboard({ m }: { m: Metrics }) {
   const s = m.summary;
+  const c = usePalette();
+  const axis = { stroke: c.muted, fontSize: 11, tickLine: false, axisLine: false } as const;
+  const tooltip = {
+    contentStyle: { background: c.panel, border: `1px solid ${c.line}`, borderRadius: 6, fontSize: 12, color: c.fg },
+    labelStyle: { color: c.fg },
+    cursor: { fill: c.hover },
+  } as const;
   const days = m.days.map((d) => ({ ...d, label: shortDate(d.date), revenue: d.revenueCents / 100 }));
   return (
     <>
@@ -86,36 +108,36 @@ function Dashboard({ m }: { m: Metrics }) {
         <Panel title="Signups and new paying users" legend={[["var(--accent)", "Signups"], ["var(--money)", "New paying"]]}>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={days} barGap={2}>
-              <CartesianGrid vertical={false} stroke="var(--line)" />
+              <CartesianGrid vertical={false} stroke={c.line} />
               <XAxis dataKey="label" {...axis} />
               <YAxis allowDecimals={false} width={28} {...axis} />
               <Tooltip {...tooltip} />
-              <Bar dataKey="signups" name="Signups" fill="var(--accent)" radius={[3, 3, 0, 0]} />
-              <Bar dataKey="newPaying" name="New paying" fill="var(--money)" radius={[3, 3, 0, 0]} />
+              <Bar isAnimationActive={false} dataKey="signups" name="Signups" fill={c.accent} radius={[3, 3, 0, 0]} />
+              <Bar isAnimationActive={false} dataKey="newPaying" name="New paying" fill={c.money} radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Panel>
         <Panel title="Revenue per day">
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={days}>
-              <CartesianGrid vertical={false} stroke="var(--line)" />
+              <CartesianGrid vertical={false} stroke={c.line} />
               <XAxis dataKey="label" {...axis} />
               <YAxis width={40} tickFormatter={(v) => `$${v}`} {...axis} />
               <Tooltip {...tooltip} formatter={(v) => [`$${v}`, "Revenue"]} />
-              <Bar dataKey="revenue" fill="var(--money)" radius={[3, 3, 0, 0]} />
+              <Bar isAnimationActive={false} dataKey="revenue" fill={c.money} radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Panel>
         <Panel title="Daily usage" legend={[["var(--accent)", "Users who called"], ["var(--muted)", "Calls"], ["var(--good)", "Calls fully done"]]}>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={days}>
-              <CartesianGrid vertical={false} stroke="var(--line)" />
+              <CartesianGrid vertical={false} stroke={c.line} />
               <XAxis dataKey="label" {...axis} />
               <YAxis allowDecimals={false} width={28} {...axis} />
-              <Tooltip {...tooltip} cursor={{ stroke: "var(--line)" }} />
-              <Line dataKey="activeCallers" name="Users who called" stroke="var(--accent)" strokeWidth={2} dot={false} />
-              <Line dataKey="calls" name="Calls" stroke="var(--muted)" strokeWidth={1.5} dot={false} />
-              <Line dataKey="doneCalls" name="Calls fully done" stroke="var(--good)" strokeWidth={1.5} dot={false} />
+              <Tooltip {...tooltip} cursor={{ stroke: c.line }} />
+              <Line isAnimationActive={false} dataKey="activeCallers" name="Users who called" stroke={c.accent} strokeWidth={2} dot={false} />
+              <Line isAnimationActive={false} dataKey="calls" name="Calls" stroke={c.muted} strokeWidth={1.5} dot={false} />
+              <Line isAnimationActive={false} dataKey="doneCalls" name="Calls fully done" stroke={c.good} strokeWidth={1.5} strokeDasharray="4 3" dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </Panel>
@@ -138,7 +160,7 @@ function Dashboard({ m }: { m: Metrics }) {
         <Panel title="Call outcomes">
           <div className="bars">
             {m.outcomes.map((o) => (
-              <Meter key={o.result} label={o.result.replace(/_/g, " ")} value={o.calls} max={m.outcomes[0]?.calls ?? 1} text={String(o.calls)} tone={o.result === "done" ? "good" : undefined} />
+              <Meter key={o.result} label={sentence(o.result)} value={o.calls} max={m.outcomes[0]?.calls ?? 1} text={String(o.calls)} tone={o.result === "done" ? "good" : undefined} />
             ))}
           </div>
         </Panel>
