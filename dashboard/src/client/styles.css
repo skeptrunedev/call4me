@@ -172,3 +172,26 @@ tbody tr:hover { background: var(--hover); }
 }
 .tip { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border: 1px solid; border-radius: 6px; font-size: 12px; }
 .burn-table .email { max-width: 200px; }
+
+/* Sortable headers: the whole label is the button. */
+th:has(> .sort) { padding: 0; }
+.sort {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 6px 8px;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  white-space: nowrap;
+}
+th.num .sort { justify-content: flex-end; }
+.sort:hover, .sort.on { color: var(--fg); }
+.sort:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.sort .arrow { font-size: 9px; opacity: 0.45; }
+.sort.on .arrow { opacity: 1; color: var(--accent); }

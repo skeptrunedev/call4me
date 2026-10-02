@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis } from "recharts";
 import type { Cohort, CreditRow, CreditStatus, Metrics, UserRow } from "../shared/types";
+import { useSort, type SortValue } from "./sort";
 
 const usd = (cents: number) => {
   const digits = cents % 100 ? 2 : 0;
@@ -186,10 +187,24 @@ const daysUntil = (ms: number, now: number) => {
   return d <= 0 ? "today" : d === 1 ? "in 1 day" : `in ${d} days`;
 };
 
+const rank = (st: CreditStatus) => STATUSES.findIndex((x) => x.key === st);
+type CreditCol = "email" | "status" | "plan" | "used" | "left" | "lastCall";
+const creditValue = (r: CreditRow, key: CreditCol): SortValue =>
+  ({
+    email: r.email,
+    status: rank(r.status),
+    // Monthly plans sort by renewal date, ahead of one-time and cancelled.
+    plan: r.plan === "monthly" ? r.periodEnd : r.plan === "one-time" ? Number.MAX_SAFE_INTEGER - 1 : Number.MAX_SAFE_INTEGER,
+    used: r.usedPct,
+    left: r.balanceCents,
+    lastCall: r.lastCallAt,
+  })[key];
+
 function CreditBurn({ credits, now, c }: { credits: CreditRow[]; now: number; c: Palette }) {
   const xMax = Math.max(10, Math.ceil(Math.max(0, ...credits.map((r) => r.elapsedPct)) / 10) * 10);
-  const rank = (st: CreditStatus) => STATUSES.findIndex((x) => x.key === st);
-  const rows = [...credits].sort((a, b) => rank(a.status) - rank(b.status) || a.periodEnd - b.periodEnd);
+  // Riskiest first, then soonest renewal; sorting by a column keeps this order within ties.
+  const byRisk = useMemo(() => [...credits].sort((a, b) => rank(a.status) - rank(b.status) || a.periodEnd - b.periodEnd), [credits]);
+  const { sorted: rows, th } = useSort(byRisk, creditValue, { key: "status", dir: "asc" });
   return (
     <section className="panel wide">
       <div className="panel-head">
@@ -262,12 +277,12 @@ function CreditBurn({ credits, now, c }: { credits: CreditRow[]; now: number; c:
           <table>
             <thead>
               <tr>
-                <th>Email</th>
-                <th>Status</th>
-                <th>Plan</th>
-                <th className="num">Used</th>
-                <th className="num">Left</th>
-                <th>Last call</th>
+                {th("email", "Email")}
+                {th("status", "Status")}
+                {th("plan", "Plan")}
+                {th("used", "Used", { numeric: true })}
+                {th("left", "Left", { numeric: true })}
+                {th("lastCall", "Last call", { numeric: true, align: "start" })}
               </tr>
             </thead>
             <tbody>
@@ -341,24 +356,29 @@ function Meter({ label, value, max, text, tone }: { label: string; value: number
   );
 }
 
+type CohortCol = "date" | "users" | `day${number}`;
+const cohortValue = (c: Cohort, key: CohortCol): SortValue => {
+  if (key === "date") return c.date;
+  if (key === "users") return c.size;
+  const d = c.days[Number(key.slice(3))];
+  return d ? d.active / d.eligible : null;
+};
+
 function CohortTable({ cohorts }: { cohorts: Cohort[] }) {
   const width = cohorts[0]?.days.length ?? 0;
+  const { sorted, th } = useSort(cohorts, cohortValue, { key: "date", dir: "asc" });
   return (
     <div className="scroll">
       <table className="cohort">
         <thead>
           <tr>
-            <th>Signed up</th>
-            <th className="num">Users</th>
-            {Array.from({ length: width }, (_, n) => (
-              <th key={n} className="num">
-                Day {n}
-              </th>
-            ))}
+            {th("date", "Signed up")}
+            {th("users", "Users", { numeric: true })}
+            {Array.from({ length: width }, (_, n) => th(`day${n}`, `Day ${n}`, { numeric: true }))}
           </tr>
         </thead>
         <tbody>
-          {cohorts.map((c) => (
+          {sorted.map((c) => (
             <tr key={c.date}>
               <td>{shortDate(c.date)}</td>
               <td className="num">{c.size}</td>
@@ -380,10 +400,23 @@ function CohortTable({ cohorts }: { cohorts: Cohort[] }) {
 }
 
 type Filter = "all" | "paying" | "free";
+type UserCol = "email" | "signedUp" | "paid" | "calls" | "activeDays" | "lastCall" | "balance";
+const userValue = (u: UserRow, key: UserCol): SortValue =>
+  ({
+    email: u.email,
+    signedUp: u.signedUpAt,
+    // Free users sort by the credits we gave them, below everyone who paid.
+    paid: u.paidCents || u.grantedCents / 1000,
+    calls: u.calls,
+    activeDays: u.activeDays,
+    lastCall: u.lastCallAt,
+    balance: u.balanceCents,
+  })[key];
 
 function Users({ users, now }: { users: UserRow[]; now: number }) {
   const [filter, setFilter] = useState<Filter>("all");
-  const shown = users.filter((u) => filter === "all" || (filter === "paying" ? u.paidCents > 0 : u.paidCents === 0));
+  const filtered = useMemo(() => users.filter((u) => filter === "all" || (filter === "paying" ? u.paidCents > 0 : u.paidCents === 0)), [users, filter]);
+  const { sorted: shown, th } = useSort(filtered, userValue, { key: "signedUp", dir: "desc" });
   return (
     <section className="panel wide">
       <div className="panel-head">
@@ -400,13 +433,13 @@ function Users({ users, now }: { users: UserRow[]; now: number }) {
         <table className="users">
           <thead>
             <tr>
-              <th>Email</th>
-              <th>Signed up</th>
-              <th className="num">Paid</th>
-              <th className="num">Calls</th>
-              <th className="num">Days active</th>
-              <th>Last call</th>
-              <th className="num">Balance</th>
+              {th("email", "Email")}
+              {th("signedUp", "Signed up", { numeric: true, align: "start" })}
+              {th("paid", "Paid", { numeric: true })}
+              {th("calls", "Calls", { numeric: true })}
+              {th("activeDays", "Days active", { numeric: true })}
+              {th("lastCall", "Last call", { numeric: true, align: "start" })}
+              {th("balance", "Balance", { numeric: true })}
             </tr>
           </thead>
           <tbody>
