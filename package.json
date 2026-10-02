@@ -17,6 +17,7 @@
     "outreach": "node scripts/outreach.mjs",
     "transfer": "node scripts/transfer-credits.mjs",
     "template": "tsx scripts/email-template.ts",
+    "recap": "tsx scripts/recap.ts",
     "password-user": "node scripts/create-password-user.mjs",
     "plugin:zip": "rm -f dist/call4me-chatgpt-plugin.zip && mkdir -p dist && cd chatgpt-plugin && zip -qr ../dist/call4me-chatgpt-plugin.zip . -x '*.svg'",
     "openapi:generate": "tsx scripts/generate-openapi.ts",
