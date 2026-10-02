@@ -25,6 +25,7 @@ import fplPhoneNumber from './fpl-phone-number.md';
 import fedexCustomerServiceNumber from './fedex-customer-service-number.md';
 import unitedChangeFlight from './united-change-flight.md';
 import unitedhealthcarePhoneNumber from './unitedhealthcare-phone-number.md';
+import needDressShoesToday from './need-dress-shoes-today.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -58,4 +59,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'fedex-customer-service-number', markdown: fedexCustomerServiceNumber },
   { slug: 'united-change-flight', markdown: unitedChangeFlight },
   { slug: 'unitedhealthcare-phone-number', markdown: unitedhealthcarePhoneNumber },
+  { slug: 'need-dress-shoes-today', markdown: needDressShoesToday },
 ];
