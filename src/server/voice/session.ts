@@ -58,6 +58,8 @@ const HOLDING_LINE_REPEAT_MS = 15_000;
 const MAX_HOLDING_LINES = 4;
 /** Quiet after the caller's last words before it checks the other side is still there. */
 const STILL_THERE_QUIET_MS = 10_000;
+/** After a "still there?", how long nobody speaks before the call is given up. */
+const NOBODY_THERE_MS = 120_000;
 /**
  * The alarm doubles as a heartbeat that outlives this instance: Cloudflare can reset a session
  * mid-call, and a fresh instance with no phone stream first asks Telnyx to reattach it, then
@@ -157,6 +159,7 @@ export class VoiceSession extends DurableObject<Env> {
   private holding: { question: string; lines: number; lastAt: number } | null = null;
   private holdingTimer: ReturnType<typeof setTimeout> | null = null;
   private stillThereTimer: ReturnType<typeof setTimeout> | null = null;
+  private nobodyThereTimer: ReturnType<typeof setTimeout> | null = null;
   /** The caller line that last got a "still there?", so one silence gets one. */
   private stillThereFor = 0;
   /** The person's own phone leg while it rings or is on the call; the caller stays silent while they talk. */
@@ -458,6 +461,10 @@ export class VoiceSession extends DurableObject<Env> {
         if (!this.heardThem) this.mark('first words from them');
         this.heardThem = true;
         const delta = (ev as { delta: string }).delta;
+        if (delta && this.nobodyThereTimer) {
+          clearTimeout(this.nobodyThereTimer);
+          this.nobodyThereTimer = null;
+        }
         this.appendTranscript('them', delta);
         if (delta) this.menuRecovery.observe(delta, Date.now());
         this.scheduleHandoffCheck();
@@ -978,6 +985,12 @@ export class VoiceSession extends DurableObject<Env> {
     this.stillThereFor = last.at;
     this.mark(`line quiet ${Math.round((Date.now() - quietSince) / 1000)}s after the caller spoke; asking if they're still there`);
     this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: 'They\'ve gone quiet. Say "Hello, are you still there?" and then wait.' });
+    // Anything they say clears this; two more minutes of nothing means nobody's there.
+    this.nobodyThereTimer ??= setTimeout(() => {
+      this.nobodyThereTimer = null;
+      // Quiet on their side is ours to fill while the person is on or a question is out to them.
+      if (!this.holding && !this.personHolds()) void this.hangup(`nobody spoke for ${NOBODY_THERE_MS / 60_000} minutes after "are you still there?"`);
+    }, NOBODY_THERE_MS);
   }
 
   // ---- transcript
@@ -1075,6 +1088,7 @@ export class VoiceSession extends DurableObject<Env> {
     if (this.handoffTimer) clearTimeout(this.handoffTimer);
     if (this.holdingTimer) clearTimeout(this.holdingTimer);
     if (this.stillThereTimer) clearTimeout(this.stillThereTimer);
+    if (this.nobodyThereTimer) clearTimeout(this.nobodyThereTimer);
     console.log('call session ending:', reason);
     const s = await this.load();
     if (s?.controlId && reason !== 'hangup webhook') {
