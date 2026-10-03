@@ -131,6 +131,12 @@ Weekends are agent-only: builds, fixes and logs, with no calls (most phone lines
 - Allstate's claims page lists 800-255-7828 (1-800-ALLSTATE) separately from the 800-726-6033 call center; the post gives both.
 - The OpenAI account behind call4me ran out of credit during these calls (`credit_balance_exhausted`; the Fabletics recap failed on it).
 
+**Sat Oct 3, call research done:**
+- Selected Fubo, Factor and HelloFresh cancellation pages from fresh Ahrefs US metrics and results showing independent guides can rank. Exact keyword demand is 15,000, 12,000 and 8,800 searches per month respectively; these are not traffic forecasts.
+- Nick authorized informational calls. Five calls completed around 11 am Pacific ($7.00), reaching humans at all three businesses. The first Fubo attempt reached only its automated assistant; repeating the human request and choosing customer service worked on the second. Factor received a second call to clarify conflicting deadline and deletion answers. No account was cancelled or changed.
+- Saved recordings and raw transcripts outside git. Sanitized findings and call record links are in [the page briefs](seo/next-pages.md). Factor's representatives and website still disagree about the cutoff, and its iOS deletion flow remains unverified. Drafts must retain those limits.
+- Remaining today: review audio, prepare the three drafts, then Nick reviews each before publication. No new pages are live from this batch yet.
+
 ## The days
 
 ### Week 1: foundation, launch links, template (Oct 1 to 4)
@@ -158,7 +164,7 @@ Still open from launch day: analytics with signup source tracking; Nick to creat
 
 **Sat Oct 3 (agent): data model**
 
-**Updated priority, Oct 3:** prepare more pages aimed at high volume searches with attainable results. The [next page batch](seo/next-pages.md), checked against fresh Ahrefs US metrics and search result snapshots, prioritizes Fubo cancellation (15,000/month), Factor cancellation (12,000/month) and HelloFresh cancellation (8,800/month). Each needs a live representative test call and Nick's review. Informational call approval is pending; preparation can proceed today. Improve the existing Fabletics page instead of making a duplicate cancellation guide. The data model remains queued below.
+**Updated priority, Oct 3:** prepare more pages aimed at high volume searches with attainable results. The [next page batch](seo/next-pages.md), checked against fresh Ahrefs US metrics and search result snapshots, prioritizes Fubo cancellation (15,000/month), Factor cancellation (12,000/month) and HelloFresh cancellation (8,800/month). Nick authorized informational calls, and all three reached live representatives around 11 am Pacific today. Recordings and transcripts are private, outside git. The next steps are resolving source discrepancies, reviewing audio and drafting each guide for Nick's review before publication. Improve the existing Fabletics page instead of making a duplicate cancellation guide. The data model remains queued below.
 
 - D1 `companies` and `test_calls` tables: company, page type, the number dialed and its source, when we called, each step of the phone tree (menu prompt, what we pressed or said, time spent), rep interactions, what was needed, the outcome, links to the call record.
 - A script that turns a finished call's transcript into a draft phone-tree write-up for review.

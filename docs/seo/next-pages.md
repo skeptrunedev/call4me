@@ -14,7 +14,7 @@ Ahrefs US keyword metrics pulled October 3. Volumes below are for the exact keyw
 
 Fubo's related wording, `how to cancel fubo subscription`, has 9,900 monthly searches and difficulty 0. Its September 22 snapshot also shows Goal and Xpendy ranking. Do not add variant volumes together and describe the total as unique searchers or expected traffic.
 
-All three are uncovered in the current blog. Each needs a real test call that reaches a person, reviewed audio, an accurate guide, and Nick's review before publication. No test calls have been placed for this batch yet. Confirmation to contact these businesses was requested October 3.
+All three are uncovered in the current blog. Nick authorized informational calls October 3, and all three reached live representatives that morning. These were general cancellation inquiries, with no accounts cancelled or changed. Raw recordings and transcripts are preserved outside git. Reviewed audio, an accurate draft and Nick's review are still required before publication.
 
 ## Factor page brief
 
@@ -22,11 +22,19 @@ Proposed slug: `/blog/cancel-factor`.
 
 Lead with how to deactivate the meal plan, the order cutoff, and how skipping a week differs from cancelling. Answer desktop and iOS separately. Explain what to confirm about an order already being processed, without promising a refund.
 
-Primary source: [Factor's cancellation guide](https://www.factor75.com/about/how-to-cancel-factor-subscription). Its desktop instructions use Plan Settings, Status, Deactivate My Plan, and Deactivate Now. It describes the cutoff as 11:59 pm Pacific, five days before delivery. The source's iOS instructions use a different route; ask support to clarify the difference between plan deactivation and account deletion before drafting that section.
+Primary source: [Factor's cancellation guide](https://www.factor75.com/about/how-to-cancel-factor-subscription). Its desktop instructions use Plan Settings, Status, Deactivate My Plan, and Deactivate Now. Its skip section describes the cutoff as 11:59 pm PST, five days before delivery. The source's iOS instructions use a different route; reconcile plan deactivation and account deletion before drafting that section.
 
 Call brief: identify the call as a general inquiry for a cancellation guide. Ask how to cancel by phone, what verification is required, whether already scheduled boxes are affected, the cutoff and timezone, how to obtain confirmation, and what happens to prepaid orders. Do not claim to be a member, invent an order, buy anything, or change an account. Record each menu prompt and how a live representative is reached.
 
-Contact verification: the official [Factor for Business accessibility page](https://business.factor75.com/pages/accessibility) lists 888-573-5727. Confirm that the consumer Factor site publishes the same customer care number before dialing; a business service number alone does not establish the consumer support route. Confirm phone hours as well.
+Contact verified on the consumer [Factor bundles page](https://www.factor75.com/pages/add-ons/bundles): (888) 573 5727, weekends 7 am to 7 pm Eastern. Our October 3 call reached a representative through the account cancellation menu.
+
+Call findings: support said cancellation is available through the website, app or phone. Phone verification needs the account holder's full name and email. Cancelling after the cutoff can leave the next box in progress. A confirmation email should arrive within 24 hours. Skipping one week differs from cancelling the subscription. Support said to cancel the subscription before requesting account deletion.
+
+Unresolved source conflict: both representatives said 9:59 pm Pacific and gave delivery dependent cutoff days. The second also said a week before delivery, which does not consistently match those weekday examples. The consumer page says 11:59 pm PST five days before delivery in its skip section. Do not publish either time as a universal cancellation deadline. Ask support to confirm the deadline for the customer's actual delivery schedule. Its iOS instructions also pass through Delete Account and Continue to deactivate; do not equate plan deactivation with completed data deletion. [First call record](https://call4.me/account/calls/call_ampuihy0z6tbtndq), [clarification call](https://call4.me/account/calls/call_sjachenxq4n1xcuq).
+
+Upcoming order distinction: the second representative said cancelling the account does not itself cancel an upcoming order, and recommended cancelling or skipping that order, saving, then cancelling the subscription. Confirm the next order's status separately. Do not promise that plan deactivation alone prevents the next box.
+
+iOS and data deletion remain unverified: the first representative described a separate deletion request taking weeks. The second said Delete Account then Continue deletes data, but the question paraphrased the button rather than using the exact Continue to deactivate label from the website. We did not test the app. Prefer the sourced desktop deactivation instructions until the actual iOS flow is checked; these calls do not establish when data is erased.
 
 ## Fubo page brief
 
@@ -36,7 +44,13 @@ Lead with which company bills the subscription, then the cancellation route. Sep
 
 Primary source: [Fubo's US cancellation guide](https://support.fubo.tv/hc/en-us/articles/360021527991-How-do-I-Cancel-My-Fubo-Subscription). Use the US page, not a Canadian help article, for US billing rules. Verify the current US article before asserting trial timing, refund terms, third party billing routes or menu labels.
 
-Contact source: [Fubo's own contact page](https://www.fubo.tv/news/sports/contact-us/) lists 844-441-3826. The page is dated 2019; corroborate through the current support site and confirm today's phone hours before calling.
+Contact verified on the current [Fubo support contact page](https://support.fubo.tv/hc/en-us/articles/360015151672-How-do-I-Contact-Fubo-Support): (844) 441 3826, 10 am to 10 pm Eastern daily.
+
+Call route: the first attempt reached only Alex, Fubo's automated assistant. The second reached a human after selecting English, explicitly asking for a human representative, repeating that request when the assistant offered to help, and choosing customer service when it offered departments. General questions did not require inventing an account. [Human call record](https://call4.me/account/calls/call_medk6zeduwjiocgy).
+
+Call findings: direct Fubo subscriptions can be cancelled on the website or by phone; the Fubo app has no cancellation control. Phone support asks for the account email and last four card digits. Roku billing needs cancellation through Roku. Direct free trials end immediately on cancellation, while paid plans continue through the paid billing period. Support said successful cancellation sends an email, and billing handles disputed later charges. The call did not establish refund eligibility; the representative referred that question to another department.
+
+Primary policy qualifications: the [US cancellation policy](https://support.fubo.tv/hc/en-us/articles/360004457571-What-Is-Fubo-s-Cancellation-Policy) says no refunds for prepaid or partial months, Roku free trials continue until their scheduled end, and promotional commitments can carry an early cancellation fee. These are website findings, not answers obtained from the representative. Do not promise refunds, no fees for every plan, or immediate termination for every trial. The representative said Apple billing is not currently offered; the current US guide lists direct Fubo and Roku routes. Do not add generic Apple instructions without evidence.
 
 Call brief: ask whether phone cancellation is available, which subscriptions support can cancel, the required verification, when a paid plan or free trial ends, how the subscriber confirms cancellation, and the route for Roku billing or a charge after cancellation. No account changes or purchases. Capture the real menu and wait; do not assume a generic route such as pressing zero works.
 
@@ -48,7 +62,9 @@ Lead with cancellation and the deadline for preventing the next box. Distinguish
 
 Primary source: [HelloFresh's cancellation guide](https://www.hellofresh.com/about/how-to-cancel-hellofresh-subscription). It describes Account Settings, Plan Settings, Cancel Plan, and confirmation. Its stated cutoff is 11:59 pm Pacific, five days before the next delivery; it says orders already processed remain chargeable.
 
-Contact source: [HelloFresh's accessibility page](https://www.hellofresh.com/about/accessibility) lists 646-846-3663 for Customer Care. Verify phone hours through the current contact flow before dialing. An older official blog lists a different number and weekend hours; do not silently treat an older listing as current.
+Contact verified on [HelloFresh's accessibility page](https://www.hellofresh.com/about/accessibility): (646) 846 3663 for Customer Care. Our Saturday call reached a human through the account cancellation menu. The live call establishes availability at the tested time, not a complete current weekend schedule.
+
+Call findings: cancel the subscription after logging into the account, at least five days before delivery. The representative did not answer the exact timezone question; use the official guide for that detail and identify it as website evidence. For a box already generated after the cutoff, the representative said a credit or refund could not be issued and the final box would still arrive. This is not a blanket policy about every refund reason. Confirmation should arrive by email within 24 hours. If the online cancel control is missing, call support; account lookup uses the shipping address, email and account holder's name. [Call record](https://call4.me/account/calls/call_hdac9u2iyoy19rfs).
 
 Call brief: ask about cancelling online or by phone, verification, the precise cutoff and timezone, the next box after cancelling, whether a processed order can be stopped, refunds or credits, and confirmation. No fake order, membership claim, purchases or account changes. Capture the real menu and representative answers.
 
@@ -68,8 +84,8 @@ OnTrac is unsuitable for a phone guide at present. Its [official support page](h
 
 ## Execution
 
-1. Confirm permission for the three informational calls, current primary source phone numbers, and phone hours.
-2. Place calls, reach a live representative, and preserve every relevant recording and saved transcript outside git.
+1. Completed October 3: Nick authorized the three informational calls, and each published consumer support number was checked before dialing.
+2. Completed October 3: five calls finished, including one unsuccessful automated Fubo attempt and the Factor clarification. All three companies reached humans; total cost $7.00. Recordings and saved transcripts are outside git. Factor's source discrepancies remain flagged above.
 3. Prepare reviewed audio and transcripts under the rules in [examples.md](../examples.md). Draft the pages using existing blog structure.
 4. Nick reads each full draft. Publish only approved pages, link them from related articles, and check production rendering, recordings, sitemap and IndexNow.
 5. Log indexing and impressions before increasing the batch size. Search volume is potential demand, not a traffic forecast.
