@@ -1,7 +1,7 @@
 import { newId, now } from '../lib/ids';
 import { CODE_ATTEMPTS, VERIFICATIONS_PER_DAY } from '../lib/number-schema';
 import { checkDialable, formatPhone, type PhoneCheck } from '../lib/phone';
-import { telnyx, TelnyxError, type AvailableNumber } from '../lib/telnyx';
+import { telnyx, TelnyxError, type AvailableNumber, type NumberOrderStatus } from '../lib/telnyx';
 import { accounts, dollars, type Account } from './accounts';
 
 /**
@@ -73,9 +73,11 @@ export interface NumberRow {
   included: number;
   monthly_cents: number;
   paid_through: number | null;
-  status: 'active' | 'released';
+  /** pending: paid for and waiting on the carrier's order (order_id); failed: the order was turned down and refunded. */
+  status: 'pending' | 'active' | 'released' | 'failed';
   created_at: number;
   released_at: number | null;
+  order_id: string | null;
 }
 
 export interface NumberView {
@@ -92,6 +94,22 @@ export interface NumberView {
   /** True once a renewal failed; the number is released at `release_after` unless credits are added. */
   overdue: boolean;
   release_after: string | null;
+}
+
+/** A bought number: ready to call from, or paid for and waiting on the carrier. */
+export type Bought = { number: NumberView; pending?: never } | { pending: PendingNumberView; number?: never };
+
+/** A number paid for and waiting on the carrier: an order abroad goes through regulatory review first. */
+export interface PendingNumberView {
+  number: string;
+  e164: string;
+  country: string;
+  country_name: string;
+  type: string;
+  monthly: string;
+  monthly_cents: number;
+  /** When it was bought. It can't place calls until it activates; the first month starts then. */
+  ordered: string;
 }
 
 /** The user's own number, verified (or being verified) to call from. */
@@ -145,6 +163,19 @@ async function carrier<T>(fn: () => Promise<T>): Promise<T> {
 }
 
 const day = (ms: number) => new Date(ms).toISOString().slice(0, 10);
+
+export function pendingNumberView(r: NumberRow): PendingNumberView {
+  return {
+    number: formatPhone(r.phone_number),
+    e164: r.phone_number,
+    country: r.country,
+    country_name: COUNTRIES[r.country]?.name ?? r.country,
+    type: r.number_type,
+    monthly: dollars(r.monthly_cents),
+    monthly_cents: r.monthly_cents,
+    ordered: day(r.created_at),
+  };
+}
 
 export function numberView(r: NumberRow, at = now()): NumberView {
   const overdue = !r.included && r.paid_through !== null && r.paid_through <= at;
@@ -346,15 +377,26 @@ export function numbers(env: Env) {
     return ownNumberView(row);
   }
 
-  async function order(found: AvailableNumber, country: string): Promise<void> {
-    await provider.orderNumber(found.phoneNumber, COUNTRIES[country].requirementGroup ?? null);
+  /** What buying `id` took from the balance, given back when its order fails. */
+  async function refundOrder(row: Pick<NumberRow, 'id' | 'account_id' | 'phone_number'>, price: number): Promise<void> {
+    // An order still pending may complete later: give the number back so it isn't held unpaid.
+    await provider.releaseNumber(row.phone_number).catch((e) => console.error('releasing the failed order', row.phone_number, e));
+    await accounts(db).post(row.account_id, price, 'refund', `number:${row.id}:refund`, `order failed for ${formatPhone(row.phone_number)}`);
   }
 
-  async function purchase(account: Account, opts: { country: string; areaCode?: string | null }): Promise<NumberView> {
+  /**
+   * Buy a number: the price comes out of the balance, then the carrier's order is placed. A US or
+   * Canadian order completes while this waits; one abroad usually goes to regulatory review, and
+   * the number is pending until settle() sees it through. Only an order the carrier turns down is
+   * refunded.
+   */
+  async function purchase(account: Account, opts: { country: string; areaCode?: string | null }): Promise<Bought> {
     const country = opts.country.trim().toUpperCase();
     const reason = await blocked(country);
     if (reason) throw new NumberError(reason, COUNTRIES[country] ? 409 : 400);
     const c = COUNTRIES[country];
+    const waiting = await db.prepare(`SELECT phone_number FROM numbers WHERE account_id = ? AND country = ? AND status = 'pending'`).bind(account.id, country).first<{ phone_number: string }>();
+    if (waiting) throw new NumberError(`your ${c.name} number ${formatPhone(waiting.phone_number)} is already paid for and waiting on the carrier's approval; it activates by itself, so there is nothing more to buy`, 409);
     const found = await provider.availableNumber({ country, type: c.type, areaCode: opts.areaCode ?? null });
     if (!found) throw new NumberError(`no ${c.name} numbers are for sale right now; try again later`, 503);
 
@@ -368,28 +410,87 @@ export function numbers(env: Env) {
     if (!(await ledger.spend(account.id, price, 'number', `number:${id}:buy`, note))) {
       throw new NumberError(`a ${c.name} number costs ${dollars(price)} today (then ${dollars(found.monthlyCents)}/month); the balance is ${dollars(await ledger.balanceCents(account.id))}. add credits first`, 402);
     }
+    const row = { id, account_id: account.id, phone_number: found.phoneNumber };
+    let placed: { id: string; status: NumberOrderStatus };
     try {
-      await order(found, country);
+      placed = await provider.orderNumber(found.phoneNumber, c.requirementGroup ?? null);
     } catch (err) {
       console.error('number order failed', id, err);
-      // An order still pending may complete later: give the number back so it isn't held unpaid.
-      await provider.releaseNumber(found.phoneNumber).catch((e) => console.error('releasing the failed order', found.phoneNumber, e));
-      await ledger.post(account.id, price, 'refund', `number:${id}:refund`, `order failed for ${formatPhone(found.phoneNumber)}`);
+      await refundOrder(row, price);
       throw new NumberError('the carrier could not complete that number order; nothing was charged. try again shortly', 502);
     }
+    if (placed.status === 'failure') {
+      console.error('number order turned down', id, placed.id);
+      await refundOrder(row, price);
+      throw new NumberError('the carrier turned down that number order; nothing was charged. try again shortly', 502);
+    }
     const at = now();
+    const active = placed.status === 'success';
     await db
-      .prepare(`INSERT INTO numbers (id, account_id, phone_number, country, number_type, included, monthly_cents, paid_through, status, created_at) VALUES (?, ?, ?, ?, ?, 0, ?, ?, 'active', ?)`)
-      .bind(id, account.id, found.phoneNumber, country, c.type, found.monthlyCents, at + RENEWAL_DAYS * DAY, at)
+      .prepare(`INSERT INTO numbers (id, account_id, phone_number, country, number_type, included, monthly_cents, paid_through, status, created_at, order_id) VALUES (?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?)`)
+      .bind(id, account.id, found.phoneNumber, country, c.type, found.monthlyCents, active ? at + RENEWAL_DAYS * DAY : null, active ? 'active' : 'pending', at, placed.id)
       .run();
-    return numberView((await db.prepare(`SELECT * FROM numbers WHERE id = ?`).bind(id).first<NumberRow>())!);
+    const bought = (await db.prepare(`SELECT * FROM numbers WHERE id = ?`).bind(id).first<NumberRow>())!;
+    return active ? { number: numberView(bought) } : { pending: pendingNumberView(bought) };
   }
+
+  /**
+   * See pending orders through: a completed one activates (its first month starts now), one the
+   * carrier turned down is refunded, and the rest keep waiting.
+   */
+  async function settle(rows: NumberRow[], at = now()): Promise<{ activated: number; failed: number; waiting: number }> {
+    const out = { activated: 0, failed: 0, waiting: 0 };
+    for (const n of rows) {
+      let status: NumberOrderStatus;
+      try {
+        status = n.order_id ? await provider.numberOrderStatus(n.order_id) : 'failure';
+      } catch (err) {
+        console.error('number order status failed', n.id, err);
+        out.waiting++;
+        continue;
+      }
+      if (status === 'pending') {
+        out.waiting++;
+      } else if (status === 'success') {
+        const r = await db.prepare(`UPDATE numbers SET status = 'active', paid_through = ? WHERE id = ? AND status = 'pending'`).bind(at + RENEWAL_DAYS * DAY, n.id).run();
+        out.activated += r.meta.changes ?? 0;
+      } else {
+        const r = await db.prepare(`UPDATE numbers SET status = 'failed', released_at = ? WHERE id = ? AND status = 'pending'`).bind(at, n.id).run();
+        if ((r.meta.changes ?? 0) === 0) continue;
+        const paid = await db.prepare(`SELECT -amount_cents AS cents FROM ledger WHERE ref = ?`).bind(`number:${n.id}:buy`).first<{ cents: number }>();
+        await refundOrder(n, paid?.cents ?? 0);
+        out.failed++;
+      }
+    }
+    return out;
+  }
+
+  async function order(found: AvailableNumber, country: string): Promise<void> {
+    const placed = await provider.orderNumber(found.phoneNumber, COUNTRIES[country].requirementGroup ?? null);
+    if (placed.status !== 'success') throw new TelnyxError(`number order ${placed.id} for ${found.phoneNumber} is ${placed.status}`, 503);
+  }
+
 
   return {
     active,
 
     async views(accountId: string): Promise<NumberView[]> {
       return (await active(accountId)).map((r) => numberView(r));
+    },
+
+    /** Numbers paid for and waiting on the carrier, checked with it first so one just approved shows as active. */
+    async pendingViews(accountId: string): Promise<PendingNumberView[]> {
+      const sql = `SELECT * FROM numbers WHERE account_id = ? AND status = 'pending' ORDER BY created_at`;
+      const { results } = await db.prepare(sql).bind(accountId).all<NumberRow>();
+      if (!results.length) return [];
+      await settle(results);
+      return (await db.prepare(sql).bind(accountId).all<NumberRow>()).results.map(pendingNumberView);
+    },
+
+    /** Every account's pending orders, from the cron. */
+    async settlePending(at = now()): Promise<{ activated: number; failed: number; waiting: number }> {
+      const { results } = await db.prepare(`SELECT * FROM numbers WHERE status = 'pending' ORDER BY created_at`).all<NumberRow>();
+      return settle(results, at);
     },
 
     /** The user's own numbers on the account: verified to call from, or waiting on their code. */
@@ -459,7 +560,7 @@ export function numbers(env: Env) {
      * Buy a number in `country` (ISO code), near `areaCode` when given. The upfront cost and first
      * month come out of the balance before the order; a failed order gives them back.
      */
-    async buy(account: Account, opts: { country: string; areaCode?: string | null }): Promise<NumberView> {
+    async buy(account: Account, opts: { country: string; areaCode?: string | null }): Promise<Bought> {
       return carrier(() => purchase(account, opts));
     },
 
@@ -467,8 +568,9 @@ export function numbers(env: Env) {
     async release(account: Account, number: string): Promise<NumberView> {
       const parsed = checkDialable(number);
       const e164 = parsed.ok ? parsed.e164 : number.trim();
-      const row = await db.prepare(`SELECT * FROM numbers WHERE account_id = ? AND phone_number = ? AND status = 'active'`).bind(account.id, e164).first<NumberRow>();
+      const row = await db.prepare(`SELECT * FROM numbers WHERE account_id = ? AND phone_number = ? AND status IN ('active', 'pending')`).bind(account.id, e164).first<NumberRow>();
       if (!row) throw new NumberError('no such number on this account', 404);
+      if (row.status === 'pending') throw new NumberError(`${formatPhone(row.phone_number)} is still waiting on the carrier's approval; it can be released once it's active`, 409);
       if (row.included) throw new NumberError('the free number that came with the account cannot be released', 409);
       await carrier(() => provider.releaseNumber(row.phone_number));
       await db.prepare(`UPDATE numbers SET status = 'released', released_at = ? WHERE id = ?`).bind(now(), row.id).run();

@@ -4,7 +4,7 @@ import { mcpUrl } from '../lib/prompts';
 import type { recordingOutput } from '../lib/recording-schema';
 import type { callView } from '../mcp/server';
 import { dollars, type Account } from '../services/accounts';
-import type { CountryOffer, NumberView, OwnNumberView } from '../services/numbers';
+import type { CountryOffer, NumberView, OwnNumberView, PendingNumberView } from '../services/numbers';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { MIN_TOPUP_CENTS, type Reload } from '../services/topups';
 import { CopyBlock, Layout } from './layout';
@@ -84,6 +84,7 @@ export const AccountPage: FC<{
   balanceCents: number;
   pricePerMinuteCents: number;
   numbers: NumberView[];
+  pendingNumbers: PendingNumberView[];
   ownNumbers: OwnNumberView[];
   offers: CountryOffer[];
   reload: Reload | null;
@@ -124,7 +125,7 @@ export const AccountPage: FC<{
       cost exactly what the carrier charges: the upfront cost plus the first month now, then the monthly cost every 30 days from your balance. if your balance can't cover a renewal, the
       number is released after 7 days.
     </p>
-    {p.numbers.length === 0 ? (
+    {p.numbers.length === 0 && p.pendingNumbers.length === 0 ? (
       <p class="muted">no numbers yet. your free us number is bought on your first call.</p>
     ) : (
       <table class="rows">
@@ -154,6 +155,17 @@ export const AccountPage: FC<{
                   </form>
                 )}
               </td>
+            </tr>
+          ))}
+          {p.pendingNumbers.map((n) => (
+            <tr>
+              <td>{n.number}</td>
+              <td>
+                {n.country_name} <span class="small muted">{n.type.replace('_', ' ')}</span>
+              </td>
+              <td class="n">{n.monthly}</td>
+              <td class="small">waiting on the carrier's approval, usually minutes to a few days. it turns on by itself and its first month starts then.</td>
+              <td></td>
             </tr>
           ))}
         </tbody>

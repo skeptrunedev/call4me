@@ -108,6 +108,56 @@
                         "additionalProperties": {}
                       }
                     },
+                    "pending_numbers": {
+                      "description": "numbers paid for and waiting on the carrier's approval (numbers abroad are reviewed first, minutes to a few days). They activate by themselves and cannot place calls until they move to numbers. Omitted when there are none",
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "number": {
+                            "type": "string",
+                            "description": "formatted for people"
+                          },
+                          "e164": {
+                            "type": "string"
+                          },
+                          "country": {
+                            "type": "string",
+                            "description": "ISO 3166-1 alpha-2"
+                          },
+                          "country_name": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string",
+                            "description": "local, mobile, national or toll_free"
+                          },
+                          "monthly": {
+                            "type": "string"
+                          },
+                          "monthly_cents": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "ordered": {
+                            "type": "string",
+                            "description": "date it was bought; it activates once the carrier approves it, and its first month starts then"
+                          }
+                        },
+                        "required": [
+                          "number",
+                          "e164",
+                          "country",
+                          "country_name",
+                          "type",
+                          "monthly",
+                          "monthly_cents",
+                          "ordered"
+                        ],
+                        "additionalProperties": {}
+                      }
+                    },
                     "own_numbers": {
                       "description": "the user's own phone numbers, verified to call from: calls go out from one only when place_call names it in from. Omitted when the account has none",
                       "type": "array",
@@ -271,7 +321,7 @@
       },
       "post": {
         "operationId": "buyNumber",
-        "description": "Buy another phone number, in the US or abroad, paid from the balance at the carrier's own price (see call4me_list_numbers for prices). It renews from the balance every 30 days; if the balance can't cover a renewal the number is released after 7 days. Only buy when the user asks for a number or needs one to call a country.",
+        "description": "Buy another phone number, in the US or abroad, paid from the balance at the carrier's own price (see call4me_list_numbers for prices). It renews from the balance every 30 days; if the balance can't cover a renewal the number is released after 7 days. Only buy when the user asks for a number or needs one to call a country. A number abroad is reviewed by the carrier after it's paid for, from minutes to a few days: it comes back pending, activates by itself, and can't place calls until then.",
         "security": [
           {
             "bearerAuth": []
@@ -306,7 +356,7 @@
         },
         "responses": {
           "201": {
-            "description": "The number bought",
+            "description": "The number bought, ready to call from",
             "content": {
               "application/json": {
                 "schema": {
@@ -376,6 +426,69 @@
                     "release_after"
                   ],
                   "additionalProperties": {}
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "The number bought and waiting on the carrier's approval; it activates by itself",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "pending": {
+                      "type": "object",
+                      "properties": {
+                        "number": {
+                          "type": "string",
+                          "description": "formatted for people"
+                        },
+                        "e164": {
+                          "type": "string"
+                        },
+                        "country": {
+                          "type": "string",
+                          "description": "ISO 3166-1 alpha-2"
+                        },
+                        "country_name": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "description": "local, mobile, national or toll_free"
+                        },
+                        "monthly": {
+                          "type": "string"
+                        },
+                        "monthly_cents": {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        "ordered": {
+                          "type": "string",
+                          "description": "date it was bought; it activates once the carrier approves it, and its first month starts then"
+                        }
+                      },
+                      "required": [
+                        "number",
+                        "e164",
+                        "country",
+                        "country_name",
+                        "type",
+                        "monthly",
+                        "monthly_cents",
+                        "ordered"
+                      ],
+                      "additionalProperties": {}
+                    }
+                  },
+                  "required": [
+                    "pending"
+                  ],
+                  "additionalProperties": false
                 }
               }
             }

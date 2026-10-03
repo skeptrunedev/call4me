@@ -25,8 +25,8 @@ numberRoutes.get(numbersPath, async (c) => {
   const account = await signedIn(c);
   if (!account) return unauthorized(c);
   const n = numbers(c.env);
-  const [owned, own, countries] = await Promise.all([n.views(account.id), n.ownViews(account.id), n.offers()]);
-  return c.json({ numbers: owned, own_numbers: own, countries });
+  const [owned, pending, own, countries] = await Promise.all([n.views(account.id), n.pendingViews(account.id), n.ownViews(account.id), n.offers()]);
+  return c.json({ numbers: owned, pending_numbers: pending, own_numbers: own, countries });
 });
 
 numberRoutes.post(numbersPath, async (c) => {
@@ -35,7 +35,9 @@ numberRoutes.post(numbersPath, async (c) => {
   const input = buyNumberInput.safeParse(await c.req.json().catch(() => null));
   if (!input.success) return c.json({ error: 'send JSON like {"country": "NL"}, optionally with "area_code"' }, 400);
   try {
-    return c.json(await numbers(c.env).buy(account, { country: input.data.country, areaCode: input.data.area_code }), 201);
+    const bought = await numbers(c.env).buy(account, { country: input.data.country, areaCode: input.data.area_code });
+    // A number abroad is paid for and then reviewed by the carrier: accepted, not yet created.
+    return bought.pending ? c.json({ pending: bought.pending }, 202) : c.json(bought.number, 201);
   } catch (err) {
     return failure(c, err);
   }

@@ -50,6 +50,11 @@ export interface AvailableNumber {
   monthlyCents: number;
 }
 
+/** A number order: still pending (regulatory review abroad), done, or turned down for good. */
+export type NumberOrderStatus = 'pending' | 'success' | 'failure';
+/** Telnyx's order statuses: pending, success, failure, and deleted or cancelled for one taken back. */
+const orderStatus = (s: string): NumberOrderStatus => (s === 'pending' || s === 'success' ? s : 'failure');
+
 /** Telnyx quotes dollars as decimal strings ("1.00000"). */
 const toCents = (dollars: string) => Math.ceil(Number(dollars) * 100 - 1e-9);
 
@@ -229,20 +234,26 @@ export function telnyx(env: TelnyxEnv) {
 
     /**
      * Order `number` onto our Call Control connection, with the requirement group that holds its
-     * country's paperwork when it needs one. Orders complete asynchronously and a number can't
-     * place calls until its order succeeds, so this waits for the outcome.
+     * country's paperwork when it needs one. Orders complete asynchronously: a US or Canadian one in
+     * seconds, which this waits out, but one abroad goes through regulatory review that takes
+     * minutes to days, so it comes back pending and numberOrderStatus follows it from there.
      */
-    async orderNumber(number: string, requirementGroupId?: string | null): Promise<void> {
+    async orderNumber(number: string, requirementGroupId?: string | null): Promise<{ id: string; status: NumberOrderStatus }> {
       const order = await call<{ data: { id: string; status: string } }>(env, 'POST', '/number_orders', {
         phone_numbers: [{ phone_number: number, ...(requirementGroupId ? { requirement_group_id: requirementGroupId } : {}) }],
         connection_id: env.TELNYX_CONNECTION_ID,
       });
-      let status = order.data.status;
+      let status = orderStatus(order.data.status);
       for (let i = 0; i < 20 && status === 'pending'; i++) {
         await new Promise((r) => setTimeout(r, 1500));
-        status = (await call<{ data: { status: string } }>(env, 'GET', `/number_orders/${order.data.id}`)).data.status;
+        status = await this.numberOrderStatus(order.data.id);
       }
-      if (status !== 'success') throw new TelnyxError(`number order ${order.data.id} for ${number} is ${status}`, 503);
+      return { id: order.data.id, status };
+    },
+
+    /** Where a number order stands now. */
+    async numberOrderStatus(id: string): Promise<NumberOrderStatus> {
+      return orderStatus((await call<{ data: { status: string } }>(env, 'GET', `/number_orders/${encodeURIComponent(id)}`)).data.status);
     },
 
     /** Give a number back to Telnyx; its monthly charge stops. Already gone counts as released. */

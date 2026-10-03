@@ -14,6 +14,7 @@ import {
   ownNumbersPath,
   ownNumberVerifyPath,
   ownNumberView,
+  pendingNumberView,
   releaseNumberDescription,
   releaseNumberInput,
   removeOwnNumberDescription,
@@ -45,7 +46,10 @@ export function openApiDocument(site: string) {
           description: buyNumberDescription,
           security: [{ bearerAuth: [] }],
           requestBody: { required: true, content: { 'application/json': { schema: schema(buyNumberInput) } } },
-          responses: { '201': json('The number bought', numberView), '400': error, '401': error, '402': error, '409': error, '502': error, '503': error },
+          responses: {
+            '201': json('The number bought, ready to call from', numberView),
+            '202': json('The number bought and waiting on the carrier\'s approval; it activates by itself', z.object({ pending: pendingNumberView })),
+            '400': error, '401': error, '402': error, '409': error, '502': error, '503': error },
         },
       },
       [numberPath]: {

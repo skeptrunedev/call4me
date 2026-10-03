@@ -14,7 +14,7 @@ import { catalog, PROFILE_FIELDS, type Surface } from '../services/intake';
 import { ProfileError, profiles } from '../services/profiles';
 import { recordingDescription, recordingInput, recordingOutput } from '../lib/recording-schema';
 import { buyNumberDescription, buyNumberInput, listNumbersDescription, numbersOutput, ownNumberInput, releaseNumberDescription, releaseNumberInput, removeOwnNumberDescription, verifyNumberDescription, verifyNumberInput } from '../lib/number-schema';
-import { mayCall, NumberError, numbers, type NumberView, type OwnNumberView } from '../services/numbers';
+import { mayCall, NumberError, numbers, type NumberView, type OwnNumberView, type PendingNumberView } from '../services/numbers';
 import { getCallRecordings } from '../services/recordings';
 import { isScheduledId, scheduledCalls, scheduledText, scheduledView, type ScheduledInput, type ScheduledView } from '../services/scheduled';
 
@@ -552,14 +552,15 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
     (async () =>
       guard(async () => {
         const n = numbers(env);
-        const [owned, own, countries] = await Promise.all([n.views(account.id), n.ownViews(account.id), n.offers()]);
+        const [owned, pending, own, countries] = await Promise.all([n.views(account.id), n.pendingViews(account.id), n.ownViews(account.id), n.offers()]);
         const text = [
           owned.length ? `your numbers:\n${owned.map((v) => `- ${numberText(v)}`).join('\n')}` : 'no numbers yet: the free US number is bought on the first call.',
+          ...(pending.length ? [`paid for, waiting on the carrier's approval (they activate by themselves and can't place calls until then):\n${pending.map((v) => `- ${pendingText(v)}`).join('\n')}`] : []),
           ...(own.length ? [`the user's own numbers (calls use one only when from names it):\n${own.map((v) => `- ${ownNumberText(v)}`).join('\n')}`] : []),
           `countries (number price today, then monthly; calls there cost ${dollars(pricePerMinute(env))}/min unless noted):\n${countries.map((c) => `- ${c.country} ${c.name} (${c.type}): ${c.available ? `${c.price}, then ${c.monthly}/month${DESTINATION_PRICE_CENTS[c.country] ? `; calls ${dollars(DESTINATION_PRICE_CENTS[c.country]!)}/min` : ''}` : c.reason}`).join('\n')}`,
         ].join('\n\n');
-        // Without own numbers, exactly the shape clients cached before own numbers existed.
-        return ok(text, { numbers: owned, ...(own.length ? { own_numbers: own } : {}), countries });
+        // Without own or pending numbers, exactly the shape clients cached before either existed.
+        return ok(text, { numbers: owned, ...(pending.length ? { pending_numbers: pending } : {}), ...(own.length ? { own_numbers: own } : {}), countries });
       })()) as never,
   );
 
@@ -570,7 +571,13 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
       guard(async () => {
         const bought = await numbers(env).buy(account, { country: args.country, areaCode: args.area_code });
         const balance = await accounts(env.DB).balanceCents(account.id);
-        return ok(`bought ${numberText(bought)}. balance ${dollars(balance)}.`, { number: bought, balance: dollars(balance) });
+        if (bought.pending) {
+          return ok(
+            `bought ${pendingText(bought.pending)}. The carrier reviews numbers in ${bought.pending.country_name} before they go live, which can take from minutes to a few days; it activates by itself and its first month starts then. Calls to ${bought.pending.country_name} can go out once call4me_list_numbers shows it under numbers. Tell the user it's ordered and waiting on approval, not ready yet. balance ${dollars(balance)}.`,
+            { pending: bought.pending, balance: dollars(balance) },
+          );
+        }
+        return ok(`bought ${numberText(bought.number)}. balance ${dollars(balance)}.`, { number: bought.number, balance: dollars(balance) });
       })()) as never,
   );
 
@@ -612,6 +619,10 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
 
 function ownNumberText(v: OwnNumberView): string {
   return `${v.number} (${v.country_name}, ${v.status === 'verified' ? 'verified' : `waiting on the ${v.method === 'sms' ? 'texted' : 'called'} code`})`;
+}
+
+function pendingText(v: PendingNumberView): string {
+  return `${v.number} (${v.country_name} ${v.type}, ${v.monthly}/month once active, ordered ${v.ordered})`;
 }
 
 function numberText(v: NumberView): string {

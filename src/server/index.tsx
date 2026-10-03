@@ -146,9 +146,10 @@ const EVERY_MINUTE = '* * * * *';
 export default {
   fetch: app.fetch,
   // Every minute, scheduled calls that came due (services/scheduled.ts). Every 15 minutes, number
-  // renewals (services/numbers.ts), calls that never dialed (services/dialer.ts), signup notices,
-  // IndexNow pings for new or changed pages (services/indexnow.ts), and the signup drip
-  // (services/drip.ts), which is off while DRIP_START is empty.
+  // renewals and numbers waiting on the carrier (services/numbers.ts), calls that never dialed
+  // (services/dialer.ts), signup notices, IndexNow pings for new or changed pages
+  // (services/indexnow.ts), and the signup drip (services/drip.ts), which is off while DRIP_START
+  // is empty.
   async scheduled(event, env, ctx) {
     if (event.cron === EVERY_MINUTE) {
       ctx.waitUntil(placeDueCalls(env).then((r) => (r.placed || r.failed || r.missed) && console.log('scheduled calls', JSON.stringify(r))));
@@ -157,6 +158,7 @@ export default {
     ctx.waitUntil(failNeverDialed(env).then((n) => n && console.log('failed never-dialed calls', n)));
     const n = numbers(env);
     ctx.waitUntil(n.renewDue().then((r) => console.log('number renewals', JSON.stringify(r))));
+    ctx.waitUntil(n.settlePending().then((r) => (r.activated || r.failed || r.waiting) && console.log('pending numbers', JSON.stringify(r))));
     ctx.waitUntil(n.refreshOffers().then((r) => console.log('number offers', JSON.stringify(r))));
     const origin = `https://${env.CANONICAL_HOST}`;
     const messenger = makeMessenger(env);

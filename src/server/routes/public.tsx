@@ -76,10 +76,11 @@ pub.get('/welcome', async (c) => {
 
 async function accountPage(c: AppContext, account: Account, errors: { error?: string; numberError?: string; ownNumberError?: string } = {}) {
   const n = numbers(c.env);
-  const [balance, rows, owned, own, offers, reload, key] = await Promise.all([
+  const [balance, rows, owned, pending, own, offers, reload, key] = await Promise.all([
     accounts(c.env.DB).balanceCents(account.id),
     calls(c.env.DB).list(account.id, 50),
     n.views(account.id),
+    n.pendingViews(account.id),
     n.ownViews(account.id),
     n.offers(),
     reloadOf(c.env.DB, account.id),
@@ -91,6 +92,7 @@ async function accountPage(c: AppContext, account: Account, errors: { error?: st
       balanceCents={balance}
       pricePerMinuteCents={pricePerMinute(c.env)}
       numbers={owned}
+      pendingNumbers={pending}
       ownNumbers={own}
       offers={offers}
       reload={reload}
