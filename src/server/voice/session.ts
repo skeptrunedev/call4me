@@ -2,7 +2,7 @@ import { DurableObject } from 'cloudflare:workers';
 import { Raindrop, type Interaction } from 'raindrop-ai';
 import { ACTIVE, calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
-import { dtmfFrames, FRAME_MS } from './dtmf';
+import { dtmfFrames, FRAME_MS, pcmuMs } from './dtmf';
 import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, missedHandoff } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { BACK_OFFICE_TOOLS } from './prompt';
@@ -95,7 +95,7 @@ type BackOfficeMonitoring = { interaction: Interaction; output: string[]; starte
 
 type LiveEvent =
   | { type: 'session.started'; session: { id: string } }
-  | { type: 'session.output_audio.delta'; delta: string; start_ms: number; end_ms: number }
+  | { type: 'session.output_audio.delta'; delta: string }
   | { type: 'session.input_transcript.delta'; delta: string }
   | { type: 'session.output_transcript.delta'; delta: string }
   | { type: 'session.delegation.created'; delegation: { id: string; target: string } }
@@ -437,11 +437,12 @@ export class VoiceSession extends DurableObject<Env> {
         // After the hang-up hand-off the goodbye has already been said; anything more is
         // the model filling the silence before the line drops, so it never reaches the phone.
         if (this.endingCall || this.personOn || Date.now() < this.keysPlayingUntil) break;
-        const e = ev as { delta: string; start_ms: number; end_ms: number };
+        const e = ev as { delta: string };
         if (this.framesOut++ === 0) this.mark('first caller audio');
         this.sendPhone({ event: 'media', media: { payload: e.delta } });
         const now = Date.now();
-        this.playbackEndsAt = Math.max(this.playbackEndsAt, now) + Math.max(0, e.end_ms - e.start_ms);
+        // Audio deltas carry no timing, so how long they play comes from their length.
+        this.playbackEndsAt = Math.max(this.playbackEndsAt, now) + pcmuMs(e.delta);
         this.lastOutputAt = now;
         break;
       }

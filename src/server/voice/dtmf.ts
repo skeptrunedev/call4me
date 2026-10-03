@@ -13,6 +13,12 @@ export const GAP_MS = 80;
 /** What a "w" in the digits waits for, as with send_dtmf. */
 export const WAIT_MS = 500;
 
+/** How long a base64 chunk of 8 kHz μ-law audio plays: one byte per sample. */
+export function pcmuMs(base64: string): number {
+  const padding = base64.endsWith('==') ? 2 : base64.endsWith('=') ? 1 : 0;
+  return ((base64.length * 3) / 4 - padding) / (SAMPLE_RATE / 1000);
+}
+
 const ROWS = [697, 770, 852, 941];
 const COLS = [1209, 1336, 1477, 1633];
 const KEYS = ['123A', '456B', '789C', '*0#D'];
