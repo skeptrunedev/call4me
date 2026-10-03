@@ -78,17 +78,16 @@ Compare a competent streaming cascade with equivalent tools and reasoning where 
 
 | Date | Work block | Deliverable |
 | :--- | :--- | :--- |
-| Sat Oct 3 | Current planning session | Complete this queue, verify direct competitors, preserve keyword evidence and write the evidence requirements for each page |
-| Sat Oct 3 | Next execution block | Test a fresh Claude Code and Codex connection against an owned phone endpoint; capture the exact surfaces, versions, authentication, call and returned result |
-| Sun Oct 4 | First content block | Draft the two setup guides from those sessions and prepare the flagship workflow; failed setup tests become fixes before claims |
-| Sun Oct 4 | Second content block | Verify T3's selected provider configuration and design the shared comparison fixtures |
-| Mon Oct 5 | Business hours | Complete one genuine web research plus telephone task; record what the phone added to the online research |
-| Mon Oct 5 | Review block | Review and publish verified setup guides and the workflow when the evidence is complete; check production, sitemap and IndexNow |
-| Tue Oct 6 | Comparison block | Run the same owned fixtures with the available calling products; record unsupported or inaccessible configurations explicitly |
-| Wed Oct 7 | Content block | Draft the calling MCP comparison and architecture explanation; include measured results only for completed trials |
+| Sat Oct 3 | Completed research and execution | Fresh Claude Code 2.1.288 and Codex CLI 0.160.0 sessions, three real SF private dining calls, recordings and reviewed transcripts |
+| Sat Oct 3 | Publication | Publish the two setup guides, complete research example, calling MCP comparison and architecture explanation; verify production, sitemap and IndexNow |
+| Sat Oct 3 | Competitor setup | Create the requested Vapi and Bland accounts and test actual calling when authentication and free allowances permit |
+| Sun Oct 4 | Provider verification | Verify T3's selected provider configuration and run a call inside its thread before publishing a T3 guide |
+| Mon Oct 5 | Business hours | Follow up on private dining questions with a real event brief if supplied; keep unconfirmed prices and availability unknown |
+| Tue Oct 6 | Shared comparison fixtures | Prepare owned IVR and interruption fixtures, then run equivalent tasks through available products |
+| Wed Oct 7 | Evidence update | Extend the comparison with completed trials and the architecture article with measurements only where the experiment supports them |
 | Thu Oct 8 | Search review | Inspect indexing and impressions for the new cluster, check which queries match our ICP, and adjust the next brief |
 
-These are the current work priorities, with publishing contingent on completed tests and Nick's review. The earlier company database and mass template work move behind this cluster. More consumer pages are worthwhile when they contribute a strong example or attract users who activate the calling MCP.
+Publication of the selected work is authorized. Shared fixture tests and a T3 walkthrough remain separate evidence requirements. The earlier company database and mass template work move behind this cluster. More consumer pages are worthwhile when they contribute a strong example or attract users who activate the calling MCP.
 
 ## Score the result
 
@@ -100,4 +99,8 @@ Review Search Console weekly for the exact calling queries and the adjacent setu
 
 ## Current status
 
-Research and page briefs are ready. Fresh harness walkthroughs, shared comparison trials and architecture measurements are queued, not completed. No new calls or blog pages were produced during this planning update. Nate Herk and Dominik Kundel outreach is sent and recorded separately in the outreach tracker.
+Five pages are written for the selected work: [Claude Code calling](/blog/claude-code-phone-calls), [Codex calling](/blog/codex-phone-calls), [SF private dining research](/blog/agent-web-research-phone-calls-sf-private-dining), [calling MCP comparison](/blog/phone-calling-mcp-comparison), and [cascaded voice stacks versus GPT Live](/blog/cascaded-voice-stack-vs-gpt-live).
+
+The actual sessions reached Foreign Cinema's private dining voicemail and Waterbar's and EPIC Steak's automated concierges. No representative, event quote, availability, reservation or successful answer round trip was obtained. The pages distinguish successful canonical account reads from calls through the legacy endpoint, disclose the saved caller name limitation, and include the late question failure in Codex. Three recordings preserve timing and mute private identifiers; independent transcriptions were reviewed before publication.
+
+Local verification passed type checking, lint, all 135 tests, both deployment builds and browser checks for all five pages. The browser checks caught wide tables on mobile; a shared scrolling wrapper fixes them and was checked against the existing private dining article. Production verification follows the git deployment. Vapi and Bland onboarding and subsequent real comparison calls are in progress; no cross vendor performance ranking or controlled architecture measurement is claimed. T3 remains untested. Nate Herk and Dominik Kundel outreach is sent and recorded separately in the outreach tracker.

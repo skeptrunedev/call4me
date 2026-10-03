@@ -33,6 +33,11 @@ import fableticsCustomerService from './fabletics-customer-service.md';
 import cancelFactor from './cancel-factor.md';
 import cancelFubo from './cancel-fubo.md';
 import cancelHelloFresh from './cancel-hellofresh.md';
+import claudeCodePhoneCalls from './claude-code-phone-calls.md';
+import codexPhoneCalls from './codex-phone-calls.md';
+import agentResearchPhoneCalls from './agent-web-research-phone-calls-sf-private-dining.md';
+import phoneCallingMcpComparison from './phone-calling-mcp-comparison.md';
+import cascadedVoiceStack from './cascaded-voice-stack-vs-gpt-live.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -40,6 +45,11 @@ import cancelHelloFresh from './cancel-hellofresh.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'claude-code-phone-calls', markdown: claudeCodePhoneCalls },
+  { slug: 'codex-phone-calls', markdown: codexPhoneCalls },
+  { slug: 'agent-web-research-phone-calls-sf-private-dining', markdown: agentResearchPhoneCalls },
+  { slug: 'phone-calling-mcp-comparison', markdown: phoneCallingMcpComparison },
+  { slug: 'cascaded-voice-stack-vs-gpt-live', markdown: cascadedVoiceStack },
   { slug: 'experian-phone-number', markdown: experianPhoneNumber },
   { slug: 'cancel-planet-fitness', markdown: cancelPlanetFitness },
   { slug: 'wayfair-customer-service', markdown: wayfairCustomerService },

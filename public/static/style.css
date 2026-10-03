@@ -164,6 +164,7 @@ form.inline { margin: 6px 0; }
 .post blockquote { border-left: 3px solid #ddd; margin: 0; padding-left: 10px; color: #555; }
 .post img { max-width: 100%; }
 .post table { border-collapse: collapse; }
+.post .table-scroll { max-width: 100%; overflow-x: auto; }
 .post td, .post th { border: 1px solid #ddd; padding: 4px 8px; }
 @media (max-width: 700px) { .featured-row { flex-direction: column; } .card .thumb img { width: 110px; } }
 @media (max-width: 600px) { .form input[type=text], .form input[type=email] { width: 100%; } }

@@ -1,4 +1,4 @@
-import { Marked, type Tokens } from 'marked';
+import { Marked, Renderer, type Tokens } from 'marked';
 import markedFootnote from 'marked-footnote';
 import { AUTHORS, type Author } from '../../content/blog/authors';
 
@@ -74,6 +74,9 @@ function renderer(sections: { id: string; text: string }[]) {
   const seen = new Map<string, number>();
   return new Marked({ gfm: true }).use(markedFootnote()).use({
     renderer: {
+      table(token: Tokens.Table) {
+        return `<div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable table">${Renderer.prototype.table.call(this, token)}</div>\n`;
+      },
       heading({ tokens, depth }: Tokens.Heading) {
         const inner = this.parser.parseInline(tokens);
         const base = slugify(inner) || 'section';

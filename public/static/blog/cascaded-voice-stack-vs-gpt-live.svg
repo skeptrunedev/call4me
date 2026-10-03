@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Cascaded voice stack vs GPT Live</title>
+  <desc id="description">A cascade connects speech recognition, a text model and speech synthesis. GPT Live handles native audio and delegates task work to a separate reasoner.</desc>
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <text x="80" y="110" font-family="Times New Roman, Times, serif" font-size="40" fill="#551a8b">call4me engineering · oct 3, 2026</text>
+  <text x="80" y="210" font-family="Times New Roman, Times, serif" font-size="76" fill="#000000">Cascaded voice vs GPT Live</text>
+  <text x="80" y="280" font-family="Times New Roman, Times, serif" font-size="40" fill="#333333">Two voice architectures, one phone task</text>
+  <text x="80" y="360" font-family="Times New Roman, Times, serif" font-size="28" fill="#551a8b">CASCADE</text>
+  <g font-family="Times New Roman, Times, serif" font-size="46" fill="#000000">
+    <text x="80" y="420">STT</text>
+    <text x="285" y="420">LLM</text>
+    <text x="515" y="420">TTS</text>
+  </g>
+  <g fill="none" stroke="#0000ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M180 405 H245 M232 395 L245 405 L232 415"/>
+    <path d="M410 405 H475 M462 395 L475 405 L462 415"/>
+  </g>
+  <text x="730" y="415" font-family="Times New Roman, Times, serif" font-size="30" fill="#333333">separate speech components</text>
+  <text x="80" y="495" font-family="Times New Roman, Times, serif" font-size="28" fill="#551a8b">NATIVE AUDIO + DELEGATION</text>
+  <text x="80" y="555" font-family="Times New Roman, Times, serif" font-size="46" fill="#000000">GPT Live</text>
+  <g fill="none" stroke="#0000ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M300 535 H395 M382 525 L395 535 L382 545"/>
+    <path d="M395 552 H300 M313 542 L300 552 L313 562"/>
+  </g>
+  <text x="430" y="555" font-family="Times New Roman, Times, serif" font-size="46" fill="#000000">separate reasoner + tools</text>
+</svg>
