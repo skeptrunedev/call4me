@@ -30,14 +30,16 @@ async function serve(c: AppContext, account: Account, surface: Surface = 'agents
   return handler.fetch(await withCurrentToolNames(c.req.raw));
 }
 
-// MCP clients always GET with Accept: text/event-stream (the streamable HTTP spec requires
-// it); everyone else, including link unfurlers that send Accept: */*, gets the page.
-const wantsHtml = (c: AppContext) => !(c.req.header('accept') ?? '').includes('text/event-stream');
+// Codex's OAuth discovery probe sends MCP-Protocol-Version without Accept. Returning HTML
+// to that probe makes it mistake /mcp for resource metadata and fall back to the wrong issuer.
+// Browsers and link unfurlers still get the install page; protocol requests get MCP auth.
+const wantsHtml = (c: AppContext) =>
+  !(c.req.header('accept') ?? '').includes('text/event-stream') && !c.req.raw.headers.has('mcp-protocol-version');
 
 // The install page. /mcp is mounted ahead of the session middleware (MCP requests carry
 // their own auth), so the page looks up the viewer itself to put their key in the prompt.
 mcp.get('/', async (c) => {
-  if (!wantsHtml(c)) return c.text('POST MCP requests here', 405);
+  if (!wantsHtml(c)) return authorized(c, '/mcp', 'agents');
   const account = await sessionAccount(c);
   const [key, owned] = await Promise.all([viewerKey(c, account), account ? numbers(c.env).views(account.id) : []]);
   return c.html(<McpPage signedIn={Boolean(account)} installPrompt={installPrompt(origin(c), key)} origin={origin(c)} apiKey={key} numbers={owned} />);
@@ -84,7 +86,7 @@ mcp.all('/:key', async (c) => {
  */
 export function directoryMcp(path: McpPath, surface: Surface): Hono<AppEnv> {
   const app = new Hono<AppEnv>();
-  app.get('/', (c) => (wantsHtml(c) ? c.redirect('/mcp', 302) : c.text('POST MCP requests here', 405)));
+  app.get('/', (c) => (wantsHtml(c) ? c.redirect('/mcp', 302) : authorized(c, path, surface)));
   app.all('/', (c) => authorized(c, path, surface));
   return app;
 }
