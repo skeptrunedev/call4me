@@ -68,7 +68,7 @@ For calls that do reach someone, `call4me_get_call` can also return an open ques
 
 The recording keeps the original voices and timing. Private identifiers are muted and shown in brackets. Select a timestamp to seek to that part of the call.
 
-+**0:00** **Phone system:** Hello, and thank you for calling Foreign Cinema.
+**0:00** **Phone system:** Hello, and thank you for calling Foreign Cinema.
 
 **0:04** **Phone system:** To reach our main line or make a reservation, press 1.
 

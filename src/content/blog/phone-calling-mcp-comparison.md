@@ -13,7 +13,7 @@ You already have Claude Code or Codex researching a problem. A phone calling MCP
 
 Several services now provide this. **Vapi Agent Phone is a ready to use calling service**, separate from Vapi's developer dashboard. **Bland has an official operational MCP server and skills plugin** that can place calls as well as build voice agents. call4me, ClawCall, Cocall, and Patter also support outbound calling from an existing agent. The useful choice is how you connect, what the call can ask you, and what comes back.
 
-We make call4me. This comparison uses official documentation reviewed on **October 3, 2026**, plus public MCP connection checks. We did not run the same live call through every service, so this is a setup and workflow comparison, without a call quality ranking.
+We make call4me. This comparison uses official documentation reviewed on **October 3, 2026**, public MCP connection checks, and the bounded harness examples described below. We did not run the same live call through every service, so this is a setup and workflow comparison, without a call quality ranking.
 
 ## Choose by the setup you want
 
@@ -101,7 +101,9 @@ url = "https://api.bland.ai/v1/mcp"
 bearer_token_env_var = "BLAND_API_KEY"
 ```
 
-The process launching Codex must receive that environment variable. Bland's tools can place a call with a task, so an existing agent does not necessarily need to build a pathway first. Its broader platform also supports voice agent development.
+The process launching Codex must receive that environment variable. For a new account, Bland also documents a [browser approval flow for connecting an agent](https://docs.bland.ai/platform/connect-your-agent). Our account connected on the free option without buying a paid plan. Account allowance and billing still limit actual calling.
+
+Bland's tools can place a call with a task, so an existing agent does not necessarily need to build a pathway first. Its broader platform also supports voice agent development. The compact `create_call` tool does not expose every call setting. In our discovered schema, setting a duration cap, recording, and voicemail behavior required `call_bland_api` with the documented `POST /v1/calls` body. Inspect those fields before dialing rather than assuming the simpler tool applies your limits.
 
 ### ClawCall
 
@@ -137,11 +139,64 @@ Keep the underlying provider in mind. T3 Code's [Codex provider guide](https://g
 
 Check which provider and environment the thread actually uses, configure the calling integration there, then verify that its tools appear in a fresh thread. We have not completed a live T3 Code calling test for these services, so this comparison does not claim verified compatibility across every T3 provider.
 
+## An actual Bland call from Codex
+
+On October 3, 2026, we connected Bland's operational MCP in a fresh **Codex CLI 0.160.0** session. The account API key reached the process through an environment variable. Codex read Bland's call documentation through MCP, submitted one `call_bland_api` request, waited on that call ID, then retrieved `get_call_log`. We did not build a pathway or install the full plugin for this example.
+
+The task was general Waterbar private dining research. It allowed one informational call, with no decided date or guest count, no booking, payment, callback, message, or personal profile disclosure. We set a **three minute cap**, enabled recording, selected voicemail hangup without a message, and omitted retries. Bland returned `completed` and **133 seconds**. Early `wait_for_call` reads returned `unknown` with no recording, before completion and `get_call_log` exposed the recording. Codex kept waiting on the same ID and did not dial again. The reviewed final log returned `null` for cost and summary. This was a completed connection with partially answered research questions.
+
+Waterbar's **virtual concierge** said Bridge Tower was fully enclosed and private, while Looking Glass was not fully enclosed and could share sound with the main dining area. It described the posted capacities as recommended maxima, with possible flexibility depending on layout. These are **concierge assertions, without staff confirmation**, rather than a capacity guarantee for an event. The concierge could not provide current minimums or mandatory fees. It offered to pass a message to the events team; the caller declined and ended. The concierge had also announced that it was taking notes to share with the team. Whether it relayed those notes is not established by our call log. The transcript shows a generic AI introduction and no invented date or guest count. It also contains brief conversational overlap and an interrupted fee question that the caller restated. We did not measure latency. Voicemail handling was configured but not exercised, because the concierge answered.
+
+Our [Call4me harness sessions](/blog/agent-web-research-phone-calls-sf-private-dining) used **six minute caps**; the Codex Waterbar recording lasts **3:12**. Those Call4me callers also used a saved profile name despite the brief asking them not to share it. The linked walkthrough discloses that failure, and the public audio mutes the name. The Bland run used a shorter cap and a different instruction payload. These examples show each workflow and its evidence. They do not establish matched timing, relative quality, or reliability rankings.
+
+### Listen to the Bland Waterbar call
+
+<audio controls preload="metadata" src="/static/blog/sf-private-dining-waterbar-bland.mp3" style="width:100%"><a href="/static/blog/sf-private-dining-waterbar-bland.mp3">listen to the Bland Waterbar call</a></audio>
+
+<details>
+<summary>Read the Bland Waterbar transcript</summary>
+
+Names are shown in brackets. The full recording lasts 2:13, with original timing preserved. This transcript follows the reviewed audio, without completing interrupted phrases from the API log. Overlapping speech remains marked.
+
+**0:04** Bland: Hello, I'm an AI assistant doing general private dining research.
+
+**0:05** Waterbar virtual concierge: [overlapping] Hello. Thank you for calling Waterbar. This is [name removed], the virtual concierge. I'm taking notes on this call and sharing with the team. How can I help you?
+
+**0:15** Bland: Hi [name removed], I have some general policy questions about your private dining spaces. First, which of the Bridge Tower and Looking Glass spaces is fully enclosed and private, and which shares space or sound with the main dining room?
+
+**0:31** Waterbar virtual concierge: The Bridge Tower Room is fully enclosed and private, offering wall to wall windows and a private terrace directly under the Bay Bridge. The Looking Glass is a versatile indoor outdoor space that overlooks the main bar and offers beautiful views, but it is not fully enclosed and may share some sound with the main dining area. Is there anything else I can help you with regarding our private dining spaces?
+
+**0:53** Bland: Thank you. Regarding capacity, your website lists ideal seated capacities of 60 for Bridge Tower and 24 for Looking Glass. Are these hard limits or flexible depending on layout?
+
+**1:07** Waterbar virtual concierge: The seated capacities of 60 for the Bridge Tower Room and 24 for the Looking Glass are the recommended maximums for a comfortable dining experience. These numbers are based on standard layouts, but there may be some flexibility depending on your event's setup and needs.
+
+**1:24** Waterbar virtual concierge: [overlapping] If you have a specific layout or guest...
+
+**1:24** Bland: [overlapping] Okay, what current...
+
+**1:29** Waterbar virtual concierge: It looks like your question got cut off. Could you please repeat or finish your question? I'm here to help.
+
+**1:37** Bland: My apologies. I was asking about the current food and beverage minimums and mandatory fees that apply generally, including any service, administrative, or room fees.
+
+**1:51** Waterbar virtual concierge: It looks like I don't have enough information to help with the current food and beverage minimums or any mandatory fees, service charges, or room fees for our private dining spaces.
+
+**2:01** Waterbar virtual concierge: I can pass your message to the events team who can provide you with all...
+
+**2:03** Bland: [overlapping] I understand.
+
+**2:07** Bland: Thank you, but that won't be necessary. I just needed the general information. Have a good day.
+
+**2:07** Waterbar virtual concierge: [overlapping] It looks like your message got...
+
+</details>
+
+At **0:31**, the concierge describes room privacy. At **1:07**, it suggests possible layout flexibility. That statement still needs staff confirmation. At **1:51**, it cannot answer minimums or fees. At **2:07**, the caller declines follow up and ends.
+
 ## A useful first task: web research, then phone confirmation
 
 The payoff is filling a specific gap in research. Keep the agent's browser and search tools in the same task as its phone tools.
 
-Our [five restaurant calls about private dining](/blog/private-dining-room-cost) show the telephone part of this workflow, with recordings, transcripts, and a comparison table. They also show why evidence matters: one fee was unclear in the audio, one restaurant required email, and another call ended with a question unanswered. Those recordings establish what happened on those calls; they are not a comparison against these other services or a recording of MCP installation.
+Our [fresh Claude Code and Codex private dining research sessions](/blog/agent-web-research-phone-calls-sf-private-dining) start with official websites, identify missing information, and return telephone findings to the same task. The call recordings also show limits: automated restaurant concierges could not supply every requested detail, and one call ended before a follow up answer could be delivered. These are actual harness sessions, with setup and outcome boundaries documented. They are not a controlled comparison against the other services here. Our [earlier five restaurant calls](/blog/private-dining-room-cost) provide additional recordings and transcripts.
 
 For example, use this prompt after connecting a service:
 

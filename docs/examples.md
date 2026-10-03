@@ -40,6 +40,21 @@ clarification. Each export retains the complete source duration, with names and
 private phone details muted. Factor's contradictory deadline and data deletion
 answers remain explicit in the guide.
 
+The October 3 coding agent research adds three founder recordings to the Claude
+Code guide and SF private dining walkthrough. Foreign Cinema reached private
+dining voicemail; Waterbar and EPIC Steak reached automated concierges. None
+reached a human, obtained a complete event quote, or arranged a booking. The
+reviewed files live in `public/static/blog/sf-private-dining-*.mp3`, preserve
+the full source durations, and mute private identifiers. Each has a reviewed
+timestamp transcript. These sessions establish their named CLI workflows,
+with canonical authentication checks and legacy calling distinguished in the
+guides. The calling MCP comparison also includes a fresh Bland call from Codex,
+with its complete reviewed 2:13 recording at
+`public/static/blog/sf-private-dining-waterbar-bland.mp3`. Its stereo source
+tracks were checked separately to preserve overlapping words; private names
+were muted on the speaking track. The experiments do not establish every
+client surface or a cross vendor benchmark.
+
 Preserve greetings, menus, questions, lookup pauses, and holds. Replace actual
 private identifiers with silence at the same source timestamps instead of
 removing the surrounding conversation. Muted fields include names, addresses,
