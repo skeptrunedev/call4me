@@ -40,20 +40,37 @@ clarification. Each export retains the complete source duration, with names and
 private phone details muted. Factor's contradictory deadline and data deletion
 answers remain explicit in the guide.
 
-The October 3 coding agent research adds three founder recordings to the Claude
-Code guide and SF private dining walkthrough. Foreign Cinema reached private
-dining voicemail; Waterbar and EPIC Steak reached automated concierges. None
-reached a human, obtained a complete event quote, or arranged a booking. The
-reviewed files live in `public/static/blog/sf-private-dining-*.mp3`, preserve
-the full source durations, and mute private identifiers. Each has a reviewed
-timestamp transcript. These sessions establish their named CLI workflows,
-with canonical authentication checks and legacy calling distinguished in the
-guides. The calling MCP comparison also includes a fresh Bland call from Codex,
-with its complete reviewed 2:13 recording at
-`public/static/blog/sf-private-dining-waterbar-bland.mp3`. Its stereo source
-tracks were checked separately to preserve overlapping words; private names
-were muted on the speaking track. The experiments do not establish every
-client surface or a cross vendor benchmark.
+The October 3 coding agent research includes five founder recordings: three
+Call4me calls, one Bland call, and one Vapi Agent Phone call. The Claude Code
+session reached Foreign Cinema's private dining voicemail. Codex reached the
+Waterbar and EPIC Steak automated concierges through Call4me, then Waterbar's
+virtual concierge through Bland and Agent Phone in separate fresh sessions.
+None reached a human, obtained a complete event quote, or arranged a booking.
+The reviewed files live in `public/static/blog/sf-private-dining-*.mp3`,
+preserve the full source durations, and mute private identifiers. Each has a
+reviewed timestamp transcript. These sessions establish their named CLI
+workflows, with canonical authentication checks and legacy calling
+distinguished in the guides.
+
+The calling MCP comparison includes Bland's complete reviewed 2:13 recording
+at `public/static/blog/sf-private-dining-waterbar-bland.mp3` and Agent Phone's
+complete reviewed 1:51 recording at
+`public/static/blog/sf-private-dining-waterbar-vapi.mp3`. Their full audio aligned
+transcripts contain 15 and 11 turns respectively. Bland's stereo source tracks
+were checked separately to preserve overlapping words. Agent Phone's recording
+was associated with its exact authenticated MCP submission and final owned call
+status; no separate Vapi developer REST inspection was available. Independent
+source and export transcriptions confirmed the public audio. The published
+transcripts preserve audible words rather than completing interrupted phrases
+or adding unverified words from API text.
+
+The three Waterbar attempts reached the same virtual concierge but received
+different capacity flexibility statements. Those statements remain unresolved
+and do not establish a staff guarantee or a provider ranking. The experiments
+also use unequal duration limits: six minute Call4me caps, a three minute Bland
+cap, and an instructional three minute Agent Phone goal with no exposed cap
+parameter. They do not establish every client surface or a cross vendor
+benchmark.
 
 Preserve greetings, menus, questions, lookup pauses, and holds. Replace actual
 private identifiers with silence at the same source timestamps instead of
