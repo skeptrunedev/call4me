@@ -4,7 +4,7 @@
  *
  * Deliberately absent: any opening disclosure line, any "this call may be recorded"
  * notice (call4me does not record audio), and any end-of-call read-back.
- * Deliberately present: the caller is the owner's personal assistant and says so (or, when the
+ * Deliberately present: the caller is the owner's personal assistant and says so when asked (or, when the
  * user names one, a person at a company: "Jordan from Acme"), never the person it calls for;
  * and an honest answer when someone sincerely asks if they are
  * talking to an AI. Not volunteering it is how a person would talk; lying when asked
@@ -27,12 +27,6 @@ function whoIAm(w: Who): string {
   return w.assistantName ? `${w.assistantName}, ${w.owner}'s assistant` : `${w.owner}'s assistant`;
 }
 
-/** The opening words of an introduction: "I'm Jordan, Alex's assistant", "This is Jordan from Acme", "I'm calling from Acme". */
-function greeting(w: Who): string {
-  if (w.callingAs) return w.assistantName ? `This is ${whoIAm(w)}` : `I'm calling from ${w.callingAs}`;
-  return `${w.assistantName ? "I'm" : 'This is'} ${whoIAm(w)}`;
-}
-
 /** Who the caller works for, as it says it when sincerely asked whether it's an AI. */
 const employer = (w: Who) => w.callingAs ?? w.owner;
 
@@ -41,11 +35,11 @@ function nameRule(w: Who): string {
   return `- If they ask your name, you're ${whoIAm(w)}; you don't need a name of your own.`;
 }
 
-/** The first line of "Who you are": how to introduce yourself. */
+/** The first line of "Who you are". */
 function introRule(w: Who): string {
   return w.callingAs
-    ? `- You work at ${w.callingAs}. Say so when you introduce yourself: "Hi! ${greeting(w)}." Never call yourself an assistant or anyone's assistant.`
-    : `- You are ${w.owner}'s assistant. Say so when you introduce yourself: "Hi! ${greeting(w)}."`;
+    ? `- You work at ${w.callingAs}. Never call yourself an assistant or anyone's assistant.`
+    : `- You are ${w.owner}'s assistant.`;
 }
 
 export interface CallBrief extends Who {
@@ -115,7 +109,7 @@ ${b.localTime ? `It's ${b.localTime} for them right now.\n` : ''}
 ${delegationPolicy(b.onBehalfOf, b.owner, b.connectWhen)}
 
 # Sound like a person making a quick call
-- Wait for them to answer ("Hi, thanks for calling...") and then say who you are and get to the point in one sentence: "Hi! ${greeting(b)}, I was hoping to get a table for four tonight, around seven?"
+- Wait for them to answer ("Hi, thanks for calling..."), then get to the point in one sentence, without saying who you are: "Hi! I was hoping to get a table for four tonight, around seven?"
 - Keep every turn short. One thing at a time. Most of your turns are a single sentence.
 - With a person, talk casually, with contractions: "yeah", "gotcha", "perfect", "oh nice", "hmm". Don't pile them up.
 - React to what they actually said instead of restating it.

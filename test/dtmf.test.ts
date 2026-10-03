@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { inbandKeysFor } from '../src/server/services/dialer';
-import { dtmfFrames, dtmfFrequencies, dtmfSamples, FRAME_SAMPLES, GAP_MS, linearToMulaw, mulawToLinear, pcmuMs, TONE_MS, WAIT_MS } from '../src/server/voice/dtmf';
+import { dtmfFrames, dtmfFrequencies, dtmfSamples, FRAME_SAMPLES, GAP_MS, linearToMulaw, mulawToLinear, pcmuAudible, pcmuMs, TONE_MS, WAIT_MS } from '../src/server/voice/dtmf';
 
 const RATE = 8000;
 const ALL = [697, 770, 852, 941, 1209, 1336, 1477, 1633];
@@ -75,4 +75,10 @@ test('pcmuMs times a GPT-Live audio delta from its bytes', () => {
   assert.equal(pcmuMs(Buffer.alloc(162, 0xff).toString('base64')), 20.25);
   assert.equal(pcmuMs(''), 0);
   for (const frame of dtmfFrames('1')) assert.equal(pcmuMs(frame), FRAME_SAMPLES / 8);
+});
+
+test('pcmuAudible tells speech from the silence GPT-Live streams between turns', () => {
+  assert.equal(pcmuAudible(Buffer.alloc(800, 0xff).toString('base64')), false);
+  assert.equal(pcmuAudible(Buffer.alloc(800, linearToMulaw(200)).toString('base64')), false);
+  assert.equal(pcmuAudible(dtmfFrames('5')[0]), true);
 });

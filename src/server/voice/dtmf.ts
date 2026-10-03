@@ -19,6 +19,16 @@ export function pcmuMs(base64: string): number {
   return ((base64.length * 3) / 4 - padding) / (SAMPLE_RATE / 1000);
 }
 
+/** Loudest sample in silence GPT-Live streams between turns stays far below this. */
+const SPEECH_LEVEL = 1000;
+
+/** Whether a base64 chunk of μ-law audio carries speech, not the silence GPT-Live streams nonstop between turns. */
+export function pcmuAudible(base64: string): boolean {
+  const bytes = atob(base64);
+  for (let i = 0; i < bytes.length; i++) if (Math.abs(mulawToLinear(bytes.charCodeAt(i))) > SPEECH_LEVEL) return true;
+  return false;
+}
+
 const ROWS = [697, 770, 852, 941];
 const COLS = [1209, 1336, 1477, 1633];
 const KEYS = ['123A', '456B', '789C', '*0#D'];

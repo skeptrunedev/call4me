@@ -2,7 +2,7 @@ import { DurableObject } from 'cloudflare:workers';
 import { Raindrop, type Interaction } from 'raindrop-ai';
 import { ACTIVE, calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
-import { dtmfFrames, FRAME_MS, pcmuMs } from './dtmf';
+import { dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
 import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, missedHandoff } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { BACK_OFFICE_TOOLS } from './prompt';
@@ -133,6 +133,8 @@ export class VoiceSession extends DurableObject<Env> {
   private heardThem = false;
   /** Wall-clock time when the audio already sent to Telnyx will finish playing. */
   private playbackEndsAt = 0;
+  /** When the caller's last audible words finish playing; GPT-Live streams silence nonstop, so playback alone never goes quiet. */
+  private speechEndsAt = 0;
   /** Until when keypad tones are playing; the caller's audio is held off the line until then. */
   private keysPlayingUntil = 0;
   private lastOutputAt = 0;
@@ -443,6 +445,7 @@ export class VoiceSession extends DurableObject<Env> {
         const now = Date.now();
         // Audio deltas carry no timing, so how long they play comes from their length.
         this.playbackEndsAt = Math.max(this.playbackEndsAt, now) + pcmuMs(e.delta);
+        if (pcmuAudible(e.delta)) this.speechEndsAt = this.playbackEndsAt;
         this.lastOutputAt = now;
         break;
       }
@@ -915,11 +918,11 @@ export class VoiceSession extends DurableObject<Env> {
 
   // ---- keeping the line warm while the person answers
 
-  /** Check for dead air once the line has been quiet long enough since the last words, our audio, or the last holding line. */
+  /** Check for dead air once the line has been quiet long enough since the last words on either side, or the last holding line. */
   private scheduleHoldingLine(): void {
     if (!this.holding || this.ended || this.endingCall) return;
     if (this.holdingTimer) clearTimeout(this.holdingTimer);
-    const quietSince = Math.max(this.lastTranscriptAt, this.playbackEndsAt);
+    const quietSince = Math.max(this.lastTranscriptAt, this.speechEndsAt);
     const due = Math.max(quietSince + HOLDING_LINE_QUIET_MS, this.holding.lastAt + HOLDING_LINE_REPEAT_MS);
     this.holdingTimer = setTimeout(() => this.holdingLine(), Math.max(0, due - Date.now()));
   }
@@ -933,7 +936,7 @@ export class VoiceSession extends DurableObject<Env> {
     this.holdingTimer = null;
     const h = this.holding;
     if (!h || !this.waiting.size || this.ended || this.endingCall || this.personHolds() || h.lines >= MAX_HOLDING_LINES) return;
-    const quietSince = Math.max(this.lastTranscriptAt, this.playbackEndsAt);
+    const quietSince = Math.max(this.lastTranscriptAt, this.speechEndsAt);
     if (Date.now() - quietSince < HOLDING_LINE_QUIET_MS) return this.scheduleHoldingLine();
     const lastThem = [...this.transcript].reverse().find((l) => l.role === 'them');
     if (!lastThem || isPhoneMenu(lastThem.text) || asksUsToWait(lastThem.text) || this.menuRecovery.pending()) return;
