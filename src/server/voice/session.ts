@@ -977,7 +977,7 @@ export class VoiceSession extends DurableObject<Env> {
     if (lastThem && (isPhoneMenu(lastThem.text) || asksUsToWait(lastThem.text))) return;
     this.stillThereFor = last.at;
     this.mark(`line quiet ${Math.round((Date.now() - quietSince) / 1000)}s after the caller spoke; asking if they're still there`);
-    this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'They\'ve gone quiet. Say "Hello, are you still there?" and then wait.' });
+    this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: 'They\'ve gone quiet. Say "Hello, are you still there?" and then wait.' });
   }
 
   // ---- transcript
