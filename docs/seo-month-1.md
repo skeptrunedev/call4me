@@ -157,6 +157,9 @@ Still open from launch day: analytics with signup source tracking; Nick to creat
 - The first 2 test calls, Verizon (customer service) and Planet Fitness (cancel), to decide what a write-up needs to capture.
 
 **Sat Oct 3 (agent): data model**
+
+**Updated priority, Oct 3:** prepare more pages aimed at high volume searches with attainable results. The [next page batch](seo/next-pages.md), checked against fresh Ahrefs US metrics and search result snapshots, prioritizes Fubo cancellation (15,000/month), Factor cancellation (12,000/month) and HelloFresh cancellation (8,800/month). Each needs a live representative test call and Nick's review. Informational call approval is pending; preparation can proceed today. Improve the existing Fabletics page instead of making a duplicate cancellation guide. The data model remains queued below.
+
 - D1 `companies` and `test_calls` tables: company, page type, the number dialed and its source, when we called, each step of the phone tree (menu prompt, what we pressed or said, time spent), rep interactions, what was needed, the outcome, links to the call record.
 - A script that turns a finished call's transcript into a draft phone-tree write-up for review.
 
