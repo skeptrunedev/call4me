@@ -56,6 +56,8 @@ const MAX_FORCED_HANDOFFS = 12;
 const HOLDING_LINE_QUIET_MS = 8_000;
 const HOLDING_LINE_REPEAT_MS = 15_000;
 const MAX_HOLDING_LINES = 4;
+/** Quiet after the caller's last words before it checks the other side is still there. */
+const STILL_THERE_QUIET_MS = 10_000;
 /**
  * The alarm doubles as a heartbeat that outlives this instance: Cloudflare can reset a session
  * mid-call, and a fresh instance with no phone stream first asks Telnyx to reattach it, then
@@ -154,6 +156,9 @@ export class VoiceSession extends DurableObject<Env> {
   /** The latest question still out to the person, and how many "still checking" lines it has had. */
   private holding: { question: string; lines: number; lastAt: number } | null = null;
   private holdingTimer: ReturnType<typeof setTimeout> | null = null;
+  private stillThereTimer: ReturnType<typeof setTimeout> | null = null;
+  /** The caller line that last got a "still there?", so one silence gets one. */
+  private stillThereFor = 0;
   /** The person's own phone leg while it rings or is on the call; the caller stays silent while they talk. */
   private personLeg: string | null = null;
   private personOn = false;
@@ -457,6 +462,7 @@ export class VoiceSession extends DurableObject<Env> {
         if (delta) this.menuRecovery.observe(delta, Date.now());
         this.scheduleHandoffCheck();
         this.scheduleHoldingLine();
+        this.scheduleStillThere();
         // Barge-in: GPT-Live stops generating when talked over, but audio already queued at
         // Telnyx keeps playing. If the model has gone quiet while playback is still ahead,
         // that queued audio is stale: flush it.
@@ -472,6 +478,7 @@ export class VoiceSession extends DurableObject<Env> {
           this.appendTranscript('caller', (ev as { delta: string }).delta);
           this.scheduleHandoffCheck();
           this.scheduleHoldingLine();
+          this.scheduleStillThere();
         }
         break;
       case 'session.delegation.created':
@@ -947,6 +954,32 @@ export class VoiceSession extends DurableObject<Env> {
     this.scheduleHoldingLine();
   }
 
+  /** Check the other side is still there once they've been quiet a while after the caller spoke. */
+  private scheduleStillThere(): void {
+    if (this.ended || this.endingCall) return;
+    if (this.stillThereTimer) clearTimeout(this.stillThereTimer);
+    const quietSince = Math.max(this.lastTranscriptAt, this.speechEndsAt);
+    this.stillThereTimer = setTimeout(() => this.stillThere(), Math.max(0, quietSince + STILL_THERE_QUIET_MS - Date.now()));
+  }
+
+  /**
+   * The caller said something for them to answer and they've said nothing since. A question out
+   * to the person has its own holding lines, and quiet after they asked us to wait is theirs.
+   */
+  private stillThere(): void {
+    this.stillThereTimer = null;
+    if (this.ended || this.endingCall || this.holding || this.personHolds() || this.menuRecovery.pending()) return;
+    const quietSince = Math.max(this.lastTranscriptAt, this.speechEndsAt);
+    if (Date.now() - quietSince < STILL_THERE_QUIET_MS) return this.scheduleStillThere();
+    const last = this.transcript[this.transcript.length - 1];
+    const lastThem = [...this.transcript].reverse().find((l) => l.role === 'them');
+    if (last?.role !== 'caller' || last.at === this.stillThereFor) return;
+    if (lastThem && (isPhoneMenu(lastThem.text) || asksUsToWait(lastThem.text))) return;
+    this.stillThereFor = last.at;
+    this.mark(`line quiet ${Math.round((Date.now() - quietSince) / 1000)}s after the caller spoke; asking if they're still there`);
+    this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'They\'ve gone quiet. Say "Hello, are you still there?" and then wait.' });
+  }
+
   // ---- transcript
 
   private appendTranscript(role: TranscriptLine['role'], delta: string): void {
@@ -1041,6 +1074,7 @@ export class VoiceSession extends DurableObject<Env> {
     this.ended = true;
     if (this.handoffTimer) clearTimeout(this.handoffTimer);
     if (this.holdingTimer) clearTimeout(this.holdingTimer);
+    if (this.stillThereTimer) clearTimeout(this.stillThereTimer);
     console.log('call session ending:', reason);
     const s = await this.load();
     if (s?.controlId && reason !== 'hangup webhook') {
