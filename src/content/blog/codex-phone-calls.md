@@ -34,7 +34,7 @@ Start a fresh Codex session and use `/mcp` to inspect the active connection. Ask
 
 > Use call4me_get_balance to check the connection. Show whether it worked. Do not place a call.
 
-OpenAI's [MCP documentation](https://learn.chatgpt.com/docs/extend/mcp) confirms that Codex supports remote HTTP servers with OAuth or bearer authentication. It also documents the configuration file and `/mcp`. The commands above use call4me's canonical endpoint. The browser OAuth steps are the documented setup path; our test below used bearer credentials.
+OpenAI's [MCP documentation](https://learn.chatgpt.com/docs/extend/mcp) confirms that Codex supports remote HTTP servers with OAuth or bearer authentication. It also documents the configuration file and `/mcp`. We completed a fresh browser OAuth connection to the canonical endpoint with Codex CLI 0.160.0, approved the call4me consent screen, then successfully ran `call4me_get_balance` in a new session. That verifies this sign in and account read. The restaurant calls below used an earlier bearer connection.
 
 ### Alternative: an API key in your environment
 
@@ -78,7 +78,7 @@ The final answer should distinguish what a website says, what the phone conversa
 
 We used a fresh session and kept the MCP connection separate from our normal configuration. A first run successfully checked the account but stopped before dialing because the call required approval and that run could not obtain it. The next run used the CLI's automatic approval review for the two explicitly authorized research calls.
 
-The current endpoint at `https://call4.me/mcp` passed a separate authenticated balance check with an existing account API key. The research calls ran through an existing connection on our older hostname. That establishes CLI calling through that connection and a current endpoint authentication check separately. We have not tested these steps in the Codex desktop app or IDE extension.
+The current endpoint at `https://call4.me/mcp` passed separate authenticated balance checks with both an existing account API key and fresh browser OAuth. The research calls ran through an existing connection on our older hostname. That establishes CLI calling through that connection and current endpoint authentication checks separately. We have not tested these steps in the Codex desktop app or IDE extension.
 
 | Restaurant | Actual call result |
 |---|---|
@@ -108,6 +108,8 @@ OpenAI's [configuration reference](https://learn.chatgpt.com/docs/config-file/co
 **If tools do not appear**, check `codex mcp list`, start a fresh session, and inspect `/mcp`. Verify that you configured the provider environment you actually use. A connection on another machine is not this session's connection.
 
 **If authentication fails**, use the canonical endpoint and reconnect with `codex mcp login call4me`, or check that the bearer variable exists in the launching process. Do not paste a key into the chat as a repair step.
+
+During our fresh OAuth test, Codex initially reported `Authorization server issuer mismatch`. We traced this to a server discovery bug: a machine GET carrying `MCP-Protocol-Version` received the installation HTML instead of an authentication challenge. We fixed the route to return the challenge and its protected resource metadata, added regression tests, then completed browser sign in and an authenticated read on production. We kept issuer validation intact. If this error recurs, report the exact endpoint and CLI version rather than disabling validation.
 
 **If a status check times out**, inspect the same call ID again before retrying the dial. A tool timeout does not establish that the phone call ended, and a second placement can create a duplicate call.
 

@@ -47,7 +47,7 @@ test('browser and unfurler GET still render the signed out installation page', a
     const response = await app.request('https://call4.me/mcp', { headers: { accept } }, {});
     assert.equal(response.status, 200);
     assert.match(response.headers.get('content-type') ?? '', /text\/html/);
-    assert.match(await response.text(), /install call4me/i);
+    assert.match(await response.text(), /<h1>install the call4me mcp<\/h1>/i);
   }
   for (const path of paths.slice(1)) {
     const response = await app.request(`https://call4.me${path}`, { headers: { accept: 'text/html' } }, {});

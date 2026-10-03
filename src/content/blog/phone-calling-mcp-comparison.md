@@ -2,7 +2,7 @@
 title: "Phone calling MCP servers for Claude Code and Codex: which setup fits your agent?"
 seoTitle: Phone calling MCP servers for Claude Code and Codex
 subtitle: Compare call4me, Vapi Agent Phone, Bland, ClawCall, Cocall, and Patter by account setup, calling workflow, and the evidence your agent gets back.
-description: A practical comparison of phone calling MCP servers for Claude Code and Codex, including hosted services, Bland's official plugin, and Patter's local Claude Code integration.
+description: Compare phone calling MCP servers for Claude Code and Codex with real call4me, Vapi Agent Phone, and Bland calls, recordings, transcripts, setup steps, and observed limits.
 date: 2026-10-03
 tags: mcp, claude code, codex, ai agents, ai phone assistant
 authors: nick
@@ -68,6 +68,8 @@ codex mcp login call4me
 
 Ask it to run `call4me_get_balance` without placing a call. The [account page](https://call4.me/account) also provides a personal server URL carrying your API key. Treat that URL as a credential.
 
+We verified fresh browser OAuth and a balance read on the canonical endpoint with Codex CLI 0.160.0. Our restaurant calls used an earlier bearer connection; the [Codex walkthrough](/blog/codex-phone-calls) distinguishes these tests and explains the discovery bug we found and fixed during sign in.
+
 call4me exposes the call to the existing agent as a goal, facts, and flexibility. For a restaurant research task, those facts might include the group size, date, and whether the agent may reserve anything. Follow `call4me_get_call` while the call is active, answer open questions, then return the result to the original task. Available carrier recordings can be retrieved separately; a recording can be pending or absent.
 
 ### Vapi Agent Phone
@@ -78,9 +80,16 @@ call4me exposes the call to the existing agent as a goal, facts, and flexibility
 claude mcp add --transport http agent-phone https://phone.vapi.ai/mcp
 ```
 
-Complete browser authentication through your client's MCP controls. Agent Phone also documents an HTTP device connection for agents with HTTP access and secure credential storage. Its device credential is separate from its MCP OAuth credential.
+Complete browser authentication through your client's MCP controls. For Codex, the standard MCP commands are:
 
-Use the Agent Phone instructions, rather than Vapi developer dashboard instructions. Its [discovery document](https://phone.vapi.ai/discovery.json) currently lists account and shared attempt limits. This is a limited calling allowance, not unlimited service. The protocol also asks you to establish voicemail preferences and collect caller and callback details where required before submission.
+```bash
+codex mcp add agent-phone --url https://phone.vapi.ai/mcp
+codex mcp login agent-phone
+```
+
+Our live example below reused a browser authorized MCP connection in a fresh Codex session. See [Codex's MCP documentation](https://learn.chatgpt.com/docs/extend/mcp) for the client commands. Agent Phone also documents an HTTP device connection for agents with HTTP access and secure credential storage. Its device credential is separate from its MCP OAuth credential.
+
+Use the Agent Phone instructions, rather than Vapi developer dashboard instructions. Its [discovery document](https://phone.vapi.ai/discovery.json) currently lists account and shared attempt limits. This is a limited calling allowance, not unlimited service. Its [call schema](https://phone.vapi.ai/openapi.json) defaults voicemail to `on`, which requires a user supplied caller name and callback number. Our task explicitly prohibited voicemail, so we sent `voicemail: "off"` and omitted both contact fields. Do not invent them to satisfy validation. The live MCP schema did not expose a duration setting; a duration instruction in the goal is not an enforced cap.
 
 ### Bland's official MCP and plugin
 
@@ -191,6 +200,53 @@ Names are shown in brackets. The full recording lasts 2:13, with original timing
 </details>
 
 At **0:31**, the concierge describes room privacy. At **1:07**, it suggests possible layout flexibility. That statement still needs staff confirmation. At **1:51**, it cannot answer minimums or fees. At **2:07**, the caller declines follow up and ends.
+
+## An actual Vapi Agent Phone call from Codex
+
+We also reused browser OAuth for Agent Phone in a fresh **Codex CLI 0.160.0** session on October 3. The live connection exposed `phone` and `phone_status`. Codex submitted **one** request with a stable `requestKey`, the published Waterbar number, the general research goal, and separate context and instructions. It sent `voicemail: "off"` with no caller name or callback contact. The tool accepted that input.
+
+There was no account allowance read tool. The submission returned `remainingCalls: 9`; this was an observed remaining allowance after the attempt, rather than a balance checked beforehand. The live schema also had **no duration parameter**. We instructed the caller to finish within three minutes, so this run had an instructional limit, unlike Bland's enforced three minute cap and the Call4me runs' six minute caps.
+
+Codex kept reading the same call ID at the returned `pollAfterSeconds` interval. Active reads had no transcript or recording. The final result returned `ended`, `assistant-ended-call`, a transcript, and a recording. It also returned `cost: 0`; we report that field without assigning an undocumented currency or treating it as a general pricing guarantee.
+
+Waterbar's virtual concierge described Bridge Tower as private and Looking Glass as less enclosed, overlooking the bar. It repeated the posted capacities but could not confirm layout flexibility. It could not supply minimums or fees. The caller used a generic AI introduction, did not invent event details, and declined offers to pass a message twice. The concierge independently announced that it was taking notes to share with the team; our artifacts do not establish whether those notes were relayed.
+
+**The same Waterbar automation gave different capacity answers across these calls.** Bland received possible flexibility language; Agent Phone and Call4me received an explicit limit on what the concierge could confirm. We leave layout flexibility unresolved and seek staff confirmation. The different responses and instructions do not support a provider ranking or a matched benchmark.
+
+### Listen to the Vapi Agent Phone Waterbar call
+
+<audio controls preload="metadata" src="/static/blog/sf-private-dining-waterbar-vapi.mp3" style="width:100%"><a href="/static/blog/sf-private-dining-waterbar-vapi.mp3">listen to the Vapi Agent Phone Waterbar call</a></audio>
+
+<details>
+<summary>Read the Vapi Agent Phone Waterbar transcript</summary>
+
+Names are shown in brackets. The full recording lasts 1:51, with original timing preserved. This transcript follows the reviewed recording. An isolated opening "Hi" in the API text was not established in the audio and is omitted here.
+
+**0:05** Waterbar virtual concierge: Hello. Thank you for calling Waterbar. This is [name removed], the virtual concierge. I'm taking notes on this call and sharing with the team. How can I help you?
+
+**0:15** Vapi through Agent Phone: Hi, I'm an AI assistant calling to ask a few general questions about your private dining spaces. I'm not making a booking, just gathering info.
+
+**0:27** Waterbar virtual concierge: Hi, of course. We have a few private event options at Waterbar. What would you like to know?
+
+**0:33** Vapi through Agent Phone: Thanks. Are the Bridge Tower and Looking Glass spaces fully enclosed, or do they share space or sound with the main dining room?
+
+**0:43** Waterbar virtual concierge: The Bridge Tower room is a private dining room with wall to wall windows and its own private terrace. The Looking Glass is a versatile indoor and outdoor venue overlooking the main bar, so it is not as fully enclosed as a traditional private room.
+
+**0:59** Vapi through Agent Phone: Okay, that helps. Are your ideal seated capacities, like 60 for Bridge Tower and 24 for Looking Glass, hard limits, or can they shift a bit depending on layout?
+
+**1:13** Waterbar virtual concierge: The Bridge Tower room can seat up to 60 guests, and the Looking Glass can seat up to 24 guests. I don't have more detail on layout flexibility, but I can pass your message to the host if you'd like.
+
+**1:24** Vapi through Agent Phone: That's okay. No need to pass anything along. Could you share, in general, what the current food and beverage minimums are and any mandatory service, admin, or room fees?
+
+**1:37** Waterbar virtual concierge: It looks like I don't have enough information to help with that, but I can pass your message to the host.
+
+**1:44** Vapi through Agent Phone: No need, thank you. That's all I needed for now.
+
+**1:48** Vapi through Agent Phone: Okay, ending the call.
+
+</details>
+
+At **0:43**, the concierge describes the rooms. At **1:13**, it cannot confirm layout flexibility. At **1:37**, it cannot answer minimums or fees. At **1:44**, the caller declines message forwarding, then announces it is ending the call at **1:48**.
 
 ## A useful first task: web research, then phone confirmation
 
