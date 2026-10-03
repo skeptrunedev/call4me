@@ -14,7 +14,30 @@ Ahrefs US keyword metrics pulled October 3. Volumes below are for the exact keyw
 
 Fubo's related wording, `how to cancel fubo subscription`, has 9,900 monthly searches and difficulty 0. Its September 22 snapshot also shows Goal and Xpendy ranking. Do not add variant volumes together and describe the total as unique searchers or expected traffic.
 
-All three are uncovered in the current blog. Nick authorized informational calls October 3, and all three reached live representatives that morning. These were general cancellation inquiries, with no accounts cancelled or changed. Raw recordings and transcripts are preserved outside git. Reviewed audio, an accurate draft and Nick's review are still required before publication.
+Nick authorized informational calls October 3, and all three reached live representatives that morning. He then requested the new blogs and examples be added. The three guides are registered at `/blog/cancel-factor`, `/blog/cancel-fubo` and `/blog/cancel-hellofresh`, with three linked examples and all five reviewed recordings. These were general cancellation inquiries, with no accounts cancelled or changed. Raw recordings, transcripts and privacy verification evidence are preserved outside git.
+
+## Related keyword coverage
+
+Ahrefs US exact keywords checked October 3. One guide per company covers the related intents below. These volumes overlap; do not sum them as unique demand or forecast traffic.
+
+| Guide | Related keyword | Monthly searches | Difficulty |
+|---|---|---:|---:|
+| Fubo | how to cancel fubo subscription | 9,900 | 0 |
+| Fubo | how to cancel fubo free trial | 7,800 | 8 |
+| Fubo | how to cancel fubotv | 6,500 | 0 |
+| Fubo | fubo customer service phone number | 3,500 | 17 |
+| Fubo | how to cancel fubo on roku | 350 | 9 |
+| Factor | factor customer service | 1,800 | 5 |
+| Factor | how to cancel factor | 1,100 | 0 |
+| Factor | how to cancel factor subscription | 1,000 | 2 |
+| Factor | factor customer service phone number | 1,000 | 2 |
+| Factor | how to cancel factor meals on app | 150 | 0 |
+| HelloFresh | how to cancel hello fresh | 3,000 | 0 |
+| HelloFresh | how to cancel hellofresh subscription | 1,800 | 1 |
+| HelloFresh | how to cancel hellofresh on app | 800 | 0 |
+| HelloFresh | hellofresh customer service phone number | 200 | 14 |
+
+Each guide also covers missing cancellation controls, confirmation and the next charge or order. The guides keep limitations about untested account screens and contradictory support answers. Fubo's Roku route uses Roku's current September 14 instructions rather than copying older labels from Fubo's help page.
 
 ## Factor page brief
 
@@ -64,7 +87,7 @@ Primary source: [HelloFresh's cancellation guide](https://www.hellofresh.com/abo
 
 Contact verified on [HelloFresh's accessibility page](https://www.hellofresh.com/about/accessibility): (646) 846 3663 for Customer Care. Our Saturday call reached a human through the account cancellation menu. The live call establishes availability at the tested time, not a complete current weekend schedule.
 
-Call findings: cancel the subscription after logging into the account, at least five days before delivery. The representative did not answer the exact timezone question; use the official guide for that detail and identify it as website evidence. For a box already generated after the cutoff, the representative said a credit or refund could not be issued and the final box would still arrive. This is not a blanket policy about every refund reason. Confirmation should arrive by email within 24 hours. If the online cancel control is missing, call support; account lookup uses the shipping address, email and account holder's name. [Call record](https://call4.me/account/calls/call_hdac9u2iyoy19rfs).
+Call findings: cancel the subscription after logging into the account, at least five days before delivery. The representative did not answer the exact timezone question; use the official guide for that detail and identify it as website evidence. For a box already generated after the cutoff, the representative said the final box would still arrive. The saved live call transcript captured a refusal of credit or refund, but the key word is unclear in the recording. The public transcript marks it unclear and the guide separately cites the official statement that processed orders remain chargeable. This is not a blanket policy about every refund reason. Confirmation should arrive by email within 24 hours. If the online cancel control is missing, call support; account lookup uses the shipping address, email and account holder's name. [Call record](https://call4.me/account/calls/call_hdac9u2iyoy19rfs).
 
 Call brief: ask about cancelling online or by phone, verification, the precise cutoff and timezone, the next box after cancelling, whether a processed order can be stopped, refunds or credits, and confirmation. No fake order, membership claim, purchases or account changes. Capture the real menu and representative answers.
 
@@ -86,6 +109,6 @@ OnTrac is unsuitable for a phone guide at present. Its [official support page](h
 
 1. Completed October 3: Nick authorized the three informational calls, and each published consumer support number was checked before dialing.
 2. Completed October 3: five calls finished, including one unsuccessful automated Fubo attempt and the Factor clarification. All three companies reached humans; total cost $7.00. Recordings and saved transcripts are outside git. Factor's source discrepancies remain flagged above.
-3. Prepare reviewed audio and transcripts under the rules in [examples.md](../examples.md). Draft the pages using existing blog structure.
-4. Nick reads each full draft. Publish only approved pages, link them from related articles, and check production rendering, recordings, sitemap and IndexNow.
+3. Completed October 3: five reviewed audio exports and matching transcripts, following [examples.md](../examples.md), are included in the three guides. Three examples link to their corresponding guide.
+4. Nick requested publication of this batch. Publish through the normal main deploy, then verify production rendering, recordings, sitemap, markdown, llms.txt and IndexNow. Future batches retain the normal draft review requirement.
 5. Log indexing and impressions before increasing the batch size. Search volume is potential demand, not a traffic forecast.

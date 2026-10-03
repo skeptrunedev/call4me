@@ -23,6 +23,7 @@ export const ExamplesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
           <p class="small">{example.business} · {example.date} · {example.duration}</p>
           <p><b>the request:</b> {example.request}</p>
           <p><b>what happened:</b> {example.outcome}</p>
+          {example.guide && <p><a href={example.guide.href}>{example.guide.label}</a></p>}
           <audio controls preload="metadata" aria-label={`listen: ${example.title}`} src={example.audio}>
             <a href={example.audio}>listen to the recording</a>
           </audio>

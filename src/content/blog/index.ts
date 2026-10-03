@@ -30,6 +30,9 @@ import spectrumRetention from './spectrum-retention-department.md';
 import allstateCustomerServiceNumber from './allstate-customer-service-number.md';
 import cancelAudible from './cancel-audible.md';
 import fableticsCustomerService from './fabletics-customer-service.md';
+import cancelFactor from './cancel-factor.md';
+import cancelFubo from './cancel-fubo.md';
+import cancelHelloFresh from './cancel-hellofresh.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -68,4 +71,7 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'allstate-customer-service-number', markdown: allstateCustomerServiceNumber },
   { slug: 'cancel-audible', markdown: cancelAudible },
   { slug: 'fabletics-customer-service', markdown: fableticsCustomerService },
+  { slug: 'cancel-factor', markdown: cancelFactor },
+  { slug: 'cancel-fubo', markdown: cancelFubo },
+  { slug: 'cancel-hellofresh', markdown: cancelHelloFresh },
 ];

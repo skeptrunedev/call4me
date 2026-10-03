@@ -198,6 +198,12 @@ document.querySelectorAll('.copy-link').forEach(function (b) {
 
 /** Timestamp links (lib/blog.ts linkTimestamps) seek the recording on the page instead of opening the file. */
 const SEEK_SCRIPT = `
+document.addEventListener('play', function (event) {
+  if (!(event.target instanceof HTMLAudioElement)) return;
+  document.querySelectorAll('audio').forEach(function (other) {
+    if (other !== event.target) other.pause();
+  });
+}, true);
 document.addEventListener('click', function (event) {
   var link = event.target instanceof Element && event.target.closest('a.seek');
   if (!link) return;

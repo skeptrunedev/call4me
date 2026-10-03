@@ -32,6 +32,14 @@ transcripts, and editing manifests outside this repository. Public players
 must only use the reviewed static exports. Publish an account owner's recording
 with their permission.
 
+The October 3 cancellation research adds founder examples for Factor, Fubo and
+HelloFresh, linked to their cancellation guides. These are general inquiries,
+not completed account cancellations. The blogs include all five calls, including
+the first Fubo attempt that reached only an automated assistant and the Factor
+clarification. Each export retains the complete source duration, with names and
+private phone details muted. Factor's contradictory deadline and data deletion
+answers remain explicit in the guide.
+
 Preserve greetings, menus, questions, lookup pauses, and holds. Replace actual
 private identifiers with silence at the same source timestamps instead of
 removing the surrounding conversation. Muted fields include names, addresses,
