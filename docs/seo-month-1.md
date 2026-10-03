@@ -1,5 +1,7 @@
 # Month 1 Search Plan: October 2026, Day by Day
 
+**Current schedule, October 3:** follow the [coding agent ICP plan and editorial schedule](seo/icp-plan.md). It replaces the company page volume targets and future work slots below. Existing progress entries remain the historical record. The next work is fresh Claude Code and Codex walkthroughs, a complete web research plus telephone task, T3 verification and calling MCP comparisons.
+
 Month 1 of the [12-month search plan](seo-plan.md), rewritten as a daily schedule after the launch. One rule decides what gets built: grow search and AI-assistant traffic as fast as possible.
 
 ## Where we start (launch day, 2026-09-30)

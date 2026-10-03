@@ -1,5 +1,7 @@
 # Call for Me Search Plan
 
+**Current priority, October 3:** the [coding agent ICP plan](seo/icp-plan.md) takes precedence over the consumer page production targets below. Focus on Claude Code, Codex and T3 Code users adding outbound calling to their existing harness, with executed setup guides, complete research workflows and tested comparisons. The consumer research and historical targets below remain reference material.
+
 A daily routine for becoming the site people land on when they need to call a company and don't want to, ahead of Pine, GetHuman, DoNotPay and Rocket Money.
 
 Data: Ahrefs US database, pulled 2026-09-28. Traffic = estimated organic visits per month.
