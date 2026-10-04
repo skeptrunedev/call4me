@@ -4,6 +4,7 @@ seoTitle: Phone calling MCP servers for Claude Code and Codex
 subtitle: Compare call4me, Vapi Agent Phone, Bland, ClawCall, Cocall, and Patter by account setup, calling workflow, and the evidence your agent gets back.
 description: Compare phone calling MCP servers for Claude Code and Codex with real call4me, Vapi Agent Phone, and Bland calls, recordings, transcripts, setup steps, and observed limits.
 date: 2026-10-03
+updated: 2026-10-04
 tags: mcp, claude code, codex, ai agents, ai phone assistant
 authors: nick
 imageAlt: Phone calling MCP services compared by setup and calling workflow
@@ -13,7 +14,7 @@ You already have Claude Code or Codex researching a problem. A phone calling MCP
 
 Several services now provide this. **Vapi Agent Phone is a ready to use calling service**, separate from Vapi's developer dashboard. **Bland has an official operational MCP server and skills plugin** that can place calls as well as build voice agents. call4me, ClawCall, Cocall, and Patter also support outbound calling from an existing agent. The useful choice is how you connect, what the call can ask you, and what comes back.
 
-We make call4me. This comparison uses official documentation reviewed on **October 3, 2026**, public MCP connection checks, and the bounded harness examples described below. We did not run the same live call through every service, so this is a setup and workflow comparison, without a call quality ranking.
+We make call4me. Our initial documentation and public MCP connection review took place on **October 3, 2026**. On **October 4**, we checked the relevant phone menu documentation and added the Foreign Cinema calls below. The bounded harness examples show each workflow and its limits. We did not run the same live call through every service, so this comparison does not rank call quality.
 
 ## Choose by the setup you want
 
@@ -247,6 +248,78 @@ Names are shown in brackets. The full recording lasts 1:51, with original timing
 </details>
 
 At **0:43**, the concierge describes the rooms. At **1:13**, it cannot confirm layout flexibility. At **1:37**, it cannot answer minimums or fees. At **1:44**, the caller declines message forwarding, then announces it is ending the call at **1:48**.
+
+## Can these callers navigate a phone menu?
+
+On **October 4, 2026**, we gave Vapi Agent Phone and Bland a narrower task: call Foreign Cinema's published main number, listen to the announced menu, select private dining using native keypad tones, and identify the destination greeting. Its [official private dining page](https://foreigncinema.com/private-dining/) confirms **(415) 648 7600, extension 2**. We did not supply a digit sequence in either call request. Each caller had to choose from the menu it heard.
+
+The instructions prohibited bookings, business questions, personal details, callbacks and messages. They also required the caller to **end immediately and silently once private dining or the events director was identified**, and finish within three minutes. That distinction lets us assess menu routing separately from what the caller did after arriving.
+
+### Vapi Agent Phone reached private dining voicemail
+
+A fresh Codex CLI session submitted the request through Agent Phone's native MCP with `dtmf: "auto"` and `voicemail: "off"`. The schema did not provide an enforced duration field. Codex polled the same call until `phone_status` returned `ended`, `assistant-ended-call`, a transcript and a recording.
+
+The recording confirms that the caller heard the main menu, including the private dining option, and then reached **Foreign Cinema Private Dining voicemail**. The full recording lasts 2:31. This supports successful routing on this call. The MCP result did **not** include a native keypad action or event trace, so the submitted setting and spoken words do not establish exactly how or when keypad tones were sent.
+
+The caller did not follow the ending instruction. It spoke during the route, waited through the private dining voicemail greeting, then said it would hang up. The private dining greeting begins at 1:29 and identifies the events director at 1:36; the caller's final spoken sentence begins at 2:27. We did not hear a clear conventional voicemail beep. **Whether the business recorded any of the caller's speech as a voicemail message remains unknown.** We cannot describe this as an immediate silent exit or claim that no message was left.
+
+### Listen to the Vapi Agent Phone menu call
+
+<audio controls preload="metadata" src="/static/blog/phone-menu-foreign-cinema-vapi.mp3" style="width:100%"><a href="/static/blog/phone-menu-foreign-cinema-vapi.mp3">listen to the Vapi Agent Phone Foreign Cinema call</a></audio>
+
+The reviewed export preserves the original voices and full timing. The staff member's name and email address, and a street reference, are replaced by silence and shown in brackets in the transcript.
+
+<details>
+<summary>Read the Vapi Agent Phone menu transcript</summary>
+
+The full recording lasts 2:31. Private details are shown in brackets, with their original timing preserved. No native keypad event trace was returned. The caller waited through the full voicemail greeting and spoke afterward; the recording does not establish whether those final words became a voicemail message.
+
+**0:00** Foreign Cinema phone system: Hello, and thank you for calling Foreign Cinema. To reach our main line or make a reservation, press one. For private dining, press two. Please leave a voicemail so we may return your call as we may be assisting another guest. Dinner is served seven days a week beginning at 5 p.m. Weekend brunch begins at 10:30 a.m. Films begin at sunset in our outdoor courtyard and play continuously until closing. Reservations are encouraged and walk ins are warmly accepted. Laszlo, our classic cocktail bar, is open daily, features the Foreign Cinema menu with weekend brunch service starting at 11 a.m. No cover charge or reservations required. Street parking is available, as is the [location removed] parking garage at [street removed].
+
+**0:56** Vapi through Agent Phone: Okay.
+
+**0:59** Vapi through Agent Phone: Thanks. I'll stay quiet and wait for the private dining greeting.
+
+**1:29** Foreign Cinema private dining voicemail: Hello, and thank you for calling Foreign Cinema Private Dining. You have reached voicemail for Events Director [name removed]. Please listen to this message. I'm happy to return your phone call with as many details as possible, but first I need some information from you, please. One, please leave your phone number two times. Two, please share the date of your event, and three, please share your estimated guest count. This will help me greatly to provide you with useful information upon my return call. It is often faster to email me. My email address is [email removed]. This email address can also be found on our website under the private dining tab, and there is also a form there that can be filled out for information. I am at work Monday through Friday and look forward to being in touch with you. Thanks so much.
+
+**2:27** Vapi through Agent Phone: Okay, I'll hang up now.
+
+</details>
+
+### Bland returned a keypad action and reached private dining
+
+Codex submitted Bland's call through its operational MCP with `ivr_mode: true`, recording enabled, an enforced three minute connected call cap, and no preset keypad sequence or retry setting. The final native transcript and `get_call_log` contain **`Pressed Button: 2`**. The destination greeting identifies **Foreign Cinema Private Dining** and its events director. These provide both an action record and destination evidence for this attempt.
+
+The call did not end itself immediately when the destination was identified. Codex inspected the ongoing voicemail transcript and explicitly called **`stop_call`**. The terminal log reports **`call_ended_by: USER`** and 68 seconds of connected time. This establishes that the coding agent could stop the call through MCP; it does not establish automatic voicemail ending by the voice agent.
+
+The request spent roughly ten minutes queued before its returned start time. That queue interval is separate from the 68 seconds connected to the business. An earlier request was cancelled while still queued because our runner applied a three minute deadline before connection. It returned no start time or transcript. We exclude that cancelled request from the menu result.
+
+### Listen to the Bland menu call
+
+<audio controls preload="metadata" src="/static/blog/phone-menu-foreign-cinema-bland.mp3" style="width:100%"><a href="/static/blog/phone-menu-foreign-cinema-bland.mp3">listen to the Bland Foreign Cinema call</a></audio>
+
+The full recording lasts 1:08 and preserves the original transfer pause. The staff member's name is replaced by silence. No agent speech is audible. The recording ends during the voicemail greeting because Codex stopped the call; the greeting was not shortened in the export.
+
+<details>
+<summary>Read the Bland menu transcript</summary>
+
+The native provider transcript and action log record button two. That is an action record, not spoken dialogue. The two spoken turns below follow the reviewed audio, with original timing and the transfer pause preserved. Codex explicitly stopped the call while the voicemail greeting was playing. This does not establish an autonomous hangup.
+
+**0:00** Foreign Cinema phone system: Hello, and thank you for calling Foreign Cinema. To reach our main line or make a reservation, press one. For private dining, press two. Please leave a voicemail.
+
+**0:44** Foreign Cinema private dining voicemail: Hello, and thank you for calling Foreign Cinema Private Dining. You have reached voicemail for Events Director [name removed]. Please listen to this message. I'm happy to return your phone call with as many details as possible, but first I need some information from you, please. One, please leave your phone number two times. Two, please share the date of your event. And three, please... [recording ends during greeting]
+
+</details>
+
+### What this establishes about phone menus
+
+Our [earlier Call4me Claude Code session](/blog/agent-web-research-phone-calls-sf-private-dining) also reached Foreign Cinema's private dining voicemail on **October 3**, in a recording lasting 2:27. It used a different day and brief. These calls do not provide a matched comparison of menu speed or reliability.
+
+These are single branch menu tests. They do not establish performance on nested menus, long holds, repeated attempts or changing options.
+
+For a menu task, check both the destination and the action evidence. A spoken promise to press a key does not prove a key was sent. A confirmed destination can establish that routing worked on that attempt, even when a tool omits the keypad event trace. Then check the next instruction separately: reaching voicemail is different from ending without speaking or leaving a message.
+
+Bland's [call documentation](https://docs.bland.ai/api-v1/post/calls) describes `ivr_mode: true` for phone menus. It also says that this mode overrides automatic voicemail hangup and makes the effective voicemail action `ignore`. A task that might pass from a menu into voicemail therefore needs an explicit ending instruction. That documented behavior alone is not evidence that a particular Bland call navigated a menu successfully.
 
 ## A useful first task: web research, then phone confirmation
 

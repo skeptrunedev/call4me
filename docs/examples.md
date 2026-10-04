@@ -72,6 +72,26 @@ cap, and an instructional three minute Agent Phone goal with no exposed cap
 parameter. They do not establish every client surface or a cross vendor
 benchmark.
 
+The October 4 menu tests add two connected calls to Foreign Cinema's published
+main line. Agent Phone reached private dining voicemail in a 2:31 recording,
+but did not end immediately or silently. Its final spoken words may have been
+recorded as a message; the recording does not establish that outcome. Bland's
+native action log reports button 2 and its recording confirms private dining
+voicemail. Codex stopped the call while the greeting continued, so the test
+does not establish autonomous immediate hangup. The provider reports 68 seconds
+and the recording lasts 67.74 seconds. Bland's queue delay is separate from
+connected duration. An earlier attempt canceled while queued by our runner is
+excluded from menu scoring and produced no recording.
+
+The reviewed menu exports live in
+`public/static/blog/phone-menu-foreign-cinema-vapi.mp3` and
+`public/static/blog/phone-menu-foreign-cinema-bland.mp3`. Keep original timing,
+mute private identifiers, and publish complete reviewed transcripts. Neither
+submitted request specified the keypad digit. Native button evidence is
+available for Bland; Agent Phone returned destination evidence without a
+keypad event trace. These one branch tests do not measure nested menus, holds,
+repeatability or relative speed.
+
 Preserve greetings, menus, questions, lookup pauses, and holds. Replace actual
 private identifiers with silence at the same source timestamps instead of
 removing the surrounding conversation. Muted fields include names, addresses,
