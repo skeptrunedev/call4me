@@ -82,6 +82,7 @@ Compare a competent streaming cascade with equivalent tools and reasoning where 
 | Sat Oct 3 | Publication and evidence amendment completed | All five pages, both vendor recordings and fresh canonical OAuth proof are published; final production browser checks passed |
 | Sat Oct 3 | Competitor setup completed | Both requested vendor accounts are connected. Fresh Codex sessions completed one Bland and one Vapi Agent Phone Waterbar call, with no paid plan or credit purchase |
 | Sun Oct 4 | Provider verification | Verify T3's selected provider configuration and run a call inside its thread before publishing a T3 guide |
+| Sun Oct 4 | Menu navigation validation in progress | One Vapi Agent Phone and one Bland call to Foreign Cinema's published main line, choose private dining from the announced menu and verify the destination; no voicemail message, booking or personal details |
 | Mon Oct 5 | Business hours | Follow up on private dining questions with a real event brief if supplied; keep unconfirmed prices and availability unknown |
 | Tue Oct 6 | Shared comparison fixtures | Prepare owned IVR and interruption fixtures, then run equivalent tasks through available products |
 | Wed Oct 7 | Evidence update | Extend the comparison with completed trials and the architecture article with measurements only where the experiment supports them |
