@@ -51,6 +51,17 @@ const DAY = 24 * 60 * 60 * 1000;
 export const RENEWAL_DAYS = 30;
 /** How long a number is kept after its renewal failed for lack of credits. */
 export const GRACE_DAYS = 7;
+/**
+ * How long buying a number waits on the carrier before answering "pending": long enough for a US
+ * or Canadian order, short enough that an agent's tool call (often cut off near 30 seconds) gets
+ * its answer. The free first number, bought while placing a call, can wait as long as before.
+ */
+const PURCHASE_WAIT_MS = 4500;
+const INCLUDED_WAIT_MS = 30_000;
+/** A pending purchase with no order at the carrier after this long never reached it, and is refunded. */
+const ORDER_LOST_MS = 10 * 60 * 1000;
+/** The label a number's order carries at the carrier, so a purchase cut off mid-request can find it. */
+const orderReference = (id: string) => `call4me-number:${id}`;
 
 /** A NANP (+1) number: US, Canadian and Puerto Rican numbers call each other's businesses. */
 const isHome = (e164: string) => e164.startsWith('+1');
@@ -384,11 +395,28 @@ export function numbers(env: Env) {
     await accounts(db).post(row.account_id, price, 'refund', `number:${row.id}:refund`, `order failed for ${formatPhone(row.phone_number)}`);
   }
 
+  /** Mark a pending number failed and refund what it took, once: a row already settled is left alone. */
+  async function fail(row: NumberRow, at = now()): Promise<boolean> {
+    const r = await db.prepare(`UPDATE numbers SET status = 'failed', released_at = ? WHERE id = ? AND status = 'pending'`).bind(at, row.id).run();
+    if ((r.meta.changes ?? 0) === 0) return false;
+    const paid = await db.prepare(`SELECT -amount_cents AS cents FROM ledger WHERE ref = ?`).bind(`number:${row.id}:buy`).first<{ cents: number }>();
+    await refundOrder(row, paid?.cents ?? 0);
+    return true;
+  }
+
+  /** A completed order: the number goes live and its first month starts now. */
+  async function activate(row: NumberRow, at = now()): Promise<boolean> {
+    const r = await db.prepare(`UPDATE numbers SET status = 'active', paid_through = ? WHERE id = ? AND status = 'pending'`).bind(at + RENEWAL_DAYS * DAY, row.id).run();
+    return (r.meta.changes ?? 0) > 0;
+  }
+
   /**
-   * Buy a number: the price comes out of the balance, then the carrier's order is placed. A US or
-   * Canadian order completes while this waits; one abroad usually goes to regulatory review, and
-   * the number is pending until settle() sees it through. Only an order the carrier turns down is
-   * refunded.
+   * Buy a number. The price comes out of the balance and the number is recorded as pending in
+   * the same moment, before the carrier is asked for anything: the request can be cut off at any
+   * point after (an agent's tool call timing out, say) and the purchase is still on the account,
+   * where settle() finishes it. A US or Canadian order usually completes within the short wait
+   * here; one abroad goes to regulatory review and stays pending until settle() sees it through.
+   * Only an order the carrier turns down, or one that never reached it, is refunded.
    */
   async function purchase(account: Account, opts: { country: string; areaCode?: string | null }): Promise<Bought> {
     const country = opts.country.trim().toUpperCase();
@@ -410,65 +438,78 @@ export function numbers(env: Env) {
     if (!(await ledger.spend(account.id, price, 'number', `number:${id}:buy`, note))) {
       throw new NumberError(`a ${c.name} number costs ${dollars(price)} today (then ${dollars(found.monthlyCents)}/month); the balance is ${dollars(await ledger.balanceCents(account.id))}. add credits first`, 402);
     }
-    const row = { id, account_id: account.id, phone_number: found.phoneNumber };
+    try {
+      await db
+        .prepare(`INSERT INTO numbers (id, account_id, phone_number, country, number_type, included, monthly_cents, paid_through, status, created_at) VALUES (?, ?, ?, ?, ?, 0, ?, NULL, 'pending', ?)`)
+        .bind(id, account.id, found.phoneNumber, country, c.type, found.monthlyCents, now())
+        .run();
+    } catch (err) {
+      // Another purchase in this country got recorded first (numbers_one_pending): this one never ordered anything.
+      console.error('recording the number purchase failed', id, err);
+      await ledger.post(account.id, price, 'refund', `number:${id}:refund`, `${c.name} number already being bought`);
+      throw new NumberError(`a ${c.name} number is already being bought on this account; nothing more was charged`, 409);
+    }
+    const row = (await db.prepare(`SELECT * FROM numbers WHERE id = ?`).bind(id).first<NumberRow>())!;
+
     let placed: { id: string; status: NumberOrderStatus };
     try {
-      placed = await provider.orderNumber(found.phoneNumber, c.requirementGroup ?? null);
+      placed = await provider.orderNumber(found.phoneNumber, { requirementGroupId: c.requirementGroup ?? null, reference: orderReference(id), waitMs: PURCHASE_WAIT_MS });
     } catch (err) {
       console.error('number order failed', id, err);
-      await refundOrder(row, price);
+      await fail(row);
       throw new NumberError('the carrier could not complete that number order; nothing was charged. try again shortly', 502);
     }
+    await db.prepare(`UPDATE numbers SET order_id = ? WHERE id = ?`).bind(placed.id, id).run();
     if (placed.status === 'failure') {
       console.error('number order turned down', id, placed.id);
-      await refundOrder(row, price);
+      await fail(row);
       throw new NumberError('the carrier turned down that number order; nothing was charged. try again shortly', 502);
     }
-    const at = now();
-    const active = placed.status === 'success';
-    await db
-      .prepare(`INSERT INTO numbers (id, account_id, phone_number, country, number_type, included, monthly_cents, paid_through, status, created_at, order_id) VALUES (?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?)`)
-      .bind(id, account.id, found.phoneNumber, country, c.type, found.monthlyCents, active ? at + RENEWAL_DAYS * DAY : null, active ? 'active' : 'pending', at, placed.id)
-      .run();
+    if (placed.status === 'success') await activate(row);
     const bought = (await db.prepare(`SELECT * FROM numbers WHERE id = ?`).bind(id).first<NumberRow>())!;
-    return active ? { number: numberView(bought) } : { pending: pendingNumberView(bought) };
+    return bought.status === 'active' ? { number: numberView(bought) } : { pending: pendingNumberView(bought) };
   }
 
   /**
-   * See pending orders through: a completed one activates (its first month starts now), one the
-   * carrier turned down is refunded, and the rest keep waiting.
+   * See pending purchases through: a completed order activates its number, one the carrier turned
+   * down is refunded, and the rest keep waiting. A purchase cut off before its order id was saved
+   * is found at the carrier by its reference; one that never reached the carrier is refunded once
+   * ORDER_LOST_MS has passed.
    */
   async function settle(rows: NumberRow[], at = now()): Promise<{ activated: number; failed: number; waiting: number }> {
     const out = { activated: 0, failed: 0, waiting: 0 };
     for (const n of rows) {
       let status: NumberOrderStatus;
       try {
-        status = n.order_id ? await provider.numberOrderStatus(n.order_id) : 'failure';
+        if (n.order_id) {
+          status = await provider.numberOrderStatus(n.order_id);
+        } else {
+          const found = await provider.findNumberOrder(orderReference(n.id));
+          if (found) {
+            await db.prepare(`UPDATE numbers SET order_id = ? WHERE id = ?`).bind(found.id, n.id).run();
+            status = found.status;
+          } else {
+            status = at - n.created_at > ORDER_LOST_MS ? 'failure' : 'pending';
+          }
+        }
       } catch (err) {
         console.error('number order status failed', n.id, err);
         out.waiting++;
         continue;
       }
-      if (status === 'pending') {
-        out.waiting++;
-      } else if (status === 'success') {
-        const r = await db.prepare(`UPDATE numbers SET status = 'active', paid_through = ? WHERE id = ? AND status = 'pending'`).bind(at + RENEWAL_DAYS * DAY, n.id).run();
-        out.activated += r.meta.changes ?? 0;
-      } else {
-        const r = await db.prepare(`UPDATE numbers SET status = 'failed', released_at = ? WHERE id = ? AND status = 'pending'`).bind(at, n.id).run();
-        if ((r.meta.changes ?? 0) === 0) continue;
-        const paid = await db.prepare(`SELECT -amount_cents AS cents FROM ledger WHERE ref = ?`).bind(`number:${n.id}:buy`).first<{ cents: number }>();
-        await refundOrder(n, paid?.cents ?? 0);
-        out.failed++;
-      }
+      if (status === 'pending') out.waiting++;
+      else if (status === 'success') out.activated += Number(await activate(n, at));
+      else out.failed += Number(await fail(n, at));
     }
     return out;
   }
 
+  /** The free first number: no one has paid for it, so this waits as long as a US order can take. */
   async function order(found: AvailableNumber, country: string): Promise<void> {
-    const placed = await provider.orderNumber(found.phoneNumber, COUNTRIES[country].requirementGroup ?? null);
+    const placed = await provider.orderNumber(found.phoneNumber, { requirementGroupId: COUNTRIES[country].requirementGroup ?? null, waitMs: INCLUDED_WAIT_MS });
     if (placed.status !== 'success') throw new TelnyxError(`number order ${placed.id} for ${found.phoneNumber} is ${placed.status}`, 503);
   }
+
 
 
   return {

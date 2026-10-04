@@ -234,17 +234,19 @@ export function telnyx(env: TelnyxEnv) {
 
     /**
      * Order `number` onto our Call Control connection, with the requirement group that holds its
-     * country's paperwork when it needs one. Orders complete asynchronously: a US or Canadian one in
-     * seconds, which this waits out, but one abroad goes through regulatory review that takes
-     * minutes to days, so it comes back pending and numberOrderStatus follows it from there.
+     * country's paperwork when it needs one, labelled `reference` so findNumberOrder can find it
+     * again. Orders complete asynchronously: a US or Canadian one in a few seconds, which this
+     * waits up to `waitMs` for, but one abroad goes through regulatory review that takes minutes
+     * to days, so it comes back pending and numberOrderStatus follows it from there.
      */
-    async orderNumber(number: string, requirementGroupId?: string | null): Promise<{ id: string; status: NumberOrderStatus }> {
+    async orderNumber(number: string, opts: { requirementGroupId?: string | null; reference?: string; waitMs: number }): Promise<{ id: string; status: NumberOrderStatus }> {
       const order = await call<{ data: { id: string; status: string } }>(env, 'POST', '/number_orders', {
-        phone_numbers: [{ phone_number: number, ...(requirementGroupId ? { requirement_group_id: requirementGroupId } : {}) }],
+        phone_numbers: [{ phone_number: number, ...(opts.requirementGroupId ? { requirement_group_id: opts.requirementGroupId } : {}) }],
         connection_id: env.TELNYX_CONNECTION_ID,
+        ...(opts.reference ? { customer_reference: opts.reference } : {}),
       });
       let status = orderStatus(order.data.status);
-      for (let i = 0; i < 20 && status === 'pending'; i++) {
+      for (let waited = 0; waited < opts.waitMs && status === 'pending'; waited += 1500) {
         await new Promise((r) => setTimeout(r, 1500));
         status = await this.numberOrderStatus(order.data.id);
       }
@@ -254,6 +256,14 @@ export function telnyx(env: TelnyxEnv) {
     /** Where a number order stands now. */
     async numberOrderStatus(id: string): Promise<NumberOrderStatus> {
       return orderStatus((await call<{ data: { status: string } }>(env, 'GET', `/number_orders/${encodeURIComponent(id)}`)).data.status);
+    },
+
+    /** The number order placed with `reference`, or null when none was. */
+    async findNumberOrder(reference: string): Promise<{ id: string; status: NumberOrderStatus } | null> {
+      const q = new URLSearchParams({ 'filter[customer_reference]': reference });
+      const r = await call<{ data: { id: string; status: string }[] }>(env, 'GET', `/number_orders?${q}`);
+      const o = r.data[0];
+      return o ? { id: o.id, status: orderStatus(o.status) } : null;
     },
 
     /** Give a number back to Telnyx; its monthly charge stops. Already gone counts as released. */

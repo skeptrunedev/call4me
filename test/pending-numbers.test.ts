@@ -11,11 +11,16 @@ import { d1 } from './sqlite-d1';
  */
 const carrier = {
   forSale: { IL: '+972555074184', US: '+12025550142' } as Record<string, string>,
-  orders: new Map<string, { number: string; status: string }>(),
+  orders: new Map<string, { number: string; status: string; reference?: string }>(),
   /** What a new order for a country comes back as. */
   initial: { IL: 'pending', US: 'success' } as Record<string, string>,
   released: [] as string[],
   failOrders: false,
+  /**
+   * The request is cut off while ordering (an agent's tool call timing out): the POST never
+   * answers. 'placed' means the order reached the carrier first, 'lost' that it never did.
+   */
+  hang: null as null | 'placed' | 'lost',
 };
 const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
 globalThis.fetch = (async (input: string | URL, init?: RequestInit) => {
@@ -35,8 +40,14 @@ globalThis.fetch = (async (input: string | URL, init?: RequestInit) => {
     const number = (body!.phone_numbers as { phone_number: string }[])[0].phone_number;
     const id = `order_${carrier.orders.size + 1}`;
     const country = Object.keys(carrier.forSale).find((c) => carrier.forSale[c] === number)!;
-    carrier.orders.set(id, { number, status: carrier.initial[country] });
+    if (carrier.hang !== 'lost') carrier.orders.set(id, { number, status: carrier.initial[country], reference: body!.customer_reference as string });
+    if (carrier.hang) return new Promise<Response>(() => {});
     return json(200, { data: { id, status: carrier.initial[country] } });
+  }
+  if (method === 'GET' && path === '/number_orders') {
+    const ref = url.searchParams.get('filter[customer_reference]');
+    const hits = [...carrier.orders].filter(([, o]) => o.reference === ref).map(([id, o]) => ({ id, status: o.status }));
+    return json(200, { data: hits });
   }
   const order = /^\/number_orders\/(.+)$/.exec(path)?.[1];
   if (method === 'GET' && order) return json(200, { data: { status: carrier.orders.get(order)!.status } });
@@ -58,6 +69,7 @@ beforeEach(async () => {
   carrier.orders.clear();
   carrier.released.length = 0;
   carrier.failOrders = false;
+  carrier.hang = null;
   carrier.initial.IL = 'pending';
   await accounts(env.DB).post(alice.id, 1500, 'adjustment', 'seed', 'credits');
 });
@@ -165,4 +177,52 @@ test('a carrier error placing the order is refunded', async () => {
   carrier.failOrders = true;
   await assert.rejects(polled(numbers(env).buy(alice, { country: 'IL' })), (err: unknown) => err instanceof NumberError && err.status === 502);
   assert.equal(await balance(), 1500);
+});
+
+/** Start a purchase whose request gets cut off while ordering, and let it get as far as it will. */
+async function cutOff(country = 'IL') {
+  numbers(env).buy(alice, { country }).catch(() => {});
+  for (let i = 0; i < 20; i++) await new Promise((r) => setImmediate(r));
+}
+
+test('a purchase cut off mid-order is already on the account, and a retry is refused instead of charged again', async () => {
+  carrier.hang = 'placed';
+  await cutOff();
+  assert.equal(await balance(), 1500 - 660);
+  const [row] = (await env.DB.prepare(`SELECT status, order_id FROM numbers WHERE country = 'IL'`).all<{ status: string; order_id: string | null }>()).results;
+  assert.deepEqual({ ...row }, { status: 'pending', order_id: null });
+  carrier.hang = null;
+  await assert.rejects(polled(numbers(env).buy(alice, { country: 'IL' })), (err: unknown) => err instanceof NumberError && err.status === 409);
+  assert.equal(await balance(), 1500 - 660);
+});
+
+test('settling finds the order of a purchase cut off before its order id was saved', async () => {
+  carrier.hang = 'placed';
+  await cutOff();
+  carrier.hang = null;
+  const [order] = carrier.orders.values();
+  assert.match(order.reference!, /^call4me-number:/);
+  order.status = 'success';
+  assert.deepEqual(await numbers(env).settlePending(), { activated: 1, failed: 0, waiting: 0 });
+  assert.deepEqual((await numbers(env).views(alice.id)).map((v) => v.e164), ['+972555074184']);
+  assert.equal(await balance(), 1500 - 660);
+});
+
+test('a purchase whose order never reached the carrier is refunded after ten minutes, not before', async () => {
+  carrier.hang = 'lost';
+  await cutOff();
+  carrier.hang = null;
+  const n = numbers(env);
+  assert.deepEqual(await n.settlePending(Date.now() + 60_000), { activated: 0, failed: 0, waiting: 1 });
+  assert.equal(await balance(), 1500 - 660);
+  assert.deepEqual(await n.settlePending(Date.now() + 11 * 60_000), { activated: 0, failed: 1, waiting: 0 });
+  assert.equal(await balance(), 1500);
+});
+
+test('two purchases racing in one country charge once', async () => {
+  const n = numbers(env);
+  const results = await Promise.allSettled([polled(n.buy(alice, { country: 'IL' })), polled(n.buy(alice, { country: 'IL' }))]);
+  assert.equal(results.filter((r) => r.status === 'fulfilled').length, 1);
+  assert.equal(await balance(), 1500 - 660);
+  assert.equal((await n.pendingViews(alice.id)).length, 1);
 });
