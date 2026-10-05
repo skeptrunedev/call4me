@@ -1,1 +1,74 @@
 keyword,country,monthly_searches,kd,metrics_checked_at,target_page,decision,reason
+ai receptionist,us,9100,39,2026-10-05T03:40:54+00:00,,defer,High volume alone does not establish coding agent calling intent; no matching complete page is demonstrated.
+ai voice agent,us,4300,55,2026-10-05T03:40:54+00:00,,defer,High volume alone does not establish coding agent calling intent; no matching complete page is demonstrated.
+ai voice agents,us,2900,34,2026-10-05T03:40:54+00:00,,defer,High volume alone does not establish coding agent calling intent; no matching complete page is demonstrated.
+claude code mcp,us,2700,41,2026-10-05T03:40:54+00:00,,long term,Higher difficulty broad configuration or directory intent. Target exact calling guides first.
+ai voice assistant,us,1600,0,2026-10-05T03:40:54+00:00,,defer,High volume alone does not establish coding agent calling intent; no matching complete page is demonstrated.
+codex mcp,us,1500,10,2026-10-05T03:40:54+00:00,/blog/codex-phone-calls,adjacent,Setup intent; retain phone calling qualifier. Generic Codex MCP also includes server and blockchain meanings.
+ai phone call,us,1400,49,2026-10-05T03:40:54+00:00,,defer,High volume alone does not establish coding agent calling intent; no matching complete page is demonstrated.
+ai phone call assistant,us,1300,43,2026-10-05T03:40:54+00:00,,defer,High volume alone does not establish coding agent calling intent; no matching complete page is demonstrated.
+ai phone assistant,us,1200,29,2026-10-05T03:40:54+00:00,,defer,High volume alone does not establish coding agent calling intent; no matching complete page is demonstrated.
+claude mcp servers,us,1200,30,2026-10-05T03:40:54+00:00,,long term,Higher difficulty broad configuration or directory intent. Target exact calling guides first.
+ai phone agent,us,1100,0,2026-10-05T03:40:54+00:00,/,primary,"Commercial product intent; returned SERP includes domains rated 0, 1 and 14. Qualify for coding agents."
+ai outbound calling,us,1000,9,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,adjacent,Compare calling tools inside the existing harness. Broader voice platform or campaign replacement needs separate evidence.
+twilio alternative,us,800,0,2026-10-05T03:40:54+00:00,,defer,Returned results mostly require SMS or carrier API replacement. A hosted calling MCP does not satisfy that full intent.
+voice ai agent,us,700,43,2026-10-05T03:40:54+00:00,,defer,High volume alone does not establish coding agent calling intent; no matching complete page is demonstrated.
+ai ivr,us,600,4,2026-10-05T03:40:54+00:00,/blog/ai-phone-tree-navigation,adjacent,Own outbound navigation and mailbox diagnostics. Broad AI IVR usually concerns incoming business systems.
+claude code mcp servers,us,600,0,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,adjacent,"Current page owns servers for phone calls. Broad development roundup is a distinct article opportunity, not demand for calling."
+gpt live,us,600,24,2026-10-05T03:40:54+00:00,/blog/cascaded-voice-stack-vs-gpt-live,adjacent,Architecture mechanisms and test methods. Speech latency is broader; no measured vendor performance claim.
+gpt realtime,us,600,0,2026-10-05T03:40:54+00:00,,research first,Model specific intent. Do not relabel GPT Live evidence or assume API and model aliases.
+twilio alternatives,us,600,1,2026-10-05T03:40:54+00:00,,defer,Returned results mostly require SMS or carrier API replacement. A hosted calling MCP does not satisfy that full intent.
+ai phone calls,us,500,42,2026-10-05T03:40:54+00:00,,defer,High volume alone does not establish coding agent calling intent; no matching complete page is demonstrated.
+claude code voice mode,us,500,unknown,2026-10-05T03:40:54+00:00,,defer,High volume alone does not establish coding agent calling intent; no matching complete page is demonstrated.
+codex cli mcp,us,500,16,2026-10-05T03:40:54+00:00,/blog/codex-phone-calls,adjacent,Setup intent; retain phone calling qualifier. Generic Codex MCP also includes server and blockchain meanings.
+vapi alternative,us,500,unknown,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,adjacent,Compare calling tools inside the existing harness. Broader voice platform or campaign replacement needs separate evidence.
+openai realtime api,us,350,unknown,2026-10-05T03:40:54+00:00,,research first,Model specific intent. Do not relabel GPT Live evidence or assume API and model aliases.
+claude code use cases,us,300,unknown,2026-10-05T03:40:54+00:00,/blog/agent-web-research-phone-calls-sf-private-dining,adjacent,A complete web research and phone workflow. Broader use case intent is not exhausted by one restaurant example.
+codex mcp servers,us,200,unknown,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,adjacent,Calling shortlist only. A broad server directory requires a separate complete guide.
+gpt live api,us,200,unknown,2026-10-05T03:40:54+00:00,/blog/cascaded-voice-stack-vs-gpt-live,adjacent,Architecture mechanisms and test methods. Speech latency is broader; no measured vendor performance claim.
+speech latency,us,200,0,2026-10-05T03:40:54+00:00,/blog/cascaded-voice-stack-vs-gpt-live,adjacent,Architecture mechanisms and test methods. Speech latency is broader; no measured vendor performance claim.
+twilio mcp server,us,200,unknown,2026-10-05T03:40:54+00:00,/blog/twilio-mcp-phone-calls,primary,Documentation MCP setup and execution boundary; a live docs connection is verified.
+add mcp to claude code,us,150,unknown,2026-10-05T03:40:54+00:00,/blog/claude-code-phone-calls,exact ICP,"Claude calling setup, permissions and recorded workflow."
+ai calling assistant,us,150,unknown,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,exact ICP,Compare calling tools inside the existing harness. Broader voice platform or campaign replacement needs separate evidence.
+automated phone calls,us,150,6,2026-10-05T03:40:54+00:00,,defer,High volume alone does not establish coding agent calling intent; no matching complete page is demonstrated.
+best mcp servers for claude code,us,150,0,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,adjacent,"Current page owns servers for phone calls. Broad development roundup is a distinct article opportunity, not demand for calling."
+bland ai alternatives,us,150,3,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,adjacent,Compare calling tools inside the existing harness. Broader voice platform or campaign replacement needs separate evidence.
+twilio mcp,us,150,unknown,2026-10-05T03:40:54+00:00,/blog/twilio-mcp-phone-calls,primary,Documentation MCP setup and execution boundary; a live docs connection is verified.
+vapi alternatives,us,150,unknown,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,adjacent,Compare calling tools inside the existing harness. Broader voice platform or campaign replacement needs separate evidence.
+voicemail detection,us,150,1,2026-10-05T03:40:54+00:00,/blog/ai-phone-tree-navigation,adjacent,Own outbound navigation and mailbox diagnostics. Broad AI IVR usually concerns incoming business systems.
+claude code research,us,100,unknown,2026-10-05T03:40:54+00:00,/blog/agent-web-research-phone-calls-sf-private-dining,adjacent,A complete web research and phone workflow. Broader use case intent is not exhausted by one restaurant example.
+claude code automation,us,80,unknown,2026-10-05T03:40:54+00:00,/blog/agent-web-research-phone-calls-sf-private-dining,adjacent,A complete web research and phone workflow. Broader use case intent is not exhausted by one restaurant example.
+ivr navigation,us,80,unknown,2026-10-05T03:40:54+00:00,/blog/ai-phone-tree-navigation,adjacent,Own outbound navigation and mailbox diagnostics. Broad AI IVR usually concerns incoming business systems.
+vapi vs bland,us,80,unknown,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,adjacent,Compare calling tools inside the existing harness. Broader voice platform or campaign replacement needs separate evidence.
+add mcp to codex,us,70,unknown,2026-10-05T03:40:54+00:00,/blog/codex-phone-calls,adjacent,Setup intent; retain phone calling qualifier. Generic Codex MCP also includes server and blockchain meanings.
+openai realtime voices,us,70,unknown,2026-10-05T03:40:54+00:00,/blog/openai-realtime-voices-phone-calls,exact ICP,Existing recorded voice evidence; model and test limits must remain explicit.
+vapi mcp,us,70,unknown,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,exact ICP,Compare calling tools inside the existing harness. Broader voice platform or campaign replacement needs separate evidence.
+claude code personal assistant,us,40,unknown,2026-10-05T03:40:54+00:00,/blog/agent-web-research-phone-calls-sf-private-dining,adjacent,A complete web research and phone workflow. Broader use case intent is not exhausted by one restaurant example.
+twilio ai voice,us,40,unknown,2026-10-05T03:40:54+00:00,/blog/twilio-mcp-phone-calls,adjacent,Documentation MCP setup and execution boundary; a live docs connection is verified.
+twilio voice agent,us,40,unknown,2026-10-05T03:40:54+00:00,/blog/twilio-mcp-phone-calls,adjacent,Documentation MCP setup and execution boundary; a live docs connection is verified.
+best mcp servers for codex,us,30,4,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,adjacent,Calling shortlist only. A broad server directory requires a separate complete guide.
+mcp servers for codex,us,20,unknown,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,adjacent,Calling shortlist only. A broad server directory requires a separate complete guide.
+voice agent latency,us,20,unknown,2026-10-05T03:40:54+00:00,/blog/cascaded-voice-stack-vs-gpt-live,adjacent,Architecture mechanisms and test methods. Speech latency is broader; no measured vendor performance claim.
+bland ai mcp,us,10,unknown,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,exact ICP,Compare calling tools inside the existing harness. Broader voice platform or campaign replacement needs separate evidence.
+phone mcp,us,10,15,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,exact ICP,Compare calling tools inside the existing harness. Broader voice platform or campaign replacement needs separate evidence.
+schedule phone calls,us,10,unknown,2026-10-05T03:40:54+00:00,/blog/schedule-phone-calls-claude-code-codex,exact ICP,Focus on MCP schedules and retrieving later results; phone operating system scheduling is separate.
+t3 code mcp,us,10,unknown,2026-10-05T03:40:54+00:00,/blog/t3-code-phone-calls,exact ICP,Provider setup and actual T3 call evidence. Small or unmeasured demand remains a conversion priority.
+voice mcp,us,10,unknown,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,exact ICP,Compare calling tools inside the existing harness. Broader voice platform or campaign replacement needs separate evidence.
+ai agent phone calls,us,0,unknown,2026-10-05T03:40:54+00:00,,defer,High volume alone does not establish coding agent calling intent; no matching complete page is demonstrated.
+ai phone tree navigation,us,unknown,unknown,2026-10-05T03:40:54+00:00,/blog/ai-phone-tree-navigation,adjacent,Own outbound navigation and mailbox diagnostics. Broad AI IVR usually concerns incoming business systems.
+bland ivr mode,us,unknown,unknown,2026-10-05T03:40:54+00:00,/blog/ai-phone-tree-navigation,adjacent,Own outbound navigation and mailbox diagnostics. Broad AI IVR usually concerns incoming business systems.
+cascaded voice agents,us,unknown,unknown,2026-10-05T03:40:54+00:00,/blog/cascaded-voice-stack-vs-gpt-live,adjacent,Architecture mechanisms and test methods. Speech latency is broader; no measured vendor performance claim.
+claude code calling,us,unknown,unknown,2026-10-05T03:40:54+00:00,/blog/claude-code-phone-calls,exact ICP,"Claude calling setup, permissions and recorded workflow."
+claude code phone calls,us,unknown,unknown,2026-10-05T03:40:54+00:00,/blog/claude-code-phone-calls,exact ICP,"Claude calling setup, permissions and recorded workflow."
+claude mcp phone calls,us,unknown,unknown,2026-10-05T03:40:54+00:00,/blog/claude-code-phone-calls,exact ICP,"Claude calling setup, permissions and recorded workflow."
+claude phone calls,us,unknown,unknown,2026-10-05T03:40:54+00:00,/blog/claude-code-phone-calls,exact ICP,"Claude calling setup, permissions and recorded workflow."
+codex personal assistant,us,0,unknown,2026-10-05T03:40:54+00:00,,defer,High volume alone does not establish coding agent calling intent; no matching complete page is demonstrated.
+codex phone calls,us,unknown,unknown,2026-10-05T03:40:54+00:00,/blog/codex-phone-calls,exact ICP,Setup intent; retain phone calling qualifier. Generic Codex MCP also includes server and blockchain meanings.
+dtmf ai agent,us,unknown,unknown,2026-10-05T03:40:54+00:00,/blog/ai-phone-tree-navigation,adjacent,Own outbound navigation and mailbox diagnostics. Broad AI IVR usually concerns incoming business systems.
+phone call mcp,us,unknown,unknown,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,exact ICP,Compare calling tools inside the existing harness. Broader voice platform or campaign replacement needs separate evidence.
+phone calling mcp,us,unknown,unknown,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,exact ICP,Compare calling tools inside the existing harness. Broader voice platform or campaign replacement needs separate evidence.
+phone calling mcp server,us,unknown,unknown,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,exact ICP,Compare calling tools inside the existing harness. Broader voice platform or campaign replacement needs separate evidence.
+speech to speech vs speech to text,us,unknown,unknown,2026-10-05T03:40:54+00:00,/blog/cascaded-voice-stack-vs-gpt-live,adjacent,Architecture mechanisms and test methods. Speech latency is broader; no measured vendor performance claim.
+t3 code phone calls,us,unknown,unknown,2026-10-05T03:40:54+00:00,/blog/t3-code-phone-calls,exact ICP,Provider setup and actual T3 call evidence. Small or unmeasured demand remains a conversion priority.
+vapi dtmf,us,0,unknown,2026-10-05T03:40:54+00:00,/blog/ai-phone-tree-navigation,adjacent,Own outbound navigation and mailbox diagnostics. Broad AI IVR usually concerns incoming business systems.
+voice mcp server,us,0,unknown,2026-10-05T03:40:54+00:00,/blog/phone-calling-mcp-comparison,exact ICP,Compare calling tools inside the existing harness. Broader voice platform or campaign replacement needs separate evidence.

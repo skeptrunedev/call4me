@@ -1,6 +1,6 @@
 ---
 title: "Can AI phone agents navigate phone trees? Vapi, Bland and Call4me evidence"
-seoTitle: AI phone tree navigation with Vapi, Bland and Call4me
+seoTitle: AI IVR navigation and voicemail detection, real call evidence
 subtitle: A phone menu, a successful keypad press, and a completed task are different results. Here is how to configure, diagnose, and test each step.
 description: Learn how AI callers navigate IVR phone trees, verify DTMF and destination evidence, handle voicemail, and diagnose Vapi and Bland settings using real recordings.
 date: 2026-10-04
@@ -16,6 +16,12 @@ That distinction matters when you give Claude Code or Codex a task like getting 
 We make Call4me. This guide separates current configuration documentation from our recorded calls on **October 3 and 4, 2026**. The calls are individual cases with different briefs and dates, rather than a controlled provider benchmark. They establish particular routing outcomes, not success rates or a winner.
 
 For connection instructions and account requirements, use our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison). This guide focuses on what to inspect after a calling tool connects.
+
+## AI IVR systems and outbound phone tree navigation
+
+IVR means interactive voice response. An AI IVR handles a business's incoming calls through conversation, routing or automated answers. [Bland's AI IVR explanation](https://www.bland.ai/blog/ai-powered-ivr) describes that receiving side of the phone system.
+
+Our examples follow the caller's side: an outbound AI agent listens to the destination's menu, selects a route and checks what answered. A traditional menu may require keypad inputs; a conversational system may accept speech. Match the caller's action to what the destination actually requests. The recordings below show the menu and mailbox boundaries we observed.
 
 ## What counts as successful phone tree navigation?
 
@@ -40,7 +46,7 @@ Keypad signals can also travel separately from ordinary voice audio. [RFC 4733](
 
 When diagnosing a failed branch, keep three pieces of evidence: the option as announced, the submitted keypad action, and the next prompt or destination. If your hosted calling tool does not expose a native action log, report that missing evidence instead of filling it in from the transcript.
 
-## Settings that change the result
+## Voicemail detection and IVR settings that change the result
 
 Read the schema exposed by the integration you actually connected. A platform's developer API and its hosted agent product can offer different controls.
 

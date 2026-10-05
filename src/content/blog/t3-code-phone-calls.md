@@ -1,6 +1,6 @@
 ---
 title: "Make phone calls from T3 Code with MCP"
-seoTitle: T3 Code phone calls with MCP, provider setup and a real test
+seoTitle: T3 Code MCP setup for phone calls, with a real test
 subtitle: Connect the calling tool to the provider behind your T3 thread. We checked a real Codex thread, retrieved a saved schedule, and tested the dialing workflow.
 description: Add phone calling MCP to T3 Code through its Codex or Claude provider. Learn which machine and configuration matter, how to verify tools, and what our actual T3 test established.
 date: 2026-10-04

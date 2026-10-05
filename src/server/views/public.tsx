@@ -46,9 +46,11 @@ function offers(countries: CountryOffer[]): { live: CountryOffer[]; soon: Countr
 export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; countries: CountryOffer[]; error?: string; amount?: string }> = (p) => {
   return (
   <Layout page="home" signedIn={p.signedIn} meta={{ jsonLd: HOME_LD }}>
+    <h1>an AI phone agent for your coding agent</h1>
     <p>
-      your coding agent (claude code, codex, claude desktop, chatgpt) gets one new tool: <b>make a phone call</b>. it calls the restaurant, the doctor's office,
-      the airline, the hotel, sounds like a normal person, gets it done, and tells your agent what happened.
+      your coding agent (<a href="/blog/claude-code-phone-calls">claude code</a>, <a href="/blog/codex-phone-calls">codex</a>,
+      {' '}<a href="/blog/t3-code-phone-calls">t3 code</a>, claude desktop, chatgpt) gets one new ability: <b>make a phone call</b> through MCP. call4me calls the restaurant,
+      the doctor's office, the airline or the hotel, follows your brief, and tells your agent what happened.
     </p>
     <div class="cols">
       <div>

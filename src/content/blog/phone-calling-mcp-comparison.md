@@ -16,7 +16,7 @@ Several services now provide this. **Vapi Agent Phone is a ready to use calling 
 
 We make call4me. Our initial documentation and public MCP connection review took place on **October 3, 2026**. On **October 4**, we checked the relevant phone menu documentation and added the Foreign Cinema calls below. The bounded harness examples show each workflow and its limits. We did not run the same live call through every service, so this comparison does not rank call quality.
 
-## Choose by the setup you want
+## Which Claude Code MCP servers can make phone calls?
 
 | Service | Connection and account requirements | Useful when |
 |---|---|---|
@@ -30,6 +30,18 @@ We make call4me. Our initial documentation and public MCP connection review took
 For a hosted service with a documented answer loop during a call, compare call4me and Cocall. For an existing Bland account, try its operational MCP before building a new integration. For a local Claude Code plugin that also supports notifications and inbound access, look at Patter. Vapi Agent Phone funds calls within a limited allowance. ClawCall focuses on English language US calls and offers REST and skill alternatives to MCP.
 
 The linked pages are the sources for this matrix. These choices follow the documented workflows; a shared live benchmark remains pending.
+
+## AI outbound calling from an existing coding agent
+
+AI outbound calling starts a phone conversation on your behalf. In this workflow, Claude Code or Codex selects the business and sends a goal and limits to a calling MCP. The voice service runs the conversation, while your original agent follows the transcript and brings the result into its research. [Retell's outbound calling explanation](https://www.retellai.com/glossary/outbound-calling) describes the wider category.
+
+This comparison covers individual business calls you request, such as clarifying a quote, checking an appointment or asking about a room. Choose a server by the account setup, call controls and returned evidence in the tables. For a complete example, follow our [web research and phone calling task](/blog/agent-web-research-phone-calls-sf-private-dining).
+
+### Vapi alternatives and Bland AI alternatives for coding agents
+
+For calling from Claude Code or Codex, the shortlist includes Vapi Agent Phone, Bland's operational MCP, Call4me, ClawCall, Cocall and Patter. Vapi Agent Phone provides hosted calling through browser authentication. Bland adds broader platform tools alongside calling. Call4me and Cocall document questions returned to your session during a call. Patter's local plugin requires your own provider accounts. The setup and result tables above explain these choices.
+
+Replacing a whole voice platform is a larger decision involving its APIs, call flows and deployment model. Our actual calls establish the particular outcomes below; they do not establish feature parity across those platforms or a reliability ranking. If you want to build the calling application yourself, see the [Twilio MCP server guide](/blog/twilio-mcp-phone-calls) and [voice architecture guide](/blog/cascaded-voice-stack-vs-gpt-live).
 
 ## What comes back to the agent?
 

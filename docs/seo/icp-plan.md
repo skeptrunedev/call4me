@@ -1,6 +1,6 @@
 # SEO plan for coding agent power users
 
-Updated October 3, 2026. This is the current editorial priority and replaces the consumer page volume targets in the original October plan.
+Updated October 4, 2026. This is the current editorial priority and replaces the consumer page volume targets in the original October plan. The historical execution notes below retain their original evidence boundaries; the fresh audit at the end records the latest targeting decisions.
 
 ## Acceptance criteria
 
@@ -115,3 +115,100 @@ Fresh production Codex OAuth at `https://call4.me/mcp` is now verified after the
 Local verification passed type checking, lint, all 139 tests and both deployment builds. Browser checks passed for all five pages, including both comparator recordings decoding, seeking, player switching, all reviewed transcript turns and a 320px viewport. The earlier checks caught wide tables on mobile; a shared scrolling wrapper fixes them and was checked against the existing private dining article.
 
 The five pages deployed from `3036a6b` passed production checks, including audio decoding, seeking, player switching, transcript expansion and mobile layout. The Bland evidence amendment in `0ac7862` and OAuth route fix in `da24e3e` are also deployed and verified. The final Vapi evidence and fresh OAuth proof amendment in `ae89dae` passed CI and production checks for all five pages, both vendor recordings, full transcripts, seeking, player switching, mobile layout and OAuth discovery. All five page URLs appear in the production sitemap, Atom feed and llms.txt. The scheduled IndexNow sweep accepted all five URLs, as verified in its production ledger. This does not establish search engine indexing. T3 remains untested. Nate Herk and Dominik Kundel outreach is sent and recorded separately in the outreach tracker.
+
+## Fresh Ahrefs targeting audit, October 4
+
+Nick requested larger search opportunities with attainable difficulty while
+keeping the Claude Code, Codex and T3 audience central. The Ahrefs CLI session
+was refreshed using its existing automated login helper. This audit checked
+73 exact phrases in the US database, a 100 result Claude MCP matching report,
+a 100 result phone call matching report, and Vapi's organic keywords filtered
+to volume at least 50 and difficulty at most 20. Six cached SERP reports were
+retrieved to inspect intent and the authority of returned pages.
+
+Exact decisions are in `docs/seo/keyword-targeting.csv`. Source responses and
+stderr are under `scratch/seo-targeting-2026-10-04/`, which is excluded from git.
+The CLI uses the existing Ahrefs mirror. A successful query checks the data
+available now; it does not mean every underlying SERP was collected today.
+
+| Query | US monthly searches | KD | Page and action |
+| :--- | ---: | ---: | :--- |
+| ai phone agent | 1,100 | 0 | Homepage primary term, with Claude Code, Codex and T3 qualification, a descriptive H1 and direct links to verified guides |
+| codex mcp | 1,500 | 10 | Existing Codex guide, explicit MCP setup title and heading qualified by phone calls |
+| claude code mcp servers | 600 | 0 | Calling comparison secondary term, with an exact server selection heading; broader directory article is a separate opportunity |
+| ai outbound calling | 1,000 | 9 | Calling comparison secondary term, with a complete explanation of an individual business call from an existing agent |
+| ai ivr | 600 | 4 | Phone tree guide secondary term, define the receiving system and focus on outbound navigation |
+| voicemail detection | 150 | 1 | Phone tree guide secondary term, matched to its actual menu and mailbox evidence |
+| bland ai alternatives | 150 | 3 | Calling comparison, scoped to coding agents rather than whole platform replacement |
+| twilio mcp server | 200 | Unknown | Existing Twilio guide, explicit server setup and execution limits |
+| t3 code mcp | 10 | Unknown | Existing T3 guide, explicit provider setup and actual call evidence |
+
+Variants overlap. Do not sum these volumes into expected traffic. Null volume
+and difficulty remain unknown. The CLI's generic console footer calls blank KD
+"winnable"; this audit does not adopt that interpretation.
+
+The `ai phone agent` SERP last updated September 30 returns pages from Voqo
+(DR 14, zero referring domains), Lacy (DR 1, referring domain count unavailable)
+and Vexion Labs (DR 0, zero referring domains). These are concrete openings for
+a focused product page, not a ranking guarantee. The current Voqo and Lacy
+primary pages confirm that the query includes commercial phone agent intent:
+[Voqo](https://www.voqo.ai/buyers-agent),
+[Lacy](https://www.lacy.ai/about-lacy-ai). Vexion's presence and metrics come
+from the cached Ahrefs SERP; its current page was not independently fetched.
+
+The Claude server SERP last updated October 3 contains directories, setup pages
+and an EvoMap roundup at DR 44 with three referring domains. Its low KD does
+not remove the need to satisfy broad server discovery. The Codex SERP last
+updated October 1 includes OpenAI community, setup guides and the unrelated
+Codex blockchain service. Squirrelscan's setup page is DR 29 with zero referring
+domains, an opening worth monitoring. Its 1,500 estimate describes generic MCP
+intent, not 1,500 people looking for a phone caller.
+
+The outbound calling SERP last updated October 4 includes campaign software,
+workflow setup and glossary definitions. The comparison now explicitly covers
+individual business inquiries from an existing harness. The AI IVR SERP last
+updated October 2 mainly concerns incoming call routing. Its 600 estimate is
+not demand measured for outbound menu navigation.
+
+Defer `twilio alternative` (800, KD 0) and `twilio alternatives` (600, KD 1)
+as primary targets. The September 14 SERP is predominantly SMS and carrier API
+replacement, which the current hosted calling product does not replace. Also
+defer `ai voice assistant` (1,600, KD 0) until a complete matching intent is
+demonstrated. Keep `gpt realtime` (600, KD 0) separate from GPT Live evidence;
+model naming and a dedicated comparison need verification first.
+
+Ahrefs reports DR 0 and zero tracked organic keywords for call4.me. Search
+Console has already returned article impressions, so Ahrefs' organic count
+does not establish absence from Google. Treat the site as developing authority.
+Use KD at most 10 as a first screening preference, then inspect actual intent,
+returned page authority and the evidence we can supply. KD from 11 through 20
+is a secondary opportunity; higher scores need a stronger reason. These are
+editorial thresholds, not predictions. Ahrefs explains the metric's limits in
+its [difficulty guide](https://ahrefs.com/blog/keyword-difficulty/) and the need
+to serve the query in its [intent guide](https://ahrefs.com/blog/search-intent/).
+
+### Next distinct discovery article
+
+The clearest new ICP discovery opportunity is a complete guide to Claude Code
+MCP servers for useful work beyond coding, also covering the exact `best mcp
+servers for claude code` phrase (150, KD 0). It must cover multiple actual jobs,
+such as current documentation, browser research, project context and calling.
+Use verified connections and a task based comparison instead of a directory
+containing only our product. The current calling comparison remains the owner
+of choosing a phone service; the new guide should link to it rather than repeat
+its recordings and setup detail. Do not borrow 600 searches from this broader
+topic to advertise demand for the four specialist articles.
+
+All four specialist articles are now published. T3 includes a real recorded
+Codex provider call with a partial outcome, replacing the earlier untested
+status. Scheduling verifies stored records while later business calls remain
+pending. The shared controlled IVR benchmark remains pending.
+
+### Targeting change verification
+
+The 73 exported volume and difficulty pairs match the raw Ahrefs responses.
+Type checking, lint, all 155 tests and both deployment builds pass. Local
+browser checks cover the homepage and five revised articles, their titles,
+descriptions, canonicals, structured data and 320px layout. The homepage has
+one H1. Its Claude Code, Codex and T3 guide links, prompt copy button and FAQ
+expansion work. Existing recordings and benchmark limitations remain intact.

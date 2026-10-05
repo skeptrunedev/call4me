@@ -1,6 +1,6 @@
 ---
 title: "Twilio MCP for phone calls: what works and what you still need to build"
-seoTitle: Twilio MCP phone calls, setup and a real documentation test
+seoTitle: Twilio MCP server for phone calls, setup and limits
 subtitle: We connected to Twilio's public MCP, searched for an outbound call, and retrieved its actual API schema. Here is the difference between documentation tools, an operational MCP, and a voice agent that can finish a conversation.
 description: Set up Twilio MCP in Claude Code or Codex, see our actual search and schema retrieval test, and compare building a conversational voice application with connecting a hosted calling MCP.
 date: 2026-10-04

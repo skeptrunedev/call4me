@@ -3,7 +3,7 @@ import { raw } from 'hono/html';
 import { tryGetContext } from 'hono/context-storage';
 import type { AppEnv } from '../lib/context';
 import { GA_MEASUREMENT_ID } from '../lib/ga';
-import { PAGES, SITE, type PageKey, type PageOverride } from '../lib/pages';
+import { PAGES, SITE, SITE_TITLE, type PageKey, type PageOverride } from '../lib/pages';
 
 export { SITE_DESCRIPTION } from '../lib/pages';
 
@@ -102,7 +102,7 @@ export const Layout: FC<{
   children?: Child;
 }> = ({ title, signedIn = false, page = 'message', path, meta: override, children }) => {
   const meta = PAGES[page];
-  const fullTitle = title ? `${title} - call4me` : 'call4me: your AI agent makes phone calls for you';
+  const fullTitle = title ? `${title} - call4me` : SITE_TITLE;
   const description = override?.description ?? meta.description;
   const url = `${SITE}${path ?? meta.path}`;
   const image = `${SITE}${override?.image ?? `/og/${meta.card}.png`}`;
@@ -166,7 +166,7 @@ export const Layout: FC<{
         )}
         <div id="masthead">
           <a class="logo" href="/">call4me</a>
-          {page === 'home' ? <h1 class="bc">your AI agent makes phone calls for you</h1> : <span class="bc">your AI agent makes phone calls for you</span>}
+          <span class="bc">your AI agent makes phone calls for you</span>
         </div>
         <div id="topnav">
           <a href="/">home</a>
