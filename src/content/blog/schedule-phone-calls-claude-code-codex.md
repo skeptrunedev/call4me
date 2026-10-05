@@ -13,6 +13,18 @@ imageAlt: Claude Code or Codex saves a call schedule, call4me waits until the ch
 
 On October 4, 2026, we checked real production schedules for the next day through a fresh authenticated MCP client. We verified pending records, local time conversion, a canceled record, and a replacement schedule. **Those calls had not run when we checked.** This article demonstrates scheduling and retrieval, not a completed unattended call or a new scheduling test inside either harness.
 
+## Queue the phone part of your personal assistant's task
+
+Your assistant may finish its online work while the business is closed. Give it the remaining questions and a time to call after that specific department opens. These are suggested uses for the scheduling workflow:
+
+| Task already in your agent | What to put in the later call brief | What to check afterward |
+|---|---|---|
+| Understand a subscription cancellation | The plan, billing provider, unresolved terms and permission to gather information or make a specific change | The answer, required next steps and any actual cancellation confirmation |
+| Check appointment availability | The business, acceptable dates and times, required details and whether booking is authorized | The offered times and whether an appointment was actually confirmed |
+| Compare businesses | The questions missing online and any alternatives you accept | Phone answers separated from website facts and unresolved questions |
+
+Our [Fubo cancellation inquiry](/blog/cancel-fubo) and [private dining research](/blog/agent-web-research-phone-calls-sf-private-dining) provide business question examples. The schedule records below are the evidence for saving and retrieving the later call. Supplying an appointment time in a brief does not itself book it or add it to your calendar.
+
 ## Connect the agent you already use
 
 You need a [call4me account](/account), an authenticated MCP connection, and enough calling credits when the call actually starts.

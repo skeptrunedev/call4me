@@ -1,6 +1,6 @@
 ---
 title: "Make phone calls from T3 Code with MCP"
-seoTitle: T3 Code MCP setup for phone calls, with a real test
+seoTitle: T3 Code phone calls with MCP, setup and a real test
 subtitle: Connect the calling tool to the provider behind your T3 thread. We checked a real Codex thread, retrieved a saved schedule, and tested the dialing workflow.
 description: Add phone calling MCP to T3 Code through its Codex or Claude provider. Learn which machine and configuration matter, how to verify tools, and what our actual T3 test established.
 date: 2026-10-04
@@ -10,6 +10,8 @@ imageAlt: A T3 Code thread uses its configured provider to access call4me and re
 ---
 
 **Give the provider behind your T3 Code thread a calling MCP connection.** T3 supplies the interface to your agent. Call4me supplies the phone calling tools. The useful result is a call and its evidence returning to the thread you were already using for research or planning.
+
+If that thread is your personal assistant, the phone part can be a question about a subscription, an appointment or a business you are comparing. Keep the task in the same thread and give the caller the facts and authority it needs.
 
 We tested **T3 Code 0.0.45 with Codex CLI 0.160.0** on October 4, 2026. Actual T3 threads checked account access, retrieved an existing schedule, and placed one call to NIST's public automated time line. The calling connection worked, but the caller broke the silence instruction and the requested complete time announcement remained unresolved. This page separates working integration from completion of the task.
 
@@ -136,6 +138,8 @@ The full decoded recording lasts **42.78 seconds**. The export normalizes loudne
 The audio confirms caller speech and only the beginning of an automated announcement. The live transcript shortened that ending to “At the tone”. Neither provides a complete time. The coding agent correctly reported the missing result, while the voice caller failed the silence instruction.
 
 ## Keep a phone call inside the task
+
+Start with a gap in the task you already gave your assistant. Our [Fubo cancellation inquiry](/blog/cancel-fubo) shows questions about the cancellation route and confirmation. Our [private dining research](/blog/agent-web-research-phone-calls-sf-private-dining) shows questions missing from restaurant websites. Those are separate business call examples; the T3 test above establishes the named provider workflow and its partial result.
 
 Once the connection works, give the thread a destination, questions and limits:
 

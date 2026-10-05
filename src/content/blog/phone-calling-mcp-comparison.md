@@ -10,7 +10,7 @@ authors: nick
 imageAlt: Phone calling MCP services compared by setup and calling workflow
 ---
 
-You already have Claude Code or Codex researching a problem. A phone calling MCP server lets that same agent call a business for information it cannot find online, then use the answer in the task it was already doing.
+You already use Claude Code or Codex as your personal assistant or coding agent. A task now needs a phone call: check how a subscription can be canceled, ask about an appointment or fill a gap in business research. A phone calling MCP server lets that same agent send the calling brief and use the returned answer in the task it was already doing.
 
 Several services now provide this. **Vapi Agent Phone is a ready to use calling service**, separate from Vapi's developer dashboard. **Bland has an official operational MCP server and skills plugin** that can place calls as well as build voice agents. call4me, ClawCall, Cocall, and Patter also support outbound calling from an existing agent. The useful choice is how you connect, what the call can ask you, and what comes back.
 
@@ -31,13 +31,15 @@ For a hosted service with a documented answer loop during a call, compare call4m
 
 The linked pages are the sources for this matrix. These choices follow the documented workflows; a shared live benchmark remains pending.
 
-## AI outbound calling from an existing coding agent
+## Phone calls for your personal assistant's tasks
 
-AI outbound calling starts a phone conversation on your behalf. In this workflow, Claude Code or Codex selects the business and sends a goal and limits to a calling MCP. The voice service runs the conversation, while your original agent follows the transcript and brings the result into its research. [Retell's outbound calling explanation](https://www.retellai.com/glossary/outbound-calling) describes the wider category.
+Claude Code or Codex selects the business and sends a goal and limits to the calling tool. The voice service runs the conversation, while your original agent follows the transcript and brings the result back into your task.
 
-This comparison covers individual business calls you request, such as clarifying a quote, checking an appointment or asking about a room. Choose a server by the account setup, call controls and returned evidence in the tables. For a complete example, follow our [web research and phone calling task](/blog/agent-web-research-phone-calls-sf-private-dining).
+For a cancellation task, our [Planet Fitness inquiries](/blog/cancel-planet-fitness) show why calling the right location can matter: two clubs described different commitment terms. We asked about the rules without canceling a membership. For a research task, our [private dining walkthrough](/blog/agent-web-research-phone-calls-sf-private-dining) shows web findings, recorded phone answers and questions that stayed unresolved.
 
-### Vapi alternatives and Bland AI alternatives for coding agents
+If you want the caller to book, cancel or accept an alternative, supply that authority and the required facts. Judge the tool by the confirmation it returns and the decisions it brings back to you. For a call after the business opens, see [scheduling from Claude Code or Codex](/blog/schedule-phone-calls-claude-code-codex).
+
+### Vapi and Bland alternatives for your existing assistant
 
 For calling from Claude Code or Codex, the shortlist includes Vapi Agent Phone, Bland's operational MCP, Call4me, ClawCall, Cocall and Patter. Vapi Agent Phone provides hosted calling through browser authentication. Bland adds broader platform tools alongside calling. Call4me and Cocall document questions returned to your session during a call. Patter's local plugin requires your own provider accounts. The setup and result tables above explain these choices.
 

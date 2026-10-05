@@ -9,7 +9,7 @@ authors: nick
 imageAlt: Instinct Concierge and an existing coding agent with a phone calling MCP tool
 ---
 
-**Instinct has announced outbound phone calls through Instinct Concierge.** If you want that capability inside the Claude Code or Codex session you already use, a calling MCP server offers another route. The choice depends on where you want the task, context and result to live.
+**If you already use Instinct as your personal assistant, check whether its announced Concierge phone calling feature is available in your account.** For a task already in Claude Code or Codex, a calling MCP server offers another route. The choice depends on where you want the task, context and result to live.
 
 This guide covers Instinct's published calling offer, the Call4me signup and connection steps, and an actual recorded Codex research call. **We have not tested Instinct Concierge or connected Call4me inside Instinct.** The recording below demonstrates our existing Codex workflow.
 
@@ -128,6 +128,6 @@ Whether you use a personal assistant or your existing coding agent, ask for:
 
 In Call4me, the agent uses `call4me_get_call` to follow progress. If the caller needs an answer, `call4me_answer_question` can relay one while the call is still active. In our EPIC Steak attempt, an answer arrived after the call had ended and was not delivered. Read the actual outcome before treating the task as resolved.
 
-For developers comparing calling tools, our [MCP comparison](/blog/phone-calling-mcp-comparison) includes real Call4me, Vapi Agent Phone and Bland attempts. Our [voice architecture guide](/blog/cascaded-voice-stack-vs-gpt-live) explains the conversation layer behind the interface.
+If you already use Claude Code or Codex as your assistant, our [MCP comparison](/blog/phone-calling-mcp-comparison) includes real Call4me, Vapi Agent Phone and Bland attempts. Our [voice architecture guide](/blog/cascaded-voice-stack-vs-gpt-live) explains the conversation layer behind the interface.
 
 If your current Claude Code or Codex session needs one missing fact from a business, [connect Call4me](/mcp), check the balance tool, and make that fact the goal of your first call.

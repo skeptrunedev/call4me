@@ -1,6 +1,6 @@
 ---
 title: "How to use Meta Muse with custom connectors (and give it a phone)"
-seoTitle: How to use Meta Muse with custom connectors
+seoTitle: How to use Meta Muse custom connectors for phone calls
 subtitle: Connect Meta Muse to a phone calling service through a custom connector. Here is our tested setup, what a live balance check proves, how native calling differs and what to check before dialing.
 description: Set up a Meta Muse custom connector for call4me. Secure credential steps, MCP checks, native calling beta and troubleshooting from our account tests.
 date: 2026-10-01
@@ -13,6 +13,8 @@ imageAlt: Meta Muse AI agent connectors, with phone calls as the worked example
 **The short answer:** Muse can build a custom connector to call4me's hosted MCP server. In our October 1 account test, we asked Muse to build the integration, entered a key through its **Connect** card and received a live balance result. We did not find a native MCP server settings form in that tested web session.
 
 An early call4me user tried our general MCP setup prompt and Muse refused, saying its tools were fixed. Asking it to **build a custom connector** worked in our own account. This guide separates that observed result from Muse's descriptions of what its connector can do.
+
+If Muse already manages your personal tasks, the reason to add calling is to finish the phone part in that conversation. Examples include asking a gym about cancellation requirements or a restaurant about availability. Our recorded [subscription inquiries](/blog/cancel-planet-fitness) provide questions to adapt after your connection check succeeds. The verified Muse setup and the still unverified calling steps are detailed below.
 
 ## What is Meta Muse?
 

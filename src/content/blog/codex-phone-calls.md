@@ -12,6 +12,8 @@ imageAlt: Codex researching online, calling a business through MCP, and returnin
 
 **Codex can make phone calls through a calling MCP server.** Connect call4me once, then ask Codex to call a business with a goal and clear limits. A voice caller handles the conversation; Codex follows the transcript and uses the result in the task you already gave it.
 
+If Codex is your personal assistant, that task might be reviewing subscriptions, planning an appointment or comparing businesses. Add the phone questions to that existing task, with the relevant context and permission for any change.
+
 We verified this with **Codex CLI 0.160.0 on October 3, 2026**. The practical test was private dining research: read the restaurants' official websites, identify missing or contradictory information, and call to clarify it. It was research only, with no invented event, reservation, or payment.
 
 ## Codex MCP setup for a phone calling server
@@ -62,6 +64,14 @@ The most useful prompt describes what Codex already knows, what the phone call m
 > Research Waterbar and EPIC Steak in San Francisco using their official private dining pages. List the published facts and anything missing or inconsistent. Then call each restaurant once to clarify those gaps. This is general research: we do not have an event date or group size, and you must not invent one. Do not book, hold space, give a card, or agree to a charge. Return a comparison that separates website information from phone answers and identifies anything still unresolved.
 
 For your own task, name the intended businesses and phone numbers, and set any time or spending limits before dialing. If you want a reservation, provide the date, headcount, name, and acceptable alternatives. Research and booking need different authority.
+
+### A cancellation inquiry from your existing task
+
+This is a proposed brief you can adapt, separate from our recorded restaurant test:
+
+> For the subscription we selected, check the business's official cancellation instructions first. Use Call4me to call only about terms or steps we still cannot establish. Ask about the cancellation route for my plan, any deadline or fee, and how confirmation works. Do not cancel, change the plan or accept an offer. Return the answers and remaining steps to this task, including who answered and anything unresolved.
+
+Our recorded [Planet Fitness inquiries](/blog/cancel-planet-fitness) show why location and plan details matter. If the relevant department is closed, use the [scheduled calling workflow](/blog/schedule-phone-calls-claude-code-codex) with the complete questions and limits saved in the brief.
 
 ## Follow the call back into the same task
 

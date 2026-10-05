@@ -1,6 +1,6 @@
 ---
-title: "Twilio MCP for phone calls: what works and what you still need to build"
-seoTitle: Twilio MCP server for phone calls, setup and limits
+title: "Can Twilio MCP make phone calls for your Claude Code or Codex assistant?"
+seoTitle: Twilio MCP phone calls for Claude Code or Codex, what works
 subtitle: We connected to Twilio's public MCP, searched for an outbound call, and retrieved its actual API schema. Here is the difference between documentation tools, an operational MCP, and a voice agent that can finish a conversation.
 description: Set up Twilio MCP in Claude Code or Codex, see our actual search and schema retrieval test, and compare building a conversational voice application with connecting a hosted calling MCP.
 date: 2026-10-04
@@ -11,9 +11,13 @@ imageAlt: Twilio documentation MCP helps your agent build a voice application, w
 
 **Twilio's public documentation MCP helps Claude Code and Codex build calling applications. It does not place calls itself.** An operational Twilio MCP can expose authenticated API actions, but creating a call is still different from giving your coding agent a caller that listens, answers questions, and brings back a usable result.
 
+If you already use that agent as a personal assistant, the goal may be to resolve a subscription question, arrange an appointment or ask a business for a missing fact. Evaluate the connection against that task: does it run the conversation and return the answer or confirmation your assistant needs?
+
 On October 4, 2026, we connected to `https://mcp.twilio.com/docs` without a Twilio account or credentials. We discovered its tools, searched for outbound calling, and retrieved the call creation schema. This is an actual MCP test. We did not place a Twilio call or run a conversational Twilio application.
 
 We make [call4me](/), a hosted calling MCP. If you are deciding whether to build with Twilio or connect a calling service to the agent you already use, the useful question is which parts you want to own.
+
+For existing calling tools, start with our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison). It covers account setup and the results returned to the original agent, with actual Call4me, Vapi Agent Phone and Bland calls. The implementation details below help when you choose to build the voice application yourself.
 
 ## Which Twilio MCP do you mean?
 
@@ -103,13 +107,13 @@ Two documented Twilio paths are relevant:
 
 These are documented architecture choices. We did not deploy either in this test, so we cannot compare their call quality, setup time, or reliability against call4me.
 
-For an agent asking a restaurant about private dining, a custom implementation needs more than a `CreateCall` wrapper. We would build these behaviors into the task interface:
+For a personal assistant checking cancellation terms, appointment availability or private dining details, a custom implementation needs more than a `CreateCall` wrapper. We would build these behaviors into the task interface:
 
 1. Accept the destination, research questions, facts the caller may share, and limits on commitments.
 2. Start one call and return a stable identifier the coding agent can follow.
 3. Expose progress separately from the transcript and answered questions.
 4. Pause for missing information or terminate when the caller lacks authority to proceed.
-5. Return the outcome, unresolved questions, and available recording to the original research task.
+5. Return the answers, any actual confirmation, unresolved questions and available recording to the original assistant task.
 
 These are our implementation criteria. They are not a claim that the public Twilio docs MCP supplies those behaviors.
 
@@ -139,5 +143,7 @@ Building on Twilio is useful when the voice application itself is part of your p
 If your immediate goal is to give the Claude Code or Codex session you already use a way to call a business, a hosted calling MCP provides that workflow directly. You can still use the Twilio docs MCP alongside it for development research.
 
 For call4me, start with our [Claude Code setup and actual call](/blog/claude-code-phone-calls) or [Codex setup and research example](/blog/codex-phone-calls). The Claude Code example includes a Foreign Cinema recording and the exact tool sequence. It reached private dining voicemail, not a person, and did not obtain a quote.
+
+For a concrete personal assistant brief, use the recorded [Fubo cancellation inquiry](/blog/cancel-fubo). If support is closed, the [scheduled calling guide](/blog/schedule-phone-calls-claude-code-codex) explains saving a complete brief now and retrieving its stored status later. That guide distinguishes verified schedule records from later call outcomes.
 
 The practical test is the same for a custom Twilio application or a hosted service: can the agent carry out the allowed task, expose what happened, and report what remains unknown? A configured server proves setup. An API schema proves what a request accepts. The completed conversation and its evidence establish what the caller actually accomplished.

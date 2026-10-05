@@ -1,8 +1,8 @@
 ---
-title: "Can AI phone agents navigate phone trees? Vapi, Bland and Call4me evidence"
-seoTitle: AI IVR navigation and voicemail detection, real call evidence
+title: "Can your AI assistant navigate phone trees? Vapi, Bland and Call4me evidence"
+seoTitle: Phone trees for Claude Code and Codex, real call evidence
 subtitle: A phone menu, a successful keypad press, and a completed task are different results. Here is how to configure, diagnose, and test each step.
-description: Learn how AI callers navigate IVR phone trees, verify DTMF and destination evidence, handle voicemail, and diagnose Vapi and Bland settings using real recordings.
+description: Get your existing AI assistant through business phone menus. Claude Code and Codex calling workflows, keypad evidence, voicemail and real Vapi, Bland and Call4me recordings.
 date: 2026-10-04
 tags: ai phone assistant, ivr, dtmf, vapi, bland, mcp, claude code, codex
 authors: nick
@@ -11,13 +11,19 @@ imageAlt: A phone menu routes through keypad input to either a person or voicema
 
 **AI callers can navigate some phone trees. Reaching the right branch does not prove they handled what came next.** Our Vapi Agent Phone and Bland calls both reached Foreign Cinema's private dining voicemail. One spoke after the greeting despite instructions to exit silently. The other needed Codex to stop the call.
 
-That distinction matters when you give Claude Code or Codex a task like getting a refund, confirming availability, or speaking to a specific department. The agent needs to choose the menu option, send a real keypad input, recognize its destination, and follow the right instruction when nobody answers.
+That distinction matters when your existing Claude Code, Codex or personal assistant session needs to cancel a subscription, change an appointment or confirm availability. Its calling service needs to choose the menu option, send a real keypad input, recognize the destination and follow the right instruction when nobody answers. Your original assistant needs the answer or confirmation back in its task.
 
 We make Call4me. This guide separates current configuration documentation from our recorded calls on **October 3 and 4, 2026**. The calls are individual cases with different briefs and dates, rather than a controlled provider benchmark. They establish particular routing outcomes, not success rates or a winner.
 
 For connection instructions and account requirements, use our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison). This guide focuses on what to inspect after a calling tool connects.
 
-## AI IVR systems and outbound phone tree navigation
+## Choose the department for the task your assistant is doing
+
+The right route depends on what you need to finish. In our [Fubo cancellation inquiry](/blog/cancel-fubo), asking for a human and choosing customer service reached a representative who explained cancellation and verification. We gathered information without changing an account. In our [private dining research](/blog/agent-web-research-phone-calls-sf-private-dining), reaching the events office mattered more than reaching the restaurant's main line, and restaurant opening hours did not establish events staff availability.
+
+Give the caller the task, the information it can share, the changes you authorize and what to do at voicemail. A menu result should return to the same assistant with the department reached, who answered, the actual answer and the remaining steps. For cancellation briefs you can adapt, see our recorded [Audible inquiry](/blog/cancel-audible) and [Planet Fitness inquiries](/blog/cancel-planet-fitness).
+
+### The business's IVR and your outbound caller
 
 IVR means interactive voice response. An AI IVR handles a business's incoming calls through conversation, routing or automated answers. [Bland's AI IVR explanation](https://www.bland.ai/blog/ai-powered-ivr) describes that receiving side of the phone system.
 

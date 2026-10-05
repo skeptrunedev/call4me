@@ -283,3 +283,18 @@ one H1. Its Claude Code, Codex and T3 guide links, prompt copy button and FAQ
 expansion work. Existing recordings and benchmark limitations remain intact.
 The final ICP correction updates the homepage, Claude Code guide and four
 cancellation entry paths; their URLs and evidence boundaries are retained.
+
+### Recent article intent refresh
+
+The October 4 review applies the same audience filter to eight existing
+articles. The phone tree and Twilio titles now address an existing assistant
+needing calls. The comparison leads with personal tasks and keeps its Vapi and
+Bland alternatives scoped to that assistant. Scheduling shows cancellation,
+appointment and research briefs before the tool reference. T3 and Codex connect
+their setup to those tasks, Muse's search title makes calling explicit, and
+Instinct starts with the assistant the reader already uses.
+
+The articles link cancellation evidence and client setup in both directions.
+Their existing URLs, recordings, transcripts and test outcomes remain intact.
+Suggested prompts are identified as examples. No new harness test, business
+call, confirmed booking or account cancellation is claimed by this refresh.
