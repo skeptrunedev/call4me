@@ -1,4 +1,8 @@
 import type { PostSource } from '../../server/lib/blog';
+import ohioWorkersCompensation from './ohio-workers-compensation-insurance.md';
+import dropOffVetAppointment from './drop-off-vet-appointment.md';
+import bookHaircutAppointment from './book-haircut-appointment.md';
+import lesSchwabOilChange from './les-schwab-oil-change.md';
 import cancelPlanetFitness from './cancel-planet-fitness.md';
 import costcoTireAppointment from './costco-tire-appointment-cancel-refund.md';
 import experianPhoneNumber from './experian-phone-number.md';
@@ -50,6 +54,10 @@ import twilioMcpPhoneCalls from './twilio-mcp-phone-calls.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'ohio-workers-compensation-insurance', markdown: ohioWorkersCompensation },
+  { slug: 'drop-off-vet-appointment', markdown: dropOffVetAppointment },
+  { slug: 'book-haircut-appointment', markdown: bookHaircutAppointment },
+  { slug: 'les-schwab-oil-change', markdown: lesSchwabOilChange },
   { slug: 't3-code-phone-calls', markdown: t3CodePhoneCalls },
   { slug: 'schedule-phone-calls-claude-code-codex', markdown: schedulePhoneCalls },
   { slug: 'ai-phone-tree-navigation', markdown: aiPhoneTreeNavigation },

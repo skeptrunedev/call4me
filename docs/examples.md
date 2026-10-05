@@ -32,6 +32,26 @@ transcripts, and editing manifests outside this repository. Public players
 must only use the reviewed static exports. Publish an account owner's recording
 with their permission.
 
+The October 5 collection prepares four customer stories and matching examples:
+an Ohio BWC application question, a veterinary dropoff booking, a haircut
+booking, and a Les Schwab oil change quote with a walk in dropoff plan. The
+haircut guide also includes its brief unsuccessful rescheduling call. All five
+exports retain complete source timing and original voices. Names, private
+numbers and identifying clinic or salon details are muted. Exact provider leg
+association, decoded silence checks and two independent source and export
+transcriptions were checked. Uncertain words are marked; no human listening
+verification is claimed. Customer publication consent must be confirmed before
+these prepared pages and recordings are deployed.
+
+The Ohio call supplied application instructions without filing an application
+or issuing coverage, and its spoken callback differed from the requested one.
+The veterinary call confirmed Tuesday at 8:30 AM but left conflicting branch
+names, price and clinical urgency unresolved. The haircut was confirmed for
+Friday at 2 PM for $60 despite an available Thursday slot; the later call did
+not confirm a change. Les Schwab accepted a walk in dropoff plan and quoted a
+combined $100 to $110 estimate, without a reserved appointment or proof of
+completed service. Each guide preserves these limits and links its example.
+
 The October 4 Grok Bot example uses one informational Foreign Cinema call.
 The complete reviewed caller and restaurant recording lasts 108.9 seconds,
 with original timing retained at `public/static/blog/grok-foreign-cinema-walk-ins.mp3`.
