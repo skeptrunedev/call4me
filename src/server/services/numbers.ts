@@ -33,6 +33,8 @@ export const COUNTRIES: Record<string, { name: string; type: string; requirement
   DK: { name: 'Denmark', type: 'mobile', requirementGroup: '91eb2437-7949-4683-9906-d340e655daee' },
   IS: { name: 'Iceland', type: 'local', requirementGroup: '8d2244f9-dc62-400c-8672-9fae946fc5bd' },
   LT: { name: 'Lithuania', type: 'mobile', requirementGroup: '333570f7-30c9-4302-98c8-353fdb1955af' },
+  // Telnyx lists no paperwork for Polish local numbers.
+  PL: { name: 'Poland', type: 'local' },
   CY: { name: 'Cyprus', type: 'local', requirementGroup: 'a5999de0-1d23-4a10-a0f4-1667e7ccdc9a' },
   UA: { name: 'Ukraine', type: 'mobile', requirementGroup: '62481732-9314-4305-bdc5-5b374dc56619' },
   IL: { name: 'Israel', type: 'mobile', requirementGroup: '7f2499ea-aaec-4c3d-a143-f8473402d192' },
