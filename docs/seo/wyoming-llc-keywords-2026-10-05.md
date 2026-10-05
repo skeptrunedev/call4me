@@ -1,14 +1,69 @@
 # Wyoming LLC search opportunities for a founder example
 
 Researched October 5, 2026 with the installed Ahrefs CLI, US Google database.
-The research checked 45 distinct exact phrases, two keyword ideas reports and
-11 SERPs. The accompanying CSV preserves all exact keyword estimates, including
+The research checked 57 distinct exact phrases, three keyword ideas reports and
+13 SERPs. The accompanying CSV preserves all exact keyword estimates, including
 zero volume and unknown difficulty.
 
-## Recommended first article
+## Current recommendation after Nick clarified the call
 
-Start with one useful Wyoming LLC setup guide containing Nick's actual Call4Me
-example. Suggested title: **How to set up a Wyoming LLC with your AI assistant**.
+Nick clarified that Call4Me called someone in Wyoming and got a registered
+agent document emailed to him. This is a concrete document retrieval example.
+The recommendation is now to lead with that task. Formation, costs, address
+permissions, mail forwarding and EIN work were not established by his account.
+
+Suggested example title: **My AI assistant got my Wyoming registered agent
+document emailed to me**. Suggested blog title: **How to get your Wyoming
+registered agent document**. The example can be a section in the blog rather
+than a second competing article for the same query.
+
+Wyoming publishes a [Consent to Appointment by Registered Agent form](https://sos.wyo.gov/Forms/RA/RAConsent.pdf).
+That is a candidate document type, not an identification of Nick's attachment.
+Review the actual attachment before using consent form language in the title
+or claiming that a signed consent was obtained. If that is the document,
+**Wyoming registered agent consent form: how to get it** is the better search
+title and `wyoming-registered-agent-consent-form` is a suitable slug.
+
+| Document keyword | US searches per month | KD | Decision |
+| --- | ---: | ---: | --- |
+| wyoming registered agent consent form | Unknown | Unknown | Precise conditional primary if the attachment is the consent form. |
+| registered agent consent form | 60 | Unknown | Supporting phrase on a Wyoming specific guide. General demand may include other states. |
+| consent to appointment by registered agent | 10 | Unknown | Supporting official document name if verified. |
+| wyoming llc registered agent form | Unknown | Unknown | Natural supporting wording. |
+| wyoming registered agent documents | Unknown | Unknown | Broad document retrieval wording until the attachment is identified. |
+| wyoming llc articles of organization | 150 | 5 | Explain as a different document if needed; do not claim the call obtained it. |
+
+The exact Wyoming consent and general consent SERP requests both returned null.
+There is no returned ranking evidence for them. The matching ideas report
+returned 38 rows, mostly state specific variants. It reports zero volume for
+`wyoming registered agent consent form pdf` and `wyoming registered agent
+consent form requirement`, with unknown difficulty. Those estimates are not
+evidence of an easy ranking opportunity, and the 60 search general phrase is
+not 60 measured Wyoming searches.
+
+The guide should answer the document need: identify the exact document,
+explain who supplies or executes it, link the official blank form where
+applicable, and show how to request the completed document from the provider.
+A downloaded blank form and a provider supplied completed document are
+different deliverables. Show Nick's requested document, call and reported
+email receipt, then a suggested prompt for the reader's existing Claude Code
+or Codex assistant. The client used for Nick's call has not been established.
+
+The [state's agent guidance](https://sos.wyo.gov/Business/Docs/HowToFindOrBecomeARegisteredAgent.pdf)
+explains signed consent for new filings and retaining consent when filing
+online. Cite the official process rather than treating one provider's response
+as a universal rule. The received attachment and call recording have not been
+reviewed in this research. Nick's report establishes the reported email
+outcome; it does not establish the document's contents or a completed filing.
+
+The measured `wyoming llc requirements` phrase (250, KD 0) can support a future
+complete checklist that links to the document guide. The immediate case study
+does not need to promise every step of formation to justify its publication.
+
+## Broader guide opportunities
+
+A potential later Wyoming LLC setup guide can incorporate this document
+retrieval example. Suggested title: **How to set up a Wyoming LLC with your AI assistant**.
 Suggested slug: `how-to-set-up-a-wyoming-llc`.
 
 Primary phrase: **how to set up a wyoming llc**, 150 estimated monthly US
@@ -22,17 +77,16 @@ and outcome, then offer a suggested brief for the reader's existing Claude Code
 or Codex assistant. Link the published calling setup guides instead of
 duplicating their installation instructions.
 
-Nick reports that he used Call4Me to get a Wyoming LLC sorted out. The exact
-provider, problem, client, call outcome and filing evidence have not been
-reviewed in this keyword research. The working title depends on the article
-answering the whole setup intent. If the actual call concerns an existing LLC
-or an address question, use that narrower intent from the table below instead.
+The provider, client, attachment and filing evidence have not been reviewed
+in this keyword research. This broader title depends on the article answering
+the whole setup intent. It is a later opportunity, rather than the immediate
+document retrieval story recommended above.
 
 ## Prioritized targets
 
 | Keyword | US searches per month | KD | Editorial decision |
 | --- | ---: | ---: | --- |
-| how to set up a wyoming llc | 150 | 0 | First guide if the story concerns setup. Complete practical answer plus the real delegated step. |
+| how to set up a wyoming llc | 150 | 0 | Later complete setup guide, with document retrieval as one practical step. |
 | how to start an llc in wyoming | 450 | 12 | Supporting phrase on that same guide. |
 | wyoming llc requirements | 250 | 0 | Checklist within the setup guide. |
 | wyoming llc cost | 800 | 7 | Cost section, or a later distinct guide if actual receipts and renewal details support it. |
@@ -169,14 +223,14 @@ the intended audience was reached.
 
 ## Reproducible evidence and verification
 
-The [CSV](wyoming-llc-keywords-2026-10-05.csv) contains the 45 exact keyword
+The [CSV](wyoming-llc-keywords-2026-10-05.csv) contains the 57 exact keyword
 estimates. Searches per month are Ahrefs estimates, and KD is its 0 to 100
 difficulty metric. Missing values stay unknown. Related volumes overlap and
 must not be summed into unique traffic. KD 0 does not remove competition,
 intent requirements or the need for reliable formation information.
 
 The ignored directory `scratch/seo-wyoming-llc-2026-10-05/` retains the followup
-batch, both raw ideas reports, all raw SERP responses, and a compact
+and document batches, all three raw ideas reports, all raw SERP responses, and a compact
 transcription of the completed first batch's console output. Ideas endpoints
 returned 100 rows each, despite the questions request's limit of 80; the
 report does not treat the backend's total keyword count as inspected rows.
@@ -203,6 +257,8 @@ ahrefs keyword-serp '<phrase>' --db us --json
 | what to do after forming an llc | 2026-08-20T07:54:03Z |
 | llc for startup | 2026-09-12T07:13:52Z |
 | claude code personal assistant | Null response |
+| wyoming registered agent consent form | Null response |
+| registered agent consent form | Null response |
 
 Fresh requests return Ahrefs' latest stored estimates and SERPs, not a new
 Google crawl. This task prepares research, rather than publishing the example
