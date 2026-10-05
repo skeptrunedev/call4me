@@ -1,6 +1,6 @@
-# Postiz publisher outreach drafts
+# Postiz publisher outreach copy
 
-October 5, 2026. Prepared for Nick Khami. All nine messages are saved as verified Fastmail drafts and in the outreach tracker. They await approval before sending. Public addresses were verified from the linked publisher pages. No return links have been promised or added.
+October 5, 2026. Nick approved sending all nine messages after reviewing the launch credibility line. All nine were sent from Nick Khami and verified in Fastmail Sent and the outreach tracker. Public addresses were verified from the linked publisher pages. No return links have been promised or added.
 
 ## Cipher Projects
 

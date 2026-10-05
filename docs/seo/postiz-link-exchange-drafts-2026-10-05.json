@@ -1,7 +1,7 @@
 {
   "date": "2026-10-05",
   "target": "postiz.com",
-  "status": "nine Fastmail drafts revised with launch credibility copy and verified, awaiting send approval",
+  "status": "all nine approved emails sent and verified in Fastmail Sent and the outreach tracker",
   "sender": "Nick Khami",
   "prospects": [
     {
@@ -230,14 +230,18 @@
     "live_backlinks_verified": 9,
     "prior_contact_matches": 0,
     "fastmail_drafts_verified": 9,
-    "submitted_emails": 0,
+    "submitted_emails": 9,
     "worker_build": "passed",
     "typecheck": "passed",
-    "tests_passed": 196,
+    "tests_passed": 202,
     "launch_sentence_matches_sent_copy": true,
-    "revised_tracker_messages_verified": 9
+    "revised_tracker_messages_verified": 9,
+    "sent_mailbox_verified": 9,
+    "sent_tracker_records_verified": 9,
+    "drafts_remaining": 0
   },
   "launch_post_statement": "our launch post (https://x.com/skeptrune/status/2105320262938009690) got 194k views, 1k likes and 1.2k bookmarks.",
   "launch_post_url": "https://x.com/skeptrune/status/2105320262938009690",
-  "copy_source": "Exact sentence and post URL from Nick's sent outreach on October 5, 2026, reused at his request."
+  "copy_source": "Exact sentence and post URL from Nick's sent outreach on October 5, 2026, reused at his request.",
+  "send_authorization": "Nick explicitly approved: send them"
 }

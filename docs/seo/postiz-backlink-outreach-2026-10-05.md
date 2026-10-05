@@ -29,8 +29,8 @@ Ahrefs estimates are not publisher analytics. The report and overview use
 different scopes, so their totals should not be combined.
 
 Research found 18 publishers worth examining. Nine have a live Postiz link,
-a verified public email and a reviewable pitch. No previous exact contact was
-found in the outreach tracker or connected mailbox. Eight of those nine live
+a verified public email and a personalized pitch. Before this campaign, no
+previous exact contact was found in the tracker or connected mailbox. Eight of those nine live
 links have neither `nofollow` nor `sponsored`. PostEverywhere's current link
 has `nofollow`; its older exported dofollow API link is absent today. Navid's
 link is in a tool recommendation module rather than the article body.
@@ -39,7 +39,7 @@ The best fit is a useful tutorial or recorded founder task. Many publishers
 link Postiz from social scheduling lists, but their Claude Code, MCP or founder
 articles provide better places for a phone calling example.
 
-## Reviewed draft queue
+## Contacted publishers
 
 | Publisher | Ahrefs DR | Verified contact | Audience and proposed reference |
 | --- | --- | --- | --- |
@@ -111,18 +111,23 @@ verified founder address is selected for this first touch.
 Raw Ahrefs responses, public HTML verification and mailbox query output are
 kept outside git. The public contact proof and actual live link attributes
 were independently checked against every selected record. The existing CLI
-created nine outreach records and nine Fastmail drafts. Readback confirmed
-every recipient, subject, sender and exact message body. All nine remain in
-Drafts, and the tracker has no sent timestamp or sending channel for them.
-Sending is a separate action and remains pending review under the user's
-outreach instructions.
+created nine outreach records and nine Fastmail drafts. Nick reviewed the
+copy, requested the launch credibility line, then explicitly approved sending
+all nine. The existing native drafts were submitted once, without creating
+extra draft copies. Readback confirmed every approved recipient, subject,
+sender and exact body in Fastmail Sent. All nine tracker records are marked
+sent via email with sending timestamps and provider submission references.
+No campaign messages remain in Drafts. Send receipts and message IDs are
+saved outside git.
 
 Self verification passed: worker build through Wrangler dry run, TypeScript
-check, all 196 tests, JSON and CSV parsing, public contact and link proof,
+check, all 202 tests, JSON and CSV parsing, public contact and link proof,
 live Call4me resource checks and the actual mailbox and tracker readback.
 The outreach CLI now supports revising its existing unsent Fastmail drafts.
 It verifies the original against the tracker and creates the revised draft
 before removing the old version. Mailbox state guards protect concurrent edits.
+Its explicit send command verifies the approved recipient, subject and body
+before submitting the existing native draft, without creating another copy.
 No application source changes are included.
 
 Sources retrieved October 5, 2026. Relevant Ahrefs commands:
