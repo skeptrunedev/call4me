@@ -49,6 +49,7 @@ export interface Reload {
 }
 
 const PRODUCT = { name: 'call4me credits', description: 'Prepaid credits for phone calls your AI agent places.' };
+const PROMOTION_ERROR = 'this discount code cannot be used for this purchase. you can add credits at call4.me.';
 
 /** Where a subscription's invoices land: the account it was bought for. */
 const subscriptionOf = (invoice: Stripe.Invoice): string | null => {
@@ -106,11 +107,25 @@ export function topups(db: D1Database, stripe: Stripe) {
      * `from` is the browser it started in, so the purchase lands in that visit (lib/ga.ts) and
      * matches its ad click (lib/meta.ts).
      */
-    async checkout(opts: { amountCents: number; monthly: boolean; origin: string; email?: string; account?: Account; adjustable?: boolean; from?: Visitor }): Promise<string> {
+    async checkout(opts: { amountCents: number; monthly: boolean; origin: string; email?: string; account?: Account; adjustable?: boolean; promotionCode?: string; from?: Visitor }): Promise<string> {
       const id = newId();
       // X sign-ins may have only a placeholder address; then Checkout asks for one.
       const email = realEmail(opts.account?.email ?? opts.email?.trim().toLowerCase()) ?? undefined;
       const customer = opts.account ? (await db.prepare(`SELECT stripe_customer_id FROM accounts WHERE id = ?`).bind(opts.account.id).first<{ stripe_customer_id: string | null }>())?.stripe_customer_id : null;
+      let promotion: Stripe.PromotionCode | undefined;
+      const code = opts.promotionCode?.trim();
+      if (code) {
+        // Resolve emailed codes through Stripe's API and apply the promotion before
+        // hosted Checkout opens. Stripe still validates the coupon and its restrictions.
+        for await (const candidate of stripe.promotionCodes.list({ code, active: true, limit: 100 })) {
+          const restrictedCustomer = typeof candidate.customer === 'string' ? candidate.customer : candidate.customer?.id;
+          if ((customer && restrictedCustomer === customer) || (!restrictedCustomer && !candidate.customer_account)) {
+            promotion = candidate;
+            break;
+          }
+        }
+        if (!promotion) throw new TopupError(PROMOTION_ERROR);
+      }
       // Adjustable: $10 units, quantity chosen on Stripe's page (the "add funds" button goes
       // straight there). Otherwise the amount was chosen on our form.
       const price_data = { currency: 'usd', unit_amount: opts.adjustable ? UNIT_CENTS : opts.amountCents, product_data: PRODUCT };
@@ -123,7 +138,7 @@ export function topups(db: D1Database, stripe: Stripe) {
         // carrying one as theirs. Ours are found by session id and tagged app=callbay.
         success_url: `${opts.origin}/welcome?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${opts.origin}/`,
-        allow_promotion_codes: true,
+        ...(promotion ? { discounts: [{ promotion_code: promotion.id }] } : { allow_promotion_codes: true }),
         metadata: { app: 'callbay', topup_id: id },
         ...(opts.monthly
           ? {
@@ -136,6 +151,9 @@ export function topups(db: D1Database, stripe: Stripe) {
               line_items: [{ ...quantity, price_data }],
               ...(customer ? {} : { customer_creation: 'always' as const }),
             }),
+      }).catch((err: unknown) => {
+        if (promotion && err instanceof Stripe.errors.StripeInvalidRequestError && /^(discounts|promotion_code|coupon)(\[|$)/.test(err.param ?? '')) throw new TopupError(PROMOTION_ERROR);
+        throw err;
       });
       const { ga, meta, touch } = opts.from ?? { ga: null, meta: null, touch: null };
       await db

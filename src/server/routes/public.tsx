@@ -265,15 +265,22 @@ pub.get('/add/:code', async (c) => {
   const accountId = await addCreditsAccount(c.env.BETTER_AUTH_SECRET, c.req.param('code'));
   if (!accountId) return invalidAddLink(c);
   c.header('cache-control', 'private, no-store');
-  return c.html(<AddCreditsPage path={await addCreditsPath(c.env.BETTER_AUTH_SECRET, accountId)} />);
+  const path = await addCreditsPath(c.env.BETTER_AUTH_SECRET, accountId);
+  const promotionCode = c.req.query('promo')?.trim();
+  return c.html(<AddCreditsPage path={promotionCode ? `${path}?promo=${encodeURIComponent(promotionCode)}` : path} />);
 });
 
 pub.post('/add/:code', async (c) => {
   const accountId = await addCreditsAccount(c.env.BETTER_AUTH_SECRET, c.req.param('code'));
   const account = accountId ? await accounts(c.env.DB).byId(accountId) : null;
   if (!account) return invalidAddLink(c);
-  const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: MIN_TOPUP_CENTS, monthly: true, adjustable: true, origin: origin(c), account, from: visitor(c) });
-  return c.redirect(url, 303);
+  try {
+    const url = await topups(c.env.DB, stripeFor(c)).checkout({ amountCents: MIN_TOPUP_CENTS, monthly: true, adjustable: true, origin: origin(c), account, promotionCode: c.req.query('promo'), from: visitor(c) });
+    return c.redirect(url, 303);
+  } catch (err) {
+    if (err instanceof TopupError) return c.html(<MessagePage title="discount code not valid" message={err.message} />, 400);
+    throw err;
+  }
 });
 
 // Drip unsubscribe. GET only shows a confirm button: mail scanners open every link in an
