@@ -98,6 +98,12 @@ and Write for `call4.me`. Any unavailable or mismatched setting fails the comman
 audit AI Crawl Control and firewall rules for crawler blocks. Cloudflare's automatic DDoS
 protection remains active.
 
+If an account token can manage tokens but lacks the permissions on this zone, use
+`npm run crawlers -- --apply --authorize` to add the necessary permissions for `call4.me`.
+It discovers permission IDs from Cloudflare and preserves existing permissions and restrictions.
+The token editor calls Write permissions Edit. Account tokens may be unsupported by some bot
+products; use a user token from My Profile if Cloudflare rejects a correctly scoped account token.
+
 ## Blog
 
 `/blog` is markdown files in `src/content/blog` (one per post, listed in `index.ts`, headline image at
