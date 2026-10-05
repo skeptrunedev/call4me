@@ -1,18 +1,21 @@
-# SEO plan for coding agent power users
+# SEO plan for personal AI assistants and coding agents that make phone calls
 
 Updated October 4, 2026. This is the current editorial priority and replaces the consumer page volume targets in the original October plan. The historical execution notes below retain their original evidence boundaries; the fresh audit at the end records the latest targeting decisions.
 
 ## Acceptance criteria
 
-* Reach Claude Code, Codex and T3 Code power users who want their existing agent to make outbound phone calls.
+* Reach people using Claude Code, Codex, Muse, Instinct, T3 Code and similar tools who want their existing personal assistant or coding agent to make phone calls.
 * Prefer a precise audience match over estimated search volume. Missing Ahrefs estimates mean unknown demand, not no demand.
+* Match either the explicit capability request (give my existing assistant a phone) or a concrete task that benefits from it (subscription cancellation, appointments, reservations or business research).
+* Keep subscription cancellation articles as a core task entry route. Make the path from the task to connecting the reader's existing assistant explicit, with actual phone evidence.
+* Screen ICP and task fit before volume and difficulty. A generic MCP directory, inbound receptionist or sales calling keyword is not an editorial priority solely because it has a large estimate or low KD.
 * Compete directly with Vapi, Bland and Twilio where the reader is choosing how to add calling. Include finished calling MCP products in the comparison.
 * Provide executed walkthroughs, real information obtained by phone, recordings, tool traces and honest failure analysis.
 * Keep architecture explanations separate from measured product comparisons. Claims about speed, reliability and cost require actual evidence.
 
 ## What changed in the research
 
-The original plan optimized for people searching for cancellation instructions and customer service numbers. Those pages remain useful examples, but their readers are not necessarily users of a coding harness. The new acquisition path is a calling setup guide, a complete research workflow, or a comparison for an existing agent.
+The acquisition plan has two routes: people explicitly adding calls to an existing assistant, and people trying to finish a concrete task such as canceling a subscription. Cancellation articles are a core part of the second route. They show what an assistant can learn by calling, then give the reader a brief and a connection path for the agent they already use. General task traffic does not by itself establish the reader's client; measure activation rather than assuming it.
 
 Vapi is a direct competitor here. Its [Personal Agent Calling launch](https://vapi.ai/blog/vapi-personal-agent-calling), dated September 30, and [Agent Phone setup](https://phone.vapi.ai/) describe ready to use calling through MCP and browser login. Do not describe every Vapi option as requiring a custom voice stack, dashboard configuration or purchased phone number. Distinguish Agent Phone, the developer platform, the documentation MCP and skills for building agents.
 
@@ -29,9 +32,9 @@ Ahrefs US estimates pulled October 3. These are exact keyword estimates, not tra
 | claude code phone calls | Unknown | Unknown | Exact ICP match; first setup guide |
 | codex phone calls | Unknown | Unknown | Exact ICP match; first executed walkthrough |
 | t3 code mcp | 10 | Unknown | Verify the selected provider's connection path before writing |
-| claude code personal assistant | 40 | Unknown | A complete web research plus telephone workflow |
-| best mcp servers for claude code | 150 | 0 | Adjacent discovery; directory distribution and a useful calling comparison |
-| codex mcp | 1,500 | 10 | Adjacent setup demand; calling as a worked example, not a generic MCP rewrite |
+| claude code personal assistant | 40 | Unknown | Give an existing personal assistant a calling tool, with real tasks and evidence |
+| best mcp servers for claude code | 150 | 0 | Broad discovery, deferred as a dedicated article; the calling comparison stays scoped to phone tools |
+| codex mcp | 1,500 | 10 | Supporting setup phrase within the phone guide; its generic demand does not drive the next brief |
 | vapi mcp | 70 | Unknown | Explain which Vapi integration the reader needs |
 | vapi alternatives | 150 | Unknown | A comparison scoped to calls from an existing agent |
 | bland ai alternatives | 150 | 3 | The same comparison research, with a separate page only if intent warrants it |
@@ -88,7 +91,7 @@ Compare a competent streaming cascade with equivalent tools and reasoning where 
 | Wed Oct 7 | Evidence update | Extend the comparison with completed trials and the architecture article with measurements only where the experiment supports them |
 | Thu Oct 8 | Search review | Inspect indexing and impressions for the new cluster, check which queries match our ICP, and adjust the next brief |
 
-Publication of the selected work is authorized. Shared fixture tests and a T3 walkthrough remain separate evidence requirements. The earlier company database and mass template work move behind this cluster. More consumer pages are worthwhile when they contribute a strong example or attract users who activate the calling MCP.
+Publication of the selected work is authorized. Shared fixture tests remain a separate evidence requirement. The earlier company database and mass template work move behind this cluster. More cancellation and related task pages are worthwhile when a real phone inquiry improves the answer and gives readers a useful task for their existing assistant.
 
 ## Score the result
 
@@ -119,12 +122,69 @@ The five pages deployed from `3036a6b` passed production checks, including audio
 ## Fresh Ahrefs targeting audit, October 4
 
 Nick requested larger search opportunities with attainable difficulty while
-keeping the Claude Code, Codex and T3 audience central. The Ahrefs CLI session
+keeping the existing assistant and coding agent audience central. The Ahrefs CLI session
 was refreshed using its existing automated login helper. This audit checked
-73 exact phrases in the US database, a 100 result Claude MCP matching report,
+73 initial exact phrases in the US database, a 100 result Claude MCP matching report,
 a 100 result phone call matching report, and Vapi's organic keywords filtered
 to volume at least 50 and difficulty at most 20. Six cached SERP reports were
-retrieved to inspect intent and the authority of returned pages.
+retrieved to inspect intent and the authority of returned pages. Nick clarified
+that broad volume must not override the existing assistant calling intent. The
+larger generic candidates below are screened opportunities, not the current
+editorial priorities.
+
+The focused followup checked 39 personal assistant phrases and 25 assistant
+calling or subscription task phrases, bringing the export to 127 distinct US
+keywords. It also retrieved a personal assistant matching report and an
+expanded Claude Code matching report. The exact personal assistant and use
+case SERP requests returned null; no rankings or difficulty were inferred from
+those responses. Three cancellation SERP reports were available.
+
+### Core task entry keywords
+
+| Query | US monthly searches | KD | Existing page |
+| :--- | ---: | ---: | :--- |
+| how to cancel fubo | 15,000 | 0 | `/blog/cancel-fubo` |
+| how to cancel audible | 14,000 | 0 | `/blog/cancel-audible` |
+| how to cancel hellofresh | 8,800 | 0 | `/blog/cancel-hellofresh` |
+| how to cancel planet fitness | 5,800 | 3 | `/blog/cancel-planet-fitness` |
+| how to cancel factor | 1,100 | 0 | `/blog/cancel-factor` |
+
+These estimates are for the cancellation problem, not a measured count of
+assistant users. The ICP connection is the task: learn the right route by
+phone, supply a brief, connect the reader's existing assistant and verify the
+actual result. Keep the direct instructions useful for every reader. Do not
+claim that a phone inquiry canceled an account, or that every cancellation
+requires a call.
+
+The returned Fubo SERP, last updated October 3, includes Xpendy's guide at
+DR 49 with zero referring domains. The Audible SERP, last updated October 4,
+includes Lovely Audiobooks at DR 25 with two referring domains. Those provide
+more concrete competition evidence than KD alone. Other returned pages include
+official support, forums and stronger domains. The HelloFresh report, last
+updated October 2, returns forum and question pages. Cached reports may omit
+results and do not prove that our page will rank.
+
+### Direct assistant calling keywords
+
+`claude code personal assistant` has 40 US searches, `claude code as a personal
+assistant` has 10, and `can claude make phone calls` has 10. Their KD values are
+unknown. `claude personal assistant` has 150 and `claude code for personal use`
+has 70, also with unknown KD; those are supporting assistant discovery terms,
+not measured demand for calling. Exact Claude Code calling, Codex calling and
+Instinct calling terms have no volume estimate. Muse calling phrases returned
+zero. These remain useful capability pages for the intended readers, with
+neither a low difficulty claim nor a large volume claim.
+
+Qualitative audience evidence supports the distinction. The
+[personal assistant plugin](https://github.com/kjenney/personal-assistant-plugin)
+and [ClaudeClaw](https://github.com/earlyaidopters/claudeclaw) describe existing
+Claude Code assistants handling calendar and email tasks. A
+[supplier research request](https://www.reddit.com/r/AgentsOfAI/comments/1wthn25/is_there_a_sane_way_to_let_claude_code_call_one/)
+asks for Claude Code business calls and explicitly distinguishes stock
+verification from sales calling. These are audience examples, not search
+volume or product reliability evidence.
+
+### Broader candidates screened
 
 Exact decisions are in `docs/seo/keyword-targeting.csv`. Source responses and
 stderr are under `scratch/seo-targeting-2026-10-04/`, which is excluded from git.
@@ -133,11 +193,11 @@ available now; it does not mean every underlying SERP was collected today.
 
 | Query | US monthly searches | KD | Page and action |
 | :--- | ---: | ---: | :--- |
-| ai phone agent | 1,100 | 0 | Homepage primary term, with Claude Code, Codex and T3 qualification, a descriptive H1 and direct links to verified guides |
-| codex mcp | 1,500 | 10 | Existing Codex guide, explicit MCP setup title and heading qualified by phone calls |
-| claude code mcp servers | 600 | 0 | Calling comparison secondary term, with an exact server selection heading; broader directory article is a separate opportunity |
-| ai outbound calling | 1,000 | 9 | Calling comparison secondary term, with a complete explanation of an individual business call from an existing agent |
-| ai ivr | 600 | 4 | Phone tree guide secondary term, define the receiving system and focus on outbound navigation |
+| ai phone agent | 1,100 | 0 | Broad supporting category, not the homepage acquisition priority. The homepage addresses adding calls to an existing personal assistant |
+| codex mcp | 1,500 | 10 | Supporting setup phrase in the existing phone calling guide, not a generic MCP article priority |
+| claude code mcp servers | 600 | 0 | Defer a broad directory. The current comparison answers which servers can make phone calls |
+| ai outbound calling | 1,000 | 9 | Broad supporting category only. Our comparison remains about individual calls from an existing assistant |
+| ai ivr | 600 | 4 | Technical supporting topic. The phone tree article helps an existing caller complete its task |
 | voicemail detection | 150 | 1 | Phone tree guide secondary term, matched to its actual menu and mailbox evidence |
 | bland ai alternatives | 150 | 3 | Calling comparison, scoped to coding agents rather than whole platform replacement |
 | twilio mcp server | 200 | Unknown | Existing Twilio guide, explicit server setup and execution limits |
@@ -150,7 +210,7 @@ and difficulty remain unknown. The CLI's generic console footer calls blank KD
 The `ai phone agent` SERP last updated September 30 returns pages from Voqo
 (DR 14, zero referring domains), Lacy (DR 1, referring domain count unavailable)
 and Vexion Labs (DR 0, zero referring domains). These are concrete openings for
-a focused product page, not a ranking guarantee. The current Voqo and Lacy
+a focused product page, not a ranking guarantee or an ICP match. The current Voqo and Lacy
 primary pages confirm that the query includes commercial phone agent intent:
 [Voqo](https://www.voqo.ai/buyers-agent),
 [Lacy](https://www.lacy.ai/about-lacy-ai). Vexion's presence and metrics come
@@ -180,24 +240,33 @@ model naming and a dedicated comparison need verification first.
 Ahrefs reports DR 0 and zero tracked organic keywords for call4.me. Search
 Console has already returned article impressions, so Ahrefs' organic count
 does not establish absence from Google. Treat the site as developing authority.
-Use KD at most 10 as a first screening preference, then inspect actual intent,
-returned page authority and the evidence we can supply. KD from 11 through 20
+First require existing assistant calling intent or a useful task entry route.
+Then inspect actual results and the evidence we can supply, with KD at most 10
+as a ranking screen where available. KD from 11 through 20
 is a secondary opportunity; higher scores need a stronger reason. These are
 editorial thresholds, not predictions. Ahrefs explains the metric's limits in
 its [difficulty guide](https://ahrefs.com/blog/keyword-difficulty/) and the need
 to serve the query in its [intent guide](https://ahrefs.com/blog/search-intent/).
 
-### Next distinct discovery article
+### Current article priorities
 
-The clearest new ICP discovery opportunity is a complete guide to Claude Code
-MCP servers for useful work beyond coding, also covering the exact `best mcp
-servers for claude code` phrase (150, KD 0). It must cover multiple actual jobs,
-such as current documentation, browser research, project context and calling.
-Use verified connections and a task based comparison instead of a directory
-containing only our product. The current calling comparison remains the owner
-of choosing a phone service; the new guide should link to it rather than repeat
-its recordings and setup detail. Do not borrow 600 searches from this broader
-topic to advertise demand for the four specialist articles.
+Keep the phone calling setup guides as the capability route, the cancellation
+blogs as a core task route, and real business research as the workflow proof.
+The Claude Code guide now explains personal assistant tasks and links the
+recorded Planet Fitness inquiry. The Planet Fitness, Fubo, Audible and
+HelloFresh briefs link back to the existing agent connection guides. The homepage addresses an existing
+personal assistant, with guides for Claude Code, Codex, Muse, Instinct and T3.
+Links to a client guide do not establish a tested integration in that client;
+each guide retains its actual setup and call evidence.
+
+The next distinct workflow article should show an existing assistant taking a
+user's subscription list and authorized choices through the phone steps, or
+checking business availability and returning the missing answer to its task.
+Reuse the relevant setup guide rather than repeat installation instructions.
+A later appointment article needs an actual confirmed appointment and the
+observed return to the user's planning workflow. Published research inquiries
+must remain inquiries, not become successful cancellations or bookings through
+a changed title. A broad MCP server roundup is deferred.
 
 All four specialist articles are now published. T3 includes a real recorded
 Codex provider call with a partial outcome, replacing the earlier untested
@@ -206,9 +275,11 @@ pending. The shared controlled IVR benchmark remains pending.
 
 ### Targeting change verification
 
-The 73 exported volume and difficulty pairs match the raw Ahrefs responses.
+All 127 exported volume and difficulty pairs match the raw Ahrefs responses.
 Type checking, lint, all 155 tests and both deployment builds pass. Local
 browser checks cover the homepage and five revised articles, their titles,
 descriptions, canonicals, structured data and 320px layout. The homepage has
 one H1. Its Claude Code, Codex and T3 guide links, prompt copy button and FAQ
 expansion work. Existing recordings and benchmark limitations remain intact.
+The final ICP correction updates the homepage, Claude Code guide and four
+cancellation entry paths; their URLs and evidence boundaries are retained.

@@ -4,6 +4,7 @@ seoTitle: How to cancel an Audible membership, or pause it
 subtitle: We called Audible's customer service line to ask exactly how cancelling works. Here is the phone tree with its keypad check, what happens to your credits and books, the 90 day pause, and the full 7 minute recording.
 description: Cancel Audible online or by phone at 888-283-5051. Unused credits expire when it ends; pause for 90 days instead. From a real recorded call to Audible.
 date: 2026-10-02
+updated: 2026-10-04
 tags: audible, cancel subscription, streaming, phone trees
 authors: nick
 imageAlt: How to cancel an Audible membership, from a real call to Audible customer service
@@ -85,7 +86,7 @@ It handled the keypad checks badly. At both checks it made a noise out loud ("Mm
 
 ## Have your agent make this call
 
-If you use call4me, paste this into your agent:
+You can add call4me to the personal AI assistant or coding agent you already use. Follow the [Claude Code setup](/blog/claude-code-phone-calls) or [Codex setup](/blog/codex-phone-calls), or check the [Muse connector guide](/blog/meta-muse-ai-agent-phone-calls). Then give your assistant this brief:
 
 > Call Audible at 888-283-5051. At "To connect to an Audible customer service associate, please press" type the digits it reads out right away (they change: we got 270, then 550). At the main menu press 2 to pause or cancel. Tell the associate I want to cancel my Audible membership. My account is under [your email or phone number]; they'll send me a verification link to approve. Before cancelling, ask when it takes effect, how many credits I have left, and what cheaper plans or pause options they can offer me. Don't accept any offer without asking me.
 

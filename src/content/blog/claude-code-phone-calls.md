@@ -1,8 +1,8 @@
 ---
 title: "Make phone calls from Claude Code with MCP: setup and a real test"
-seoTitle: Claude Code phone calls with MCP, setup and a real test
+seoTitle: Claude Code personal assistant phone calls, setup and a real test
 subtitle: Give the Claude Code session you already use a phone. We connected a real account, checked its balance, and asked Claude to call a restaurant during private dining research. Here is the setup, the actual tool sequence, and what the voicemail did and did not answer.
-description: How to add a phone calling MCP server to Claude Code, verify the connection, and use calls in an existing research task, with a recorded Foreign Cinema attempt and exact tool behavior.
+description: Add phone calls to your Claude Code personal assistant with MCP. Setup, cancellation inquiry prompts and a recorded restaurant research test with explicit limits.
 date: 2026-10-03
 updated: 2026-10-04
 tags: claude code, mcp, personal assistant, ai phone assistant
@@ -10,7 +10,9 @@ authors: nick
 imageAlt: Claude Code connects to call4me, makes a phone call, and returns the evidence to the research task
 ---
 
-Claude Code can make phone calls through an MCP server. Add [call4me](/) to the session you already use, ask it to call a business, and it gets the status, transcript and outcome back through tools. The conversation stays part of the research or planning task Claude was already doing.
+If you use Claude Code as a personal assistant, a task can reach a point where it needs to call a business. A subscription has unclear cancellation terms. An appointment needs a conversation. A restaurant's website leaves a question unanswered.
+
+Claude Code can make those phone calls through an MCP server. Add [call4me](/) to the session you already use, ask it to call a business, and it gets the status, transcript and outcome back through tools. The conversation stays part of the research or planning task Claude was already doing.
 
 We tested this on October 3, 2026 with **Claude Code 2.1.288** and our own account. Claude connected, read a live balance, called Foreign Cinema in San Francisco, followed the call, and hung up when it reached the private dining voicemail. **It did not reach a person or get a quote.** The recording and the unanswered questions are below.
 
@@ -142,6 +144,22 @@ We used a fresh Claude Code session with an isolated MCP configuration and our e
 That verifies the current canonical endpoint with an existing account key. We did not run a new account signup or a fresh browser OAuth login in this test. The normal sign in command above follows our current account instructions and Claude Code's documented HTTP setup.
 
 One failure we encountered is worth making concrete. An earlier server alias had a cached needs authentication state. Claude skipped its connection entirely, even when we supplied a valid token. Its debug log identified that cached state. A fresh isolated alias connected and the actual balance tool ran. If your tools do not appear, check `/mcp` and authenticate the server before asking Claude to make a call.
+
+## Calling tasks for your Claude Code personal assistant
+
+The setup above adds the phone part to the assistant you already use. Start with one task and make clear what the caller can do. These are suggested tasks, not additional Claude Code tests:
+
+| Your assistant's task | What the phone part needs to establish | Useful example |
+|---|---|---|
+| Understand a subscription cancellation | The available cancellation route, fees, deadline and proof to request before changing the account | Our [Planet Fitness calls](/blog/cancel-planet-fitness) asked two clubs about their rules. They did not cancel a membership |
+| Plan an appointment | Availability that fits the times you supplied, what information the office needs and whether anything was actually confirmed | Give Claude your real constraints and permission to book before it agrees to a time |
+| Compare businesses | Answers missing online, who supplied them and what remains unresolved | Our [private dining research](/blog/agent-web-research-phone-calls-sf-private-dining) combines web sources with recorded calls |
+
+For a cancellation inquiry, you can start with:
+
+> Use the subscription details we already have to identify the right business and its official phone number. Call to ask how cancellation works for my plan, whether fees or deadlines apply, and what confirmation I should get. This is an information request. Do not cancel, change my plan or accept an offer. Return the answers, who answered and any remaining steps to this conversation.
+
+Some businesses require an online form or an in person signature. The phone can establish the route without completing the cancellation. If you later authorize a change, ask Claude to report the actual confirmation separately from the instructions it gathered.
 
 ## Use the result in the task you started
 

@@ -4,6 +4,7 @@ seoTitle: How to cancel HelloFresh: deadline, app and phone help
 subtitle: We reached HelloFresh customer care to ask about cancellation, a box already in progress and missing cancel options. Hear the call and follow the official online route.
 description: Cancel HelloFresh online before the next box cutoff. Hear our support call about processed orders, confirmation and phone help at (646) 846 3663.
 date: 2026-10-03
+updated: 2026-10-04
 tags: hellofresh, cancel subscription, meal delivery, phone trees
 authors: nick
 imageAlt: How to cancel HelloFresh before the next box, from a recorded customer care call
@@ -179,9 +180,8 @@ We asked about stopping the subscription and deliveries. Our call did not establ
 
 ## Have your agent make this call
 
-[call4me](/) gives your AI agent a phone. See [real call examples](/examples) or [connect your agent](/mcp). If you want help with an actual subscription, give your agent the account information and the actions you authorize:
+[call4me](/) adds phone calls to the personal AI assistant or coding agent you already use. Follow the [Claude Code setup](/blog/claude-code-phone-calls) or [Codex setup](/blog/codex-phone-calls), or check the [Muse connector guide](/blog/meta-muse-ai-agent-phone-calls). If you want help with an actual subscription, give your agent the account information and the actions you authorize:
 
 > Call HelloFresh at (646) 846 3663 and follow the cancellation menu. My account is under [name], [email] and [shipping address]. Confirm the exact deadline and timezone for my next scheduled delivery. Ask whether that box has already been processed and whether it can still be stopped. Cancel my subscription, confirm whether any final box will still be charged or delivered, and ask for the confirmation email. Ask me before accepting an offer, charge or plan change.
 
 For other subscriptions, see our recorded guides to [Factor meal plan cancellation](/blog/cancel-factor), [Fubo cancellation and trials](/blog/cancel-fubo), [Audible cancellation and credits](/blog/cancel-audible) and [Fabletics membership cancellation](/blog/fabletics-customer-service).
-

@@ -4,6 +4,7 @@ seoTitle: How to cancel Fubo (FuboTV): free trial, plan and Roku
 subtitle: We called Fubo twice to ask how cancellation works. Here are the website steps, the route past its automated assistant, and what a human told us about verification and billing.
 description: Cancel Fubo online, by phone or through Roku. Hear our real calls about free trials, paid plans, confirmation and reaching a human at (844) 441 3826.
 date: 2026-10-03
+updated: 2026-10-04
 tags: fubo, cancel subscription, streaming, phone trees
 authors: nick
 imageAlt: How to cancel Fubo online or by phone, from two recorded support calls
@@ -232,9 +233,8 @@ Check the billing provider and try the website rather than the mobile app. For a
 
 ## Have your agent make this call
 
-[call4me](/) lets your AI agent make a phone call and report back. See [real call examples](/examples) or [connect your agent](/mcp). For an actual cancellation, give your agent the account details and the actions you authorize:
+[call4me](/) adds phone calls to the personal AI assistant or coding agent you already use. Follow the [Claude Code setup](/blog/claude-code-phone-calls) or [Codex setup](/blog/codex-phone-calls), or check the [Muse connector guide](/blog/meta-muse-ai-agent-phone-calls). For an actual cancellation, give your agent the account details and the actions you authorize:
 
 > Call Fubo at (844) 441 3826. Ask for a human customer service representative. If the automated assistant offers to answer, repeat that I need a human and choose customer service when offered departments. My account email is [email] and the payment card ends in [last four digits]. Confirm whether Fubo or Roku manages my subscription, when cancelling would end access, and whether my offer has a commitment or cancellation fee. If Fubo manages it, cancel my subscription and confirm the final service date and confirmation email. Ask me before accepting an offer, charge or plan change.
 
 If you are clearing other recurring subscriptions, our recorded guides cover [Audible cancellation and credits](/blog/cancel-audible), [Fabletics membership cancellation](/blog/fabletics-customer-service), [Factor meal plan cancellation](/blog/cancel-factor) and [HelloFresh cancellation before the next box](/blog/cancel-hellofresh).
-

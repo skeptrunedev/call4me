@@ -46,11 +46,16 @@ function offers(countries: CountryOffer[]): { live: CountryOffer[]; soon: Countr
 export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; countries: CountryOffer[]; error?: string; amount?: string }> = (p) => {
   return (
   <Layout page="home" signedIn={p.signedIn} meta={{ jsonLd: HOME_LD }}>
-    <h1>an AI phone agent for your coding agent</h1>
+    <h1>give your personal AI assistant the ability to make phone calls</h1>
     <p>
-      your coding agent (<a href="/blog/claude-code-phone-calls">claude code</a>, <a href="/blog/codex-phone-calls">codex</a>,
-      {' '}<a href="/blog/t3-code-phone-calls">t3 code</a>, claude desktop, chatgpt) gets one new ability: <b>make a phone call</b> through MCP. call4me calls the restaurant,
-      the doctor's office, the airline or the hotel, follows your brief, and tells your agent what happened.
+      your personal AI assistant or coding agent gets one new ability: <b>make a phone call</b> through MCP.
+      ask it to check cancellation rules, book an appointment or get an answer a website cannot give you.
+      call4me calls the business, follows your brief, and brings the result back to the task your agent is already doing.
+    </p>
+    <p class="small">
+      setup and calling guides: <a href="/blog/claude-code-phone-calls">claude code</a>, <a href="/blog/codex-phone-calls">codex</a>,
+      {' '}<a href="/blog/meta-muse-ai-agent-phone-calls">muse</a>, <a href="/blog/instinct-ai-phone-calls">instinct</a>,
+      {' '}<a href="/blog/t3-code-phone-calls">t3 code</a>.
     </p>
     <div class="cols">
       <div>

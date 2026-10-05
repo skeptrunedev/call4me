@@ -6,8 +6,8 @@
 import type { OgCard } from './og-card';
 
 export const SITE = 'https://call4.me';
-export const SITE_TITLE = 'call4me: AI phone agent for Claude Code, Codex and T3 Code';
-export const SITE_DESCRIPTION = 'An AI phone agent for Claude Code, Codex and T3 Code. Add the MCP to call businesses, ask questions and bring transcripts and results back to your task.';
+export const SITE_TITLE = 'call4me: Phone calls for your personal AI assistant';
+export const SITE_DESCRIPTION = 'Give your personal AI assistant or coding agent a phone calling MCP. Use Claude Code, Codex or another connected agent to call businesses and bring answers back to your task.';
 
 export interface PageMeta {
   /** Sentence shown under the link on Slack, Discord, X, Signal, iMessage, LinkedIn. */

@@ -4,6 +4,7 @@ seoTitle: How to cancel a Planet Fitness membership
 subtitle: Two San Francisco clubs, the same evening, two different sets of rules. Here's what each one told us, the phone menu to reach a person, and both recordings.
 description: Planet Fitness clubs set their own cancellation terms. We called two in San Francisco: a $58 early cancel fee, and the annual fee rules. Recordings inside.
 date: 2026-09-30
+updated: 2026-10-04
 tags: planet fitness, cancel subscription, gyms, phone trees
 authors: nick
 imageAlt: How to cancel Planet Fitness, we called two clubs and got two different answers
@@ -70,7 +71,7 @@ This call dropped partway through because of a bug on our side (fixed the same e
 
 ## Have your agent make this call
 
-If you use call4me, paste this into your agent:
+If you use Claude Code, Codex or another personal AI assistant, [add the phone calling tool](/mcp) to that assistant and paste the brief below. Our [Claude Code setup guide](/blog/claude-code-phone-calls) and [Codex setup guide](/blog/codex-phone-calls) show the connection steps.
 
 > Call my Planet Fitness home club ([club name and phone number from planetfitness.com]) and ask how to cancel my membership. Find out: whether my plan has a commitment or early cancel fee, when the annual fee is billed, whether I can cancel online or have to come in and sign, and when my access ends. Don't cancel anything or accept any offers; just report back.
 
