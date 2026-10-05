@@ -4,6 +4,7 @@ seoTitle: Codex phone calls: MCP setup and a real research task
 subtitle: Give Codex a calling tool, keep your credentials out of the prompt, and bring phone answers back into the research it is already doing.
 description: Connect Codex to call4me through MCP with OAuth or an API key. Learn the result loop, approval settings, and what we verified in a real restaurant research session.
 date: 2026-10-03
+updated: 2026-10-04
 tags: codex, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: Codex researching online, calling a business through MCP, and returning the answer to the task
@@ -114,3 +115,5 @@ During our fresh OAuth test, Codex initially reported `Authorization server issu
 **If a status check times out**, inspect the same call ID again before retrying the dial. A tool timeout does not establish that the phone call ended, and a second placement can create a duplicate call.
 
 For the corresponding Claude Code workflow, see [Claude Code phone calls](/blog/claude-code-phone-calls). For other integrations, see our [calling MCP comparison](/blog/phone-calling-mcp-comparison). For how the voice conversation is handled, see [the voice stack explanation](/blog/cascaded-voice-stack-vs-gpt-live).
+
+For calls after a business opens, see [scheduling a call and retrieving its result later](/blog/schedule-phone-calls-claude-code-codex). If Codex runs inside T3, use our [tested T3 provider workflow](/blog/t3-code-phone-calls). For developers deciding what to build themselves, the [Twilio MCP guide](/blog/twilio-mcp-phone-calls) distinguishes documentation tools from a conversational calling runtime.

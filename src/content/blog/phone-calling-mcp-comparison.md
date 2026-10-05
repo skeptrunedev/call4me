@@ -147,7 +147,7 @@ Choose its third party call command for business research. Its completion notifi
 
 Keep the underlying provider in mind. T3 Code's [Codex provider guide](https://github.com/pingdotgg/t3code/blob/main/docs/user/providers-codex.md) and [Claude provider guide](https://github.com/pingdotgg/t3code/blob/main/docs/user/providers-claude.md) describe provider configuration. An MCP added on another machine or to another provider profile may not reach the session you are using.
 
-Check which provider and environment the thread actually uses, configure the calling integration there, then verify that its tools appear in a fresh thread. We have not completed a live T3 Code calling test for these services, so this comparison does not claim verified compatibility across every T3 provider.
+Check which provider and environment the thread actually uses, configure the calling integration there, then verify its tools in a fresh thread. Our [T3 Code calling guide](/blog/t3-code-phone-calls) now verifies Call4me with T3 0.0.45 and its Codex provider, including a real automated time line call that returned a partial outcome. It does not establish compatibility across every provider or calling service.
 
 ## An actual Bland call from Codex
 
@@ -319,7 +319,9 @@ These are single branch menu tests. They do not establish performance on nested 
 
 For a menu task, check both the destination and the action evidence. A spoken promise to press a key does not prove a key was sent. A confirmed destination can establish that routing worked on that attempt, even when a tool omits the keypad event trace. Then check the next instruction separately: reaching voicemail is different from ending without speaking or leaving a message.
 
-Bland's [call documentation](https://docs.bland.ai/api-v1/post/calls) describes `ivr_mode: true` for phone menus. It also says that this mode overrides automatic voicemail hangup and makes the effective voicemail action `ignore`. A task that might pass from a menu into voicemail therefore needs an explicit ending instruction. That documented behavior alone is not evidence that a particular Bland call navigated a menu successfully.
+Bland's [call documentation](https://docs.bland.ai/api-v1/post/calls) describes `ivr_mode: true` for phone menus. It also says that this mode overrides automatic voicemail hangup and makes the effective voicemail action `ignore`. A task that might pass from a menu into voicemail therefore needs an explicit ending instruction. That documented behavior alone is not evidence that a particular Bland call navigated a menu successfully. Our [phone tree troubleshooting guide](/blog/ai-phone-tree-navigation) separates keypad actions, destination evidence, voicemail behavior and task completion.
+
+For developers considering their own calling application, our [Twilio MCP guide](/blog/twilio-mcp-phone-calls) includes an actual public documentation MCP test and explains what the execution and conversational layers still need to supply.
 
 ## A useful first task: web research, then phone confirmation
 

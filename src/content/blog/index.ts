@@ -39,6 +39,10 @@ import agentResearchPhoneCalls from './agent-web-research-phone-calls-sf-private
 import phoneCallingMcpComparison from './phone-calling-mcp-comparison.md';
 import cascadedVoiceStack from './cascaded-voice-stack-vs-gpt-live.md';
 import instinctPhoneCalls from './instinct-ai-phone-calls.md';
+import t3CodePhoneCalls from './t3-code-phone-calls.md';
+import schedulePhoneCalls from './schedule-phone-calls-claude-code-codex.md';
+import aiPhoneTreeNavigation from './ai-phone-tree-navigation.md';
+import twilioMcpPhoneCalls from './twilio-mcp-phone-calls.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -46,6 +50,10 @@ import instinctPhoneCalls from './instinct-ai-phone-calls.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 't3-code-phone-calls', markdown: t3CodePhoneCalls },
+  { slug: 'schedule-phone-calls-claude-code-codex', markdown: schedulePhoneCalls },
+  { slug: 'ai-phone-tree-navigation', markdown: aiPhoneTreeNavigation },
+  { slug: 'twilio-mcp-phone-calls', markdown: twilioMcpPhoneCalls },
   { slug: 'instinct-ai-phone-calls', markdown: instinctPhoneCalls },
   { slug: 'claude-code-phone-calls', markdown: claudeCodePhoneCalls },
   { slug: 'codex-phone-calls', markdown: codexPhoneCalls },

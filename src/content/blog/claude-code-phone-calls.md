@@ -4,6 +4,7 @@ seoTitle: Claude Code phone calls with MCP, setup and a real test
 subtitle: Give the Claude Code session you already use a phone. We connected a real account, checked its balance, and asked Claude to call a restaurant during private dining research. Here is the setup, the actual tool sequence, and what the voicemail did and did not answer.
 description: How to add a phone calling MCP server to Claude Code, verify the connection, and use calls in an existing research task, with a recorded Foreign Cinema attempt and exact tool behavior.
 date: 2026-10-03
+updated: 2026-10-04
 tags: claude code, mcp, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Claude Code connects to call4me, makes a phone call, and returns the evidence to the research task
@@ -151,3 +152,5 @@ Once call4me is connected, start with:
 > Continue the research we are doing. Use call4me to call this business for the facts we cannot find online. Check the requirements before dialing, ask me for anything essential that is missing, follow the call until it ends, and distinguish what a person confirmed from a menu, voicemail or website. Ask me before making any commitment.
 
 That keeps the phone call inside your existing Claude Code workflow, with evidence you can inspect before acting on the answer.
+
+If the business is closed now, use our [scheduled calling workflow](/blog/schedule-phone-calls-claude-code-codex). If you use Claude through T3, check the selected provider configuration in our [T3 Code guide](/blog/t3-code-phone-calls). For a destination with a menu, read the [phone tree troubleshooting guide](/blog/ai-phone-tree-navigation).
