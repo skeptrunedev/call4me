@@ -2,7 +2,6 @@
 /** Audit the committed crawler policy; --apply updates Cloudflare and verifies it. */
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { randomUUID } from 'node:crypto';
 
 const args = process.argv.slice(2);
 if (args.some((arg) => !['--apply', '--authorize'].includes(arg))) throw new Error('usage: npm run crawlers -- [--apply [--authorize]]');
@@ -51,7 +50,8 @@ if (args.includes('--authorize')) {
   }));
   let scoped = policies.find((p) => p.effect === 'allow' && p.resources[resource] === '*' && Object.keys(p.resources).length === 1);
   if (!scoped) {
-    scoped = { id: randomUUID().replaceAll('-', ''), effect: 'allow', resources: { [resource]: '*' }, permission_groups: [] };
+    // Cloudflare assigns the ID to a new policy; IDs in an update refer to existing policies.
+    scoped = { effect: 'allow', resources: { [resource]: '*' }, permission_groups: [] };
     policies.push(scoped);
   }
   for (const group of required) {
@@ -63,7 +63,7 @@ if (args.includes('--authorize')) {
   }
   await api(path, 'PUT', body);
   const after = await api(path);
-  const granted = after.policies.find((p) => p.id === scoped.id);
+  const granted = after.policies.find((p) => p.effect === 'allow' && p.resources[resource] === '*' && Object.keys(p.resources).length === 1);
   assert.ok(granted && required.every((g) => granted.permission_groups.some((p) => p.id === g.id)), 'Token permission update did not persist');
   console.log(`Authorized ${current.name} for crawler settings on ${policy.zone}`);
 }
