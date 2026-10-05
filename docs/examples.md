@@ -32,7 +32,7 @@ transcripts, and editing manifests outside this repository. Public players
 must only use the reviewed static exports. Publish an account owner's recording
 with their permission.
 
-The October 5 collection prepares four customer stories and matching examples:
+The October 5 collection adds four customer stories and matching examples:
 an Ohio BWC application question, a veterinary dropoff booking, a haircut
 booking, and a Les Schwab oil change quote with a walk in dropoff plan. The
 haircut guide also includes its brief unsuccessful rescheduling call. All five
@@ -40,8 +40,8 @@ exports retain complete source timing and original voices. Names, private
 numbers and identifying clinic or salon details are muted. Exact provider leg
 association, decoded silence checks and two independent source and export
 transcriptions were checked. Uncertain words are marked; no human listening
-verification is claimed. Customer publication consent must be confirmed before
-these prepared pages and recordings are deployed.
+verification is claimed. Nick confirmed that all three account owners agreed
+to publication before these pages and recordings were deployed.
 
 The Ohio call supplied application instructions without filing an application
 or issuing coverage, and its spoken callback differed from the requested one.

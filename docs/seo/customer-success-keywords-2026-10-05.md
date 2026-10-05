@@ -139,8 +139,9 @@ force Google to recrawl a keyword today.
 The four articles are registered in the blog inventory and have matching
 examples, four SVG headline images and five anonymized recordings. The fifth
 recording is the unsuccessful haircut rescheduling attempt, retained in its
-article. Customer publication consent is still pending, so this collection is
-prepared in a separate local checkout rather than deployed.
+article. Nick confirmed that all three account owners agreed to publication on
+October 5, 2026. The collection was prepared and verified in a separate checkout
+before integration into main.
 
 Type checking, linting, the Worker deployment build and all 158 existing tests
 passed. Local HTTP checks found 46 unique internal link and image targets,
