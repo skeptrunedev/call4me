@@ -15,7 +15,7 @@ not observed audience sizes or predicted ranking gains.
 Checked the fresh 158 record outreach tracker by domain, published email and
 verified names. A separate connected mailbox search found no messages to or
 from the six selected public addresses. None of these prospects was contacted,
-added to the tracker or given a mailbox draft during this research.
+added to the tracker or given a mailbox draft during the initial research.
 
 Only Mailmodo publishes an explicit content collaboration program. An existing
 Postiz link does not establish that a publisher accepts reciprocal links.
@@ -130,3 +130,29 @@ contains the six selected records. Raw Ahrefs responses, page verification and
 private mailbox search results remain outside git. The parent independently
 checked the live source links, published addresses and proposed article URLs.
 All referenced Call4me pages returned HTTP 200. No code changed in this task.
+
+## Outreach delivery
+
+The user authorized X DMs from the signed in Mac session for available X
+accounts and emails for publishers without X. The user also authorized email
+fallback when X DMs are blocked. X copy used the same email
+body, with only the opening greeting and final `nick` removed. The introduction
+`i'm nick, building call4me.` and the approved launch post sentence were retained.
+
+| Publisher | Route | Result |
+| --- | --- | --- |
+| Mailmodo | [Aquibur Rahman on X](https://x.com/AR_Bits) | Sent. Full body verified in the conversation, with an empty composer. |
+| Postory | [Vadym Petryshyn on X](https://x.com/vadym_petryshyn) | Sent. Full body verified in the conversation, with an empty composer. |
+| Ticketsmith | [Will Townsend on X](https://x.com/wtsnz) | Sent. Full body verified in the conversation, with an empty composer. |
+| FounderBuilt | enricohernandez@gmail.com | Sent. Native email `StmFxQSM9NoV`, recipient, subject and body verified in Sent. |
+| TheStacc | hello@thestacc.com | Sent. Native email `StmFx5TyTje-`, recipient, subject and body verified in Sent. |
+| Pinggy | contact@pinggy.io | Sent by email after the user authorized fallback for the read only X conversation. Native email `StmFx08WIUAR`, recipient, subject and body verified in Sent. |
+
+TheStacc's website links to `sidgangal` and `thestacc` on X. Both actual
+profiles displayed “This account doesn’t exist” during the send attempt, so
+the verified company email was used. Website links alone did not establish
+that these X accounts were still available.
+
+The outreach tracker records the three verified X sends and three verified
+email sends. Private message bodies and provider
+receipts remain outside git. No reciprocal citations were added.
