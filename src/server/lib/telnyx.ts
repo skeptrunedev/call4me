@@ -266,6 +266,16 @@ export function telnyx(env: TelnyxEnv) {
       return o ? { id: o.id, status: orderStatus(o.status) } : null;
     },
 
+    /** Whether Telnyx still has the call up. A call it no longer knows (404) is over. */
+    async callAlive(callControlId: string): Promise<boolean> {
+      try {
+        return Boolean((await call<{ data: { is_alive?: boolean } }>(env, 'GET', `/calls/${encodeURIComponent(callControlId)}`)).data.is_alive);
+      } catch (err) {
+        if (err instanceof TelnyxError && err.status === 404) return false;
+        throw err;
+      }
+    },
+
     /** Give a number back to Telnyx; its monthly charge stops. Already gone counts as released. */
     async releaseNumber(number: string): Promise<void> {
       const q = new URLSearchParams({ 'filter[phone_number]': number });

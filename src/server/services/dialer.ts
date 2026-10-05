@@ -83,6 +83,37 @@ export async function failNeverDialed(env: Env, at = Date.now()): Promise<number
   return results.length;
 }
 
+/** How long a call the carrier started may look live before the sweep asks the carrier whether it still is. */
+export const LOST_AFTER_MS = 10 * 60_000;
+
+/**
+ * Ends calls the carrier started that still look live here long after, once the carrier says they
+ * are over: their hangup never reached us (it came before the call row existed, or was lost), so
+ * they would hold credits and look live to the voice deploy forever. They end unbilled, since
+ * without the hangup the talk time isn't known.
+ */
+export async function settleLost(env: Env, at = Date.now()): Promise<number> {
+  const { results } = await env.DB.prepare(
+    `SELECT id, direction, to_number, telnyx_call_control_id FROM calls WHERE status IN ('dialing', 'in_progress') AND telnyx_call_control_id IS NOT NULL AND created_at < ?`,
+  )
+    .bind(at - LOST_AFTER_MS)
+    .all<Pick<CallRow, 'id' | 'direction' | 'to_number' | 'telnyx_call_control_id'>>();
+  const db = calls(env.DB);
+  const carrier = telnyx(env);
+  let settled = 0;
+  for (const row of results) {
+    try {
+      if (await carrier.callAlive(row.telnyx_call_control_id!)) continue;
+    } catch (err) {
+      console.error('checking a lost call failed', row.id, err);
+      continue;
+    }
+    await db.finish(row.id, { status: 'failed', error: 'the carrier ended this call without our hearing its hangup', pricePerMinuteCents: callPrice(env, row), at });
+    settled++;
+  }
+  return settled;
+}
+
 /** The account's owner, who can be patched into any of its calls: their name and their own phone. */
 async function personFor(env: Env, origin: string, account: Account, profile: Profile, from: string, connectWhen: string | null = null, listenIn = false): Promise<NonNullable<SessionSetup['person']>> {
   // Profiles hold numbers as people type them; Telnyx dials E.164 only.
@@ -280,6 +311,13 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     controlId: opts.controlId,
     streamUrl: await streamUrl(env, id),
   };
-  await sessionFor(env, id).fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
-  await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: setup.streamUrl!, callId: id, timeLimitSecs: setup.maxSeconds });
+  try {
+    await sessionFor(env, id).fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
+    await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: setup.streamUrl!, callId: id, timeLimitSecs: setup.maxSeconds });
+  } catch (err) {
+    // Most often the caller hung up while this was setting up: answering fails, and their hangup
+    // may have come before the call row existed, so nothing else would end it or release its hold.
+    console.error('answering an incoming call failed', id, err);
+    await db.finish(id, { status: 'failed', error: `could not answer: ${String(err)}`, pricePerMinuteCents: price });
+  }
 }
