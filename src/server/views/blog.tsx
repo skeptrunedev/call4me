@@ -19,6 +19,12 @@ const PUBLISHER = { '@type': 'Organization', name: 'call4me', url: SITE, logo: {
 
 export type Tab = 'latest' | 'top';
 
+/** Support checkout needs sign-in; anonymous links go directly to that sign-in page. */
+const supportPath = (signedIn: boolean, next: string) => {
+  const path = `/blog/support?next=${encodeURIComponent(next)}`;
+  return signedIn ? path : `/login?next=${encodeURIComponent(path)}`;
+};
+
 const byline = (p: Post) => p.authors.map((a) => a.name).join(', ');
 
 const Counts: FC<{ e: Engagement | undefined }> = ({ e }) =>
@@ -29,7 +35,7 @@ const Counts: FC<{ e: Engagement | undefined }> = ({ e }) =>
   ) : null;
 
 /** `anchor` marks the box that shows the result of a sign-up (the redirect lands on #subscribe). */
-const SubscribeBox: FC<{ count: number; next: string; compact?: boolean; anchor?: boolean; email?: string; error?: string; sent?: boolean }> = ({ count, next, compact, anchor, email, error, sent }) => (
+const SubscribeBox: FC<{ signedIn: boolean; count: number; next: string; compact?: boolean; anchor?: boolean; email?: string; error?: string; sent?: boolean }> = ({ signedIn, count, next, compact, anchor, email, error, sent }) => (
   <div class={`box subscribe${compact ? ' compact' : ''}`} id={anchor ? 'subscribe' : undefined}>
     <b>get new posts by email</b>
     {count > 0 && (
@@ -50,7 +56,7 @@ const SubscribeBox: FC<{ count: number; next: string; compact?: boolean; anchor?
     {!compact && (
       <div class="small muted">
         no tracking, no spam; one email per post, unsubscribe in one click. or use the <a href="/blog/feed.xml">atom feed</a>. posts marked <span class="badge">paid</span> need a{' '}
-        <a href="/blog/support">supporter subscription</a> (monthly, cancel any time).
+        <a href={supportPath(signedIn, next)}>supporter subscription</a> (monthly, cancel any time).
       </div>
     )}
   </div>
@@ -107,7 +113,7 @@ export const BlogIndex: FC<{
         <h1>call4me blog</h1>
         <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
         <p class="muted">notes on AI agents that make phone calls for you.</p>
-        <SubscribeBox count={subscribers} next="/blog" compact anchor sent={subscribed === 'sent'} error={subscribed && subscribed !== 'sent' ? subscribed : undefined} />
+        <SubscribeBox signedIn={signedIn} count={subscribers} next="/blog" compact anchor sent={subscribed === 'sent'} error={subscribed && subscribed !== 'sent' ? subscribed : undefined} />
       </div>
 
       {featured.length > 0 && (
@@ -152,7 +158,7 @@ export const BlogIndex: FC<{
           </li>
         ))}
       </ul>
-      <SubscribeBox count={subscribers} next="/blog" />
+      <SubscribeBox signedIn={signedIn} count={subscribers} next="/blog" />
     </Layout>
   );
 };
@@ -354,7 +360,7 @@ export const BlogPost: FC<{
         {raw(first)}
         {more && (
           <>
-            <SubscribeBox count={subscribers} next={here} compact />
+            <SubscribeBox signedIn={signedIn} count={subscribers} next={here} compact />
             {raw(more)}
           </>
         )}
@@ -367,11 +373,11 @@ export const BlogPost: FC<{
               <p class="small">
                 {signedIn ? (
                   <>
-                    <a href={`/blog/support?next=${here}`}>become a supporter</a> to read the whole thing.
+                    <a href={supportPath(signedIn, here)}>become a supporter</a> to read the whole thing.
                   </>
                 ) : (
                   <>
-                    <a href={`/login?next=${here}`}>sign in</a> if you already support call4me, or <a href={`/blog/support?next=${here}`}>become a supporter</a>.
+                    <a href={`/login?next=${here}`}>sign in</a> if you already support call4me, or <a href={supportPath(signedIn, here)}>become a supporter</a>.
                   </>
                 )}
               </p>
@@ -410,7 +416,7 @@ export const BlogPost: FC<{
         ))}
       </div>
 
-      <SubscribeBox count={subscribers} next={here} anchor sent={subscribed === 'sent'} error={subscribed && subscribed !== 'sent' ? subscribed : undefined} />
+      <SubscribeBox signedIn={signedIn} count={subscribers} next={here} anchor sent={subscribed === 'sent'} error={subscribed && subscribed !== 'sent' ? subscribed : undefined} />
       {supporter && (
         <p class="small muted">
           you support call4me, thank you. <a href="/blog/support/manage">manage the subscription</a>.

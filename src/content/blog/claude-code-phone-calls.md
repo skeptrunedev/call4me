@@ -1,8 +1,8 @@
 ---
 title: "Make phone calls from Claude Code with MCP: setup and a real test"
-seoTitle: Claude Code personal assistant phone calls, setup and a real test
+seoTitle: "Claude Code phone calls: personal assistant setup"
 subtitle: Give the Claude Code session you already use a phone. We connected a real account, checked its balance, and asked Claude to call a restaurant during private dining research. Here is the setup, the actual tool sequence, and what the voicemail did and did not answer.
-description: Add phone calls to your Claude Code personal assistant with MCP. Setup, cancellation inquiry prompts and a recorded restaurant research test with explicit limits.
+description: "Add phone calls to your Claude Code personal assistant with MCP. Setup, cancellation prompts and a recorded restaurant research test with explicit limits."
 date: 2026-10-03
 updated: 2026-10-04
 tags: claude code, mcp, personal assistant, ai phone assistant
@@ -26,7 +26,7 @@ claude mcp add --scope user --transport http call4me https://call4.me/mcp
 
 Open Claude Code, run `/mcp`, choose **call4me**, and authenticate. The user scope makes the connection available across your projects. For a connection confined to your current project, use `--scope local` instead. These are the HTTP transport and scope options documented in [Claude Code's MCP reference](https://code.claude.com/docs/en/mcp).
 
-Your [account page](/account) also has a personal MCP URL. You can use that URL instead of the sign in endpoint. It contains your key, so keep it out of shared project configuration and screenshots.
+Your [account page](/login?next=/account) also has a personal MCP URL. You can use that URL instead of the sign in endpoint. It contains your key, so keep it out of shared project configuration and screenshots.
 
 After connecting, ask:
 

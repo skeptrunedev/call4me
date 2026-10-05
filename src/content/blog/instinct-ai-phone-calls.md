@@ -49,7 +49,7 @@ Call4me supplies the telephone conversation. Your existing agent chooses the que
 Connecting another agent involves three separate steps: creating your Call4me account, authenticating the connection, and confirming that the agent can actually use a tool.
 
 1. Open [Call4me's sign in page](/login) yourself and continue with Google or X. Your first sign in creates the account. There is no separate agent registration form.
-2. Open [your account](/account). For clients that support OAuth, complete the connection's browser sign in and consent. For clients using a key, get your personal API key here.
+2. Open [your account](/login?next=/account). For clients that support OAuth, complete the connection's browser sign in and consent. For clients using a key, get your personal API key here.
 3. Configure the client for the remote MCP endpoint, `https://call4.me/mcp`. An API key works in an `Authorization: Bearer` header. Complete browser authentication or use a credential method your client actually supports.
 4. Ask the agent to run `call4me_get_balance` without placing a call. A real tool response establishes account access. A message saying the integration is ready does not.
 5. Before dialing, check your calling credits and give the agent a bounded task.

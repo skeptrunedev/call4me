@@ -4,12 +4,13 @@ seoTitle: American Airlines flight credit: 2 real calls
 subtitle: A call4me user's aa.com checkout wouldn't take their flight credit, so their AI phone assistant called American Airlines reservations twice to apply it to a held trip. Here's who has to be on the line, why the credit was worth less than the full ticket, both recordings, and what to have ready.
 description: We called American Airlines twice to apply a flight credit to a held trip. Who must be on the line, why it was worth less, and both recordings.
 date: 2026-10-01
+updated: 2026-10-04
 tags: american airlines, flight credit, airlines, phone numbers, ai phone assistant
 authors: nick
 imageAlt: American Airlines flight credit, two calls to reservations, recorded
 ---
 
-**The short answer:** to use an American Airlines flight credit by phone, call reservations at **800-433-7300** (English, 24 hours, per [aa.com](https://www.aa.com/i18n/customer-service/contact-american/reservations-and-ticket-changes.jsp)) and have **the traveler named on the credit on the line, with a credit card**. A Flight Credit can only pay for travel for the person named on it, and the agent applies it and takes payment for any balance in the same call. On our first call the traveler couldn't be reached, so nothing was applied. On the second, the traveler joined, the credit went on the reservation, and the agent quoted **about $285** to pay.
+**The short answer:** to use an American Airlines flight credit by phone, call reservations at **800-433-7300** (English, 24 hours, per [aa.com](https://www.aa.com/web/i18n/customer-service/contact-american/reservations-and-ticket-changes.html)) and have **the traveler named on the credit on the line, with a credit card**. A Flight Credit can only pay for travel for the person named on it, and the agent applies it and takes payment for any balance in the same call. On our first call the traveler couldn't be reached, so nothing was applied. On the second, the traveler joined, the credit went on the reservation, and the agent quoted **about $285** to pay.
 
 The credit was worth less than the full ticket. The original ticket was a Nashville to New York LaGuardia round trip, out September 21 and back September 25. The agent's records showed **the outbound flight had been flown**, and on the call the traveler confirmed it: asked "did you use the first leg of the flight?", they said "Yes, yes." So only the LaGuardia to Nashville return was left as credit, to put toward a held Nashville to Raleigh trip.
 
@@ -44,7 +45,7 @@ The held fare was **$578.79**, as the second agent read it out (8:21 in the reco
 
 Our caller asked to apply the credit against the original ticket value, $576.80. The agent looked at the ticket: "I can see the ticket image and it says the flight was on 21st of September, from Nashville to LaGuardia... the status says used." On the call, the traveler confirmed the first flight had been flown, so only the return was left as credit. They wanted to use that credit from the second leg.
 
-So the credit only covered the unused return. That lines up with what American publishes: in the [travel credit table on aa.com](https://www.aa.com/i18n/customer-service/payment-options/travel-credit.jsp), a Flight Credit is issued for "unused tickets." If your credit looks smaller than your original ticket, ask the agent first whether part of the ticket shows as flown.
+So the credit only covered the unused return. That lines up with what American publishes: in the [travel credit table on aa.com](https://www.aa.com/web/i18n/customer-service/payment-options/travel-credit.html), a Flight Credit is issued for "unused tickets." If your credit looks smaller than your original ticket, ask the agent first whether part of the ticket shows as flown.
 
 ## Listen: the first call, no traveler, no credit applied (6 minutes 9 seconds)
 
@@ -105,7 +106,7 @@ At 22:09 the agent didn't say yes or no to a full refund. What they said was tha
 
 ## How to use an American Airlines flight credit by phone, step by step
 
-1. **Look up the credit first.** On aa.com, choose "Manage trips / Check-in", then "View travel credits", and enter the confirmation code or the 13-digit ticket number of the cancelled trip ([aa.com](https://www.aa.com/i18n/customer-service/payment-options/travel-credit.jsp)). That's the American Airlines flight credit lookup.
+1. **Look up the credit first.** On aa.com, choose "Manage trips / Check-in", then "View travel credits", and enter the confirmation code or the 13-digit ticket number of the cancelled trip ([aa.com](https://www.aa.com/web/i18n/customer-service/payment-options/travel-credit.html)). That's the American Airlines flight credit lookup.
 2. **Try aa.com once.** American's steps: book the new flight, then on "Review and pay" select "Add travel credit" and pay any remaining balance. Our user tried this first, and the credit didn't go through, which is why they called.
 3. **Call 800-433-7300 with the traveler next to you,** or on a line you can bring them onto. American's terms say the person named on a Flight Credit can use it "for themselves only," and our first call stopped at exactly that point.
 4. **Use the phone menu words that work.** "Apply a flight credit to a held reservation and ticket it" wasn't understood. "Book a held reservation" was. Expect questions about miles, the number of passengers and an AAdvantage account before a person picks up, about two minutes in.
@@ -118,7 +119,7 @@ At 22:09 the agent didn't say yes or no to a full refund. What they said was tha
 
 ## American Airlines trip credit vs flight credit
 
-From [American's travel credit page](https://www.aa.com/i18n/customer-service/payment-options/travel-credit.jsp), checked on October 1, 2026:
+From [American's travel credit page](https://www.aa.com/web/i18n/customer-service/payment-options/travel-credit.html), checked on October 1, 2026:
 
 | | Trip Credit | Flight Credit |
 |---|---|---|

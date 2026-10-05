@@ -1,9 +1,10 @@
 ---
 title: "Spectrum retention department: the number, what to say, and the offer we got ($85 to $55)"
-seoTitle: "Spectrum retention department & phone number: what to say, offers (2026)"
+seoTitle: "Spectrum retention department: phone and offers"
 subtitle: A call4me user's Spectrum internet bill had climbed to $85 a month. Their AI phone assistant called Spectrum, said "cancel" to get routed to retention, sat through the hold, and got the user patched in. Spectrum offered $55 a month for a year. Here's the phone tree, the recording, both offers, and the free technician tip the rep gave.
 description: How to reach the Spectrum retention department: call (833) 267-6094 and say "cancel," then "disconnect." Our call got $85/mo internet cut to $55 for a year.
 date: 2026-10-01
+updated: 2026-10-04
 tags: spectrum retention, spectrum customer service, lower spectrum bill, cancel spectrum, ai phone assistant
 authors: nick
 imageAlt: Spectrum retention department, $85 a month down to $55

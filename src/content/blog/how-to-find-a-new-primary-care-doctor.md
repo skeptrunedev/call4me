@@ -1,9 +1,10 @@
 ---
 title: How to find a new primary care doctor with an out-of-state plan (15 recorded calls)
-seoTitle: How to find a new primary care doctor: 15 real calls
+seoTitle: "Find a new primary care doctor: 15 real calls"
 subtitle: A call4me user in Baltimore needed a new primary care doctor and had an out-of-state Blue Cross Blue Shield PPO. Their AI phone assistant called 10 practices. Here's who was taking new patients, who took the plan, how far out the first opening was, a $2,121 surprise, and all 15 recordings.
 description: We called 10 Baltimore-area practices to find a new primary care doctor on an out-of-state BCBS PPO. Who took it, the wait, and what to ask.
 date: 2026-10-01
+updated: 2026-10-04
 tags: primary care doctor, new patient, bluecard, blue cross blue shield, insurance, ai phone assistant
 authors: nick
 imageAlt: Finding a new primary care doctor, 15 calls to 10 practices, 2 new-patient visits booked, recorded

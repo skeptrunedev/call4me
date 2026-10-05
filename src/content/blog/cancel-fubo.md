@@ -1,6 +1,6 @@
 ---
 title: How to cancel Fubo: we reached a human after its AI assistant
-seoTitle: How to cancel Fubo (FuboTV): free trial, plan and Roku
+seoTitle: "Cancel Fubo (FuboTV): free trial, plan and Roku"
 subtitle: We called Fubo twice to ask how cancellation works. Here are the website steps, the route past its automated assistant, and what a human told us about verification and billing.
 description: Cancel Fubo online, by phone or through Roku. Hear our real calls about free trials, paid plans, confirmation and reaching a human at (844) 441 3826.
 date: 2026-10-03
@@ -18,7 +18,7 @@ We called on Saturday, October 3, 2026, with [call4me](/) asking general questio
 
 For subscriptions managed directly by Fubo, its [US cancellation guide](https://support.fubo.tv/hc/en-us/articles/360021527991-How-do-I-Cancel-My-Fubo-Subscription) gives this route:
 
-1. Sign in at [fubo.tv](https://www.fubo.tv/) and choose a profile.
+1. Sign in at [fubo.tv](https://www.fubo.tv/welcome) and choose a profile.
 2. Open the settings icon, then **My Account**.
 3. Choose **Subscription**, scroll down and select **Cancel**.
 4. If a discount offer appears, select **Cancel Subscription** to continue cancelling.
@@ -56,7 +56,7 @@ There is an important exception: Fubo's [cancellation policy](https://support.fu
 
 ## How to cancel Fubo on Roku
 
-The representative said subscriptions started through Roku must be cancelled through Roku. Roku's current [subscription instructions](https://support.roku.com/article/208756478) give these options:
+The representative said subscriptions started through Roku must be cancelled through Roku. Roku's current [subscription instructions](https://support.roku.com/article/manage-or-cancel-subscriptions) give these options:
 
 * **Online:** open [my.roku.com/subscriptions](https://my.roku.com/subscriptions), select the active Fubo subscription, then **Manage subscription** and **Turn off auto renew**. Follow any confirmation prompts.
 * **On the device:** highlight Fubo in the Apps section, press the remote's **Star** button, choose **Manage subscription**, then **Turn off auto renew**. Enter a subscription PIN if prompted.

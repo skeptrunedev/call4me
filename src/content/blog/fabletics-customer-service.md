@@ -1,9 +1,10 @@
 ---
 title: "Fabletics customer service: the phone number, how to cancel, and the VIP charge"
-seoTitle: "Fabletics customer service number: reach a person, cancel VIP"
+seoTitle: "Fabletics customer service: phone and VIP help"
 subtitle: We called Fabletics customer service to ask how the $69.95 VIP charge works and how cancelling works. Here is the phone tree, how fast a person picked up, what the consultant would and wouldn't say without an account, and the full 9 minute recording.
 description: The Fabletics customer service number is 1-844-322-5384, open 24/7. How to reach a person, skip the $69.95 VIP charge, and cancel, from a real recorded call.
 date: 2026-10-02
+updated: 2026-10-04
 tags: fabletics, customer service, cancel subscription, vip membership, phone trees
 authors: nick
 imageAlt: Fabletics 1-844-322-5384, customer service and how to cancel VIP

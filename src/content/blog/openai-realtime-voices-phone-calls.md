@@ -2,7 +2,7 @@
 title: OpenAI realtime voices on a real phone call: marin vs cedar vs gleam vs meridian
 seoTitle: OpenAI realtime voices on a real phone call
 subtitle: Hear marin, cedar, gleam and meridian in five languages, then inspect repeated calls captured at the receiving end. We test dates, times, reference codes and corrections, with the recordings and transcription disagreements included.
-description: Compare OpenAI realtime voice samples and received SIP calls for marin, cedar, gleam and meridian. Hear the audio and inspect date, time, code and correction tests.
+description: "Compare OpenAI realtime voices marin, cedar, gleam and meridian on real SIP calls. Hear samples and inspect date, time, code and correction tests."
 date: 2026-09-30
 updated: 2026-10-04
 tags: ai voice, openai, phone calls, ai phone assistant

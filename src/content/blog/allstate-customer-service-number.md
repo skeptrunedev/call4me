@@ -2,8 +2,9 @@
 title: Allstate phone number: the customer service number, and how to reach an agent
 seoTitle: Allstate phone number: customer service and claims
 subtitle: We called Allstate's customer service number to ask how a quote works in California and which number existing customers and claims should use. Here is the phone menu, what it asks before it lets you through, what the agent said, and the full 5 minute recording.
-description: The Allstate phone number is 800-726-6033 for customer service and quotes, and 800-255-7828 for claims. Answer the menu's questions to reach a licensed agent, from a real recorded call.
+description: "Call Allstate at 800-726-6033 for customer service and quotes, or 800-255-7828 for claims. Hear our recorded call and how we reached a licensed agent."
 date: 2026-10-02
+updated: 2026-10-04
 tags: allstate, customer service, insurance, claims, phone trees
 authors: nick
 imageAlt: Allstate 800-726-6033, customer service, claims, and reaching an agent

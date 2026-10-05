@@ -1,8 +1,8 @@
 ---
 title: "Can your AI assistant navigate phone trees? Vapi, Bland and Call4me evidence"
-seoTitle: Phone trees for Claude Code and Codex, real call evidence
+seoTitle: "Phone trees for Claude Code and Codex: real calls"
 subtitle: A phone menu, a successful keypad press, and a completed task are different results. Here is how to configure, diagnose, and test each step.
-description: Get your existing AI assistant through business phone menus. Claude Code and Codex calling workflows, keypad evidence, voicemail and real Vapi, Bland and Call4me recordings.
+description: "Get Claude Code or Codex through business phone menus. Hear real Call4me, Vapi and Bland recordings, with keypad evidence and voicemail limits."
 date: 2026-10-04
 tags: ai phone assistant, ivr, dtmf, vapi, bland, mcp, claude code, codex
 authors: nick
@@ -48,7 +48,7 @@ For a business menu you do not control, destination audio may be your best evide
 
 DTMF means the keypad signaling a phone system recognizes. An agent saying “two” is different from sending the keypad input for two. Speech can work when a menu explicitly accepts spoken choices, but it does not demonstrate keypad navigation.
 
-Keypad signals can also travel separately from ordinary voice audio. [RFC 4733](https://www.rfc-editor.org/rfc/rfc4733) defines telephone events carried in RTP packets. Consequently, the absence of an audible keypad tone in a recording does not by itself prove that no input was sent. Conversely, hearing a tone does not prove the destination accepted it.
+Keypad signals can also travel separately from ordinary voice audio. [RFC 4733](https://www.rfc-editor.org/info/rfc4733/) defines telephone events carried in RTP packets. Consequently, the absence of an audible keypad tone in a recording does not by itself prove that no input was sent. Conversely, hearing a tone does not prove the destination accepted it.
 
 When diagnosing a failed branch, keep three pieces of evidence: the option as announced, the submitted keypad action, and the next prompt or destination. If your hosted calling tool does not expose a native action log, report that missing evidence instead of filling it in from the transcript.
 

@@ -1,9 +1,10 @@
 ---
 title: "United change flight rules: what a United agent told us, and how to reach one"
-seoTitle: "United change flight fees: a recorded call to United"
+seoTitle: "United change flight fees: our recorded call"
 subtitle: We called United reservations to ask how changing a flight works and what it costs. Here is the phone tree, the three words that got us to a person, what the agent said about Economy, Basic Economy and same-day changes, where united.com says something different, and the recording.
 description: United change flight rules from a recorded call. Economy pays only the fare difference, Basic Economy is stricter. Call 1-800-864-8331, say "flight change fee".
 date: 2026-10-01
+updated: 2026-10-04
 tags: united, airlines, flight changes, customer service, phone trees
 authors: nick
 imageAlt: United 1-800-864-8331, how to change a flight and what it costs

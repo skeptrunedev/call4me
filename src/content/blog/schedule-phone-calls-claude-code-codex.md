@@ -1,8 +1,8 @@
 ---
 title: "Schedule phone calls from Claude Code or Codex for tomorrow"
-seoTitle: Schedule phone calls from Claude Code or Codex with MCP
+seoTitle: "Schedule phone calls with Claude Code or Codex"
 subtitle: Give your agent the full brief now, let call4me keep the schedule, and retrieve the result in a later session. Here are the exact tools, time formats, and live pending and canceled records we checked.
-description: Schedule an AI phone call from Claude Code or Codex through MCP. Learn business timezone handling, status checks, cancellation, rescheduling, and how to retrieve the eventual result.
+description: "Schedule AI phone calls from Claude Code or Codex through MCP. Check timezones, status and results, or cancel and reschedule before a call starts."
 date: 2026-10-04
 tags: claude code, codex, mcp, scheduled phone calls, ai phone assistant
 authors: nick
@@ -27,7 +27,7 @@ Our [Fubo cancellation inquiry](/blog/cancel-fubo) and [private dining research]
 
 ## Connect the agent you already use
 
-You need a [call4me account](/account), an authenticated MCP connection, and enough calling credits when the call actually starts.
+You need a [call4me account](/login?next=/account), an authenticated MCP connection, and enough calling credits when the call actually starts.
 
 For Claude Code:
 

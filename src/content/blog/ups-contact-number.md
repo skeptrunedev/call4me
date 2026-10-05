@@ -4,6 +4,7 @@ seoTitle: UPS phone number and contact number: 2 real calls
 subtitle: We called UPS customer service twice to ask how to change a delivery that's already on the way. The first call got lost in the voice menu. The second reached a person. Here are both recordings, the exact words that got through, and what the agent said it costs.
 description: The UPS phone number and contact number is 1-800-742-5877. Saying "representative" twice at the tracking number prompt got us a person. Both calls recorded.
 date: 2026-10-01
+updated: 2026-10-04
 tags: ups, package delivery, phone trees, customer service, phone numbers
 authors: nick
 imageAlt: UPS phone number 1-800-742-5877, two calls to UPS customer service, recorded
@@ -167,7 +168,7 @@ The transcript follows the edited recording. "Caller" is the call4me agent. "UPS
 
 **2:13 UPS menu:** Please stay on the phone after the call to take a brief survey. This call may be monitored or recorded for quality, training, customer service, and service improvement purposes. AI assisted technology may be used to help our representatives provide customer support. Information may be processed in accordance with the UPS Privacy Notice available at ups.com slash privacy. Please hold. Your call will be answered by the first available representative.
 
-**2:42 UPS menu:** You can also visit the UPS website at www.ups.com. On our website, you can interact with our virtual assistant to resolve your inquiry, track packages, arrange for a pickup, obtain the addresses of shipping locations, order customer supplies, determine shipping rates and transit times, and much more.
+**2:42 UPS menu:** You can also visit the UPS website at `www.ups.com`. On our website, you can interact with our virtual assistant to resolve your inquiry, track packages, arrange for a pickup, obtain the addresses of shipping locations, order customer supplies, determine shipping rates and transit times, and much more.
 
 *Hold music until 5:57.*
 

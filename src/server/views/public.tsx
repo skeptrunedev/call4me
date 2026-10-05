@@ -4,7 +4,7 @@ import { dollars } from '../services/accounts';
 import { isAwaitingApproval, type CountryOffer, type NumberView } from '../services/numbers';
 import { MIN_TOPUP_CENTS } from '../services/topups';
 import { MonthlyBox } from './account';
-import { SITE, SITE_DESCRIPTION } from '../lib/pages';
+import { accountPath, SITE, SITE_DESCRIPTION } from '../lib/pages';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { CopyBlock, Layout } from './layout';
 import { CallOnboarding } from './onboarding';
@@ -72,7 +72,7 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
         <h3>add credits</h3>
         <p class="small">want to hear it first? <a href="/examples">listen to real calls</a>.</p>
         <BuyForm signedIn={p.signedIn} error={p.error} amount={p.amount} />
-        <p class="small">top up anytime from <a href="/account">my account</a> or ask your agent (call4me_add_funds).</p>
+        <p class="small">top up anytime from <a href={accountPath(p.signedIn)}>my account</a> or ask your agent (call4me_add_funds).</p>
       </div>
       <div>
         <h3>what it's good at</h3>
@@ -101,13 +101,13 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
     <h3>the prompt</h3>
     <p class="small">{p.signedIn ? 'this is what you paste into your agent. your key is already in it.' : 'this is what you paste into your agent. it signs you in; sign in here first and your key comes in the prompt instead.'}</p>
     <CopyBlock id="install-prompt" text={p.installPrompt} rows={12} />
-    <Faq pricePerMinuteCents={p.pricePerMinuteCents} countries={p.countries} />
+    <Faq signedIn={p.signedIn} pricePerMinuteCents={p.pricePerMinuteCents} countries={p.countries} />
   </Layout>
   );
 };
 
 /** The faq on the home page and the rules page. */
-const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ pricePerMinuteCents, countries }) => {
+const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ signedIn, pricePerMinuteCents, countries }) => {
   const { live, soon } = offers(countries);
   const extra = pricierDestinations();
   return (
@@ -142,7 +142,7 @@ const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ p
       <details>
         <summary>how do extra numbers work?</summary>
         <p>
-          ask your agent (call4me_buy_number) or use <a href="/account">my account</a>. a number costs exactly what our phone carrier charges us, no markup: its upfront
+          ask your agent (call4me_buy_number) or use <a href={accountPath(signedIn)}>my account</a>. a number costs exactly what our phone carrier charges us, no markup: its upfront
           cost plus the first month when you buy it, then the monthly cost every 30 days from your credits. your account page shows each country's price. if your credits
           can't cover a renewal, the number is released after 7 days. you can release a number anytime.
         </p>
@@ -179,7 +179,7 @@ const Faq: FC<{ pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ p
       </details>
       <details>
         <summary>are calls recorded? where can i listen?</summary>
-        <p>yes. our phone carrier (Telnyx) records calls. after a call ends, open it in <a href="/account">my account</a> to play or save its recording and read the transcript. you can also ask your agent for the recording. it can take a minute to appear after hangup.</p>
+        <p>yes. our phone carrier (Telnyx) records calls. after a call ends, open it in <a href={accountPath(signedIn)}>my account</a> to play or save its recording and read the transcript. you can also ask your agent for the recording. it can take a minute to appear after hangup.</p>
       </details>
       <details>
         <summary>who can it call?</summary>
@@ -283,11 +283,11 @@ export const RulesPage: FC<{ signedIn: boolean; pricePerMinuteCents: number; cou
       <li>no harassment, threats, pranks, or pretending to be someone else. the caller always calls <i>for</i> you; it never claims to be you.</li>
       <li>the same number can be called a few times a day, not more. anyone who asks not to be called again is never called by call4me again.</li>
       <li>the caller does not open by announcing it's an AI, the same way you don't open a call by explaining who you are. if someone sincerely asks, it tells the truth.</li>
-      <li>calls are recorded by our phone carrier (Telnyx). after a call ends, open it in <a href="/account">my account</a> to play or save the recording. a text transcript is kept there too.</li>
+      <li>calls are recorded by our phone carrier (Telnyx). after a call ends, open it in <a href={accountPath(signedIn)}>my account</a> to play or save the recording. a text transcript is kept there too.</li>
       <li>the caller never reads out card numbers, bank details, or passwords.</li>
     </ul>
     <p>break these and the account is closed without a refund of the remaining balance.</p>
-    <Faq pricePerMinuteCents={pricePerMinuteCents} countries={countries} />
+    <Faq signedIn={signedIn} pricePerMinuteCents={pricePerMinuteCents} countries={countries} />
   </Layout>
 );
 
@@ -298,7 +298,7 @@ export const PrivacyPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ si
     <ul>
       <li>we store your email, your balance history, and for each call: the number, the brief your agent sent, the outcome, and a text transcript.</li>
       <li>if you save a calling profile (name, date of birth, phone, address, insurance, car), we store it so your agent doesn't have to ask before every call. the caller only shares it with the place it's calling, and only when asked. your agent can remove any of it with call4me_save_profile.</li>
-      <li>our phone carrier (Telnyx) records and stores call audio. audio also passes through our speech model provider (OpenAI) while the call is live. after a call ends, you can play or save available recordings from <a href="/account">my account</a>, or ask your agent for them. recording links can expire and anyone you share a link with can use it.</li>
+      <li>our phone carrier (Telnyx) records and stores call audio. audio also passes through our speech model provider (OpenAI) while the call is live. after a call ends, you can play or save available recordings from <a href={accountPath(signedIn)}>my account</a>, or ask your agent for them. recording links can expire and anyone you share a link with can use it.</li>
       <li>payments are handled by Stripe; we never see your card.</li>
       <li>we count visits to this site with Google Analytics and Ahrefs Web Analytics. Google Analytics sets a cookie to tell repeat visits apart. when you're signed in, Google Analytics also gets your account's internal id and a one-way hash of your email (never the email itself or your phone number) along with sign-ups, purchases, and when calls are placed and how they ended, without who was called or what was said. we also set our own cookie on your first visit that remembers where you came from (the referring site or link tag and the first page you saw), and keep that with your account so we know which channels bring people who use call4me.</li>
       <li>we measure our Facebook and Instagram ads with Meta's pixel, which sets a cookie to recognize your browser and the ad you clicked. Meta gets that cookie, your IP address and browser type, and, when you're signed in, a scrambled (hashed) copy of your account's internal id, along with sign-ups, purchases and amounts, and that a call was placed. never your email, phone number or name, who was called, or what was said.</li>
@@ -315,12 +315,12 @@ export const SupportPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ si
     <h1>support</h1>
     <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
     <p>
-      email <a href="mailto:me@call4.me">me@call4.me</a> with what happened and, for a call, its id (call_...) from your agent or <a href="/account">my account</a>. a person
+      email <a href="mailto:me@call4.me">me@call4.me</a> with what happened and, for a call, its id (call_...) from your agent or <a href={accountPath(signedIn)}>my account</a>. a person
       answers, usually the same day.
     </p>
     <ul>
-      <li>a call went wrong: open it in <a href="/account">my account</a> for the outcome and the full transcript, and send us the call id. talk time is billed from pickup; unanswered, busy and failed calls are free.</li>
-      <li>credits and the monthly reload: your balance and reload are in <a href="/account">my account</a>, where you can stop the reload anytime. credits already loaded stay and don't expire.</li>
+      <li>a call went wrong: open it in <a href={accountPath(signedIn)}>my account</a> for the outcome and the full transcript, and send us the call id. talk time is billed from pickup; unanswered, busy and failed calls are free.</li>
+      <li>credits and the monthly reload: your balance and reload are in <a href={accountPath(signedIn)}>my account</a>, where you can stop the reload anytime. credits already loaded stay and don't expire.</li>
       <li>connecting your agent: the <a href="/mcp">install page</a> has the steps for each app. in chatgpt, add call4me from the plugins directory and sign in when it asks.</li>
       <li>someone you don't know called from a call4me number: tell us the number and we stop calls to yours.</li>
       <li>deleting your account: email us from the address you signed in with, and we delete the account, its calling profile and its call history.</li>

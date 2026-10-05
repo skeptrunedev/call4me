@@ -1,9 +1,10 @@
 ---
 title: "Adderall shortage: we called 10 South Florida pharmacies, and every one that answered was out"
-seoTitle: "Adderall shortage: we called 10 pharmacies (Oct 2026)"
+seoTitle: "Adderall shortage: 10 pharmacy calls (Oct 2026)"
 subtitle: A call4me user with a prescription for Adderall 30 mg had their AI phone assistant call 10 pharmacies in Miami-Dade and Broward on one morning. Five answered the question, and all five said no. Here's what each one said, all 11 recordings, and what to do next.
 description: Is there still an Adderall shortage? We called 10 South Florida pharmacies on Oct 1, 2026. All 5 that answered had no 30 mg. Recordings and next steps.
 date: 2026-10-01
+updated: 2026-10-04
 tags: adderall shortage, adhd medication, pharmacy, prescriptions, ai phone assistant
 authors: nick
 imageAlt: The Adderall shortage, 10 South Florida pharmacies called, 5 answered, none had it

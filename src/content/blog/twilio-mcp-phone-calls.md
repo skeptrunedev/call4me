@@ -1,8 +1,8 @@
 ---
 title: "Can Twilio MCP make phone calls for your Claude Code or Codex assistant?"
-seoTitle: Twilio MCP phone calls for Claude Code or Codex, what works
+seoTitle: "Twilio MCP phone calls: Claude Code and Codex"
 subtitle: We connected to Twilio's public MCP, searched for an outbound call, and retrieved its actual API schema. Here is the difference between documentation tools, an operational MCP, and a voice agent that can finish a conversation.
-description: Set up Twilio MCP in Claude Code or Codex, see our actual search and schema retrieval test, and compare building a conversational voice application with connecting a hosted calling MCP.
+description: "Set up Twilio MCP in Claude Code or Codex. See our search and schema test, and compare building a voice application with a hosted calling MCP."
 date: 2026-10-04
 tags: twilio, mcp, claude code, codex, ai phone assistant
 authors: nick

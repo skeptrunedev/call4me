@@ -1,8 +1,8 @@
 ---
 title: "Make phone calls from T3 Code with MCP"
-seoTitle: T3 Code phone calls with MCP, setup and a real test
+seoTitle: "T3 Code phone calls with MCP: setup and test"
 subtitle: Connect the calling tool to the provider behind your T3 thread. We checked a real Codex thread, retrieved a saved schedule, and tested the dialing workflow.
-description: Add phone calling MCP to T3 Code through its Codex or Claude provider. Learn which machine and configuration matter, how to verify tools, and what our actual T3 test established.
+description: "Add phone calling MCP to T3 Code through Codex or Claude. Check the correct machine, configuration and tools, and see what our real T3 test established."
 date: 2026-10-04
 tags: t3 code, mcp, codex, claude code, ai phone assistant
 authors: nick
@@ -35,7 +35,7 @@ Check the actual instance before copying commands. The steps below cover Codex a
 
 ## Add Call4me to the Codex provider
 
-Sign in to your [Call4me account](/account). On the machine and Codex configuration used by T3, run:
+Sign in to your [Call4me account](/login?next=/account). On the machine and Codex configuration used by T3, run:
 
 ```bash
 codex mcp add call4me --url https://call4.me/mcp

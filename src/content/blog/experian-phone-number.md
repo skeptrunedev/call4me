@@ -4,6 +4,7 @@ seoTitle: Experian phone number for a credit freeze
 subtitle: We called Experian's freeze line 15 times in one afternoon. Here is the whole phone tree, every dead end, and a 9 minute recording of the call that got furthest.
 description: Experian's number is 1-888-397-3742. It asks for your full SSN first, and we found no way to reach a person without it. Full recording and phone tree.
 date: 2026-09-30
+updated: 2026-10-04
 tags: experian, credit freeze, phone trees, customer service
 authors: nick
 imageAlt: Experian 1-888-397-3742, what happens when you call to freeze your credit
@@ -155,7 +156,7 @@ The transcript follows the edited recording. Brief acknowledgments ("okay") are 
 
 **7:56 Caller:** Could you repeat that? I didn't quite get it. Sorry.
 
-**8:09 Experian:** To freeze your credit report with Experian, you can do it online, by phone, or by mail. The online method is the fastest and easiest. Here's how. Online, visit the Experian website, https://www.experian.com/freeze, and go to the Credit Freeze Management Center, or by mail. Send a written request to Experian Security Freeze, P.O. Box 9554, Allen, TX 75013. Make sure to include your full name, Social Security number, addresses for the past two years, date of birth, a government-issued ID, and a utility bill or bank statement.
+**8:09 Experian:** To freeze your credit report with Experian, you can do it online, by phone, or by mail. The online method is the fastest and easiest. Here's how. Online, visit the Experian website, `https://www.experian.com/freeze`, and go to the Credit Freeze Management Center, or by mail. Send a written request to Experian Security Freeze, P.O. Box 9554, Allen, TX 75013. Make sure to include your full name, Social Security number, addresses for the past two years, date of birth, a government-issued ID, and a utility bill or bank statement.
 
 **9:02 Experian:** If you're calling from a mobile number and have questions about how to add or remove a freeze, would you like to receive a text with additional instructions?
 

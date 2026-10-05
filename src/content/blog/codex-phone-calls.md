@@ -1,8 +1,8 @@
 ---
 title: "How to make phone calls from Codex with MCP"
-seoTitle: Codex MCP setup for phone calls, OAuth and a real test
+seoTitle: "Codex MCP phone calls: OAuth setup and real test"
 subtitle: Give Codex a calling tool, keep your credentials out of the prompt, and bring phone answers back into the research it is already doing.
-description: Connect Codex to call4me through MCP with OAuth or an API key. Learn the result loop, approval settings, and what we verified in a real restaurant research session.
+description: "Connect Codex to call4me through MCP with OAuth or an API key. See approval settings, the result loop and our real restaurant research test."
 date: 2026-10-03
 updated: 2026-10-04
 tags: codex, mcp, ai agents, ai phone assistant
@@ -20,7 +20,7 @@ We verified this with **Codex CLI 0.160.0 on October 3, 2026**. The practical te
 
 This setup uses Codex as an MCP client. The calling server exposes the tools, and Codex chooses when to invoke them during your task.
 
-You need Codex, a [call4me account](https://call4.me/account), and calling credits for the phone part. Your Codex sign in and your call4me connection are separate accounts.
+You need Codex, a [call4me account](/login?next=/account), and calling credits for the phone part. Your Codex sign in and your call4me connection are separate accounts.
 
 For browser OAuth:
 

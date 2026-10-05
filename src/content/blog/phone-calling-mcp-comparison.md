@@ -1,8 +1,8 @@
 ---
 title: "Phone calling MCP servers for Claude Code and Codex: which setup fits your agent?"
-seoTitle: Phone calling MCP servers for Claude Code and Codex
+seoTitle: "Phone calling MCP: Claude Code and Codex compared"
 subtitle: Compare call4me, Vapi Agent Phone, Bland, ClawCall, Cocall, and Patter by account setup, calling workflow, and the evidence your agent gets back.
-description: Compare phone calling MCP servers for Claude Code and Codex with real call4me, Vapi Agent Phone, and Bland calls, recordings, transcripts, setup steps, and observed limits.
+description: "Compare phone calling MCP servers for Claude Code and Codex. Real call4me, Vapi and Bland calls, recordings, transcripts, setup and observed limits."
 date: 2026-10-03
 updated: 2026-10-04
 tags: mcp, claude code, codex, ai agents, ai phone assistant
@@ -81,7 +81,7 @@ codex mcp add call4me --url https://call4.me/mcp
 codex mcp login call4me
 ```
 
-Ask it to run `call4me_get_balance` without placing a call. The [account page](https://call4.me/account) also provides a personal server URL carrying your API key. Treat that URL as a credential.
+Ask it to run `call4me_get_balance` without placing a call. The [account page](/login?next=/account) also provides a personal server URL carrying your API key. Treat that URL as a credential.
 
 We verified fresh browser OAuth and a balance read on the canonical endpoint with Codex CLI 0.160.0. Our restaurant calls used an earlier bearer connection; the [Codex walkthrough](/blog/codex-phone-calls) distinguishes these tests and explains the discovery bug we found and fixed during sign in.
 

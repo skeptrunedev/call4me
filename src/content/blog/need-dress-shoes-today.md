@@ -1,9 +1,10 @@
 ---
 title: "Need dress shoes today? Our AI called 3 DC stores and got a pair on hold by 11 am"
-seoTitle: "Need dress shoes today? We called 3 DC stores (Oct 2026)"
+seoTitle: "Need dress shoes today? 3 DC stores (Oct 2026)"
 subtitle: A call4me user's dress shoe broke on the morning of a 5 pm gala. Their AI phone assistant called two Nordstrom Racks and a Men's Wearhouse, found Stacy Adams loafers in a 10.5 for $119, and got them set aside for pickup. Here's what each store said, all 6 recordings, and how to do it yourself.
 description: A shoe broke the morning of a gala. We called 2 Nordstrom Racks and a Men's Wearhouse in DC, found a $119 pair, and got it held for pickup. All 6 calls.
 date: 2026-10-01
+updated: 2026-10-04
 tags: dress shoes, men's wearhouse, nordstrom rack, same day pickup, ai phone assistant
 authors: nick
 imageAlt: Need dress shoes today, 3 DC stores called, 1 pair on hold by 11 am
@@ -165,7 +166,7 @@ If you use call4me, paste this into your agent:
 
 "AI agent" is the call4me caller. Private details are muted in the audio and shown in brackets here.
 
-**0:00 Phone system:** Thank you for calling the Men's Wearhouse, located at 1024 Connecticut Avenue Northwest in Washington, District of Columbia. We are currently open. Our business hours are 9:30 am to 7 pm Monday through Friday, 10 am to 7 pm Saturdays, and 11 am to 6 pm on Sundays. To help direct you to the right place, please listen carefully to the following options. For driving directions, or to make an appointment, visit our store locator on our website at www.menswearhouse.com. To speak to a store associate, press zero. To repeat this information, press one.
+**0:00 Phone system:** Thank you for calling the Men's Wearhouse, located at 1024 Connecticut Avenue Northwest in Washington, District of Columbia. We are currently open. Our business hours are 9:30 am to 7 pm Monday through Friday, 10 am to 7 pm Saturdays, and 11 am to 6 pm on Sundays. To help direct you to the right place, please listen carefully to the following options. For driving directions, or to make an appointment, visit our store locator on our website at `www.menswearhouse.com`. To speak to a store associate, press zero. To repeat this information, press one.
 
 **0:45 AI agent:** Okay.
 

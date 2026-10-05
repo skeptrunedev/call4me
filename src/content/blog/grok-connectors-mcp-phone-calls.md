@@ -2,7 +2,7 @@
 title: "Grok connectors and MCP: how to add custom tools to Grok (and make phone calls)"
 seoTitle: Grok connectors and MCP servers, explained
 subtitle: Set up custom tools on grok.com, in Grok Bot or through the xAI API. Then hear our actual Grok Bot restaurant call, including the partial answer and the menu problem.
-description: Add a custom Grok MCP connector and hear a real Grok Bot phone call. Setup steps, account authentication, recording, transcript and what the call did not confirm.
+description: "Add a custom Grok MCP connector and hear a real Grok Bot phone call. Setup, authentication, recording, transcript and what the call did not confirm."
 date: 2026-10-01
 updated: 2026-10-04
 tags: grok, mcp, ai agents, ai phone assistant
@@ -49,7 +49,7 @@ On **Grok Business and Enterprise** plans there's an extra step first. According
 
 ## What is Grok Bot?
 
-Grok Bot is xAI's app for persistent AI teammates that keep context across tasks ([Grok Bot docs](https://docs.x.ai/grok-bot)). The parts that matter for adding tools:
+Grok Bot is xAI's app for persistent AI teammates that keep context across tasks ([Grok Bot docs](https://docs.x.ai/grok-bot/overview)). The parts that matter for adding tools:
 
 - **Each Bot has its own computer.** Bots work on a persistent cloud computer with a browser, files, and a terminal, and keep working while your laptop is closed.
 - **You set it up by messaging it.** That's also how you add a custom MCP server, as shown below.
@@ -69,7 +69,7 @@ Custom MCP servers come in two types:
 
 The quickest way is to ask in chat:
 
-> Add a custom MCP server called call4me at https://call4.me/mcp/YOUR-KEY (remote HTTPS, no headers, no auth).
+> Add a custom MCP server called call4me at `https://call4.me/mcp/YOUR-KEY` (remote HTTPS, no headers, no auth).
 
 Say "custom MCP server" so the Bot doesn't go looking for a ready-made plugin with a similar name instead.
 
@@ -205,7 +205,7 @@ Use explicit permission and spending limits that fit your own task. If no messag
 
 call4me is an MCP server that places real phone calls. Your agent hands it a goal ("book a table for four at seven"), a voice caller talks to the business like a person would, and your agent gets the outcome and transcript back. It works in Claude Code, Codex, ChatGPT and Claude, and the same server works in Grok.
 
-**1. Get your server URL.** Sign in at [call4.me](https://call4.me). Your personal server URL is on [your account page](https://call4.me/account). It has your key in it, so treat it like a password.
+**1. Get your server URL.** Sign in at [call4.me](https://call4.me). Your personal server URL is on [your account page](/login?next=/account). It has your key in it, so treat it like a password.
 
 **2. Add it to Grok.**
 

@@ -1,6 +1,6 @@
 ---
 title: "How to use Meta Muse with custom connectors (and give it a phone)"
-seoTitle: How to use Meta Muse custom connectors for phone calls
+seoTitle: "Meta Muse custom connectors for phone calls"
 subtitle: Connect Meta Muse to a phone calling service through a custom connector. Here is our tested setup, what a live balance check proves, how native calling differs and what to check before dialing.
 description: Set up a Meta Muse custom connector for call4me. Secure credential steps, MCP checks, native calling beta and troubleshooting from our account tests.
 date: 2026-10-01
@@ -46,13 +46,13 @@ MCP is a tool protocol, and a custom client can connect to an MCP server. That i
 
 This is the exact message we sent Muse on October 1:
 
-> Build a custom integration to call4me so you can place phone calls for me from any future conversation. It's a hosted remote MCP server (streamable HTTP) at https://call4.me/mcp. Use the official MCP SDK to connect. It authenticates with my call4me API key (I can get it from https://call4.me/account): ask me for it through your secure credential flow and store it in your Secure Credentials Store, never in chat, and send it as an Authorization: Bearer header. Then list the tools, test call4me_get_balance end to end, show me the result, and save the integration as a reusable skill.
+> Build a custom integration to call4me so you can place phone calls for me from any future conversation. It's a hosted remote MCP server (streamable HTTP) at https://call4.me/mcp. Use the official MCP SDK to connect. It authenticates with my call4me API key (I can get it from `https://call4.me/account`): ask me for it through your secure credential flow and store it in your Secure Credentials Store, never in chat, and send it as an Authorization: Bearer header. Then list the tools, test call4me_get_balance end to end, show me the result, and save the integration as a reusable skill.
 
 Within about half a minute, Muse requested a Call4me key and presented a card labeled **Call4me**, **Connector**, with a **Connect** button. It linked to our account page and described the secure credential flow.
 
 Here's the whole setup, start to finish:
 
-1. **Get your call4me key.** Sign in at [call4.me](https://call4.me) and copy your key from [your account page](https://call4.me/account).
+1. **Get your call4me key.** Sign in at [call4.me](https://call4.me) and copy your key from [your account page](/login?next=/account).
 2. **Send Muse the message above** in any chat.
 3. **Click Connect** on the Call4me card and paste your key into Muse's secure page. Don't paste it into the chat itself.
 4. **Let Muse test it.** It lists the call4me tools and runs `call4me_get_balance`. If it reports your balance, it's connected.
