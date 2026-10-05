@@ -4,12 +4,13 @@ seoTitle: USAA phone number: reach a person and join
 subtitle: We called USAA's main number to ask who can join and what it takes. Here is the phone tree, the one word that got us through it, what the eligibility team said, and the full 8 minute recording.
 description: The USAA phone number is 800-531-8722. Press 1, then 2, then say "membership" to reach the eligibility team. Who can join, from a real recorded call.
 date: 2026-10-01
+updated: 2026-10-04
 tags: usaa, customer service, membership, eligibility, phone trees
 authors: nick
 imageAlt: USAA 800-531-8722, how to reach a person and who can join
 ---
 
-**The short answer:** the USAA phone number, the main line for USAA customer service, is **800-531-8722** (800-531-USAA). You can also dial **210-531-8722**, or **#8722** from a mobile phone. USAA's [support page](https://www.usaa.com/support/) says "You can reach any department through our main number." It's open **Monday to Friday 6 am to 10 pm Central** and **Saturday 8 am to 8 pm Central**, and closed Sunday ("Days and times may vary").
+**The short answer:** the USAA phone number, the main line for USAA customer service, is **800-531-8722** (800-531-USAA). You can also dial **210-531-8722**, or **#8722** from a mobile phone. USAA's [support page](https://www.usaa.com/support/?akredirect=true) says "You can reach any department through our main number." It's open **Monday to Friday 6 am to 10 pm Central** and **Saturday 8 am to 8 pm Central**, and closed Sunday ("Days and times may vary").
 
 If you're not a member and want to join, this got us to a person:
 
@@ -23,7 +24,7 @@ After a short disclosure and a hold announced as "approximately two minutes", so
 - **A child of a USAA member can join, and so can a spouse.** Siblings and other relatives can't.
 - **Some areas of federal government may be eligible.** That's assessed person by person.
 - **No documents up front.** "We do have a system that does check for eligibility." A **DD-214** or other military documents, or an **ID card**, may be asked for later.
-- **Membership is free.** You only pay for products you choose to buy, like insurance. USAA's [membership page](https://www.usaa.com/membership/about/) says the same: "creating a member account with USAA is free."
+- **Membership is free.** You only pay for products you choose to buy, like insurance. USAA's [membership page](https://www.usaa.com/membership/about/?akredirect=true) says the same: "creating a member account with USAA is free."
 - **You can join at usaa.com or by phone.** It's the same process either way, and by phone it takes "five minutes, maybe a little more" if nothing comes up.
 
 We called on Thursday, October 1, 2026, at about 12:52 pm Eastern, with [call4me](/) asking the questions. This page is what we heard.
