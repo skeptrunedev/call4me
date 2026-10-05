@@ -38,6 +38,7 @@ import codexPhoneCalls from './codex-phone-calls.md';
 import agentResearchPhoneCalls from './agent-web-research-phone-calls-sf-private-dining.md';
 import phoneCallingMcpComparison from './phone-calling-mcp-comparison.md';
 import cascadedVoiceStack from './cascaded-voice-stack-vs-gpt-live.md';
+import instinctPhoneCalls from './instinct-ai-phone-calls.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -45,6 +46,7 @@ import cascadedVoiceStack from './cascaded-voice-stack-vs-gpt-live.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'instinct-ai-phone-calls', markdown: instinctPhoneCalls },
   { slug: 'claude-code-phone-calls', markdown: claudeCodePhoneCalls },
   { slug: 'codex-phone-calls', markdown: codexPhoneCalls },
   { slug: 'agent-web-research-phone-calls-sf-private-dining', markdown: agentResearchPhoneCalls },

@@ -49,7 +49,7 @@ closest adjacent audience; the consumer guides are secondary to the ICP cluster.
 ## Acceptance criteria
 
 Use the existing markdown article and SVG image conventions. Register the post,
-add useful links from adjacent guides, and verify rendering, search, discovery,
+include useful links to adjacent guides, and verify rendering, search, discovery,
 metadata, audio decoding and seeking, transcript access and narrow screens.
 Run required repository checks, push to main, wait for the site deploy and verify
 the production page. Do not change calling infrastructure or send outreach.
