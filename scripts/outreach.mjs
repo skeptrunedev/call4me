@@ -17,6 +17,8 @@
  *                                                      who already replied or was won keeps that status
  *   npm run outreach -- email-draft <id> <subject> [body file] [--dry-run]
  *                                                      create a Fastmail draft without sending
+ *   npm run outreach -- email-draft-update <person id> <old draft id> <subject> <body file> [--dry-run]
+ *                                                      replace a verified unsent Fastmail draft without sending
  *   npm run outreach -- mail-status                   verify Fastmail account and sender (read only)
  *   npm run outreach -- mail-search '<query JSON>'    read only JMAP Email/query arguments: filter, position, limit
  *   npm run outreach -- mail-read <id> [id ...]        fetch email bodies without changing read state
@@ -149,6 +151,37 @@ if (command === 'import') {
     d1(`UPDATE outreach SET notes = ${sql(notes)}, updated_at = ${now} WHERE id = ${sql(p.id)}`);
   }
   console.log(JSON.stringify(delivery, null, 2));
+} else if (command === 'email-draft-update') {
+  const [id, draftId, subject, file] = rest;
+  if (!id || !draftId || !subject || !file) fail('usage: email-draft-update <person id> <old draft id> <subject> <body file> [--dry-run]');
+  const p = one(id);
+  if (!p.email) fail(`${p.name} has no email`);
+  if (!p.message?.trim()) fail(`${p.name} has no expected draft message`);
+  const text = readFileSync(file, 'utf8').trim();
+  if (!text) fail(`${p.name} has an empty message`);
+  if (dryRun) {
+    console.log(`replace draft: ${draftId}\nto: ${p.email}\nsubject: ${subject}\n\n${text}`);
+    process.exit(0);
+  }
+  let replacement;
+  try {
+    replacement = await fastmail().replaceDraft({ id: draftId, to: p.email, subject, text, expectedText: p.message });
+  } catch (error) {
+    fail(error.message);
+  }
+  if (!replacement.replaced) {
+    console.log(JSON.stringify(replacement, null, 2));
+    fail(replacement.warning);
+  }
+  const now = Date.now();
+  const notes = [p.notes, `${new Date(now).toISOString().slice(0, 10)}: replaced fastmail draft ${draftId} with draft ${replacement.id} for ${p.email}`].filter(Boolean).join('\n');
+  try {
+    d1(`UPDATE outreach SET message = ${sql(text)}, status = ${sql(statusAfterDraft(p.status))}, notes = ${sql(notes)}, updated_at = ${now} WHERE id = ${sql(p.id)}`);
+  } catch (error) {
+    console.log(JSON.stringify(replacement, null, 2));
+    fail(`Draft replacement succeeded (${replacement.id}), but tracker update failed; inspect the replacement before retrying: ${error.message}`);
+  }
+  console.log(JSON.stringify(replacement, null, 2));
 } else if (command === 'email' || command === 'email-draft') {
   const [id, subject, file] = rest;
   if (!subject) fail(`usage: ${command} <id> <subject> [body file] [--dry-run]`);
@@ -190,5 +223,5 @@ if (command === 'import') {
   console.log(`emailed ${p.name} <${p.email}>: ${delivery.id}`);
   if (delivery.warning) console.warn(delivery.warning);
 } else {
-  fail('usage: npm run outreach -- import|list|show|draft|sent|status|set|mail-status|mail-search|mail-read|mail-reply|email-draft|email-reply|email ... (see scripts/outreach.mjs)');
+  fail('usage: npm run outreach -- import|list|show|draft|sent|status|set|mail-status|mail-search|mail-read|mail-reply|email-draft|email-draft-update|email-reply|email ... (see scripts/outreach.mjs)');
 }

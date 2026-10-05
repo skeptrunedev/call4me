@@ -84,6 +84,46 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     return { provider: 'fastmail', id };
   }
 
+  async function replaceDraft({ id, to, subject, text, expectedText }) {
+    if (!id || !to || !subject || !text?.trim() || !expectedText?.trim()) throw new Error('Original draft, recipient, subject, new body and expected body are required');
+    const session = await discover();
+    const originalResult = await call(session, 'Email/get', {
+      ids: [id],
+      properties: ['id', 'mailboxIds', 'keywords', 'sender', 'from', 'to', 'cc', 'bcc', 'replyTo', 'inReplyTo', 'references', 'hasAttachment', 'attachments', 'htmlBody', 'bodyValues'],
+      fetchHTMLBodyValues: true,
+    });
+    const original = originalResult.list?.find((email) => email.id === id);
+    const singleAddress = (addresses, email) => Array.isArray(addresses) && addresses.length === 1 && addresses[0].email?.toLowerCase() === email.toLowerCase();
+    const empty = (value) => value == null || (Array.isArray(value) && value.length === 0);
+    if (!original || original.keywords?.$draft !== true || Object.keys(original.mailboxIds ?? {}).length !== 1 || original.mailboxIds[session.draftMailboxId] !== true) throw new Error('Original email is not an unsent draft in only the Drafts mailbox');
+    if (!singleAddress(original.from, SENDER.email) || !singleAddress(original.to, to) || !empty(original.sender)) throw new Error('Original draft sender or recipient does not match');
+    if (['cc', 'bcc', 'replyTo', 'inReplyTo', 'references', 'attachments'].some((property) => !empty(original[property])) || original.hasAttachment) throw new Error('Original draft has additional recipients, attachments or reply headers');
+    const html = original.htmlBody?.length === 1 && original.htmlBody[0].type === 'text/html' ? original.bodyValues?.[original.htmlBody[0].partId] : null;
+    if (!html || html.isTruncated || html.isEncodingProblem || html.value !== messageHtml(expectedText)) throw new Error('Original draft body does not match the outreach tracker');
+    if (typeof originalResult.state !== 'string' || !originalResult.state) throw new Error('Original draft read returned no email state');
+
+    const created = await call(session, 'Email/set', {
+      ifInState: originalResult.state,
+      create: { draft: {
+        mailboxIds: { [session.draftMailboxId]: true }, keywords: { $draft: true },
+        from: [SENDER], to: [{ email: to }], subject,
+        htmlBody: [{ partId: 'html', type: 'text/html' }],
+        bodyValues: { html: { value: messageHtml(text) } },
+      } },
+    });
+    const replacementId = created.created?.draft?.id;
+    if (!replacementId) throw new Error(`Fastmail replacement draft creation failed: ${created.notCreated?.draft?.type ?? 'missing email id'}; original draft ${id} was not removed`);
+    const replacement = { provider: 'fastmail', id: replacementId, previousId: id, replaced: false };
+    try {
+      if (typeof created.newState !== 'string' || !created.newState) throw new Error('draft creation returned no email state');
+      const removed = await call(session, 'Email/set', { ifInState: created.newState, destroy: [id] });
+      if (!removed.destroyed?.includes(id)) throw new Error(removed.notDestroyed?.[id]?.type ?? 'missing destruction confirmation');
+      return { ...replacement, replaced: true };
+    } catch (error) {
+      return { ...replacement, warning: `Replacement draft ${replacementId} exists, but removal of original draft ${id} was not confirmed (${error.message}); inspect both drafts before retrying to avoid duplicates` };
+    }
+  }
+
   // Only the CLI's explicit email command calls this method. Creating a draft never submits it.
   async function send(message) {
     const draft = await createDraft(message);
@@ -141,6 +181,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
       });
     },
     createDraft,
+    replaceDraft,
     send,
     replyMessage,
     async reply(message) {

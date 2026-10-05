@@ -33,7 +33,8 @@ function mock(overrides: Record<string, unknown> = {}, sessionData: unknown = se
     const body = options.body ? JSON.parse(options.body) : undefined;
     calls.push({ url, body });
     assert.equal(options.headers.Authorization, 'Bearer test-token');
-    const result = body ? { ...defaults, ...overrides }[body.methodCalls[0][0]] : sessionData;
+    const configured = body ? { ...defaults, ...overrides }[body.methodCalls[0][0]] : sessionData;
+    const result = Array.isArray(configured) ? configured.shift() : configured;
     return { ok: true, json: async () => result };
   };
   return { client: fastmail({ token: 'test-token', fetchImpl }), calls };
@@ -153,13 +154,109 @@ test('drafting preserves prior contact history statuses', () => {
   for (const status of ['sent', 'replied', 'won', 'declined']) assert.equal(statusAfterDraft(status), status);
 });
 
+const originalDraft = {
+  id: 'original-draft', mailboxIds: { drafts: true }, keywords: { $draft: true },
+  from: [{ email: 'me@skeptrune.com' }], to: [{ email: message.to }],
+  sender: null, cc: null, bcc: null, replyTo: null, inReplyTo: null, references: null,
+  hasAttachment: false, attachments: [], htmlBody: [{ partId: 'html', type: 'text/html' }],
+  bodyValues: { html: { value: messageHtml(message.text), isTruncated: false } },
+};
+const replacementMessage = { ...message, id: originalDraft.id, expectedText: message.text, text: 'updated body\n\nnick' };
+const replacementResponses = () => [
+  methodResult('Email/set', { created: { draft: { id: 'replacement-draft' } }, newState: 'after-create' }),
+  methodResult('Email/set', { destroyed: [originalDraft.id], newState: 'after-destroy' }),
+];
+const replacementOverrides = (original: object = originalDraft) => ({
+  'Email/get': methodResult('Email/get', { state: 'before-create', list: [original] }),
+  'Email/set': replacementResponses(),
+});
+
+test('draft replacement verifies the original and guards both native mutations without submitting', async () => {
+  const { client, calls } = mock(replacementOverrides());
+  assert.deepEqual(await client.replaceDraft(replacementMessage), { provider: 'fastmail', id: 'replacement-draft', previousId: 'original-draft', replaced: true });
+  const methods = calls.slice(1).map((call) => call.body.methodCalls[0][0]);
+  assert.deepEqual(methods, ['Identity/get', 'Mailbox/get', 'Email/get', 'Email/set', 'Email/set']);
+  const read = calls[3].body.methodCalls[0][1];
+  assert.deepEqual(read.ids, ['original-draft']);
+  assert.equal(read.fetchHTMLBodyValues, true);
+  const create = calls[4].body.methodCalls[0][1];
+  assert.equal(create.ifInState, 'before-create');
+  assert.deepEqual(create.create.draft.mailboxIds, { drafts: true });
+  assert.deepEqual(create.create.draft.keywords, { $draft: true });
+  assert.deepEqual(create.create.draft.from, [{ name: 'Nick Khami', email: 'me@skeptrune.com' }]);
+  assert.deepEqual(create.create.draft.to, [{ email: message.to }]);
+  assert.equal(create.create.draft.bodyValues.html.value, messageHtml(replacementMessage.text));
+  assert.equal(create.destroy, undefined);
+  assert.deepEqual(calls[5].body.methodCalls[0][1], { accountId: 'account', ifInState: 'after-create', destroy: ['original-draft'] });
+});
+
+test('edited, sent or mismatched original drafts stop before any writes', async () => {
+  const invalid = [
+    { ...originalDraft, keywords: {} },
+    { ...originalDraft, mailboxIds: { sent: true } },
+    { ...originalDraft, mailboxIds: { drafts: true, sent: true } },
+    { ...originalDraft, from: [{ email: 'wrong@example.com' }] },
+    { ...originalDraft, sender: [{ email: 'wrong@example.com' }] },
+    { ...originalDraft, to: [{ email: 'wrong@example.com' }] },
+    { ...originalDraft, to: [...originalDraft.to, { email: 'second@example.com' }] },
+    ...['cc', 'bcc', 'replyTo', 'inReplyTo', 'references', 'attachments'].map((property) => ({ ...originalDraft, [property]: ['extra'] })),
+    { ...originalDraft, hasAttachment: true },
+    { ...originalDraft, bodyValues: { html: { value: '<p>edited in Fastmail</p>' } } },
+    { ...originalDraft, bodyValues: { html: { value: messageHtml(message.text), isTruncated: true } } },
+    { ...originalDraft, htmlBody: [] },
+  ];
+  for (const original of invalid) {
+    const { client, calls } = mock(replacementOverrides(original));
+    await assert.rejects(client.replaceDraft(replacementMessage), /Original/);
+    assert.ok(calls.every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+  }
+  for (const response of [{ state: 'before-create', list: [], notFound: [originalDraft.id] }, { list: [originalDraft] }]) {
+    const { client, calls } = mock({ ...replacementOverrides(), 'Email/get': methodResult('Email/get', response) });
+    await assert.rejects(client.replaceDraft(replacementMessage), /Original/);
+    assert.ok(calls.every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+  }
+});
+
+test('replacement creation failure and concurrent edits preserve the original without retrying', async () => {
+  for (const response of [
+    methodResult('Email/set', { notCreated: { draft: { type: 'forbidden' } } }),
+    { methodResponses: [['error', { type: 'stateMismatch' }, 'outreach']] },
+  ]) {
+    const { client, calls } = mock({ ...replacementOverrides(), 'Email/set': response });
+    await assert.rejects(client.replaceDraft(replacementMessage), /forbidden|stateMismatch/);
+    const writes = calls.filter((call) => call.body?.methodCalls[0][0].endsWith('/set'));
+    assert.equal(writes.length, 1);
+    assert.equal(writes[0].body.methodCalls[0][1].destroy, undefined);
+  }
+});
+
+test('partial replacement returns the created draft id and inspection warning without retries', async () => {
+  for (const response of [
+    methodResult('Email/set', { notDestroyed: { [originalDraft.id]: { type: 'forbidden' } } }),
+    { methodResponses: [['error', { type: 'stateMismatch' }, 'outreach']] },
+  ]) {
+    const responses = replacementResponses();
+    responses[1] = response;
+    const { client, calls } = mock({ ...replacementOverrides(), 'Email/set': responses });
+    const result = await client.replaceDraft(replacementMessage);
+    assert.equal(result.id, 'replacement-draft');
+    assert.equal(result.replaced, false);
+    assert.match(result.warning, /inspect both drafts before retrying to avoid duplicates/);
+    assert.equal(calls.length, 6);
+    assert.ok(calls.every((call) => call.body?.methodCalls[0][0] !== 'EmailSubmission/set'));
+  }
+  const { client, calls } = mock({ ...replacementOverrides(), 'Email/set': methodResult('Email/set', { created: { draft: { id: 'replacement-draft' } } }) });
+  assert.match((await client.replaceDraft(replacementMessage)).warning, /no email state/);
+  assert.equal(calls.length, 5);
+});
+
 // Stub only external boundaries so the actual CLI routing and SQL are exercised.
-function cliFixture(row: Record<string, unknown>, run: (fixture: { run: (args: string[]) => string; calls: () => any[] }) => void) {
+function cliFixture(row: Record<string, unknown>, run: (fixture: { run: (args: string[]) => string; calls: () => any[] }) => void, overrides: Record<string, unknown> = {}) {
   const directory = mkdtempSync(join(tmpdir(), 'outreach-mail-test-'));
   const log = join(directory, 'calls.jsonl');
   const preload = join(directory, 'fetch.mjs');
   writeFileSync(join(directory, 'npx'), `#!${process.execPath}\nimport {appendFileSync} from 'node:fs';\nappendFileSync(${JSON.stringify(log)},JSON.stringify({sql:process.argv.at(-1)})+'\\n');\nconsole.log(JSON.stringify([{results:[${JSON.stringify(row)}]}]));\n`, { mode: 0o755 });
-  writeFileSync(preload, `import {appendFileSync} from 'node:fs';\nglobalThis.fetch=async(url,options)=>{const body=options.body?JSON.parse(options.body):null;appendFileSync(${JSON.stringify(log)},JSON.stringify({url,body})+'\\n');return{ok:true,json:async()=>body?${JSON.stringify(defaults)}[body.methodCalls[0][0]]:${JSON.stringify(session)}}};\n`);
+  writeFileSync(preload, `import {appendFileSync} from 'node:fs';\nconst responses=${JSON.stringify({ ...defaults, ...overrides })};\nglobalThis.fetch=async(url,options)=>{const body=options.body?JSON.parse(options.body):null;appendFileSync(${JSON.stringify(log)},JSON.stringify({url,body})+'\\n');const result=body?responses[body.methodCalls[0][0]]:${JSON.stringify(session)};return{ok:true,json:async()=>Array.isArray(result)?result.shift():result}};\n`);
   try {
     run({
       run: (args) => execFileSync(process.execPath, ['--import', preload, 'scripts/outreach.mjs', ...args], {
@@ -201,6 +298,60 @@ test('CLI draft records native draft id without changing prior sent history', ()
     assert.doesNotMatch(update, /sent_via|sent_at|message =/);
     assert.ok(calls.every((call) => !call.body || call.body.methodCalls[0][0] !== 'EmailSubmission/set'));
   });
+});
+
+test('CLI draft update routes the guarded replacement and preserves prior sent history', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'outreach-draft-update-test-'));
+  const file = join(directory, 'body.txt');
+  writeFileSync(file, replacementMessage.text);
+  try {
+    cliFixture({ ...row, status: 'replied', sent_via: 'email', sent_at: 123, replied_at: 456 }, (fixture) => {
+      const args = ['email-draft-update', 'person', 'original-draft', 'updated subject', file];
+      assert.match(fixture.run([...args, '--dry-run']), /replace draft: original-draft/);
+      assert.ok(fixture.calls().every((call) => call.sql?.startsWith('SELECT')));
+      const result = JSON.parse(fixture.run(args));
+      assert.equal(result.id, 'replacement-draft');
+      assert.equal(result.replaced, true);
+      const calls = fixture.calls();
+      const update = calls.find((call) => call.sql?.startsWith('UPDATE')).sql;
+      assert.match(update, /message = 'updated body\n\nnick'/);
+      assert.match(update, /status = 'replied'/);
+      assert.match(update, /existing notes/);
+      assert.match(update, /replaced fastmail draft original-draft with draft replacement-draft/);
+      assert.doesNotMatch(update, /sent_via|sent_at|replied_at/);
+      const create = calls.find((call) => call.body?.methodCalls[0][1].create)?.body.methodCalls[0][1].create.draft;
+      assert.equal(create.subject, 'updated subject');
+      assert.ok(calls.every((call) => call.body?.methodCalls[0][0] !== 'EmailSubmission/set'));
+    }, replacementOverrides());
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('CLI draft update leaves tracker unchanged on original mismatch or partial replacement', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'outreach-draft-update-failure-test-'));
+  const file = join(directory, 'body.txt');
+  writeFileSync(file, replacementMessage.text);
+  try {
+    cliFixture(row, (fixture) => {
+      assert.throws(() => fixture.run(['email-draft-update', 'person', 'original-draft', 'hello', file]), /does not match the outreach tracker/);
+      assert.ok(fixture.calls().every((call) => !call.sql || call.sql.startsWith('SELECT')));
+      assert.ok(fixture.calls().every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+    }, replacementOverrides({ ...originalDraft, bodyValues: { html: { value: '<p>edited</p>' } } }));
+    const responses = replacementResponses();
+    responses[1] = methodResult('Email/set', { notDestroyed: { 'original-draft': { type: 'forbidden' } } });
+    cliFixture(row, (fixture) => {
+      assert.throws(() => fixture.run(['email-draft-update', 'person', 'original-draft', 'hello', file]), (error: any) => {
+        assert.equal(JSON.parse(error.stdout).id, 'replacement-draft');
+        assert.match(error.stderr, /inspect both drafts before retrying to avoid duplicates/);
+        return true;
+      });
+      assert.ok(fixture.calls().every((call) => !call.sql || call.sql.startsWith('SELECT')));
+      assert.ok(fixture.calls().every((call) => call.body?.methodCalls[0][0] !== 'EmailSubmission/set'));
+    }, { ...replacementOverrides(), 'Email/set': responses });
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });
 
 test('CLI reply dry run stays read only and sending preserves original contact history', () => {
