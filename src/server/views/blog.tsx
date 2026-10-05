@@ -226,14 +226,15 @@ const Share: FC<{ post: Post }> = ({ post }) => {
   const url = `${SITE}/blog/${post.slug}`;
   const text = `${post.title} - ${post.subtitle}`;
   return (
-    <span class="share small">
+    <div class="share small" style="display:inline">
       share:{' '}
       <a href={`https://x.com/intent/post?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`} rel="noopener">
         x
       </a>{' '}
-      <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`} rel="noopener">
-        linkedin
-      </a>{' '}
+      <form class="inline-form" method="get" action="https://www.linkedin.com/sharing/share-offsite/">
+        <input type="hidden" name="url" value={url} />
+        <button type="submit" class="linkbutton">linkedin</button>
+      </form>{' '}
       <a href={`https://news.ycombinator.com/submitlink?u=${encodeURIComponent(url)}&t=${encodeURIComponent(post.title)}`} rel="noopener">
         hn
       </a>{' '}
@@ -241,7 +242,7 @@ const Share: FC<{ post: Post }> = ({ post }) => {
       <button type="button" class="linkbutton copy-link">
         [ copy link ]
       </button>
-    </span>
+    </div>
   );
 };
 
