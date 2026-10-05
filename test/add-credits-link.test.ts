@@ -86,6 +86,7 @@ test('posting the link opens a monthly, adjustable checkout for that account', a
   assert.equal(stripeCalls.length, 1);
   const body = decodeURIComponent(stripeCalls[0].body);
   assert.match(body, /mode=subscription/);
+  assert.match(body, /allow_promotion_codes=true/);
   assert.match(body, /adjustable_quantity\]\[enabled\]=true/);
   const topup = writes.find(([sql]) => /INSERT INTO topups/.test(String(sql)));
   assert.ok(topup, 'the topup is recorded');

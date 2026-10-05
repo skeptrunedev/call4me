@@ -123,6 +123,7 @@ export function topups(db: D1Database, stripe: Stripe) {
         // carrying one as theirs. Ours are found by session id and tagged app=callbay.
         success_url: `${opts.origin}/welcome?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${opts.origin}/`,
+        allow_promotion_codes: true,
         metadata: { app: 'callbay', topup_id: id },
         ...(opts.monthly
           ? {
@@ -151,7 +152,7 @@ export function topups(db: D1Database, stripe: Stripe) {
      * Credit a completed Checkout session. Called by both the webhook and the success page:
      * ledger refs (the session, or the first invoice) make the money land exactly once.
      */
-    async fulfill(sessionId: string): Promise<{ account: Account; topup: TopupRow } | null> {
+    async fulfill(sessionId: string): Promise<{ account: Account; topup: TopupRow; paidCents: number } | null> {
       const session = await stripe.checkout.sessions.retrieve(sessionId, { expand: ['subscription', 'invoice'] });
       if (session.status !== 'complete' || session.payment_status === 'unpaid') return null;
       const topup = await db.prepare(`SELECT * FROM topups WHERE stripe_session_id = ?`).bind(sessionId).first<TopupRow>();
@@ -164,21 +165,23 @@ export function topups(db: D1Database, stripe: Stripe) {
       const paidEmail = session.customer_details?.email?.toLowerCase();
       if (paidEmail && !realEmail(account.email)) await db.prepare(`UPDATE OR IGNORE accounts SET email = ? WHERE id = ?`).bind(paidEmail, account.id).run();
       // What was actually bought: with an adjustable quantity the buyer may have changed it.
-      const paidCents = session.amount_subtotal ?? topup.amount_cents;
+      const creditCents = session.amount_subtotal ?? topup.amount_cents;
       await db
         .prepare(`UPDATE topups SET account_id = ?, amount_cents = ?, status = 'paid', paid_at = COALESCE(paid_at, ?) WHERE id = ?`)
-        .bind(account.id, paidCents, now(), topup.id)
+        .bind(account.id, creditCents, now(), topup.id)
         .run();
 
       if (session.mode === 'subscription') {
         const sub = session.subscription as Stripe.Subscription;
         const invoice = session.invoice as Stripe.Invoice | null;
-        await adoptSubscription(account, sub, paidCents);
-        if (invoice?.status === 'paid') await ledger.post(account.id, invoice.amount_paid, 'topup', `invoice:${invoice.id}`, 'card, reloads monthly');
+        await adoptSubscription(account, sub, creditCents);
+        // Credits are the face value purchased, before the Checkout coupon. Use the same
+        // invoice subtotal as invoicePaid so either webhook order credits it exactly once.
+        if (invoice?.status === 'paid') await ledger.post(account.id, invoice.subtotal, 'topup', `invoice:${invoice.id}`, 'card, reloads monthly');
       } else {
-        await ledger.post(account.id, paidCents, 'topup', `stripe:${sessionId}`, 'card');
+        await ledger.post(account.id, creditCents, 'topup', `stripe:${sessionId}`, 'card');
       }
-      return { account, topup: { ...topup, account_id: account.id, amount_cents: paidCents, status: 'paid' } };
+      return { account, topup: { ...topup, account_id: account.id, amount_cents: creditCents, status: 'paid' }, paidCents: session.amount_total ?? creditCents };
     },
 
     /**
@@ -187,11 +190,11 @@ export function topups(db: D1Database, stripe: Stripe) {
      */
     async invoicePaid(invoice: Stripe.Invoice): Promise<{ accountId: string; cents: number } | null> {
       const subId = subscriptionOf(invoice);
-      if (!subId || invoice.amount_paid <= 0) return null;
+      if (!subId || invoice.status !== 'paid' || invoice.subtotal <= 0) return null;
       const row = await db.prepare(`SELECT id FROM accounts WHERE reload_subscription_id = ?`).bind(subId).first<{ id: string }>();
       if (!row) return null; // the first invoice can beat checkout.session.completed; fulfill credits it
       const kind = invoice.billing_reason === 'subscription_cycle' ? 'reload' : 'topup';
-      await ledger.post(row.id, invoice.amount_paid, kind, `invoice:${invoice.id}`, kind === 'reload' ? 'monthly reload' : 'card, reloads monthly');
+      await ledger.post(row.id, invoice.subtotal, kind, `invoice:${invoice.id}`, kind === 'reload' ? 'monthly reload' : 'card, reloads monthly');
       return kind === 'reload' ? { accountId: row.id, cents: invoice.amount_paid } : null;
     },
 

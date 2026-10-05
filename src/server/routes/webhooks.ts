@@ -86,7 +86,7 @@ webhooks.post('/stripe', async (c) => {
           const ga = topup.ga_client_id ? { clientId: topup.ga_client_id, sessionId: topup.ga_session_id } : null;
           // The checkout's browser, which finishes the purchase on the welcome page.
           const meta = { fbp: topup.meta_fbp, fbc: topup.meta_fbc, ip: topup.meta_ip, userAgent: topup.meta_user_agent, url: `https://${c.env.CANONICAL_HOST}/welcome` };
-          c.executionCtx.waitUntil(analytics(c.env).purchase(done.account, { transactionId: session.id, cents: topup.amount_cents, reload: false, from: { ga, meta, touch: decodeFirstTouch(topup.first_touch) } }));
+          c.executionCtx.waitUntil(analytics(c.env).purchase(done.account, { transactionId: session.id, cents: done.paidCents, reload: false, from: { ga, meta, touch: decodeFirstTouch(topup.first_touch) } }));
         }
       }
       break;
