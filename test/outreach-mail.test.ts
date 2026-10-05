@@ -18,7 +18,8 @@ const methodResult = (name: string, data: object) => ({ methodResponses: [[name,
 const defaults: Record<string, unknown> = {
   'Identity/get': methodResult('Identity/get', { list: [{ id: 'wrong', email: 'other@example.com' }, { id: 'sender', email: 'me@skeptrune.com' }] }),
   'Mailbox/get': methodResult('Mailbox/get', { list: [{ id: 'drafts', role: 'drafts' }, { id: 'sent', role: 'sent' }] }),
-  'Email/set': methodResult('Email/set', { created: { draft: { id: 'draft-email' } } }),
+  'Email/get': methodResult('Email/get', { list: [{ id: 'incoming', threadId: 'thread', from: [{ email: 'creator@example.com' }], subject: 'Re: hello', messageId: ['parent@example.com'] }] }),
+  'Email/set': methodResult('Email/set', { created: { draft: { id: 'draft-email', threadId: 'thread' } } }),
   'EmailSubmission/set': { methodResponses: [
     ['Email/set', { accountId: 'account', updated: { 'draft-email': null } }, 'outreach'],
     ['EmailSubmission/set', { accountId: 'account', created: { submission: { id: 'submission' } } }, 'outreach'],
@@ -59,6 +60,45 @@ test('mail status is read only and reuses discovery', async () => {
   await client.status();
   assert.equal(calls.length, 3);
   assert.ok(calls.slice(1).every((call) => call.body.methodCalls[0][0].endsWith('/get')));
+});
+
+test('mail search and full body reads preserve mailbox and read state', async () => {
+  const email = { id: 'reply', subject: 'Re: hello', bodyValues: { text: { value: 'interested' } } };
+  const { client, calls } = mock({
+    'Email/query': methodResult('Email/query', { ids: ['reply'], position: 100, total: 101 }),
+    'Email/get': methodResult('Email/get', { list: [email], notFound: [] }),
+  });
+  const filter = { after: '2026-10-01T00:00:00Z', text: 'call4me' };
+  assert.equal((await client.search({ filter, position: 100, limit: 10 })).total, 101);
+  assert.deepEqual(calls.at(-1)!.body.methodCalls[0][1], { accountId: 'account', filter, position: 100, limit: 10, sort: [{ property: 'receivedAt', isAscending: false }], calculateTotal: true });
+  assert.deepEqual((await client.read(['reply'])).list, [email]);
+  const read = calls.at(-1)!.body.methodCalls[0][1];
+  assert.equal(read.fetchTextBodyValues, true);
+  assert.equal(read.fetchHTMLBodyValues, true);
+  assert.ok(read.properties.includes('keywords'));
+  assert.ok(calls.slice(1).every((call) => !call.body.methodCalls[0][0].endsWith('/set')));
+  await assert.rejects(client.search({ position: -1 }), /position/);
+  await assert.rejects(client.read([]), /email ids/);
+});
+
+test('replies preserve references and reject recipient or thread mismatches before submitting', async () => {
+  const source = { id: 'incoming', threadId: 'thread', from: [{ email: message.to }], subject: 'Re: hello', messageId: ['parent@example.com'], references: ['root@example.com'] };
+  const overrides = {
+    'Email/get': methodResult('Email/get', { list: [source] }),
+    'Email/set': methodResult('Email/set', { created: { draft: { id: 'draft-email', threadId: 'thread' } } }),
+  };
+  const { client, calls } = mock(overrides);
+  assert.equal((await client.reply({ id: 'incoming', to: message.to, text: message.text })).submissionId, 'submission');
+  const draft = calls.find((call) => call.body?.methodCalls[0][0] === 'Email/set')!.body.methodCalls[0][1].create.draft;
+  assert.equal(draft.subject, 'Re: hello');
+  assert.deepEqual(draft.inReplyTo, ['parent@example.com']);
+  assert.deepEqual(draft.references, ['root@example.com', 'parent@example.com']);
+  const wrongRecipient = mock(overrides);
+  await assert.rejects(wrongRecipient.client.reply({ id: 'incoming', to: 'wrong@example.com', text: 'hello' }), /intended recipient/);
+  assert.ok(wrongRecipient.calls.every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+  const wrongThread = mock({ ...overrides, 'Email/set': methodResult('Email/set', { created: { draft: { id: 'unsent-draft', threadId: 'wrong-thread' } } }) });
+  await assert.rejects(wrongThread.client.reply({ id: 'incoming', to: message.to, text: 'hello' }), /inspect before sending/);
+  assert.ok(wrongThread.calls.every((call) => call.body?.methodCalls[0][0] !== 'EmailSubmission/set'));
 });
 
 test('only explicit send submits and moves the created draft to sent', async () => {
@@ -161,4 +201,24 @@ test('CLI draft records native draft id without changing prior sent history', ()
     assert.doesNotMatch(update, /sent_via|sent_at|message =/);
     assert.ok(calls.every((call) => !call.body || call.body.methodCalls[0][0] !== 'EmailSubmission/set'));
   });
+});
+
+test('CLI reply dry run stays read only and sending preserves original contact history', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'outreach-reply-test-'));
+  const file = join(directory, 'reply.txt');
+  writeFileSync(file, 'thanks, interested');
+  try {
+    cliFixture({ ...row, status: 'replied', sent_via: 'email', sent_at: 123 }, (fixture) => {
+      const preview = JSON.parse(fixture.run(['email-reply', 'person', 'incoming', file, '--dry-run']));
+      assert.equal(preview.expectedThreadId, 'thread');
+      assert.ok(fixture.calls().every((call) => !call.sql || call.sql.startsWith('SELECT')));
+      assert.ok(fixture.calls().every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+      assert.equal(JSON.parse(fixture.run(['email-reply', 'person', 'incoming', file])).submissionId, 'submission');
+      const update = fixture.calls().find((call) => call.sql?.startsWith('UPDATE')).sql;
+      assert.match(update, /thanks, interested/);
+      assert.doesNotMatch(update, /sent_at|sent_via|message =|status =/);
+    });
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });

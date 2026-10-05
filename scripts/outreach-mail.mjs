@@ -65,7 +65,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     return context;
   }
 
-  async function createDraft({ to, subject, text }) {
+  async function createDraft({ to, subject, text, inReplyTo, references, expectedThreadId }) {
     if (!to || !subject || !text?.trim()) throw new Error('Email recipient, subject and body are required');
     const session = await discover();
     const result = await call(session, 'Email/set', {
@@ -73,18 +73,20 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
         mailboxIds: { [session.draftMailboxId]: true },
         keywords: { $draft: true },
         from: [SENDER], to: [{ email: to }], subject,
+        ...(inReplyTo ? { inReplyTo, references } : {}),
         htmlBody: [{ partId: 'html', type: 'text/html' }],
         bodyValues: { html: { value: messageHtml(text) } },
       } },
     });
     const id = result.created?.draft?.id;
     if (!id) throw new Error(`Fastmail draft creation failed: ${result.notCreated?.draft?.type ?? 'missing email id'}`);
+    if (expectedThreadId && result.created.draft.threadId !== expectedThreadId) throw new Error(`Reply draft ${id} did not join the expected thread; inspect before sending`);
     return { provider: 'fastmail', id };
   }
 
   // Only the CLI's explicit email command calls this method. Creating a draft never submits it.
-  async function send({ to, subject, text }) {
-    const draft = await createDraft({ to, subject, text });
+  async function send(message) {
+    const draft = await createDraft(message);
     const session = await discover();
     try {
       const result = await call(session, 'EmailSubmission/set', {
@@ -108,12 +110,41 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     }
   }
 
+  async function replyMessage({ id, to, text }) {
+    if (!id || !to || !text?.trim()) throw new Error('Reply source, recipient and body are required');
+    const session = await discover();
+    const result = await call(session, 'Email/get', { ids: [id], properties: ['id', 'threadId', 'from', 'replyTo', 'subject', 'messageId', 'references'] });
+    const original = result.list?.find((email) => email.id === id);
+    const recipients = original?.replyTo?.length ? original.replyTo : original?.from;
+    if (recipients?.length !== 1 || recipients[0].email.toLowerCase() !== to.toLowerCase()) throw new Error('Reply source does not match the intended recipient');
+    if (!original.messageId?.length || !original.threadId) throw new Error('Reply source has no message id or thread id');
+    return { to, text, subject: /^re:/i.test(original.subject) ? original.subject : `Re: ${original.subject}`, inReplyTo: original.messageId, references: [...new Set([...(original.references ?? []), ...original.messageId])], expectedThreadId: original.threadId };
+  }
+
   return {
     async status() {
       const session = await discover();
       return { provider: 'fastmail', sender: SENDER, accountId: session.accountId, draftMailboxId: session.draftMailboxId, sentMailboxId: session.sentMailboxId };
     },
+    async search({ filter = {}, position = 0, limit = 100 } = {}) {
+      if (!Number.isInteger(position) || position < 0 || !Number.isInteger(limit) || limit < 1 || limit > 100) throw new Error('Search position must be nonnegative and limit must be 1 to 100');
+      const session = await discover();
+      return call(session, 'Email/query', { filter, position, limit, sort: [{ property: 'receivedAt', isAscending: false }], calculateTotal: true });
+    },
+    async read(ids) {
+      if (!Array.isArray(ids) || !ids.length || ids.length > 100 || ids.some((id) => typeof id !== 'string' || !id)) throw new Error('Provide 1 to 100 email ids');
+      const session = await discover();
+      return call(session, 'Email/get', {
+        ids,
+        properties: ['id', 'threadId', 'mailboxIds', 'keywords', 'receivedAt', 'from', 'to', 'cc', 'subject', 'preview', 'inReplyTo', 'references', 'messageId', 'textBody', 'htmlBody', 'bodyValues'],
+        fetchTextBodyValues: true, fetchHTMLBodyValues: true,
+      });
+    },
     createDraft,
     send,
+    replyMessage,
+    async reply(message) {
+      return send(await replyMessage(message));
+    },
   };
 }

@@ -18,6 +18,10 @@
  *   npm run outreach -- email-draft <id> <subject> [body file] [--dry-run]
  *                                                      create a Fastmail draft without sending
  *   npm run outreach -- mail-status                   verify Fastmail account and sender (read only)
+ *   npm run outreach -- mail-search '<query JSON>'    read only JMAP Email/query arguments: filter, position, limit
+ *   npm run outreach -- mail-read <id> [id ...]        fetch email bodies without changing read state
+ *   npm run outreach -- email-reply <person id> <email id> <body file> [--dry-run]
+ *                                                      reply in the existing Fastmail thread
  *
  * Add --local to any command to use the local D1. The channel is the first contact we have:
  * X, then email, then other_contact.
@@ -109,12 +113,38 @@ if (command === 'import') {
   const p = one(id);
   d1(`UPDATE outreach SET ${field} = ${sql(value)}, updated_at = ${Date.now()} WHERE id = ${sql(id)}`);
   console.log(`${p.name}: ${field} = ${value}`);
-} else if (command === 'mail-status') {
+} else if (['mail-status', 'mail-search', 'mail-read'].includes(command)) {
   try {
-    console.log(JSON.stringify(await fastmail().status(), null, 2));
+    const client = fastmail();
+    const result = command === 'mail-status' ? await client.status()
+      : command === 'mail-search' ? await client.search(rest[0] ? JSON.parse(rest[0]) : {})
+      : await client.read(rest);
+    console.log(JSON.stringify(result, null, 2));
   } catch (error) {
     fail(error.message);
   }
+} else if (command === 'email-reply') {
+  const [id, emailId, file] = rest;
+  if (!emailId || !file) fail('usage: email-reply <person id> <email id> <body file> [--dry-run]');
+  const p = one(id);
+  const text = readFileSync(file, 'utf8').trim();
+  const client = fastmail();
+  let delivery;
+  try {
+    const message = { id: emailId, to: p.email, text };
+    if (dryRun) {
+      console.log(JSON.stringify(await client.replyMessage(message), null, 2));
+      process.exit(0);
+    }
+    delivery = await client.reply(message);
+  } catch (error) {
+    fail(error.message);
+  }
+  // A follow up preserves the original message and first contact timestamps.
+  const now = Date.now();
+  const notes = [p.notes, `${new Date(now).toISOString().slice(0, 10)}: replied to ${emailId}, fastmail id ${delivery.id}, submission id ${delivery.submissionId}; body: ${text}${delivery.warning ? `; ${delivery.warning}` : ''}`].filter(Boolean).join('\n');
+  d1(`UPDATE outreach SET notes = ${sql(notes)}, updated_at = ${now} WHERE id = ${sql(p.id)}`);
+  console.log(JSON.stringify(delivery, null, 2));
 } else if (command === 'email' || command === 'email-draft') {
   const [id, subject, file] = rest;
   if (!subject) fail(`usage: ${command} <id> <subject> [body file] [--dry-run]`);
@@ -156,5 +186,5 @@ if (command === 'import') {
   console.log(`emailed ${p.name} <${p.email}>: ${delivery.id}`);
   if (delivery.warning) console.warn(delivery.warning);
 } else {
-  fail('usage: npm run outreach -- import|list|show|draft|sent|status|set|mail-status|email-draft|email ... (see scripts/outreach.mjs)');
+  fail('usage: npm run outreach -- import|list|show|draft|sent|status|set|mail-status|mail-search|mail-read|email-draft|email-reply|email ... (see scripts/outreach.mjs)');
 }
