@@ -13,7 +13,11 @@ Subject: a real founder phone workflow for your solo founder guide
 ```text
 hi keith,
 
-i'm nick, building call4me. your solo founder toolkit mentions postiz alongside other agent workflows.
+i'm nick, building call4me.
+
+our launch post (https://x.com/skeptrune/status/2105320262938009690) got 194k views, 1k likes and 1.2k bookmarks.
+
+your solo founder toolkit mentions postiz alongside other agent workflows.
 
 we just published a real example of getting wyoming registered agent paperwork emailed back after a phone call, with the recording and transcript:
 https://call4.me/blog/wyoming-registered-agent-consent-form
@@ -40,7 +44,11 @@ Subject: phone tasks for your ai operating system guide
 ```text
 hi navid,
 
-i'm nick, building call4me. your ai operating system guide covers connecting tools to claude code and codex. we have a practical guide to adding business phone calls through mcp, including a real call:
+i'm nick, building call4me.
+
+our launch post (https://x.com/skeptrune/status/2105320262938009690) got 194k views, 1k likes and 1.2k bookmarks.
+
+your ai operating system guide covers connecting tools to claude code and codex. we have a practical guide to adding business phone calls through mcp, including a real call:
 https://call4.me/blog/claude-code-phone-calls
 
 would you be open to a relevant link exchange if you try it and find it useful? our calling guide could point readers to your ai operating system guide for the broader workspace setup. your tools section could link our phone tutorial as an example.
@@ -67,7 +75,11 @@ Subject: a claude code phone tutorial for snappify readers
 ```text
 hi dominik,
 
-i'm nick, building call4me. i found your postiz coverage and the claude code section in your vibe coding tools guide.
+i'm nick, building call4me.
+
+our launch post (https://x.com/skeptrune/status/2105320262938009690) got 194k views, 1k likes and 1.2k bookmarks.
+
+i found your postiz coverage and the claude code section in your vibe coding tools guide.
 
 we published a tutorial showing how to make real business phone calls from claude code through mcp:
 https://call4.me/blog/claude-code-phone-calls
@@ -94,7 +106,11 @@ Subject: complementary claude code tutorials
 ```text
 hi wonda team,
 
-i'm nick, building call4me. your claude code tutorial shows founders using an agent for marketing. ours shows the same type of assistant making business phone calls through mcp:
+i'm nick, building call4me.
+
+our launch post (https://x.com/skeptrune/status/2105320262938009690) got 194k views, 1k likes and 1.2k bookmarks.
+
+your claude code tutorial shows founders using an agent for marketing. ours shows the same type of assistant making business phone calls through mcp:
 https://call4.me/blog/claude-code-phone-calls
 
 would you be open to a relevant link exchange between these tutorials? we could add useful context about other founder tasks, linking your marketing walkthrough. your guide could point readers to our phone example as a complementary workflow.
@@ -121,7 +137,11 @@ Subject: a founder paperwork example for high signal
 ```text
 hi pete,
 
-i'm nick, building call4me. i came across your postiz coverage in high signal.
+i'm nick, building call4me.
+
+our launch post (https://x.com/skeptrune/status/2105320262938009690) got 194k views, 1k likes and 1.2k bookmarks.
+
+i came across your postiz coverage in high signal.
 
 i recently used call4me to get wyoming registered agent paperwork emailed back after a phone call. we published the recording, transcript and a practical guide:
 https://call4.me/blog/wyoming-registered-agent-consent-form
@@ -148,7 +168,11 @@ Subject: a real phone example for your startup automation section
 ```text
 hi natia,
 
-i'm nick, building call4me. your startup marketing strategy guide has a section on using ai to automate the grunt work.
+i'm nick, building call4me.
+
+our launch post (https://x.com/skeptrune/status/2105320262938009690) got 194k views, 1k likes and 1.2k bookmarks.
+
+your startup marketing strategy guide has a section on using ai to automate the grunt work.
 
 we have a practical guide to using claude code for business phone calls, with a real call example:
 https://call4.me/blog/claude-code-phone-calls
@@ -175,7 +199,11 @@ Subject: claude code resources for complementary founder tasks
 ```text
 hi jamie,
 
-i'm nick, building call4me. your claude code guide covers publishing through mcp. our tutorial covers business phone calls from the same kind of assistant:
+i'm nick, building call4me.
+
+our launch post (https://x.com/skeptrune/status/2105320262938009690) got 194k views, 1k likes and 1.2k bookmarks.
+
+your claude code guide covers publishing through mcp. our tutorial covers business phone calls from the same kind of assistant:
 https://call4.me/blog/claude-code-phone-calls
 
 would you be open to a relevant link exchange? your guide could reference our phone tutorial as another founder task. we could point readers to your publishing guide in useful context about complementary mcp workflows.
@@ -202,7 +230,11 @@ Subject: complementary mcp resources for business workflows
 ```text
 hi mailercloud team,
 
-i'm nick, building call4me. i saw your mcp page and your blog's postiz reference. we have a practical codex tutorial for making business phone calls through mcp:
+i'm nick, building call4me.
+
+our launch post (https://x.com/skeptrune/status/2105320262938009690) got 194k views, 1k likes and 1.2k bookmarks.
+
+i saw your mcp page and your blog's postiz reference. we have a practical codex tutorial for making business phone calls through mcp:
 https://call4.me/blog/codex-phone-calls
 
 would you be open to a relevant link exchange around assistant workflows? we could reference your mcp resource when discussing email alongside phone tasks. you could link our phone tutorial from relevant mcp content or a related blog guide.
@@ -229,7 +261,11 @@ Subject: a real phone audio workflow for your transcription guide
 ```text
 hi praveen,
 
-i'm nick, building call4me. your blog covers transcription workflows and links to postiz as a related resource.
+i'm nick, building call4me.
+
+our launch post (https://x.com/skeptrune/status/2105320262938009690) got 194k views, 1k likes and 1.2k bookmarks.
+
+your blog covers transcription workflows and links to postiz as a related resource.
 
 we published a real phone research walkthrough with recordings, transcripts and the answers we could actually confirm:
 https://call4.me/blog/agent-web-research-phone-calls-sf-private-dining

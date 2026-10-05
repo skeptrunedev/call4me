@@ -67,6 +67,14 @@ return links have been added, no publisher acceptance is established and no
 fixed placement is promised. Useful new editorial context is required before
 adding a return citation.
 
+At Nick's request, every draft now includes the exact launch credibility
+sentence and post URL used in his sent outreach earlier on October 5:
+
+> our launch post (https://x.com/skeptrune/status/2105320262938009690) got 194k views, 1k likes and 1.2k bookmarks.
+
+This is a reuse of his existing copy. No other body wording or subject was
+changed. The source email bodies remain outside git.
+
 The drafts do not claim a tested product integration. Call4me is not proposed
 as a social scheduler, marketing CLI or open source repository. The Wyoming
 example says paperwork arrived after a call, not that the call established a
