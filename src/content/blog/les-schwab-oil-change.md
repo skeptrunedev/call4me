@@ -1,10 +1,10 @@
 ---
-title: Does Les Schwab do oil changes? A real store quote and walk in plan
-seoTitle: Does Les Schwab do oil changes? A real phone quote
-subtitle: A customer call got a $100 to $110 estimate for an oil change and tire rotation in McKinleyville, plus a Monday morning walk in dropoff plan.
-description: Check Les Schwab oil change availability, cost, and walk in plans. A real call got a $100 to $110 estimate for an oil change and tire rotation.
+title: Does Les Schwab do oil changes? Have your AI assistant check the store
+seoTitle: Does Les Schwab do oil changes? An AI phone quote
+subtitle: Let the assistant you already use ask your store about service, price and availability. A real customer call got a $100 to $110 combined quote and a walk in plan.
+description: Have your AI assistant check Les Schwab oil change cost and availability. Hear a real store quote and try a suggested Claude Code or Codex workflow.
 date: 2026-10-05
-tags: oil change, les schwab, tire rotation, ai phone assistant
+tags: oil change, les schwab, tire rotation, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Does Les Schwab do oil changes, a real $100 to $110 store quote
 ---
@@ -14,6 +14,8 @@ imageAlt: Does Les Schwab do oil changes, a real $100 to $110 store quote
 On October 3, 2026, a call4me assistant phoned the [McKinleyville store](https://www.lesschwab.com/stores/ca/mckinleyville/2210-central-ave) for a customer who wanted an oil change and tire rotation for a 2009 Toyota Tacoma. The representative estimated **$100 to $110 total** and accepted a plan to drop the truck off around **9 AM Monday** as a walk in.
 
 **That was a price estimate and a walk in plan.** Monday's reserved appointments were already full. The call did not secure a reserved appointment or prove the work was later completed.
+
+If Claude Code or Codex is already helping you plan car maintenance, you can give that same assistant the store call. [call4me](/) lets it ask about your vehicle, price and availability and bring the answers back to your plan. Use the [Claude Code calling guide](/blog/claude-code-phone-calls) or [Codex calling guide](/blog/codex-phone-calls) to connect. The customer recording below does not establish which client they used; the assistant workflow is a suggested way to handle a similar task.
 
 ## Listen to the store call (2 minutes 47 seconds)
 
@@ -28,6 +30,10 @@ This call produced a **$100 to $110 estimate for an oil change and tire rotation
 To get a quote that fits your vehicle, provide the year, make and model. Ask which oil and service package the quote covers, whether the rotation is included, and whether taxes or other charges are included. The written service page lists different oil change packages, so make sure the quote is for the work you want. [Check the current packages with Les Schwab.](https://www.lesschwab.com/more/oil-changes)
 
 Keep the estimate dated. A historical phone quote is useful evidence of what the store said, but a later visit needs its own price confirmation.
+
+### Does this quote establish Les Schwab tire rotation cost?
+
+No. The representative gave a combined estimate for the oil change and tire rotation. To find the tire rotation cost on its own, ask your store for a separate quote for your vehicle and whether it is included in the oil change package you are considering. Have your assistant preserve that distinction when it compares service options.
 
 ## Can you walk in when appointments are full?
 
@@ -54,11 +60,13 @@ If the schedule is full:
 
 > Would a dropoff around [time] work? What wait should I expect, and can you call me when it's ready? Please confirm whether that is a walk in or a reserved appointment.
 
-## Have call4me check your store
+## Use your AI assistant to check oil change prices and availability
 
-Tell your AI agent to use [call4me](/):
+Give your existing assistant the year, make and model, the services you want and the time windows you can use. Tell it whether a walk in dropoff is acceptable if appointments are full. It can then ask the store questions that apply to your actual maintenance plan.
 
-> Call my local Les Schwab and ask whether it does oil changes for my [vehicle]. Get an estimate for an oil change and tire rotation, including what the price covers. Ask about [day and time]. If appointments are full, check walk in dropoff options and the expected wait. Report which details were confirmed. Do not authorize extra work or make a payment.
+After connecting [call4me](/), use this suggested prompt in Claude Code or Codex:
+
+> Use call4me to call my local Les Schwab about the maintenance plan we are working on. Ask whether it does oil changes for my [vehicle]. Get an estimate for an oil change and tire rotation, including what the price covers. Ask about [day and time]. If appointments are full, check walk in dropoff options and the expected wait. Return the quote, confirmed availability and unanswered questions to this conversation. Clearly distinguish a reserved appointment from a walk in plan. Do not authorize extra work or make a payment.
 
 See the [store call in examples](/examples#les-schwab-oil-change), or another real call about [finding a tire order at Costco](/blog/costco-tire-appointment-cancel-refund).
 

@@ -1,10 +1,10 @@
 ---
-title: Book a haircut appointment with your preferred stylist: a real call and script
-seoTitle: Book a haircut appointment with your stylist
-subtitle: The salon confirmed Friday at 2 PM with the requested stylist for $60. An earlier Thursday slot was available, and a later call did not confirm a change.
-description: Use a simple call script to book a haircut with your preferred stylist. A real call confirmed Friday at 2 PM for $60, with an earlier slot missed.
+title: Book a haircut appointment with your AI personal assistant
+seoTitle: Book a haircut appointment with your AI assistant
+subtitle: Ask your existing assistant to call the salon with your preferred stylist and available dates. A real call booked Friday at 2 PM for $60, but missed an earlier Thursday slot.
+description: Book a haircut appointment from your Claude Code or Codex personal assistant. A real salon call shows what to confirm and a scheduling mistake to avoid.
 date: 2026-10-05
-tags: haircut, salon appointments, bookings, ai phone assistant
+tags: haircut, salon appointments, bookings, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Book a haircut appointment, a real Friday 2 PM booking for $60
 ---
@@ -14,6 +14,8 @@ To **book a haircut appointment**, give the salon your preferred stylist, the se
 On October 3, 2026, a call4me customer's AI assistant booked **Friday, October 9 at 2 PM** with the requested stylist. The salon quoted **$60** for the haircut and said cancellation on the same day was allowed. Those were this salon's answers on that call, rather than a general price or policy for every haircut.
 
 The appointment was confirmed, but it was **not the earliest available slot** within the customer's requested windows. Thursday at 4 PM was also offered. The assistant selected Friday at 2 PM even though Thursday came first.
+
+For someone already using Claude Code or Codex to plan their week, booking a salon appointment is another task for the same assistant. [call4me](/) adds the phone call, with the salon's answer returned to the conversation. Connect through the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). The client used for this customer recording is not established; the prompts below are suggested workflows for your own assistant.
 
 ## Listen to the haircut booking (2 minutes 2 seconds)
 
@@ -135,10 +137,12 @@ When a time is offered:
 
 > That works. Could you confirm the stylist, date, time, haircut price and cancellation policy? Please book it under [name].
 
-## Ask call4me to book it for you
+## Book a salon appointment from Claude Code or Codex
 
-[call4me](/) lets the AI agent you already use make the salon call. Include the ordering rule if several dates are acceptable:
+Once you connect [call4me](/), give the assistant you already use your preferred stylist and the dates you can attend. Specify whether earliest means the first available day or a preferred time of day. If your assistant helped choose the windows, have it read back the full dates before calling.
 
-> Call my salon and book a haircut with [stylist]. I can attend [dates and time windows]. Choose the earliest calendar appointment across those windows, comparing the date first and the time second. Ask for the haircut price and cancellation policy. Confirm the stylist, date and time before hanging up. If my preferred stylist is unavailable, ask me before booking with someone else.
+Here is a suggested prompt:
+
+> Use call4me to call my salon and book a haircut with [stylist]. I can attend [dates and time windows]. Choose the earliest calendar appointment across those windows, comparing the date first and the time second. Ask for the haircut price and cancellation policy. Confirm the stylist, date and time before hanging up, then return those details to this conversation. If my preferred stylist is unavailable, ask me before booking with someone else. Do not change an existing booking unless I have asked for that change.
 
 See the [haircut booking on our examples page](/examples#haircut-booking), or read how another call [moved a dentist appointment](/blog/reschedule-dentist-appointment).

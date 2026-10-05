@@ -1,10 +1,10 @@
 ---
-title: Ohio workers compensation insurance: how to apply when the online form gets stuck
-seoTitle: Ohio workers compensation insurance: how to apply
-subtitle: A real customer call clarified a paper application route for a foreign owner with an ITIN. The call answered the question; it did not submit the application or start coverage.
-description: See how to apply for Ohio workers compensation insurance, what to ask BWC, and how a real call clarified an ITIN obstacle for a foreign owner.
+title: Ohio workers compensation insurance: ask BWC with your AI assistant
+seoTitle: Ohio workers compensation insurance: an AI call
+subtitle: When an application needs a phone answer, your existing assistant can ask BWC. A real customer call clarified a paper route for an owner with an ITIN, without submitting the application.
+description: Applying for Ohio workers compensation insurance? See a real BWC call and a suggested workflow for your Claude Code or Codex personal assistant.
 date: 2026-10-05
-tags: workers compensation, ohio, applications, ai phone assistant
+tags: workers compensation, ohio, applications, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Ohio workers compensation insurance, a real call about a blocked application
 ---
@@ -12,6 +12,8 @@ imageAlt: Ohio workers compensation insurance, a real call about a blocked appli
 To apply for **Ohio workers compensation insurance**, start with the Ohio Bureau of Workers' Compensation (BWC) application for coverage, form U3. If an online field prevents you from completing it, ask BWC how to handle that field before substituting another person's information. A real call on October 5, 2026 clarified a paper application route for a customer whose foreign owner had an ITIN rather than a Social Security number.
 
 The result was a specific next step: the representative said to use the paper application and enter the ITIN there. **No application was submitted and no insurance coverage was issued during this call.** The ITIN answer was advice from this representative about this situation, rather than an ITIN rule stated in the published form.
+
+If Claude Code or Codex is already helping you work through the application, an unanswered field can interrupt that task. [call4me](/) adds phone calls to the assistant you already use, so it can ask BWC and bring the answer back to your application checklist. Start with the [Claude Code calling setup](/blog/claude-code-phone-calls) or [Codex calling setup](/blog/codex-phone-calls). The recording below is a customer call; the suggested workflow does not establish which client that customer used.
 
 ## How to apply for Ohio workers compensation insurance
 
@@ -21,7 +23,7 @@ Prepare the business identity, contact information, owner or officer details, de
 
 For a blocked field, call **800 644 6292**, the number printed on the application. Explain which field is failing, whose information it requests and the exact problem with the online submission. Ask for the correct submission route, required attachments and payment method. Keep the answer with your application records.
 
-## The real call: an ITIN question answered
+## Ohio workers compensation coverage: what the call clarified
 
 The customer's request was to find out how a foreign corporate owner without an SSN could complete the application. The online owner identity field was rejecting the ITIN. The call4me assistant reached a BWC representative and explained that obstacle.
 
@@ -49,11 +51,13 @@ Then check the parts that determine whether you can act on the answer:
 4. **How do we submit and pay?** Confirm the destination and payment method for the route you choose.
 5. **How will we know the application was accepted and coverage began?** An answered phone question is not proof of coverage.
 
-## Have call4me ask BWC for you
+## Have your existing assistant ask BWC about the application
 
-[call4me](/) can call BWC from the AI agent you already use and report the representative's answer. Give it the obstacle to explain and the questions you need answered:
+An AI administrative assistant can help collect application questions, but a field the agency needs to explain still calls for an answer from BWC. Once your existing assistant is connected to [call4me](/), give it the exact obstacle and keep the call focused on instructions.
 
-> Call Ohio BWC about an application for workers compensation coverage. The online owner identity field rejects an ITIN for a foreign owner without an SSN. Ask how to complete the field, which application route to use, whether attachments are needed, and how to submit and pay. Report the instructions. Do not submit an application or make a payment.
+Here is a suggested prompt for Claude Code or Codex, rather than a transcript of the customer's original request:
+
+> Use call4me to call Ohio BWC about the application we are working on. The online owner identity field rejects an ITIN for a foreign owner without an SSN. Ask how to complete the field, which application route to use, whether attachments are needed, and how to submit and pay. Return the representative's instructions to this conversation and update our checklist with confirmed answers and open questions. Do not submit an application or make a payment.
 
 That keeps an information call focused. If you need the next step carried out, give separate instructions after reviewing the answer. See this call on our [examples page](/examples#ohio-bwc-application), or read another real call about [booking a lawyer consultation](/blog/lawyer-consultation-fee).
 

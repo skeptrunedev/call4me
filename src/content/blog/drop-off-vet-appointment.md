@@ -1,10 +1,10 @@
 ---
-title: Drop off vet appointment: what to confirm before you leave your pet
-seoTitle: Drop off vet appointment: what to confirm
-subtitle: A real call confirmed a Tuesday 8:30 AM dropoff for a senior dog. It also exposed a location mismatch that needed another check.
-description: A real call booked a Tuesday vet dropoff. Learn what to confirm about the clinic, arrival time, pickup, and contact details before leaving your pet.
+title: Drop off vet appointment: have your AI assistant call the clinic
+seoTitle: Drop off vet appointment: book with your assistant
+subtitle: Give the assistant you already use the booking details and questions for the clinic. A real customer call confirmed Tuesday at 8:30 AM, with the branch still needing verification.
+description: Book a drop off vet appointment through your existing AI assistant. Hear a real call and use a suggested Claude Code or Codex booking prompt.
 date: 2026-10-05
-tags: vet appointments, pets, bookings, ai phone assistant
+tags: vet appointments, pets, bookings, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Drop off vet appointment, Tuesday at 8:30 AM confirmed on a real call
 ---
@@ -12,6 +12,8 @@ imageAlt: Drop off vet appointment, Tuesday at 8:30 AM confirmed on a real call
 A **drop off vet appointment** means you bring your pet to the clinic, leave them with the veterinary team and return for pickup. Confirm the arrival time, exact location, reason for the visit, expected cost and how the clinic will reach you. The dropoff time alone does not tell you when the examination will happen or when your pet will be ready.
 
 On October 4, 2026, a call4me customer had an AI assistant phone a veterinary clinic for the earliest available visit for a senior dog. The front desk confirmed **Tuesday at 8:30 AM as a dropoff**. The automated greeting and the person who answered used different branch names, so the destination still needed verification. The call did not establish an exam price, pickup time or whether the dog's symptoms required faster care.
+
+If you use Claude Code or Codex as a personal assistant, the booking call can stay part of the pet care task you already have open. [call4me](/) gives that assistant a way to phone the clinic and return the appointment details. Follow the [Claude Code setup](/blog/claude-code-phone-calls) or [Codex setup](/blog/codex-phone-calls), then use the suggested booking workflow below. Those instructions are separate from the recorded customer call, whose client is not established here.
 
 ## What happens at a drop off vet appointment?
 
@@ -49,11 +51,13 @@ Before hanging up:
 
 > Could you confirm the date, arrival time and street address? What should I bring, what is the exam fee, and how will you contact me about treatment and pickup?
 
-## Let call4me arrange the phone call
+## How to schedule a vet appointment with your AI assistant
 
-Tell your AI agent to use [call4me](/) with the clinic, your availability and the questions you need answered:
+Give your existing assistant the clinic's number, the pet details you want shared and your available arrival times. If you have already discussed those details in the same conversation, ask it to summarize them for your review before dialing. Your assistant should leave questions about urgency and care to the veterinary team.
 
-> Call my veterinary clinic to book a visit for my dog. Explain [reason for visit] and ask the clinic how soon the pet should be seen. Find the earliest suitable appointment within [availability]. Confirm whether it is a dropoff, the date, time, street address, exam price, preparation and pickup arrangements. Report anything the clinic could not confirm.
+After connecting [call4me](/), try this suggested prompt:
+
+> Use call4me to call my veterinary clinic to book a visit for my dog. Use the pet details and availability we have agreed on. Explain [reason for visit] and ask the clinic how soon the pet should be seen. Find the earliest suitable appointment within [availability]. Confirm whether it is a dropoff, the date, time, street address, exam price, preparation and pickup arrangements. Bring the confirmation and unanswered questions back to this conversation. Do not agree to tests or treatment beyond booking the visit.
 
 The confirmation should separate booked details from unanswered questions. See the [vet call in examples](/examples#vet-drop-off-booking) and another real example of [rescheduling an appointment](/blog/reschedule-dentist-appointment).
 

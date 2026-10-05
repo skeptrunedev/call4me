@@ -91,17 +91,17 @@ service, national fixed pricing or oil change availability at every location.
 The tire rotation query must distinguish this combined quote from a standalone
 rotation price and any eligibility terms for complimentary rotations.
 
-## Suggested metadata
+## Current metadata
 
 These SEO titles remain within 60 characters after the layout appends
 ` - call4me`. Descriptions remain under 160 characters.
 
 | Article | SEO title | Description |
 | --- | --- | --- |
-| Ohio | Ohio workers compensation insurance: how to apply | See how to apply for Ohio workers compensation insurance, what to ask BWC, and how a real call clarified an ITIN obstacle for a foreign owner. |
-| Vet | Drop off vet appointment: what to confirm | A real call booked a Tuesday vet dropoff. Learn what to confirm about the clinic, arrival time, pickup, and contact details before leaving your pet. |
-| Haircut | Book a haircut appointment with your stylist | Use a simple call script to book a haircut with your preferred stylist. A real call confirmed Friday at 2 PM for $60, with an earlier slot missed. |
-| Les Schwab | Does Les Schwab do oil changes? A real phone quote | Check Les Schwab oil change availability, cost, and walk in plans. A real call got a $100 to $110 estimate for an oil change and tire rotation. |
+| Ohio | Ohio workers compensation insurance: an AI call | Applying for Ohio workers compensation insurance? See a real BWC call and a suggested workflow for your Claude Code or Codex personal assistant. |
+| Vet | Drop off vet appointment: book with your assistant | Book a drop off vet appointment through your existing AI assistant. Hear a real call and use a suggested Claude Code or Codex booking prompt. |
+| Haircut | Book a haircut appointment with your AI assistant | Book a haircut appointment from your Claude Code or Codex personal assistant. A real salon call shows what to confirm and a scheduling mistake to avoid. |
+| Les Schwab | Does Les Schwab do oil changes? An AI phone quote | Have your AI assistant check Les Schwab oil change cost and availability. Hear a real store quote and try a suggested Claude Code or Codex workflow. |
 
 ## Reproducible evidence
 
@@ -170,3 +170,13 @@ unexpected playback failures. Local browser regression checks exercised eight
 rapid playback and pause cycles without an unhandled cancellation, and confirmed
 that an unsupported media error still surfaces. Type checking, linting, the
 Worker build and all 158 tests passed for the correction.
+
+
+## ICP followup
+
+The four stories now qualify the reader as an existing personal assistant user
+near the start, link the Claude Code and Codex calling guides, and provide
+explicitly suggested task prompts. The recorded customer calls do not establish
+which client each customer used. Fresh supporting keyword estimates and
+SERP intent decisions are in
+[the ICP followup](customer-success-icp-keywords-2026-10-05.md).
