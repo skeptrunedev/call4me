@@ -16,7 +16,7 @@ export const VoicesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ sig
     <main class="examples">
       <h1>hear every caller voice</h1>
       <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
-      <p>each sample is the same line, recorded at phone quality, so you hear what the business hears. every voice speaks the five most spoken languages: {SAMPLE_LANGUAGES.map((l) => l.name.toLowerCase()).join(', ')}.</p>
+      <p>each sample is the same line, recorded directly from the voice model at phone quality. these samples let you compare delivery. our <a href="/blog/openai-realtime-voices-phone-calls">received call tests</a> check what survives a carrier SIP route. every voice speaks the five most spoken languages: {SAMPLE_LANGUAGES.map((l) => l.name.toLowerCase()).join(', ')}.</p>
       <details>
         <summary>read the line in each language</summary>
         {SAMPLE_LANGUAGES.map((l) => (

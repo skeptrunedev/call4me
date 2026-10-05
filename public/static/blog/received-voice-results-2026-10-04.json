@@ -1,0 +1,1069 @@
+{
+  "method": {
+    "model": "gpt-live-1",
+    "instructions": "You are on an automated test phone call. Speak English. When asked, read the appointment date October 12, 2026, the time 7:15 PM Pacific time, and reference code B7Q29. Say each letter and digit of the code separately. Wait for the other side. If they correct the date or time, read back the corrected date and time and the unchanged reference code. Do not make a booking or perform any action. After they say the test is complete, say goodbye and stop speaking.",
+    "prompts": [
+      "This is the automated voice test line. Please read the appointment date, time, time zone and reference code.",
+      "Correction. Change the appointment to October twenty second, twenty twenty six, at six forty five P M Pacific time. Keep the same reference code. Please read back the corrected date, time, time zone and reference code.",
+      "Thank you. The test is complete. Goodbye."
+    ],
+    "voices": [
+      "marin",
+      "cedar",
+      "gleam",
+      "meridian"
+    ],
+    "trials": 3,
+    "route": "Telnyx SIP subdomain, PCMU 8000 Hz",
+    "receivedTimestampUnit": "8000 Hz sample clock, verified on 160 sample packets",
+    "receiver": "fixed synthetic TTS, gpt-4o-mini-tts ash",
+    "createdAt": "2026-10-05T00:31:15.937Z"
+  },
+  "expected": {
+    "initial": {
+      "date": "2026-10-12",
+      "time": "19:15",
+      "zone": "Pacific",
+      "code": "B7Q29"
+    },
+    "corrected": {
+      "date": "2026-10-22",
+      "time": "18:45",
+      "zone": "Pacific",
+      "code": "B7Q29"
+    }
+  },
+  "metric": "automated recognizability, exact code characters, Pacific or PT accepted, no UTC offset scored",
+  "transcriptsAreMachineOutputs": true,
+  "summary": {
+    "marin": {
+      "whisper-1": {
+        "date": 6,
+        "time": 6,
+        "zone": 6,
+        "code": 2
+      },
+      "gpt-4o-transcribe": {
+        "date": 6,
+        "time": 6,
+        "zone": 6,
+        "code": 2
+      }
+    },
+    "cedar": {
+      "whisper-1": {
+        "date": 6,
+        "time": 6,
+        "zone": 6,
+        "code": 5
+      },
+      "gpt-4o-transcribe": {
+        "date": 6,
+        "time": 6,
+        "zone": 6,
+        "code": 6
+      }
+    },
+    "gleam": {
+      "whisper-1": {
+        "date": 6,
+        "time": 6,
+        "zone": 6,
+        "code": 5
+      },
+      "gpt-4o-transcribe": {
+        "date": 6,
+        "time": 6,
+        "zone": 6,
+        "code": 6
+      }
+    },
+    "meridian": {
+      "whisper-1": {
+        "date": 6,
+        "time": 6,
+        "zone": 6,
+        "code": 6
+      },
+      "gpt-4o-transcribe": {
+        "date": 6,
+        "time": 6,
+        "zone": 6,
+        "code": 5
+      }
+    }
+  },
+  "codeAgreement": {
+    "bothRecovered": 17,
+    "disagreed": 3,
+    "bothMissed": 4
+  },
+  "trials": [
+    {
+      "id": "t1",
+      "voice": "marin",
+      "round": 1,
+      "startedAt": "2026-10-05T00:31:35.504Z",
+      "duration": 60.76,
+      "leadingMillis": 20,
+      "missingMillis": 20,
+      "duplicateBytes": 0,
+      "sha256": "c96e5e5240fb7e160d50b995e3a91df427e50411bf9d8c8207bed93eb04626f1",
+      "modelOutputText": "Appointment date is October 12th, 2026. Time is 7:15 PM Pacific time. Reference code is B-7-Q-2-9. October 22nd, 2026, at 6:45 PM Pacific time. Reference code is B-7-Q-2-9. Goodbye.",
+      "sourceText": "Appointment date is October 12th, 2026. Time is 7:15 PM Pacific Time. Reference code is B-7\n\nOctober 22nd, 2026 at 6:45 PM Pacific Time. Reference code is B-\n\nGoodbye.",
+      "exportText": "Appointment date is October 12, 2026. Time is 7.15 p.m. Pacific Time. Reference code is B-7-6-1. October 22, 2026, at 6.45 p.m. Pacific Time. Reference code is B-7-6-1. Goodbye. October 22, 2026, at 6.45 p.m. Pacific Time.  ",
+      "readbacks": [
+        {
+          "phase": "initial",
+          "start": 1.52,
+          "end": 23.18,
+          "inputSha256": "dddd84ef5716e924bf07eb8935656c8c8f11908fb5ec708f7f8075f02233791d",
+          "speechStart": 11.2,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment date is October 12, 2026. Time is 7.15 p.m. Pacific Time. Reference code is B-7-2-3-1.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": false
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment date is October 12, 2026. Time is 7:15 PM Pacific Time. Reference code is B-7",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": false
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t1-marin-initial.wav"
+        },
+        {
+          "phase": "corrected",
+          "start": 23.18,
+          "end": 52.1,
+          "inputSha256": "aa8b1fdb3a5e02a30cf586db465e54dad09d129546c0e66b9babc5efe580f3ed",
+          "speechStart": 41.7,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "October 22, 2026 at 6.45 p.m. Pacific time. Reference code is B.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": false
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "October 22, 2026 at 6:45 p.m. Pacific Time. Reference code is B",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": false
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t1-marin-corrected.wav"
+        }
+      ],
+      "audio": "/static/blog/received-t1-marin.mp3",
+      "packetGaps": [
+        {
+          "atSeconds": 0.06,
+          "missingMillis": 20.0
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "voice": "cedar",
+      "round": 1,
+      "startedAt": "2026-10-05T00:32:40.558Z",
+      "duration": 65.76,
+      "leadingMillis": 20,
+      "missingMillis": 20,
+      "duplicateBytes": 0,
+      "sha256": "e7c7677a6bb125a750aa2371a6fa98db8d7af999976e4b1c05e967197aae9f23",
+      "modelOutputText": "The appointment date is October 12th, 2026. The time is 7:15 PM Pacific time. The reference code is B 7 Q 2 9. The corrected appointment date is October 22nd, 2026. The time is 6:45 PM Pacific time. The reference code is B 7 Q 2 9. Goodbye.",
+      "sourceText": "The appointment date is October 12, 2026. The time is 7:15 p.m. Pacific Time. The reference code is B-7-Q-2-9.\n\nThe corrected appointment date is October 22, 2026. The time is 6:45 p.m. Pacific Time. The reference code is B-7-Q-2-9.\n\nGoodbye.",
+      "exportText": "The appointment date is October 12, 2026. The time is 7.15 p.m. Pacific Time. The reference code is B7Q29. The corrected appointment date is October 22, 2026. The time is 6.45 p.m. Pacific Time. The reference code is B7Q29. Goodbye.",
+      "readbacks": [
+        {
+          "phase": "initial",
+          "start": 1.52,
+          "end": 24.96,
+          "inputSha256": "a183353c5b81e92e5340f339a762295fd72ecd5e7c4b42f32417a1c7625e78e4",
+          "speechStart": 11.06,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "The appointment date is October 12, 2026. The time is 7.15 p.m. Pacific Time. The reference code is B7229.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": false
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "The appointment date is October 12, 2026. The time is 7:15 PM Pacific Time. The reference code is B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t2-cedar-initial.wav"
+        },
+        {
+          "phase": "corrected",
+          "start": 24.96,
+          "end": 56.78,
+          "inputSha256": "92fc95d9bf03b885ecaacc13d265e529dcda41b40e48e83a93aece1fc0a34dc8",
+          "speechStart": 43.06,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "The corrected appointment date is October 22, 2026. The time is 645 p.m. Pacific Time. The reference code is B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "The corrected appointment date is October 22, 2026. The time is 6:45 PM Pacific time. The reference code is B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t2-cedar-corrected.wav"
+        }
+      ],
+      "audio": "/static/blog/received-t2-cedar.mp3",
+      "packetGaps": [
+        {
+          "atSeconds": 0.08,
+          "missingMillis": 20.0
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "voice": "gleam",
+      "round": 1,
+      "startedAt": "2026-10-05T00:33:52.260Z",
+      "duration": 69.36,
+      "leadingMillis": 20,
+      "missingMillis": 20,
+      "duplicateBytes": 0,
+      "sha256": "04a80d8036987bdd5fa7135a29179c9545d263ad493150c845a5a68cdf47d6c2",
+      "modelOutputText": "Appointment date October 12, 2026. Time 7:15 p.m. Pacific time. Reference code is B 7 Q 2 9.Corrected appointment date October 22, 2026. Time 6:45 p.m. Pacific time. Reference code B 7 Q 2 9.Goodbye.",
+      "sourceText": "Appointment date October 12, 2026. Time 7:15 PM Pacific Time. Reference code is B7Q29.\n\nCorrected appointment date October 22, 2026. Time 6:45 PM Pacific Time. Reference code B7Q29.\n\nGoodbye.",
+      "exportText": "Appointment date October 12, 2026, time 7.15 p.m. Pacific time. Reference code is B7Q29. Corrected appointment date October 22, 2026, time 6.45 p.m. Pacific time. Reference code B7Q29. Goodbye.",
+      "readbacks": [
+        {
+          "phase": "initial",
+          "start": 1.52,
+          "end": 26.88,
+          "inputSha256": "6a43a91b3c1f6836278b64071a08b66ed6dbd5ae64fb9342b73b4085ffcefc97",
+          "speechStart": 11.44,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment date October 12, 2026, time 7.15 p.m. Pacific time. Reference code is B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment date October 12, 2026. Times 7:15 PM Pacific Time. Reference code is B7Q29",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t3-gleam-initial.wav"
+        },
+        {
+          "phase": "corrected",
+          "start": 26.88,
+          "end": 60.44,
+          "inputSha256": "b7f8954bd098ea8aa289c8d68c7e7c739f07f1bc20f6093a6d5d5cb4064bd5c2",
+          "speechStart": 45.78,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Corrected appointment date, October 22, 2026, time, 645 p.m., Pacific time. Reference code, B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Corrected appointment date October 22, 2026. Time 6:45 p.m. Pacific Time. Reference Code B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t3-gleam-corrected.wav"
+        }
+      ],
+      "audio": "/static/blog/received-t3-gleam.mp3",
+      "packetGaps": [
+        {
+          "atSeconds": 0.04,
+          "missingMillis": 20.0
+        }
+      ]
+    },
+    {
+      "id": "t4",
+      "voice": "meridian",
+      "round": 1,
+      "startedAt": "2026-10-05T00:35:07.020Z",
+      "duration": 66.02,
+      "leadingMillis": 20,
+      "missingMillis": 0,
+      "duplicateBytes": 0,
+      "sha256": "0785f757991d6a62ce7993608dd29596b20e1412b5b1091dd10af8a2102a1dbb",
+      "modelOutputText": "The appointment is on October 12th, 2026, at 7:15 PM Pacific time. Reference code is B 7 Q 2 9. The appointment is October 22nd, 2026, at 6:45 p.m. Pacific time. Reference code is B 7 Q 2 9. Goodbye.",
+      "sourceText": "The appointment is on October 12th, 2026 at 7:15 PM Pacific Time. Reference code is B7Q29.\n\nThe appointment is October 22nd, 2026 at 6:45 PM Pacific Time. Reference code is B7Q29.\n\nGoodbye!",
+      "exportText": "The appointment is on October 12th, 2026 at 7.15pm Pacific Time. Reference code is B7Q29. The appointment is on October 12th, 2026 at 6.45pm Pacific Time. Reference code is B7Q29. Goodbye!",
+      "readbacks": [
+        {
+          "phase": "initial",
+          "start": 1.58,
+          "end": 25.02,
+          "inputSha256": "d38fccc2faf3981f7d9deb784295614b1785ac77f847e486be20ce9fb6ee0c24",
+          "speechStart": 10.96,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "The appointment is on October 12, 2026 at 7.15pm Pacific Time. Reference code is B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "The appointment is on October 12, 2026, at 7:15 PM Pacific Time. Reference code is B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t4-meridian-initial.wav"
+        },
+        {
+          "phase": "corrected",
+          "start": 25.02,
+          "end": 57.16,
+          "inputSha256": "44f43b5bec41194f915e74e85d676fd6d0827b05f8edf6abbabf627f5ad17409",
+          "speechStart": 43.3,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "The appointment is October 22, 2026, at 6.45 p.m. Pacific Time. Reference code is B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "The appointment is October 22nd, 2026, at 6:45 PM Pacific Time. Reference code is B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t4-meridian-corrected.wav"
+        }
+      ],
+      "audio": "/static/blog/received-t4-meridian.mp3",
+      "packetGaps": []
+    },
+    {
+      "id": "t5",
+      "voice": "meridian",
+      "round": 2,
+      "startedAt": "2026-10-05T00:36:18.504Z",
+      "duration": 62.76,
+      "leadingMillis": 20,
+      "missingMillis": 0,
+      "duplicateBytes": 0,
+      "sha256": "ae0f5d2ae6c24b0406a097dcb85ba375a5195898187ea0f541f86b67231dd02a",
+      "modelOutputText": "Appointment date, October 12, 2026. Time, 7:15 PM Pacific time. Reference code B, 7, Q. 2, 9. Appointment date, October 22, 2026. Time, 6:45 PM Pacific time. Reference code B, 7, Q, 2, 9. Goodbye.",
+      "sourceText": "Appointment date: October 12, 2026. Time: 7:15 PM Pacific Time. Reference code: B7Q29",
+      "exportText": "Appointment date October 12, 2026, time 7.15pm Pacific Time, reference code B7Q29. Bye.",
+      "readbacks": [
+        {
+          "phase": "initial",
+          "start": 1.52,
+          "end": 23.86,
+          "inputSha256": "2920bc6e88b7b2d388e992d421802065f6a8942d66f54d8373e4ea945aae52cc",
+          "speechStart": 11.28,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment Date October 12, 2026 Time 7.15 PM Pacific Time Reference Code B7Q29",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment Date: October 12, 2026. Time: 7:15 PM Pacific Time. Reference Code: B7Q29",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t5-meridian-initial.wav"
+        },
+        {
+          "phase": "corrected",
+          "start": 23.86,
+          "end": 54.1,
+          "inputSha256": "7a1014d367287f4dd0801fd6d1591de1de7c45d5849272a69948910e1d2aa7a9",
+          "speechStart": 42.3,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment date, October 22, 2026, time, 645 p.m. Pacific time. Reference code B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment Date: October 22, 2026, Time: 6:45 PM Pacific Time, Reference code: B72",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": false
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t5-meridian-corrected.wav"
+        }
+      ],
+      "audio": "/static/blog/received-t5-meridian.mp3",
+      "packetGaps": []
+    },
+    {
+      "id": "t6",
+      "voice": "gleam",
+      "round": 2,
+      "startedAt": "2026-10-05T00:37:26.728Z",
+      "duration": 69.26,
+      "leadingMillis": 20,
+      "missingMillis": 20,
+      "duplicateBytes": 0,
+      "sha256": "40ec48f9debb74f1fc17176e06d95d40ecec3964dd726f0b67b944f20a6fde01",
+      "modelOutputText": "Appointment date is October 12th, 2026. Time is 7:15 PM Pacific time. Reference code is B 7 Q 2 9. Corrected appointment date is October 22nd, 2026. Time is 6:45 PM Pacific time. Reference code is B 7 Q 2 9. Goodbye.",
+      "sourceText": "Appointment date is October 12, 2026. Time is 7:15 PM Pacific Time. Reference code is B7Q29. Corrected appointment date is October 22, 2026. Time is 6:45 PM Pacific Time. Reference code is B7Q29. Goodbye.",
+      "exportText": "Appointment date is October 12th, 2026. Time is 7.15 PM Pacific Time. Reference code is B7229. Appointment date is October 22nd, 2026. Time is 6.45 PM Pacific Time. Reference code is B7229. Goodbye.",
+      "readbacks": [
+        {
+          "phase": "initial",
+          "start": 1.58,
+          "end": 26.42,
+          "inputSha256": "d49c3a08ed1f2deb9f63adfb626a05c0b1e0b1b62e016343b889bbb890926caa",
+          "speechStart": 11.08,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment date is October 12, 2026. Time is 7.15 PM Pacific Time. Reference code is B7229.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": false
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment date is October 12, 2026, time is 7:15 PM Pacific Time. Reference code is B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t6-gleam-initial.wav"
+        },
+        {
+          "phase": "corrected",
+          "start": 26.42,
+          "end": 60.36,
+          "inputSha256": "d250bc013995f5c8b6b855748a9836e4ceb3e8093b33ba7e58cd963db2a0da53",
+          "speechStart": 44.68,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Corrected appointment date is October 22, 2026. Time is 645 p.m. Pacific Time. Reference code is B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Corrected appointment date is October 22, 2026. Time is 6:45 PM Pacific Time. Reference code is B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t6-gleam-corrected.wav"
+        }
+      ],
+      "audio": "/static/blog/received-t6-gleam.mp3",
+      "packetGaps": [
+        {
+          "atSeconds": 1.04,
+          "missingMillis": 20.0
+        }
+      ]
+    },
+    {
+      "id": "t7",
+      "voice": "cedar",
+      "round": 2,
+      "startedAt": "2026-10-05T00:38:40.948Z",
+      "duration": 70.08,
+      "leadingMillis": 20,
+      "missingMillis": 20,
+      "duplicateBytes": 0,
+      "sha256": "77a5e93c5394abf4042e902fe7e97f877c2c089646c707ad0e988d7f892d4e91",
+      "modelOutputText": "Appointment date October 12, 2026, time 7:15 PM Pacific time. Reference code B 7 Q 2 9. Appointment date October 22, 2026, time 6:45 PM Pacific time. Reference code B 7 Q 2 9. Goodbye.",
+      "sourceText": "Appointment date October 12th, 2026, time 7:15 PM Pacific Time, reference code B7Q29.",
+      "exportText": "Appointment Date October 12, 2026 Time 7.15 PM Pacific Time Reference Code B7Q29 Appointment Date October 22, 2026 Time 6.45 PM Pacific Time Reference Code B7Q29 Goodbye",
+      "readbacks": [
+        {
+          "phase": "initial",
+          "start": 1.58,
+          "end": 23.72,
+          "inputSha256": "dcc17fad2b7d5157d0f399f6dc975b1336fd78283547e7591e307144a90dcc60",
+          "speechStart": 10.96,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment Date October 12, 2026 Time 7.15 PM Pacific Time Reference Code B7Q29",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment Date: October 12, 2026 Time: 7:15 PM Pacific Time Reference Code: B7Q29",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t7-cedar-initial.wav"
+        },
+        {
+          "phase": "corrected",
+          "start": 23.72,
+          "end": 56.18,
+          "inputSha256": "1c2542f305cfdb1feb310a559c17c20de439ca3d0b83b5305372f74050ede874",
+          "speechStart": 42.3,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment date, October 22nd, 2026, time 645 p.m. Pacific time. Reference code B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment Date: October 22, 2026, Time: 6:45 PM Pacific Time, Reference Code: B7Q29",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t7-cedar-corrected.wav"
+        }
+      ],
+      "audio": "/static/blog/received-t7-cedar.mp3",
+      "packetGaps": [
+        {
+          "atSeconds": 0.24,
+          "missingMillis": 20.0
+        }
+      ]
+    },
+    {
+      "id": "t8",
+      "voice": "marin",
+      "round": 2,
+      "startedAt": "2026-10-05T00:39:56.124Z",
+      "duration": 66.16,
+      "leadingMillis": 20,
+      "missingMillis": 0,
+      "duplicateBytes": 0,
+      "sha256": "47fbbb36b12bd55472da77618ff2bda7df83d61fc31a8ac170b824cf36e27e0c",
+      "modelOutputText": "Appointment date October 12, 2026. Time 7:15 PM Pacific time. Reference code B 7 Q 2 9. Appointment date October 22, 2026. Time 6:45 PM Pacific time. Reference code B 7 Q 2 9. Goodbye.",
+      "sourceText": "Appointment date: October 12, 2026. Time: 7:15 PM Pacific Time. Reference code: B-7-Q-2-9. \n\nAppointment date: October 22, 2026. Time: 6:45 PM Pacific Time. Reference code: B-7-Q-2-9.\n\nGoodbye.",
+      "exportText": "Appointment date, October 12, 2026, time, 7.15 p.m. pacific time, reference code, B7229. Appointment date, October 22, 2026, time, 6.45 p.m. pacific time, reference code, B7229.",
+      "readbacks": [
+        {
+          "phase": "initial",
+          "start": 1.54,
+          "end": 24.86,
+          "inputSha256": "ebf7dc0ed38b1e27726c5adea138ec909e3be415f77e6384d51721634079b932",
+          "speechStart": 10.96,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment date, October 12, 2026, time, 7.15 p.m. pacific time. Reference code, B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment Date: October 12, 2026. Time: 7:15 PM Pacific Time. Reference Code: B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t8-marin-initial.wav"
+        },
+        {
+          "phase": "corrected",
+          "start": 24.86,
+          "end": 57.18,
+          "inputSha256": "c186524d7c8533e838102c593de61ea5f69e8eaa0cae6140a0114ef337c804c8",
+          "speechStart": 43.22,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment date, October 22, 2026, time, 645 p.m. Pacific time. Reference code B7229.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": false
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment Date: October 22, 2026. Time: 6:45 PM Pacific Time. Reference Code: B7229.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": false
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t8-marin-corrected.wav"
+        }
+      ],
+      "audio": "/static/blog/received-t8-marin.mp3",
+      "packetGaps": []
+    },
+    {
+      "id": "t9",
+      "voice": "gleam",
+      "round": 3,
+      "startedAt": "2026-10-05T00:41:07.497Z",
+      "duration": 66.48,
+      "leadingMillis": 20,
+      "missingMillis": 0,
+      "duplicateBytes": 0,
+      "sha256": "d9c1558d416beb5c7241a3e3ec775d106745de940de6531e9f59e95b53167f25",
+      "modelOutputText": "Appointment date October 12, 2026, time 7:15 PM Pacific Time. Reference code B 7 Q 2 9.Appointment date October 22, 2026, time 6:45 PM Pacific Time, reference code B 7 Q 2 9.Goodbye.",
+      "sourceText": "Appointment date October 12, 2026. Time 7:15 PM Pacific Time. Reference code B7Q29.\n\nAppointment date October 22, 2026. Time 6:45 PM Pacific Time. Reference code B7Q29.\n\nGoodbye.",
+      "exportText": "Appointment date, October 12, 2026, time, 7.15 p.m. Pacific Time. Reference code B7Q29. Appointment date, October 22, 2026, time, 6.45 p.m. Pacific Time. Reference code B7Q29. Goodbye.",
+      "readbacks": [
+        {
+          "phase": "initial",
+          "start": 1.62,
+          "end": 24.96,
+          "inputSha256": "6bd8ebc13e9c5580e4efca9ee45d6cc0d5dc866b4dd75038c4c879414932a5f7",
+          "speechStart": 11.3,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment date, October 12, 2026, time, 715 PM Pacific Time. Reference code B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment Date: October 12, 2026. Time: 7:15 PM Pacific Time. Reference Code: B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t9-gleam-initial.wav"
+        },
+        {
+          "phase": "corrected",
+          "start": 24.96,
+          "end": 57.6,
+          "inputSha256": "71eb6aa40477f0ace39b0435780ffa7ffafa14b28b0308a8513f62b6abc92059",
+          "speechStart": 43.48,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment date, October 22, 2026, time, 645 p.m., Pacific time. Reference code B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment date October 22, 2026. Time: 6:45 PM Pacific Time. Reference code B7Q29",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t9-gleam-corrected.wav"
+        }
+      ],
+      "audio": "/static/blog/received-t9-gleam.mp3",
+      "packetGaps": []
+    },
+    {
+      "id": "t10",
+      "voice": "meridian",
+      "round": 3,
+      "startedAt": "2026-10-05T00:42:19.405Z",
+      "duration": 67.18,
+      "leadingMillis": 20,
+      "missingMillis": 0,
+      "duplicateBytes": 0,
+      "sha256": "58d1927e2f2695b87d6ff951fb99d64f852af908956a59e6bc72d752ddde1d33",
+      "modelOutputText": "Appointment date October 12, 2026. Time, 7:15 PM, Pacific time. Reference code B 7 Q 2 9. Appointment date October 22, 2026. Time, 6:45 PM, Pacific time. Reference code B 7 Q 2 9. Goodbye.",
+      "sourceText": "Appointment date: October 12, 2026. Time: 7:15 PM, Pacific Time. Reference code: B7Q29",
+      "exportText": "Appointment Date October 12, 2026 Time 7.15pm PST Reference Code B7Q29 Appointment Date October 22, 2026 Time 6.45pm PST Reference Code B7Q29 Goodbye",
+      "readbacks": [
+        {
+          "phase": "initial",
+          "start": 1.58,
+          "end": 26.1,
+          "inputSha256": "4d0582241f3b896833206bd1681a7846d873d2996964894939e05bba031f92d6",
+          "speechStart": 11.24,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment Date October 12, 2026 Time 7.15 PM Pacific Time Reference Code B7Q29",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment date: October 12, 2026. Time: 7:15 pm, Pacific Time. Reference code: B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t10-meridian-initial.wav"
+        },
+        {
+          "phase": "corrected",
+          "start": 26.1,
+          "end": 58.24,
+          "inputSha256": "024cf265185aca18e15fe7e8ae6ddee9c3c6cc0c2c779a137e6bf875e30702e8",
+          "speechStart": 44.38,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment date, October 22, 2026, time, 645 p.m., Pacific Time, reference code B7Q29. B7Q29. Thank you.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment Date: October 22, 2026. Time: 6:45 PM (Pacific Time). Reference Code: B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t10-meridian-corrected.wav"
+        }
+      ],
+      "audio": "/static/blog/received-t10-meridian.mp3",
+      "packetGaps": []
+    },
+    {
+      "id": "t11",
+      "voice": "marin",
+      "round": 3,
+      "startedAt": "2026-10-05T00:43:31.487Z",
+      "duration": 65.92,
+      "leadingMillis": 20,
+      "missingMillis": 0,
+      "duplicateBytes": 0,
+      "sha256": "aa0ca5744b306764fadd91019d23f3bd6472cfaca26461a50214be685ed9c3fd",
+      "modelOutputText": "Appointment date is October twelfth, twenty twenty-six. Time is seven fifteen PM Pacific time. Reference code is B seven Q two nine. Corrected appointment date is October twenty-second, twenty twenty-six. Time is six forty-five PM Pacific time. Reference code is B seven Q two nine. Goodbye.",
+      "sourceText": "Appointment date is October 12, 2026. Time is 7:15 PM Pacific Time. Reference code is B7229.\n\nCorrected appointment date is October 22, 2026. Time is 6:45 PM Pacific Time. Reference code is B7229.\n\nGoodbye.",
+      "exportText": "The appointment date is October 12, 2026. Time is 7.15 p.m. Pacific Time. Reference code is B7Q29. The appointment date is October 12, 2026. Time is 6.45 p.m. Pacific Time. Reference code is B7Q29. Goodbye.",
+      "readbacks": [
+        {
+          "phase": "initial",
+          "start": 1.52,
+          "end": 24.66,
+          "inputSha256": "ed0f99c6e921a5f7812537bfadc5c641e5af957c2a9445023a054207905d2683",
+          "speechStart": 11.28,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment date is October 12, 2026. Time is 7.15 p.m. Pacific Time. Reference code is B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment date is October 12, 2026. Time is 7:15 pm Pacific Time. Reference code is B-7-Q-2-9.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t11-marin-initial.wav"
+        },
+        {
+          "phase": "corrected",
+          "start": 24.66,
+          "end": 57,
+          "inputSha256": "e35283f96414ee5e0bda03f73ed865c540ee6b0859937951fc987977fb2359b3",
+          "speechStart": 43.02,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Corrected appointment date is October 22, 2026. Time is 645 PM Pacific Time. Reference code is B7229.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": false
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Corrected appointment date is October 22, 2026. Time is 6:45 PM Pacific Time. Reference code is B72Q9",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": false
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t11-marin-corrected.wav"
+        }
+      ],
+      "audio": "/static/blog/received-t11-marin.mp3",
+      "packetGaps": []
+    },
+    {
+      "id": "t12",
+      "voice": "cedar",
+      "round": 3,
+      "startedAt": "2026-10-05T00:44:43.326Z",
+      "duration": 68.76,
+      "leadingMillis": 20,
+      "missingMillis": 20,
+      "duplicateBytes": 0,
+      "sha256": "5c7d2b07ced0a91214015db04d3c7d2f9d012d1449388ca89a3aa47343a0beaa",
+      "modelOutputText": "Appointment date October 12, 2026. Time 7:15 PM, Pacific time. Reference code B, 7, Q, 2, 9.Corrected appointment date October 22, 2026. Time 6:45 PM, Pacific time. Reference code B, 7, Q, 2, 9.Goodbye.",
+      "sourceText": "Appointment date October 12, 2026. Time 7:15 PM Pacific Time. Reference code B7Q29.\n\nCorrected appointment date October 22, 2026. Time 6:45 PM Pacific Time. Reference code B7Q29.\n\nGoodbye.",
+      "exportText": "Appointment Date October 12, 2026 Time 7.15pm Pacific Time Reference Code B7Q29 Appointment Date October 12, 2026 Time 6.45pm Pacific Time Reference Code B7Q29 Appointment Date October 12, 2026 Time 6.45pm Pacific Time Reference Code B7Q29",
+      "readbacks": [
+        {
+          "phase": "initial",
+          "start": 1.46,
+          "end": 26.02,
+          "inputSha256": "58c14105379c51075bce2ae5e78383c896a8284d207ed0d574f8628e774e6acf",
+          "speechStart": 12.42,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Appointment Date October 12, 2026 Time 7.15pm Pacific Time Reference Code B7Q29",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Appointment Date: October 12, 2026. Time: 7:15 p.m. PT. Reference Code: B7Q29",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t12-cedar-initial.wav"
+        },
+        {
+          "phase": "corrected",
+          "start": 26.02,
+          "end": 59.86,
+          "inputSha256": "b692f8997158efc0d91adf85c63e7d3c57bd872a92e6177ccdfc854caac4a4bf",
+          "speechStart": 44.92,
+          "transcripts": [
+            {
+              "model": "whisper-1",
+              "text": "Corrected appointment date, October 22, 2026. Time 645 p.m. Pacific Time. Reference code B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            },
+            {
+              "model": "gpt-4o-transcribe",
+              "text": "Corrected appointment date: October 22, 2026. Time: 6:45 PM (Pacific Time). Reference code: B7Q29.",
+              "recognized": {
+                "date": true,
+                "time": true,
+                "zone": true,
+                "code": true
+              }
+            }
+          ],
+          "audio": "/static/blog/received-t12-cedar-corrected.wav"
+        }
+      ],
+      "audio": "/static/blog/received-t12-cedar.mp3",
+      "packetGaps": [
+        {
+          "atSeconds": 2.94,
+          "missingMillis": 20.0
+        }
+      ]
+    }
+  ]
+}

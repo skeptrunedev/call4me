@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Record the /voices page samples: one GPT-Live session per voice, at the phone format real
- * calls use (8 kHz μ-law), so each sample sounds the way a business hears the caller.
+ * Record the /voices page samples directly from one GPT-Live session per voice
+ * at 8 kHz mu law. These do not traverse a carrier or a receiving phone.
  *
  *   OPENAI_API_KEY=... node scripts/record-voice-samples.mjs [--lang es] [marin cedar]
  *

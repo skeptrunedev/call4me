@@ -1,9 +1,10 @@
 ---
 title: "Grok connectors and MCP: how to add custom tools to Grok (and make phone calls)"
 seoTitle: Grok connectors and MCP servers, explained
-subtitle: Grok can use custom MCP servers in three places, grok.com, Grok Bot, and the xAI API, and each one adds them differently. Here's what Grok connectors are, how to add your own, and a worked example that gives Grok a phone.
-description: What Grok connectors are, whether Grok supports MCP, and how to add a custom MCP server on grok.com, in Grok Bot, and through the xAI API, with phone calls as the example.
+subtitle: Set up custom tools on grok.com, in Grok Bot or through the xAI API. Then hear our actual Grok Bot restaurant call, including the partial answer and the menu problem.
+description: Add a custom Grok MCP connector and hear a real Grok Bot phone call. Setup steps, account authentication, recording, transcript and what the call did not confirm.
 date: 2026-10-01
+updated: 2026-10-04
 tags: grok, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: Grok connectors and MCP servers, with phone calls as the worked example
@@ -15,20 +16,15 @@ We support Grok as one of the agents call4me works with, and the first version o
 
 ## What are Grok connectors?
 
-Grok connectors let Grok read and act on your other tools from inside a conversation. xAI's [connectors page](https://docs.x.ai/grok/connectors) puts it this way:
-
-> Connectors are available to all Grok users and let Grok access your external tools and data sources directly within a conversation.
-
-There are two kinds:
+Grok connectors let Grok read and act on your other tools from inside a conversation. xAI's [connectors page](https://docs.x.ai/grok/connectors) lists three kinds:
 
 - **Built-in connectors.** The docs list Google Drive, Gmail and Google Calendar, Outlook Mail and Calendar, SharePoint, OneDrive, Microsoft Teams, and Salesforce. You add one at grok.com/connectors, click **New Connector**, pick the service, and sign in.
+- **Catalog connectors.** These are listed integrations you can choose from the connector catalog.
 - **Custom connectors.** Any MCP server you point Grok at. This is the one that matters if the tool you want isn't on the list.
 
 ## Does Grok support MCP?
 
 Yes. Grok's MCP support covers all three xAI products: the grok.com chat (custom connectors), Grok Bot (custom MCP servers), and the xAI API (remote MCP tools). Here's how xAI MCP support works in each.
-
-Yes, in all three places Grok runs, though each one sets it up differently:
 
 | Where you use Grok | How you add an MCP server | Who adds it |
 |---|---|---|
@@ -43,9 +39,7 @@ Two rules apply everywhere:
 
 ## How to add a custom MCP server on grok.com
 
-This is the one most people mean by "Grok connectors". xAI's instructions, word for word:
-
-> To add a custom MCP connector: Go to grok.com/connectors. Click **New Connector**, then select **Custom**. Enter the MCP server URL and complete any required authentication.
+This is the one most people mean by "Grok connectors". In xAI's [setup instructions](https://docs.x.ai/grok/connectors), open grok.com/connectors, click **New Connector**, select **Custom**, enter the server URL and complete authentication.
 
 Grok then finds the tools the server offers and makes them available in your chats, the same way as the built-in connectors.
 
@@ -55,10 +49,10 @@ On **Grok Business and Enterprise** plans there's an extra step first. According
 
 ## What is Grok Bot?
 
-Grok Bot is xAI's app for AI teammates you keep around. In xAI's words, it "gives you Bots you can keep around: AI teammates with names, jobs, and context that compounds over time" ([Grok Bot docs](https://docs.x.ai/grok-bot)). The parts that matter for adding tools:
+Grok Bot is xAI's app for persistent AI teammates that keep context across tasks ([Grok Bot docs](https://docs.x.ai/grok-bot)). The parts that matter for adding tools:
 
 - **Each Bot has its own computer.** Bots work on a persistent cloud computer with a browser, files, and a terminal, and keep working while your laptop is closed.
-- **You set it up by messaging it.** "Setup is a message, not a workflow builder." That's also how you add a custom MCP server, as shown below.
+- **You set it up by messaging it.** That's also how you add a custom MCP server, as shown below.
 - **It runs everywhere.** macOS, Windows, Linux, iOS, and Android.
 - **It comes with Cursor or SuperGrok.** It's included with every paid individual Cursor plan and the Cursor Teams plan, and you can link a SuperGrok, SuperGrok Plus, or SuperGrok Heavy subscription instead.
 
@@ -139,6 +133,75 @@ curl https://api.x.ai/v1/responses \
 This uses the personal server URL, which carries your key, so there's nothing else to configure. call4me also accepts the key as an `Authorization: Bearer` header on `https://call4.me/mcp`, which is what the `authorization` setting is for, but xAI's docs don't say whether it adds the `Bearer ` prefix for you, so the key URL is the safer choice. We haven't run this exact request against xAI's API ourselves.
 
 ## Worked example: give Grok a phone with call4me
+
+### An actual Grok Bot call, October 4
+
+We went beyond the October 1 balance check. In Grok Bot 0.63.0 on a Mac, we reopened the existing Bot with its installed call4me connector and asked it to make one informational call to [Foreign Cinema's published number](https://foreigncinema.com/location-hours/), +1 415 648 7600. The app required sign in again; after signing in, the existing conversation and connector were available.
+
+The question was whether four people could walk in for dinner that Sunday evening, and what arrival time the restaurant recommended. We allowed three minutes, with no booking, purchase, callback, message or call to our own phone.
+
+| Step | What we observed |
+| :--- | :--- |
+| Start the call from Grok Bot | A real call was created, `call_vbphp5uiz7j2k9py`, with the requested restaurant, goal and three minute cap |
+| Follow the result | Grok reported the recorded menu and returned the completed call's partial outcome and transcript |
+| Stop the call | The call record names `call4me_hang_up` as the reason it ended. This was a stop from the Bot's tool workflow |
+| Retrieve a recording | Grok returned the recording metadata. We separately matched the downloaded WAV to the exact provider call leg |
+| Confirm the requested facts | The recording says walk ins are accepted and dinner starts at 5 PM. No person confirmed space for four or a recommended arrival time |
+
+This establishes a real calling workflow in the tested personal Grok Bot conversation. It does not establish a call through grok.com, the xAI API or a Team Bot.
+
+### Hear the complete call
+
+The recording lasts 1 minute 49 seconds. The original audio and timing are preserved, with loudness normalization. It contains the restaurant's recording, a brief caller interjection and automated prompts. No live staff member spoke.
+
+<audio controls preload="metadata" src="/static/blog/grok-foreign-cinema-walk-ins.mp3" style="width:100%"><a href="/static/blog/grok-foreign-cinema-walk-ins.mp3">Listen to the Grok Bot call</a></audio>
+
+<details>
+<summary>Recording transcript</summary>
+
+The transcript uses independent speech transcription checked against the saved call transcript. Unclear or disputed words are marked. The audio is the primary evidence.
+
+**0:00** Restaurant recording: Hello, and thank you for calling Foreign Cinema. To reach our main line or make a reservation, press one. For private dining, press two. Please leave a voicemail so we may return your call as we may be assisting another guest.
+
+**0:17** Restaurant recording: Dinner is served seven days a week beginning at five PM. Weekend brunch begins at ten thirty AM. Films begin at sunset in our outdoor courtyard and play continuously until closing.
+
+**0:31** Restaurant recording: Reservations are encouraged, and walk ins are warmly accepted.
+
+**0:36** Restaurant recording: Laszlo, our classic cocktail bar, is open daily, features the Foreign Cinema menu with weekend brunch service starting at eleven AM. No cover charge or reservations required. Street parking is available, as is the Mission Bartlett parking garage at twenty first Street.
+
+**0:59** Caller: [Brief unclear interjection. The saved call transcript renders this as “Um, hmm.”]
+
+**1:15** Automated prompt: To inquire for a reservation, please leave a message after the tone.
+
+**1:32** Automated prompt: I did not hear you. Please try again.
+
+**1:40** Automated prompt: I did not hear you. Please try again.
+
+**1:48** Automated prompt: [Final words are unclear. The saved call transcript ends “Sorry, you're”; independent transcriptions disagree about the rest.]
+
+</details>
+
+The menu route did not produce a person. We did not capture a native keypad action trace, so this recording cannot establish which digit was sent or grade menu navigation as successful. The caller also made a brief sound while the recording played, and the Bot stopped the call after further automated prompts. **Immediate silent hangup was not demonstrated.** Grok's summary said no voicemail was left; we did not obtain a mailbox receipt or other independent confirmation of that claim.
+
+The useful result was narrower than the request: the menu supplied a general walk in policy, while the party size and arrival time questions remained unanswered. That distinction matters when your agent turns a call into an answer. The [phone calling MCP comparison](/blog/phone-calling-mcp-comparison) contains separate Vapi and Bland menu attempts; it is not a matched performance test against this call.
+
+### A prompt you can adapt
+
+> Use call4me to make one informational call to [business] at [published number]. Ask [questions]. Do not book, buy anything or request a callback. Cap the call at three minutes. Follow call4me_get_call until it ends, then return the actual call id, confirmed facts and unanswered questions. Retrieve recording metadata with call4me_get_recordings. Do not make a second call.
+
+Use explicit permission and spending limits that fit your own task. If no message may be left, say so, and check the recording before treating a summary's “no voicemail” claim as verified.
+
+### Troubleshooting the tested workflow
+
+| Symptom | What to check |
+| :--- | :--- |
+| The app opens to sign in instead of your Bots | Sign back into the account that owns the Bot. This happened on our October 4 run; our existing setup was available afterward |
+| Setup reports tools, but you have not tested access | Ask for `call4me_get_balance`. Our October 1 run verified live account data. A connector being listed is a weaker check |
+| Grok shows “Connecting to Call4me” | In this run the activity label stayed visible while a real call was in progress. It did not mean that the call had failed. Use the returned call id to check the call state |
+| The answer says “completed,” but your question is unresolved | Inspect the outcome and recording. This call ended normally with a partial result, rather than a human answer |
+| A recording link stops working | Ask `call4me_get_recordings` for fresh metadata. Grok returned a temporary provider link; the reviewed player above uses a static export |
+
+### Setup reference for the three Grok surfaces
 
 call4me is an MCP server that places real phone calls. Your agent hands it a goal ("book a table for four at seven"), a voice caller talks to the business like a person would, and your agent gets the outcome and transcript back. It works in Claude Code, Codex, ChatGPT and Claude, and the same server works in Grok.
 

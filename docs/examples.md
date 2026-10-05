@@ -32,6 +32,27 @@ transcripts, and editing manifests outside this repository. Public players
 must only use the reviewed static exports. Publish an account owner's recording
 with their permission.
 
+The October 4 Grok Bot example uses one informational Foreign Cinema call.
+The complete reviewed caller and restaurant recording lasts 108.9 seconds,
+with original timing retained at `public/static/blog/grok-foreign-cinema-walk-ins.mp3`.
+The restaurant's menu supplied a walk in policy but no staff member confirmed
+availability for four people or an arrival time. The article preserves the
+brief unclear interjection, disputed final prompt and stop from the Bot tool.
+It does not establish a keypad action, immediate silent hangup or mailbox receipt.
+
+The October 4 voice comparison adds twelve controlled carrier SIP trials,
+three per voice, captured on the receiving application's caller channel.
+Appointments and reference codes are synthetic fixture facts. Public players
+contain the complete received caller channel, with silence during the separate
+receiver prompts preserved. They do not contain a mixed conversation and do
+not establish a public telephone or handset test. Reviewed WAV extracts expose
+the exact readback windows used for scoring; label their boundaries and keep
+the complete recordings alongside them. The downloadable result ledger includes
+audio hashes, packet gap totals, two ASR outputs per window and recognized fields.
+ASR text and the caller's intended text are separate evidence, neither is a
+human verified transcript. The existing five language clips are direct model
+samples and now say so in both the article and the voices page.
+
 The October 3 cancellation research adds founder examples for Factor, Fubo and
 HelloFresh, linked to their cancellation guides. These are general inquiries,
 not completed account cancellations. The blogs include all five calls, including
