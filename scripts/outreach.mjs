@@ -3,17 +3,21 @@
  * Track creator and press outreach in the outreach table.
  *
  *   npm run outreach -- import <file.json>            add people (skips names already there)
- *   npm run outreach -- list [status] [x|email|other] who is where, by the channel to use
+ *   npm run outreach -- list [status] [x|email|other] [--json] who is where, by the channel to use
  *   npm run outreach -- show <id>                      one person, with their message
  *   npm run outreach -- draft <id> <message file>      save the message to send
  *   npm run outreach -- sent <id> [x|email|other]      mark sent (defaults to their channel)
  *   npm run outreach -- status <id> <status> [note]    replied, won, declined, ...
  *   npm run outreach -- set <id> <email|other_contact|x_handle> <value>  fill in a contact we found later
  *   npm run outreach -- email <id> <subject> [body file] [--dry-run]
- *                                                      email them from me@skeptrune.com (gws-gmail
- *                                                      profile) and mark sent; body defaults to their
+ *                                                      email them from me@skeptrune.com and mark sent;
+ *                                                      Fastmail when configured, otherwise gws-gmail;
+ *                                                      body defaults to their
  *                                                      message, blank lines separate paragraphs; someone
  *                                                      who already replied or was won keeps that status
+ *   npm run outreach -- email-draft <id> <subject> [body file] [--dry-run]
+ *                                                      create a Fastmail draft without sending
+ *   npm run outreach -- mail-status                   verify Fastmail account and sender (read only)
  *
  * Add --local to any command to use the local D1. The channel is the first contact we have:
  * X, then email, then other_contact.
@@ -21,6 +25,7 @@
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
+import { fastmail, messageHtml, statusAfterDraft } from './outreach-mail.mjs';
 
 const STATUSES = ['new', 'drafted', 'sent', 'replied', 'won', 'declined', 'no_contact'];
 const CHANNELS = ['x', 'email', 'other'];
@@ -28,7 +33,8 @@ const CHANNELS = ['x', 'email', 'other'];
 const args = process.argv.slice(2);
 const where = args.includes('--local') ? '--local' : '--remote';
 const dryRun = args.includes('--dry-run');
-const [command, ...rest] = args.filter((a) => a !== '--local' && a !== '--dry-run');
+const json = args.includes('--json');
+const [command, ...rest] = args.filter((a) => !['--local', '--dry-run', '--json'].includes(a));
 
 const sql = (v) => (v === null || v === undefined || v === '' ? 'NULL' : typeof v === 'number' ? String(v) : `'${String(v).replace(/'/g, "''")}'`);
 function d1(statement) {
@@ -68,8 +74,11 @@ if (command === 'import') {
   const status = rest.find((a) => STATUSES.includes(a));
   const channel = rest.find((a) => CHANNELS.includes(a));
   const rows = d1(`SELECT * FROM outreach ${status ? `WHERE status = ${sql(status)}` : ''} ORDER BY kind, status, name`).filter((p) => !channel || channelOf(p) === channel);
-  for (const p of rows) console.log([p.id, p.status.padEnd(10), (channelOf(p) ?? '-').padEnd(5), p.kind.padEnd(7), p.name.slice(0, 32).padEnd(32), contactOf(p)].join('  '));
-  console.log(`${rows.length} people`);
+  if (json) console.log(JSON.stringify(rows, null, 2));
+  else {
+    for (const p of rows) console.log([p.id, p.status.padEnd(10), (channelOf(p) ?? '-').padEnd(5), p.kind.padEnd(7), p.name.slice(0, 32).padEnd(32), contactOf(p)].join('  '));
+    console.log(`${rows.length} people`);
+  }
 } else if (command === 'show') {
   const p = one(rest[0]);
   console.log({ ...p, channel: channelOf(p) });
@@ -100,32 +109,52 @@ if (command === 'import') {
   const p = one(id);
   d1(`UPDATE outreach SET ${field} = ${sql(value)}, updated_at = ${Date.now()} WHERE id = ${sql(id)}`);
   console.log(`${p.name}: ${field} = ${value}`);
-} else if (command === 'email') {
+} else if (command === 'mail-status') {
+  try {
+    console.log(JSON.stringify(await fastmail().status(), null, 2));
+  } catch (error) {
+    fail(error.message);
+  }
+} else if (command === 'email' || command === 'email-draft') {
   const [id, subject, file] = rest;
-  if (!subject) fail('usage: email <id> <subject> [body file] [--dry-run]');
+  if (!subject) fail(`usage: ${command} <id> <subject> [body file] [--dry-run]`);
   const p = one(id);
   if (!p.email) fail(`${p.name} has no email`);
-  if (p.sent_via === 'email') fail(`${p.name} was already emailed`);
+  if (command === 'email' && p.sent_via === 'email') fail(`${p.name} was already emailed`);
   const text = (file ? readFileSync(file, 'utf8') : p.message ?? fail(`${p.name} has no message`)).trim();
-  const escape = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  const html = text
-    .split(/\n\s*\n/)
-    .map((para) => `<div>${para.split('\n').map(escape).join('<br>')}</div>`)
-    .join('<div><br></div>');
-  const send = ['gmail', '+send', '--to', p.email, '--from', 'Nick Khami <me@skeptrune.com>', '--subject', subject, '--body', html, '--html'];
-  const env = { ...process.env, GOOGLE_WORKSPACE_CLI_KEYRING_BACKEND: 'file', GOOGLE_WORKSPACE_CLI_CONFIG_DIR: `${process.env.HOME}/.config/gws-gmail` };
+  if (!text) fail(`${p.name} has an empty message`);
   if (dryRun) {
     console.log(`to: ${p.email}\nsubject: ${subject}\n\n${text}`);
     process.exit(0);
   }
-  const out = execFileSync('gws', send, { encoding: 'utf8', env, stdio: ['ignore', 'pipe', 'inherit'] });
-  const gmailId = JSON.parse(out.slice(out.indexOf('{'))).id ?? fail(`gws returned no message id: ${out}`);
+  let delivery;
+  try {
+    if (command === 'email-draft') delivery = await fastmail().createDraft({ to: p.email, subject, text });
+    else if (process.env.FASTMAIL_JMAP_TOKEN) delivery = await fastmail().send({ to: p.email, subject, text });
+    else {
+      const send = ['gmail', '+send', '--to', p.email, '--from', 'Nick Khami <me@skeptrune.com>', '--subject', subject, '--body', messageHtml(text), '--html'];
+      const env = { ...process.env, GOOGLE_WORKSPACE_CLI_KEYRING_BACKEND: 'file', GOOGLE_WORKSPACE_CLI_CONFIG_DIR: `${process.env.HOME}/.config/gws-gmail` };
+      const out = execFileSync('gws', send, { encoding: 'utf8', env, stdio: ['ignore', 'pipe', 'inherit'] });
+      const id = JSON.parse(out.slice(out.indexOf('{'))).id;
+      if (!id) fail('gws returned no message id');
+      delivery = { provider: 'gmail', id };
+    }
+  } catch (error) {
+    fail(error.message);
+  }
   const now = Date.now();
-  const notes = [p.notes, `${new Date(now).toISOString().slice(0, 10)}: emailed ${p.email}, gmail id ${gmailId}`].filter(Boolean).join('\n');
+  if (command === 'email-draft') {
+    const notes = [p.notes, `${new Date(now).toISOString().slice(0, 10)}: email draft for ${p.email}, ${delivery.provider} draft id ${delivery.id}`].filter(Boolean).join('\n');
+    d1(`UPDATE outreach SET status = ${sql(statusAfterDraft(p.status))}, notes = ${sql(notes)}, updated_at = ${now} WHERE id = ${sql(p.id)}`);
+    console.log(`drafted email for ${p.name} <${p.email}>: ${delivery.id}`);
+    process.exit(0);
+  }
+  const notes = [p.notes, `${new Date(now).toISOString().slice(0, 10)}: emailed ${p.email}, ${delivery.provider} id ${delivery.id}${delivery.submissionId ? `, submission id ${delivery.submissionId}` : ''}${delivery.warning ? `; ${delivery.warning}` : ''}`].filter(Boolean).join('\n');
   // A follow-up to someone who already answered keeps their status; only a first touch becomes 'sent'.
   const status = ['replied', 'won'].includes(p.status) ? p.status : 'sent';
   d1(`UPDATE outreach SET status = ${sql(status)}, sent_via = 'email', sent_at = ${now}, notes = ${sql(notes)}, updated_at = ${now} WHERE id = ${sql(p.id)}`);
-  console.log(`emailed ${p.name} <${p.email}>: ${gmailId}`);
+  console.log(`emailed ${p.name} <${p.email}>: ${delivery.id}`);
+  if (delivery.warning) console.warn(delivery.warning);
 } else {
-  fail('usage: npm run outreach -- import|list|show|draft|sent|status|set|email ... (see scripts/outreach.mjs)');
+  fail('usage: npm run outreach -- import|list|show|draft|sent|status|set|mail-status|email-draft|email ... (see scripts/outreach.mjs)');
 }
