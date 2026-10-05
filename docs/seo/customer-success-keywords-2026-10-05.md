@@ -154,3 +154,19 @@ no mobile horizontal overflow and no page JavaScript errors. Timestamp media
 fragments also remain usable without JavaScript. All four headline images were
 visually inspected. These checks verify the prepared pages; they do not assert
 an Ahrefs Site Audit score, achieved rankings or production deployment.
+
+## Production verification
+
+CI run 37332295190 deployed the collection successfully. Production HTTP checks
+confirmed all four article URLs, canonical tags, examples anchors and guide
+links, sitemap, feed and llms.txt entries. All 41 distinct internal link targets
+returned 200 without redirects. All five audio files matched the approved
+exports by SHA256, and byte range responses returned the expected bytes.
+
+The production playback pass exposed an existing unhandled AbortError when
+pausing or changing recordings before playback finished starting. The timestamp
+player now handles that intentional cancellation while continuing to report
+unexpected playback failures. Local browser regression checks exercised eight
+rapid playback and pause cycles without an unhandled cancellation, and confirmed
+that an unsupported media error still surfaces. Type checking, linting, the
+Worker build and all 158 tests passed for the correction.

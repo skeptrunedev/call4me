@@ -218,7 +218,10 @@ document.addEventListener('click', function (event) {
   event.preventDefault();
   document.querySelectorAll('audio').forEach(function (other) { if (other !== audio) other.pause(); });
   audio.currentTime = Number(link.dataset.t);
-  audio.play();
+  audio.play().catch(function (error) {
+    // Switching recordings or pausing while playback starts cancels this request.
+    if (error.name !== 'AbortError') throw error;
+  });
   audio.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 });`;
 
