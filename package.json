@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "wrangler dev -c wrangler.jsonc -c wrangler.voice.jsonc",
     "check": "tsc -p tsconfig.json",
+    "crawlers": "node scripts/configure-crawlers.mjs",
     "lint": "eslint src",
     "cf-typegen": "wrangler types -c wrangler.jsonc -c wrangler.voice.jsonc",
     "db:migrate:local": "wrangler d1 migrations apply callbay --local",

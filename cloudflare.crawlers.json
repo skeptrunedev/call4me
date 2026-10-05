@@ -1,0 +1,18 @@
+{
+  "zone": "call4.me",
+  "settings": {
+    "browser_check": "off"
+  },
+  "bot_management": {
+    "ai_bots_protection": "disabled",
+    "ai_search": "disabled",
+    "ai_training": "disabled",
+    "ai_user": "disabled",
+    "bot_preference_sync_enabled": false,
+    "cf_robots_variant": "off",
+    "content_bots_protection": "disabled",
+    "crawler_protection": "disabled",
+    "fight_mode": false,
+    "is_robots_txt_managed": false
+  }
+}

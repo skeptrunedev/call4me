@@ -89,6 +89,17 @@ value as the site's): `npx wrangler secret put <NAME> -c wrangler.voice.jsonc`.
 
 ## Blog
 
+### Crawlers
+
+`/robots.txt` allows every crawler on every path, including AI search, answers, and training.
+The wildcard covers current and future crawlers without maintaining a named allowlist.
+Cloudflare's desired crawler settings live in `cloudflare.crawlers.json`. Run `npm run crawlers`
+to audit them, or `npm run crawlers -- --apply` to apply and verify them. The command requires
+`CLOUDFLARE_API_TOKEN` with Zone Read, Zone Settings Read and Write, and Bot Management Read
+and Write for `call4.me`. Any unavailable or mismatched setting fails the command. Separately
+audit AI Crawl Control and firewall rules for crawler blocks. Cloudflare's automatic DDoS
+protection remains active.
+
 `/blog` is markdown files in `src/content/blog` (one per post, listed in `index.ts`, headline image at
 `public/static/blog/<slug>.svg`), with an Atom feed, likes, comments, an email newsletter (sent from
 `/admin/blog`, for the `ADMIN_EMAILS` accounts), and paid posts for monthly supporters.
