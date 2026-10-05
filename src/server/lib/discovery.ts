@@ -12,30 +12,8 @@ export type PostEntry = Pick<Post, 'slug' | 'title' | 'description' | 'date' | '
  * (siteUrl in auth-options.ts), so every link points back at the host that was asked.
  */
 
-/** Crawlers we name explicitly so the policy is unambiguous: search and answer engines are welcome. */
-export const AI_CRAWLERS = [
-  'GPTBot', 'OAI-SearchBot', 'ChatGPT-User', // OpenAI
-  'ClaudeBot', 'Claude-User', 'Claude-SearchBot', // Anthropic
-  'Google-Extended', 'Googlebot', // Google
-  'PerplexityBot', 'Perplexity-User', // Perplexity
-  'Applebot', 'Applebot-Extended', // Apple
-  'Bingbot', 'DuckAssistBot', 'meta-externalagent', 'Amazonbot', 'MistralAI-User', 'cohere-ai', 'CCBot', 'Bytespider',
-];
-
-/**
- * Paths that are per-user, side-effecting, or carry a secret; nothing a crawler should walk.
- * /mcp/ (with the slash) is the key-in-URL form of the MCP endpoint; the /mcp page stays open.
- */
-export const DISALLOW = [
-  '/account', '/welcome', '/login', '/logout', '/oauth/', '/add-funds', '/add/', '/buy', '/unsubscribe', '/mcp/', '/api/auth/', '/webhooks/', '/voice/',
-  // The blog's checkout, emailed-link pages, and back office; the posts themselves are open.
-  '/blog/support', '/blog/subscribe/', '/blog/unsubscribe', '/admin/',
-  // Blog search, tag, and sort results: /blog with a query, each canonical to /blog itself.
-  '/blog?',
-];
-
-/** Content Signals (contentsignals.org): search and answer engines may use the content; training is not granted. */
-export const CONTENT_SIGNAL = 'search=yes, ai-input=yes, ai-train=no';
+/** Content Signals (contentsignals.org): allow search, AI answers, and AI training. */
+export const CONTENT_SIGNAL = 'search=yes, ai-input=yes, ai-train=yes';
 
 export function robotsTxt(site: string): string {
   return [
@@ -43,12 +21,11 @@ export function robotsTxt(site: string): string {
     `# entry points are the sitemap below, ${site}/llms.txt, ${site}/.well-known/api-catalog,`,
     `# ${site}/.well-known/agent-skills/index.json, and the MCP server at ${site}/mcp.`,
     '',
+    // One wildcard group allows every present and future crawler on every path.
     'User-agent: *',
-    ...DISALLOW.map((p) => `Disallow: ${p}`),
     'Allow: /',
     `Content-Signal: ${CONTENT_SIGNAL}`,
     '',
-    ...AI_CRAWLERS.flatMap((ua) => [`User-agent: ${ua}`, ...DISALLOW.map((p) => `Disallow: ${p}`), 'Allow: /', `Content-Signal: ${CONTENT_SIGNAL}`, '']),
     `Sitemap: ${site}/sitemap.xml`,
     // ARD (agenticresourcediscovery.org): where the capability manifest lives.
     `Agentmap: ${site}/.well-known/ai-catalog.json`,
