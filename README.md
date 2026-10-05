@@ -87,9 +87,7 @@ one. Never deploy it or change its secrets any other way: either restarts every 
 `OPENAI_API_KEY`, `TELNYX_API_KEY`, `TELNYX_CONNECTION_ID`, `RAINDROP_WRITE_KEY` and `STREAM_SECRET` (the same
 value as the site's): `npx wrangler secret put <NAME> -c wrangler.voice.jsonc`.
 
-## Blog
-
-### Crawlers
+## Crawlers
 
 `/robots.txt` allows every crawler on every path, including AI search, answers, and training.
 The wildcard covers current and future crawlers without maintaining a named allowlist.
@@ -99,6 +97,8 @@ to audit them, or `npm run crawlers -- --apply` to apply and verify them. The co
 and Write for `call4.me`. Any unavailable or mismatched setting fails the command. Separately
 audit AI Crawl Control and firewall rules for crawler blocks. Cloudflare's automatic DDoS
 protection remains active.
+
+## Blog
 
 `/blog` is markdown files in `src/content/blog` (one per post, listed in `index.ts`, headline image at
 `public/static/blog/<slug>.svg`), with an Atom feed, likes, comments, an email newsletter (sent from
