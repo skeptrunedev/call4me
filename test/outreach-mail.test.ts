@@ -156,6 +156,7 @@ test('drafting preserves prior contact history statuses', () => {
 
 const originalDraft = {
   id: 'original-draft', mailboxIds: { drafts: true }, keywords: { $draft: true },
+  subject: message.subject,
   from: [{ email: 'me@skeptrune.com' }], to: [{ email: message.to }],
   sender: null, cc: null, bcc: null, replyTo: null, inReplyTo: null, references: null,
   hasAttachment: false, attachments: [], htmlBody: [{ partId: 'html', type: 'text/html' }],
@@ -169,6 +170,69 @@ const replacementResponses = () => [
 const replacementOverrides = (original: object = originalDraft) => ({
   'Email/get': methodResult('Email/get', { state: 'before-create', list: [original] }),
   'Email/set': replacementResponses(),
+});
+
+const sendDraftMessage = { ...message, id: originalDraft.id };
+const draftSubmissionResponse = {
+  methodResponses: [
+    ['Email/set', { accountId: 'account', updated: { 'original-draft': null } }, 'outreach'],
+    ['EmailSubmission/set', { accountId: 'account', created: { submission: { id: 'submission' } } }, 'outreach'],
+  ],
+};
+const sendDraftOverrides = (original: object = originalDraft) => ({
+  'Email/get': methodResult('Email/get', { state: 'original-state', list: [original] }),
+  'EmailSubmission/set': draftSubmissionResponse,
+});
+
+test('sending an existing draft submits its verified native id without creating another email', async () => {
+  const { client, calls } = mock(sendDraftOverrides());
+  assert.deepEqual(await client.sendDraft(sendDraftMessage), { provider: 'fastmail', id: 'original-draft', submissionId: 'submission' });
+  assert.deepEqual(calls.slice(1).map((call) => call.body.methodCalls[0][0]), ['Identity/get', 'Mailbox/get', 'Email/get', 'EmailSubmission/set']);
+  const read = calls[3].body.methodCalls[0][1];
+  assert.deepEqual(read.ids, ['original-draft']);
+  assert.ok(read.properties.includes('subject'));
+  const submission = calls[4].body.methodCalls[0][1];
+  assert.deepEqual(submission.create.submission, { identityId: 'sender', emailId: 'original-draft' });
+  assert.deepEqual(submission.onSuccessUpdateEmail, { '#submission': {
+    'mailboxIds/drafts': null, 'mailboxIds/sent': true, 'keywords/$draft': null,
+  } });
+  assert.ok(calls.every((call) => call.body?.methodCalls[0][0] !== 'Email/set'));
+});
+
+test('existing draft submission refuses sent mail, mismatched content or extra recipients before submitting', async () => {
+  const invalid = [
+    { ...originalDraft, keywords: {} },
+    { ...originalDraft, mailboxIds: { sent: true } },
+    { ...originalDraft, mailboxIds: { drafts: true, sent: true } },
+    { ...originalDraft, from: [{ email: 'wrong@example.com' }] },
+    { ...originalDraft, to: [{ email: 'wrong@example.com' }] },
+    { ...originalDraft, to: [...originalDraft.to, { email: 'second@example.com' }] },
+    { ...originalDraft, subject: 'edited subject' },
+    { ...originalDraft, bodyValues: { html: { value: '<p>edited body</p>' } } },
+    { ...originalDraft, hasAttachment: true },
+    ...['sender', 'cc', 'bcc', 'replyTo', 'inReplyTo', 'references', 'attachments'].map((property) => ({ ...originalDraft, [property]: ['extra'] })),
+  ];
+  for (const original of invalid) {
+    const { client, calls } = mock(sendDraftOverrides(original));
+    await assert.rejects(client.sendDraft(sendDraftMessage));
+    assert.ok(calls.every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+  }
+});
+
+test('existing draft submission failure is not retried and a filing error retains confirmed submission', async () => {
+  const failed = mock({ ...sendDraftOverrides(), 'EmailSubmission/set': methodResult('EmailSubmission/set', { notCreated: { submission: { type: 'forbiddenToSend' } } }) });
+  await assert.rejects(failed.client.sendDraft(sendDraftMessage), /original-draft.*inspect.*retrying.*forbiddenToSend/);
+  assert.equal(failed.calls.filter((call) => call.body?.methodCalls[0][0] === 'EmailSubmission/set').length, 1);
+  assert.ok(failed.calls.every((call) => call.body?.methodCalls[0][0] !== 'Email/set'));
+  const filing = mock({ ...sendDraftOverrides(), 'EmailSubmission/set': { methodResponses: [
+    ['Email/set', { accountId: 'account', notUpdated: { 'original-draft': { type: 'forbidden' } } }, 'outreach'],
+    ['EmailSubmission/set', { accountId: 'account', created: { submission: { id: 'submission' } } }, 'outreach'],
+  ] } });
+  const sent = await filing.client.sendDraft(sendDraftMessage);
+  assert.equal(sent.id, 'original-draft');
+  assert.equal(sent.submissionId, 'submission');
+  assert.match(sent.warning, /mail submitted.*Sent mailbox update.*forbidden/);
+  assert.equal(filing.calls.filter((call) => call.body?.methodCalls[0][0] === 'EmailSubmission/set').length, 1);
 });
 
 test('draft replacement verifies the original and guards both native mutations without submitting', async () => {
@@ -298,6 +362,57 @@ test('CLI draft records native draft id without changing prior sent history', ()
     assert.doesNotMatch(update, /sent_via|sent_at|message =/);
     assert.ok(calls.every((call) => !call.body || call.body.methodCalls[0][0] !== 'EmailSubmission/set'));
   });
+});
+
+test('CLI existing draft send dry run is read only and successful send records the native id and sent timestamp', () => {
+  cliFixture({ ...row, status: 'drafted' }, (fixture) => {
+    const args = ['email-send-draft', 'person', 'original-draft', message.subject];
+    assert.equal(fixture.run([...args, '--dry-run']), `to: ${message.to}\nsubject: ${message.subject}\n\n${message.text}\n`);
+    assert.ok(fixture.calls().every((call) => !call.sql || call.sql.startsWith('SELECT')));
+    assert.ok(fixture.calls().every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+    assert.match(fixture.run(args), /original-draft/);
+    const calls = fixture.calls();
+    const update = calls.find((call) => call.sql?.startsWith('UPDATE')).sql;
+    assert.match(update, /status = 'sent'/);
+    assert.match(update, /sent_via = 'email'/);
+    assert.match(update, /sent_at = \d+/);
+    assert.match(update, /existing notes/);
+    assert.match(update, /original-draft/);
+    assert.match(update, /submission/);
+    assert.doesNotMatch(update, /message =/);
+    assert.equal(calls.filter((call) => call.body?.methodCalls[0][0] === 'EmailSubmission/set').length, 1);
+    assert.ok(calls.every((call) => call.body?.methodCalls[0][0] !== 'Email/set'));
+  }, sendDraftOverrides());
+});
+
+test('CLI existing draft send refuses already emailed rows before provider access and content mismatches before submit', () => {
+  cliFixture({ ...row, status: 'sent', sent_via: 'email', sent_at: 123 }, (fixture) => {
+    assert.throws(() => fixture.run(['email-send-draft', 'person', 'original-draft', message.subject]), /already emailed/);
+    assert.ok(fixture.calls().every((call) => call.sql?.startsWith('SELECT')));
+  }, sendDraftOverrides());
+  cliFixture(row, (fixture) => {
+    assert.throws(() => fixture.run(['email-send-draft', 'person', 'original-draft', message.subject]), /body.*match/);
+    assert.ok(fixture.calls().every((call) => !call.sql || call.sql.startsWith('SELECT')));
+    assert.ok(fixture.calls().every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+  }, sendDraftOverrides({ ...originalDraft, bodyValues: { html: { value: '<p>unexpected draft body</p>' } } }));
+});
+
+test('CLI existing draft send preserves replied status and records confirmed submission despite a filing warning', () => {
+  cliFixture({ ...row, status: 'replied', replied_at: 456 }, (fixture) => {
+    assert.match(fixture.run(['email-send-draft', 'person', 'original-draft', message.subject]), /original-draft/);
+    const calls = fixture.calls();
+    const update = calls.find((call) => call.sql?.startsWith('UPDATE')).sql;
+    assert.match(update, /status = 'replied'/);
+    assert.match(update, /sent_via = 'email'/);
+    assert.match(update, /sent_at = \d+/);
+    assert.match(update, /submission/);
+    assert.match(update, /Sent mailbox update/);
+    assert.doesNotMatch(update, /message =|replied_at/);
+    assert.equal(calls.filter((call) => call.body?.methodCalls[0][0] === 'EmailSubmission/set').length, 1);
+  }, { ...sendDraftOverrides(), 'EmailSubmission/set': { methodResponses: [
+    ['Email/set', { accountId: 'account', notUpdated: { 'original-draft': { type: 'forbidden' } } }, 'outreach'],
+    ['EmailSubmission/set', { accountId: 'account', created: { submission: { id: 'submission' } } }, 'outreach'],
+  ] } });
 });
 
 test('CLI draft update routes the guarded replacement and preserves prior sent history', () => {

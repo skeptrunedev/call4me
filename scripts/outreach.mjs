@@ -19,6 +19,8 @@
  *                                                      create a Fastmail draft without sending
  *   npm run outreach -- email-draft-update <person id> <old draft id> <subject> <body file> [--dry-run]
  *                                                      replace a verified unsent Fastmail draft without sending
+ *   npm run outreach -- email-send-draft <person id> <draft id> <subject> [--dry-run]
+ *                                                      send the exact existing draft after verifying its body
  *   npm run outreach -- mail-status                   verify Fastmail account and sender (read only)
  *   npm run outreach -- mail-search '<query JSON>'    read only JMAP Email/query arguments: filter, position, limit
  *   npm run outreach -- mail-read <id> [id ...]        fetch email bodies without changing read state
@@ -182,12 +184,16 @@ if (command === 'import') {
     fail(`Draft replacement succeeded (${replacement.id}), but tracker update failed; inspect the replacement before retrying: ${error.message}`);
   }
   console.log(JSON.stringify(replacement, null, 2));
-} else if (command === 'email' || command === 'email-draft') {
-  const [id, subject, file] = rest;
-  if (!subject) fail(`usage: ${command} <id> <subject> [body file] [--dry-run]`);
+} else if (['email', 'email-draft', 'email-send-draft'].includes(command)) {
+  const [id, subject, file] = command === 'email-send-draft' ? [rest[0], rest[2], null] : rest;
+  const draftId = command === 'email-send-draft' ? rest[1] : null;
+  if (command === 'email-send-draft' && !draftId) fail('usage: email-send-draft <person id> <draft id> <subject> [--dry-run]');
+  if (!subject) fail(command === 'email-send-draft'
+    ? 'usage: email-send-draft <person id> <draft id> <subject> [--dry-run]'
+    : `usage: ${command} <id> <subject> [body file] [--dry-run]`);
   const p = one(id);
   if (!p.email) fail(`${p.name} has no email`);
-  if (command === 'email' && p.sent_via === 'email') fail(`${p.name} was already emailed`);
+  if (command !== 'email-draft' && p.sent_via === 'email') fail(`${p.name} was already emailed`);
   const text = (file ? readFileSync(file, 'utf8') : p.message ?? fail(`${p.name} has no message`)).trim();
   if (!text) fail(`${p.name} has an empty message`);
   if (dryRun) {
@@ -197,6 +203,7 @@ if (command === 'import') {
   let delivery;
   try {
     if (command === 'email-draft') delivery = await fastmail().createDraft({ to: p.email, subject, text });
+    else if (command === 'email-send-draft') delivery = await fastmail().sendDraft({ id: draftId, to: p.email, subject, text });
     else if (process.env.FASTMAIL_JMAP_TOKEN) delivery = await fastmail().send({ to: p.email, subject, text });
     else {
       const send = ['gmail', '+send', '--to', p.email, '--from', 'Nick Khami <me@skeptrune.com>', '--subject', subject, '--body', messageHtml(text), '--html'];
@@ -223,5 +230,5 @@ if (command === 'import') {
   console.log(`emailed ${p.name} <${p.email}>: ${delivery.id}`);
   if (delivery.warning) console.warn(delivery.warning);
 } else {
-  fail('usage: npm run outreach -- import|list|show|draft|sent|status|set|mail-status|mail-search|mail-read|mail-reply|email-draft|email-draft-update|email-reply|email ... (see scripts/outreach.mjs)');
+  fail('usage: npm run outreach -- import|list|show|draft|sent|status|set|mail-status|mail-search|mail-read|mail-reply|email-draft|email-draft-update|email-send-draft|email-reply|email ... (see scripts/outreach.mjs)');
 }

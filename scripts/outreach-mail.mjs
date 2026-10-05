@@ -84,12 +84,12 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     return { provider: 'fastmail', id };
   }
 
-  async function replaceDraft({ id, to, subject, text, expectedText }) {
-    if (!id || !to || !subject || !text?.trim() || !expectedText?.trim()) throw new Error('Original draft, recipient, subject, new body and expected body are required');
+  async function verifiedDraft({ id, to, expectedText, expectedSubject }) {
+    if (!id || !to || !expectedText?.trim()) throw new Error('Original draft, recipient and expected body are required');
     const session = await discover();
     const originalResult = await call(session, 'Email/get', {
       ids: [id],
-      properties: ['id', 'mailboxIds', 'keywords', 'sender', 'from', 'to', 'cc', 'bcc', 'replyTo', 'inReplyTo', 'references', 'hasAttachment', 'attachments', 'htmlBody', 'bodyValues'],
+      properties: ['id', 'subject', 'mailboxIds', 'keywords', 'sender', 'from', 'to', 'cc', 'bcc', 'replyTo', 'inReplyTo', 'references', 'hasAttachment', 'attachments', 'htmlBody', 'bodyValues'],
       fetchHTMLBodyValues: true,
     });
     const original = originalResult.list?.find((email) => email.id === id);
@@ -100,10 +100,17 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     if (['cc', 'bcc', 'replyTo', 'inReplyTo', 'references', 'attachments'].some((property) => !empty(original[property])) || original.hasAttachment) throw new Error('Original draft has additional recipients, attachments or reply headers');
     const html = original.htmlBody?.length === 1 && original.htmlBody[0].type === 'text/html' ? original.bodyValues?.[original.htmlBody[0].partId] : null;
     if (!html || html.isTruncated || html.isEncodingProblem || html.value !== messageHtml(expectedText)) throw new Error('Original draft body does not match the outreach tracker');
+    if (expectedSubject !== undefined && original.subject !== expectedSubject) throw new Error('Original draft subject does not match the approved subject');
     if (typeof originalResult.state !== 'string' || !originalResult.state) throw new Error('Original draft read returned no email state');
+    return { session, state: originalResult.state };
+  }
+
+  async function replaceDraft({ id, to, subject, text, expectedText }) {
+    if (!id || !to || !subject || !text?.trim() || !expectedText?.trim()) throw new Error('Original draft, recipient, subject, new body and expected body are required');
+    const { session, state } = await verifiedDraft({ id, to, expectedText });
 
     const created = await call(session, 'Email/set', {
-      ifInState: originalResult.state,
+      ifInState: state,
       create: { draft: {
         mailboxIds: { [session.draftMailboxId]: true }, keywords: { $draft: true },
         from: [SENDER], to: [{ email: to }], subject,
@@ -124,9 +131,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     }
   }
 
-  // Only the CLI's explicit email command calls this method. Creating a draft never submits it.
-  async function send(message) {
-    const draft = await createDraft(message);
+  async function submitDraft(draft) {
     const session = await discover();
     try {
       const result = await call(session, 'EmailSubmission/set', {
@@ -148,6 +153,17 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     } catch (error) {
       throw new Error(`Fastmail submission failed for draft ${draft.id}; inspect that draft before retrying: ${error.message}`, { cause: error });
     }
+  }
+
+  // Only explicit send commands submit mail. Draft creation and revision never submit it.
+  async function send(message) {
+    return submitDraft(await createDraft(message));
+  }
+
+  async function sendDraft({ id, to, subject, text }) {
+    if (!subject) throw new Error('Approved subject is required');
+    await verifiedDraft({ id, to, expectedText: text, expectedSubject: subject });
+    return submitDraft({ provider: 'fastmail', id });
   }
 
   async function replyMessage({ id, to, text }) {
@@ -183,6 +199,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     createDraft,
     replaceDraft,
     send,
+    sendDraft,
     replyMessage,
     async reply(message) {
       return send(await replyMessage(message));
