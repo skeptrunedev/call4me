@@ -222,3 +222,19 @@ test('CLI reply dry run stays read only and sending preserves original contact h
     rmSync(directory, { recursive: true, force: true });
   }
 });
+
+test('direct mail reply does not query or modify the outreach tracker', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'mail-reply-test-'));
+  const file = join(directory, 'reply.txt');
+  writeFileSync(file, 'thanks for the feedback');
+  try {
+    cliFixture(row, (fixture) => {
+      assert.equal(JSON.parse(fixture.run(['mail-reply', message.to, 'incoming', file, '--dry-run'])).expectedThreadId, 'thread');
+      assert.ok(fixture.calls().every((call) => !call.sql && !call.body?.methodCalls[0][0].endsWith('/set')));
+      assert.equal(JSON.parse(fixture.run(['mail-reply', message.to, 'incoming', file])).submissionId, 'submission');
+      assert.ok(fixture.calls().every((call) => !call.sql));
+    });
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
