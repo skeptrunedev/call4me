@@ -103,6 +103,7 @@ If an account token can manage tokens but lacks the permissions on this zone, us
 It discovers permission IDs from Cloudflare and preserves existing permissions and restrictions.
 The token editor calls Write permissions Edit. Account tokens may be unsupported by some bot
 products; use a user token from My Profile if Cloudflare rejects a correctly scoped account token.
+To manage another site's committed policy, pass `--policy /path/to/cloudflare.crawlers.json`.
 
 ## Blog
 

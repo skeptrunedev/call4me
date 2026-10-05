@@ -2,14 +2,18 @@
 /** Audit the committed crawler policy; --apply updates Cloudflare and verifies it. */
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { parseArgs } from 'node:util';
 
-const args = process.argv.slice(2);
-if (args.some((arg) => !['--apply', '--authorize'].includes(arg))) throw new Error('usage: npm run crawlers -- [--apply [--authorize]]');
-const apply = args.includes('--apply');
-if (args.includes('--authorize') && !apply) throw new Error('--authorize requires --apply');
+const { values } = parseArgs({ options: {
+  apply: { type: 'boolean' },
+  authorize: { type: 'boolean' },
+  policy: { type: 'string' },
+} });
+const apply = values.apply;
+if (values.authorize && !apply) throw new Error('--authorize requires --apply');
 const token = process.env.CLOUDFLARE_API_TOKEN;
 if (!token) throw new Error('CLOUDFLARE_API_TOKEN is required');
-const policy = JSON.parse(readFileSync(new URL('../cloudflare.crawlers.json', import.meta.url), 'utf8'));
+const policy = JSON.parse(readFileSync(values.policy ?? new URL('../cloudflare.crawlers.json', import.meta.url), 'utf8'));
 
 async function api(path, method = 'GET', body) {
   const response = await fetch(`https://api.cloudflare.com/client/v4${path}`, {
@@ -31,7 +35,7 @@ const base = `/zones/${zones[0].id}`;
 
 // Repair the current account token's scope only when explicitly requested. Discover IDs
 // from Cloudflare and preserve every existing permission, restriction, and other zone.
-if (args.includes('--authorize')) {
+if (values.authorize) {
   const tokens = `/accounts/${zones[0].account.id}/tokens`;
   const verified = await api(`${tokens}/verify`);
   const path = `${tokens}/${verified.id}`;
