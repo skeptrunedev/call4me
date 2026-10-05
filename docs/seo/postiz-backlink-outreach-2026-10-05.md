@@ -118,9 +118,12 @@ Sending is a separate action and remains pending review under the user's
 outreach instructions.
 
 Self verification passed: worker build through Wrangler dry run, TypeScript
-check, all 190 existing tests, JSON and CSV parsing, public contact and link
-proof, live Call4me resource checks and the actual mailbox and tracker readback.
-No application source changes are included in this research commit.
+check, all 196 tests, JSON and CSV parsing, public contact and link proof,
+live Call4me resource checks and the actual mailbox and tracker readback.
+The outreach CLI now supports revising its existing unsent Fastmail drafts.
+It verifies the original against the tracker and creates the revised draft
+before removing the old version. Mailbox state guards protect concurrent edits.
+No application source changes are included.
 
 Sources retrieved October 5, 2026. Relevant Ahrefs commands:
 
