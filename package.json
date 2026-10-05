@@ -16,6 +16,7 @@
     "deploy": "scripts/deploy-voice.sh && wrangler deploy",
     "grant": "node scripts/grant-credits.mjs",
     "number": "tsx scripts/number.ts",
+    "requirements": "node scripts/requirements.mjs",
     "outreach": "node scripts/outreach.mjs",
     "transfer": "node scripts/transfer-credits.mjs",
     "template": "tsx scripts/email-template.ts",
