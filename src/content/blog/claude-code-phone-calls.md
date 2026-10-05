@@ -4,7 +4,7 @@ seoTitle: "Claude Code phone calls: personal assistant setup"
 subtitle: Give the Claude Code session you already use a phone. We connected a real account, checked its balance, and asked Claude to call a restaurant during private dining research. Here is the setup, the actual tool sequence, and what the voicemail did and did not answer.
 description: "Add phone calls to your Claude Code personal assistant with MCP. Setup, cancellation prompts and a recorded restaurant research test with explicit limits."
 date: 2026-10-03
-updated: 2026-10-04
+updated: 2026-10-05
 tags: claude code, mcp, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Claude Code connects to call4me, makes a phone call, and returns the evidence to the research task
@@ -154,6 +154,7 @@ The setup above adds the phone part to the assistant you already use. Start with
 | Understand a subscription cancellation | The available cancellation route, fees, deadline and proof to request before changing the account | Our [Planet Fitness calls](/blog/cancel-planet-fitness) asked two clubs about their rules. They did not cancel a membership |
 | Plan an appointment | Availability that fits the times you supplied, what information the office needs and whether anything was actually confirmed | Give Claude your real constraints and permission to book before it agrees to a time |
 | Compare businesses | Answers missing online, who supplied them and what remains unresolved | Our [private dining research](/blog/agent-web-research-phone-calls-sf-private-dining) combines web sources with recorded calls |
+| Get business paperwork | Which document is needed, whether the provider sent it and where it was delivered | Our [Wyoming registered agent consent call](/blog/wyoming-registered-agent-consent-form) requested the document by phone; I confirmed it arrived afterward |
 
 For a cancellation inquiry, you can start with:
 

@@ -4,7 +4,7 @@ seoTitle: "Codex MCP phone calls: OAuth setup and real test"
 subtitle: Give Codex a calling tool, keep your credentials out of the prompt, and bring phone answers back into the research it is already doing.
 description: "Connect Codex to call4me through MCP with OAuth or an API key. See approval settings, the result loop and our real restaurant research test."
 date: 2026-10-03
-updated: 2026-10-04
+updated: 2026-10-05
 tags: codex, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: Codex researching online, calling a business through MCP, and returning the answer to the task
@@ -13,6 +13,8 @@ imageAlt: Codex researching online, calling a business through MCP, and returnin
 **Codex can make phone calls through a calling MCP server.** Connect call4me once, then ask Codex to call a business with a goal and clear limits. A voice caller handles the conversation; Codex follows the transcript and uses the result in the task you already gave it.
 
 If Codex is your personal assistant, that task might be reviewing subscriptions, planning an appointment or comparing businesses. Add the phone questions to that existing task, with the relevant context and permission for any change.
+
+For business paperwork, see our [Wyoming registered agent consent example](/blog/wyoming-registered-agent-consent-form). It includes a real call that got the document emailed and a suggested Codex brief for requesting your own missing document.
 
 We verified this with **Codex CLI 0.160.0 on October 3, 2026**. The practical test was private dining research: read the restaurants' official websites, identify missing or contradictory information, and call to clarify it. It was research only, with no invented event, reservation, or payment.
 

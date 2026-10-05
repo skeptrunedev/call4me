@@ -32,6 +32,28 @@ transcripts, and editing manifests outside this repository. Public players
 must only use the reviewed static exports. Publish an account owner's recording
 with their permission.
 
+The October 5 founder example adds a Wyoming registered agent consent request,
+published at `/blog/wyoming-registered-agent-consent-form` and on the examples
+page. Nick requested publication of his recording and confirmed that the
+consent document arrived by email. The recorded conversation establishes a
+signed and dated consent request, an account lookup, a confirmed email
+destination and the representative's agreement to email it. Document receipt
+is Nick's confirmation after the call. The representative did not read back
+the full consent wording, and no LLC filing was submitted during the call.
+
+The reviewed MP3 at
+`public/static/examples/wyoming-registered-agent-consent.mp3` decodes to
+171.82 seconds, matching the complete source WAV. It preserves original
+voices, menu, hold music, waiting and final survey fragment. Names, company
+name and spelling, account phone and email are muted in nine spans. The
+overlap affected by company name muting and uncertain words are marked in
+the full transcript. Two independent source transcriptions, word timestamps,
+short source excerpts, two independent final export transcriptions and
+decoded silence checks were reviewed. No human listening verification is
+claimed. Raw audio, ASR outputs and the editing manifest remain outside the
+repository. The article's Claude Code and Codex briefs are suggested workflows,
+rather than evidence of a newly executed client integration.
+
 The October 5 collection adds four customer stories and matching examples:
 an Ohio BWC application question, a veterinary dropoff booking, a haircut
 booking, and a Les Schwab oil change quote with a walk in dropoff plan. The
