@@ -7,6 +7,12 @@
  * and .../receiving-webhooks for signatures.
  */
 
+/**
+ * Answering machine detection on the calls we place: premium (speech recognition, with beep
+ * detection) plus Apple call screening. Its webhooks drive voice/voicemail.ts.
+ */
+const ANSWERING_MACHINE_DETECTION = 'premium_ios_call_screening_detection';
+
 const API = 'https://api.telnyx.com/v2';
 
 type TelnyxEnv = Pick<Env, 'TELNYX_API_KEY' | 'TELNYX_CONNECTION_ID'>;
@@ -147,6 +153,7 @@ export function telnyx(env: TelnyxEnv) {
         timeout_secs: 40,
         time_limit_secs: opts.timeLimitSecs,
         stream_url: opts.streamUrl,
+        answering_machine_detection: ANSWERING_MACHINE_DETECTION,
         ...STREAM,
       });
       return r.data.call_control_id;

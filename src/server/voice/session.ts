@@ -6,6 +6,7 @@ import { dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
 import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, missedHandoff } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { BACK_OFFICE_TOOLS } from './prompt';
+import { MACHINE_GUIDANCE, type MachineEvent } from './voicemail';
 
 /**
  * One live phone call: Telnyx's media stream on one side, a GPT-Live session on the other.
@@ -162,6 +163,10 @@ export class VoiceSession extends DurableObject<Env> {
   private nobodyThereTimer: ReturnType<typeof setTimeout> | null = null;
   /** The caller line that last got a "still there?", so one silence gets one. */
   private stillThereFor = 0;
+  /** A voicemail greeting is playing (the carrier detected a machine): the caller waits silently for its end. */
+  private greetingPlaying = false;
+  /** What the carrier's machine detection has already told the caller, so a repeated webhook isn't said twice. */
+  private machineHeard = new Set<MachineEvent>();
   /** The person's own phone leg while it rings or is on the call; the caller stays silent while they talk. */
   private personLeg: string | null = null;
   private personOn = false;
@@ -240,6 +245,11 @@ export class VoiceSession extends DurableObject<Env> {
         return new Response('ok');
       case '/hang-up':
         return Response.json({ message: await this.hangUpForUser() });
+      case '/machine': {
+        const { event } = (await req.json()) as { event: MachineEvent };
+        this.machineDetected(event);
+        return new Response('ok');
+      }
       case '/answer': {
         const { id, question, answer } = (await req.json()) as { id: string; question: string; answer: string };
         this.answerCameIn(id, question, answer);
@@ -803,6 +813,20 @@ export class VoiceSession extends DurableObject<Env> {
     return 'hung up';
   }
 
+  /**
+   * The carrier's answering machine detection: a voicemail greeting is playing (stay silent), it
+   * has ended (leave the message now), or a call screener answered (say who's calling). Each is
+   * acted on once per call.
+   */
+  private machineDetected(event: MachineEvent): void {
+    if (this.ended || this.endingCall || this.personHolds() || this.machineHeard.has(event)) return;
+    this.machineHeard.add(event);
+    this.greetingPlaying = event === 'machine';
+    this.note(event === 'machine' ? 'voicemail answered' : event === 'greeting_ended' ? 'voicemail greeting ended' : 'call screener answered');
+    this.mark(`answering machine detection: ${event}`);
+    this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: MACHINE_GUIDANCE[event] });
+  }
+
   private note(text: string): void {
     this.transcript.push({ role: 'note', text, at: Date.now() });
     if (!this.flushTimer) this.flushTimer = setTimeout(() => void this.flushTranscript(), TRANSCRIPT_FLUSH_MS);
@@ -975,7 +999,7 @@ export class VoiceSession extends DurableObject<Env> {
    */
   private stillThere(): void {
     this.stillThereTimer = null;
-    if (this.ended || this.endingCall || this.holding || this.personHolds() || this.menuRecovery.pending()) return;
+    if (this.ended || this.endingCall || this.holding || this.greetingPlaying || this.personHolds() || this.menuRecovery.pending()) return;
     const quietSince = Math.max(this.lastTranscriptAt, this.speechEndsAt);
     if (Date.now() - quietSince < STILL_THERE_QUIET_MS) return this.scheduleStillThere();
     const last = this.transcript[this.transcript.length - 1];

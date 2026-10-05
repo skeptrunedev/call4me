@@ -9,6 +9,7 @@ import { answerInbound, callPrice, pricePerMinute } from '../services/dialer';
 import { isSupporterObject, supporters } from '../services/supporters';
 import { topups, verifyWebhook } from '../services/topups';
 import { sessionFor } from '../voice/stub';
+import { machineEventOf } from '../voice/voicemail';
 import { accounts } from '../services/accounts';
 import { analytics } from '../services/analytics';
 import { decodeFirstTouch } from '../lib/first-touch';
@@ -121,7 +122,7 @@ webhooks.post('/stripe', async (c) => {
 interface TelnyxWebhook {
   data?: {
     event_type?: string;
-    payload?: { call_control_id?: string; call_leg_id?: string; client_state?: string | null; direction?: string; from?: string; to?: string; hangup_cause?: string; hangup_source?: string; digit?: string; digits?: string; status?: string };
+    payload?: { call_control_id?: string; call_leg_id?: string; client_state?: string | null; direction?: string; from?: string; to?: string; hangup_cause?: string; hangup_source?: string; digit?: string; digits?: string; status?: string; result?: string };
   };
 }
 
@@ -197,6 +198,13 @@ webhooks.post('/telnyx', async (c) => {
       }
       if (row?.answered_at) c.executionCtx.waitUntil(writeRecap(c.env, callId));
       c.executionCtx.waitUntil(reportCallEnded(c.env, callId));
+      break;
+    }
+    case 'call.machine.premium.detection.ended':
+    case 'call.machine.premium.greeting.ended':
+    case 'call.machine.premium.call_screening.detected': {
+      const event = machineEventOf(type, p.result);
+      if (event) await sessionFor(c.env, callId).fetch('https://session/machine', { method: 'POST', body: JSON.stringify({ event }) });
       break;
     }
     case 'streaming.failed':
