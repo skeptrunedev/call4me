@@ -1,4 +1,5 @@
 import type { PostSource } from '../../server/lib/blog';
+import wyomingRegisteredAgentConsent from './wyoming-registered-agent-consent-form.md';
 import ohioWorkersCompensation from './ohio-workers-compensation-insurance.md';
 import dropOffVetAppointment from './drop-off-vet-appointment.md';
 import bookHaircutAppointment from './book-haircut-appointment.md';
@@ -54,6 +55,7 @@ import twilioMcpPhoneCalls from './twilio-mcp-phone-calls.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'wyoming-registered-agent-consent-form', markdown: wyomingRegisteredAgentConsent },
   { slug: 'ohio-workers-compensation-insurance', markdown: ohioWorkersCompensation },
   { slug: 'drop-off-vet-appointment', markdown: dropOffVetAppointment },
   { slug: 'book-haircut-appointment', markdown: bookHaircutAppointment },
