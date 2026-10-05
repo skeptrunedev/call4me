@@ -1,22 +1,25 @@
 ---
 title: How much does a private dining room cost? We called 5 restaurants for a dinner for 10
 seoTitle: Private dining room cost: 5 real quotes for 10
-subtitle: A call4me user had their AI phone assistant call five Durham restaurants about a private dining room for 10. Here's what each one charged, what they asked for, all five recordings, and the questions to ask before you book.
-description: We called five Durham restaurants about a private dining room for 10. Room fees ran from none to $1,500. Every quote, the recordings, and what to ask.
+subtitle: Five recorded Durham restaurant quotes for 10 people, with a cost worksheet that separates room rental, food minimums and deposits. Hear our followup attempt and see which amounts still need confirmation.
+description: Five real private dining quotes for 10, with recordings, room fee versus food minimum calculations, deposit questions and an honest followup on unclear costs.
 date: 2026-10-01
+updated: 2026-10-04
 tags: private dining room, restaurants, group dinner, reservations, ai phone assistant
 authors: nick
 imageAlt: Private dining room for 10, five restaurants, five quotes, recorded
 ---
 
-**The short answer:** a private dining room for 10 usually costs **a room fee, plus a set amount of food per person, plus a deposit or a card on file**, and the numbers swing a lot from one restaurant to the next. On five calls to Durham, North Carolina restaurants for the same Thursday dinner, the room fee ran from **none mentioned** (10 people were treated as a regular reservation) to **$350** to **$1,500**. Two places already had their private space booked that night, and one would only talk about it by email.
+**The short answer:** in our five Durham calls, a dinner for 10 ranged from an ordinary table reservation with no room fee mentioned to a quoted **$350** or **$1,500** private room charge. The smallest calculable subtotal was M Hansik's **$1,000 for the room and food**, before drinks and unconfirmed tax and service charges. We could not calculate The Lenny's total because the recording does not clearly establish whether its $1,500 counts toward food and drink. Two places already had their private space booked that night, and one would only discuss it by email.
+
+Compare the **total event cost** and the **amount due up front** separately. A deposit may be credited against the final bill. Adding it to room and food charges again would overstate the cost, and none of these calls fully established the final bill or refund terms.
 
 What a restaurant will ask, and what you should ask back:
 
 1. **The date, the time and the headcount.** Every call started there.
-2. **How private it needs to be.** "Private or semi-private, or a table that feels set apart" got different answers at every place: a separate downstairs area, an outdoor pergola, a set-apart table, a private room.
+2. **How private it needs to be.** "Private or semi-private, or a table that feels set apart" got different answers at every place: a separate downstairs area, an outdoor pergola, a table set apart, a private room.
 3. **The room fee,** and **whether it counts toward food and drink.** M Hansik said its $350 is a room fee on top of the food. At The Lenny, our recording is unclear on that exact point (more below).
-4. **The food minimum or per-person spend,** and **whether there's a set menu.**
+4. **The food minimum or spend per person,** and **whether there's a set menu.**
 5. **The deposit, or a card on file.** All three places that quoted asked for one or the other.
 6. **Who books it.** At four of the five, a private room or a party goes through an events contact or an email address, not the person who answers the phone.
 
@@ -28,21 +31,85 @@ For a party of 10 on Thursday, November 5, 2026, around 6 pm, as quoted on Septe
 
 | Restaurant | Private space that night | Room fee | Food and drink | Deposit or card | How to book the room |
 |---|---|---|---|---|---|
-| **M Hansik** | Private dining room, available | **$350** (quoted for Wednesdays and Thursdays) | **$65 per person** expected for food, set menu | **50% of the total** up front | An events contact, by email |
-| **The Lenny** | Private events room, just for your group | **$1,500** flat to rent the room | Packages: buffet or sit-down dinner | A deposit ("a small fraction of the price") and a card on file, once the event is confirmed | The events coordinator, by email |
+| **M Hansik** | Private dining room, available | **$350**, separate room fee (quoted for Wednesdays and Thursdays) | **$65 per person** expected for food, set menu | Calculation unclear: "50% of the entire payment" and "$350, and then half" of food were both mentioned | An events contact, by email |
+| **The Lenny** | Private events room, just for your group | **$1,500** quoted to rent the room; credit toward food and drink unclear | Packages: buffet or dinner served at the table; no package price quoted | A deposit ("a small fraction of the price") and a card on file, once the event is confirmed | The events coordinator, by email |
 | **Mateo Bar de Tapas** | Upstairs area already reserved. 10 can sit downstairs | **None mentioned** for 10: "it's just regular" | No minimum mentioned. Family style starts at 12 people | A card on file | Regular table by phone. Private room through the events coordinator |
-| **Nikos** | Private space already booked. A set-apart table in the main room, "probably" | Not discussed | Not discussed | Not discussed | 5:00 or 7:30 offered, not 6:00 |
+| **Nikos** | Private space already booked. A table set apart in the main room, "probably" | Not discussed | Not discussed | Not discussed | 5:00 or 7:30 offered, not 6:00 |
 | **Seraphine** | Not discussed on the phone | Not discussed | Not discussed | Not discussed | Email the restaurant |
 
-Some quick math from the quotes, ours and not the restaurants': at M Hansik, 10 people at $65 plus the $350 room comes to **$1,000 before drinks, tax and tip**. As the host described the deposit, it's the $350 plus half of the food, which would be $675 up front. At The Lenny, the room alone is $1,500, before any food package.
+## What would the dinner actually cost?
+
+These calculations use the September 30 quotes, not a new offer. They separate arithmetic we can do from contract terms we still need to confirm.
+
+| Calculation for 10 people | What the recording supports | What remains unknown |
+|---|---|---|
+| M Hansik food | 10 × $65 = **$650** | Exactly what the set menu includes and whether drinks have a separate minimum |
+| M Hansik room plus food | $350 + $650 = **$1,000** | Drinks, tax, gratuity, service charges and cancellation terms |
+| M Hansik payment if half of the $1,000 subtotal is due | **$500** up front | Whether this is the intended deposit basis |
+| M Hansik payment if the full room fee plus half of food is due | $350 + $325 = **$675** up front | Whether this is the intended deposit basis, and how it is credited to the final bill |
+| The Lenny if $1,500 is a separate rental charge | **$1,500 plus the food and drink package** | Package price and all other charges |
+| The Lenny if $1,500 is a food and drink minimum | **At least $1,500 in eligible food and drink spend** | Whether this interpretation applies, what counts toward it, and how any shortfall is charged |
+
+**The $500 and $675 figures are alternative interpretations, not two charges to add together or confirmed deposit quotes.** M Hansik's host said both "50% of the entire payment" and "the initial $350, and then half of" the food before being interrupted. The call never supplied a final dollar amount. Our original article treated $675 as settled; that was too strong.
+
+For The Lenny, the recording supports a $1,500 quoted figure but leaves its treatment unresolved. Its [August 2025 event brochure](https://media-cdn.getbento.com/accounts/a9c845744cd8f7f88328c6b383170cf7/media/EVnj3F07T3xSY6Crj4ua_TheLennyEvents%20AUG2025.pdf) separately lists the private room starting at $1,000 and package specific food and beverage minimums. That older brochure is context, not confirmation of the September quote or a current $1,000 offer. The live [private events page](https://www.thelenny555.com/private-events/) we checked on October 4 describes the spaces and inquiry process without a price or deposit calculation.
+
+## Room fee, food minimum and deposit: what to ask
+
+A **room fee** pays for the space. A **food and beverage minimum** sets the required eligible meal spend. A **deposit** is an advance payment whose credit and refund terms need confirmation. Restaurants may use these words loosely, as the M Hansik call shows.
+
+Ask the coordinator to fill in this worksheet before paying:
+
+| Line item | Question that resolves it |
+|---|---|
+| Space | Is this an exclusive room, a shared section or a regular table? For how many hours? |
+| Room charge | Is this additional to food and drink, or does it count toward them? |
+| Meal spend | What is the minimum for the whole party, and which items count? If we spend less, how is the shortfall billed? |
+| Additional charges | Are tax, service charges and gratuity included? What other required fees apply? |
+| Payment now | What exact dollar amount is due, and which line items or percentage produce it? |
+| Payment later | How much of the advance payment is credited to the final bill, and when is the balance due? |
+| Cancellation | What is refundable, until what deadline, and what happens if the headcount changes? |
+
+For M Hansik, the precise missing question is: **"For 10 people at $65 each with a $350 room fee, is the payment due now $500, $675, or another amount, and what would remain due later before any extra charges?"** For The Lenny: **"If we pay the $1,500 quoted for the room, do we still pay separately for all food and drink, or does some or all of that $1,500 apply to the meal?"**
+
+## Our October 4 followup: The Lenny reached voicemail
+
+We tried a general pricing clarification call at **9:27 pm Eastern on Sunday, October 4, 2026**. This was our own editorial research, separate from the customer's September event inquiry. We did not invent a new event or request a reservation.
+
+The [restaurant's published Sunday hours](https://www.thelenny555.com/location/the-lenny/) run until 10 pm, with the kitchen closing at 9 pm. The call reached a recorded greeting, no person answered, and we ended it from our agent. The complete recording contains only the greeting and silence. It provides **no fresh fee, credit or deposit confirmation**. Published opening hours do not guarantee that the events coordinator is available.
+
+<audio controls preload="metadata" src="/static/blog/private-dining-followup-the-lenny.mp3" style="width:100%"><a href="/static/blog/private-dining-followup-the-lenny.mp3">Listen to the October 4 Lenny followup attempt</a></audio>
+
+The source audio lasts **19.4 seconds**, with the original timing retained. The recording provider lists 19.72 seconds; the downloaded WAV and decoded public MP3 contain 19.4 seconds. No caller speech appears in the recording. Our agent issued the hangup; this was not a completed pricing conversation.
+
+<details>
+<summary>Read the October 4 followup greeting</summary>
+
+This is a machine transcription checked against the saved call transcript. Two independent transcription models rendered the restaurant name and website as "Delaney" and "delaney555.com"; the live call transcript rendered them as The Lenny and thelenny555.com. We use brackets for those disputed words. The dialed number matches the restaurant's official event brochure, and the original pronunciation is preserved in the recording.
+
+**0:01** Recorded greeting: Thank you for calling [restaurant name] at 555.
+
+**0:05** Recorded greeting: I'm sorry we are unable to answer your call. Please leave a message and we will get back to you.
+
+**0:10** Recorded greeting: For reservations, please visit our website [restaurant website].
+
+**0:16** Recorded greeting: Thank you. Hope to see you soon.
+
+The greeting is followed by silence. The recording ends at 19.4 seconds without caller speech.
+
+</details>
+
+We did not call M Hansik after its [published Sunday closing time of 9 pm](https://mhansik.m-restaurants.com/locations). Its [group reservations page](https://mhansik.m-restaurants.com/party) does not publish the room fee or deposit formula. Those amounts still require a human answer or written terms.
+
+We have scheduled another general pricing inquiry to The Lenny for Monday, October 5 at 4:15 PM Eastern, and one to M Hansik for Wednesday, October 7 at 5:15 PM Eastern, shortly after their listed openings. Neither call requests an event reservation or hold. These pending calls do not resolve the room credit or deposit calculation. We will only replace an unknown after reviewing the answer.
 
 ## What moves the price of a private dining room
 
-- **Group size.** Mateo treats 10 as a regular reservation with a card on file. Its family-style setup and the event planner start at 12 people. If you're near a cutoff like that, ask: it can be the difference between a room fee and none.
+- **Group size.** Mateo treats 10 as a regular reservation with a card on file. Its family style setup and the event planner start at 12 people. If you're near a cutoff like that, ask: it can change whether the restaurant treats your dinner as an ordinary reservation or a private event. The call did not establish a room fee for larger groups.
 - **The day.** M Hansik's host quoted the $350 room fee "for Wednesday and Thursdays." Ask whether another night costs something different.
 - **Fee or minimum.** A room fee is money for the room. A food and beverage minimum is spend that goes to your meal. They aren't the same, and a host may use "deposit" for either. M Hansik's host first called the $350 "a deposit of $350 for the room," then confirmed it was a room fee.
-- **How private.** A separate room costs the most. A set-apart table or a quieter area can cost nothing extra. The Lenny's host was upfront that "nothing really in the dining room feels super away from people," and offered the pergola outside, with a warning that it would be "a little bit chillier" in November.
-- **Packages and set menus.** M Hansik uses a set menu. The Lenny sells food and drink packages, buffet or sit-down, and pre-orders everything, which is why it wants a card on file.
+- **How private.** A separate room can add a fee or a minimum spend. A table set apart or a quieter area may cost less, but these calls did not establish every option's price. The Lenny's host was upfront that "nothing really in the dining room feels super away from people," and offered the pergola outside, with a warning that it would be "a little bit chillier" in November.
+- **Packages and set menus.** M Hansik uses a set menu. The Lenny sells food and drink packages, either buffet or dinner served at the table, and has food ordered in advance, which is why it wants a card on file.
 
 ## Listen: M Hansik, a $350 room and $65 a head (2 minutes 55 seconds)
 
@@ -74,17 +141,17 @@ Some quick math from the quotes, ours and not the restaurants': at M Hansik, 10 
 - **2:16** "She will take a deposit... It's like a small fraction of the price"
 - **2:30** "All the food and everything and the alcohol is pre-ordered before your event, so we need a card on file"
 
-Right after "$1,500," the host says whether the fee counts toward food and drink, and we can't tell you which way it went. We ran that phrase through three transcription models several times. One heard "that doesn't go towards food or beverage." The other two heard "that does include towards food or beverage." Our caller didn't ask again. That's a $1,500 difference in what dinner costs, so get it in writing from the events coordinator.
+Right after "$1,500," the host says whether the fee counts toward food and drink, and we can't tell you which way it went. We ran that phrase through three transcription models several times. One heard "that doesn't go towards food or beverage." The other two heard "that does include towards food or beverage." Our caller didn't ask again. If the same meal costs at least $1,500 and the full charge is either additional or credited against it, those interpretations differ by $1,500 before other charges. We do not have the meal price or credit terms, so we cannot calculate the actual difference. Get those terms in writing from the events coordinator.
 
 ## Listen: Mateo Bar de Tapas, no room fee for 10 (2 minutes 36 seconds)
 
 <audio controls preload="metadata" src="/static/examples/private-dining-mateo.mp3" style="width:100%"><a href="/static/examples/private-dining-mateo.mp3">listen to the Mateo Bar de Tapas call</a></audio>
 
-- **0:06** The ask: a private or semi-private space, "or even just a table for 10 that feels a little set apart, for a company dinner"
+- **0:06** The ask: a private or partly private space, "or even just a table for 10 that feels a little set apart, for a company dinner"
 - **0:29** "We do have an event upstairs where that's reserved"
 - **0:53** "Downstairs would be our area that we would have that we could accommodate 10"
 - **0:59** "What would the food and beverage minimum or, like, room fee be?"
-- **1:05** "So for 10, it's just regular." Family-style service and the event planner start "at 12 people"
+- **1:05** "So for 10, it's just regular." Family style service and the event planner start "at 12 people"
 - **1:17** "With 10, we would just need a card on file to make the reservation"
 - **1:34** "I can do that right now on the phone"
 - **1:40** A private room "would be through our events coordinator"
@@ -98,7 +165,7 @@ Right after "$1,500," the host says whether the fee counts toward food and drink
 - **0:13** "You said November 10th?" Corrected to the 5th
 - **0:57** "I can't do 6, but I can do 5 o'clock or 7:30"
 - **1:12** A private space? "We do, but it is booked at the moment"
-- **1:31** A set-apart table in the main dining room? "Yeah, we can probably do that"
+- **1:31** A table set apart in the main dining room? "Yeah, we can probably do that"
 - **1:50** "What's a good phone number?" Our caller goes quiet, and the call ends with nothing held
 
 ## Listen: Seraphine, ask by email (1 minute 11 seconds)
@@ -113,8 +180,8 @@ Right after "$1,500," the host says whether the fee counts toward food and drink
 
 1. **Call early, and call several places.** Five weeks ahead, two of these five already had their private space booked for that night: Mateo's upstairs and Nikos's room.
 2. **Lead with the date, time, headcount and the occasion.** "A table for 10, on Thursday, November 5th, around 6, for a company dinner."
-3. **Ask for a range of privacy, not just a room.** "A private or semi-private space, or even just a table that feels set apart" is what got Mateo's downstairs area and Nikos's set-apart table.
-4. **Ask the money questions together:** the room fee, the food and beverage minimum or per-person spend, and the deposit. Then ask: **does the room fee count toward food and drink?** That's the question we needed and didn't get a clear answer to.
+3. **Ask for a range of privacy, not just a room.** "A private or semi-private space, or even just a table that feels set apart" is what got Mateo's downstairs area and Nikos's table set apart.
+4. **Ask the money questions together:** the room fee, the food and beverage minimum or spend per person, and the deposit. Then ask: **does the room fee count toward food and drink?** That's the question we needed and didn't get a clear answer to.
 5. **Ask about the menu.** Set menu, packages, or order from the regular menu?
 6. **Be flexible on time.** Nikos couldn't do 6:00 but could do 5:00 or 7:30.
 7. **Get the events contact's email, and have it read back.** At M Hansik, The Lenny, Mateo and Seraphine, a private room or a party goes through email or an events person. Our M Hansik call ended before the address was finished, so we only got a first name.
@@ -134,11 +201,11 @@ Then: "What would the food and beverage minimum or room fee be? Is that a room f
 
 ## Let an AI phone assistant make the calls
 
-These calls were made by [call4me](/), an AI phone assistant that works inside the agent you already use (Claude Code, Codex, ChatGPT). You tell your agent what to get done. It calls and talks to the restaurant like a person would, asks you mid-call if something comes up, and reports back with the outcome and the transcript. It can call several restaurants at once, which is how five calls fit in under 12 minutes.
+These calls were made by [call4me](/), an AI phone assistant that works inside the agent you already use (Claude Code, Codex, ChatGPT). You tell your agent what to get done. It calls and talks to the restaurant like a person would, asks you during the call if something comes up, and reports back with the outcome and the transcript. It can call several restaurants at once, which is how five calls fit in under 12 minutes.
 
 If you use call4me, paste this into your agent:
 
-> Call [restaurants and phone numbers] and ask whether they have a private or semi-private space, or a table for [number] that feels set apart, on [day, date] around [time]. At each one, find out the room fee, whether the room fee counts toward food and drink, the food and beverage minimum or per-person spend, whether a set menu is required, and the deposit. Get the private events contact's name and email, and have the email read back. Don't book, hold, or give a card. If they ask for a phone number or a card, say we're comparing a few places and will call back. Put the answers in one table.
+> Call [restaurants and phone numbers] and ask whether they have a private or partly private space, or a table for [number] that feels set apart, on [day, date] around [time]. At each one, find out the room fee, whether the room fee counts toward food and drink, the food and beverage minimum or spend per person, whether a set menu is required, and the exact dollar amount due up front. Ask how that payment is credited to the final bill and what happens if we cancel or the headcount changes. Get the private events contact's name and email, and have the email read back. Don't book, hold, or give a card. If they ask for a phone number or a card, say we're comparing a few places and will call back. Put the answers and any unknown terms in one table.
 
 <details>
 <summary>Read the M Hansik transcript</summary>

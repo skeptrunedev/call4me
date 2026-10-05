@@ -1,22 +1,23 @@
 ---
 title: How much is an eye exam without insurance? Two real quotes, recorded
 seoTitle: How much is an eye exam without insurance?
-subtitle: Our AI phone assistant called two eye care offices in Katy, Texas and asked what a routine exam costs with no vision insurance. One quoted $143 and had nothing left that day. The other quoted 99 and booked a 4 PM exam the same afternoon. Here are all three recordings and what to have ready.
-description: Two offices in Katy, TX quoted $143 and $99 for a self-pay routine eye exam on recorded calls, and one booked an exam the same afternoon.
+subtitle: Two recorded Katy calls returned routine exam quotes of $143 and $99. Compare the stated prices, see which inclusions remain unconfirmed, and ask for the total before booking.
+description: Hear two real Katy eye exam quotes of $143 and $99. Compare refraction, contact fitting, retinal imaging and required fees before booking without insurance.
 date: 2026-10-01
-tags: eye exam, eye exam cost, eye exam without insurance, same day eye exam, self-pay, ai phone assistant
+updated: 2026-10-04
+tags: eye exam, eye exam cost, eye exam without insurance, same day eye exam, self pay, ai phone assistant
 authors: nick
 imageAlt: How much is an eye exam without insurance, two real quotes of $143 and $99, recorded
 ---
 
-**The short answer:** how much an eye exam costs without insurance depends on the office, so call and ask for the **self-pay price for a routine exam for a new patient**. On Monday, September 28, 2026 we called two offices in the Katy, Texas area for someone with no vision insurance:
+**The short answer:** how much an eye exam costs without insurance depends on the office, so call and ask for the **self pay price for a routine exam for a new patient**. On Monday, September 28, 2026 we called two offices in the Katy, Texas area for someone with no vision insurance:
 
-| Office | Self-pay routine exam, new patient | Earliest opening |
+| Office | Self pay routine exam, new patient | Earliest opening |
 |---|---|---|
 | MyEyeDr. Cinco Ranch | "It's $143." | Nothing left that day. Next day from 9 AM |
 | Revolution Eyes, Katy | "Out of pocket price is 99 for the routine" | 4 PM the same day, booked on the call |
 
-That's a $44 difference between two offices in the same area, on the same afternoon, for the same exam. Two calls are two data points, not a price list. Prices vary by office and by city, and these were stated on that day's calls. Ask what yours costs before you book.
+The stated routine exam prices differ by $44. We did not establish that both prices cover the same services or the final amount due. Two calls are two data points, not a price list. Prices vary by office and by city, and these were stated on that day's calls. Ask what yours costs and includes before you book.
 
 The calls were made from our own call4me account by its AI phone assistant, for a person who needed an exam and gave us permission to publish them. Their name, date of birth and phone numbers are muted in the audio, and so are the staff names.
 
@@ -53,7 +54,7 @@ The calls were made from our own call4me account by its AI phone assistant, for 
 ## How to book a same day eye exam, step by step
 
 1. **Call more than one office.** The first office had nothing left that afternoon. The second, called about 20 minutes later, had a 4 PM opening.
-2. **Say the three things that set the price up front:** new patient, routine exam, no vision insurance (self-pay).
+2. **Say the three things that set the price up front:** new patient, routine exam, no vision insurance (self pay).
 3. **Be flexible about the doctor.** "We'll take the first available with any doctor" is what got the same day slot. Offices with several doctors book each one separately.
 4. **Have the intake answers ready.** Revolution Eyes asked, in order: preferred day and time, mornings or afternoons, full name (our caller spelled the first name), date of birth, vision insurance, a cell number, and contacts or glasses only.
 5. **Get the price before you hang up.** At MyEyeDr. it was the answer to the first question. At Revolution Eyes the office named it at the end, after the booking.
@@ -67,17 +68,74 @@ For a price:
 
 To book:
 
-> Hi, I'm hoping to book a routine eye exam for [name]. [They're] a new patient, self-pay, no vision insurance. We're pretty flexible, so we'll take the first available with any doctor. What would the out of pocket price be?
+> Hi, I'm hoping to book a routine eye exam for [name]. [They're] a new patient, self pay, no vision insurance. We're pretty flexible, so we'll take the first available with any doctor. What would the out of pocket price be?
 
-## Ask what the quote covers
+## What does an eye exam price include?
 
-Neither of our calls asked what the price includes. Ask before you go:
+The original calls establish the stated routine exam prices and available appointments on September 28. They do not establish the total checkout price. On October 4, we checked the offices' official websites to separate published service descriptions from what the recordings actually confirm.
 
-- **Is the glasses prescription included,** and is a contact lens exam or fitting extra?
-- **Are there add-ons** you'll be offered at the visit, like dilation or retinal photos, and what do they cost?
-- **Is the self-pay price the total,** and is it paid at the visit?
+| Item to compare | MyEyeDr. Cinco Ranch | Revolution Eyes, Katy |
+|---|---|---|
+| Routine exam quote on September 28 | $143 | $99, stated as routine after the office asked about contacts versus glasses |
+| Refraction, the test that determines a glasses prescription | Included in this quoted price: unconfirmed | Included in this quoted price: unconfirmed |
+| Contact lens evaluation or fitting | MyEyeDr.'s general FAQ describes a separate evaluation and charge; local amount unconfirmed | The call distinguished contacts from a routine glasses exam; fitting fee unconfirmed |
+| Retinal imaging | Included, extra fee or required at this location: unconfirmed | Website advertises Optos imaging; included, extra fee or required: unconfirmed |
+| Dilation, if the clinician recommends it | Included or extra fee: unconfirmed | Included or extra fee: unconfirmed |
+| Total with every required service | Unconfirmed | Unconfirmed |
 
-## The follow-up call: fixing the phone number (1 minute 27 seconds)
+An office listing a service does not tell you whether it is included in a quoted price. An unconfirmed item is not proof of an extra charge.
+
+### Does the price include a glasses prescription?
+
+Ask whether the routine exam quote includes **refraction**, the measurement used to determine your glasses prescription. That resolves a different question from whether you can receive a copy afterward.
+
+The [FTC's prescription guidance](https://consumer.ftc.gov/articles/buying-prescription-glasses-or-contact-lenses-your-rights) says a prescriber must give you a copy immediately after an exam that includes refraction, at no extra charge and before offering to sell glasses. You can buy the glasses elsewhere. This does not make the exam free or establish whether either quoted price includes refraction.
+
+### Is a contact lens exam the same price?
+
+[MyEyeDr.'s general FAQ](https://www.myeyedr.com/patients/info-center) separates the comprehensive exam from the contact lens evaluation. It describes a separate evaluation charge whose amount depends on the lenses and care needed. This is chainwide information, not a confirmed Cinco Ranch contact exam quote.
+
+Revolution Eyes asked whether the appointment was for contacts or a routine glasses exam before stating $99. The recording supplies no contact fitting price. Ask for the combined exam and fitting total, whether trial lenses and fitting followups are included, and when the fitting is complete. The [FTC explains](https://consumer.ftc.gov/articles/buying-prescription-glasses-or-contact-lenses-your-rights) that the contact prescription copy is due after the fitting is complete, which can require a later visit.
+
+### Are retinal imaging and dilation included?
+
+Revolution Eyes' [technology page](https://www.revolutioneyeskaty.com/eye-care-services/advanced-technology/) says it offers an Optos retinal exam. Its [comprehensive exam page](https://www.revolutioneyeskaty.com/eye-care-services/comprehensive-eye-exams/) describes prescription determination and eye health assessment. Neither page ties those services to the $99 recorded quote or specifies an imaging fee.
+
+MyEyeDr.'s [general FAQ](https://www.myeyedr.com/patients/info-center) describes retinal photos and says dilation depends on the patient's eye health at the visit. Its [video assisted exam page](https://www.myeyedr.com/video-assisted-eye-exam) says retinal imaging is required for that exam format and may cost extra depending on insurance. We did not confirm whether Cinco Ranch uses that format or how it prices imaging for someone paying without insurance.
+
+Ask the office to distinguish **required services, services recommended after the exam, and optional purchases**, with a price for each. Decisions about which clinical tests you need belong with the examining clinician.
+
+## Compare the total before booking
+
+Use the same questions at each office:
+
+1. What is the current price for a new patient's routine glasses exam without vision insurance?
+2. Does that price include refraction and the eye health exam?
+3. Are retinal imaging or dilation included? If separately charged, what does each cost and when is it required?
+4. If I need contacts, what is the exam plus fitting total, including any required followups?
+5. Are there any other required fees, and what amount would I pay without buying frames, lenses or optional extras?
+6. When is payment due, and can you confirm the inclusions and prices in writing?
+
+Compare the base exam plus required fees first. List optional imaging or eyewear purchases separately. If the office cannot know a fee until the clinician evaluates you, record that uncertainty instead of treating the base quote as a guaranteed total.
+
+For a price check without booking, use this:
+
+> Hi, I'm comparing general prices, not booking today. What is the total for a new patient's routine glasses exam without vision insurance, including refraction and any required fees? Is retinal imaging or dilation included? If either costs extra, is it required or optional, and what is the price? What would a contact lens evaluation add, including required fitting followups?
+
+## Contact the two Katy offices
+
+We checked these official listings on October 4, 2026. Both list Sunday as closed, so we did not place a new confirmation call that evening. The price inclusions above remain unresolved.
+
+| Office | Official contact page | Listed Monday hours, Central time |
+|---|---|---|
+| MyEyeDr. Cinco Ranch | [23702 Westheimer Parkway, Suite C](https://locations.myeyedr.com/tx/katy/23702-westheimer-pkwy), (281) 391 2020 | 9 AM to 5 PM |
+| Revolution Eyes | [27110 Cinco Ranch Boulevard, Suite 400](https://www.revolutioneyeskaty.com/hours-location/), (281) 394 5222 | 10 AM to 6 PM |
+
+The next listed opening after our check is Monday, October 5. Office opening hours are not appointment availability. Confirm the current price and available exam times directly.
+
+We have scheduled general pricing followups for October 5 at 9:15 AM Central for MyEyeDr. and 10:15 AM Central for Revolution Eyes. These are information requests only, with no appointment or purchase. A scheduled call is not a price confirmation. The table will continue to show unknown amounts until we have reviewed a staff answer.
+
+## The followup call: fixing the phone number (1 minute 27 seconds)
 
 The number given on the booking call was the wrong one, so our caller called back at about 3:49 PM, eleven minutes before the exam, to correct it.
 
@@ -91,11 +149,11 @@ The number given on the booking call was the wrong one, so our caller called bac
 
 ## Let an AI phone assistant make the call
 
-These calls were made by [call4me](/), an AI phone assistant that works inside the agent you already use (Claude Code, Codex, ChatGPT). You tell your agent what to get done. It calls and talks to the office like a person would, asks you mid-call if something comes up, and reports back with the outcome and the transcript.
+These calls were made by [call4me](/), an AI phone assistant that works inside the agent you already use (Claude Code, Codex, ChatGPT). You tell your agent what to get done. It calls and talks to the office like a person would, asks you during the call if something comes up, and reports back with the outcome and the transcript.
 
 If you use call4me, paste this into your agent:
 
-> Call [eye care office] at [phone number] and ask the self-pay price for a routine eye exam for a new patient with no vision insurance, and whether the glasses prescription is included. If it's under $[budget], book the earliest opening today or tomorrow with any doctor for [name], date of birth [date], cell [the number I'll answer]. Tell them it's a routine exam for glasses only, no contacts. Read the phone number back before hanging up.
+> Call [eye care office] at [phone number] and ask the self pay price for a routine eye exam for a new patient with no vision insurance, and whether the glasses prescription is included. If it's under $[budget], book the earliest opening today or tomorrow with any doctor for [name], date of birth [date], cell [the number I'll answer]. Tell them it's a routine exam for glasses only, no contacts. Read the phone number back before hanging up.
 
 <details>
 <summary>Read the transcript of the price check</summary>

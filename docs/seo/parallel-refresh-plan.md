@@ -27,3 +27,55 @@ The current time at task start is Sunday, October 4, 6:26 PM Pacific, 8:26 PM
 Central and 9:26 PM Eastern. Business specific opening hours determine which
 human followups are feasible tonight. A historical menu does not establish the
 current staff availability.
+
+## October 4 outcomes
+
+All three articles retain their original URLs, SEO titles and publication dates.
+Their update date is October 4. Each revision separates historical quotes,
+official service descriptions, reported tool behavior and unresolved questions.
+
+* Muse: corrected the outdated implication that Muse has no native calling.
+  Added the native beta context, evidence table, schema checked general inquiry
+  example and five troubleshooting cases. The signed in browser restored the
+  October 1 conversation, but a new balance request showed delivery unconfirmed.
+  No new result, fresh conversation test or Muse call exists. Credential storage
+  protections are attributed to Meta documentation rather than independently
+  audited. Mac interaction stopped when the user was actively using the machine.
+* Private dining: corrected the definitive $675 deposit and $1,500 additional
+  room charge interpretations. Added a cost worksheet and official source
+  context. Call call_eylkwypb3wx0gr5i reached only a prerecorded Lenny greeting,
+  and was ended without a message or caller speech. Its reviewed export is
+  19.424 seconds; both source and export transcriptions found no private spans.
+* Eye exams: added refraction, contact fitting, imaging and dilation comparison,
+  qualified chainwide versus local information, a total price checklist and
+  official contacts. Both offices were closed Sunday. No new local fee quote
+  was obtained. Existing customer recordings and redactions are preserved.
+
+## Verified pending followups
+
+The MCP scheduler accepted all four requests and a separate get call request
+confirmed each record is pending. Each is limited to four connected minutes,
+with no reservation, purchase, hold, voicemail, callback or user connection.
+Numbers and hours were checked against official listings or the event brochure.
+These schedules do not confirm any price and do not automatically publish audio
+or modify the articles. Results require review before any subsequent edit.
+
+| Business | Scheduled local time | Pacific time | Schedule ID |
+| :--- | :--- | :--- | :--- |
+| MyEyeDr. Cinco Ranch | October 5, 9:15 AM Central | October 5, 7:15 AM | sched_82dumh21jea372af |
+| Revolution Eyes, Katy | October 5, 10:15 AM Central | October 5, 8:15 AM | sched_8dps9nrzx758dvz3 |
+| The Lenny | October 5, 4:15 PM Eastern | October 5, 1:15 PM | sched_rczni542sv5kye1b |
+| M Hansik | October 7, 5:15 PM Eastern | October 7, 2:15 PM | sched_rulj6cqey1pcz7c6 |
+
+Credentials, raw results, recordings, source transcriptions and private schedule
+briefs are outside git in the parallel refresh evidence directory. Only the
+reviewed public Lenny greeting export is included in this change.
+
+## Verification
+
+Type checking, lint, all 153 tests, OpenAPI generation with no schema change,
+and site and voice build previews passed. Local browser checks confirmed all
+nine recordings decode at full duration, transcript disclosure controls work,
+and article tables scroll within the page at 320 pixels. Canonical URLs and
+structured update dates are correct. Sitemap, Atom feed and llms.txt include
+all three pages; sitemap update timestamps are October 4.
