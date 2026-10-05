@@ -101,7 +101,7 @@ The greeting is followed by silence. The recording ends at 19.4 seconds without 
 
 We did not call M Hansik after its [published Sunday closing time of 9 pm](https://mhansik.m-restaurants.com/locations). Its [group reservations page](https://mhansik.m-restaurants.com/party) does not publish the room fee or deposit formula. Those amounts still require a human answer or written terms.
 
-We have scheduled another general pricing inquiry to The Lenny for Monday, October 5 at 4:15 PM Eastern, and one to M Hansik for Wednesday, October 7 at 5:15 PM Eastern, shortly after their listed openings. Neither call requests an event reservation or hold. These pending calls do not resolve the room credit or deposit calculation. We will only replace an unknown after reviewing the answer.
+We have scheduled another general pricing inquiry to The Lenny for Monday, October 5 at 4:15 PM Eastern, shortly after its listed opening. We moved the M Hansik inquiry to Monday, October 5 at 5:15 PM Eastern. Its [official hours](https://mhansik.m-restaurants.com/locations) list Monday and Tuesday as closed, so this earlier attempt may reach only a recorded greeting. Neither call requests an event reservation or hold, and either caller will hang up without leaving a message if it reaches voicemail. These pending calls do not resolve the room credit or deposit calculation. We will only replace an unknown after reviewing the answer.
 
 ## What moves the price of a private dining room
 

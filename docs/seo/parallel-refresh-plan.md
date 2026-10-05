@@ -65,7 +65,14 @@ or modify the articles. Results require review before any subsequent edit.
 | MyEyeDr. Cinco Ranch | October 5, 9:15 AM Central | October 5, 7:15 AM | sched_82dumh21jea372af |
 | Revolution Eyes, Katy | October 5, 10:15 AM Central | October 5, 8:15 AM | sched_8dps9nrzx758dvz3 |
 | The Lenny | October 5, 4:15 PM Eastern | October 5, 1:15 PM | sched_rczni542sv5kye1b |
-| M Hansik | October 7, 5:15 PM Eastern | October 7, 2:15 PM | sched_rulj6cqey1pcz7c6 |
+| M Hansik | October 5, 5:15 PM Eastern | October 5, 2:15 PM | sched_gvrcq23sji6av1ei |
+
+Nick requested moving the October 7 call to tomorrow, October 5. Official hours
+still list Monday and Tuesday as closed. The earlier attempt is explicitly
+authorized despite that listing, with the same limits and silent hangup on
+voicemail or a closed greeting. Original schedule sched_rulj6cqey1pcz7c6 is
+confirmed canceled; replacement sched_gvrcq23sji6av1ei is confirmed pending.
+No later automatic retry is scheduled.
 
 Credentials, raw results, recordings, source transcriptions and private schedule
 briefs are outside git in the parallel refresh evidence directory. Only the
