@@ -112,7 +112,7 @@ The brief authorized one attempt with a two minute cap. It required silent liste
 | `call4me_get_call` | Returned a completed call with a partial outcome |
 | `call4me_get_recordings` | Returned an available carrier recording |
 
-The live transcript contained “At the tone”, without a complete UTC hour and minute. It also recorded the caller saying “Hi, hello? Hello, are you still there?” despite the silence instruction. Codex identified the violation, ended the attempt, and returned an unresolved answer rather than filling in the time from its clock. The tool reported one billed minute and **$0.25**.
+The live transcript contained “At the tone”, without a complete UTC hour and minute. It also recorded the caller saying “Hi, hello? Hello, are you still there?” despite the silence instruction. Codex identified the violation, ended the attempt, and returned an unresolved answer rather than filling in the time from its clock.
 
 **This establishes dialing, status following, stopping and recording retrieval from a T3 Codex thread. It does not establish successful silent listening or completion of the requested task.** It also does not test a human conversation, a phone menu, an unattended scheduled call, or a T3 Claude provider.
 
