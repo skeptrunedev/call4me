@@ -2,6 +2,11 @@
 
 Updated October 4, 2026. This is the current editorial priority and replaces the consumer page volume targets in the original October plan. The historical execution notes below retain their original evidence boundaries; the fresh audit at the end records the latest targeting decisions.
 
+The [October audience growth plan](october-100k-growth-plan.md), prepared October 6,
+adds a $5,000 distribution experiment toward 100,000 October ICP website visitors.
+It preserves this audience definition and separates the stretch target from
+the current traffic baseline and the reach that has actually been secured.
+
 ## Acceptance criteria
 
 * Reach people using Claude Code, Codex, Muse, Instinct, T3 Code and similar tools who want their existing personal assistant or coding agent to make phone calls.
