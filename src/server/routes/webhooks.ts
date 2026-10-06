@@ -139,6 +139,7 @@ webhooks.post('/stripe', async (c) => {
 interface TelnyxWebhook {
   data?: {
     event_type?: string;
+    occurred_at?: string;
     payload?: { call_control_id?: string; call_leg_id?: string; client_state?: string | null; direction?: string; from?: string; to?: string; hangup_cause?: string; hangup_source?: string; digit?: string; digits?: string; status?: string; result?: string };
   };
 }
@@ -221,7 +222,7 @@ webhooks.post('/telnyx', async (c) => {
     case 'call.machine.premium.greeting.ended':
     case 'call.machine.premium.call_screening.detected': {
       const event = machineEventOf(type, p.result);
-      if (event) await sessionFor(c.env, callId).fetch('https://session/machine', { method: 'POST', body: JSON.stringify({ event }) });
+      if (event) await sessionFor(c.env, callId).fetch('https://session/machine', { method: 'POST', body: JSON.stringify({ event, occurredAt: hook.data?.occurred_at }) });
       break;
     }
     case 'streaming.failed':

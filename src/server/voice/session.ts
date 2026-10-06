@@ -6,7 +6,7 @@ import { dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
 import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, missedHandoff } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { BACK_OFFICE_TOOLS } from './prompt';
-import { MACHINE_GUIDANCE, type MachineEvent } from './voicemail';
+import { INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, type MachineEvent, type MachineGuidance, type MachineState } from './voicemail';
 
 /**
  * One live phone call: Telnyx's media stream on one side, a GPT-Live session on the other.
@@ -122,6 +122,7 @@ export class VoiceSession extends DurableObject<Env> {
   /** This instance took over a call already in progress (the previous one was reset). */
   private resumed = false;
   private liveStarting: Promise<void> | null = null;
+  private liveConnectAbort: AbortController | null = null;
   /** When each milestone happened, logged as one line per step so a broken call shows where it stopped. */
   private answeredAt = 0;
   private liveStartedAt = 0;
@@ -155,8 +156,10 @@ export class VoiceSession extends DurableObject<Env> {
   /** The latest question still out to the person, and how many "still checking" lines it has had. */
   private holding: { question: string; lines: number; lastAt: number } | null = null;
   private holdingTimer: ReturnType<typeof setTimeout> | null = null;
-  /** What the carrier's machine detection has already told the caller, so a repeated webhook isn't said twice. */
-  private machineHeard = new Set<MachineEvent>();
+  /** Ordered carrier evidence survives retries and object resets without restarting a greeting. */
+  private machineState: MachineState | null = null;
+  private machineUpdates: Promise<void> = Promise.resolve();
+  private pendingMachineGuidance: MachineGuidance | null = null;
   /** The person's own phone leg while it rings or is on the call; the caller stays silent while they talk. */
   private personLeg: string | null = null;
   private personOn = false;
@@ -236,8 +239,8 @@ export class VoiceSession extends DurableObject<Env> {
       case '/hang-up':
         return Response.json({ message: await this.hangUpForUser() });
       case '/machine': {
-        const { event } = (await req.json()) as { event: MachineEvent };
-        this.machineDetected(event);
+        const { event, occurredAt } = (await req.json()) as { event: MachineEvent; occurredAt?: string };
+        await this.machineDetected(event, occurredAt);
         return new Response('ok');
       }
       case '/answer': {
@@ -259,24 +262,35 @@ export class VoiceSession extends DurableObject<Env> {
 
   private async acceptStream(req: Request): Promise<Response> {
     if (req.headers.get('upgrade')?.toLowerCase() !== 'websocket') return new Response('expected a websocket', { status: 426 });
+    if (this.ended) return new Response('call ended', { status: 410 });
     const [client, server] = Object.values(new WebSocketPair());
     server.accept();
-    this.phone = server;
-    server.addEventListener('message', (ev) => this.onPhoneFrame(typeof ev.data === 'string' ? ev.data : ''));
-    // A stream that closes without Telnyx's "stop" is not a hang-up: the call may be reattached.
-    server.addEventListener('close', () => void this.phoneLost(server, 'media stream closed'));
-    server.addEventListener('error', () => void this.phoneLost(server, 'media stream error'));
+    this.attachPhone(server);
     // Complete Telnyx's handshake first: it waits well under the time picking a call back up takes
     // (storage, D1, a new voice session), and drops a stream that isn't answered promptly.
-    this.ctx.waitUntil(this.streamAttached().catch((err) => console.warn('stream attach', this.setup?.callId, String(err))));
+    this.ctx.waitUntil(this.streamAttached(server).catch((err) => console.warn('stream attach', this.setup?.callId, String(err))));
     return new Response(null, { status: 101, webSocket: client });
   }
 
-  private async streamAttached(): Promise<void> {
+  private attachPhone(server: WebSocket): void {
+    const previous = this.phone;
+    if (previous && previous !== server) this.detachLive();
+    this.phone = server;
+    if (previous?.readyState === WebSocket.OPEN) previous.close(1000, 'phone stream replaced');
+    server.addEventListener('message', (ev) => {
+      if (this.phone === server && !this.ended) this.onPhoneFrame(typeof ev.data === 'string' ? ev.data : '');
+    });
+    // A stream that closes without Telnyx's "stop" is not a hang-up: the call may be reattached.
+    server.addEventListener('close', () => void this.phoneLost(server, 'media stream closed'));
+    server.addEventListener('error', () => void this.phoneLost(server, 'media stream error'));
+  }
+
+  private async streamAttached(socket: WebSocket): Promise<void> {
+    if (this.phone !== socket || this.ended) return;
     await this.ctx.storage.delete(['orphanSince', 'reattached']);
     if (!this.answered) await this.resumeIfLive();
     // Inbound calls are answered with the stream attached, so the stream itself means "answered".
-    if (this.answered) await this.startLive();
+    if (this.phone === socket && !this.ended && this.answered) await this.startLive();
   }
 
   /** A stream reaching a fresh instance of a call whose voice session already ran: pick the call back up. */
@@ -297,13 +311,26 @@ export class VoiceSession extends DurableObject<Env> {
     if (this.phone !== socket || this.ended) return;
     console.warn('call session lost the phone stream:', reason, this.setup?.callId);
     this.phone = null;
+    this.detachLive();
+    await this.flushTranscript().catch((err) => console.warn('transcript flush', String(err)));
+    if (this.phone || this.ended) return; // A new stream may have attached while the transcript saved.
+    await this.ctx.storage.put('orphanSince', Date.now());
+    await this.scheduleAlarm(Date.now() + 1_000);
+  }
+
+  /** Socket state belongs to one phone stream; none of it may leak into its replacement. */
+  private detachLive(): void {
+    this.liveConnectAbort?.abort();
     const live = this.live;
     this.live = null;
     this.liveReady = false;
+    this.resumed ||= this.liveStartedAt > 0;
+    this.pendingAudio = [];
+    this.playbackEndsAt = 0;
+    this.speechEndsAt = 0;
+    this.lastOutputAt = 0;
+    this.backOfficeBusy = false;
     if (live?.readyState === WebSocket.OPEN) live.close(1000, 'phone stream lost');
-    await this.flushTranscript().catch((err) => console.warn('transcript flush', String(err)));
-    await this.ctx.storage.put('orphanSince', Date.now());
-    await this.scheduleAlarm(Date.now() + 1_000);
   }
 
   private onPhoneFrame(raw: string): void {
@@ -332,15 +359,32 @@ export class VoiceSession extends DurableObject<Env> {
 
   /** One voice session at a time: the answered webhook and a stream attaching can both ask for it. */
   private startLive(): Promise<void> {
-    this.liveStarting ??= this.openLive().finally(() => {
+    this.liveStarting ??= this.openCurrentPhone().finally(() => {
       this.liveStarting = null;
     });
     return this.liveStarting;
   }
 
+  /** If the phone changes during an open, finish discarding that open, then serve the new phone. */
+  private async openCurrentPhone(): Promise<void> {
+    while (this.phone && !this.ended && !this.live) {
+      const phone = this.phone;
+      await this.openLive();
+      if (this.phone === phone) return;
+    }
+  }
+
   private async openLive(): Promise<void> {
     const s = await this.load();
-    if (!s || this.live || this.ended || !this.phone) return;
+    const phone = this.phone;
+    if (!s || this.live || this.ended || !phone || phone.readyState !== WebSocket.OPEN) return;
+    let instructions = s.instructions;
+    if (this.resumed) {
+      const row = this.transcriptComplete ? null : await calls(this.env.DB).byId(s.callId);
+      const sofar = this.transcriptComplete ? this.transcript : row?.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [];
+      instructions = `${s.instructions}\n\n${resumeNote(sofar)}`;
+    }
+    if (this.phone !== phone || this.ended) return;
     // Start monitoring alongside the connection, so telemetry never delays live audio.
     if (this.env.RAINDROP_WRITE_KEY && !this.monitoringReady) {
       this.monitoringReady = (async () => {
@@ -370,27 +414,43 @@ export class VoiceSession extends DurableObject<Env> {
       this.ctx.waitUntil(this.monitoringReady);
     }
     this.mark('live connecting');
-    const res = await fetch(OPENAI_LIVE_URL, { headers: { upgrade: 'websocket', authorization: `Bearer ${this.env.OPENAI_API_KEY}` } });
+    const connecting = new AbortController();
+    this.liveConnectAbort = connecting;
+    let res: Response;
+    try {
+      res = await fetch(OPENAI_LIVE_URL, { headers: { upgrade: 'websocket', authorization: `Bearer ${this.env.OPENAI_API_KEY}` }, signal: connecting.signal });
+    } catch (err) {
+      if (this.phone === phone && !this.ended) await this.fail(`could not open GPT-Live: ${String(err)}`);
+      return;
+    } finally {
+      if (this.liveConnectAbort === connecting) this.liveConnectAbort = null;
+    }
     this.mark(`live connect ${res.status}`);
     const ws = res.webSocket;
+    // The network await can outlive the phone stream or the entire call. Never install its
+    // result on a different phone, and never let its errors end that phone's call.
+    if (this.phone !== phone || this.ended || phone.readyState !== WebSocket.OPEN) {
+      if (ws) {
+        ws.accept();
+        ws.close(1000, 'phone stream no longer current');
+      }
+      return;
+    }
     if (!ws) {
       const why = `could not open GPT-Live: ${res.status} ${(await res.text()).slice(0, 300)}`;
+      if (this.phone !== phone || this.ended) return;
       console.error(why);
       await this.fail(why);
       return;
     }
     ws.accept();
     this.live = ws;
-    ws.addEventListener('message', (ev) => void this.onLive(typeof ev.data === 'string' ? ev.data : ''));
+    ws.addEventListener('message', (ev) => {
+      if (this.live === ws && !this.ended) void this.onLive(typeof ev.data === 'string' ? ev.data : '');
+    });
     // A socket dropped on purpose (phoneLost) is no longer this.live and ends nothing.
     ws.addEventListener('close', () => void (this.live === ws && this.shutdown('the voice model disconnected')));
     ws.addEventListener('error', () => void (this.live === ws && this.shutdown('the voice model connection failed')));
-    let instructions = s.instructions;
-    if (this.resumed) {
-      const row = await calls(this.env.DB).byId(s.callId);
-      const sofar = row?.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [];
-      instructions = `${s.instructions}\n\n${resumeNote(sofar)}`;
-    }
     this.sendLive({
       type: 'session.start',
       session: {
@@ -432,14 +492,17 @@ export class VoiceSession extends DurableObject<Env> {
     }
     switch (ev.type) {
       case 'session.started': {
+        const live = this.live;
         this.liveReady = true;
         this.liveStartedAt = Date.now();
         void this.ctx.storage.put('liveStarted', true);
         this.mark(`live session started, flushing ${this.pendingAudio.length} buffered frames`);
         for (const a of this.pendingAudio) this.sendLive({ type: 'session.input_audio.append', audio: a });
         this.pendingAudio = [];
+        await this.queueMachineUpdate(() => this.sendMachineGuidance());
         setTimeout(() => {
-          if (!this.heardThem && !this.ended) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'Nobody has spoken since the call connected. Say a short "Hi, hello?" and then wait.' });
+          const personOrUnknown = !this.machineState || this.machineState.phase === 'unknown' || this.machineState.phase === 'human';
+          if (this.live === live && personOrUnknown && !this.heardThem && !this.ended) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'Nobody has spoken since the call connected. Say a short "Hi, hello?" and then wait.' });
         }, SILENT_PICKUP_MS);
         break;
       }
@@ -797,17 +860,56 @@ export class VoiceSession extends DurableObject<Env> {
     return 'hung up';
   }
 
-  /**
-   * The carrier's answering machine detection: a voicemail greeting is playing (stay silent), it
-   * has ended (leave the message now), or a call screener answered (say who's calling). Each is
-   * acted on once per call.
-   */
-  private machineDetected(event: MachineEvent): void {
-    if (this.ended || this.endingCall || this.personHolds() || this.machineHeard.has(event)) return;
-    this.machineHeard.add(event);
-    this.note(event === 'machine' ? 'voicemail answered' : event === 'greeting_ended' ? 'voicemail greeting ended' : 'call screener answered');
-    this.mark(`answering machine detection: ${event}`);
-    this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: MACHINE_GUIDANCE[event] });
+  /** Serialize detector updates only; storage never blocks audio forwarding. */
+  private machineDetected(event: MachineEvent, occurredAt?: string): Promise<void> {
+    return this.queueMachineUpdate(async () => {
+      if (this.ended || this.endingCall) return;
+      const previous = await this.loadMachineState();
+      const { state, guidance } = machineTransition(previous, event, occurredAt);
+      this.machineState = state;
+      if (guidance) this.pendingMachineGuidance = guidance;
+      await this.saveMachineState();
+      if (this.ended || this.endingCall || this.personHolds()) return;
+      if (guidance) {
+        const notes: Record<MachineGuidance, string> = {
+          machine: 'carrier detected an automated greeting',
+          greeting_ended: 'carrier detected a possible voicemail beep',
+          greeting_timeout: 'carrier greeting detection timed out without a beep',
+          screening: 'carrier detected a call screening prompt',
+          human: 'carrier detected a live person',
+        };
+        this.note(notes[guidance]);
+        this.mark(`answering machine detection: ${event}`);
+      }
+      await this.sendMachineGuidance();
+    });
+  }
+
+  private queueMachineUpdate(operation: () => Promise<void>): Promise<void> {
+    const update = this.machineUpdates.then(operation);
+    this.machineUpdates = update.catch(() => {}); // This request reports errors; later events can still proceed.
+    return update;
+  }
+
+  private async loadMachineState(): Promise<MachineState> {
+    if (!this.machineState) {
+      const stored = await this.ctx.storage.get<{ state: MachineState; pending: MachineGuidance | null }>('machineDetection');
+      this.machineState = stored?.state ?? INITIAL_MACHINE_STATE;
+      this.pendingMachineGuidance = stored?.pending ?? null;
+    }
+    return this.machineState;
+  }
+
+  private saveMachineState(): Promise<void> {
+    return this.ctx.storage.put('machineDetection', { state: this.machineState, pending: this.pendingMachineGuidance });
+  }
+
+  private async sendMachineGuidance(): Promise<void> {
+    await this.loadMachineState();
+    if (!this.liveReady || this.live?.readyState !== WebSocket.OPEN || this.ended || this.endingCall || this.personHolds() || !this.pendingMachineGuidance) return;
+    this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: MACHINE_GUIDANCE[this.pendingMachineGuidance] });
+    this.pendingMachineGuidance = null;
+    await this.saveMachineState();
   }
 
   private note(text: string): void {
@@ -818,8 +920,9 @@ export class VoiceSession extends DurableObject<Env> {
   // ---- back-office functions
 
   private async runTool(item: { call_id: string; name: string; arguments: string }): Promise<void> {
+    const live = this.live;
     const s = await this.load();
-    if (!s) return;
+    if (!s || this.live !== live || this.ended) return;
     let args: Record<string, unknown> = {};
     try {
       args = JSON.parse(item.arguments || '{}') as Record<string, unknown>;
@@ -860,6 +963,9 @@ export class VoiceSession extends DurableObject<Env> {
         output = `unknown tool ${item.name}`;
     }
     this.observe(() => this.toolMonitoring.get(item.call_id)?.monitoring.output.push(redact(output, s.redact ?? [])));
+    // A pending ask_user or carrier request can finish after its model socket was replaced.
+    // The action is still recorded, but its old function call ID belongs only to that socket.
+    if (this.live !== live || this.ended) return;
     this.sendLive({ type: 'response.item.create', item: { type: 'function_call_output', call_id: item.call_id, output } });
     if (item.name !== 'end_call') {
       // The tool result starts another backend response. Recovery must wait for it too.
@@ -1060,6 +1166,7 @@ export class VoiceSession extends DurableObject<Env> {
 
   private async teardown(reason: string): Promise<void> {
     this.ended = true;
+    this.liveConnectAbort?.abort();
     if (this.handoffTimer) clearTimeout(this.handoffTimer);
     if (this.holdingTimer) clearTimeout(this.holdingTimer);
     console.log('call session ending:', reason);
