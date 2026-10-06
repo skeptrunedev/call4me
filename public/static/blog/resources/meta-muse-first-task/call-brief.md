@@ -1,6 +1,7 @@
 # One library call through consumer Muse
 
-Prepared workflow only. No call has been executed in Muse for this example.
+Blank workflow for your own call. The separate executed-result-2026-10-06.md
+records our actual Muse library test; this template is not its call log.
 
 ## Reader inputs before approval
 

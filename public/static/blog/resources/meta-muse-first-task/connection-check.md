@@ -3,6 +3,9 @@
 Empty worksheet for your own task. This is not an executed Muse call log.
 Our published Muse test established a balance result on October 1, 2026.
 The October 4 reuse attempt did not return a new result.
+On October 6, a fresh Muse conversation returned a new successful balance result
+using the existing connector. Fill in your own current check below; that result
+does not establish that every future conversation will work.
 
 ## Check the current conversation before dialing
 

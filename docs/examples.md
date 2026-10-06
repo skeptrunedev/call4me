@@ -1,5 +1,21 @@
 # Public call examples
 
+## October 6 consumer Muse library test
+
+The first Muse task guide now contains a founder informational call to SFPL Main
+Library, initiated by the consumer Muse app through its saved Call4me connector.
+The exact provider association was matched to call_pk4x8psku92xtb48. The complete
+source and public MP3 both decode to 108.72 seconds. Original voices, menu,
+transfer and timing remain, with normalization and source metadata removal.
+The saved transcript and two independent source transcriptions revealed no
+private identifying speech. No mute spans were required. Two independent export
+transcriptions and decoded duration were reviewed; no human listening is claimed.
+
+The staff answers support quiet laptop use, outlet floors and WiFi access. The
+interrupted card question does not independently establish a card rule for seating,
+and the call did not verify seat availability, speed or an exact network label.
+The blog retains these limits rather than copying the recap's broader claim.
+
 ## October 6 collection
 
 Nick confirmed that the account owners agreed to publication of all eight

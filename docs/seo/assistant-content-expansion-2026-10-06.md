@@ -46,27 +46,42 @@ snapshots remain in their existing scratch directories.
    remains incomplete; the later customer calls do not prove web research or a
    named client was used.
 
-## Muse execution limit
+## Original Muse execution limit
 
-A fresh consumer Muse call could not be executed in this runtime. No consumer
+A fresh consumer Muse call could not initially be executed in this runtime. No consumer
 Muse tool or CLI and no signed in browser control tool were available. Earlier
 Muse Code probes used a different client and cannot substitute for this test.
-The published guides retain the October 1 authenticated balance result and the
-October 4 unconfirmed message delivery attempt. No new call, recording or
-successful reuse is claimed. A completed consumer Muse task remains the next
-evidence improvement when its authenticated session is accessible.
+At that stage, the published guides retained the October 1 authenticated balance
+result and the October 4 unconfirmed message delivery attempt. They claimed no
+new call, recording or successful reuse. A completed consumer Muse task was the
+next evidence improvement, completed in the followthrough below.
 
-## Verification
+## October 6 completed consumer Muse test
 
-## October 6 native session followthrough checkpoint
+The native Mac desktop worker inspected the saved Call4me connector, then a fresh
+Muse conversation returned a successful balance check through the existing skill.
+After the user's action confirmation, Muse placed call_pk4x8psku92xtb48 to the
+official Main Library number at 4:22 pm Pacific. The independent call record
+confirmed the four minute cap and completed status. Native task observations
+confirmed Muse polled the same ID and retrieved its transcript and recording.
 
-The user requested completion after a Linux to Mac native desktop relay became
-available. Native observation confirms the signed in Muse application and a saved
-Call4me connector with a Disconnect action. This does not yet establish a fresh
-authenticated tool response or a call. The remaining test is a fresh conversation
-access check followed by one authorized Main Library inquiry, limited to four
-minutes and the original no booking, payment, voicemail or callback boundaries.
-Actual results and recording review will determine the publication changes.
+An automated menu transferred to staff, who confirmed quiet laptop use, outlet
+seating on floors three through five and WiFi without a password or library card.
+The published result preserves the interrupted question about a card for seating,
+uncertain network spelling and untested availability, speed and future conditions.
+The recap's broader seating card claim is not repeated as a confirmed answer.
+
+The exact provider recording and public export both decode to 108.72 seconds.
+Two independent source and two export transcriptions were reviewed alongside
+the saved transcript. No private identifying speech was found, so the manifest
+has no mute spans. Original voices and timing remain. No human listening review
+is claimed. Private source data lives outside the repository under the October 6
+Muse followthrough evidence directory.
+
+The setup, first task, comparison and supplier guides now link the actual calling
+evidence. Blank templates and the earlier preparation baseline remain separate
+from the new dated Markdown and JSON execution reports. Existing keyword targets
+are retained; the comparison still describes unequal tasks without ranking clients.
 
 ## Verification history
 
@@ -83,3 +98,10 @@ targets, every linked download, layouts at 320px and 1280px, all three new
 article players loading and seeking, automatic player switching, the transcript
 destinations, navigation from the homepage, archive, feed, sitemap and the
 missing article 404. Root visually reviewed the new cover and rendered page.
+
+The completed Muse call followthrough passed type checking, lint, 241 tests
+with one existing skip, and the site deployment build. Expect verified all four
+updated guides at 320px and 1280px without document overflow, canonical URLs,
+valid structured data, the recording anchor, the 108.72 second player loading
+and seeking to 100 seconds, the expanded transcript, and both dated execution
+report downloads. The public audio hash matches the independently reviewed export.

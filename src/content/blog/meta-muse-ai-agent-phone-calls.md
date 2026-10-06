@@ -1,8 +1,8 @@
 ---
 title: "Muse MCP: connect Meta Muse to phone calling tools"
 seoTitle: "Muse MCP: Meta Muse connectors for phone calls"
-subtitle: Connect Meta Muse to a phone calling service through a custom connector. Here is our tested setup, what a live balance check proves, how native calling differs and what to check before dialing.
-description: "Use Muse MCP through a Meta Muse custom connector to add phone calling tools. Includes our tested balance check, setup prompt and calling brief."
+subtitle: Connect Meta Muse to a phone calling service through a custom connector. Includes our tested setup, successful reuse in a fresh conversation and a recorded library inquiry.
+description: "Use Muse MCP through a Meta Muse custom connector for phone calls. Tested setup, saved connector reuse and a recorded library call with staff answers."
 date: 2026-10-01
 updated: 2026-10-06
 tags: meta muse, ai agents, mcp, ai phone assistant
@@ -10,11 +10,11 @@ authors: nick
 imageAlt: Meta Muse AI agent connectors, with phone calls as the worked example
 ---
 
-**Muse MCP setup uses a custom connector to reach Call4me's phone calling server.** In our October 1 Meta Muse account test, we asked Muse to build the integration, entered a key through its **Connect** card and received a live balance result. We did not find a native MCP server settings form in that tested web session, and we have not completed a Muse business call. This guide gives you the tested connection steps and a brief for an informational phone inquiry after your own access check succeeds.
+**Muse MCP setup uses a custom connector to reach Call4me's phone calling server.** In our October 1 Meta Muse account test, we asked Muse to build the integration, entered a key through its **Connect** card and received a live balance result. On October 6, a fresh conversation reused that connector to check access, call San Francisco's Main Library and retrieve the result. A staff member answered questions about laptop seating, outlets and WiFi. This guide gives you the tested connection steps and links to the [recorded library call](/blog/meta-muse-first-task#hear-the-actual-muse-library-call).
 
 An early call4me user tried our general MCP setup prompt and Muse refused, saying its tools were fixed. Asking it to **build a custom connector** worked in our own account. This guide separates that observed result from Muse's descriptions of what its connector can do.
 
-If Muse already manages your personal tasks, the reason to add calling is to finish the phone part in that conversation. Examples include asking a gym about cancellation requirements or a restaurant about availability. Our recorded [subscription inquiries](/blog/cancel-planet-fitness) provide questions to adapt after your connection check succeeds. The verified Muse setup and the still unverified calling steps are detailed below.
+If Muse already manages your personal tasks, the reason to add calling is to finish the phone part in that conversation. Examples include asking a gym about cancellation requirements or a restaurant about availability. Our recorded [subscription inquiries](/blog/cancel-planet-fitness) provide questions to adapt after your connection check succeeds. The tested Muse setup, connector reuse and library calling workflow are detailed below.
 
 ## Start where your connection actually stands
 
@@ -33,7 +33,7 @@ For a saved connector, send:
 
 > Find and read the existing Call4me connector and its saved instructions. In this conversation, use the saved credential to discover the current tools and execute call4me_get_balance once. Do not dial, schedule a call, change my profile or create a second connector. Do not print credentials. Report whether the request actually ran and show the returned balance, or the exact error without secrets. If the connector cannot be found, say so and stop.
 
-That is a diagnostic prompt to try. Our verified October 1 balance result and incomplete October 4 reuse attempt remain the execution evidence for this guide.
+On October 6, our access check in a fresh Muse conversation returned a successful balance result. Muse reported reading the saved skill and connector, discovering the current tools and executing `call4me_get_balance` once. That establishes successful reuse for this check, not reliable execution from every future conversation.
 
 ## What is Meta Muse?
 
@@ -97,17 +97,39 @@ We reopened muse.ai in the same signed in account to test reuse before attemptin
 
 The page first showed **Warming up**. Our message requested a balance check only, with no call authorized. Its delivery label changed from **Still sending** to **Delivery not confirmed**. The agent later showed **Connected**, but we did not receive a new balance result or a new connector task.
 
-This attempt does not establish that the saved connector failed. It also does not prove that it works from a fresh conversation. Message delivery and connector execution are separate checks. We did not place a Muse business call, so there is no Muse call recording to publish here.
+This October 4 attempt did not establish that the saved connector failed or worked from a fresh conversation. Message delivery and connector execution are separate checks. We did not place a call during that attempt.
+
+### Inspecting the saved connector on October 6
+
+In the signed in Muse account, we opened **Settings**, then **Connectors**, then **Call4me**. The saved connector's detail page showed a **Disconnect** button and **Background sync** set to **Allow**. It did not display an explicit enabled toggle or the connector's tool names. We did not change any settings.
+
+This establishes that the saved connector was visible in the account. It does not establish that its credential still authenticates, that a fresh conversation can execute it or that a phone call works. No new balance request or call was executed during this inspection.
+
+### Reusing the connector in a fresh conversation on October 6
+
+After the settings inspection, we opened a fresh Muse conversation and requested an access check without dialing. Muse returned a successful balance result and reported reading the existing Call4me skill and connector, discovering the current server tools and running `call4me_get_balance` exactly once. It also reported reading the general calling requirements and caller profile without changing the profile. No error was reported, and no call was placed or scheduled during this check.
+
+This is a successful fresh conversation reuse result observed in Muse. It is not an independent audit of credential handling or a guarantee that later conversations will work. The October 4 delivery problem remains a separate historical result; it did not establish a connector failure.
 
 | Check | What our evidence supports |
 | :--- | :--- |
 | October 1 setup | A Connect card, credential entry outside chat and a balance result matching our account |
-| Saved skill claim | Muse reported saving the skill, and the old setup task history remained visible on October 4. We did not inspect the saved skill itself |
-| New balance check | Requested on October 4, but message delivery was not confirmed and no result returned |
-| Calling from a fresh conversation | Still unverified |
+| Saved skill claim | Muse reported saving the skill, and the old setup task history remained visible on October 4. That October 4 check did not inspect the saved skill itself |
+| October 6 connector inspection | Call4me appeared under Settings and Connectors, with Disconnect and Background sync Allow visible. No tool execution was tested |
+| October 4 balance request | Message delivery was not confirmed and no result returned |
+| October 6 fresh conversation check | Muse returned a successful balance result and reported reading the saved skill and connector, discovering tools and executing the balance request once |
+| October 6 library call | Muse placed one call through the saved connector, followed its status and retrieved the transcript and an available recording. Staff answered the informational questions |
 | Native Muse phone calling | Not tested |
 
-For an executed phone workflow with recordings, see our [Claude Code test](/blog/claude-code-phone-calls), [Codex test](/blog/codex-phone-calls) and [Grok Bot test](/blog/grok-connectors-mcp-phone-calls). Those results establish the named client paths, not Muse's behavior.
+### The completed Muse library call
+
+On October 6 at 4:22 pm Pacific, the fresh Muse conversation used its saved skill to execute `call4me_place_call` once for San Francisco's Main Library. The call record independently confirmed the four minute limit and completed status. Muse followed the same call with `call4me_get_call`, then used `call4me_get_recordings` and returned the transcript and an available WAV recording.
+
+After an automated menu, a staff member confirmed that an adult can work quietly on a laptop in general seating, identified outlets on floors three, four and five, and said WiFi does not require a password or library card. Asked about restrictions, the staff member advised keeping the volume low. We did not measure WiFi speed, verify a particular network name or establish that a seat or outlet would be free on arrival. The interrupted library card question did not separately confirm the card policy for general seating.
+
+Hear the [complete reviewed call and transcript](/blog/meta-muse-first-task#hear-the-actual-muse-library-call), or read the [dated result report](/static/blog/resources/meta-muse-first-task/executed-result-2026-10-06.md). This was an informational inquiry, with no reservation or purchase. It demonstrates one executed consumer Muse workflow through Call4me, not Muse's native calling service or every future task.
+
+For other executed client workflows, see our [Claude Code test](/blog/claude-code-phone-calls), [Codex test](/blog/codex-phone-calls) and [Grok Bot test](/blog/grok-connectors-mcp-phone-calls).
 
 ## Troubleshooting Muse custom connectors
 
@@ -125,7 +147,7 @@ We saw both labels together on October 4. Check the message's own delivery state
 
 ### A later conversation does not discover the skill
 
-Ask Muse to locate and read the existing `call4me` skill, then run `call4me_get_balance` with the saved credential. Do not rebuild the connector or paste a key into chat just because the agent cannot recall it. This is a diagnostic step to try, not a future conversation path we have verified.
+Ask Muse to locate and read the existing `call4me` skill, then run `call4me_get_balance` with the saved credential. Do not rebuild the connector or paste a key into chat just because the agent cannot recall it. Our October 6 fresh conversation check succeeded through the saved connection. Recheck the actual response in your own conversation before dialing.
 
 ### The call is completed but the question is unanswered
 

@@ -1,8 +1,8 @@
 ---
 title: "How to use Meta Muse for your first informational phone call"
 seoTitle: "How to use Meta Muse for a first phone call"
-subtitle: Ask one library about laptop seating, outlets and guest WiFi. Includes published branch numbers, a bounded call brief and a checklist for the returned answers.
-description: Give Meta Muse a bounded first phone task. Verify a library number, check Call4me access, approve one call and inspect the answers and transcript.
+subtitle: Hear Muse use Call4me to ask a library about laptop seating, outlets and guest WiFi. Includes the actual recording, a bounded call brief and the limits of the answers.
+description: Hear our actual Meta Muse phone call to a library through Call4me. Includes saved connector reuse, the recording, transcript and a reusable call brief.
 date: 2026-10-05
 updated: 2026-10-06
 tags: meta muse, ai agents, phone calls, muse use cases
@@ -12,9 +12,81 @@ imageAlt: A first Muse phone task moves from a verified branch number through on
 
 **Use Meta Muse for one small informational phone call: ask a library whether its general seating fits your laptop session.** Published hours establish when it opens. A conversation can clarify where adults can work, where to find outlets and how guests access WiFi. The result should identify who answered and what they could actually confirm.
 
-This walkthrough prepares that task using official San Francisco Public Library branch pages and study room policy rechecked October 6, 2026. We have not executed this library call in Muse. Our [consumer Muse connection test](/blog/meta-muse-ai-agent-phone-calls) established an authenticated balance check, not a completed business call or reliable reuse from every later conversation.
+On October 6, 2026, we ran this task in consumer Muse through the saved Call4me connector. A fresh conversation returned a successful balance check, placed one Main Library call, followed its status and retrieved its transcript and recording metadata. A staff member answered the laptop, outlet and WiFi questions. You can hear the complete call below.
+
+This establishes the tested Muse conversation's calling workflow. It does not test Muse's native calling feature or establish reliability in every future conversation. The [connection guide](/blog/meta-muse-ai-agent-phone-calls) separates the original setup, an earlier delivery problem and this successful reuse.
 
 Use the [one call brief](/static/blog/resources/meta-muse-first-task/call-brief.md) to choose a branch and record its answers. It contains the exact questions, approval boundary and empty outcome fields.
+
+## What the actual Muse call established
+
+We checked the Main Library's [published number and Tuesday hours](https://sfpl.org/locations/main-library), then approved one informational call to (415) 557 4400 with a four minute limit. It began at 4:22 pm Pacific on October 6. No visit date, reservation, purchase, voicemail or callback was requested.
+
+Muse returned call ID `call_pk4x8psku92xtb48`. We independently matched that ID to the completed Call4me record and its exact provider recording. The saved request retained the four minute cap. Muse used `call4me_get_call` to follow the same call and `call4me_get_recordings` to retrieve the available recording metadata.
+
+| Question | What the staff member said | What remains unverified |
+| :--- | :--- | :--- |
+| Can an adult quietly use a personal laptop in general seating? | Yes | A particular seat or a future visit's conditions |
+| Where is seating with outlets? | Floors three, four and five | Whether an outlet will be free when you arrive |
+| Does guest WiFi need a password or library card? | No password; anyone can use the WiFi | Device login screens, signal quality and speed were not tested |
+| Are there noise rules or seating time limits? | The response was no, followed by “Just keep volume low” | This brief answer is not a complete review of library policy |
+
+The caller began asking whether a card was needed for WiFi “or for just” before being interrupted. The staff member's clear followup concerned WiFi. **The automated recap extended that answer to seating; we do not treat the recording as separate confirmation of the seating card rule.** The spoken network name was transcribed as SFPL Library WiFi, with one letter differing between transcriptions. We did not verify an exact network label on a device.
+
+Download the [dated execution report](/static/blog/resources/meta-muse-first-task/executed-result-2026-10-06.md) or [structured result](/static/blog/resources/meta-muse-first-task/executed-result-2026-10-06.json). These contain the observed result; the blank brief and worksheets remain reusable preparation materials.
+
+## Hear the actual Muse library call
+
+The complete recording lasts about 1 minute 49 seconds. It includes the library menu, transfer, staff conversation and goodbyes. Original voices and timing are retained, with loudness normalization. No private identifying speech was found in the saved transcript and two independent source transcriptions, so no mute spans were applied. Two further transcriptions of the exported recording and decoded duration checks were reviewed. This is a transcription based review, not a claim of human listening verification.
+
+<audio controls preload="metadata" src="/static/blog/muse-main-library-laptop-seating.mp3" style="width:100%"><a href="/static/blog/muse-main-library-laptop-seating.mp3">Listen to the complete Muse library call</a></audio>
+
+<details>
+<summary>Recording transcript</summary>
+
+This transcript combines independent speech transcriptions with the saved call text. Short overlapping acknowledgments and uncertain words are marked. The recording is the primary evidence.
+
+**0:00** Library recording: Thank you for calling the San Francisco Public Library. Please listen carefully to the following options so we can direct your call to the appropriate department. For the hours and location of the main library, press one. For main library reference desk, press two. To speak to library staff, press three. For information about community meeting rooms, press four. To renew library materials by phone or get help with your account, press five. To speak with staff in community programs and partnerships, including public affairs, press six. To repeat, press nine. To go back, press star.
+
+**About 0:37** Caller: [Brief interjection rendered as “Hmm” in the saved call text; omitted by both full recording transcriptions.]
+
+**0:37** Library recording: Thank you for calling the San Francisco [remaining words unclear]. Wait while I transfer your call.
+
+**0:48** Staff: Library information.
+
+**0:51** Caller: Hi, I have a quick question about visiting the main library. Can an adult quietly use their own laptop in general seating during open hours?
+
+Staff: [Brief acknowledgment.] Yeah, of course.
+
+**1:02** Caller: Perfect. And do you know where the seating with power outlets is in the main branch?
+
+**1:07** Staff: Upper floor, three, four and five.
+
+**1:11** Caller: Great, thanks. How does the guest WiFi [overlap and unfinished question].
+
+Staff: [Overlapping acknowledgment, rendered “Sure, you're welcome” in the saved call text.] There's no password.
+
+**1:18** Caller: Okay, is a library card needed for WiFi or for just [interrupted]?
+
+Staff: No.
+
+Caller: Okay.
+
+**1:23** Staff: No, anyone can use our WiFi. [Network name spoken as SFPL Library WiFi; one letter is uncertain between transcriptions.]
+
+**1:27** Caller: Got it. Are there any current restrictions I should know about, like noise rules or time limits on seating?
+
+Staff: [Brief acknowledgment.] No. Just keep volume low.
+
+**1:38** Caller: That's helpful. Thank you. That's all I needed. Thanks so much.
+
+Staff: Sure. You're welcome.
+
+**1:44** Caller and staff: [Exchanged and overlapping goodbyes through about 1:47.]
+
+</details>
+
+The menu transferred to a person, but the recording alone does not prove which keypad digit was sent. Nothing was booked or held, and no seat or future WiFi conditions were guaranteed. Muse also reported saving the findings in its memory; we did not independently audit that storage or future recall.
 
 ## Choose the branch and the question before dialing
 
@@ -61,7 +133,7 @@ Retrieve the available transcript and recording
 Return confirmed answers and open questions
 ```
 
-This is the intended workflow, not a log of an executed Muse call. The requirements check may reveal missing information. Resolve that before dialing, without silently expanding the authorized task.
+This is the reusable workflow. The dated test above records our actual execution. Your requirements check may reveal missing information. Resolve that before dialing, without silently expanding the authorized task.
 
 ## Judge the answers, not just the completed status
 
@@ -75,7 +147,7 @@ The useful final report separates three kinds of information:
 
 Ask for the transcript evidence supporting each phone answer and a recording link if available. A general statement about outlets should identify where the respondent said to look. A WiFi answer should distinguish a login instruction from a measured speed. If someone cannot answer, keep that question open.
 
-The [reference report](/static/blog/resources/meta-muse-first-task/reference-report.md) and [structured preparation data](/static/blog/resources/meta-muse-first-task/reference-data.json) contain the official source baseline and empty phone outcome fields. They are complete preparation assets, not a fabricated call transcript.
+The [reference report](/static/blog/resources/meta-muse-first-task/reference-report.md) and [structured preparation data](/static/blog/resources/meta-muse-first-task/reference-data.json) preserve the earlier official source baseline and empty template outcome fields. The separate [October 6 execution report](/static/blog/resources/meta-muse-first-task/executed-result-2026-10-06.md) contains the actual call findings.
 
 Use this result prompt after the attempt:
 

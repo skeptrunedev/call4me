@@ -4,12 +4,13 @@ seoTitle: "Grok Bot vs Meta Muse for phone calls"
 subtitle: Compare how each agent connects a calling service, prepares an approved inquiry and checks the answer. Includes three matching call briefs and a worksheet for recording actual results.
 description: "Grok Bot vs Meta Muse for phone calls. Actual connector evidence, setup differences, three bounded inquiry prompts and a call result comparison worksheet."
 date: 2026-10-05
+updated: 2026-10-06
 tags: grok, meta muse, ai agents, mcp, ai phone assistant
 authors: nick
 imageAlt: Grok Bot and Meta Muse phone workflows compared by calling setup, call evidence and unanswered questions
 ---
 
-**Grok Bot has completed a real Call4me restaurant call in our tests. Meta Muse has completed a connector setup and live balance check, but we have not verified a business call from Muse.** That is the evidence available for choosing a calling workflow today. It does not establish which agent is the better caller.
+**Grok Bot and Meta Muse have both completed real Call4me calls in our tests.** Grok reached a restaurant's recorded walk in policy; Muse reached library staff who answered laptop seating, outlet and WiFi questions. These were different tasks at different destinations, so the results do not establish which agent is the better caller.
 
 This comparison concerns **Grok Bot and the consumer Meta Muse agent**, using the same external phone service. It excludes grok.com chat, the xAI API, Muse Code and Muse's native calling path. We build Call4me, so the comparison focuses on how an existing agent prepares and follows a call through our tools.
 
@@ -23,10 +24,10 @@ Grok Bot can use plugins and custom MCP servers. Meta describes Muse as able to 
 | :--- | :--- | :--- |
 | Add Call4me | Our personal Bot accepted a request to add a custom remote MCP server | Our tested Muse session built a custom connector using the MCP SDK |
 | Authenticate | Our personal Bot used the account's personal server URL, which contains a key | Our Muse test entered the key through a separate Connect card, outside chat |
-| Check access | Returned live balance information | Returned live balance information after fixing an SDK import error |
-| Place a business call | Verified in the personal Grok Bot conversation described below | Not verified in our reviewed Muse tests |
-| Follow the result | Returned the restaurant call's partial outcome, transcript and recording metadata | The connector reported available tools, but we did not execute a business call or its result loop |
-| Reuse later | Our October 4 run reopened the existing Bot and used its saved connector | October 4 restored the earlier conversation, but new message delivery was unconfirmed and no new balance result returned |
+| Check access | Returned live balance information | Returned live balance information during setup and a successful fresh conversation check on October 6 |
+| Place an informational call | Verified restaurant call in the personal Grok Bot conversation described below | Verified Main Library call from a fresh conversation on October 6 |
+| Follow the result | Returned the restaurant call's partial outcome, transcript and recording metadata | Followed the library call's status and returned its transcript and an available WAV recording |
+| Reuse later | Our October 4 run reopened the existing Bot and used its saved connector | On October 6, a fresh conversation used the saved connector for a successful balance check and library call |
 
 Use the [Grok calling setup guide](/blog/grok-connectors-mcp-phone-calls) for its actual connection instructions. Use the [Muse calling setup guide](/blog/meta-muse-ai-agent-phone-calls) for its custom connector prompt and secure credential flow. Keys and personal MCP URLs belong in your own setup, never in shared call briefs or worksheets.
 
@@ -40,7 +41,11 @@ The recording also contains a brief caller interjection and automated prompts. W
 
 Muse's October 1 setup returned account data matching our balance and reported saving a reusable skill. It did not exercise a call. On October 4, its requested new balance check showed unconfirmed message delivery. That attempt does not identify a connector failure or prove reuse from a fresh conversation. See the [Muse test evidence](/blog/meta-muse-ai-agent-phone-calls).
 
-These are unequal tests. They support choosing a currently demonstrated setup path, but not a ranking of voice quality, speed, reliability or task success. A comparison of the same calls still needs actual results from both agents, with changes in business availability accounted for.
+On October 6, a fresh Muse conversation returned a successful balance result. Muse reported reading the saved skill and connector, discovering the current calling tools and executing `call4me_get_balance` once. It also reported reading the general requirements and caller profile without changing it. This check placed or scheduled no call. It establishes successful reuse for that access check, not a credential security audit or dependable execution from every later conversation.
+
+After that check, Muse placed one approved informational call to San Francisco's Main Library with a four minute limit. It followed the same call's status and retrieved the transcript and an available recording. After the automated menu, staff confirmed quiet laptop use in general seating, outlets on floors three, four and five, and WiFi access without a password or library card. Staff advised keeping the volume low. The call did not establish seating availability, WiFi speed or a separate library card policy for seating. Hear the [Muse library call and reviewed transcript](/blog/meta-muse-first-task#hear-the-actual-muse-library-call).
+
+These are unequal tests: a restaurant inquiry and a library inquiry, on different dates. They demonstrate both setup paths and result retrieval, but not a ranking of voice quality, speed, reliability or task success. A comparison of the same calls still needs actual results from both agents, with changes in business availability accounted for.
 
 ## Compare the whole calling workflow
 
@@ -91,6 +96,6 @@ The [worksheet](/static/blog/resources/grok-bot-vs-meta-muse/comparison-workshee
 
 A good result may be partial: the restaurant confirmed a policy but not availability, the office quoted an exam without establishing every inclusion, or a club required the account holder to complete cancellation elsewhere. Preserve that distinction rather than awarding success because a call ended.
 
-Finally, check reuse separately. Grok documents [skills and routines](https://docs.x.ai/grok-bot/skills-routines-and-automations), but the next task still needs current inputs and permission. Muse reported saving our connector skill, but its later execution remains unverified. Recheck access in the conversation doing the work before approving another call.
+Finally, check reuse separately. Grok documents [skills and routines](https://docs.x.ai/grok-bot/skills-routines-and-automations), but the next task still needs current inputs and permission. Muse's October 6 fresh conversation used its saved connector for a successful balance check and the library call. Recheck access in the conversation doing the work before approving another call.
 
-If you need a demonstrated personal Bot calling path, start with the [Grok test](/blog/grok-connectors-mcp-phone-calls). If Muse already handles your tasks, use its [connector guide](/blog/meta-muse-ai-agent-phone-calls), verify a current account read and evaluate one approved inquiry. The useful comparison is the actual answer each returns to your original task, with the gaps still visible.
+For the demonstrated personal Bot path, start with the [Grok test](/blog/grok-connectors-mcp-phone-calls). If Muse already handles your tasks, use its [connector guide](/blog/meta-muse-ai-agent-phone-calls) and [executed library tutorial](/blog/meta-muse-first-task). In either client, verify a current account read before approving an inquiry. The useful comparison is the actual answer each returns to your original task, with the gaps still visible.

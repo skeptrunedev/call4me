@@ -1,0 +1,48 @@
+{
+  "kind": "executed consumer Muse call through the saved Call4me custom connector",
+  "date": "2026-10-06",
+  "client": "Meta Muse consumer app",
+  "fresh_conversation": true,
+  "saved_connector_reused": true,
+  "balance_check": "new successful result returned in Muse",
+  "call_id": "call_pk4x8psku92xtb48",
+  "business": "San Francisco Public Library Main Library",
+  "published_phone_e164": "+14155574400",
+  "number_source": "https://sfpl.org/locations/main-library",
+  "created_at": "2026-10-06T23:22:54.599Z",
+  "timezone": "America/Los_Angeles",
+  "max_minutes": 4,
+  "status": "completed",
+  "respondent": "automated menu followed by human staff",
+  "result_tools_observed": ["call4me_get_call", "call4me_get_recordings"],
+  "answers": {
+    "quiet_laptop_in_general_seating": "permitted according to staff",
+    "outlet_floors": [3, 4, 5],
+    "wifi_password_required": false,
+    "library_card_required_for_wifi": false,
+    "restriction_response": "no, followed by advice to keep volume low"
+  },
+  "unverified": [
+    "separate library card rule for seating",
+    "available seat or outlet on arrival",
+    "exact device network label",
+    "WiFi login screens, speed and signal",
+    "complete library policy",
+    "future conditions",
+    "keypad digit used for the transfer",
+    "Muse memory storage and future recall"
+  ],
+  "recording": {
+    "url": "https://call4.me/static/blog/muse-main-library-laptop-seating.mp3",
+    "decoded_source_seconds": 108.72,
+    "decoded_export_seconds": 108.72,
+    "source_sha256": "a86d9b7bc8e7e615b67d0f5308679b3442b812ce3221657660e400302f38cd5b",
+    "export_sha256": "cdf048503d8669f9ed20818ad32e254d3801f2722e4497d4b22f008246f980f3",
+    "original_timing_preserved": true,
+    "mute_spans": 0,
+    "independent_source_transcriptions": 2,
+    "independent_export_transcriptions": 2,
+    "human_listening_verification": false
+  },
+  "transcript_url": "https://call4.me/blog/meta-muse-first-task#hear-the-actual-muse-library-call"
+}

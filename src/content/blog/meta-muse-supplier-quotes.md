@@ -4,6 +4,7 @@ seoTitle: "Meta Muse supplier quotes by phone"
 subtitle: Give every supplier the same phone brief. Includes published price preparation, questions for comparable delivered quotes and a worksheet for actual call outcomes.
 description: Prepare supplier calls in Meta Muse with one shared specification, published prices, approval boundaries and a downloadable phone quote worksheet.
 date: 2026-10-05
+updated: 2026-10-06
 tags: meta muse, small business, ai agents, supplier quotes
 authors: nick
 imageAlt: Supplier phone calls share one specification and return comparable quotes with unresolved costs visible
@@ -13,7 +14,7 @@ imageAlt: Supplier phone calls share one specification and return comparable quo
 
 Meta announced [Muse for Small Business](https://about.fb.com/news/2026/09/introducing-muse-small-business/) on September 29. It adds business skills and connectors, including custom connections for services outside the built in list. A supplier calling task is a practical use case: research the exact products, prepare one question set and ask each approved supplier about the same quantity and destination. This guide uses the consumer Muse app with a Call4me custom connection, rather than Muse Code.
 
-We researched the published listings below on October 5, 2026. We did not request a supplier quote, make a call or execute this workflow in Muse. The delivered cost example later in this article is synthetic and is labeled accordingly.
+We researched the published listings below on October 5, 2026. We did not request a supplier quote, make a supplier call or execute this workflow in Muse. The delivered cost example later in this article is synthetic and is labeled accordingly.
 
 ## Define the order before asking for a winner
 
@@ -78,7 +79,7 @@ The [sourcing worksheet](/static/blog/resources/meta-muse-supplier-quotes/quote-
 
 ## Check the connection, approve contact, then follow each call
 
-Meta's [official connector instructions](https://www.meta.com/help/artificial-intelligence/1687253048996149/) explain custom connections. Use the [consumer Muse connection guide](/blog/meta-muse-ai-agent-phone-calls), then request `call4me_get_balance` without authorizing a call. Continue only after an authenticated response and discovery of the calling tools. Our Muse setup evidence establishes that balance check; it does not establish these supplier calls.
+Meta's [official connector instructions](https://www.meta.com/help/artificial-intelligence/1687253048996149/) explain custom connections. Use the [consumer Muse connection guide](/blog/meta-muse-ai-agent-phone-calls), then request `call4me_get_balance` without authorizing a call. Continue only after an authenticated response and discovery of the calling tools. Our [October 6 Muse library call](/blog/meta-muse-first-task) demonstrates saved connector reuse, one informational call and result retrieval. It does not establish these supplier calls or quotes.
 
 Verify the relevant sales number on each supplier's own site. This article does not supply unverified sales numbers. The worksheet deliberately leaves those fields blank. A product SKU or a search snippet is not a phone number source. Show the selected recipient, source, questions, buyer identity and five minute limit before requesting approval of the particular calls.
 
