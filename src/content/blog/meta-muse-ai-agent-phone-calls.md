@@ -4,7 +4,7 @@ seoTitle: "Meta Muse custom connectors for phone calls"
 subtitle: Connect Meta Muse to a phone calling service through a custom connector. Here is our tested setup, what a live balance check proves, how native calling differs and what to check before dialing.
 description: Set up a Meta Muse custom connector for call4me. Secure credential steps, MCP checks, native calling beta and troubleshooting from our account tests.
 date: 2026-10-01
-updated: 2026-10-04
+updated: 2026-10-05
 tags: meta muse, ai agents, mcp, ai phone assistant
 authors: nick
 imageAlt: Meta Muse AI agent connectors, with phone calls as the worked example
@@ -139,6 +139,8 @@ Call4me exposes status and transcripts through `call4me_get_call`. A finished ca
 A personal Call4me MCP URL contains a credential. Pasting it into chat exposes that credential to the conversation and can carry it into generated code or shared screenshots. Use the **Connect** card and the canonical endpoint, `https://call4.me/mcp`, for this setup.
 
 That follows Meta's documented credential entry path. We did not audit the custom connector's storage, generated code or logs, and a balance check should not be presented as that audit.
+
+For a first public research task, use our [Muse library comparison tutorial](/blog/meta-muse-first-task). For business research, try the [supplier comparison brief](/blog/meta-muse-supplier-quotes). The developer client has a separate [Muse Code MCP setup guide](/blog/muse-code-mcp-phone-calls), including a configuration mismatch found in our native client tests. Our [Grok Bot versus Meta Muse comparison](/blog/grok-bot-vs-meta-muse) explains the consumer workflow differences.
 
 ## Let your agent make the call
 

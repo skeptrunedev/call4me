@@ -1,0 +1,98 @@
+Grok Bot everyday errand workflows
+
+These are copyable prompts, not a Grok template installer. Replace the bracketed inputs. Preparation and external contact have separate permissions. These complete workflows have not been executed for this guide.
+
+1. Find an appointment that fits
+
+Help me find [appointment type] near [location], within [travel limit],
+between [start date] and [end date]. My available times, with time zone,
+are [windows]. My provider or insurance preferences are [preferences].
+
+Start with public provider websites. Return a shortlist with source links
+and the exact unanswered questions. Do not infer availability from office
+hours or assume a provider accepts my specific insurance plan.
+
+Before calling, show me the proposed businesses, published phone numbers,
+questions and maximum duration per call. Wait for my permission to call.
+If approved, check call4me_get_requirements and ask for missing information
+in one message. Do not book, provide payment details or agree to fees.
+
+Return provider, location, offered slot with time zone, whether that slot
+is held, coverage questions, source and what I need to do next.
+If a slot was not confirmed, say availability is unknown.
+
+2. Check restaurant availability
+
+Check [restaurant] for a party of [size] on [date] around [time and time zone].
+Our flexibility is [alternate times]. Relevant needs are [accessibility,
+seating or dietary questions]. Do not invent a dietary need.
+
+Check the restaurant's own website and booking page first. Distinguish a
+visible reservation slot from a general walk in policy. If the answer
+needs a call, show me the published number, questions and duration limit,
+then wait for my permission.
+
+If I approve a call, ask about space for this party, recommended arrival
+time, wait estimate and any deposit or cancellation conditions. Do not
+reserve, pay, request a callback or leave a voicemail without approval.
+
+Return confirmed facts, their source, unresolved questions and the next
+step. If only a menu answers, label its statements as recorded policy,
+not a live availability confirmation.
+
+3. Compare service quotes
+
+Help compare providers for [service] at [location]. The exact scope is
+[items, dimensions, condition and access constraints]. My timing is
+[window]. My requirements are [requirements].
+
+Find suitable providers from their own websites. Draft one scope brief
+to use for every provider. Ask me to review it before contacting anyone.
+Show proposed recipients, published contact details and contact method.
+
+If I approve contact, ask each provider about the same scope: what is
+included, exclusions, possible extra charges, earliest availability,
+whether an onsite visit is required and how long the estimate is valid.
+Do not accept a quote, schedule work, pay a deposit or send photos without
+my approval. Do not supply a budget I have not given you.
+
+Return comparable quotes with scope, inclusions, exclusions, estimate
+versus confirmed quote, availability, source and missing information.
+Do not rank a provider as cheapest while material charges remain unknown.
+
+4. Research cancellation
+
+Help me understand how to cancel [service]. My relevant plan information
+is [plan and renewal date, if known]. Start with official cancellation
+instructions and the documents I provide.
+
+Separate public policy from terms specific to my account. Identify the
+cancellation method, renewal cutoff, required account holder steps,
+fees stated in my terms and whether cancelling affects remaining access.
+If the policy or account terms are missing, mark the answer unknown.
+
+Prepare the exact steps and any questions for support. Do not cancel,
+change billing, accept a retention offer or contact support yet. If an
+answer requires contact, show me the proposed questions and ask first.
+
+Return the policy source and date checked, account facts, unresolved
+questions, proposed next action and the approval needed to perform it.
+
+5. Follow up on a refund
+
+Help follow up on my refund from [merchant]. The purchase reference is
+[reference], the relevant timeline is [dates], and I will provide the
+receipt and prior support messages. Use only the documents I provide.
+
+Build a short factual timeline. Separate a refund request, merchant
+approval and payment actually received. Identify the missing evidence.
+Draft the support questions and let me review before any contact.
+
+If I approve contact, ask whether the refund was approved, when it was
+submitted, where it was sent, the reference available to me and the
+stated next step if it has not arrived. Do not accept store credit,
+close the case, change payment details or threaten legal action.
+
+Return merchant confirmed facts, documents that support them, questions
+still open and the next check I need to make with the payment provider.
+Do not label the refund received unless there is evidence of receipt.

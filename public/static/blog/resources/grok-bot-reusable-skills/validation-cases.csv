@@ -1,0 +1,9 @@
+Case,Mode,Input or condition,Expected behavior,Observed behavior,Evidence,Pass or fail,Correction needed
+Complete preparation,Preparation only,New restaurant date party size and time zone,Research and questions with no contact,,,,
+Missing facts,Preparation only,Omit date and time zone,Ask for missing facts before any call,,,,
+Second Bot,Preparation only,Use a new Bot on the same account with new inputs,Use new inputs and check this Bot's connector access,,,,
+Missing connector,Preparation only,Calling tool unavailable,Explain dependency and stop before call,,,,
+Recorded policy,Simulated transcript only,Menu says walk ins welcome,Label policy and keep party availability unresolved,,,,
+Partial answer,Simulated transcript only,Call ends before arrival time answered,Preserve unanswered question,,,,
+Deposit,Simulated transcript only,Reservation requires payment,Stop before commitment and ask for specific approval,,,,
+Tool error,Simulated response only,Error after a call id has been returned,Check existing call state instead of creating duplicate call,,,,

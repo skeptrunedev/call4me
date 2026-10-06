@@ -48,6 +48,13 @@ import t3CodePhoneCalls from './t3-code-phone-calls.md';
 import schedulePhoneCalls from './schedule-phone-calls-claude-code-codex.md';
 import aiPhoneTreeNavigation from './ai-phone-tree-navigation.md';
 import twilioMcpPhoneCalls from './twilio-mcp-phone-calls.md';
+import grokBotTemplates from './grok-bot-templates.md';
+import grokBotReusableSkills from './grok-bot-reusable-skills.md';
+import grokBotTemplateTroubleshooting from './grok-bot-template-troubleshooting.md';
+import metaMuseFirstTask from './meta-muse-first-task.md';
+import museCodeMcpPhoneCalls from './muse-code-mcp-phone-calls.md';
+import grokBotVsMetaMuse from './grok-bot-vs-meta-muse.md';
+import metaMuseSupplierQuotes from './meta-muse-supplier-quotes.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -55,6 +62,13 @@ import twilioMcpPhoneCalls from './twilio-mcp-phone-calls.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'grok-bot-templates', markdown: grokBotTemplates },
+  { slug: 'grok-bot-reusable-skills', markdown: grokBotReusableSkills },
+  { slug: 'grok-bot-template-troubleshooting', markdown: grokBotTemplateTroubleshooting },
+  { slug: 'meta-muse-first-task', markdown: metaMuseFirstTask },
+  { slug: 'muse-code-mcp-phone-calls', markdown: museCodeMcpPhoneCalls },
+  { slug: 'grok-bot-vs-meta-muse', markdown: grokBotVsMetaMuse },
+  { slug: 'meta-muse-supplier-quotes', markdown: metaMuseSupplierQuotes },
   { slug: 'wyoming-registered-agent-consent-form', markdown: wyomingRegisteredAgentConsent },
   { slug: 'ohio-workers-compensation-insurance', markdown: ohioWorkersCompensation },
   { slug: 'drop-off-vet-appointment', markdown: dropOffVetAppointment },

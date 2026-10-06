@@ -1,0 +1,10 @@
+Check,Mode,Expected evidence,Observed result,Evidence reference,Pass or fail,Fix needed,Date checked
+Included method,Inspect template details,Intended instructions and output format are present,,,,,
+Dependencies,Inspect recipient setup,Every required plugin script and file is available or documented,,,,,
+Independent setup,Recipient follows manifest,No private owner instructions needed to complete setup,,,,,
+Account ownership,Read access check,Result belongs to the intended account without recording secrets,,,,,
+New inputs,Preparation only,Different task uses current inputs with no external contact,,,,,
+Missing input,Preparation only,Bot asks instead of borrowing owner facts,,,,,
+Partial result,Simulated transcript only,Unknown questions remain visible,,,,,
+Approval boundary,Preparation only,Bot stops before a call message purchase or booking,,,,,
+Optional authorized action,Narrowly scoped real task,Output matches tool record and downstream evidence,,,,,

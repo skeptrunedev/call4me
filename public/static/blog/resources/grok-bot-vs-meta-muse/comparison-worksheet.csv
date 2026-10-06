@@ -1,0 +1,7 @@
+agent,task,run_date,product_surface,version_if_available,access_granted,message_delivered,final_answer_received,official_source_urls,unsupported_claims,unknowns_preserved,correction_messages,unauthorized_actions,final_document,next_step,notes
+Grok Bot,Private dining,,,,,,,,,,,,,,
+Meta Muse,Private dining,,,,,,,,,,,,,,
+Grok Bot,Eye exam preparation,,,,,,,,,,,,,,
+Meta Muse,Eye exam preparation,,,,,,,,,,,,,,
+Grok Bot,Membership cancellation inquiry,,,,,,,,,,,,,,
+Meta Muse,Membership cancellation inquiry,,,,,,,,,,,,,,

@@ -4,7 +4,7 @@ seoTitle: Grok connectors and MCP servers, explained
 subtitle: Set up custom tools on grok.com, in Grok Bot or through the xAI API. Then hear our actual Grok Bot restaurant call, including the partial answer and the menu problem.
 description: "Add a custom Grok MCP connector and hear a real Grok Bot phone call. Setup, authentication, recording, transcript and what the call did not confirm."
 date: 2026-10-01
-updated: 2026-10-04
+updated: 2026-10-05
 tags: grok, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: Grok connectors and MCP servers, with phone calls as the worked example
@@ -242,6 +242,8 @@ Ask Grok to run `call4me_get_balance` first. If it answers with your balance, ev
 ```
 
 Then it keeps checking `call4me_get_call` until the call ends and tells you what happened. If the restaurant asks something the caller doesn't know, like "is a booth OK?", the question comes back to Grok to answer while they wait.
+
+For tasks to use after setup, copy our [five Grok Bot errand templates](/blog/grok-bot-templates). Then [save a reusable skill](/blog/grok-bot-reusable-skills) or [check a shared template's recipient setup](/blog/grok-bot-template-troubleshooting). Our [Grok Bot versus Meta Muse comparison](/blog/grok-bot-vs-meta-muse) includes identical research briefs for trying both agents.
 
 ## Let your agent make the call
 

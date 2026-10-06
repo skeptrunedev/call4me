@@ -1,0 +1,18 @@
+Grok Bot recipient setup manifest
+
+Fill in the dependencies and actual setup links. Never include credentials, private API URLs, personal account data or signed recording links.
+
+Workflow name:
+Purpose and expected output:
+What the recipient receives:
+What must be installed separately:
+Required files and where to obtain them:
+Required account or connector, with official setup link:
+Credential owner: recipient or explicitly shared account
+Access check and what it proves:
+Inputs required for each task:
+Preparation that may proceed without external contact:
+Actions that require approval:
+How to validate the finished result:
+What to report if access, inputs or evidence are missing:
+Date this recipient setup was last checked:

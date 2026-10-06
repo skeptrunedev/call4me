@@ -1,0 +1,9 @@
+Attach restaurant-inquiry-method.md to Grok Bot, or paste its contents, then send:
+
+Create a skill called Restaurant availability inquiry from the attached method. Preserve its evidence checks, failure handling and approval boundaries. Do not copy the restaurant, dates, keys, recording links or personal details from our previous task. Show me the skill instructions before saving, then tell me how to invoke the saved skill. Do not create a routine or make a call.
+
+After you review and save it, open another Bot on your account and request preparation only:
+
+Use Restaurant availability inquiry for [new restaurant], [date], [party size] and [time with time zone]. Research public sources and show the proposed questions. Do not place any call, book, leave a message or contact anyone.
+
+The documented save and reuse path needs validation in your account. This file is an instruction prompt, not an installer, and does not verify recipient template portability.

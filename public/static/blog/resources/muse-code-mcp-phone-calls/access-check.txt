@@ -1,0 +1,1 @@
+Use the actual call4me_get_balance tool to check my calling connection. Report whether the tool succeeded and whether calling tools are available. Do not place or schedule a call, buy a number, change my account or print private profile details. If the tool is absent or returns an error, report that exact limitation instead of describing a hypothetical success.

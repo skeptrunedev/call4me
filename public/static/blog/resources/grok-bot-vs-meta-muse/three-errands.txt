@@ -1,0 +1,21 @@
+Grok Bot vs Meta Muse: three identical research briefs
+Prepared October 5, 2026. This is a reusable test pack, not a record of completed matched tests.
+
+Run each task separately in each agent. Use the same access and instructions. Record the date, product surface, version where available, any corrections and the final answer. Public research only. No calls, messages, forms, bookings or account changes are authorized.
+
+TASK 1: PRIVATE DINING
+Compare private dining at Waterbar, EPIC Steak and Foreign Cinema in San Francisco using their official websites. List the named spaces, published seated and reception capacities, descriptions of privacy, inquiry routes and any conflicting details. We have not decided an event date, guest count or budget. Do not invent them. Link the source for each factual claim. Mark current availability, event specific minimum spend and missing fees as unknown unless an official source directly supplies the relevant information. Do not call, email, submit a form, book or hold anything. Return one comparison table and the five most useful questions for the events teams.
+
+TASK 2: EYE EXAM PREPARATION
+Find three optometry practices in San Francisco using their official websites. Return the practice name, location, published opening hours, official appointment route and any explicitly published price for an eye exam without insurance. Distinguish a routine eye exam from a contact lens fitting if the source does. No appointment date, insurance plan or medical symptoms have been supplied. Do not infer insurance acceptance, current new patient availability or an unpublished price. Link the source for each factual claim and mark missing information unknown. Do not call, submit a form, book, or send a message. Finish with the information I need to provide and the questions to ask before choosing.
+
+TASK 3: MEMBERSHIP CANCELLATION INQUIRY
+Research Planet Fitness membership cancellation using its official FAQ and official club pages. We have not supplied a home club, membership agreement, account details or next billing date. Separate the general published process from terms that depend on the home club or agreement. Link each factual claim to its official source. Do not invent a fee, notice deadline or eligibility for online cancellation. Return a short checklist of missing information and a script of questions for the home club. Do not contact the club, sign in, submit a cancellation, send a message or change an account.
+
+REVIEW EACH ANSWER
+Can every material factual claim be traced to an official source?
+Did the answer preserve unknown prices, dates, availability and account terms?
+Did the agent complete preparation without external actions?
+Which correction messages were needed, and why?
+What useful document and next step did the task produce?
+Did the message deliver and the task return a final result? Track delivery failure separately from answer quality.

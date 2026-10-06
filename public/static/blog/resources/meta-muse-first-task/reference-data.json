@@ -1,0 +1,50 @@
+{
+  "kind": "independent reference research, not Muse output",
+  "checked": "2026-10-05",
+  "requested_day": "2026-10-06",
+  "timezone": "America/Los_Angeles",
+  "window": {
+    "start": "14:00",
+    "end": "17:00"
+  },
+  "branches": [
+    {
+      "name": "Main Library",
+      "address": "100 Larkin Street",
+      "tuesday_open": "09:00",
+      "tuesday_close": "20:00",
+      "source": "https://sfpl.org/locations/main-library"
+    },
+    {
+      "name": "Chinatown/Him Mark Lai",
+      "address": "1135 Powell Street",
+      "tuesday_open": "10:00",
+      "tuesday_close": "20:00",
+      "source": "https://sfpl.org/locations/chinatown"
+    },
+    {
+      "name": "Mission Bay",
+      "address": "960 4th Street",
+      "tuesday_open": "10:00",
+      "tuesday_close": "18:00",
+      "source": "https://sfpl.org/locations/mission-bay"
+    }
+  ],
+  "basis": "regular published hours only",
+  "unknowns": [
+    "Exceptional closures on chosen date",
+    "Free seat and outlet availability",
+    "WiFi guest login and current speed",
+    "Starting location and travel time"
+  ],
+  "study_room_policy": {
+    "source": "https://sfpl.org/services/meeting-rooms/study-rooms",
+    "reservations": false,
+    "sign_in": "in person when available",
+    "intended_for_multiple_hours": false
+  },
+  "wifi_faq": {
+    "source": "https://sfpl.libanswers.com/faq/88545",
+    "retrieval": "429 rate limit"
+  }
+}

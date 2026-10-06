@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <title>Muse Code MCP phone calling setup</title>
+  <desc>Connect the developer client, check account access, then inspect evidence from an authorized inquiry.</desc>
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <text x="80" y="115" font-family="Times New Roman, Times, serif" font-size="30" fill="#551a8b">call4me developer guide · october 5, 2026</text>
+  <text x="80" y="215" font-family="Times New Roman, Times, serif" font-size="70" fill="#000000">Muse Code phone tools</text>
+  <text x="80" y="280" font-family="Times New Roman, Times, serif" font-size="38" fill="#333333">connect. check access. inspect the result.</text>
+  <g font-family="Times New Roman, Times, serif" font-size="27">
+    <rect x="80" y="340" width="310" height="160" rx="8" fill="#f7f4fb" stroke="#551a8b"/>
+    <rect x="445" y="340" width="310" height="160" rx="8" fill="#f4f6ff" stroke="#0000ee"/>
+    <rect x="810" y="340" width="310" height="160" rx="8" fill="#f7f7f7" stroke="#555555"/>
+    <text x="110" y="395" fill="#551a8b">Muse Code</text>
+    <text x="110" y="450" fill="#333333" font-size="23">settings and tools</text>
+    <text x="475" y="395" fill="#0000ee">Call4me MCP</text>
+    <text x="475" y="450" fill="#333333" font-size="23">account access check</text>
+    <text x="840" y="395" fill="#333333">Authorized task</text>
+    <text x="840" y="450" fill="#333333" font-size="23">outcome and evidence</text>
+  </g>
+  <path d="M400 420 H435 M424 411 L435 420 L424 429 M765 420 H800 M789 411 L800 420 L789 429" fill="none" stroke="#0000ee" stroke-width="3"/>
+  <text x="80" y="565" font-family="Times New Roman, Times, serif" font-size="27" fill="#333333">download the settings fragment and inquiry brief</text>
+</svg>

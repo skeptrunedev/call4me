@@ -1,0 +1,17 @@
+We need to establish [one unresolved fact] about [business].
+The business's official contact page is [source URL].
+Our relevant task facts are [facts needed to answer the question].
+
+Find the published phone number and show me the proposed question and
+call duration. Wait for my permission for this specific attempt.
+Check call4me_get_requirements and gather any missing required facts.
+
+Once I approve, place one inquiry with call4me_place_call. Set max_minutes
+to the duration I approved. Do not book, purchase, cancel, disclose other
+personal details, request a callback or leave a message.
+Follow the returned call id using call4me_get_call until it ends or needs
+my input. Do not create a duplicate call when a status request is slow.
+
+Return the actual outcome, source of the answer, unresolved questions
+and available recording. A recording or voicemail may establish policy
+without answering our specific question. Never fill in the missing answer.

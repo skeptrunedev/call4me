@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "mcpServers": {
+    "call4me": {
+      "type": "streamable-http",
+      "url": "https://call4.me/mcp",
+      "enabled": true,
+      "mode": "required"
+    }
+  }
+}

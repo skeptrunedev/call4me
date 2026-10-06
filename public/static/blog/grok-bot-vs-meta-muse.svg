@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <title>Grok Bot and Meta Muse, three everyday errands</title>
+  <desc>A comparison worksheet for dining research, appointment preparation and membership inquiries.</desc>
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <text x="80" y="115" font-family="Times New Roman, Times, serif" font-size="30" fill="#551a8b">call4me practical comparison · october 5, 2026</text>
+  <text x="80" y="215" font-family="Times New Roman, Times, serif" font-size="72" fill="#000000">Grok Bot vs Meta Muse</text>
+  <text x="80" y="280" font-family="Times New Roman, Times, serif" font-size="38" fill="#333333">same brief. checkable sources. clear next step.</text>
+  <g font-family="Times New Roman, Times, serif" font-size="24">
+    <rect x="80" y="340" width="320" height="160" rx="8" fill="#f7f4fb" stroke="#551a8b"/>
+    <rect x="440" y="340" width="320" height="160" rx="8" fill="#f4f6ff" stroke="#0000ee"/>
+    <rect x="800" y="340" width="320" height="160" rx="8" fill="#f7f7f7" stroke="#555555"/>
+    <text x="110" y="393" fill="#551a8b">01 · dining research</text>
+    <text x="110" y="447" fill="#333333" font-size="21">capacities and unknowns</text>
+    <text x="470" y="393" fill="#0000ee">02 · appointment prep</text>
+    <text x="470" y="447" fill="#333333" font-size="21">sources and missing facts</text>
+    <text x="830" y="393" fill="#333333" font-size="22">03 · membership inquiry</text>
+    <text x="830" y="447" fill="#333333" font-size="21">process and next questions</text>
+  </g>
+  <text x="80" y="565" font-family="Times New Roman, Times, serif" font-size="27" fill="#333333">copy the prompts and compare your own results</text>
+</svg>

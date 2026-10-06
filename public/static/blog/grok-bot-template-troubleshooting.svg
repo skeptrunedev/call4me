@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Troubleshoot a shared Grok Bot template</title>
+  <desc id="desc">The recipient needs their own access, task inputs and a verified result.</desc>
+  <rect width="1200" height="630" fill="#fff"/>
+  <text x="80" y="112" font-family="Times New Roman, Times, serif" font-size="35" fill="#551a8b">call4me guides · oct 5, 2026</text>
+  <text x="80" y="210" font-family="Times New Roman, Times, serif" font-size="73" fill="#111">The template transferred.</text>
+  <text x="80" y="278" font-family="Times New Roman, Times, serif" font-size="42" fill="#444">Did its dependencies?</text>
+  <g font-family="Times New Roman, Times, serif" font-size="34">
+    <rect x="80" y="340" width="470" height="190" rx="8" fill="#f5f3ff"/>
+    <rect x="650" y="340" width="470" height="190" rx="8" fill="#f5f3ff"/>
+    <text x="112" y="397" fill="#0000ee">shared method</text>
+    <text x="112" y="453" fill="#444">instructions and output</text>
+    <text x="682" y="397" fill="#0000ee">recipient setup</text>
+    <text x="682" y="453" fill="#444">tools, access and files</text>
+    <text x="575" y="439" fill="#0000ee" font-size="54">+</text>
+  </g>
+  <text x="80" y="582" font-family="Times New Roman, Times, serif" font-size="28" fill="#555">Check the missing prerequisite before repeating the task.</text>
+</svg>

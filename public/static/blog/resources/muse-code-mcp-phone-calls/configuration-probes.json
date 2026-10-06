@@ -1,0 +1,382 @@
+{
+  "tested_on": "2026-10-05",
+  "timezone": "America/Los_Angeles",
+  "client": {
+    "name": "Muse Code",
+    "version": "1.4.3",
+    "build": "1.4.3-R5018.1",
+    "platform": "Linux"
+  },
+  "scope": {
+    "provider": "echo",
+    "meta_provider_authenticated": false,
+    "local_fixture": true,
+    "fixture_tool_count": 1,
+    "tools_executed": false,
+    "account_reads": false,
+    "phone_calls": false,
+    "credentials": "Synthetic values only. No real credential was used."
+  },
+  "settings_location": {
+    "with_xdg_config_home": "$XDG_CONFIG_HOME/muse/settings.json",
+    "isolation": "Each case used a separate scratch configuration root and workspace."
+  },
+  "fixture_cases": [
+    {
+      "case": "live-camel-no-headers",
+      "settings_shape": {
+        "schema_version": 1,
+        "mcpServers": {
+          "probe": {
+            "type": "streamable-http",
+            "url": "local fixture endpoint",
+            "enabled": true,
+            "mode": "required"
+          }
+        }
+      },
+      "configured_environment": {
+        "MUSE_CONFIG_PROBE_TOKEN": "synthetic_probe_value_only"
+      },
+      "exit_code": 0,
+      "observed_requests": [
+        {
+          "method": "initialize",
+          "authorization_header_observed": null,
+          "synthetic_probe_header_observed": null
+        },
+        {
+          "method": "notifications/initialized",
+          "authorization_header_observed": null,
+          "synthetic_probe_header_observed": null
+        },
+        {
+          "method": "tools/list",
+          "authorization_header_observed": null,
+          "synthetic_probe_header_observed": null
+        }
+      ],
+      "echo_reply_received": true,
+      "mcp_warning_observed": false
+    },
+    {
+      "case": "live-camel-disabled",
+      "settings_shape": {
+        "schema_version": 1,
+        "mcpServers": {
+          "probe": {
+            "type": "streamable-http",
+            "url": "local fixture endpoint",
+            "enabled": false,
+            "mode": "required"
+          }
+        }
+      },
+      "configured_environment": {
+        "MUSE_CONFIG_PROBE_TOKEN": "synthetic_probe_value_only"
+      },
+      "exit_code": 0,
+      "observed_requests": [],
+      "echo_reply_received": true,
+      "mcp_warning_observed": false
+    },
+    {
+      "case": "unavailable-required",
+      "settings_shape": {
+        "schema_version": 1,
+        "mcpServers": {
+          "probe": {
+            "type": "streamable-http",
+            "url": "local unreachable endpoint",
+            "enabled": true,
+            "mode": "required"
+          }
+        }
+      },
+      "configured_environment": {
+        "MUSE_CONFIG_PROBE_TOKEN": "synthetic_probe_value_only"
+      },
+      "exit_code": 1,
+      "observed_requests": [],
+      "echo_reply_received": false,
+      "mcp_warning_observed": false,
+      "startup_failure": "Required MCP server probe failed during startup because the server could not be reached."
+    },
+    {
+      "case": "unavailable-optional",
+      "settings_shape": {
+        "schema_version": 1,
+        "mcpServers": {
+          "probe": {
+            "type": "streamable-http",
+            "url": "local unreachable endpoint",
+            "enabled": true,
+            "mode": "optional"
+          }
+        }
+      },
+      "configured_environment": {
+        "MUSE_CONFIG_PROBE_TOKEN": "synthetic_probe_value_only"
+      },
+      "exit_code": 0,
+      "observed_requests": [],
+      "echo_reply_received": true,
+      "mcp_warning_observed": false
+    },
+    {
+      "case": "live-camel-type",
+      "settings_shape": {
+        "schema_version": 1,
+        "mcpServers": {
+          "probe": {
+            "type": "streamable-http",
+            "url": "local fixture endpoint",
+            "mode": "required",
+            "headers": {
+              "Authorization": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+              "X-Probe": "${MUSE_CONFIG_PROBE_TOKEN}"
+            }
+          }
+        }
+      },
+      "configured_environment": {
+        "MUSE_CONFIG_PROBE_TOKEN": "synthetic_probe_value_only"
+      },
+      "exit_code": 0,
+      "observed_requests": [
+        {
+          "method": "initialize",
+          "authorization_header_observed": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+          "synthetic_probe_header_observed": "${MUSE_CONFIG_PROBE_TOKEN}"
+        },
+        {
+          "method": "notifications/initialized",
+          "authorization_header_observed": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+          "synthetic_probe_header_observed": "${MUSE_CONFIG_PROBE_TOKEN}"
+        },
+        {
+          "method": "tools/list",
+          "authorization_header_observed": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+          "synthetic_probe_header_observed": "${MUSE_CONFIG_PROBE_TOKEN}"
+        }
+      ],
+      "echo_reply_received": true,
+      "mcp_warning_observed": false
+    },
+    {
+      "case": "live-snake-transport",
+      "settings_shape": {
+        "schema_version": 1,
+        "mcp_servers": {
+          "probe": {
+            "url": "local fixture endpoint",
+            "mode": "required",
+            "headers": {
+              "Authorization": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+              "X-Probe": "${MUSE_CONFIG_PROBE_TOKEN}"
+            },
+            "transport": "streamable_http"
+          }
+        }
+      },
+      "configured_environment": {
+        "MUSE_CONFIG_PROBE_TOKEN": "synthetic_probe_value_only"
+      },
+      "exit_code": 0,
+      "observed_requests": [
+        {
+          "method": "initialize",
+          "authorization_header_observed": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+          "synthetic_probe_header_observed": "${MUSE_CONFIG_PROBE_TOKEN}"
+        },
+        {
+          "method": "notifications/initialized",
+          "authorization_header_observed": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+          "synthetic_probe_header_observed": "${MUSE_CONFIG_PROBE_TOKEN}"
+        },
+        {
+          "method": "tools/list",
+          "authorization_header_observed": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+          "synthetic_probe_header_observed": "${MUSE_CONFIG_PROBE_TOKEN}"
+        }
+      ],
+      "echo_reply_received": true,
+      "mcp_warning_observed": false
+    },
+    {
+      "case": "live-camel-literal-header",
+      "settings_shape": {
+        "schema_version": 1,
+        "mcpServers": {
+          "probe": {
+            "type": "streamable-http",
+            "url": "local fixture endpoint",
+            "mode": "required",
+            "headers": {
+              "Authorization": "Bearer synthetic_probe_value_only"
+            }
+          }
+        }
+      },
+      "configured_environment": {
+        "MUSE_CONFIG_PROBE_TOKEN": "synthetic_probe_value_only"
+      },
+      "exit_code": 0,
+      "observed_requests": [
+        {
+          "method": "initialize",
+          "authorization_header_observed": "Bearer synthetic_probe_value_only",
+          "synthetic_probe_header_observed": null
+        },
+        {
+          "method": "notifications/initialized",
+          "authorization_header_observed": "Bearer synthetic_probe_value_only",
+          "synthetic_probe_header_observed": null
+        },
+        {
+          "method": "tools/list",
+          "authorization_header_observed": "Bearer synthetic_probe_value_only",
+          "synthetic_probe_header_observed": null
+        }
+      ],
+      "echo_reply_received": true,
+      "mcp_warning_observed": false
+    },
+    {
+      "case": "live-camel-transport",
+      "settings_shape": {
+        "schema_version": 1,
+        "mcpServers": {
+          "probe": {
+            "url": "local fixture endpoint",
+            "mode": "required",
+            "headers": {
+              "Authorization": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+              "X-Probe": "${MUSE_CONFIG_PROBE_TOKEN}"
+            },
+            "transport": "streamable_http"
+          }
+        }
+      },
+      "configured_environment": {
+        "MUSE_CONFIG_PROBE_TOKEN": "synthetic_probe_value_only"
+      },
+      "exit_code": 0,
+      "observed_requests": [
+        {
+          "method": "initialize",
+          "authorization_header_observed": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+          "synthetic_probe_header_observed": "${MUSE_CONFIG_PROBE_TOKEN}"
+        },
+        {
+          "method": "notifications/initialized",
+          "authorization_header_observed": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+          "synthetic_probe_header_observed": "${MUSE_CONFIG_PROBE_TOKEN}"
+        },
+        {
+          "method": "tools/list",
+          "authorization_header_observed": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+          "synthetic_probe_header_observed": "${MUSE_CONFIG_PROBE_TOKEN}"
+        }
+      ],
+      "echo_reply_received": true,
+      "mcp_warning_observed": false
+    },
+    {
+      "case": "live-camel-type-underscore",
+      "settings_shape": {
+        "schema_version": 1,
+        "mcpServers": {
+          "probe": {
+            "type": "streamable_http",
+            "url": "local fixture endpoint",
+            "mode": "required",
+            "headers": {
+              "Authorization": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+              "X-Probe": "${MUSE_CONFIG_PROBE_TOKEN}"
+            }
+          }
+        }
+      },
+      "configured_environment": {
+        "MUSE_CONFIG_PROBE_TOKEN": "synthetic_probe_value_only"
+      },
+      "exit_code": 0,
+      "observed_requests": [],
+      "echo_reply_received": true,
+      "mcp_warning_observed": false
+    },
+    {
+      "case": "live-both-aliases",
+      "settings_shape": {
+        "schema_version": 1,
+        "mcpServers": {
+          "probe": {
+            "type": "streamable-http",
+            "url": "local fixture endpoint",
+            "mode": "required",
+            "headers": {
+              "Authorization": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+              "X-Probe": "${MUSE_CONFIG_PROBE_TOKEN}"
+            }
+          }
+        },
+        "mcp_servers": {
+          "other": {
+            "type": "streamable-http",
+            "url": "local fixture endpoint",
+            "mode": "required",
+            "headers": {
+              "Authorization": "Bearer ${MUSE_CONFIG_PROBE_TOKEN}",
+              "X-Probe": "${MUSE_CONFIG_PROBE_TOKEN}"
+            }
+          }
+        }
+      },
+      "configured_environment": {
+        "MUSE_CONFIG_PROBE_TOKEN": "synthetic_probe_value_only"
+      },
+      "exit_code": 0,
+      "observed_requests": [],
+      "echo_reply_received": true,
+      "mcp_warning_observed": false
+    }
+  ],
+  "production_oauth_challenge": {
+    "server_url": "https://call4.me/mcp",
+    "configuration": {
+      "schema_version": 1,
+      "mcpServers": {
+        "call4me": {
+          "type": "streamable-http",
+          "url": "https://call4.me/mcp",
+          "enabled": true,
+          "mode": "required"
+        }
+      }
+    },
+    "provider": "echo",
+    "exit_code": 1,
+    "native_observation": "Required MCP server call4me failed during startup because it requires an OAuth sign in. The client requested muse mcp login call4me and restart.",
+    "native_request_trace": null,
+    "native_request_trace_note": "The production native client requests were not instrumented. This observation comes from the client startup error, not a captured request log.",
+    "independent_http_check": {
+      "method": "GET",
+      "request_accept": "application/json, text/event-stream",
+      "response_status": 401,
+      "www_authenticate": "Bearer resource_metadata=\"https://call4.me/.well-known/oauth-protected-resource/mcp\"",
+      "response_error_message": "sign in to call4me to use this server"
+    },
+    "oauth_login_completed": false,
+    "account_access_established": false,
+    "oauth_login_command_invoked": false,
+    "manual_dynamic_client_registration_requested": false
+  },
+  "limitations": [
+    "The echo provider returns a deterministic reply and does not demonstrate model reasoning or tool selection.",
+    "Local initialize and tools/list requests establish discovery of a synthetic fixture, not access to Call4me.",
+    "A successful process exit alone does not establish that MCP configuration was loaded. Some invalid combinations produced no server requests and no MCP warning.",
+    "Production OAuth challenge detection is not a completed OAuth authorization or authenticated account read."
+  ],
+  "fixture_case_note": "Settings shapes describe the inputs tested. Local endpoint URLs are normalized labels, so these shapes are evidence records, not runnable installation fragments."
+}

@@ -1,0 +1,36 @@
+{
+  "kind": "SYNTHETIC WORKED EXAMPLE, no actual supplier quotes",
+  "assumptions": [
+    "Both fictional offers meet the same specification",
+    "All 25 boxes usable",
+    "Tax assumed zero solely for exercise",
+    "No unknown required charges"
+  ],
+  "rules": {
+    "delivered_total_usd": "merchandise_usd + shipping_usd + other_fees_usd + tax_usd",
+    "delivered_cost_per_unit_usd": "delivered_total_usd / units"
+  },
+  "orders": [
+    {
+      "supplier": "Fictional supplier A",
+      "units": 25,
+      "merchandise_usd": 30,
+      "shipping_usd": 18,
+      "other_fees_usd": 2,
+      "tax_usd": 0,
+      "delivered_total_usd": 50,
+      "delivered_cost_per_unit_usd": 2.0
+    },
+    {
+      "supplier": "Fictional supplier B",
+      "units": 25,
+      "merchandise_usd": 40,
+      "shipping_usd": 4,
+      "other_fees_usd": 0,
+      "tax_usd": 0,
+      "delivered_total_usd": 44,
+      "delivered_cost_per_unit_usd": 1.76
+    }
+  ],
+  "conclusion": "Fictional supplier B is cheaper delivered under these stated assumptions"
+}
