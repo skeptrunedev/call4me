@@ -1,5 +1,19 @@
 # Public call examples
 
+## October 6 collection in preparation
+
+The account owners have agreed to publication of eight additional redacted
+recordings. The collection covers a store stock check, a dinner reservation,
+a doctor's appointment reschedule, a barber arrival update, a Mandarin
+availability check, a veterinary callback, a return exception approval and a
+clinic arrival update. Append these examples after the existing collection.
+Each accompanying article must preserve the recorded outcome's limits,
+especially the unconfirmed replacement meeting time and the pending return
+paperwork and refund. Source association, audio redaction, transcript review
+and browser checks remain required before publication.
+
+## Published collection
+
 `/examples` publishes real conversations with their original voices at normal
 speed. Its route uses the shared layout and sign in state. Content lives in
 `src/content/examples.ts`; reviewed MP3 recordings live in
