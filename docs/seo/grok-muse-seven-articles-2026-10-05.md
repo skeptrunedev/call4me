@@ -37,3 +37,9 @@ Meta login approval succeeded, but the client then required a payment method and
 Publication and production checks are recorded after the normal main deployment finishes.
 
 The final primary source pass confirmed Staples and Fisher prices and the SFPL branch hours. PackagingSupplies.com's final page exposed $31.90 per bundle of 25, which was unavailable in the earlier retrieval. Updated article, report and JSON together. Merchandise per box is $1.276, displayed as about $1.28; shipping and delivered total remain unknown.
+
+## Calling focus correction
+
+Nick clarified that all seven guides must be anchored in calling. The first Muse task, supplier comparison and Grok versus Muse draft had made calling an optional followup, and some Grok templates stopped at generic research. Reframe all seven around a concrete phone task while retaining their keyword topics.
+
+Acceptance checklist: calling appears in the title or opening, the central workflow supplies a practical call brief, online research establishes only what the call needs, the reader supplies missing facts and approves the particular attempt, the tool receives an approved max_minutes limit, the same call ID is followed to an observed outcome, and the reader inspects transcript or recording evidence and unresolved questions. Downloaded prompts, worksheets, manifests and covers must match the article. Preserve truthful test limits and current source observations. No business contacts or app performance results will be invented. Root reviews every final article, runs the required checks and browser validation, pushes main and verifies production.
