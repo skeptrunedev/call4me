@@ -1,8 +1,8 @@
 ---
-title: Ask about a veterinary behavior consultation by phone
-seoTitle: Veterinary behavior consultation questions by AI phone call
+title: Veterinary behavior consultation: questions your assistant can ask
+seoTitle: Veterinary behavior consultation: questions to ask
 subtitle: A real callback gathered availability, a $600 consultation quote and attendance requirements. No appointment was booked or paid for.
-description: Read a saved callback transcript showing an AI assistant gather veterinary consultation information, including the initial fee, referral requirements and earliest time with a requested provider.
+description: Ask your existing AI assistant about a veterinary behavior consultation. Read one practice's fee and availability answers, then use a suggested call prompt.
 date: 2026-10-06
 tags: veterinary appointments, consultation questions, personal assistant, ai phone assistant
 authors: nick
@@ -10,6 +10,8 @@ imageAlt: Veterinary consultation information, $600 initial fee and no booking m
 ---
 
 Before booking a **veterinary behavior consultation**, you may want to know whether the practice handles the concern, when the requested provider is available, what the initial fee covers and whether the owner must attend. An information call can collect those answers without committing to a visit.
+
+Your existing personal assistant can gather those answers through [call4me](/). Connect it with the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls), then specify that you want information before deciding. These are suggested workflows; the saved customer call does not identify its client.
 
 On October 6, 2026, a veterinary practice called back a call4me customer's assistant about a senior dog that bites during eye cleaning. The representative said the practice could help with that type of handling issue and discuss a plan at the first visit, while making clear that one visit might not resolve it.
 
@@ -158,7 +160,7 @@ This is the saved call transcript with private details removed. No recording is 
 
 </details>
 
-## The initial fee was not a complete cost guarantee
+## What did this veterinary behavior consultation quote cover?
 
 The assistant asked what the first visit might cost beyond the consultation. Staff described possible additional medication or testing charges and said estimates would be discussed before proceeding. A house call would also have a travel fee that could not be calculated without knowing the distance.
 
@@ -184,4 +186,4 @@ This call gathered scheduling and service information. It did not assess the dog
 
 > Use call4me to contact [veterinary practice] for information about a consultation for [brief description of concern]. Ask whether they see this type of case, the earliest opening with [provider], the initial fee, possible additional costs, referral and records requirements, and who must attend. Ask what can be addressed at the first visit without assuming it will resolve the problem. Do not book, hold an appointment or pay a deposit. Return the answers and anything they could not confirm.
 
-See the [veterinary callback on our examples page](/examples#veterinary-behavior-consultation-call).
+See the [veterinary callback on our examples page](/examples#veterinary-behavior-consultation-call). For a separate example that did book a visit, hear the [drop off vet appointment call](/blog/drop-off-vet-appointment).

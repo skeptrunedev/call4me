@@ -1,6 +1,7 @@
 import { Marked, Renderer, type Tokens } from 'marked';
 import markedFootnote from 'marked-footnote';
 import { AUTHORS, type Author } from '../../content/blog/authors';
+import { decodeEntities } from './markdown';
 
 /**
  * The blog: markdown files in src/content/blog, one per post, with YAML-ish frontmatter
@@ -83,7 +84,8 @@ function renderer(sections: { id: string; text: string }[]) {
         const n = (seen.get(base) ?? 0) + 1;
         seen.set(base, n);
         const id = n === 1 ? base : `${base}-${n}`;
-        if (depth === 2) sections.push({ id, text: inner.replace(/<[^>]+>/g, '') });
+        // JSX escapes section labels, so store plain text rather than HTML entities.
+        if (depth === 2) sections.push({ id, text: decodeEntities(inner.replace(/<[^>]+>/g, '')) });
         return `<h${depth} id="${id}">${inner} <a class="anchor" href="#${id}" aria-hidden="true" tabindex="-1">#</a></h${depth}>\n`;
       },
       image({ href, title, text }: Tokens.Image) {

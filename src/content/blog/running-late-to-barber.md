@@ -1,8 +1,8 @@
 ---
 title: Tell your barber you are running late with your AI assistant
-seoTitle: Running late to the barber? Have your AI assistant call
+seoTitle: Late to a haircut appointment? Have your AI call
 subtitle: A short call told the barber that a customer was five minutes away. The barber acknowledged the update and said they would wait.
-description: Hear a real AI arrival update to a barber. The call passed along a five minute ETA for an existing appointment without making a new booking.
+description: Running late to a haircut appointment? Have your existing AI assistant call the barber. Hear a real arrival update and use a Claude Code or Codex prompt.
 date: 2026-10-06
 tags: barber appointments, arrival updates, personal assistant, ai phone assistant
 authors: nick
@@ -10,6 +10,8 @@ imageAlt: Barber arrival update, five minutes away
 ---
 
 If you are **running late to the barber**, give the shop your appointment time and an honest estimate of when you will arrive. Ask them to acknowledge the update so you know someone received it.
+
+This is a small task for the personal assistant you already use. [call4me](/) lets it call the barber and return their answer to your conversation. Connect with the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). These are suggested ways to repeat the task; the customer recording does not identify its client.
 
 On October 5, 2026, a call4me customer's AI assistant called a barbershop about an existing **6:20 PM haircut and beard trim**. The message was simple: the customer was on the way and **about five minutes away**, with thanks for waiting.
 
@@ -67,6 +69,8 @@ The barber's reply establishes that the update was received and accepted in this
 
 ## What to give your assistant
 
+There is no grace period established by this recording. If you are late to a haircut appointment, ask your own shop whether it can still accommodate you. One barber agreeing to wait does not establish another shop's policy.
+
 1. The barbershop and the name on the existing booking.
 2. The appointment time and service, so staff can identify it.
 3. Your current arrival estimate in plain language.
@@ -81,4 +85,4 @@ Connect [call4me](/) through the [Claude Code guide](/blog/claude-code-phone-cal
 
 > Use call4me to call my barbershop. I have an existing [time] appointment under [name] for [service]. Tell them I am on my way and about [number] minutes away. Thank them for waiting and ask whether that still works. This is only an arrival update. Do not create a new appointment or cancel the existing one. Return their response.
 
-See the [barber arrival update on our examples page](/examples#running-late-to-barber), or hear a longer call to [book a haircut appointment](/blog/book-haircut-appointment).
+See the [barber arrival update on our examples page](/examples#running-late-to-barber), or hear a longer call to [book a haircut appointment](/blog/book-haircut-appointment). For a front desk update, use the separate [running late to an appointment guide](/blog/running-late-to-appointment).

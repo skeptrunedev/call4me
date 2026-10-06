@@ -1,8 +1,8 @@
 ---
-title: Check meeting availability with a Mandarin phone call
-seoTitle: Mandarin phone calls for scheduling with your AI assistant
+title: Make AI phone calls in Mandarin with your existing assistant
+seoTitle: AI phone calls in Mandarin: a scheduling example
 subtitle: A real call in Mandarin checked a meeting across Houston and Los Angeles time. Saturday was suggested, but no replacement time was confirmed.
-description: Hear an AI assistant check meeting availability in Mandarin. The recipient proposed Saturday, leaving the exact replacement time open for confirmation.
+description: Add Mandarin phone calls to your existing AI assistant. Hear a real availability check, read its English translation and try a Claude Code or Codex prompt.
 date: 2026-10-06
 tags: Mandarin, meeting scheduling, multilingual calls, personal assistant, ai phone assistant
 authors: nick
@@ -10,6 +10,8 @@ imageAlt: A Mandarin availability check, Saturday suggested and time unconfirmed
 ---
 
 For a **Mandarin phone call about scheduling**, tell your assistant which language to use, the meeting date and time, and whether it may agree to a change. If the participants are in different cities, include both local times in the brief.
+
+If your personal assistant already helps coordinate your day, [call4me](/) lets it place the call in Mandarin and bring the answer back to the conversation. Connect through the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). This is a suggested workflow, not evidence that the customer used either client. The example is an assistant speaking for the customer, rather than live interpretation of a call the customer joined.
 
 On October 6, 2026, a call4me customer's AI assistant spoke Mandarin to check whether a meeting still worked that day. The proposed time was **1:30 PM in Houston, corresponding to 11:30 AM in Los Angeles** on that date.
 

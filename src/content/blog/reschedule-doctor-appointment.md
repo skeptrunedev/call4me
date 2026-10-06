@@ -2,7 +2,7 @@
 title: Reschedule a doctor appointment with your AI assistant
 seoTitle: Reschedule a doctor appointment by phone with AI
 subtitle: A real call checked that the old appointment was canceled, then booked Thursday at 1:30 PM within the patient's available hours.
-description: Hear an AI assistant reschedule a doctor appointment, verify the old slot and collect arrival instructions without creating a duplicate booking.
+description: Reschedule a doctor appointment through your existing Claude Code or Codex assistant. Hear a real call and learn what to include in the request.
 date: 2026-10-06
 tags: doctor appointments, rescheduling, personal assistant, ai phone assistant
 authors: nick
@@ -10,6 +10,8 @@ imageAlt: Doctor appointment rescheduled, Thursday at 1:30 PM
 ---
 
 When you **reschedule a doctor appointment**, start by checking what is already on the office's calendar. If you think a visit was canceled but are not certain, ask before creating another booking. Then give the scheduler complete dates and times you can attend.
+
+Your existing personal assistant can handle this scheduling call through [call4me](/). If you use Claude Code or Codex to organize your week, connect through the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). The workflow below is a suggestion for your assistant; the recorded customer's client is unknown.
 
 On October 6, 2026, a call4me customer's AI assistant asked an office to check an earlier **Thursday, October 8 at 10 AM** appointment. The office's virtual assistant confirmed that it was already canceled. After a transfer to scheduling, a representative offered Thursday at 1:30 PM or Friday at 11:30 AM.
 
@@ -150,7 +152,7 @@ This matters because a request to reschedule can mean two different things: move
 
 The assistant also asked for arrival and preparation instructions. Those were answers for this patient's visit. The recording does not establish what another patient should do, and the representative's comment about expected insurance coverage does not verify an insurer's payment decision.
 
-## What to include in a rescheduling request
+## How to reschedule a doctor appointment by phone
 
 1. Give the original appointment date, time and provider.
 2. Explain whether you want to move an active booking or verify a cancellation first.
@@ -167,4 +169,4 @@ Keep clinical questions directed to the office. An assistant can collect its ins
 
 > Use call4me to call my doctor's office about the appointment on [date and time] with [provider]. First confirm whether it is still active. If it is, ask to move that booking. If it is already canceled, ask for a replacement. I can attend [dates and time windows]. Choose the earliest calendar appointment within those windows with the same provider. Confirm the date, time, arrival instructions and any preparation instructions from the office. Return the confirmed details and any questions still open.
 
-See the [doctor appointment reschedule on our examples page](/examples#reschedule-doctor-appointment).
+See the [doctor appointment reschedule on our examples page](/examples#reschedule-doctor-appointment). For a different scheduling task, hear how an assistant [rescheduled a dentist appointment](/blog/reschedule-dentist-appointment).

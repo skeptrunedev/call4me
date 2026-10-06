@@ -7,6 +7,26 @@ import { HomePage, PrivacyPage, RulesPage, SupportPage } from '../src/server/vie
 
 const links = (html: string) => [...html.matchAll(/<a\b[^>]*\bhref="([^"]+)"/g)].map((m) => m[1]!.replace(/&amp;/g, '&'));
 
+test('blog section labels display punctuation once and keep encoded markup as text', () => {
+  const post = renderPost({
+    slug: 'section-labels',
+    markdown: `---\ntitle: Section labels\ndate: 2026-10-06\nsubtitle: Test\n---\n## What Aquasana's **policy** says\n\n## Returns & refunds\n\n## Literal &lt;img src=x onerror=alert(1)&gt;`,
+  });
+  assert.deepEqual(post.sections.map((s) => s.text), [
+    "What Aquasana's policy says", 'Returns & refunds', 'Literal <img src=x onerror=alert(1)>',
+  ]);
+  const page = String(BlogPost({ signedIn: false, supporter: false, post, older: null, newer: null, related: [], engagement: { likes: 0, comments: 0 }, liked: false, comments: [], subscribers: 0, unlocked: false, agentPrompt: '' }));
+  const toc = page.match(/<nav class="toc small"[^>]*>([\s\S]*?)<\/nav>/)![1]!;
+  assert.ok(!toc.includes('&amp;#39;'));
+  assert.ok(!toc.includes('&amp;amp;'));
+  assert.ok(toc.includes('&lt;img src=x onerror=alert(1)&gt;'));
+  assert.ok(!toc.includes('<img'));
+  for (const section of post.sections) {
+    assert.ok(toc.includes(`href="#${section.id}"`));
+    assert.ok(post.html.includes(`id="${section.id}"`));
+  }
+});
+
 test('public account links go straight to sign-in for visitors and to the account for members', () => {
   for (const signedIn of [false, true]) {
     const props = { signedIn, agentPrompt: '', countries: [], pricePerMinuteCents: 25 };

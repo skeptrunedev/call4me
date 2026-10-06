@@ -1,15 +1,17 @@
 ---
-title: Tell an appointment desk you are running late
-seoTitle: Running late to an appointment? Have your AI assistant call
+title: Running late to an appointment? Ask your assistant to call
+seoTitle: Running late to an appointment? Have your AI call
 subtitle: A real call passed along a 10:10 AM arrival estimate for a 10 AM appointment. The desk said it should be okay and would notify the provider.
-description: Hear an AI assistant notify a front desk about a ten minute delay and ask whether the appointment can still go ahead, without rescheduling it.
+description: Running late to an appointment? Have your existing Claude Code or Codex assistant notify the office and ask whether you should still come in.
 date: 2026-10-06
-tags: appointment reminders, arrival updates, personal assistant, ai phone assistant
+tags: running late, arrival updates, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Appointment arrival update, 10:10 AM expected for a 10 AM booking
 ---
 
 If you are **running late to an appointment**, tell the front desk the booked time, your expected arrival and the name on the booking. Ask whether you should still come in, then keep the desk's actual answer in your plans.
+
+If you already use Claude Code or Codex as a personal assistant, [call4me](/) gives it a way to deliver that update and ask for a response. Connect through the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). The prompt below is a suggested workflow; the historical recording does not identify the customer's client.
 
 On October 6, 2026, a call4me customer's AI assistant notified a clinic that traffic would delay the customer for a **10 AM appointment**. The caller gave an expected arrival of **10:10 AM** and asked whether the provider could still see them.
 
@@ -73,7 +75,11 @@ The representative's answer was conditional. Keeping “should be okay” in the
 
 The reason the desk gave involved the customer's visit type, which is omitted from the public example. That answer applied to this appointment. It does not establish a general grace period for the clinic or for other offices.
 
-## Keep an arrival update focused
+## What to say when you are running late to an appointment
+
+> Hi, I have an appointment at [booked time] under [name]. I expect to arrive at [arrival time]. Can you still see me, and could you let [provider] know?
+
+Ask your own office for its answer rather than assuming a standard grace period. The conditional response in this recording applied to one appointment.
 
 1. Give the existing appointment time and name on the booking.
 2. State a realistic arrival time, including the reason for the delay if useful.

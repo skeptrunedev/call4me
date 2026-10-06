@@ -1,15 +1,17 @@
 ---
-title: Check Macy's bow tie stock before going to the store
-seoTitle: Macy's bow tie stock check by AI phone assistant
+title: Check store availability with your AI assistant: a Macy's call
+seoTitle: Check store availability: an AI call to Macy's
 subtitle: A real call reached the Herald Square accessories department and checked the quantity, price, finish and neck strap before a shopping trip.
-description: Hear an AI assistant check a black silk bow tie at Macy's Herald Square. Staff reported 88 in stock at $33, with no purchase or reservation made.
+description: Check store availability through your existing AI assistant. Hear a real Macy's stock call and use a suggested Claude Code or Codex shopping prompt.
 date: 2026-10-06
 tags: store stock, shopping, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Macy's bow tie stock check, 88 reported in stock at $33
 ---
 
-A useful **store stock check by phone** answers more than whether an item appears online. Ask someone in the right department to check the exact product, the local quantity, the current price and the details that matter before you travel.
+To **check store availability**, first select the location on the retailer's product page. If the listing does not answer your question, call the department with the exact item details. Ask staff to check the local quantity, current price and features that matter before you travel. Stock availability alone does not confirm a hold or pickup order.
+
+If you already use Claude Code or Codex to research a purchase, [call4me](/) lets the same assistant call the store for the missing details. Connect through the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). These are suggested workflows; the recording below does not identify the customer's client.
 
 On October 6, 2026, a call4me customer's AI assistant called **Macy's Herald Square** about a Michelsons of London black silk bow tie that comes already tied. The assistant reached the accessories department after several phone menus. A representative checked the item and said the store had **88 available at a sale price of $33**.
 
@@ -17,7 +19,7 @@ The representative also described a little sheen, a butterfly shape and an adjus
 
 ## Listen to the stock check
 
-The complete recording lasts 7 minutes 1 seconds.
+The complete recording lasts 7 minutes 1 second.
 
 <audio controls preload="metadata" src="/static/examples/macys-bow-tie-stock-check.mp3" style="width:100%"><a href="/static/examples/macys-bow-tie-stock-check.mp3">listen to the Macy's stock check</a></audio>
 
@@ -316,7 +318,7 @@ The representative distinguished the store's stock from online stock. When the c
 
 The requested department extension remained unresolved. A personal contact number is not the same as a published department extension. The public recording and transcript omit that private number.
 
-## What to ask when checking an item by phone
+## How to check store availability by phone
 
 1. Give the exact brand, product, color and material, plus a product code if you have one.
 2. Ask the department to check stock at that location.

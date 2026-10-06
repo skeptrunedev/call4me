@@ -1,15 +1,25 @@
 ---
-title: Ask Aquasana for a return exception with your AI assistant
-seoTitle: Aquasana return exception, a real AI customer service call
+title: Aquasana return policy and an exception call by an AI assistant
+seoTitle: Aquasana return policy: an AI exception request
 subtitle: A real call obtained approval for a $551.79 filter return exception. Return paperwork and payment remained pending.
-description: Hear an AI assistant request an Aquasana return exception. The representative approved $551.79 by check, with return instructions still to follow.
+description: Check Aquasana's return policy and hear a real exception request. Use your existing Claude Code or Codex assistant to call about your own return.
 date: 2026-10-06
 tags: customer service, returns, Aquasana, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Aquasana return exception approved for $551.79, paperwork pending
 ---
 
-An **Aquasana return exception request** needs a clear account of the item, why the ordinary return window does not cover it and what outcome you are asking customer service to approve. It also needs a practical finish: return instructions, the approved amount, the refund method and the next step.
+The **Aquasana return policy** is the starting point for a return request. An exception request also needs a clear account of the item, why the ordinary window does not cover it and what you are asking customer service to approve. Before ending the call, confirm the instructions, approved amount, refund method and next step.
+
+If you already use Claude Code or Codex as a personal assistant, [call4me](/) lets it make that customer service call and bring the answer back to your conversation. Connect with the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). The prompt below is a suggested workflow; the customer recording does not establish which client was used.
+
+## What Aquasana's published return policy says
+
+Checked October 6, 2026, Aquasana's [official returns policy](https://www.aquasana.com/refunds-and-returns.html) covers consumer purchases made directly from Aquasana. It gives 90 calendar days from the order date, requires prior authorization and a Return Authorization Code, and makes the customer responsible for return shipping and insurance. The return must include the complete product and arrive within 21 calendar days after the code is generated.
+
+For authorized returns, the policy says refunds go to the original payment method within 15 business days after Aquasana receives the product. Check the current policy and your order's eligibility before shipping. The recorded exception below was an individual approval beyond the window, with a different payment method. It does not guarantee the same answer for another customer.
+
+## A real Aquasana return exception request
 
 On October 6, 2026, a call4me customer's AI assistant called Aquasana about an unopened filter that was past the 90 day return window discussed on the call. The caller explained that package forwarding after a move had delayed receipt and asked for an exception.
 

@@ -1,15 +1,17 @@
 ---
-title: Book a dinner reservation by phone with your AI assistant
-seoTitle: Book a dinner reservation by phone with AI
+title: How to make a restaurant reservation with your AI assistant
+seoTitle: How to make a restaurant reservation with AI
 subtitle: A real restaurant call confirmed a table for four on Thursday, October 8 at 7:30 PM. Cancellation terms were not discussed.
-description: Hear an AI assistant book a table for four by phone. See what the restaurant confirmed, what remained unanswered and a suggested booking prompt.
+description: Make a restaurant reservation from your existing Claude Code or Codex assistant. Hear a real booking call and use a suggested prompt for your own table.
 date: 2026-10-06
 tags: restaurant reservations, dinner, bookings, personal assistant, ai phone assistant
 authors: nick
 imageAlt: A dinner reservation for four, Thursday at 7:30 PM
 ---
 
-To **book a dinner reservation by phone**, give the restaurant the full date, preferred time, party size and reservation name. Ask staff to repeat the booking before hanging up, and ask about any deposit or cancellation terms that matter to your plans.
+Here is **how to make a restaurant reservation** by phone: give the restaurant the full date, preferred time, party size and reservation name. Ask staff to repeat the booking before hanging up, and ask about any deposit or cancellation terms that matter to your plans.
+
+If you already use Claude Code or Codex to plan an evening, your assistant can make the reservation call through [call4me](/). Connect with the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls), then give it your booking limits. The customer call below demonstrates the task; it does not identify which client the customer used.
 
 On October 6, 2026, a call4me customer's AI assistant asked a restaurant for **a table for four on Thursday, October 8 at 7:30 PM**. Staff checked, took a callback number and reservation name, then explicitly confirmed the table for that date and time.
 
@@ -82,7 +84,7 @@ The name needed to be repeated because staff did not hear it clearly the first t
 
 The unanswered cancellation question is also useful. If your evening could change, include that question in the calling brief. A restaurant not asking for a card during one conversation does not answer every policy question.
 
-## Give the caller a booking window and clear limits
+## How to brief your assistant for a restaurant reservation
 
 1. State the number of guests and the complete date.
 2. Give your preferred time and the earliest and latest acceptable alternatives.
