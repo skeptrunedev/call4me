@@ -65,9 +65,6 @@ app.get("/api/metrics", async (c) => {
     c.env.DB.prepare(
       "SELECT account_id, created_at, direction, status, billed_seconds, cost_cents, json_extract(outcome, '$.result') AS result FROM calls",
     ),
-    c.env.DB.prepare("SELECT id, visitor_id, account_id, campaign_id, campaign_name, ad_group_id, ad_group_name, audience, ad_id, ad_name, creative_id, creative_name, visited_at FROM reddit_visits"),
-    c.env.DB.prepare("SELECT campaign_id, campaign_name, ad_group_id, ad_group_name, ad_id, ad_name, creative_id, creative_name, spend_micros FROM reddit_ad_spend"),
-    c.env.DB.prepare("SELECT conversion_id, event_name, status, attempts, last_http_status, last_error, last_attempt_at, delivered_at, event_at FROM reddit_conversions ORDER BY event_at DESC LIMIT 200"),
     c.env.DB.prepare(
       `SELECT account_id, SUM(amount_cents) AS balance_cents,
          SUM(CASE WHEN kind = 'adjustment' THEN amount_cents ELSE 0 END) AS granted_cents,
@@ -75,6 +72,9 @@ app.get("/api/metrics", async (c) => {
          -SUM(CASE WHEN kind IN ('call', 'number', 'refund') THEN amount_cents ELSE 0 END) AS spent_cents
        FROM ledger GROUP BY account_id`,
     ),
+    c.env.DB.prepare("SELECT id, visitor_id, account_id, campaign_id, campaign_name, ad_group_id, ad_group_name, audience, ad_id, ad_name, creative_id, creative_name, visited_at FROM reddit_visits"),
+    c.env.DB.prepare("SELECT campaign_id, campaign_name, ad_group_id, ad_group_name, ad_id, ad_name, creative_id, creative_name, spend_micros FROM reddit_ad_spend"),
+    c.env.DB.prepare("SELECT conversion_id, event_name, status, attempts, last_http_status, last_error, last_attempt_at, delivered_at, event_at FROM reddit_conversions ORDER BY event_at DESC LIMIT 200"),
   ]);
   return c.json(
     computeMetrics(
