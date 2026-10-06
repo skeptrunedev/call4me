@@ -33,6 +33,7 @@ import { BlogError } from './services/blog';
 import { exampleAudio } from './lib/example-audio';
 import { analytics, emailHashOf } from './services/analytics';
 import { firstTouchCookie, firstTouchOf, firstTouchSetCookie } from './lib/first-touch';
+import { redditConversions, redditCookies, redditVisitCookie, redditVisitOf, saveRedditVisit } from './lib/reddit';
 
 const app = new Hono<AppEnv>();
 
@@ -44,6 +45,20 @@ app.use('*', async (c, next) => {
   const to = canonicalRedirect(new URL(c.req.url), c.env);
   if (to) return c.redirect(to, 301);
   await next();
+});
+
+// A Reddit click is recorded on the server before any browser script runs. The 90-day first-party
+// cookie carries the latest paid visit through sign-in and Checkout; every visit remains in D1.
+app.use('*', async (c, next) => {
+  let visitId = redditVisitCookie(c.req.header('cookie'));
+  const visit = c.req.method === 'GET' ? redditVisitOf(new URL(c.req.url), c.req.raw.headers) : null;
+  if (visit) {
+    await saveRedditVisit(c.env.DB, visit);
+    visitId = visit.id;
+  }
+  c.set('redditVisitId', visitId);
+  await next();
+  if (visit) for (const value of redditCookies(visit)) c.header('set-cookie', value, { append: true });
 });
 
 // A browser's first page records where it came from (lib/first-touch.ts), so checkouts and
@@ -158,6 +173,7 @@ export default {
     ctx.waitUntil(failNeverDialed(env).then((n) => n && console.log('failed never-dialed calls', n)));
     ctx.waitUntil(settleLost(env).then((n) => n && console.log('settled lost calls', n)));
     const n = numbers(env);
+    ctx.waitUntil(redditConversions(env).flush().then((count) => count && console.log('reddit conversions retried', count)));
     ctx.waitUntil(n.renewDue().then((r) => console.log('number renewals', JSON.stringify(r))));
     ctx.waitUntil(n.settlePending().then((r) => (r.activated || r.failed || r.waiting) && console.log('pending numbers', JSON.stringify(r))));
     ctx.waitUntil(n.refreshOffers().then((r) => console.log('number offers', JSON.stringify(r))));

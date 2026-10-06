@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import { computeMetrics } from "./metrics";
-import type { AccountRow, CallRow, LedgerRow, TopupRow } from "../shared/types";
+import type { AccountRow, CallRow, LedgerRow, RedditConversionRow, RedditSpendRow, RedditVisitRow, TopupRow } from "../shared/types";
 
 export interface Env {
   DB: D1Database;
@@ -59,12 +59,15 @@ app.use("*", async (c, next) => {
 });
 
 app.get("/api/metrics", async (c) => {
-  const [accounts, topups, calls, ledger] = await c.env.DB.batch([
-    c.env.DB.prepare("SELECT id, email, created_at, reload_status, reload_cents, reload_renews_at FROM accounts"),
-    c.env.DB.prepare("SELECT account_id, amount_cents, paid_at, monthly FROM topups WHERE status = 'paid' AND account_id IS NOT NULL"),
+  const [accounts, topups, calls, ledger, redditVisits, redditSpend, redditConversions] = await c.env.DB.batch([
+    c.env.DB.prepare("SELECT id, email, created_at, reload_status, reload_cents, reload_renews_at, reddit_first_visit_id, reddit_last_visit_id FROM accounts"),
+    c.env.DB.prepare("SELECT account_id, amount_cents, paid_at, monthly, reddit_visit_id FROM topups WHERE status = 'paid' AND account_id IS NOT NULL"),
     c.env.DB.prepare(
       "SELECT account_id, created_at, direction, status, billed_seconds, cost_cents, json_extract(outcome, '$.result') AS result FROM calls",
     ),
+    c.env.DB.prepare("SELECT id, visitor_id, account_id, campaign_id, campaign_name, ad_group_id, ad_group_name, audience, ad_id, ad_name, creative_id, creative_name, visited_at FROM reddit_visits"),
+    c.env.DB.prepare("SELECT campaign_id, campaign_name, ad_group_id, ad_group_name, ad_id, ad_name, creative_id, creative_name, spend_micros FROM reddit_ad_spend"),
+    c.env.DB.prepare("SELECT conversion_id, event_name, status, attempts, last_http_status, last_error, last_attempt_at, delivered_at, event_at FROM reddit_conversions ORDER BY event_at DESC LIMIT 200"),
     c.env.DB.prepare(
       `SELECT account_id, SUM(amount_cents) AS balance_cents,
          SUM(CASE WHEN kind = 'adjustment' THEN amount_cents ELSE 0 END) AS granted_cents,
@@ -80,6 +83,9 @@ app.get("/api/metrics", async (c) => {
         topups: topups.results as unknown as TopupRow[],
         calls: calls.results as unknown as CallRow[],
         ledger: ledger.results as unknown as LedgerRow[],
+        redditVisits: redditVisits.results as unknown as RedditVisitRow[],
+        redditSpend: redditSpend.results as unknown as RedditSpendRow[],
+        redditConversions: redditConversions.results as unknown as RedditConversionRow[],
       },
       list(c.env.INTERNAL_EMAILS),
       Date.now(),

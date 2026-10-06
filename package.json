@@ -17,6 +17,7 @@
     "grant": "node scripts/grant-credits.mjs",
     "number": "tsx scripts/number.ts",
     "requirements": "node scripts/requirements.mjs",
+    "reddit:spend": "node scripts/sync-reddit-spend.mjs",
     "outreach": "node scripts/outreach.mjs",
     "transfer": "node scripts/transfer-credits.mjs",
     "template": "tsx scripts/email-template.ts",

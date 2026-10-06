@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis } from "recharts";
-import type { Cohort, CreditRow, CreditStatus, Metrics, UserRow } from "../shared/types";
+import type { Cohort, CreditRow, CreditStatus, Metrics, RedditAttributionRow, UserRow } from "../shared/types";
 import { useSort, type SortValue } from "./sort";
 
 const usd = (cents: number) => {
@@ -105,6 +105,8 @@ function Dashboard({ m }: { m: Metrics }) {
         <Kpi label="MRR" value={usd(s.mrrCents)} note={`${s.monthlyPlans} active monthly plans · ${s.cancelledPlans} cancelled`} />
       </section>
 
+      <RedditAttribution reddit={m.reddit} />
+
       <CreditBurn credits={m.credits} now={m.generatedAt} c={c} />
 
       <section className="grid">
@@ -171,6 +173,90 @@ function Dashboard({ m }: { m: Metrics }) {
 
       <Users users={m.users} now={m.generatedAt} />
     </>
+  );
+}
+
+type RedditMetrics = Metrics["reddit"];
+type RedditCol = "campaign" | "audience" | "ad" | "creative" | "recordedVisits" | "spendCents" | "newPayingCustomers" | "callingCustomers" | "repeatPurchasers" | "repeatUsers" | "completedCalls" | "resolvedTasks" | "cacCents";
+const redditValue = (row: RedditAttributionRow, key: RedditCol): SortValue => row[key] ?? Number.MAX_SAFE_INTEGER;
+
+function RedditAttribution({ reddit }: { reddit: RedditMetrics }) {
+  const { sorted: rows, th } = useSort(reddit.rows, redditValue, { key: "newPayingCustomers", dir: "desc" });
+  const delivery = reddit.deliveries;
+  return (
+    <section className="panel wide">
+      <div className="panel-head">
+        <div>
+          <h2>Reddit audience and creative attribution</h2>
+          <p className="foot">Call4me-recorded paid landings and first-touch customer cohorts. Reddit Ads' own click/view attribution uses its configured windows and will differ.</p>
+        </div>
+        <div className="legend">
+          <span>{reddit.recordedVisits} visits</span>
+          <span>{reddit.visitors} visitors</span>
+          <span>{reddit.attributedAccounts} accounts</span>
+          <span>{reddit.spendCents ? `${usd(reddit.spendCents)} spend` : "spend not synced"}</span>
+        </div>
+      </div>
+      <div className="scroll">
+        <table>
+          <thead>
+            <tr>
+              {th("campaign", "Campaign")}
+              {th("audience", "Audience / ad group")}
+              {th("ad", "Ad")}
+              {th("creative", "Creative")}
+              {th("recordedVisits", "Visits", { numeric: true })}
+              {th("spendCents", "Spend", { numeric: true })}
+              {th("newPayingCustomers", "New paying", { numeric: true })}
+              {th("callingCustomers", "Calling", { numeric: true })}
+              {th("repeatPurchasers", "Repeat pay", { numeric: true })}
+              {th("repeatUsers", "Repeat use", { numeric: true })}
+              {th("completedCalls", "Completed calls", { numeric: true })}
+              {th("resolvedTasks", "Resolved tasks", { numeric: true })}
+              {th("cacCents", "CAC", { numeric: true })}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.key}>
+                <td>{row.campaign}</td>
+                <td>{row.audience}</td>
+                <td>{row.ad}</td>
+                <td>{row.creative}</td>
+                <td className="num">{row.recordedVisits}</td>
+                <td className="num">{row.spendCents ? usd(row.spendCents) : "–"}</td>
+                <td className="num">{row.newPayingCustomers}</td>
+                <td className="num">{row.callingCustomers}</td>
+                <td className="num">{row.repeatPurchasers}</td>
+                <td className="num">{row.repeatUsers}</td>
+                <td className="num">{row.completedCalls}</td>
+                <td className="num">{row.resolvedTasks}</td>
+                <td className="num">{row.cacCents === null || !row.spendCents ? "–" : usd(row.cacCents)}</td>
+              </tr>
+            ))}
+            {!rows.length && <tr><td colSpan={13} className="muted">No recorded Reddit paid visits yet.</td></tr>}
+          </tbody>
+        </table>
+      </div>
+      <p className="foot">
+        CAPI delivery: {delivery.sent} sent · {delivery.pending} pending · {delivery.failed} failed · {delivery.blocked} waiting for credentials.
+        Completed calls mean the line connected and ended normally; resolved tasks require the recap result to be “done.”
+      </p>
+      {reddit.recentConversions.some((event) => event.status === "failed" || event.status === "blocked") && (
+        <div className="scroll">
+          <table>
+            <thead><tr><th>Recent delivery issue</th><th>Event</th><th>Attempts</th><th>HTTP</th><th>Error</th></tr></thead>
+            <tbody>
+              {reddit.recentConversions.filter((event) => event.status === "failed" || event.status === "blocked").slice(0, 10).map((event) => (
+                <tr key={event.conversion_id}>
+                  <td>{event.conversion_id}</td><td>{event.event_name}</td><td className="num">{event.attempts}</td><td className="num">{event.last_http_status ?? "–"}</td><td>{event.last_error ?? "–"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
   );
 }
 

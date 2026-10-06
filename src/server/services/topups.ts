@@ -3,6 +3,7 @@ import { newId, now } from '../lib/ids';
 import { accounts, type Account } from './accounts';
 import { realEmail } from '../lib/auth-options';
 import type { Visitor } from './analytics';
+import { attachRedditVisit } from '../lib/reddit';
 
 export const MIN_TOPUP_CENTS = 1000;
 /** "Add funds" sells credits in $10 units; the buyer picks how many on Stripe's page. */
@@ -40,6 +41,7 @@ interface TopupRow {
   meta_user_agent: string | null;
   /** The checkout browser's first touch, as JSON (lib/first-touch.ts). */
   first_touch: string | null;
+  reddit_visit_id: string | null;
 }
 
 export interface Reload {
@@ -158,10 +160,10 @@ export function topups(db: D1Database, stripe: Stripe) {
       const { ga, meta, touch } = opts.from ?? { ga: null, meta: null, touch: null };
       await db
         .prepare(
-          `INSERT INTO topups (id, account_id, email, amount_cents, monthly, stripe_session_id, ga_client_id, ga_session_id, meta_fbp, meta_fbc, meta_ip, meta_user_agent, first_touch, created_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          `INSERT INTO topups (id, account_id, email, amount_cents, monthly, stripe_session_id, ga_client_id, ga_session_id, meta_fbp, meta_fbc, meta_ip, meta_user_agent, first_touch, reddit_visit_id, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         )
-        .bind(id, opts.account?.id ?? null, email ?? null, opts.amountCents, opts.monthly ? 1 : 0, session.id, ga?.clientId ?? null, ga?.sessionId ?? null, meta?.fbp ?? null, meta?.fbc ?? null, meta?.ip ?? null, meta?.userAgent ?? null, touch ? JSON.stringify(touch) : null, now())
+        .bind(id, opts.account?.id ?? null, email ?? null, opts.amountCents, opts.monthly ? 1 : 0, session.id, ga?.clientId ?? null, ga?.sessionId ?? null, meta?.fbp ?? null, meta?.fbc ?? null, meta?.ip ?? null, meta?.userAgent ?? null, touch ? JSON.stringify(touch) : null, opts.from?.redditVisitId ?? null, now())
         .run();
       return session.url!;
     },
@@ -170,7 +172,7 @@ export function topups(db: D1Database, stripe: Stripe) {
      * Credit a completed Checkout session. Called by both the webhook and the success page:
      * ledger refs (the session, or the first invoice) make the money land exactly once.
      */
-    async fulfill(sessionId: string): Promise<{ account: Account; topup: TopupRow; paidCents: number } | null> {
+    async fulfill(sessionId: string): Promise<{ account: Account; topup: TopupRow; paidCents: number; firstPayment: boolean } | null> {
       const session = await stripe.checkout.sessions.retrieve(sessionId, { expand: ['subscription', 'invoice'] });
       if (session.status !== 'complete' || session.payment_status === 'unpaid') return null;
       const topup = await db.prepare(`SELECT * FROM topups WHERE stripe_session_id = ?`).bind(sessionId).first<TopupRow>();
@@ -188,6 +190,11 @@ export function topups(db: D1Database, stripe: Stripe) {
         .prepare(`UPDATE topups SET account_id = ?, amount_cents = ?, status = 'paid', paid_at = COALESCE(paid_at, ?) WHERE id = ?`)
         .bind(account.id, creditCents, now(), topup.id)
         .run();
+      if (topup.reddit_visit_id) {
+        await attachRedditVisit(db, account.id, topup.reddit_visit_id);
+        account.reddit_first_visit_id ??= topup.reddit_visit_id;
+        account.reddit_last_visit_id = topup.reddit_visit_id;
+      }
 
       if (session.mode === 'subscription') {
         const sub = session.subscription as Stripe.Subscription;
@@ -199,7 +206,8 @@ export function topups(db: D1Database, stripe: Stripe) {
       } else {
         await ledger.post(account.id, creditCents, 'topup', `stripe:${sessionId}`, 'card');
       }
-      return { account, topup: { ...topup, account_id: account.id, amount_cents: creditCents, status: 'paid' }, paidCents: session.amount_total ?? creditCents };
+      const first = await db.prepare(`SELECT id FROM topups WHERE account_id = ? AND status = 'paid' ORDER BY paid_at, created_at, id LIMIT 1`).bind(account.id).first<{ id: string }>();
+      return { account, topup: { ...topup, account_id: account.id, amount_cents: creditCents, status: 'paid' }, paidCents: session.amount_total ?? creditCents, firstPayment: first?.id === topup.id };
     },
 
     /**
@@ -243,15 +251,17 @@ export function topups(db: D1Database, stripe: Stripe) {
       await db.batch([
         db.prepare(`UPDATE ledger SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
         db.prepare(`UPDATE topups SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
+        db.prepare(`UPDATE reddit_visits SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
+        db.prepare(`UPDATE reddit_conversions SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
         db.prepare(`UPDATE OR IGNORE drip_sends SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
         db.prepare(`DELETE FROM drip_sends WHERE account_id = ?`).bind(fromId),
         db.prepare(`DELETE FROM key_resets WHERE account_id = ?`).bind(fromId),
         db.prepare(`DELETE FROM profiles WHERE account_id = ?`).bind(fromId),
         from.reload_subscription_id
           ? db
-              .prepare(`UPDATE accounts SET reload_subscription_id = ?, reload_cents = ?, reload_status = ?, reload_renews_at = ?, stripe_customer_id = COALESCE(stripe_customer_id, ?) WHERE id = ?`)
-              .bind(from.reload_subscription_id, from.reload_cents, from.reload_status, from.reload_renews_at, from.stripe_customer_id, to.id)
-          : db.prepare(`UPDATE accounts SET stripe_customer_id = COALESCE(stripe_customer_id, ?) WHERE id = ?`).bind(from.stripe_customer_id, to.id),
+              .prepare(`UPDATE accounts SET reload_subscription_id = ?, reload_cents = ?, reload_status = ?, reload_renews_at = ?, stripe_customer_id = COALESCE(stripe_customer_id, ?), reddit_first_visit_id = COALESCE(reddit_first_visit_id, (SELECT reddit_first_visit_id FROM accounts WHERE id = ?)), reddit_last_visit_id = COALESCE((SELECT reddit_last_visit_id FROM accounts WHERE id = ?), reddit_last_visit_id) WHERE id = ?`)
+              .bind(from.reload_subscription_id, from.reload_cents, from.reload_status, from.reload_renews_at, from.stripe_customer_id, fromId, fromId, to.id)
+          : db.prepare(`UPDATE accounts SET stripe_customer_id = COALESCE(stripe_customer_id, ?), reddit_first_visit_id = COALESCE(reddit_first_visit_id, (SELECT reddit_first_visit_id FROM accounts WHERE id = ?)), reddit_last_visit_id = COALESCE((SELECT reddit_last_visit_id FROM accounts WHERE id = ?), reddit_last_visit_id) WHERE id = ?`).bind(from.stripe_customer_id, fromId, fromId, to.id),
         db.prepare(`DELETE FROM accounts WHERE id = ?`).bind(fromId),
       ]);
       return true;

@@ -14,6 +14,12 @@ interface Env {
   GA_API_SECRET?: string;
   /** Optional Conversions API access token for META_PIXEL_ID (Events Manager → Settings). Unset disables server-side Meta events. */
   META_CAPI_TOKEN?: string;
+  /** Public Reddit Pixel id. Unset disables the browser Pixel. */
+  REDDIT_PIXEL_ID?: string;
+  /** Reddit Events Manager conversion access token. Unset keeps CAPI events queued and auditable. */
+  REDDIT_CAPI_TOKEN?: string;
+  /** Temporary Events Manager test id. Remove after verification so events become production events. */
+  REDDIT_TEST_ID?: string;
   TELNYX_API_KEY: string;
   /** Base64 Ed25519 public key from the Telnyx portal (API keys → public key), for webhook signatures. */
   TELNYX_PUBLIC_KEY: string;

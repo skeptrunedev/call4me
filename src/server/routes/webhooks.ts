@@ -13,6 +13,7 @@ import { machineEventOf } from '../voice/voicemail';
 import { accounts } from '../services/accounts';
 import { analytics } from '../services/analytics';
 import { decodeFirstTouch } from '../lib/first-touch';
+import { redditConversions } from '../lib/reddit';
 
 export const webhooks = new Hono<AppEnv>();
 
@@ -30,6 +31,10 @@ async function writeRecap(env: Env, callId: string): Promise<void> {
     prompt = summaryPrompt(row, JSON.parse(row.brief) as Brief, transcript);
     const outcome = await summarizeCall(env, prompt);
     await db.saveOutcome(callId, outcome);
+    if (outcome.result === 'done') {
+      const account = await accounts(env.DB).byId(row.account_id);
+      if (account) await redditConversions(env).queue(account, { trackingType: 'CUSTOM', customEventName: 'Task resolved', conversionId: `task_resolved:${callId}`, sourceRef: callId, at: row.ended_at ?? now(), website: false });
+    }
     await log('completed', JSON.stringify(outcome));
   } catch (err) {
     console.error('recap failed', callId, err);
@@ -45,6 +50,18 @@ async function reportCallEnded(env: Env, callId: string): Promise<void> {
   if (!row || !account) return;
   const params = { status: row.status, direction: row.direction, talk_seconds: row.billed_seconds ?? 0, currency: 'USD', value: (row.cost_cents ?? 0) / 100 };
   await analytics(env).track(account, [{ name: 'call_ended', params }]);
+  if (row.direction !== 'outbound' || row.status !== 'completed') return;
+  const completed = await env.DB
+    .prepare(`SELECT COUNT(*) AS calls, COUNT(DISTINCT date(created_at / 1000, 'unixepoch')) AS days FROM calls WHERE account_id = ? AND direction = 'outbound' AND status = 'completed'`)
+    .bind(account.id)
+    .first<{ calls: number; days: number }>();
+  const reddit = redditConversions(env);
+  if ((completed?.calls ?? 0) === 1) {
+    await reddit.queue(account, { trackingType: 'CUSTOM', customEventName: 'First completed call', conversionId: `first_completed_call:${account.id}`, sourceRef: account.id, at: row.ended_at ?? now(), website: false });
+  }
+  if ((completed?.days ?? 0) >= 2) {
+    await reddit.queue(account, { trackingType: 'CUSTOM', customEventName: 'Returning caller', conversionId: `returning_caller:${account.id}`, sourceRef: account.id, at: row.ended_at ?? now(), website: false });
+  }
 }
 
 // ---- Stripe: card top-ups and the blog's supporter tier
@@ -86,7 +103,7 @@ webhooks.post('/stripe', async (c) => {
           const ga = topup.ga_client_id ? { clientId: topup.ga_client_id, sessionId: topup.ga_session_id } : null;
           // The checkout's browser, which finishes the purchase on the welcome page.
           const meta = { fbp: topup.meta_fbp, fbc: topup.meta_fbc, ip: topup.meta_ip, userAgent: topup.meta_user_agent, url: `https://${c.env.CANONICAL_HOST}/welcome` };
-          c.executionCtx.waitUntil(analytics(c.env).purchase(done.account, { transactionId: session.id, cents: done.paidCents, reload: false, from: { ga, meta, touch: decodeFirstTouch(topup.first_touch) } }));
+          c.executionCtx.waitUntil(analytics(c.env).purchase(done.account, { transactionId: session.id, cents: done.paidCents, reload: false, firstPayment: done.firstPayment, from: { ga, meta, touch: decodeFirstTouch(topup.first_touch), redditVisitId: topup.reddit_visit_id } }));
         }
       }
       break;

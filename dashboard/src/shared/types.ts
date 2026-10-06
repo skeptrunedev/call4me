@@ -7,12 +7,73 @@ export interface AccountRow {
   reload_status: string | null;
   reload_cents: number | null;
   reload_renews_at: number | null;
+  reddit_first_visit_id?: string | null;
+  reddit_last_visit_id?: string | null;
 }
 export interface TopupRow {
   account_id: string;
   amount_cents: number;
   paid_at: number;
   monthly: number;
+  reddit_visit_id?: string | null;
+}
+
+export interface RedditVisitRow {
+  id: string;
+  visitor_id: string;
+  account_id: string | null;
+  campaign_id: string | null;
+  campaign_name: string | null;
+  ad_group_id: string | null;
+  ad_group_name: string | null;
+  audience: string | null;
+  ad_id: string | null;
+  ad_name: string | null;
+  creative_id: string | null;
+  creative_name: string | null;
+  visited_at: number;
+}
+
+export interface RedditSpendRow {
+  campaign_id: string;
+  campaign_name: string | null;
+  ad_group_id: string;
+  ad_group_name: string | null;
+  ad_id: string;
+  ad_name: string | null;
+  creative_id: string;
+  creative_name: string | null;
+  spend_micros: number;
+}
+
+export interface RedditConversionRow {
+  conversion_id: string;
+  event_name: string;
+  status: "pending" | "sent" | "failed" | "blocked";
+  attempts: number;
+  last_http_status: number | null;
+  last_error: string | null;
+  last_attempt_at: number | null;
+  delivered_at: number | null;
+  event_at: number;
+}
+
+export interface RedditAttributionRow {
+  key: string;
+  campaign: string;
+  audience: string;
+  ad: string;
+  creative: string;
+  recordedVisits: number;
+  visitors: number;
+  spendCents: number;
+  newPayingCustomers: number;
+  callingCustomers: number;
+  repeatPurchasers: number;
+  repeatUsers: number;
+  completedCalls: number;
+  resolvedTasks: number;
+  cacCents: number | null;
 }
 export interface CallRow {
   account_id: string;
@@ -103,4 +164,13 @@ export interface Metrics {
   cohorts: Cohort[];
   users: UserRow[];
   credits: CreditRow[];
+  reddit: {
+    recordedVisits: number;
+    visitors: number;
+    attributedAccounts: number;
+    spendCents: number;
+    deliveries: { sent: number; pending: number; failed: number; blocked: number };
+    rows: RedditAttributionRow[];
+    recentConversions: RedditConversionRow[];
+  };
 }

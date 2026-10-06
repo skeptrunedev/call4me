@@ -58,18 +58,22 @@ pub.get('/welcome', async (c) => {
   const t = topups(c.env.DB, stripeFor(c));
   const done = await t.fulfill(sessionId);
   if (!done) return c.html(<WelcomePage pending apiKey={null} installPrompt="" balanceCents={0} email="" />);
+  const redditEvents = [
+    { name: 'Purchase' as const, conversionId: `purchase:${sessionId}`, currency: 'USD' as const, value: done.paidCents / 100, itemCount: 1 },
+    ...(done.firstPayment ? [{ name: 'Custom' as const, customEventName: 'First payment', conversionId: `first_payment:${done.account.id}` }] : []),
+  ];
   const viewer = c.get('account');
   // Paid signed out: the credits wait on the account for the checkout email. Signing in with
   // that email opens it; signing in any other way brings the buyer back here to claim it.
   if (!viewer) {
     const balance = await accounts(c.env.DB).balanceCents(done.account.id);
-    return c.html(<WelcomePage signedOut apiKey={null} installPrompt="" balanceCents={balance} email={done.account.email} next={`/welcome?session_id=${encodeURIComponent(sessionId)}`} />);
+    return c.html(<WelcomePage signedOut apiKey={null} installPrompt="" balanceCents={balance} email={done.account.email} next={`/welcome?session_id=${encodeURIComponent(sessionId)}`} redditEvents={redditEvents} />);
   }
   const owner = viewer.id === done.account.id || (await t.claim(done.account.id, viewer)) ? viewer : null;
   if (!owner) return c.html(<MessagePage title="already claimed" message={`these credits belong to the account for ${done.account.email}. sign in with that email to use them.`} signedIn />, 409);
   const key = await ownerKey(c, owner);
   const [balance, owned] = await Promise.all([accounts(c.env.DB).balanceCents(owner.id), numbers(c.env).views(owner.id)]);
-  return c.html(<WelcomePage apiKey={key} installPrompt={installPrompt(origin(c), key)} balanceCents={balance} email={owner.email} numbers={owned} />);
+  return c.html(<WelcomePage apiKey={key} installPrompt={installPrompt(origin(c), key)} balanceCents={balance} email={owner.email} numbers={owned} redditEvents={redditEvents} />);
 });
 
 // ---- account

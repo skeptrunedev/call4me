@@ -3,6 +3,7 @@ import { raw } from 'hono/html';
 import { tryGetContext } from 'hono/context-storage';
 import type { AppEnv } from '../lib/context';
 import { GA_MEASUREMENT_ID } from '../lib/ga';
+import type { RedditPixelEvent } from '../lib/reddit';
 import { PAGES, SITE, SITE_TITLE, type PageKey, type PageOverride } from '../lib/pages';
 
 export { SITE_DESCRIPTION } from '../lib/pages';
@@ -63,6 +64,25 @@ fbq('init', ${scriptValue(pixelId)}${externalId ? `, ${scriptValue({ external_id
 fbq('track', 'PageView');
 `;
 
+/** Reddit's base Pixel plus optional conversion events whose ids match CAPI for deduplication. */
+const redditPixelScript = (pixelId: string, externalId: string | null, events: RedditPixelEvent[]) => `
+!function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement('script');t.src='https://www.redditstatic.com/ads/pixel.js';t.async=!0;var s=d.getElementsByTagName('script')[0];s.parentNode.insertBefore(t,s)}}(window,document);
+rdt('init', ${scriptValue(pixelId)}${externalId ? `, ${scriptValue({ externalId })}` : ''});
+rdt('track', 'PageVisit');
+${events
+  .map((event) => {
+    const data = {
+      conversionId: event.conversionId,
+      ...(event.customEventName ? { customEventName: event.customEventName } : {}),
+      ...(event.currency ? { currency: event.currency } : {}),
+      ...(event.value !== undefined ? { value: event.value } : {}),
+      ...(event.itemCount !== undefined ? { itemCount: event.itemCount } : {}),
+    };
+    return `rdt('track', ${scriptValue(event.name)}, ${scriptValue(data)});`;
+  })
+  .join('\n')}
+`;
+
 /**
  * WebMCP (webmachinelearning.github.io/webmcp): the site's key actions as in-page tools for
  * browser agents. Placing calls needs the MCP server (signed in); these read the site, hand
@@ -99,8 +119,10 @@ export const Layout: FC<{
   path?: string;
   /** Overrides for pages whose preview depends on their content (blog posts). */
   meta?: PageOverride;
+  /** Browser events also sent by CAPI, with the same conversion ids. */
+  redditEvents?: RedditPixelEvent[];
   children?: Child;
-}> = ({ title, signedIn = false, page = 'message', path, meta: override, children }) => {
+}> = ({ title, signedIn = false, page = 'message', path, meta: override, redditEvents = [], children }) => {
   const meta = PAGES[page];
   const fullTitle = title ? `${title} - call4me` : SITE_TITLE;
   const description = override?.description ?? meta.description;
@@ -110,6 +132,10 @@ export const Layout: FC<{
   const ctx = tryGetContext<AppEnv>();
   const accountId = ctx?.get('account')?.id ?? null;
   const pixelId = ctx?.env.META_PIXEL_ID;
+  // Never give third-party browser code access to account pages, call transcripts/recordings,
+  // admin pages, or public examples/blog posts that contain call content. CAPI covers later usage.
+  const redditSafePath = ctx ? ['/', '/mcp', '/login', '/rules', '/privacy', '/terms', '/support', '/voices', '/welcome'].includes(new URL(ctx.req.url).pathname) : false;
+  const redditPixelId = redditSafePath ? ctx?.env.REDDIT_PIXEL_ID : undefined;
   return (
   <>
     {raw('<!DOCTYPE html>')}
@@ -157,6 +183,7 @@ export const Layout: FC<{
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
         <script>{raw(gaScript(accountId, ctx?.get('gaEmailHash') ?? null))}</script>
         {pixelId && <script>{raw(metaPixelScript(pixelId, accountId))}</script>}
+        {redditPixelId && <script>{raw(redditPixelScript(redditPixelId, accountId, redditEvents))}</script>}
       </head>
       <body>
         {pixelId && (
