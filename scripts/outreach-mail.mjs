@@ -84,12 +84,12 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     return { provider: 'fastmail', id };
   }
 
-  async function verifiedDraft({ id, to, expectedText, expectedSubject }) {
+  async function verifiedDraft({ id, to, expectedText, expectedSubject, expectedReply }) {
     if (!id || !to || !expectedText?.trim()) throw new Error('Original draft, recipient and expected body are required');
     const session = await discover();
     const originalResult = await call(session, 'Email/get', {
       ids: [id],
-      properties: ['id', 'subject', 'mailboxIds', 'keywords', 'sender', 'from', 'to', 'cc', 'bcc', 'replyTo', 'inReplyTo', 'references', 'hasAttachment', 'attachments', 'htmlBody', 'bodyValues'],
+      properties: ['id', 'threadId', 'subject', 'mailboxIds', 'keywords', 'sender', 'from', 'to', 'cc', 'bcc', 'replyTo', 'inReplyTo', 'references', 'hasAttachment', 'attachments', 'htmlBody', 'bodyValues'],
       fetchHTMLBodyValues: true,
     });
     const original = originalResult.list?.find((email) => email.id === id);
@@ -97,7 +97,12 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     const empty = (value) => value == null || (Array.isArray(value) && value.length === 0);
     if (!original || original.keywords?.$draft !== true || Object.keys(original.mailboxIds ?? {}).length !== 1 || original.mailboxIds[session.draftMailboxId] !== true) throw new Error('Original email is not an unsent draft in only the Drafts mailbox');
     if (!singleAddress(original.from, SENDER.email) || !singleAddress(original.to, to) || !empty(original.sender)) throw new Error('Original draft sender or recipient does not match');
-    if (['cc', 'bcc', 'replyTo', 'inReplyTo', 'references', 'attachments'].some((property) => !empty(original[property])) || original.hasAttachment) throw new Error('Original draft has additional recipients, attachments or reply headers');
+    if (['cc', 'bcc', 'replyTo', 'attachments'].some((property) => !empty(original[property])) || original.hasAttachment) throw new Error('Original draft has additional recipients or attachments');
+    if (expectedReply) {
+      if (original.threadId !== expectedReply.expectedThreadId || ['inReplyTo', 'references'].some((property) => JSON.stringify(original[property]) !== JSON.stringify(expectedReply[property]))) throw new Error('Original draft reply headers or thread do not match the source email');
+    } else if (['inReplyTo', 'references'].some((property) => !empty(original[property]))) {
+      throw new Error('Original draft has unexpected reply headers');
+    }
     const html = original.htmlBody?.length === 1 && original.htmlBody[0].type === 'text/html' ? original.bodyValues?.[original.htmlBody[0].partId] : null;
     if (!html || html.isTruncated || html.isEncodingProblem || html.value !== messageHtml(expectedText)) throw new Error('Original draft body does not match the outreach tracker');
     if (expectedSubject !== undefined && original.subject !== expectedSubject) throw new Error('Original draft subject does not match the approved subject');
@@ -177,6 +182,12 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     return { to, text, subject: /^re:/i.test(original.subject) ? original.subject : `Re: ${original.subject}`, inReplyTo: original.messageId, references: [...new Set([...(original.references ?? []), ...original.messageId])], expectedThreadId: original.threadId };
   }
 
+  async function sendReplyDraft({ id, draftId, to, text }) {
+    const message = await replyMessage({ id, to, text });
+    await verifiedDraft({ id: draftId, to, expectedText: text, expectedSubject: message.subject, expectedReply: message });
+    return submitDraft({ provider: 'fastmail', id: draftId });
+  }
+
   return {
     async status() {
       const session = await discover();
@@ -200,6 +211,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     replaceDraft,
     send,
     sendDraft,
+    sendReplyDraft,
     replyMessage,
     async reply(message) {
       return send(await replyMessage(message));
