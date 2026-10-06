@@ -157,11 +157,21 @@ export async function redditPayload(db: D1Database, account: Account, event: Red
     user: {
       external_id: await sha256Hex(account.id),
       ...(real ? { email: await redditEmailHash(real) } : {}),
-      ...(visit?.visitor_id ? { uuid: visit.visitor_id } : {}),
       ...(website && visit?.ip_address ? { ip_address: visit.ip_address } : {}),
       ...(website && visit?.user_agent ? { user_agent: visit.user_agent } : {}),
     },
   };
+}
+
+/**
+ * Call4Me's visitor id is an internal attribution key, not Reddit's Pixel/device UUID.
+ * Strip the old, invalid mapping while delivering so persisted retries created before
+ * this fix are repaired as well as newly queued conversions.
+ */
+function payloadForDelivery(payload: string): Record<string, unknown> {
+  const parsed = JSON.parse(payload) as Record<string, unknown>;
+  if (parsed.user && typeof parsed.user === 'object' && !Array.isArray(parsed.user)) delete (parsed.user as Record<string, unknown>).uuid;
+  return parsed;
 }
 
 type RedditEnv = Pick<Env, 'DB' | 'REDDIT_PIXEL_ID' | 'REDDIT_CAPI_TOKEN' | 'REDDIT_TEST_ID'>;
@@ -176,7 +186,7 @@ export function redditConversions(env: RedditEnv) {
       await env.DB.prepare(`UPDATE reddit_conversions SET status = 'blocked', last_error = ? WHERE conversion_id = ?`).bind('REDDIT_PIXEL_ID or REDDIT_CAPI_TOKEN is not configured', conversionId).run();
       return;
     }
-    const body = JSON.stringify({ data: { ...(env.REDDIT_TEST_ID ? { test_id: env.REDDIT_TEST_ID } : {}), events: [JSON.parse(row.payload)] } });
+    const body = JSON.stringify({ data: { ...(env.REDDIT_TEST_ID ? { test_id: env.REDDIT_TEST_ID } : {}), events: [payloadForDelivery(row.payload)] } });
     let status: number | null = null;
     let response = '';
     let error: string | null = null;
