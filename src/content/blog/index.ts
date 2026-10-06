@@ -1,4 +1,12 @@
 import type { PostSource } from '../../server/lib/blog';
+import macysBowTieStockCheck from './macys-bow-tie-stock-check.md';
+import bookDinnerReservationByPhone from './book-dinner-reservation-by-phone.md';
+import rescheduleDoctorAppointment from './reschedule-doctor-appointment.md';
+import runningLateToBarber from './running-late-to-barber.md';
+import mandarinPhoneCallScheduling from './mandarin-phone-call-scheduling.md';
+import veterinaryBehaviorConsultationCall from './veterinary-behavior-consultation-call.md';
+import aquasanaReturnException from './aquasana-return-exception.md';
+import runningLateToAppointment from './running-late-to-appointment.md';
 import wyomingRegisteredAgentConsent from './wyoming-registered-agent-consent-form.md';
 import ohioWorkersCompensation from './ohio-workers-compensation-insurance.md';
 import dropOffVetAppointment from './drop-off-vet-appointment.md';
@@ -62,6 +70,14 @@ import metaMuseSupplierQuotes from './meta-muse-supplier-quotes.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'macys-bow-tie-stock-check', markdown: macysBowTieStockCheck },
+  { slug: 'book-dinner-reservation-by-phone', markdown: bookDinnerReservationByPhone },
+  { slug: 'reschedule-doctor-appointment', markdown: rescheduleDoctorAppointment },
+  { slug: 'running-late-to-barber', markdown: runningLateToBarber },
+  { slug: 'mandarin-phone-call-scheduling', markdown: mandarinPhoneCallScheduling },
+  { slug: 'veterinary-behavior-consultation-call', markdown: veterinaryBehaviorConsultationCall },
+  { slug: 'aquasana-return-exception', markdown: aquasanaReturnException },
+  { slug: 'running-late-to-appointment', markdown: runningLateToAppointment },
   { slug: 'grok-bot-templates', markdown: grokBotTemplates },
   { slug: 'grok-bot-reusable-skills', markdown: grokBotReusableSkills },
   { slug: 'grok-bot-template-troubleshooting', markdown: grokBotTemplateTroubleshooting },

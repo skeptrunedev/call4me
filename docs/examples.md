@@ -1,16 +1,44 @@
 # Public call examples
 
-## October 6 collection in preparation
+## October 6 collection
 
-The account owners have agreed to publication of eight additional redacted
-recordings. The collection covers a store stock check, a dinner reservation,
+Nick confirmed that the account owners agreed to publication of all eight
+additional calls. The collection covers a store stock check, a dinner reservation,
 a doctor's appointment reschedule, a barber arrival update, a Mandarin
 availability check, a veterinary callback, a return exception approval and a
-clinic arrival update. Append these examples after the existing collection.
-Each accompanying article must preserve the recorded outcome's limits,
-especially the unconfirmed replacement meeting time and the pending return
-paperwork and refund. Source association, audio redaction, transcript review
-and browser checks remain required before publication.
+clinic arrival update. The eight examples are appended after the existing
+collection, each linked to its own article. The Mandarin example is a real
+personal contact call, with the original Chinese transcript and a separately
+labeled English translation in its article.
+
+Seven complete recordings retain original voices, menus, holds and timing.
+Names, private telephone numbers, addresses, identity checks, reference numbers
+and identifying clinic information are muted. The exports were checked against
+the exact provider associations and saved call text, two independent source
+transcriptions, focused excerpts, decoded duration and silence checks, and
+independent export transcriptions. No human listening verification is claimed.
+The long return call's full automatic transcription hallucinated material in
+holds and omitted conversation. Overlapping shorter export excerpts covering
+the business conversation were independently transcribed instead; those
+limitations remain in the private review evidence.
+
+The veterinary callback is an explicit exception to the recording requirement
+below. The provider returned no recording for either exact call identifier,
+and its webhook history contained no recording event. Its example and article
+therefore show a redacted saved call transcript, prominently labeled as not
+checked against audio, with no player or fabricated substitute recording.
+The original outbound voicemail is not used as article evidence.
+
+The dinner reservation did not confirm cancellation terms. The original doctor
+appointment was already canceled before the rescheduling call. The Mandarin
+call proposed Saturday without agreeing a replacement time. The veterinary
+callback gathered information without booking. The return exception was
+approved, but its return paperwork and payment remained pending. Arrival
+updates do not establish attendance or completed service. Preserve those limits.
+
+Use the reusable [recording review CLI](audio-review.md) for future acquisitions,
+manual redaction manifests and verification. Keep all raw audio, provider URLs,
+source transcriptions and private manifests outside the repository.
 
 ## Published collection
 

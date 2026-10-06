@@ -16,7 +16,7 @@ export const ExamplesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
     <main class="examples">
       <h1>listen to real calls</h1>
       <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
-      <p>hear the agent talk to a business, ask questions, and get an answer before you buy.</p>
+      <p>hear the agent call businesses and personal contacts, ask questions, and get an answer before you buy. one callback is available as a saved transcript only.</p>
       {EXAMPLES.map((example) => (
         <article class="example" id={example.slug} aria-labelledby={`${example.slug}-title`}>
           <h2 id={`${example.slug}-title`}>{example.title}</h2>
@@ -24,9 +24,9 @@ export const ExamplesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
           <p><b>the request:</b> {example.request}</p>
           <p><b>what happened:</b> {example.outcome}</p>
           {example.guide && <p><a href={example.guide.href}>{example.guide.label}</a></p>}
-          <audio controls preload="metadata" aria-label={`listen: ${example.title}`} src={example.audio}>
+          {example.audio ? <audio controls preload="metadata" aria-label={`listen: ${example.title}`} src={example.audio}>
             <a href={example.audio}>listen to the recording</a>
-          </audio>
+          </audio> : <p class="small">no recording is available for this call. the transcript below is saved call text with private details removed, rather than an audio verified transcript.</p>}
           <details>
             <summary>read the transcript</summary>
             <div class="example-transcript">
