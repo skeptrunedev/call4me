@@ -1,18 +1,22 @@
-Grok Bot recipient setup manifest
+Grok Bot phone calling recipient setup manifest
 
-Fill in the dependencies and actual setup links. Never include credentials, private API URLs, personal account data or signed recording links.
+Adapt this restaurant inquiry example to your calling workflow. Never include credentials, private API URLs, personal account data or signed recording links.
 
-Workflow name:
-Purpose and expected output:
-What the recipient receives:
-What must be installed separately:
-Required files and where to obtain them:
-Required account or connector, with official setup link:
+Workflow name: Restaurant phone inquiry
+Purpose: Ask about this party and date, then report supported answers
+What the recipient receives: Calling method and output instructions
+Separate setup: Recipient's Call4Me account and Grok Bot connection
+Setup guide: https://call4.me/blog/grok-connectors-mcp-phone-calls
+Required files: restaurant-inquiry-method.md from the skill guide
 Credential owner: recipient or explicitly shared account
-Access check and what it proves:
-Inputs required for each task:
-Preparation that may proceed without external contact:
-Actions that require approval:
-How to validate the finished result:
-What to report if access, inputs or evidence are missing:
+Access check: call4me_get_balance verifies current account access
+Intake check: call4me_get_requirements supplies required call fields
+Task inputs: Restaurant, published number, party, date, time and needs
+Call brief: Questions, facts it may share and duration in whole minutes
+Approval: One named call, with call4me_place_call.max_minutes set
+Preparation: Read checks and a call brief, with no dialing
+Result check: Same call id through call4me_get_call and transcript
+Recording check: call4me_get_recordings for that same id
+Output: Confirmed facts, source type, unanswered questions and next step
+Failure rule: Report missing access or evidence, do not dial again
 Date this recipient setup was last checked:

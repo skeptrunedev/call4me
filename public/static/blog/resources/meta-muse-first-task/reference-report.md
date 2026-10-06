@@ -1,6 +1,6 @@
-# First Muse task reference report
+# First Muse phone task preparation report
 
-Independent official source research checked October 5, 2026. This is not output from a completed Muse task and is not a record of a visit.
+Independent official source research checked October 5, 2026. Use these facts to prepare one informational library call. No Muse call or visit has been executed for this example.
 
 Request: one adult, personal laptop, Tuesday October 6, 2026, 2 pm to 5 pm Pacific. Starting location was not supplied.
 
@@ -22,10 +22,12 @@ Main links to https://sfpl.libanswers.com/faq/88545, but that FAQ returned a rat
 
 Unknown: exceptional closures for the chosen date, seating, outlet availability, guest WiFi access, noise and travel time. Check current branch notices before a visit. No room was reserved, branch contacted or credentials supplied.
 
-## Acceptance checks
+## Phone task finish line
 
-1. Check each cited branch's own hours rather than navigation listing another branch.
-2. Preserve the Tuesday date and Pacific time window.
-3. Keep quietness, WiFi speed, outlets and proximity unknown without evidence.
-4. Return a conditional recommendation and sources.
-5. Do not transform the research task into a booking, call or outgoing message.
+Choose a branch, date, work window and approved caller identity. Verify its official number. Check Call4me access with a balance request without dialing. Show a four minute call plan and wait for specific approval. After approval, check general category requirements and the live tool schema, call once and follow status to completion.
+
+Ask about adult personal laptop use in general seating, outlet locations, guest WiFi login and current restrictions. Do not request room reservations, purchases, voicemail or callbacks. Collect the transcript and available recording. Report who answered, supported answers and open questions. A finished call does not guarantee a seat or an answer.
+
+Phone result: not executed. Call ID, respondent, phone answers, transcript and recording remain unknown.
+
+Published branch numbers: Main (415) 557 4400; Chinatown (415) 355 2888; Mission Bay (415) 355 2838. Sources are the respective official branch pages above. Recheck before the call.

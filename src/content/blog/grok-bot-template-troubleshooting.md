@@ -1,15 +1,15 @@
 ---
-title: "Why a Grok Bot template works for its owner but fails for someone else"
-seoTitle: "Grok Bot template troubleshooting: setup and access"
-subtitle: Find the missing connector, login, file or instruction before retrying the task. Includes a setup manifest and a recipient acceptance checklist.
-description: "Troubleshoot Grok Bot templates that fail after sharing. Check custom MCP setup, recipient authentication, missing files and task permissions."
+title: "Why a Grok Bot phone calling template fails after sharing"
+seoTitle: "Grok Bot template troubleshooting for phone calling"
+subtitle: A recipient needs their own working Call4Me connection, call brief and permission. Find the missing prerequisite before asking the Bot to dial again.
+description: "Fix a shared Grok Bot phone calling template by checking Call4Me setup, account access, required inputs and call evidence. Download the recipient checklist."
 date: 2026-10-05
-tags: grok, templates, mcp, ai agents
+tags: grok, templates, mcp, ai agents, ai phone assistant
 authors: nick
-imageAlt: A shared Grok Bot template needs the recipient's access, files and task inputs
+imageAlt: A shared Grok phone calling template needs the recipient's Call4Me access and call brief
 ---
 
-**A shared Grok Bot template can contain the method while missing the access that made the owner's Bot work.** Find the first missing prerequisite before asking it to repeat the errand.
+**A shared Grok Bot phone calling template can remember how to call while lacking the recipient's Call4Me connection.** Check the actual calling tools, account ownership and call brief before another dial. The owner's working phone setup does not establish that the recipient has working access.
 
 xAI's [template guide](https://x.ai/bot/guides/templates-for-grok-bot) says a copy needs its own setup and explicitly calls out custom MCP servers, scripts and code that are not included. A successful owner run therefore does not establish that a recipient can run the same workflow.
 
@@ -27,7 +27,7 @@ Three similar looking situations have different ownership and access rules:
 
 For a public template, the recipient owns and maintains their copy separately. A Team Bot is maintained centrally by its owner. Do not troubleshoot one as if it were the other. [Official Team Bot comparison](https://docs.x.ai/grok-bot/team-bots#team-bots-personal-bots-and-public-templates).
 
-If you shared our [five errand prompts](/blog/grok-bot-templates), those are instruction files. They do not install plugins or authorize calls.
+If you shared our [five phone calling prompts](/blog/grok-bot-templates), those are instruction files. They do not install Call4Me or authorize calls.
 
 ## Trace the failure from instruction to evidence
 
@@ -35,12 +35,12 @@ Ask the recipient to describe the last concrete step that worked. “The Bot is 
 
 Use this order so you do not repair authentication when the real problem is a missing file:
 
-1. **Instructions:** does the copied Bot have the intended method and output format?
-2. **Dependencies:** does it have the connector, script or file the method references?
-3. **Authentication:** is that dependency connected to the intended recipient account?
-4. **Inputs:** does the current request supply the required facts?
-5. **Permission:** is it allowed to take the proposed action for this request?
-6. **Evidence:** did the tool action happen, and does its result answer the question?
+1. **Instructions:** does the copied Bot have the calling method and result format?
+2. **Dependencies:** can it find Call4Me's calling and result tools, plus any required files?
+3. **Authentication:** does `call4me_get_balance` reach the intended recipient account?
+4. **Inputs:** has it checked `call4me_get_requirements` and collected the required facts?
+5. **Permission:** is this specific call approved, with a `max_minutes` cap?
+6. **Evidence:** does the same call id's outcome, transcript and recording answer the question?
 
 For each stage, record what was inspected. Stop at the first failure. Fix that prerequisite and rerun only the relevant check.
 
@@ -48,7 +48,7 @@ For each stage, record what was inspected. Stop at the first failure. Fix that p
 
 **Likely cause:** the instructions refer to a dependency that was available only in the owner's setup.
 
-Ask the Bot to list the tools it can currently use and the exact tool the workflow requires. Compare that with the setup manifest. A remembered statement such as “Call4Me is installed” is weaker than a current tool listing and an actual access check.
+Ask the Bot to check for `call4me_get_balance`, `call4me_get_requirements`, `call4me_place_call`, `call4me_get_call` and `call4me_get_recordings` in its actual available tools. Compare that with the setup manifest. A remembered statement such as “Call4Me is installed” is weaker than a current tool listing and an actual access check.
 
 For Call4Me, use our [Grok connector setup instructions](/blog/grok-connectors-mcp-phone-calls#how-to-add-an-mcp-server-to-grok-bot). After the recipient adds their own connection, ask for `call4me_get_balance`. This is an access check, not a phone call. Review the returned account data before any calling workflow proceeds.
 
@@ -60,7 +60,7 @@ Do not transfer the owner's key or personal MCP URL as a fix. A template should 
 
 Grok's [official troubleshooting instructions](https://docs.x.ai/grok-bot/troubleshooting#a-plugin-will-not-install-or-authenticate) direct you to **Marketplace**, **Your plugins**, then the installed plugin's authentication action. Complete the browser authorization using the intended account and return to the Bot. Some connectors also need administrator configuration.
 
-After authentication, repeat a read operation and confirm the result belongs to the recipient. A plugin card being visible does not prove that the right account is connected.
+After authentication, repeat `call4me_get_balance` and confirm the result belongs to the recipient. A plugin card being visible does not prove that the right account is connected or that a call can be placed.
 
 If the Bot is waiting rather than failing, inspect its conversation and computer for a login, question or approval prompt. Preserve the exact error text when there is one. [Grok troubleshooting](https://docs.x.ai/grok-bot/troubleshooting#a-bot-appears-stuck).
 
@@ -94,28 +94,42 @@ Then check the evidence behind the answer. In our [real Grok restaurant call](/b
 
 Patch the method to keep confirmed facts, recorded policy and unanswered questions separate. Recheck with a supplied transcript before placing another call.
 
+## Symptom: an error appears after a call started
+
+**Possible cause:** result retrieval failed while the existing phone call continued, or the call itself failed. Those are different conditions.
+
+Ask Grok for the actual id returned by `call4me_place_call`, then use `call4me_get_call` for that id. Do not create another call just because the chat showed an error. If the call finished, review its outcome and transcript and retrieve recording metadata with `call4me_get_recordings`. If no id was returned, report that uncertainty instead of claiming the call never happened.
+
+Here is a diagnostic prompt the recipient can use without authorizing a new call:
+
+> Diagnose the Call4Me phone workflow without dialing. Check the actual available tools and run call4me_get_balance. Identify missing access or required inputs without showing credentials. If this task already returned a call id, inspect that same id with call4me_get_call and call4me_get_recordings. Return the observed state, confirmed answers, unanswered questions and the setup step needed next. Do not create a call, booking or callback.
+
 ## Give recipients a setup manifest
 
 Put the setup instructions where the Bot and the person can both read them. [Download a blank manifest](/static/blog/resources/grok-bot-template-troubleshooting/setup-manifest.txt) and fill in these fields:
 
 ```text
-Workflow name:
-Purpose and expected output:
-What the recipient receives:
-What must be installed separately:
-Required files and where to obtain them:
-Required account or connector, with official setup link:
+Workflow name: Restaurant phone inquiry
+Purpose: Ask about this party and date, then report supported answers
+What the recipient receives: Calling method and output instructions
+Separate setup: Recipient's Call4Me account and Grok Bot connection
+Setup guide: https://call4.me/blog/grok-connectors-mcp-phone-calls
+Required files: restaurant-inquiry-method.md from the skill guide
 Credential owner: recipient or explicitly shared account
-Access check and what it proves:
-Inputs required for each task:
-Preparation that may proceed without external contact:
-Actions that require approval:
-How to validate the finished result:
-What to report if access, inputs or evidence are missing:
+Access check: call4me_get_balance verifies current account access
+Intake check: call4me_get_requirements supplies required call fields
+Task inputs: Restaurant, published number, party, date, time and needs
+Call brief: Questions, facts it may share and duration in whole minutes
+Approval: One named call, with call4me_place_call.max_minutes set
+Preparation: Read checks and a call brief, with no dialing
+Result check: Same call id through call4me_get_call and transcript
+Recording check: call4me_get_recordings for that same id
+Output: Confirmed facts, source type, unanswered questions and next step
+Failure rule: Report missing access or evidence, do not dial again
 Date this recipient setup was last checked:
 ```
 
-For Call4Me, the access check can be `call4me_get_balance`, and the action boundary can be “show the proposed business, published number, questions and call limit before asking permission.” Neither field should contain a real API key.
+Adapt this example to the calling task you share. The recipient still needs to fill in their current inputs and approve a specific call. The manifest must not contain a real API key or the owner's personal MCP URL.
 
 ## A recipient test that actually establishes portability
 
@@ -123,12 +137,12 @@ Run this on a separate recipient account using the template or artifact you inte
 
 1. Review the template details before adding it. Compare the included method and integrations with the manifest.
 2. Follow the manifest without private instructions from the owner. Record any missing dependency or unclear step.
-3. Authenticate with the intended account and run the read access check.
-4. Supply new task inputs and request preparation only. Verify there is no external contact.
+3. Authenticate with the intended account and run `call4me_get_balance`.
+4. Supply new task inputs and request a call brief only. Verify the required inputs and duration cap, with no dialing.
 5. Remove a required input. Verify the Bot asks rather than inventing a value.
 6. Supply a labelled simulated partial result. Verify the unanswered questions remain visible.
-7. If needed, authorize a narrowly scoped real task. Match the final output to the actual tool record and downstream result.
+7. If needed, approve one call with a duration cap. Follow its actual id and compare the final answer with the transcript, recording and unresolved questions.
 
 The [acceptance checklist](/static/blog/resources/grok-bot-template-troubleshooting/recipient-checklist.csv) leaves observed results blank so you can record what happened. Keep a failure visible until you fix its cause and rerun that check.
 
-The finished deliverable is a method someone else can set up, invoke and verify. A share link alone cannot establish that.
+The finished deliverable is a calling method someone else can connect, invoke and verify. A share link alone cannot establish that.

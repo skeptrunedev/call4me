@@ -12,6 +12,8 @@ personal details, request a callback or leave a message.
 Follow the returned call id using call4me_get_call until it ends or needs
 my input. Do not create a duplicate call when a status request is slow.
 
-Return the actual outcome, source of the answer, unresolved questions
-and available recording. A recording or voicemail may establish policy
-without answering our specific question. Never fill in the missing answer.
+Return the actual outcome and transcript. Use call4me_get_recordings to
+retrieve available recording evidence. Identify whether the answer came
+from a person or a recording, and keep unresolved questions visible.
+A menu may establish policy without answering our specific question.
+Never fill in the missing answer.

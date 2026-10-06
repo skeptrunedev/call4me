@@ -1,17 +1,17 @@
 ---
-title: "Meta Muse for small business: compare supplier quotes without guessing"
-seoTitle: "Meta Muse for small business: supplier quotes"
-subtitle: Turn published packaging listings into a fair supplier shortlist. Includes a complete sourcing brief, a sourced comparison and a clearly labeled sample for delivery cost math.
-description: Compare supplier offers with Meta Muse. Includes a complete research brief, sourced box listings, delivered cost example and downloadable worksheets.
+title: "Meta Muse for small business: ask suppliers for comparable quotes by phone"
+seoTitle: "Meta Muse supplier quotes by phone"
+subtitle: Give every supplier the same phone brief. Includes published price preparation, questions for comparable delivered quotes and a worksheet for actual call outcomes.
+description: Prepare supplier calls in Meta Muse with one shared specification, published prices, approval boundaries and a downloadable phone quote worksheet.
 date: 2026-10-05
 tags: meta muse, small business, ai agents, supplier quotes
 authors: nick
-imageAlt: Three supplier offers compared against one specification with delivery costs and unknowns kept visible
+imageAlt: Supplier phone calls share one specification and return comparable quotes with unresolved costs visible
 ---
 
-**Give Muse the same specification for every supplier, then compare what it can actually verify.** A published product price is a starting point. A useful supplier quote also needs the quantity, destination, delivery date, taxes, shipping, surcharges and the terms applying to that order.
+**Ask Muse to prepare supplier calls around one shared specification, then compare the answers it actually gets.** Use the phone to clarify dimensions, delivery charges and timing that published listings leave open. A useful quote identifies the exact order, who answered and which charges remain unconfirmed.
 
-Meta announced [Muse for Small Business](https://about.fb.com/news/2026/09/introducing-muse-small-business/) on September 29. It adds business skills and connectors, including custom connections for services outside the built in list. A supplier comparison is a practical use case: research listings first, identify missing information, and prepare focused questions before anyone contacts a vendor.
+Meta announced [Muse for Small Business](https://about.fb.com/news/2026/09/introducing-muse-small-business/) on September 29. It adds business skills and connectors, including custom connections for services outside the built in list. A supplier calling task is a practical use case: research the exact products, prepare one question set and ask each approved supplier about the same quantity and destination. This guide uses the consumer Muse app with a Call4me custom connection, rather than Muse Code.
 
 We researched the published listings below on October 5, 2026. We did not request a supplier quote, make a call or execute this workflow in Muse. The delivered cost example later in this article is synthetic and is labeled accordingly.
 
@@ -23,9 +23,9 @@ That is enough for a shortlist of published products. It is insufficient for a d
 
 Send Muse this brief, also available as a [complete text download](/static/blog/resources/meta-muse-supplier-quotes/supplier-research-prompt.txt):
 
-> Research published supplier offers for 25 brown corrugated boxes advertised as 12 by 12 by 12 inches, rated 32 ECT. Compare Staples model 121212, Fisher Scientific catalog NC1810018 and PackagingSupplies.com's matching product. Use their own product pages. Keep advertised dimensions separate from confirmed inside dimensions. Record pack count, pack price, currency, strength, shipping, tax, surcharges, delivery and source URL. No destination or deadline has been supplied. Do not invent them or treat a default site's destination as mine. Do not log in, add items to a cart, contact suppliers, submit forms, subscribe or order. Mark unavailable prices and terms unknown. Return a shortlist, merchandise cost per box and the exact missing facts needed for a delivered quote. Do not select a delivered cost winner until those facts are known.
+> Prepare supplier calls through Call4me for 25 brown corrugated boxes advertised as 12 by 12 by 12 inches, rated 32 ECT. Read the official listings for Staples model 121212, Fisher Scientific NC1810018 and PackagingSupplies.com's matching product. Keep inside dimensions separate from advertised dimensions. Ask me for the delivery destination, deadline, essential specifications and identity I authorize sharing. Verify Call4me access with a balance request without dialing. Find each supplier's relevant published sales number on its official site. Show the source, exact shared questions, approved buyer facts and a five minute limit for each proposed call, then wait for approval of those specific calls. Until approval, research only. After approval, check the general category requirements and live calling schema, call only the approved suppliers with call4me_place_call.max_minutes set to 5 for each call. Follow each same returned call ID with call4me_get_call until that call ends, return its transcript and retrieve available evidence with call4me_get_recordings. Ask about matching SKU, quantity, dimensions, merchandise, shipping, taxes, surcharges, arrival estimate and quote validity. Do not log in, submit forms, subscribe, order, accept terms, leave voicemail or arrange callbacks. Record who answered, phone statements and unresolved costs separately from the published price baseline. Do not choose a delivered cost winner with required charges unknown.
 
-## What the published offers actually tell us
+## Use published prices to prepare precise calls
 
 All prices are displayed USD merchandise prices observed October 5, not firm quotes for your order. The arithmetic uses each listed pack count.
 
@@ -60,21 +60,53 @@ Supplier B has the higher merchandise price and the lower delivered total. That 
 
 Download the [complete calculation example](/static/blog/resources/meta-muse-supplier-quotes/synthetic-comparison.json) to inspect the inputs and calculated totals. To compare your own orders, sum merchandise, shipping, tax and other required fees, then divide by the number of usable units. If a required charge is unknown, the delivered total stays unknown.
 
-## Ask only for the facts the research did not answer
+## Give every approved supplier the same phone questions
 
 Before seeking actual quotes, supply the shipping destination, deadline, intended contents and any mandatory inside dimensions. Product suitability matters before price ranking. Do not assume that every 32 ECT listing is appropriate for a particular load or carrier requirement.
 
-A complete request for a written quote would ask the supplier to identify the exact SKU, quantity, specification, merchandise total, shipping, taxes, surcharges, expected arrival, quote expiration and relevant return terms. Save the supplier's answer next to its date and source. Keep agent calculations in a separate column or section.
+Use this shared question set for each approved supplier:
+
+1. Does this exact SKU meet the brown color, required inside dimensions and 32 ECT specification? What pack quantity applies?
+2. What is the merchandise total for 25 usable boxes, without a subscription or a larger quantity tier?
+3. What shipping, tax and required surcharges apply to the supplied destination?
+4. What arrival estimate can you give for the supplied deadline, and what still needs confirmation?
+5. How long does this quote apply, and which returns terms affect this order?
+
+Treat a phone price as an oral estimate or quote attributed to the respondent, not a written firm proposal. Ask whether the respondent can provide a complete quote by phone. If a written proposal or checkout is required, record that next step without submitting it automatically. Keep the exact respondent's answers separate from website prices and agent calculations.
 
 The [sourcing worksheet](/static/blog/resources/meta-muse-supplier-quotes/quote-brief.md) contains the fields to fill in and a ready to adapt question list. Blank buyer details deliberately remain blank. It is a preparation document, not an email that has been sent.
 
-## Where Muse connectors and phone calls fit
+## Check the connection, approve contact, then follow each call
 
-Public pages are enough to start this task. A private supplier portal or order history could justify a connector later. Meta's [official connector instructions](https://www.meta.com/help/artificial-intelligence/1687253048996149/) explain asking Muse to create a custom connector when a service is not listed. Meta also says it does not review those custom connectors. Review the connection and credential flow before granting access to a business account.
+Meta's [official connector instructions](https://www.meta.com/help/artificial-intelligence/1687253048996149/) explain custom connections. Use the [consumer Muse connection guide](/blog/meta-muse-ai-agent-phone-calls), then request `call4me_get_balance` without authorizing a call. Continue only after an authenticated response and discovery of the calling tools. Our Muse setup evidence establishes that balance check; it does not establish these supplier calls.
 
-If the missing information needs a conversation, give the caller the same specification and the exact unresolved questions. Distinguish permission to ask a question from permission to purchase, arrange a callback or disclose buyer information. A phone statement about “free shipping” should still identify the destination and order it applies to.
+Verify the relevant sales number on each supplier's own site. This article does not supply unverified sales numbers. The worksheet deliberately leaves those fields blank. A product SKU or a search snippet is not a phone number source. Show the selected recipient, source, questions, buyer identity and five minute limit before requesting approval of the particular calls.
 
-Our [consumer Muse connector test](/blog/meta-muse-ai-agent-phone-calls) established a balance check. It did not establish a completed supplier call. The [recorded private dining workflow](/blog/agent-web-research-phone-calls-sf-private-dining) shows what research plus calling actually produced in Codex and Claude Code, including unanswered questions.
+After approval, use the live schema rather than assuming a generic payload works:
+
+```text
+call4me_get_requirements(category: "general")
+Resolve missing authorized buyer facts
+call4me_place_call for an approved supplier, max_minutes: 5
+call4me_get_call until the call ends
+Collect transcript and available recording
+Repeat for the remaining specifically approved suppliers
+Compare phone answers against the published baseline
+```
+
+This is a planned sequence, not an executed Muse session. If a requirement or call cannot be completed, record that result. Do not replace a failed call with an imagined quote.
+
+| Call outcome | How it belongs in the comparison |
+| :--- | :--- |
+| Human supplies all required costs for the same order | Record the statement, identity or department, date and transcript; calculate a total only from complete charges |
+| Automated system repeats a published price | Label it automated and preserve the source; missing delivery charges stay open |
+| Supplier requires a written proposal or checkout | Record the process needed; do not present a firm delivered quote |
+| Voicemail, unavailable staff or incomplete answers | Keep the quote unresolved; do not leave a message or arrange a callback without permission |
+
+A statement about free shipping should identify the destination and order it applies to. If the caller posts a question for missing information, answer with approved facts or pause for the buyer; the agent should not invent an address to keep the conversation going.
+
+The [recorded private dining workflow](/blog/agent-web-research-phone-calls-sf-private-dining) shows real Codex and Claude Code calls that reached automated concierges and voicemail. It demonstrates why following the transcript matters: a call can end without producing the requested quote. It does not establish Muse execution.
+
 
 For a smaller introductory task, use [your first useful Muse task](/blog/meta-muse-first-task). For the separate developer client, see [Muse Code MCP phone calls](/blog/muse-code-mcp-phone-calls). If you use Grok Bot, our [reusable skills guide](/blog/grok-bot-reusable-skills), [templates](/blog/grok-bot-templates) and [template troubleshooting](/blog/grok-bot-template-troubleshooting) cover repeatable task structures. The [Grok Bot versus Muse comparison](/blog/grok-bot-vs-meta-muse) explains the client differences.
 

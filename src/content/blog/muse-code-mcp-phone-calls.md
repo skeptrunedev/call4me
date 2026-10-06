@@ -1,7 +1,7 @@
 ---
 title: "Connect Muse Code to phone calling tools with MCP"
 seoTitle: "Muse Code MCP phone calls: configuration and checks"
-subtitle: Configure the developer client, check the tools it actually loaded and keep an account read separate from a completed phone task.
+subtitle: Keep a business phone inquiry in your terminal task. Connect the caller, supply the exact question and inspect the returned outcome, transcript and available recording.
 description: "Connect Muse Code to Call4me using remote MCP. Includes configuration examples, an access check prompt, a bounded inquiry brief and troubleshooting steps."
 date: 2026-10-05
 tags: meta muse, muse code, mcp, ai phone assistant
@@ -9,11 +9,19 @@ authors: nick
 imageAlt: Muse Code connects to Call4me through MCP, checks account access and returns evidence from an authorized task
 ---
 
-**Muse Code can connect external tools through MCP.** To add phone calling, configure Call4me in the developer client's settings, authenticate the connection and inspect the actual tool result before assigning an inquiry.
+**Use Muse Code to get a business's answer by phone and bring the result back to your terminal task.** Call4me supplies the caller through MCP. Give Muse Code the brief, then ask it to follow the call and report what the business actually answered.
 
 This is the terminal client, not the consumer Muse app. Our [consumer Muse guide](/blog/meta-muse-ai-agent-phone-calls) describes a different custom connector workflow. Configuring one client does not configure the other.
 
 We installed **Muse Code 1.4.3 (1.4.3-R5018.1)** on Linux on October 5, 2026 and checked its native commands and configuration behavior. A local MCP fixture successfully initialized and listed its tool through the native client. Production discovery identified Call4me's OAuth requirement. Meta sign in was approved, but the client then required a payment method and signed out. We have not completed a model driven account read or phone call in Muse Code.
+
+## Start with the question the phone call must answer
+
+Suppose your terminal task is planning dinner. The restaurant's website says it accepts walk ins, but you still need to ask about your party, date and arrival time. Give Muse Code those facts and a specific inquiry before connecting tools. A useful result will identify whether a person answered that question, whether a recording supplied only general policy, or whether the question remains open.
+
+Our [recorded Grok restaurant call](/blog/grok-connectors-mcp-phone-calls#an-actual-grok-bot-call-october-4) established general walk in policy without confirming availability for the party. That is a concrete example of why the phone brief and evidence matter. It is a Grok result, not a completed Muse Code task.
+
+The setup below leads to a [downloadable phone inquiry brief](/static/blog/resources/muse-code-mcp-phone-calls/inquiry-brief.txt). Fill in the business, exact question, relevant facts and permitted call duration. After the connection check, approve the particular attempt and require its actual outcome before acting on the answer.
 
 ## Start with the right client and settings
 
@@ -107,9 +115,11 @@ personal details, request a callback or leave a message.
 Follow the returned call id using call4me_get_call until it ends or needs
 my input. Do not create a duplicate call when a status request is slow.
 
-Return the actual outcome, source of the answer, unresolved questions
-and available recording. A recording or voicemail may establish policy
-without answering our specific question. Never fill in the missing answer.
+Return the actual outcome and transcript. Use call4me_get_recordings to
+retrieve available recording evidence. Identify whether the answer came
+from a person or a recording, and keep unresolved questions visible.
+A menu may establish policy without answering our specific question.
+Never fill in the missing answer.
 ```
 
 Call4me's calling interface separates placing a call from following it. The first response can return while dialing is still underway. Retrieve that same call's result before deciding that the task is complete.

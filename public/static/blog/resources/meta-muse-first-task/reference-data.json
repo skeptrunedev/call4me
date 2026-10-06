@@ -1,5 +1,5 @@
 {
-  "kind": "independent reference research, not Muse output",
+  "kind": "independent phone preparation, not executed Muse output",
   "checked": "2026-10-05",
   "requested_day": "2026-10-06",
   "timezone": "America/Los_Angeles",
@@ -13,21 +13,24 @@
       "address": "100 Larkin Street",
       "tuesday_open": "09:00",
       "tuesday_close": "20:00",
-      "source": "https://sfpl.org/locations/main-library"
+      "source": "https://sfpl.org/locations/main-library",
+      "published_phone_e164": "+14155574400"
     },
     {
       "name": "Chinatown/Him Mark Lai",
       "address": "1135 Powell Street",
       "tuesday_open": "10:00",
       "tuesday_close": "20:00",
-      "source": "https://sfpl.org/locations/chinatown"
+      "source": "https://sfpl.org/locations/chinatown",
+      "published_phone_e164": "+14153552888"
     },
     {
       "name": "Mission Bay",
       "address": "960 4th Street",
       "tuesday_open": "10:00",
       "tuesday_close": "18:00",
-      "source": "https://sfpl.org/locations/mission-bay"
+      "source": "https://sfpl.org/locations/mission-bay",
+      "published_phone_e164": "+14153552838"
     }
   ],
   "basis": "regular published hours only",
@@ -46,5 +49,35 @@
   "wifi_faq": {
     "source": "https://sfpl.libanswers.com/faq/88545",
     "retrieval": "429 rate limit"
+  },
+  "call_plan": {
+    "branch": null,
+    "visit_date": null,
+    "visit_window": null,
+    "approved_caller_identity": null,
+    "max_minutes": 4,
+    "approval_required_before_dialing": true,
+    "default_phase": "source research and balance request only",
+    "questions": [
+      "Adult personal laptop use in general seating during supplied window",
+      "Outlet locations without guaranteed availability",
+      "Guest WiFi login and library card requirement",
+      "Current branch restrictions"
+    ],
+    "excluded_actions": [
+      "booking",
+      "purchase",
+      "voicemail",
+      "callback",
+      "sharing unapproved contact details"
+    ]
+  },
+  "phone_outcome": {
+    "executed": false,
+    "call_id": null,
+    "respondent": null,
+    "answers": null,
+    "transcript": null,
+    "recording": null
   }
 }

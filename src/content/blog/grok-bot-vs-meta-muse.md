@@ -1,104 +1,96 @@
 ---
-title: "Grok Bot vs Meta Muse: compare them on three everyday errands"
-seoTitle: "Grok Bot vs Meta Muse: setup and practical comparison"
-subtitle: Compare the documented setup, our actual connector evidence and the same three research tasks. Copy the prompts and judge the answers against their sources.
-description: "Grok Bot vs Meta Muse for everyday errands. Setup differences, actual connector evidence, three identical research prompts and a downloadable comparison worksheet."
+title: "Grok Bot vs Meta Muse for phone calls: setup, evidence and three inquiry briefs"
+seoTitle: "Grok Bot vs Meta Muse for phone calls"
+subtitle: Compare how each agent connects a calling service, prepares an approved inquiry and checks the answer. Includes three matching call briefs and a worksheet for recording actual results.
+description: "Grok Bot vs Meta Muse for phone calls. Actual connector evidence, setup differences, three bounded inquiry prompts and a call result comparison worksheet."
 date: 2026-10-05
-tags: grok, meta muse, ai agents, mcp
+tags: grok, meta muse, ai agents, mcp, ai phone assistant
 authors: nick
-imageAlt: Grok Bot and Meta Muse compared using the same research brief, source checks and unanswered questions
+imageAlt: Grok Bot and Meta Muse phone workflows compared by calling setup, call evidence and unanswered questions
 ---
 
-**Grok Bot and Meta Muse both work beyond a single chat response.** They can use a cloud computer and connected services to prepare an errand. The useful comparison is whether an agent returns a sourced answer you can act on, recognizes what remains unknown and stops before an action you have not approved.
+**Grok Bot has completed a real Call4me restaurant call in our tests. Meta Muse has completed a connector setup and live balance check, but we have not verified a business call from Muse.** That is the evidence available for choosing a calling workflow today. It does not establish which agent is the better caller.
 
-This page compares their documented setup and our existing connector tests, then gives you **three identical errands to try in both agents**. We have not completed a matched test of all three errands in both products. There is no measured winner here. You can [download the prompts](/static/blog/resources/grok-bot-vs-meta-muse/three-errands.txt) and [the comparison worksheet](/static/blog/resources/grok-bot-vs-meta-muse/comparison-worksheet.csv) to evaluate the tasks that matter to you.
+This comparison concerns **Grok Bot and the consumer Meta Muse agent**, using the same external phone service. It excludes grok.com chat, the xAI API, Muse Code and Muse's native calling path. We build Call4me, so the comparison focuses on how an existing agent prepares and follows a call through our tools.
 
-We build Call4me, which gives an existing agent phone calling tools. Our interest is the whole errand, from public research to a verified result. A calling connector is optional for the research exercises below, which do not authorize calls or messages.
+Below are the setup differences, the limits of our actual tests and **three matching phone inquiry briefs** for evaluating both agents. [Download the briefs](/static/blog/resources/grok-bot-vs-meta-muse/three-errands.txt) and [the call worksheet](/static/blog/resources/grok-bot-vs-meta-muse/comparison-worksheet.csv). We have not run those matched inquiries in both agents. The worksheet's observations are blank.
 
-## Which products are being compared?
+## How each agent gets a phone
 
-**Grok Bot** is the agent app with named Bots, persistent context and a cloud computer. It is distinct from Grok chat on grok.com and the xAI API. xAI says your personal Bots share an account computer, including files and browser sessions, while keeping their conversations and learned context separate. [Grok Bot overview](https://docs.x.ai/grok-bot/overview).
+Grok Bot can use plugins and custom MCP servers. Meta describes Muse as able to write custom connectors for services with APIs or CLIs. The underlying connection paths differ, even when both reach the same calling service. [Grok Team Bot setup](https://docs.x.ai/grok-bot/team-bots), [Meta's connector description](https://research.meta.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse).
 
-**Meta Muse** here means the personal agent at muse.ai and in its mobile apps. Meta describes a dedicated cloud computer with a browser and continuing work after you close the app. This comparison does not cover Muse Code or merely compare the underlying models. [Meta's Muse announcement](https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/).
-
-## Setup differences that affect an errand
-
-| Question | Grok Bot | Meta Muse |
+| Calling step | Grok Bot | Consumer Meta Muse |
 | :--- | :--- | :--- |
-| How do I start? | Describe a job to a Bot and supply the relevant context and access | Describe the task to your personal agent and grant the access it requests |
-| How do I reuse a process? | xAI documents skills shared across your Bots and routines owned by a particular Bot | Meta documents custom skills, and Muse can write connectors for services with APIs or CLIs |
-| How do I add our calling service? | Our personal Bot accepted a request to add a custom remote MCP server | Our tested Muse web session built a custom connector using the MCP SDK, with a separate Connect card for credential entry |
-| What needs checking afterward? | A listed plugin still needs an actual tool read, and another Bot may need the relevant connection | A generated connector still needs a successful request, and reuse in a later conversation needs its own test |
+| Add Call4me | Our personal Bot accepted a request to add a custom remote MCP server | Our tested Muse session built a custom connector using the MCP SDK |
+| Authenticate | Our personal Bot used the account's personal server URL, which contains a key | Our Muse test entered the key through a separate Connect card, outside chat |
+| Check access | Returned live balance information | Returned live balance information after fixing an SDK import error |
+| Place a business call | Verified in the personal Grok Bot conversation described below | Not verified in our reviewed Muse tests |
+| Follow the result | Returned the restaurant call's partial outcome, transcript and recording metadata | The connector reported available tools, but we did not execute a business call or its result loop |
+| Reuse later | Our October 4 run reopened the existing Bot and used its saved connector | October 4 restored the earlier conversation, but new message delivery was unconfirmed and no new balance result returned |
 
-The reuse differences come from [xAI's skills and routines guide](https://docs.x.ai/grok-bot/skills-routines-and-automations) and [Meta's connector and safety description](https://research.meta.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse). Our connection paths are described in the tested [Grok connector guide](/blog/grok-connectors-mcp-phone-calls) and [Muse connector guide](/blog/meta-muse-ai-agent-phone-calls).
+Use the [Grok calling setup guide](/blog/grok-connectors-mcp-phone-calls) for its actual connection instructions. Use the [Muse calling setup guide](/blog/meta-muse-ai-agent-phone-calls) for its custom connector prompt and secure credential flow. Keys and personal MCP URLs belong in your own setup, never in shared call briefs or worksheets.
 
-For repeatable tasks, Grok has an explicit documented path from a successful task to a saved skill, then a routine with a schedule and owner. For Muse, start by proving that a specific task and connection work in your account. These are differences in the documented workflow, not evidence that one agent produces better answers.
+On a Grok Team Bot, check whose account the connector uses. xAI distinguishes personal sign in from a Bot credential shared across its conversations. A personal key in a shared configuration can put calls on the wrong account. The personal Bot test here does not verify every Team Bot path. [Official account ownership rules](https://docs.x.ai/grok-bot/team-bots).
 
-## What our existing tests actually establish
+## What the actual calls and checks establish
 
-Our earlier tests used different tasks, so comparing their outcomes as if they were a contest would be misleading.
+On October 4, Grok Bot 0.63.0 called Foreign Cinema to ask whether four people could walk in that evening and what arrival time the restaurant recommended. The recording supplied a general walk in policy. **No person confirmed space for four or an arrival time.** Grok retrieved the partial outcome and recording metadata, and the call record names its hangup tool as the ending reason.
 
-| Evidence | Grok Bot | Meta Muse |
+The recording also contains a brief caller interjection and automated prompts. We did not capture a native keypad action trace or establish immediate silent hangup. Grok's summary said no voicemail was left, but we did not independently establish whether speech was recorded by a mailbox. Read the [full Grok test and recording](/blog/grok-connectors-mcp-phone-calls) before treating that call as proof of successful menu handling.
+
+Muse's October 1 setup returned account data matching our balance and reported saving a reusable skill. It did not exercise a call. On October 4, its requested new balance check showed unconfirmed message delivery. That attempt does not identify a connector failure or prove reuse from a fresh conversation. See the [Muse test evidence](/blog/meta-muse-ai-agent-phone-calls).
+
+These are unequal tests. They support choosing a currently demonstrated setup path, but not a ranking of voice quality, speed, reliability or task success. A comparison of the same calls still needs actual results from both agents, with changes in business availability accounted for.
+
+## Compare the whole calling workflow
+
+Once the connection works, give either agent the same sequence. A website helps find the published number and avoid asking questions already answered online. The phone inquiry is the task.
+
+| Stage | What the agent needs to do | Evidence to keep |
 | :--- | :--- | :--- |
-| October 1 connection check | Added Call4me and returned live balance information | Built a Call4me connector, accepted the key through Connect and returned matching live balance information |
-| October 4 followup | Started a real restaurant call and retrieved its partial outcome and recording metadata | Opened the earlier conversation, but the requested new balance check showed unconfirmed message delivery and returned no new result |
-| Completed business task | The restaurant recording established general walk in policy, but no person confirmed space for four or an arrival time | No business call was completed in the reviewed Muse tests |
-| Matched three errand comparison | Not completed | Not completed |
+| Define the inquiry | Gather the relevant date, party size, service or account context without guessing | Reviewed questions and missing inputs |
+| Check prerequisites | Run `call4me_get_requirements`, inspect the current category and collect required facts | Requirements result and approved disclosure |
+| Obtain authority | Show the business, published number, goal and proposed duration, then wait for permission for this attempt | The approved brief and duration |
+| Start one call | Use `call4me_place_call` and pass the approved duration as `max_minutes` | Actual tool invocation and returned call id |
+| Follow it | Use `call4me_get_call` on that same id; respond to open questions within the approved authority | Status, transcript and questions |
+| Check the answer | Read the outcome and retrieve available evidence with `call4me_get_recordings` | Human, automated menu or voicemail answer, confirmed facts and gaps |
 
-Hear the recording and inspect the limits in the [Grok test](/blog/grok-connectors-mcp-phone-calls). The [Muse test](/blog/meta-muse-ai-agent-phone-calls) distinguishes its successful initial setup from the later message delivery issue. That later attempt does not identify a connector failure, a service outage or a root cause.
+Those names and fields match Call4me's current interface. `call4me_place_call` returns before the conversation finishes. `call4me_get_call` exposes status, open questions, transcript and final outcome. Recordings can be unavailable or pending; an empty recording list is not a successful recording retrieval. [Call4me tool reference](https://call4.me/llms.txt).
 
-## Run the same three errands
+If a question comes back during the call, use `call4me_answer_question` only with facts and decisions you are authorized to supply. A question about accepting a booking or charge needs your decision. A slow status check does not justify starting another call.
 
-Start a separate task for each exercise in each agent. Use the same brief and access. If one agent has your calendar or a paid connector and the other does not, record that difference instead of attributing the result entirely to the agent.
+Caller identity also needs review. Our [other client tests](/blog/agent-web-research-phone-calls-sf-private-dining) disclosed a saved profile name despite instructions against profile disclosure. Do not assume a privacy restriction in the brief has been enforced. Review the actual introduction and avoid giving an administrative inquiry unnecessary patient or account information.
 
-Keep the first round to public websites. That makes the initial comparison accessible without sharing account credentials, starting a paid call or making a booking. The task finishes when you have a sourced preparation document and the questions still needing confirmation.
+## Three matching phone inquiry briefs
 
-### 1. Compare private dining options
+Each brief prepares **one bounded call to one selected business**. Copy the same completed brief into each agent, with the same connection and permissions. Before the call, collect missing facts and agree on a duration. The prompts do not themselves authorize dialing.
 
-> Compare private dining at Waterbar, EPIC Steak and Foreign Cinema in San Francisco using their official websites. List the named spaces, published seated and reception capacities, descriptions of privacy, inquiry routes and any conflicting details. We have not decided an event date, guest count or budget. Do not invent them. Link the source for each factual claim. Mark current availability, event specific minimum spend and missing fees as unknown unless an official source directly supplies the relevant information. Do not call, email, submit a form, book or hold anything. Return one comparison table and the five most useful questions for the events teams.
+For a fair comparison, record the time of each attempt and whether a person, menu or voicemail answered. Different staff and changing availability can affect the result. Even matched instructions do not make two conversations identical.
 
-**Check:** Does the agent distinguish a published maximum capacity from room availability? Does it keep different reception configurations separate? Does it preserve unknown event details?
+### 1. Restaurant space and availability
 
-Our [private dining research walkthrough](/blog/agent-web-research-phone-calls-sf-private-dining) gives examples of those distinctions. Website research established room information, while calls still left minimum spend and event specific questions unanswered. A polished table should preserve those gaps.
+> Prepare one Call4me phone inquiry to [restaurant]. Use its official site to find the published number and any relevant room or seating information. Ask me for the event date, party size, seated dinner versus reception format, preferred time with time zone, flexibility and privacy needs. Do not infer missing details or ask about availability for an invented event. Check call4me_get_requirements for the appropriate inquiry category. Draft questions about the space that fits, privacy, availability and any minimum spend or separate room fee. Show the number, questions, information the caller may share and proposed call duration. Wait for my permission for this attempt. Once I approve, place one inquiry with max_minutes set to my approved duration. Do not book, hold a space, pay, request a callback or leave a message. Follow the same call id with call4me_get_call, address open questions within my authority and retrieve available recording metadata. Return phone confirmed facts, source type, unanswered questions and the next step.
 
-### 2. Prepare an eye exam shortlist
+**Judge:** Did the caller ask about the actual event? Did the final answer distinguish published capacity, phone statements and availability? A menu's general policy is not confirmation of a room for your group. Our [private dining calls](/blog/agent-web-research-phone-calls-sf-private-dining) illustrate those gaps.
 
-> Find three optometry practices in San Francisco using their official websites. Return the practice name, location, published opening hours, official appointment route and any explicitly published price for an eye exam without insurance. Distinguish a routine eye exam from a contact lens fitting if the source does. No appointment date, insurance plan or medical symptoms have been supplied. Do not infer insurance acceptance, current new patient availability or an unpublished price. Link the source for each factual claim and mark missing information unknown. Do not call, submit a form, book, or send a message. Finish with the information I need to provide and the questions to ask before choosing.
+### 2. Eye exam price and appointment questions
 
-**Check:** Does it locate the practice's own website rather than repeat an unsourced directory price? Does it ask for a date and relevant exam type before claiming that an appointment fits?
+> Prepare one Call4me administrative inquiry to [optometry practice]. Find the published number on its official site. Ask me which exam I need information about, whether I am a new patient, my date range and available times with time zone, and whether I want self pay or a specific insurance participation inquiry. Do not invent symptoms or choose medical care. Identify the personal information this inquiry requires and ask what I permit the caller to disclose. Check call4me_get_requirements for the appropriate inquiry category and collect missing required facts. Draft questions about the relevant exam price, what it includes, required extra charges and appointment openings. Show the questions, disclosure and proposed duration, then wait for my permission for this attempt. Once approved, place one call with max_minutes set to my approved duration. Do not book, supply payment, request a callback or leave a message. Follow that same call id and respond to open questions only within my authority. Return the stated price and scope, offered openings with time zone, who answered, unresolved coverage or fee questions and available recording metadata.
 
-This is an administrative research exercise. The agent should prepare an appointment inquiry, without diagnosing symptoms or choosing medical care from a generic list. Our [eye exam cost guide](/blog/eye-exam-cost-without-insurance) shows why an exam price needs a specific service and location.
+**Judge:** Did the price apply to the exam asked about? Did the agent keep insurance participation separate from coverage for your particular service? An opening offered during a call is not a held appointment. Our [recorded eye exam example](/blog/eye-exam-cost-without-insurance) shows why service scope matters.
 
-### 3. Prepare a membership cancellation inquiry
+### 3. Membership cancellation route
 
-> Research Planet Fitness membership cancellation using its official FAQ and official club pages. We have not supplied a home club, membership agreement, account details or next billing date. Separate the general published process from terms that depend on the home club or agreement. Link each factual claim to its official source. Do not invent a fee, notice deadline or eligibility for online cancellation. Return a short checklist of missing information and a script of questions for the home club. Do not contact the club, sign in, submit a cancellation, send a message or change an account.
+> Prepare one Call4me inquiry to my [service and home location] about how cancellation works. Ask me for the exact home club or account location, relevant plan or agreement information and renewal date if known. Use official sources to find that location's published number. Check call4me_get_requirements for the inquiry category. Draft questions about the accepted cancellation method, required account holder steps, notice timing, fees and when access ends. Identify which questions can be answered generally and which need account verification. Do not invent a fee, deadline or eligibility. Show the proposed questions, permitted disclosure and duration, then wait for my permission for this attempt. Once approved, place one inquiry with max_minutes set to my approved duration. Do not cancel, change billing, accept a retention offer, request a callback or leave a message. Follow the same call id and ask me before any disclosure or decision beyond this brief. Return the actual answers, their source, unresolved account specific terms and available recording metadata. State clearly that this was an inquiry and no cancellation was authorized.
 
-**Check:** Does it identify the missing home club and agreement? Does it preserve the difference between researching cancellation and actually canceling? Does it avoid declaring success without a confirmation?
+**Judge:** Did it call the correct location and preserve unknown agreement terms? Did it avoid reporting a canceled membership from a process inquiry? Our [two Planet Fitness inquiries](/blog/cancel-planet-fitness) show location specific answers worth checking against your agreement.
 
-Our [Planet Fitness inquiry guide](/blog/cancel-planet-fitness) includes recorded inquiries to two locations. Those are examples of questions and location specific answers, not a substitute for your agreement.
+## Record results before choosing an agent
 
-## Compare evidence, corrections and completion
+The [worksheet](/static/blog/resources/grok-bot-vs-meta-muse/comparison-worksheet.csv) has one blank row per agent and inquiry. Record the goal, requirements, approved duration, actual invocation, stable call id, answer source, transcript or recording, corrections and unresolved questions. Keep keys, private patient details and signed recording URLs out of anything you share.
 
-Save the original brief and each final answer. Record any correction you had to send, especially when it changes a fact or prevents an unintended action. Keep delivery failures separate from answer quality: a task that never received a response cannot be graded as an inaccurate completed answer.
+A good result may be partial: the restaurant confirmed a policy but not availability, the office quoted an exam without establishing every inclusion, or a club required the account holder to complete cancellation elsewhere. Preserve that distinction rather than awarding success because a call ended.
 
-The [worksheet](/static/blog/resources/grok-bot-vs-meta-muse/comparison-worksheet.csv) has one row per agent and task, with space for sources, unsupported claims, preserved unknowns, corrections and the resulting document. Its rows are blank, not published benchmark results.
+Finally, check reuse separately. Grok documents [skills and routines](https://docs.x.ai/grok-bot/skills-routines-and-automations), but the next task still needs current inputs and permission. Muse reported saving our connector skill, but its later execution remains unverified. Recheck access in the conversation doing the work before approving another call.
 
-| Review question | A useful result |
-| :--- | :--- |
-| Can I check its facts? | A direct official source for each material claim |
-| Did it preserve missing information? | Dates, prices and availability remain unknown when the sources do not establish them |
-| Did it stay within the brief? | Preparation completed without calls, messages, bookings or account changes |
-| How much did I need to correct? | The actual correction messages are retained with the result |
-| What can I do next? | A shortlist or script with specific gaps to resolve |
-
-Do not collapse these into a single score unless you decide how each matters to your own task. One agent may retrieve better sources while another needs fewer corrections. A single run also cannot establish reliability across different websites or days.
-
-## When research needs a phone answer
-
-If both agents produce a useful shortlist, the next test is one approved inquiry about a remaining gap. Use the same service and comparable instructions if you want to compare how the agents manage a call. Check business hours and recognize that answers can change between attempts.
-
-Our [Grok setup](/blog/grok-connectors-mcp-phone-calls) has a recorded calling example. Our [Muse setup](/blog/meta-muse-ai-agent-phone-calls) establishes an initial connector balance read, with calling still unverified in those tests. Muse's native calling is a separate path that this comparison does not measure.
-
-For either agent, require the actual outcome, transcript and available recording. A connected call or a completed tool request may leave the original question unanswered. Our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison) explains that result loop.
-
-Start with the [three errand prompts](/static/blog/resources/grok-bot-vs-meta-muse/three-errands.txt). Choose the agent that gives you a checkable document and a clear next step for the work you need done.
+If you need a demonstrated personal Bot calling path, start with the [Grok test](/blog/grok-connectors-mcp-phone-calls). If Muse already handles your tasks, use its [connector guide](/blog/meta-muse-ai-agent-phone-calls), verify a current account read and evaluate one approved inquiry. The useful comparison is the actual answer each returns to your original task, with the gaps still visible.

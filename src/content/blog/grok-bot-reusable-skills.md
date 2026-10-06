@@ -1,15 +1,15 @@
 ---
-title: "How to turn a successful Grok Bot task into a reusable skill"
-seoTitle: "Grok Bot skills: save and reuse a useful workflow"
-subtitle: Keep the method, replace the task specific facts and check that a new Bot can use the right tools. Includes a reusable instruction file and a small validation matrix.
-description: "Create a reusable Grok Bot skill from a completed task. Includes a downloadable instruction file, save prompt, approval boundaries and validation cases."
+title: "Grok Bot skills: save a phone calling workflow you can reuse"
+seoTitle: "Grok Bot skills: save a reusable phone calling workflow"
+subtitle: Turn a restaurant inquiry into a reusable Call4Me skill that collects a fresh brief, caps the call and checks the transcript before answering.
+description: "Save a reusable Grok Bot phone calling skill with Call4Me. Includes a downloadable method, call duration cap, evidence checks and validation cases."
 date: 2026-10-05
 tags: grok, skills, ai agents, ai phone assistant
 authors: nick
-imageAlt: A Grok task becomes a method, then a saved skill and a new checked task
+imageAlt: A Grok phone call becomes a saved calling method for a new restaurant inquiry
 ---
 
-**A Grok Bot skill should remember how to do the job, while collecting the facts for each new request.** Saving a successful conversation wholesale can leave behind the old business, date or permission to act. Save the decision rules and verification steps instead.
+**Save your Grok Bot phone calling method as a skill so the next call starts with a good brief and ends with a checked answer.** The skill should collect fresh inputs, verify Call4Me access, set a duration cap and preserve unanswered questions. It should not inherit an old restaurant or permission to call.
 
 This guide uses a restaurant availability inquiry as the example. [Download the instruction file](/static/blog/resources/grok-bot-reusable-skills/restaurant-inquiry-method.md) and [the prompt to save it](/static/blog/resources/grok-bot-reusable-skills/save-skill.txt). Attach the file to your Bot and ask it to create a skill from the instructions. The file is readable Markdown, not an automatic Grok installer.
 
@@ -29,7 +29,7 @@ Our existing restaurant call reached a recorded menu. It confirmed a general wal
 
 That is useful material for a skill because it exposes a rule a simple happy path might miss: **a completed call can leave the task unresolved.** The skill should distinguish recorded policy from a live availability answer and keep unanswered questions in its final output.
 
-Before saving a task's method, inspect its evidence. For a call, that means the returned call record, outcome and transcript, and the recording when the summary is ambiguous. For a browser task, it means the page or document that supports the claim. Correct unsupported conclusions before you teach the Bot to repeat them.
+Before saving the calling method, inspect the returned call record, outcome and transcript, and the recording when the summary is ambiguous. Correct unsupported conclusions before you teach the Bot to repeat them. Keep the instruction to follow the same call id, so a partial result does not silently become a second call.
 
 ## Separate the reusable method from private facts
 
@@ -40,7 +40,7 @@ Write the method as if the next request came from a person you have never met.
 | Use the restaurant's own contact page | Restaurant and published phone number |
 | Distinguish recorded policy from live answers | Date, party size and preferred time |
 | Collect missing information before calling | Time zone, flexibility and relevant needs |
-| Ask for permission before contact | Permission for this particular contact |
+| Ask for permission before a call | Permission and duration cap for this particular call |
 | Return evidence and unresolved questions | Any account or reservation details |
 
 Keep keys, signed recording links and personal contact details out of a shareable method. A skill needs to describe a connector requirement; it does not need to contain a credential.
@@ -59,27 +59,30 @@ not permission to reserve a table.
 
 Inputs
 Restaurant, date, party size, preferred time, time zone, flexibility,
-relevant seating needs and permission for any external contact.
+relevant seating needs, approved call duration and permission for this call.
 Never infer a dietary or accessibility need.
 
 Access
 Public restaurant website and booking page. A working Call4Me connector
-is required only if an authorized phone inquiry is needed.
+is required for the phone inquiry. Check access with call4me_get_balance
+and confirm that the account belongs to the intended user.
 
 Method
 1. Gather missing inputs in one message.
 2. Find the restaurant's own contact and booking pages. Record sources.
 3. Check public availability. Keep general policy separate from slots.
-4. If a call is needed, show the business, published number, questions
-   and proposed call duration. Wait for explicit permission to call.
-5. Check call4me_get_requirements and collect any missing required facts.
+4. Check call4me_get_requirements and collect any missing required facts.
+5. Produce a call brief with the business, published number, questions,
+   facts it may share and proposed duration. Wait for permission to call.
 6. Place only the authorized call, setting call4me_place_call.max_minutes
    to the approved duration. Do not reserve, pay, request a callback
    or leave a message unless separately authorized.
-7. Follow the returned call id with call4me_get_call. If the call is still
-   active, report that state rather than pretending to have a final answer.
-8. Review the outcome and transcript. Retrieve recording metadata with
-   call4me_get_recordings when available and needed to check a claim.
+7. Make only one call. Follow that returned id with call4me_get_call.
+   If the call is still active, report that state rather than pretending
+   to have a final answer.
+8. Review the outcome and transcript. Retrieve recording metadata for
+   the same id with call4me_get_recordings. If unavailable, say so.
+   Inspect the recording when a summary's claim is ambiguous.
 9. Report confirmed facts, source type, unresolved questions and next step.
 
 Failure handling
@@ -96,6 +99,7 @@ Confirmed facts with source and date checked.
 Whether a person answered or only a recording supplied information.
 Unanswered questions.
 Actual call id if one exists, and final or currently observed call state.
+Transcript and recording references when available, without exposed keys.
 Next action and any approval needed.
 ```
 
@@ -115,7 +119,7 @@ The documentation says the desktop composer uses `/` to reference saved skills. 
 
 Open another Bot under your account and invoke the saved skill. Give it a different restaurant and ask for preparation only:
 
-> Use Restaurant availability inquiry for [new restaurant], [date], [party size] and [time with time zone]. Research public sources and show the proposed questions. Do not place any call, book, leave a message or contact anyone.
+> Use Restaurant availability inquiry for [new restaurant], [date], [party size] and [time with time zone]. Check Call4Me access and required inputs, then show the call brief with a proposed [minutes] talk time cap. Do not place any call, book, leave a message or contact anyone.
 
 Check that the output refers to the new request. If the Bot cannot access Call4Me, that is a connector setup issue; the method should explain the missing prerequisite rather than claim it made a call.
 
@@ -144,4 +148,4 @@ If you later create a routine, inspect its owner, schedule, inputs and approval 
 
 Update the method when a connector, website or output format changes. Repeat the relevant validation cases after each edit. Preserve the evidence and approval rules even when the successful path becomes simpler.
 
-You can use the same approach for [service quotes, cancellation research and refund follow ups](/blog/grok-bot-templates): finish a concrete task, correct the result, extract the method and check it with new inputs before automating it.
+You can use the same approach for [service quote, cancellation inquiry and refund follow up calls](/blog/grok-bot-templates): review a concrete call, correct the result, extract the method and check it with new inputs before automating it.

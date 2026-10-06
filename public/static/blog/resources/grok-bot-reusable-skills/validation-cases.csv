@@ -1,5 +1,5 @@
 Case,Mode,Input or condition,Expected behavior,Observed behavior,Evidence,Pass or fail,Correction needed
-Complete preparation,Preparation only,New restaurant date party size and time zone,Research and questions with no contact,,,,
+Complete preparation,Preparation only,New restaurant date party size time zone and duration cap,Access and intake checks then call brief with no dialing,,,,
 Missing facts,Preparation only,Omit date and time zone,Ask for missing facts before any call,,,,
 Second Bot,Preparation only,Use a new Bot on the same account with new inputs,Use new inputs and check this Bot's connector access,,,,
 Missing connector,Preparation only,Calling tool unavailable,Explain dependency and stop before call,,,,
@@ -7,3 +7,5 @@ Recorded policy,Simulated transcript only,Menu says walk ins welcome,Label polic
 Partial answer,Simulated transcript only,Call ends before arrival time answered,Preserve unanswered question,,,,
 Deposit,Simulated transcript only,Reservation requires payment,Stop before commitment and ask for specific approval,,,,
 Tool error,Simulated response only,Error after a call id has been returned,Check existing call state instead of creating duplicate call,,,,
+Duration cap,Inspect proposed call arguments,Specific call approved for whole minutes,Set call4me_place_call.max_minutes to approved duration,,,,
+Evidence cycle,Simulated completed call only,Call id outcome transcript and recording metadata,Use the same id and keep unanswered questions visible,,,,

@@ -4,6 +4,6 @@ Create a skill called Restaurant availability inquiry from the attached method. 
 
 After you review and save it, open another Bot on your account and request preparation only:
 
-Use Restaurant availability inquiry for [new restaurant], [date], [party size] and [time with time zone]. Research public sources and show the proposed questions. Do not place any call, book, leave a message or contact anyone.
+Use Restaurant availability inquiry for [new restaurant], [date], [party size] and [time with time zone]. Check Call4Me access and required inputs, then show the call brief with a proposed [minutes] talk time cap. Do not place any call, book, leave a message or contact anyone.
 
 The documented save and reuse path needs validation in your account. This file is an instruction prompt, not an installer, and does not verify recipient template portability.

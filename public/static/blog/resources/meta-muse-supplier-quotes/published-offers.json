@@ -31,7 +31,14 @@
       "other_fees_usd": null,
       "delivery_date": null,
       "delivered_total_usd": null,
-      "merchandise_per_box_usd": 1.4676
+      "merchandise_per_box_usd": 1.4676,
+      "published_sales_phone": null,
+      "phone_number_source": null,
+      "phone_call_executed": false,
+      "phone_respondent": null,
+      "phone_quote": null,
+      "transcript": null,
+      "recording": null
     },
     {
       "supplier": "Fisher Scientific",
@@ -49,7 +56,14 @@
       "other_fees_usd": null,
       "delivery_date": null,
       "delivered_total_usd": null,
-      "merchandise_per_box_usd": 1.69
+      "merchandise_per_box_usd": 1.69,
+      "published_sales_phone": null,
+      "phone_number_source": null,
+      "phone_call_executed": false,
+      "phone_respondent": null,
+      "phone_quote": null,
+      "transcript": null,
+      "recording": null
     },
     {
       "supplier": "PackagingSupplies.com",
@@ -66,7 +80,43 @@
       "other_fees_usd": null,
       "delivery_date": null,
       "delivered_total_usd": null,
-      "merchandise_per_box_usd": 1.276
+      "merchandise_per_box_usd": 1.276,
+      "published_sales_phone": null,
+      "phone_number_source": null,
+      "phone_call_executed": false,
+      "phone_respondent": null,
+      "phone_quote": null,
+      "transcript": null,
+      "recording": null
     }
-  ]
+  ],
+  "call_plan": {
+    "default_phase": "source research and balance request only",
+    "max_minutes_per_call": 5,
+    "specific_recipient_approval_required": true,
+    "destination": null,
+    "deadline": null,
+    "approved_caller_identity": null,
+    "required_question_fields": [
+      "matching SKU",
+      "inside dimensions",
+      "strength",
+      "color",
+      "quantity",
+      "merchandise",
+      "shipping",
+      "tax",
+      "required surcharges",
+      "arrival estimate",
+      "quote validity"
+    ],
+    "excluded_actions": [
+      "order",
+      "terms acceptance",
+      "subscription",
+      "voicemail",
+      "callback",
+      "unapproved identity disclosure"
+    ]
+  }
 }

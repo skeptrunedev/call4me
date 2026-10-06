@@ -140,7 +140,7 @@ A personal Call4me MCP URL contains a credential. Pasting it into chat exposes t
 
 That follows Meta's documented credential entry path. We did not audit the custom connector's storage, generated code or logs, and a balance check should not be presented as that audit.
 
-For a first public research task, use our [Muse library comparison tutorial](/blog/meta-muse-first-task). For business research, try the [supplier comparison brief](/blog/meta-muse-supplier-quotes). The developer client has a separate [Muse Code MCP setup guide](/blog/muse-code-mcp-phone-calls), including a configuration mismatch found in our native client tests. Our [Grok Bot versus Meta Muse comparison](/blog/grok-bot-vs-meta-muse) explains the consumer workflow differences.
+For a first phone task, use our [Muse library calling tutorial](/blog/meta-muse-first-task). For supplier calls, try the [supplier inquiry brief](/blog/meta-muse-supplier-quotes). The developer client has a separate [Muse Code MCP setup guide](/blog/muse-code-mcp-phone-calls), including a configuration mismatch found in our native client tests. Our [Grok Bot versus Meta Muse comparison](/blog/grok-bot-vs-meta-muse) explains the consumer workflow differences.
 
 ## Let your agent make the call
 

@@ -1,72 +1,79 @@
 ---
-title: "How to use Meta Muse: a first task with a useful result"
-seoTitle: "How to use Meta Muse: your first useful task"
-subtitle: Give Muse a small research job with a clear finish line. This library comparison includes the exact prompt, a sourced reference answer and a checklist for judging the result.
-description: A practical first Meta Muse task with a complete prompt, official sources, downloadable reference report and clear checks for accuracy before adding phone calls.
+title: "How to use Meta Muse for your first informational phone call"
+seoTitle: "How to use Meta Muse for a first phone call"
+subtitle: Ask one library about laptop seating, outlets and guest WiFi. Includes published branch numbers, a bounded call brief and a checklist for the returned answers.
+description: Give Meta Muse a bounded first phone task. Verify a library number, check Call4me access, approve one call and inspect the answers and transcript.
 date: 2026-10-05
-tags: meta muse, ai agents, research, muse use cases
+tags: meta muse, ai agents, phone calls, muse use cases
 authors: nick
-imageAlt: A Meta Muse first task moves from a clear request through official sources to a usable comparison
+imageAlt: A first Muse phone task moves from a verified branch number through one approved call to sourced answers
 ---
 
-**Give Meta Muse one decision to help with, the facts it should use, and the result you want back.** For a first task, compare something you can verify without connecting your inbox or authorizing a purchase. A table with sources and open questions is a useful finish line.
+**Use Meta Muse for one small informational phone call: ask a library whether its general seating fits your laptop session.** Published hours establish when it opens. A conversation can clarify where adults can work, where to find outlets and how guests access WiFi. The result should identify who answered and what they could actually confirm.
 
-Our example is concrete: compare three San Francisco libraries for an adult working on a personal laptop from 2 pm to 5 pm on Tuesday, October 6, 2026. We researched the official pages on October 5 and provide a reference answer below. This is an independently researched tutorial, not a completed Muse session or a record of a library visit.
+This walkthrough prepares that task using official San Francisco Public Library pages checked October 5, 2026. We have not executed this library call in Muse. Our [consumer Muse connection test](/blog/meta-muse-ai-agent-phone-calls) established an authenticated balance check, not a completed business call or reliable reuse from every later conversation.
 
-Meta [describes Muse](https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/) as a personal agent with a dedicated cloud computer and browser. Public research is a sensible first use case because the sources are visible and the decision has a narrow scope. The consumer Muse app and Muse Code have different integration paths; this walkthrough concerns the consumer agent.
+Use the [one call brief](/static/blog/resources/meta-muse-first-task/call-brief.md) to choose a branch and record its answers. It contains the exact questions, approval boundary and empty outcome fields.
 
-## Start with this exact request
+## Choose the branch and the question before dialing
 
-Open Muse and send the following. The prompt is also available as a [complete text download](/static/blog/resources/meta-muse-first-task/first-task-prompt.txt).
+Supply your branch, visit date, local time window and the facts that matter. Our example window is Tuesday, October 6, from 2 pm to 5 pm Pacific. For a different visit, change the date and check that day's current schedule. Do not ask the caller to invent your location, guarantee a seat or reserve a room.
 
-> Compare Main Library, Chinatown/Him Mark Lai and Mission Bay in San Francisco for one adult working on a personal laptop Tuesday October 6, 2026, from 2 pm to 5 pm Pacific. Use current official SFPL pages for address, Tuesday hours, WiFi and any study room rules. Return a compact sourced table, unresolved questions, and a conditional recommendation based on hours, without inventing my starting location. Do not sign in, book, call, contact anyone, submit a form or spend money. Start with https://sfpl.org/locations/main-library, https://sfpl.org/locations/chinatown, https://sfpl.org/locations/mission-bay and https://sfpl.org/services/meeting-rooms/study-rooms. If a page cannot load, label it unavailable instead of assuming.
+| Branch and official number source | Published phone | Regular Tuesday hours |
+| :--- | :--- | :--- |
+| [Main Library](https://sfpl.org/locations/main-library) | (415) 557 4400 | 9 am to 8 pm |
+| [Chinatown/Him Mark Lai](https://sfpl.org/locations/chinatown) | (415) 355 2888 | 10 am to 8 pm |
+| [Mission Bay](https://sfpl.org/locations/mission-bay) | (415) 355 2838 | 10 am to 6 pm |
 
-This request supplies the day, time, activity and comparison set. It leaves travel distance unknown because no starting location was supplied. It also defines what completion means: return the evidence and a conditional choice.
+These are the numbers on the respective official pages. Recheck the selected branch's own page before the call. Regular opening hours do not confirm staffing, special closures or seating availability for a particular visit.
 
-## The reference answer to compare against
+SFPL's [study room policy](https://sfpl.org/services/meeting-rooms/study-rooms) already answers one question: rooms cannot be reserved, require signing in in person when available, and are not intended for use lasting multiple hours. Main and Mission Bay appear on its room list. A three hour session should therefore ask about general seating, without requesting an exclusive room.
 
-These are regular published Tuesday hours, checked October 5. They establish that the requested window fits the schedule. They do not confirm a seat, a quiet room or an exceptional closure on the chosen date.
+The Main page links to an [official WiFi FAQ](https://sfpl.libanswers.com/faq/88545) that returned a rate limit response during our research. Guest access steps and outlet locations remained unanswered. Those are specific questions for the call, rather than claims to fill in from memory.
 
-| Location | Address | Published Tuesday hours | Does 2 pm to 5 pm fit? |
-| :--- | :--- | :--- | :--- |
-| [Main Library](https://sfpl.org/locations/main-library) | 100 Larkin Street | 9 am to 8 pm | Yes, based on regular hours |
-| [Chinatown/Him Mark Lai](https://sfpl.org/locations/chinatown) | 1135 Powell Street | 10 am to 8 pm | Yes, based on regular hours |
-| [Mission Bay](https://sfpl.org/locations/mission-bay) | 960 4th Street | 10 am to 6 pm | Yes, based on regular hours |
+## Check Muse's phone connection with a harmless read
 
-All three cover the requested afternoon. Main and Chinatown have two more hours after Mission Bay closes. If you might continue past 6 pm, that is a reason to favor either of them. If you will finish at 5 pm, hours alone do not select a winner. Your starting location and the conditions you need would decide the next step.
+Meta [documents](https://www.meta.com/help/artificial-intelligence/1687253048996149/) supported connectors and asking Muse to create custom connections. Use the [consumer Muse setup guide](/blog/meta-muse-ai-agent-phone-calls) if Call4me is not connected. Enter credentials through its connection flow, then ask for `call4me_get_balance` without placing a call.
 
-### A study room is a separate question
+Continue only when that request returns an authenticated result and Muse can discover the current calling tools. A connector card or a saved skill claim is insufficient. If the message itself is not delivered, solve that separately before asking for a call. The consumer Muse integration described here differs from [Muse Code's native MCP path](/blog/muse-code-mcp-phone-calls).
 
-SFPL's [study room policy](https://sfpl.org/services/meeting-rooms/study-rooms) says rooms are available in person when free, with no reservations accepted. It also says they are not intended for use lasting multiple hours. The page lists Main and Mission Bay among locations with rooms. Chinatown does not appear in that list; this alone does not prove it has no other seating options.
+## Send the task, then approve one specific call
 
-A three hour laptop session therefore should not assume exclusive use of a study room. Ask for general seating guidance or plan around open seating. Do not ask Muse to reserve a room through a form when the published policy rules out reservations.
+This [complete prompt](/static/blog/resources/meta-muse-first-task/first-task-prompt.txt) includes preparation, access checks and the approval boundary. Replace the bracketed inputs before using it:
 
-### WiFi needs an honest gap
+> I want one informational library call through Call4me. My chosen branch is [branch], my visit date is [date], and my quiet laptop work window is [local start and end time with timezone]. Read that branch's official SFPL page to verify its number and hours, and read the study room policy. Check Call4me access with a balance request, without dialing. Prepare questions about adult general seating for a personal laptop, outlet locations and guest WiFi login. Do not ask for a guaranteed seat, a room reservation or permission to take a business call inside the library. Show me the selected branch, published number and source, exact questions, caller identity from my profile and a four minute call limit. Ask for approval of that single call and wait. After I approve, check the current general category requirements, use the live tool schema and call once with call4me_place_call.max_minutes set to 4. Do not reserve, buy, leave voicemail, arrange a callback or share contact details beyond the identity I approved. Follow the same returned call ID with call4me_get_call until the call ends, collect its transcript and retrieve available evidence with call4me_get_recordings, and return who answered, each answer, unresolved questions and the result links. If access or call delivery fails, report that failure without claiming an answer.
 
-The [Main Library page](https://sfpl.org/locations/main-library) links to WiFi information. During our research, that [official FAQ](https://sfpl.libanswers.com/faq/88545) returned a rate limit response. SFPL's [membership page](https://sfpl.org/free) mentions WiFi, but that does not establish the guest login procedure, a guaranteed speed or an available outlet at every seat.
+The caller identity matters because an account may have a saved calling profile. Inspect it before approval. Our [recorded research calls](/blog/agent-web-research-phone-calls-sf-private-dining) showed callers introducing the profile owner's name even when a brief sought to avoid sharing it. A prompt alone should not be treated as a verified privacy control.
 
-Those details remain unknown in the reference report. A sentence like “all locations have reliable video call WiFi and plentiful outlets” would go beyond our sources. The requested activity is quiet laptop work; permission to take a business call inside the library is a different question.
+Download the [prepared call brief](/static/blog/resources/meta-muse-first-task/call-brief.md) to keep the questions and scope next to your result. After you approve the branch, identity, questions and limit, the intended sequence is:
 
-## Download the whole task, including its finish line
+```text
+call4me_get_balance, with no call authorized
+Read the selected branch's official number and hours
+Show the call plan and wait for approval
+call4me_get_requirements(category: "general")
+call4me_place_call using the current schema and max_minutes: 4
+call4me_get_call until the call has ended
+Retrieve the available transcript and recording
+Return confirmed answers and open questions
+```
 
-Use the [reference report](/static/blog/resources/meta-muse-first-task/reference-report.md) to check the returned table. The [structured reference data](/static/blog/resources/meta-muse-first-task/reference-data.json) preserves sources, observation date and unresolved fields for reuse. These files contain the researched example, not a transcript generated by Muse.
+This is the intended workflow, not a log of an executed Muse call. The requirements check may reveal missing information. Resolve that before dialing, without silently expanding the authorized task.
 
-Before accepting an answer, check:
+## Judge the answers, not just the completed status
 
-1. Every location matches the actual branch page, including its own hours rather than a different branch in the site's navigation.
-2. The agent uses Tuesday hours and the Pacific time window supplied in the prompt.
-3. Its recommendation follows from the cited facts. “Closest” requires a starting location; “quietest” needs evidence beyond opening hours.
-4. Missing facts remain missing. A failed page fetch should not turn into a confident claim.
-5. Research remains research. There should be no booking confirmation, outgoing message or call in this task.
+The useful final report separates three kinds of information:
 
-If a result fails one of these checks, name the specific problem and ask for a corrected report. For example: “The Mission Bay row used Wednesday hours. Reopen its branch page and fix Tuesday, then update the recommendation.”
+| Evidence | What it establishes | What it does not establish |
+| :--- | :--- | :--- |
+| Official branch page | Published number and regular hours | A seat or outlet available at your arrival |
+| Human or automated phone answer | What that respondent said about the questions | A reservation or a guaranteed future condition |
+| Voicemail or unanswered call | Which route was reached | An answer to the laptop questions |
 
-## Add a phone only when the missing fact matters
+Ask for the transcript evidence supporting each phone answer and a recording link if available. A general statement about outlets should identify where the respondent said to look. A WiFi answer should distinguish a login instruction from a measured speed. If someone cannot answer, keep that question open.
 
-Suppose outlet access becomes essential. A precise followup would be to ask whether adults can use their own laptops in general seating and whether any areas have power outlets. That is a research gap worth considering for a call. It still does not authorize booking a room or sharing your contact details.
+The [reference report](/static/blog/resources/meta-muse-first-task/reference-report.md) and [structured preparation data](/static/blog/resources/meta-muse-first-task/reference-data.json) contain the official source baseline and empty phone outcome fields. They are complete preparation assets, not a fabricated call transcript.
 
-Meta's [connector documentation](https://www.meta.com/help/artificial-intelligence/1687253048996149/) explains supported connections and custom connectors. Our [Muse phone connection guide](/blog/meta-muse-ai-agent-phone-calls) records an authenticated balance check; it does not establish a completed Muse business call or dependable reuse in every later conversation. Check the current connection before assigning a call.
+Before accepting a result, check that the caller reached the branch you approved, stayed within the questions and action limits, and returned a supported answer or an honest unanswered question. No booking confirmation should emerge from an informational seating inquiry.
 
-For an executed example of research plus calling, our [private dining comparison](/blog/agent-web-research-phone-calls-sf-private-dining) includes recordings from Codex and Claude Code and the questions those calls left unanswered. For business research, use the [Muse supplier comparison brief](/blog/meta-muse-supplier-quotes). For reusable task structures and client differences, see [Grok Bot templates](/blog/grok-bot-templates) and [Grok Bot versus Muse](/blog/grok-bot-vs-meta-muse).
-
-The useful first result is a decision you can inspect: three options, sources for their published facts, and a short list of what still needs checking.
+For several business calls with a shared specification, use the [Muse supplier phone brief](/blog/meta-muse-supplier-quotes). For repeatable calling tasks, see [Grok Bot templates](/blog/grok-bot-templates), [reusable skills](/blog/grok-bot-reusable-skills) and [template troubleshooting](/blog/grok-bot-template-troubleshooting). The [Grok Bot versus Muse comparison](/blog/grok-bot-vs-meta-muse) explains the client differences.
