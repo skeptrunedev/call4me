@@ -1,0 +1,30 @@
+name: Backfill Meta CompleteRegistration
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: Maximum recent registrations to backfill
+        required: true
+        default: "10"
+        type: string
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run cf-typegen
+      - name: Backfill real recent registrations
+        run: npx tsx scripts/backfill-meta-registrations.ts "${{ inputs.limit }}"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          META_PIXEL_ID: "1585785682496725"
+          META_CAPI_TOKEN: ${{ secrets.META_CAPI_TOKEN }}
