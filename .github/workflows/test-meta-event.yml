@@ -1,0 +1,22 @@
+name: Test Meta CompleteRegistration
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_event_code:
+        description: Test event code shown in Meta Events Manager
+        required: true
+        type: string
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Send test CompleteRegistration
+        run: node scripts/send-meta-test.mjs
+        env:
+          META_PIXEL_ID: "1585785682496725"
+          META_CAPI_TOKEN: ${{ secrets.META_CAPI_TOKEN }}
+          META_TEST_EVENT_CODE: ${{ inputs.test_event_code }}
