@@ -77,6 +77,12 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           REDDIT_CAPI_TOKEN: ${{ secrets.REDDIT_CAPI_TOKEN }}
+      - name: Configure Meta Conversions API secret
+        run: printf '%s' "$META_CAPI_TOKEN" | npx wrangler secret put META_CAPI_TOKEN
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          META_CAPI_TOKEN: ${{ secrets.META_CAPI_TOKEN }}
       - name: Deploy the site
         run: scripts/deploy-site.sh
         env:
