@@ -33,13 +33,13 @@ All prices are displayed USD merchandise prices observed October 5, not firm quo
 | :--- | :--- | :--- | :--- |
 | [Staples model 121212](https://www.staples.com/12-x-12-x-12-standard-shipping-boxes-32-ect-kraft-25-bundle-121212/product_415595) | $36.69 for 25, brown kraft, 32 ECT | About $1.47 | Dimensions convention, your destination, taxes and delivery |
 | [Fisher Scientific NC1810018](https://www.fishersci.com/shop/products/12x12x12-corrugated-boxes-1/NC1810018), Uline supplier item S18344PK | $42.25 for 25, 32 ECT | $1.69 | Color, dimensions convention, account price, shipping, surcharges and delivery |
-| [PackagingSupplies.com matching listing](https://www.packagingsupplies.com/products/12-x-12-x-12-corrugated-boxes) | 25 per bundle, brown, 32 ECT; price unavailable in the retrieved page | Unknown | Current pack price, shipping, taxes and delivery |
+| [PackagingSupplies.com matching listing](https://www.packagingsupplies.com/products/12-x-12-x-12-corrugated-boxes) | $31.90 for 25, brown, 32 ECT | About $1.28 | Shipping, taxes and delivery |
 
 Staples displayed free delivery and an October 6 arrival to Natick, Massachusetts in the retrieved page. That is the page's configured location, not an address supplied for this example. We did not carry that delivery promise into our comparison.
 
 Fisher Scientific's page asks users to sign in to check their own price and notes possible supplier surcharges. Its displayed amount is useful for initial merchandise comparison, but it does not establish your final checkout price. Its retrieved description did not explicitly establish the brown color requirement, so that row needs a specification check as well.
 
-PackagingSupplies.com publishes the brown color, 32 ECT specification and inside dimension convention, but the retrieved page did not expose a price. We kept that field unknown. A missing price is a followup question, not an invitation to substitute a remembered number.
+PackagingSupplies.com publishes brown color, 32 ECT and inside dimensions. Our final source check exposed $31.90 for one bundle of 25. Its lower prices for five or ten bundles do not apply to this quantity. Shipping is calculated at checkout, so the delivered total remains unknown.
 
 The [downloadable source report](/static/blog/resources/meta-muse-supplier-quotes/published-offers.md) includes every source and open question. The [structured offer data](/static/blog/resources/meta-muse-supplier-quotes/published-offers.json) keeps numeric prices separate from unknown fields.
 

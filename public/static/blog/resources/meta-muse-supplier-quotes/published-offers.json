@@ -53,20 +53,20 @@
     },
     {
       "supplier": "PackagingSupplies.com",
-      "sku": null,
-      "price_usd": null,
+      "sku": "A1121212",
+      "price_usd": 31.9,
       "quantity": 25,
       "strength": "32 ECT",
       "color": "brown",
       "dimensions": "inside dimensions 12 x 12 x 12 inches",
       "source": "https://www.packagingsupplies.com/products/12-x-12-x-12-corrugated-boxes",
-      "notes": "Price was not exposed in retrieved page",
+      "notes": "One bundle price observed in final source check; larger quantity discount tiers excluded. Shipping is calculated at checkout.",
       "shipping_usd": null,
       "tax_usd": null,
       "other_fees_usd": null,
       "delivery_date": null,
       "delivered_total_usd": null,
-      "merchandise_per_box_usd": null
+      "merchandise_per_box_usd": 1.276
     }
   ]
 }
