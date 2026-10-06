@@ -4,6 +4,7 @@ seoTitle: "How to use Meta Muse for a first phone call"
 subtitle: Ask one library about laptop seating, outlets and guest WiFi. Includes published branch numbers, a bounded call brief and a checklist for the returned answers.
 description: Give Meta Muse a bounded first phone task. Verify a library number, check Call4me access, approve one call and inspect the answers and transcript.
 date: 2026-10-05
+updated: 2026-10-06
 tags: meta muse, ai agents, phone calls, muse use cases
 authors: nick
 imageAlt: A first Muse phone task moves from a verified branch number through one approved call to sourced answers
@@ -11,13 +12,13 @@ imageAlt: A first Muse phone task moves from a verified branch number through on
 
 **Use Meta Muse for one small informational phone call: ask a library whether its general seating fits your laptop session.** Published hours establish when it opens. A conversation can clarify where adults can work, where to find outlets and how guests access WiFi. The result should identify who answered and what they could actually confirm.
 
-This walkthrough prepares that task using official San Francisco Public Library pages checked October 5, 2026. We have not executed this library call in Muse. Our [consumer Muse connection test](/blog/meta-muse-ai-agent-phone-calls) established an authenticated balance check, not a completed business call or reliable reuse from every later conversation.
+This walkthrough prepares that task using official San Francisco Public Library branch pages and study room policy rechecked October 6, 2026. We have not executed this library call in Muse. Our [consumer Muse connection test](/blog/meta-muse-ai-agent-phone-calls) established an authenticated balance check, not a completed business call or reliable reuse from every later conversation.
 
 Use the [one call brief](/static/blog/resources/meta-muse-first-task/call-brief.md) to choose a branch and record its answers. It contains the exact questions, approval boundary and empty outcome fields.
 
 ## Choose the branch and the question before dialing
 
-Supply your branch, visit date, local time window and the facts that matter. Our example window is Tuesday, October 6, from 2 pm to 5 pm Pacific. For a different visit, change the date and check that day's current schedule. Do not ask the caller to invent your location, guarantee a seat or reserve a room.
+Supply your branch, visit date, local time window and the facts that matter. The preparation assets preserve an illustrative Tuesday, October 6 window from 2 pm to 5 pm Pacific. Replace that historical example with your actual upcoming visit date and check that day's current schedule. Do not ask the caller to invent your location, guarantee a seat or reserve a room.
 
 | Branch and official number source | Published phone | Regular Tuesday hours |
 | :--- | :--- | :--- |
@@ -36,6 +37,8 @@ The Main page links to an [official WiFi FAQ](https://sfpl.libanswers.com/faq/88
 Meta [documents](https://www.meta.com/help/artificial-intelligence/1687253048996149/) supported connectors and asking Muse to create custom connections. Use the [consumer Muse setup guide](/blog/meta-muse-ai-agent-phone-calls) if Call4me is not connected. Enter credentials through its connection flow, then ask for `call4me_get_balance` without placing a call.
 
 Continue only when that request returns an authenticated result and Muse can discover the current calling tools. A connector card or a saved skill claim is insufficient. If the message itself is not delivered, solve that separately before asking for a call. The consumer Muse integration described here differs from [Muse Code's native MCP path](/blog/muse-code-mcp-phone-calls).
+
+Use the [connection and result worksheet](/static/blog/resources/meta-muse-first-task/connection-check.md) in the conversation where you intend to call. Record whether the balance request ran there, rather than copying the result from an earlier chat. If delivery is unconfirmed or the connector errors, leave the call ID empty and stop before dialing.
 
 ## Send the task, then approve one specific call
 
@@ -73,6 +76,18 @@ The useful final report separates three kinds of information:
 Ask for the transcript evidence supporting each phone answer and a recording link if available. A general statement about outlets should identify where the respondent said to look. A WiFi answer should distinguish a login instruction from a measured speed. If someone cannot answer, keep that question open.
 
 The [reference report](/static/blog/resources/meta-muse-first-task/reference-report.md) and [structured preparation data](/static/blog/resources/meta-muse-first-task/reference-data.json) contain the official source baseline and empty phone outcome fields. They are complete preparation assets, not a fabricated call transcript.
+
+Use this result prompt after the attempt:
+
+> Inspect the same Call4me call ID we started. Separate call status from task outcome. For each library question, give the answer, who supplied it and the supporting transcript passage, or mark it unanswered. Link the available recording. Do not treat a menu, voicemail or completed status as a staff confirmation. If the call is still active, say so. If a tool timed out, check that ID again without placing another call.
+
+## Move from an informational call to an authorized task
+
+A successful access check is one step. An answered library question is another. Neither authorizes booking something later. Before asking Muse to take action, define the acceptable alternatives, the information it may share and the result you need.
+
+Our [recorded dinner reservation](/blog/book-dinner-reservation-by-phone) shows a confirmed date, time and party size, with cancellation terms still unknown. The [doctor appointment replacement](/blog/reschedule-doctor-appointment) shows why checking the old slot matters: it was already canceled before the call. Those are approved customer examples with an unknown assistant client, not Muse tests.
+
+Use the [appointment brief and confirmation checklist](/blog/ai-personal-assistant-appointment-booking) for that next task. Keep this library brief informational, and start a separate approved booking brief when you are ready to commit.
 
 Before accepting a result, check that the caller reached the branch you approved, stayed within the questions and action limits, and returned a supported answer or an honest unanswered question. No booking confirmation should emerge from an informational seating inquiry.
 

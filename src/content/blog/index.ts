@@ -1,4 +1,5 @@
 import type { PostSource } from '../../server/lib/blog';
+import aiPersonalAssistantAppointmentBooking from './ai-personal-assistant-appointment-booking.md';
 import macysBowTieStockCheck from './macys-bow-tie-stock-check.md';
 import bookDinnerReservationByPhone from './book-dinner-reservation-by-phone.md';
 import rescheduleDoctorAppointment from './reschedule-doctor-appointment.md';
@@ -70,6 +71,7 @@ import metaMuseSupplierQuotes from './meta-muse-supplier-quotes.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'ai-personal-assistant-appointment-booking', markdown: aiPersonalAssistantAppointmentBooking },
   { slug: 'macys-bow-tie-stock-check', markdown: macysBowTieStockCheck },
   { slug: 'book-dinner-reservation-by-phone', markdown: bookDinnerReservationByPhone },
   { slug: 'reschedule-doctor-appointment', markdown: rescheduleDoctorAppointment },

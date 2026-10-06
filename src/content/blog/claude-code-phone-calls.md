@@ -2,9 +2,9 @@
 title: "Make phone calls from Claude Code with MCP: setup and a real test"
 seoTitle: "Claude Code phone calls: personal assistant setup"
 subtitle: Give the Claude Code session you already use a phone. We connected a real account, checked its balance, and asked Claude to call a restaurant during private dining research. Here is the setup, the actual tool sequence, and what the voicemail did and did not answer.
-description: "Add phone calls to your Claude Code personal assistant with MCP. Setup, cancellation prompts and a recorded restaurant research test with explicit limits."
+description: "Add phone calls to your Claude Code personal assistant with MCP. Use booking, shopping and return briefs with real outcomes and a verified setup walkthrough."
 date: 2026-10-03
-updated: 2026-10-05
+updated: 2026-10-06
 tags: claude code, mcp, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Claude Code connects to call4me, makes a phone call, and returns the evidence to the research task
@@ -147,12 +147,15 @@ One failure we encountered is worth making concrete. An earlier server alias had
 
 ## Calling tasks for your Claude Code personal assistant
 
-The setup above adds the phone part to the assistant you already use. Start with one task and make clear what the caller can do. These are suggested tasks, not additional Claude Code tests:
+The setup above adds the phone part to the assistant you already use. Start with one task and make clear what the caller can do. These are suggested tasks, not additional Claude Code tests. The customer examples link to their reviewed recordings and transcripts; their initiating client is unknown.
 
 | Your assistant's task | What the phone part needs to establish | Useful example |
 |---|---|---|
 | Understand a subscription cancellation | The available cancellation route, fees, deadline and proof to request before changing the account | Our [Planet Fitness calls](/blog/cancel-planet-fitness) asked two clubs about their rules. They did not cancel a membership |
-| Plan an appointment | Availability that fits the times you supplied, what information the office needs and whether anything was actually confirmed | Give Claude your real constraints and permission to book before it agrees to a time |
+| Plan an appointment | The original booking status, a replacement within your available hours and an explicit confirmation | Our [doctor appointment call](/blog/reschedule-doctor-appointment) checked that the old slot was already canceled, then confirmed October 8 at 1:30 PM |
+| Reserve dinner | The date, time, party size and terms staff actually agreed to | Our [dinner booking](/blog/book-dinner-reservation-by-phone) confirmed four people for October 8 at 7:30 PM; cancellation terms remained unknown |
+| Finish shopping research | Local stock of the exact item, its features and current price | Our [Macy's stock check](/blog/macys-bow-tie-stock-check) established those answers on the call date, without a purchase or hold |
+| Resolve a return request | Whether an exception is approved and which steps remain | Our [Aquasana call](/blog/aquasana-return-exception) obtained approval for $551.79 by check; paperwork and payment remained pending |
 | Compare businesses | Answers missing online, who supplied them and what remains unresolved | Our [private dining research](/blog/agent-web-research-phone-calls-sf-private-dining) combines web sources with recorded calls |
 | Get business paperwork | Which document is needed, whether the provider sent it and where it was delivered | Our [Wyoming registered agent consent call](/blog/wyoming-registered-agent-consent-form) requested the document by phone; I confirmed it arrived afterward |
 
@@ -161,6 +164,29 @@ For a cancellation inquiry, you can start with:
 > Use the subscription details we already have to identify the right business and its official phone number. Call to ask how cancellation works for my plan, whether fees or deadlines apply, and what confirmation I should get. This is an information request. Do not cancel, change my plan or accept an offer. Return the answers, who answered and any remaining steps to this conversation.
 
 Some businesses require an online form or an in person signature. The phone can establish the route without completing the cancellation. If you later authorize a change, ask Claude to report the actual confirmation separately from the instructions it gathered.
+
+### A reusable brief for your next errand
+
+Give Claude the following alongside the task facts. Fill in the business, questions and permissions before using it:
+
+> Continue our [planning, shopping or customer service] task. Check [business]'s official website and number first. Call about [specific questions still unanswered]. You may share [necessary details supplied privately] and agree to [explicitly allowed action and limits]. Ask me before accepting another time, provider, item, charge or remedy outside those limits. If you need a fact I have not supplied, ask rather than invent it. Follow the call until it ends and return the outcome, its supporting statement and anything still pending.
+
+The permission changes with the errand. For shopping, you can authorize only a stock inquiry. For dinner, you can authorize a reservation within a specific time window. For a return, you can authorize an exception request while keeping any alternative offer subject to your decision.
+
+For appointments, give complete dates, time windows and timezone, plus the required provider. Say what should happen to an existing booking. Our [appointment booking guide](/blog/ai-personal-assistant-appointment-booking) includes a reusable brief and confirmation checklist.
+
+### Bring a precise result back to your plan
+
+Ask Claude to finish with these four fields:
+
+| Field | What it should contain |
+|---|---|
+| Confirmed | What staff explicitly agreed to, including the date, time or amount where relevant |
+| Evidence | Who supplied the answer and the relevant transcript statement or recording reference |
+| Pending | Missing terms, promised paperwork or a payment whose receipt has not been verified |
+| Next action | What you or the business still need to do, with any stated deadline |
+
+Applied to the dinner example, that means a confirmed table with cancellation terms unknown. Applied to Aquasana, it means an approved exception with instructions and payment still pending. Neither a finished call nor a confident summary closes those remaining steps.
 
 ## Use the result in the task you started
 

@@ -2,8 +2,9 @@
 title: Web research and phone calls in your AI agent: comparing SF private dining
 seoTitle: AI agent web research and phone calls: a real task
 subtitle: We used Codex to research and call Waterbar and EPIC Steak, plus a separate Claude Code call to Foreign Cinema. Here is what the websites answered, what the calls added, and what stayed unknown.
-description: A real Codex web research and phone workflow for SF private dining, with a separate Claude Code call, recordings, sources and explicit unresolved questions.
+description: A real Codex web research and phone workflow, plus customer stock and reservation examples. Reusable briefs, recordings and clear limits on each result.
 date: 2026-10-03
+updated: 2026-10-06
 tags: claude code, codex, mcp, ai agents, private dining, ai phone assistant
 authors: nick
 imageAlt: Official websites, phone calls and a sourced private dining comparison in an existing AI agent
@@ -242,6 +243,33 @@ EPIC's published Bay Room capacity supports considering it for a larger seated g
 Foreign Cinema needs a followup through its private dining inquiry route. The voicemail identifies the information to prepare, and the official site provides a [private dining contact page](https://foreigncinema.com/private-dining-contact/).
 
 A fair price or availability comparison needs the same date, approximate guest count, seated dinner versus reception format, and privacy requirement for all three. Ask each events team for a written proposal that separates the food and beverage minimum, room fee, service charge, tax, other surcharges, deposit and cancellation terms. Waterbar and EPIC publish [event FAQs](https://www.waterbarsf.com/faq/) and [event terms](https://www.epicsteak.com/faq/), but the proposal should identify the terms applying to your event.
+
+## From research to a stock answer or a confirmed reservation
+
+The October 3 private dining experiment ended with unanswered questions. Two separate customer calls published October 6 show more concrete outcomes: staff checked an exact product, and a restaurant confirmed a table. Their initiating clients are unknown. They do not establish new Codex or Claude Code sessions, or that either customer used web research before calling.
+
+They do give you useful examples of the evidence to request when your own research reaches the phone step:
+
+| Task | Research to prepare before your own call | What the recorded customer call established | What it did not establish |
+|---|---|---|---|
+| Check a shortlisted product | Exact product, required features, store location and published number | Macy's staff checked a black silk bow tie, reported 88 available at $33, and described the finish and adjustable strap | No purchase or hold. Price and stock apply to the October 6 conversation |
+| Turn an evening plan into a reservation | Restaurant, complete date, guest count, acceptable times and booking terms to ask about | Staff confirmed a table for four on October 8 at 7:30 PM | No cancellation terms were confirmed, and no attendance is established |
+
+Listen to the [Macy's inventory call and read its transcript](/blog/macys-bow-tie-stock-check), or the [dinner reservation call and transcript](/blog/book-dinner-reservation-by-phone). The recordings remain on their source pages so you can inspect the complete conversation and its limits.
+
+### Stock research brief
+
+> Read the official product page for [item] and confirm the exact model, required features and store location. List the questions the page does not answer. Call the store's published number to check local stock, price and those details. Do not buy, hold or accept a substitute. Return a table separating the website's claims from staff's answers, with the date checked and anything still unresolved.
+
+The Macy's caller asked about the finish and fastening, not just whether a black bow tie existed. That distinction matters when a substitute would fail your original requirements. A staff stock answer also does not turn into a pickup reservation unless somebody actually agrees to hold the item.
+
+### Research with permission to book
+
+> Continue the evening plan using the restaurant we selected. Check its official booking instructions, then call if the requested table still needs confirmation. Book [party size] on [full date] at [preferred time], accepting only [allowed alternatives]. Use the name and callback details I supplied privately. Ask about deposits and cancellation terms, and ask me before agreeing to a charge. Return the date, time and party size staff confirmed, plus any missing terms, before building the rest of the plan around it.
+
+Here the change from research to booking is explicit permission, a complete date and a defined party size. Our original private dining inquiry had none of those booking facts, so its unknown availability must stay unknown. For an appointment rather than dinner, use the [personal assistant booking brief and confirmation checklist](/blog/ai-personal-assistant-appointment-booking).
+
+In the final answer, keep three columns: **website facts**, **phone confirmation** and **remaining action**. That lets your assistant carry a real answer back into the plan without turning availability into a booking or an unanswered question into a guess.
 
 ## What to check in your own agent's result
 

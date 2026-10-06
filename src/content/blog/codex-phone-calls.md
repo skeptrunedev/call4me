@@ -2,9 +2,9 @@
 title: "How to make phone calls from Codex with MCP"
 seoTitle: "Codex MCP phone calls: OAuth setup and real test"
 subtitle: Give Codex a calling tool, keep your credentials out of the prompt, and bring phone answers back into the research it is already doing.
-description: "Connect Codex to call4me through MCP with OAuth or an API key. See approval settings, the result loop and our real restaurant research test."
+description: "Connect Codex to call4me through MCP. Use reusable booking, shopping and return prompts, inspect real call outcomes and follow our verified CLI setup."
 date: 2026-10-03
-updated: 2026-10-05
+updated: 2026-10-06
 tags: codex, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: Codex researching online, calling a business through MCP, and returning the answer to the task
@@ -74,6 +74,34 @@ This is a proposed brief you can adapt, separate from our recorded restaurant te
 > For the subscription we selected, check the business's official cancellation instructions first. Use Call4me to call only about terms or steps we still cannot establish. Ask about the cancellation route for my plan, any deadline or fee, and how confirmation works. Do not cancel, change the plan or accept an offer. Return the answers and remaining steps to this task, including who answered and anything unresolved.
 
 Our recorded [Planet Fitness inquiries](/blog/cancel-planet-fitness) show why location and plan details matter. If the relevant department is closed, use the [scheduled calling workflow](/blog/schedule-phone-calls-claude-code-codex) with the complete questions and limits saved in the brief.
+
+## Reusable phone tasks for your Codex personal assistant
+
+Once Codex has the connection, give it the part of your plan that needs a conversation. The briefs below are suggested workflows. The linked October 6 customer calls include reviewed recordings and transcripts, but their initiating client is unknown. They show what the phone conversation established, not additional Codex tests.
+
+### Reserve the dinner you have already planned
+
+> Use the restaurant and date we selected. Check its official number, then call to book [party size] at [preferred time]. You may accept [alternative times] on that date. Use the reservation name and callback number I supplied privately. Ask about deposits and cancellation terms. Do not agree to a charge without asking me. Have staff repeat the date, time and party size. Return the confirmed booking, any reference and any unanswered policy questions to our evening plan.
+
+In the [recorded dinner reservation](/blog/book-dinner-reservation-by-phone), staff confirmed four people for October 8 at 7:30 PM. Cancellation terms were not discussed. A useful Codex recap would keep that policy question open instead of treating it as free cancellation.
+
+### Find an appointment that fits your week
+
+> Call [office] about my appointment on [full date and time]. First establish whether it is still active. Ask to move it if active, or book a replacement if it is already canceled. I can attend [complete dates, time windows and timezone]. Choose the earliest slot within those windows with [required provider]. Ask me before accepting a different provider or a time outside them. Return the original appointment status, the new confirmed date and time, and the office's arrival instructions.
+
+The [doctor appointment recording](/blog/reschedule-doctor-appointment) confirms that the original slot was already canceled before the call and a replacement was booked for October 8 at 1:30 PM. It does not show the caller canceling the old visit. Use the [appointment booking brief and confirmation checklist](/blog/ai-personal-assistant-appointment-booking) to keep those states separate.
+
+### Check the exact item before you travel
+
+> Use the product we selected and call [store location]. Check its exact brand, product code, color and required features against local stock. Ask for today's price and whether it is available when I plan to visit. This is a stock inquiry only. Do not buy, reserve or substitute another item. Return what staff checked, the time of the answer and anything unresolved.
+
+The [Macy's stock check](/blog/macys-bow-tie-stock-check) obtained a local quantity, a price and details about the bow tie's finish and fastening. Those answers were useful for the shopping decision, but no item was held or purchased. Stock and price were historical statements from that call.
+
+### Request a return exception and track the next step
+
+> Read the retailer's current return policy and the order facts I supplied. Call to ask whether it will approve [specific exception] for [truthful reason]. Do not invent a purchase date or agree to an alternative remedy without asking me. Request the approved amount, refund method, return authorization, shipping instructions and deadlines. Report approval, documents received, item returned and refund received as separate states. Leave any unsupported state unknown.
+
+The [Aquasana return call](/blog/aquasana-return-exception) obtained approval for a $551.79 refund by check. Return paperwork and payment remained pending. The result to bring back into your task is an approved exception with remaining steps, not money already recovered.
 
 ## Follow the call back into the same task
 

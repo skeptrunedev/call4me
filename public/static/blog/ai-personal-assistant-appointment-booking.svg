@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#fff"/>
+  <text x="70" y="96" font-family="Georgia,serif" font-size="30" fill="#551a8b">call4me guides · october 6, 2026</text>
+  <text x="70" y="194" font-family="Georgia,serif" font-size="57" fill="#111">Let your assistant book it</text>
+  <text x="70" y="252" font-family="Georgia,serif" font-size="29" fill="#444">a clear brief, a real call, a checked confirmation</text>
+  <rect x="70" y="330" width="320" height="205" rx="10" fill="#f7f4ff" stroke="#551a8b" stroke-width="2"/>
+  <text x="94" y="380" font-family="Georgia,serif" font-size="25" fill="#551a8b">01 · your limits</text>
+  <text x="94" y="433" font-family="Georgia,serif" font-size="27" fill="#111">dates and times</text>
+  <text x="94" y="478" font-family="Georgia,serif" font-size="24" fill="#444">choices you approve</text>
+  <path d="M400 432h20l-7-7m7 7l-7 7" fill="none" stroke="#0000ee" stroke-width="3"/>
+  <rect x="440" y="330" width="320" height="205" rx="10" fill="#f7f4ff" stroke="#551a8b" stroke-width="2"/>
+  <text x="464" y="380" font-family="Georgia,serif" font-size="25" fill="#551a8b">02 · the call</text>
+  <text x="464" y="433" font-family="Georgia,serif" font-size="27" fill="#111">ask and confirm</text>
+  <text x="464" y="478" font-family="Georgia,serif" font-size="24" fill="#444">keep open questions</text>
+  <path d="M770 432h20l-7-7m7 7l-7 7" fill="none" stroke="#0000ee" stroke-width="3"/>
+  <rect x="810" y="330" width="320" height="205" rx="10" fill="#f7f4ff" stroke="#551a8b" stroke-width="2"/>
+  <text x="834" y="380" font-family="Georgia,serif" font-size="25" fill="#551a8b">03 · your result</text>
+  <text x="834" y="433" font-family="Georgia,serif" font-size="27" fill="#111">check the evidence</text>
+  <text x="834" y="478" font-family="Georgia,serif" font-size="24" fill="#444">then update your plans</text>
+</svg>

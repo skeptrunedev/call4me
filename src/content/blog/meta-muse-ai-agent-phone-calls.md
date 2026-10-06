@@ -4,7 +4,7 @@ seoTitle: "Muse MCP: Meta Muse connectors for phone calls"
 subtitle: Connect Meta Muse to a phone calling service through a custom connector. Here is our tested setup, what a live balance check proves, how native calling differs and what to check before dialing.
 description: "Use Muse MCP through a Meta Muse custom connector to add phone calling tools. Includes our tested balance check, setup prompt and calling brief."
 date: 2026-10-01
-updated: 2026-10-05
+updated: 2026-10-06
 tags: meta muse, ai agents, mcp, ai phone assistant
 authors: nick
 imageAlt: Meta Muse AI agent connectors, with phone calls as the worked example
@@ -15,6 +15,25 @@ imageAlt: Meta Muse AI agent connectors, with phone calls as the worked example
 An early call4me user tried our general MCP setup prompt and Muse refused, saying its tools were fixed. Asking it to **build a custom connector** worked in our own account. This guide separates that observed result from Muse's descriptions of what its connector can do.
 
 If Muse already manages your personal tasks, the reason to add calling is to finish the phone part in that conversation. Examples include asking a gym about cancellation requirements or a restaurant about availability. Our recorded [subscription inquiries](/blog/cancel-planet-fitness) provide questions to adapt after your connection check succeeds. The verified Muse setup and the still unverified calling steps are detailed below.
+
+## Start where your connection actually stands
+
+Choose the next step from a tool result in the conversation you are using now. A previous successful setup is useful evidence, but it does not establish that a new conversation can run the connector.
+
+| What you have now | Next step | Evidence to keep |
+| :--- | :--- | :--- |
+| No Call4me connector | Follow the custom connector setup below and enter the key through Connect | An authenticated balance result |
+| A saved connector, but no result in this conversation | Run the read only reuse prompt below | The current tool response, or its exact failure |
+| A fresh balance result and discovered calling tools | Prepare the [first informational call](/blog/meta-muse-first-task) | A specific destination, questions, caller identity and approved limit |
+| A finished phone call | Read its transcript before accepting the task as done | Who answered, supported answers and unresolved questions |
+
+Download the [connection and result worksheet](/static/blog/resources/meta-muse-first-task/connection-check.md) to record those checks. It starts empty and does not contain a new Muse test result.
+
+For a saved connector, send:
+
+> Find and read the existing Call4me connector and its saved instructions. In this conversation, use the saved credential to discover the current tools and execute call4me_get_balance once. Do not dial, schedule a call, change my profile or create a second connector. Do not print credentials. Report whether the request actually ran and show the returned balance, or the exact error without secrets. If the connector cannot be found, say so and stop.
+
+That is a diagnostic prompt to try. Our verified October 1 balance result and incomplete October 4 reuse attempt remain the execution evidence for this guide.
 
 ## What is Meta Muse?
 
@@ -142,8 +161,20 @@ That follows Meta's documented credential entry path. We did not audit the custo
 
 For a first phone task, use our [Muse library calling tutorial](/blog/meta-muse-first-task). For supplier calls, try the [supplier inquiry brief](/blog/meta-muse-supplier-quotes). The developer client has a separate [Muse Code MCP setup guide](/blog/muse-code-mcp-phone-calls), including a configuration mismatch found in our native client tests. Our [Grok Bot versus Meta Muse comparison](/blog/grok-bot-vs-meta-muse) explains the consumer workflow differences.
 
+## Choose a useful task after the connection check
+
+Our customer recordings show the kinds of outcomes to request once your calling connection works. These customers' assistant clients are unknown, so the examples below do not establish that Muse placed their calls.
+
+| Task | Recorded result | What to ask Muse to return |
+| :--- | :--- | :--- |
+| [Check a store's stock](/blog/macys-bow-tie-stock-check) | Staff confirmed a matching bow tie and quoted a price. Nothing was held or purchased | Exact item match, quoted price, who checked and whether a hold exists |
+| [Book a dinner table](/blog/book-dinner-reservation-by-phone) | Staff confirmed a table for four on October 8 at 7:30 pm. Cancellation terms were not established | Agreed date, local time, party size, booking name and any unresolved terms |
+| [Replace an appointment](/blog/reschedule-doctor-appointment) | The old slot was already canceled; staff confirmed a replacement for October 8 at 1:30 pm | Old slot status, confirmed replacement and anything still needing your attention |
+
+Each linked story contains its reviewed recording and transcript. For appointments, use the [personal assistant booking brief and confirmation checklist](/blog/ai-personal-assistant-appointment-booking) to define your acceptable times and permitted changes before calling. A suggested Muse brief is separate from proof that Muse executed it.
+
 ## Let your agent make the call
 
 Once call4me is connected, paste this into Muse:
 
-> Use call4me for phone calls. Call [business] at [phone number] and [what you want done]. Before dialing, check call4me_get_requirements and ask me for anything missing in one message. Ask me before agreeing to anything that costs money, and tell me the result in one or two lines.
+> Use Call4me to prepare one call to [business] for [task]. Verify its published phone number, run a fresh balance check and read the current requirements. Ask me for missing information in one message, then show the destination, caller identity, permitted actions and a four minute limit for approval. After approval, make one call using the live schema and max_minutes set to 4. Follow the returned call ID until it ends. If a status request fails, check that same ID before considering another call. Return who answered, what was confirmed, unresolved questions and the available transcript and recording. Ask me before expanding the task or agreeing to a cost.
