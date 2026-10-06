@@ -155,8 +155,6 @@ export class VoiceSession extends DurableObject<Env> {
   /** The latest question still out to the person, and how many "still checking" lines it has had. */
   private holding: { question: string; lines: number; lastAt: number } | null = null;
   private holdingTimer: ReturnType<typeof setTimeout> | null = null;
-  /** A voicemail greeting is playing (the carrier detected a machine): the caller waits silently for its end. */
-  private greetingPlaying = false;
   /** What the carrier's machine detection has already told the caller, so a repeated webhook isn't said twice. */
   private machineHeard = new Set<MachineEvent>();
   /** The person's own phone leg while it rings or is on the call; the caller stays silent while they talk. */
@@ -807,7 +805,6 @@ export class VoiceSession extends DurableObject<Env> {
   private machineDetected(event: MachineEvent): void {
     if (this.ended || this.endingCall || this.personHolds() || this.machineHeard.has(event)) return;
     this.machineHeard.add(event);
-    this.greetingPlaying = event === 'machine';
     this.note(event === 'machine' ? 'voicemail answered' : event === 'greeting_ended' ? 'voicemail greeting ended' : 'call screener answered');
     this.mark(`answering machine detection: ${event}`);
     this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: MACHINE_GUIDANCE[event] });
