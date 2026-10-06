@@ -1,4 +1,4 @@
-import type { AccountRow, CallRow, Cohort, CreditRow, CreditStatus, Day, LedgerRow, Metrics, TopupRow, UserRow } from "../shared/types";
+import type { AccountRow, CallRow, Cohort, CreditRow, CreditStatus, Day, LedgerRow, Metrics, RedditAttributionRow, RedditConversionRow, RedditSpendRow, RedditVisitRow, TopupRow, UserRow } from "../shared/types";
 
 const DAY = 24 * 60 * 60 * 1000;
 const COHORT_DAYS = 7;
@@ -39,7 +39,7 @@ function group<T>(rows: T[], key: (row: T) => string): Map<string, T[]> {
  * outbound call; inbound calls are businesses calling back, not something the user did.
  */
 export function computeMetrics(
-  input: { accounts: AccountRow[]; topups: TopupRow[]; calls: CallRow[]; ledger: LedgerRow[] },
+  input: { accounts: AccountRow[]; topups: TopupRow[]; calls: CallRow[]; ledger: LedgerRow[]; redditVisits?: RedditVisitRow[]; redditSpend?: RedditSpendRow[]; redditConversions?: RedditConversionRow[] },
   internalEmails: Set<string>,
   now: number,
 ): Metrics {
@@ -181,5 +181,78 @@ export function computeMetrics(
     };
   });
 
-  return { generatedAt: now, summary, funnel, outcomes, days, cohorts, users, credits };
+  const redditVisits = (input.redditVisits ?? []).filter((v) => !v.account_id || ids.has(v.account_id));
+  const redditConversions = input.redditConversions ?? [];
+  const visitsById = new Map(redditVisits.map((v) => [v.id, v]));
+  const visitKey = (v: Pick<RedditVisitRow, "campaign_id" | "campaign_name" | "ad_group_id" | "ad_group_name" | "audience" | "ad_id" | "ad_name" | "creative_id" | "creative_name">) =>
+    [v.campaign_id || v.campaign_name || "(campaign unknown)", v.ad_group_id || v.ad_group_name || v.audience || "(audience unknown)", v.ad_id || v.ad_name || "(ad unknown)", v.creative_id || v.creative_name || "(creative unknown)"].join("\u001f");
+  const label = (name: string | null, id: string | null, fallback: string) => name || id || fallback;
+  const rows = new Map<string, RedditAttributionRow>();
+  const rowFor = (v: Pick<RedditVisitRow, "campaign_id" | "campaign_name" | "ad_group_id" | "ad_group_name" | "audience" | "ad_id" | "ad_name" | "creative_id" | "creative_name">) => {
+    const key = visitKey(v);
+    let row = rows.get(key);
+    if (!row) {
+      row = {
+        key,
+        campaign: label(v.campaign_name, v.campaign_id, "(campaign unknown)"),
+        audience: label(v.ad_group_name || v.audience, v.ad_group_id, "(audience unknown)"),
+        ad: label(v.ad_name, v.ad_id, "(ad unknown)"),
+        creative: label(v.creative_name, v.creative_id, "(creative unknown)"),
+        recordedVisits: 0,
+        visitors: 0,
+        spendCents: 0,
+        newPayingCustomers: 0,
+        callingCustomers: 0,
+        repeatPurchasers: 0,
+        repeatUsers: 0,
+        completedCalls: 0,
+        resolvedTasks: 0,
+        cacCents: null,
+      };
+      rows.set(key, row);
+    }
+    return row;
+  };
+  const visitorsByRow = new Map<string, Set<string>>();
+  for (const visit of redditVisits) {
+    const row = rowFor(visit);
+    row.recordedVisits++;
+    const visitors = visitorsByRow.get(row.key) ?? new Set<string>();
+    visitors.add(visit.visitor_id);
+    visitorsByRow.set(row.key, visitors);
+  }
+  for (const spend of input.redditSpend ?? []) {
+    const existing = [...rows.values()].find((row) => {
+      const parts = row.key.split("\u001f");
+      return (!spend.campaign_id || parts[0] === spend.campaign_id) && (!spend.ad_group_id || parts[1] === spend.ad_group_id) && (!spend.ad_id || parts[2] === spend.ad_id) && (!spend.creative_id || parts[3] === spend.creative_id);
+    });
+    (existing ?? rowFor({ ...spend, audience: null })).spendCents += Math.round(spend.spend_micros / 10_000);
+  }
+  for (const account of accounts) {
+    const visit = account.reddit_first_visit_id ? visitsById.get(account.reddit_first_visit_id) : null;
+    if (!visit) continue;
+    const row = rowFor(visit);
+    const paid = topupsBy.get(account.id) ?? [];
+    const ownCalls = callsBy.get(account.id) ?? [];
+    if (paid.length) row.newPayingCustomers++;
+    if (ownCalls.length) row.callingCustomers++;
+    if (paid.length >= 2) row.repeatPurchasers++;
+    if (activeDays(account.id).size >= 2) row.repeatUsers++;
+    row.completedCalls += ownCalls.filter((call) => call.status === "completed").length;
+    row.resolvedTasks += ownCalls.filter((call) => call.result === "done").length;
+  }
+  for (const [key, visitors] of visitorsByRow) rows.get(key)!.visitors = visitors.size;
+  for (const row of rows.values()) row.cacCents = row.newPayingCustomers ? Math.round(row.spendCents / row.newPayingCustomers) : null;
+  const statusCount = (status: RedditConversionRow["status"]) => redditConversions.filter((c) => c.status === status).length;
+  const reddit = {
+    recordedVisits: redditVisits.length,
+    visitors: new Set(redditVisits.map((v) => v.visitor_id)).size,
+    attributedAccounts: accounts.filter((a) => a.reddit_first_visit_id && visitsById.has(a.reddit_first_visit_id)).length,
+    spendCents: [...rows.values()].reduce((sum, row) => sum + row.spendCents, 0),
+    deliveries: { sent: statusCount("sent"), pending: statusCount("pending"), failed: statusCount("failed"), blocked: statusCount("blocked") },
+    rows: [...rows.values()].sort((a, b) => b.spendCents - a.spendCents || b.newPayingCustomers - a.newPayingCustomers || b.recordedVisits - a.recordedVisits),
+    recentConversions: [...redditConversions].sort((a, b) => b.event_at - a.event_at).slice(0, 50),
+  };
+
+  return { generatedAt: now, summary, funnel, outcomes, days, cohorts, users, credits, reddit };
 }

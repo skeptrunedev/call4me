@@ -107,3 +107,31 @@ describe("credit burn", () => {
     expect(m.summary.cancelledPlans).toBe(1);
   });
 });
+
+describe("Reddit attribution", () => {
+  it("keeps recorded first-touch cohorts separate and reports completion apart from resolution", () => {
+    const m = computeMetrics(
+      {
+        accounts: [{ id: "r", email: "r@x.com", created_at: T0, reddit_first_visit_id: "rv1", reddit_last_visit_id: "rv2", ...noReload }],
+        topups: [
+          { account_id: "r", amount_cents: 1000, paid_at: T0 + 1000, monthly: 0, reddit_visit_id: "rv1" },
+          { account_id: "r", amount_cents: 1000, paid_at: T0 + DAY, monthly: 0, reddit_visit_id: "rv2" },
+        ],
+        calls: [call("r", T0 + 2000), call("r", T0 + DAY + 2000, { result: "partial" })],
+        ledger: [],
+        redditVisits: [
+          { id: "rv1", visitor_id: "v1", account_id: "r", campaign_id: "c1", campaign_name: "launch", ad_group_id: "g1", ad_group_name: "Claude Code", audience: "Claude Code", ad_id: "a1", ad_name: "demo", creative_id: "cr1", creative_name: "demo-a", visited_at: T0 },
+          { id: "rv2", visitor_id: "v1", account_id: "r", campaign_id: "c2", campaign_name: "retarget", ad_group_id: "g2", ad_group_name: "Visitors", audience: "Visitors", ad_id: "a2", ad_name: "return", creative_id: "cr2", creative_name: "return-a", visited_at: T0 + DAY },
+        ],
+        redditSpend: [{ campaign_id: "c1", campaign_name: "launch", ad_group_id: "g1", ad_group_name: "Claude Code", ad_id: "a1", ad_name: "demo", creative_id: "cr1", creative_name: "demo-a", spend_micros: 5_000_000 }],
+        redditConversions: [{ conversion_id: "purchase:1", event_name: "PURCHASE", status: "sent", attempts: 1, last_http_status: 200, last_error: null, last_attempt_at: T0, delivered_at: T0, event_at: T0 }],
+      },
+      new Set(),
+      T0 + 2 * DAY,
+    );
+    const launch = m.reddit.rows.find((row) => row.campaign === "launch")!;
+    expect(launch).toMatchObject({ spendCents: 500, newPayingCustomers: 1, callingCustomers: 1, repeatPurchasers: 1, repeatUsers: 1, completedCalls: 2, resolvedTasks: 1, cacCents: 500 });
+    expect(m.reddit).toMatchObject({ recordedVisits: 2, visitors: 1, attributedAccounts: 1, deliveries: { sent: 1, pending: 0, failed: 0, blocked: 0 } });
+    expect(m.reddit.rows.find((row) => row.campaign === "retarget")?.newPayingCustomers).toBe(0);
+  });
+});

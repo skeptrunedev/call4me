@@ -8,6 +8,7 @@ import { accountPath, SITE, SITE_DESCRIPTION } from '../lib/pages';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { CopyBlock, Layout } from './layout';
 import { CallOnboarding } from './onboarding';
+import type { RedditPixelEvent } from '../lib/reddit';
 
 /** Who runs the site and what it is, for search and answer engines (schema.org). */
 const HOME_LD = {
@@ -190,8 +191,8 @@ const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries: Count
   );
 };
 
-export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; balanceCents: number; email: string; pending?: boolean; signedOut?: boolean; next?: string; numbers?: NumberView[] }> = (p) => (
-  <Layout title="you're in" page="welcome" signedIn={!p.signedOut && !p.pending}>
+export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; balanceCents: number; email: string; pending?: boolean; signedOut?: boolean; next?: string; numbers?: NumberView[]; redditEvents?: RedditPixelEvent[] }> = (p) => (
+  <Layout title="you're in" page="welcome" signedIn={!p.signedOut && !p.pending} redditEvents={p.redditEvents}>
     {p.pending ? (
       <>
         <h1>waiting for the payment to clear</h1>
@@ -302,6 +303,7 @@ export const PrivacyPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ si
       <li>payments are handled by Stripe; we never see your card.</li>
       <li>we count visits to this site with Google Analytics and Ahrefs Web Analytics. Google Analytics sets a cookie to tell repeat visits apart. when you're signed in, Google Analytics also gets your account's internal id and a one-way hash of your email (never the email itself or your phone number) along with sign-ups, purchases, and when calls are placed and how they ended, without who was called or what was said. we also set our own cookie on your first visit that remembers where you came from (the referring site or link tag and the first page you saw), and keep that with your account so we know which channels bring people who use call4me.</li>
       <li>we measure our Facebook and Instagram ads with Meta's pixel, which sets a cookie to recognize your browser and the ad you clicked. Meta gets that cookie, your IP address and browser type, and, when you're signed in, a scrambled (hashed) copy of your account's internal id, along with sign-ups, purchases and amounts, and that a call was placed. never your email, phone number or name, who was called, or what was said.</li>
+      <li>we measure Reddit ads with Reddit's pixel and server-side conversions. we keep the Reddit click and campaign labels from a paid visit with your account so later purchases and usage can be attributed. Reddit may receive the click id, browser identifiers, IP address and browser type, plus scrambled copies of your account id and email, purchase amounts, and milestones such as a first completed call, returning use, or a resolved task. Reddit never receives a phone number, destination, call category, brief, transcript, recording, or call outcome details.</li>
       <li>on the blog, a cookie remembers which posts you liked. a comment stores the name and email you give (the email is never shown), and the newsletter stores your email until you unsubscribe.</li>
       <li>
         email <a href="mailto:me@call4.me">me@call4.me</a> to delete your account and its call history.

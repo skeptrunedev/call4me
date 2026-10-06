@@ -10,6 +10,7 @@ import { realEmail } from '../lib/auth-options';
 import { newId, now } from '../lib/ids';
 import { sendMeta, type MetaBrowser, type MetaEvent } from '../lib/meta';
 import type { Account } from './accounts';
+import { attachRedditVisit, redditConversions } from '../lib/reddit';
 
 /**
  * A stable stand-in client id for an account GA has never seen in a browser, shaped like gtag's
@@ -48,6 +49,8 @@ export interface Visitor {
   ga: GaClient | null;
   meta: MetaBrowser | null;
   touch?: FirstTouch | null;
+  /** Latest paid Reddit landing recorded by call4me, not Reddit's attributed click/view. */
+  redditVisitId?: string | null;
 }
 
 /** GA's hashed email for an account; none for X sign-ins known only by a placeholder address. */
@@ -56,21 +59,21 @@ export const emailHashOf = async (account: Pick<Account, 'email'>): Promise<stri
   return email ? gaEmailHash(email) : null;
 };
 
-export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID' | 'META_CAPI_TOKEN'>) {
+export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID' | 'META_CAPI_TOKEN' | 'REDDIT_PIXEL_ID' | 'REDDIT_CAPI_TOKEN' | 'REDDIT_TEST_ID'>) {
   const db = env.DB;
   const metaOn = Boolean(env.META_PIXEL_ID && env.META_CAPI_TOKEN);
 
   /** sign_up goes out once per account, ahead of its first tracked activity, to GA and Meta alike. */
-  async function claimSignup(account: Account): Promise<GaEvent[]> {
-    if (account.ga_signup_at !== null) return [];
+  async function claimSignup(account: Account): Promise<{ events: GaEvent[]; claimed: boolean }> {
+    if (account.ga_signup_at !== null) return { events: [], claimed: false };
     const claimed = await db.prepare(`UPDATE accounts SET ga_signup_at = ? WHERE id = ? AND ga_signup_at IS NULL`).bind(now(), account.id).run();
-    if (!claimed.meta.changes) return [];
+    if (!claimed.meta.changes) return { events: [], claimed: false };
     // An account opened by a checkout has no sign-in yet.
     const provider = await db
       .prepare(`SELECT p."providerId" AS provider FROM accounts a JOIN "account" p ON p."userId" = a.user_id WHERE a.id = ? LIMIT 1`)
       .bind(account.id)
       .first<{ provider: string }>();
-    return [{ name: 'sign_up', params: { method: provider?.provider ?? 'checkout' } }];
+    return { events: [{ name: 'sign_up', params: { method: provider?.provider ?? 'checkout' } }], claimed: true };
   }
 
   /**
@@ -87,9 +90,15 @@ export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID
   }
 
   async function track(account: Account, events: GaEvent[], from: Visitor = { ga: null, meta: null }): Promise<void> {
-    if (!env.GA_API_SECRET && !metaOn) return;
+    if (from.redditVisitId) {
+      await attachRedditVisit(db, account.id, from.redditVisitId);
+      account.reddit_first_visit_id ??= from.redditVisitId;
+      account.reddit_last_visit_id = from.redditVisitId;
+    }
+    if (!env.GA_API_SECRET && !metaOn && !env.REDDIT_PIXEL_ID && !env.REDDIT_CAPI_TOKEN) return;
     const touch = await firstTouch(account, from);
-    const all = [...(await claimSignup(account)), ...events];
+    const signup = await claimSignup(account);
+    const all = [...signup.events, ...events];
     const client = from.ga ?? (account.ga_client_id ? { clientId: account.ga_client_id, sessionId: null } : serverClient(account));
     // The account's last known Meta ids stand in for any the event's own browser lacks.
     const browser: MetaBrowser = {
@@ -100,7 +109,13 @@ export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID
       url: from.meta?.url ?? null,
     };
     const metaEvents = all.map(metaEvent).filter((e): e is MetaEvent => e !== null);
-    await Promise.all([sendGa(env, { client, userId: account.id, emailHash: await emailHashOf(account), userProperties: touch ? firstTouchUserProperties(touch) : undefined, events: all }), sendMeta(env, { user: { externalId: account.id }, browser, events: metaEvents })]);
+    await Promise.all([
+      sendGa(env, { client, userId: account.id, emailHash: await emailHashOf(account), userProperties: touch ? firstTouchUserProperties(touch) : undefined, events: all }),
+      sendMeta(env, { user: { externalId: account.id }, browser, events: metaEvents }),
+      signup.claimed
+        ? redditConversions(env).queue(account, { trackingType: 'SIGN_UP', conversionId: `signup:${account.id}`, sourceRef: account.id, at: now(), website: true }, from.redditVisitId)
+        : Promise.resolve(),
+    ]);
   }
 
   return {
@@ -108,6 +123,11 @@ export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID
 
     /** A signed-in page view: remember the browser for later server-side events, and report a new sign-up from it. */
     async seen(account: Account, from: Visitor): Promise<void> {
+      if (from.redditVisitId) {
+        await attachRedditVisit(db, account.id, from.redditVisitId);
+        account.reddit_first_visit_id ??= from.redditVisitId;
+        account.reddit_last_visit_id = from.redditVisitId;
+      }
       const fbp = from.meta?.fbp ?? null;
       const fbc = from.meta?.fbc ?? null;
       if ((fbp && fbp !== account.meta_fbp) || (fbc && fbc !== account.meta_fbc)) {
@@ -120,9 +140,15 @@ export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID
     },
 
     /** Credits bought: a checkout (`transactionId` is its Stripe session) or a monthly reload (its invoice). */
-    purchase(account: Account, opts: { transactionId: string; cents: number; reload: boolean; from?: Visitor }): Promise<void> {
+    async purchase(account: Account, opts: { transactionId: string; cents: number; reload: boolean; firstPayment?: boolean; from?: Visitor }): Promise<void> {
       const params = { transaction_id: opts.transactionId, currency: 'USD', value: opts.cents / 100, reload: opts.reload };
-      return track(account, [{ name: 'purchase', params }], opts.from);
+      await track(account, [{ name: 'purchase', params }], opts.from);
+      const visitId = opts.from?.redditVisitId ?? account.reddit_last_visit_id ?? account.reddit_first_visit_id;
+      const reddit = redditConversions(env);
+      await reddit.queue(account, { trackingType: 'PURCHASE', conversionId: `purchase:${opts.transactionId}`, sourceRef: opts.transactionId, at: now(), value: opts.cents / 100, website: !opts.reload }, visitId);
+      if (opts.firstPayment) {
+        await reddit.queue(account, { trackingType: 'CUSTOM', customEventName: 'First payment', conversionId: `first_payment:${account.id}`, sourceRef: account.id, at: now(), website: true }, visitId);
+      }
     },
   };
 }
