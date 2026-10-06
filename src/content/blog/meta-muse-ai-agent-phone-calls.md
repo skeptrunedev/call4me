@@ -1,8 +1,8 @@
 ---
-title: "How to use Meta Muse with custom connectors (and give it a phone)"
-seoTitle: "Meta Muse custom connectors for phone calls"
+title: "Muse MCP: connect Meta Muse to phone calling tools"
+seoTitle: "Muse MCP: Meta Muse connectors for phone calls"
 subtitle: Connect Meta Muse to a phone calling service through a custom connector. Here is our tested setup, what a live balance check proves, how native calling differs and what to check before dialing.
-description: Set up a Meta Muse custom connector for call4me. Secure credential steps, MCP checks, native calling beta and troubleshooting from our account tests.
+description: "Use Muse MCP through a Meta Muse custom connector to add phone calling tools. Includes our tested balance check, setup prompt and calling brief."
 date: 2026-10-01
 updated: 2026-10-05
 tags: meta muse, ai agents, mcp, ai phone assistant
@@ -10,7 +10,7 @@ authors: nick
 imageAlt: Meta Muse AI agent connectors, with phone calls as the worked example
 ---
 
-**The short answer:** Muse can build a custom connector to call4me's hosted MCP server. In our October 1 account test, we asked Muse to build the integration, entered a key through its **Connect** card and received a live balance result. We did not find a native MCP server settings form in that tested web session.
+**Muse MCP setup uses a custom connector to reach Call4me's phone calling server.** In our October 1 Meta Muse account test, we asked Muse to build the integration, entered a key through its **Connect** card and received a live balance result. We did not find a native MCP server settings form in that tested web session, and we have not completed a Muse business call. This guide gives you the tested connection steps and a brief for an informational phone inquiry after your own access check succeeds.
 
 An early call4me user tried our general MCP setup prompt and Muse refused, saying its tools were fixed. Asking it to **build a custom connector** worked in our own account. This guide separates that observed result from Muse's descriptions of what its connector can do.
 

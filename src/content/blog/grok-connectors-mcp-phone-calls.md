@@ -1,8 +1,8 @@
 ---
-title: "Grok connectors and MCP: how to add custom tools to Grok (and make phone calls)"
-seoTitle: Grok connectors and MCP servers, explained
+title: "Grok MCP and Grok Bot MCP: add phone calling tools"
+seoTitle: "Grok MCP and Grok Bot MCP: phone calling setup"
 subtitle: Set up custom tools on grok.com, in Grok Bot or through the xAI API. Then hear our actual Grok Bot restaurant call, including the partial answer and the menu problem.
-description: "Add a custom Grok MCP connector and hear a real Grok Bot phone call. Setup, authentication, recording, transcript and what the call did not confirm."
+description: "Set up Grok MCP or Grok Bot MCP with Call4me to make phone calls. Follow the connector steps, check access and hear our recorded restaurant call."
 date: 2026-10-01
 updated: 2026-10-05
 tags: grok, mcp, ai agents, ai phone assistant
@@ -10,7 +10,7 @@ authors: nick
 imageAlt: Grok connectors and MCP servers, with phone calls as the worked example
 ---
 
-**The short answer:** yes, Grok supports MCP. Grok connectors are how Grok reaches tools and data outside the chat, and besides the built-in ones (Gmail, Google Drive, Outlook, Salesforce and others), you can add any public MCP server as a custom connector. Where you add it depends on which Grok you use: on **grok.com** you add it yourself at grok.com/connectors, in **Grok Bot** you ask the Bot to add a custom MCP server, and with the **xAI API** you pass the server in the `tools` array of your request. The worked example below adds call4me, an MCP server that makes phone calls, so Grok can call a restaurant or a doctor's office for you.
+**Grok MCP and Grok Bot MCP can connect your assistant to phone calling tools.** Call4me supplies the caller, so your assistant can ask a restaurant or a doctor's office a question and bring back the answer. Where you add the server depends on which Grok you use: on **grok.com** you add it yourself at grok.com/connectors, in **Grok Bot** you ask the Bot to add a custom MCP server, and with the **xAI API** you pass the server in the `tools` array of your request. This guide covers those setup paths, then lets you hear our actual Grok Bot restaurant call and inspect its partial result.
 
 We support Grok as one of the agents call4me works with, and the first version of our setup instructions mixed up grok.com and Grok Bot. So this page sorts out the three, using xAI's own docs.
 

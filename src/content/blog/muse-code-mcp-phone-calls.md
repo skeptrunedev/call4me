@@ -1,15 +1,15 @@
 ---
-title: "Connect Muse Code to phone calling tools with MCP"
-seoTitle: "Muse Code MCP phone calls: configuration and checks"
+title: "Muse Code MCP: connect phone calling tools"
+seoTitle: "Muse Code MCP: connect phone calling tools"
 subtitle: Keep a business phone inquiry in your terminal task. Connect the caller, supply the exact question and inspect the returned outcome, transcript and available recording.
-description: "Connect Muse Code to Call4me using remote MCP. Includes configuration examples, an access check prompt, a bounded inquiry brief and troubleshooting steps."
+description: "Set up Muse Code MCP for phone calls with Call4me. Includes tested server configuration, authentication checks, a calling brief and troubleshooting."
 date: 2026-10-05
 tags: meta muse, muse code, mcp, ai phone assistant
 authors: nick
 imageAlt: Muse Code connects to Call4me through MCP, checks account access and returns evidence from an authorized task
 ---
 
-**Use Muse Code to get a business's answer by phone and bring the result back to your terminal task.** Call4me supplies the caller through MCP. Give Muse Code the brief, then ask it to follow the call and report what the business actually answered.
+**Use Muse Code MCP to connect a phone caller to your terminal task.** Call4me supplies the calling tools. Give Muse Code a specific business inquiry, then ask it to follow the approved call and report what the business actually answered.
 
 This is the terminal client, not the consumer Muse app. Our [consumer Muse guide](/blog/meta-muse-ai-agent-phone-calls) describes a different custom connector workflow. Configuring one client does not configure the other.
 
