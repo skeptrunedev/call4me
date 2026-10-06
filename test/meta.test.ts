@@ -3,7 +3,8 @@ import test from 'node:test';
 import { createHash } from 'node:crypto';
 import { GRAPH_API_VERSION, metaBrowser, sendMeta } from '../src/server/lib/meta';
 import { analytics } from '../src/server/services/analytics';
-import type { Account } from '../src/server/services/accounts';
+import { accounts } from '../src/server/services/accounts';
+import { d1 } from './sqlite-d1';
 
 const sha256 = (s: string) => createHash('sha256').update(s).digest('hex');
 
@@ -84,50 +85,47 @@ test('sendMeta hashes the account id, sends only browser ids, and marks website 
 });
 
 test('analytics: sign_up reaches Meta once as CompleteRegistration; calls carry no details', async () => {
-  let claimed = false;
-  const db = {
-    prepare: (sql: string) => ({
-      bind: () => ({
-        run: async () => {
-          const won = sql.includes('ga_signup_at IS NULL') && !claimed;
-          if (won) claimed = true;
-          return { meta: { changes: won ? 1 : 0 } };
-        },
-        first: async () => ({ provider: 'google' }),
-      }),
-    }),
-  } as unknown as D1Database;
-  const account: Account = {
-    id: 'acct1',
-    email: 'a@example.com',
-    display_name: 'Ada Lovelace',
-    key_prefix: null,
-    created_at: 1_790_000_000_000,
-    ga_client_id: null,
-    ga_signup_at: null,
-    meta_fbp: 'fb.1.1596403881668.1116446470',
-    meta_fbc: 'fb.1.1554763741205.IwAR2F4',
-  };
+  const db = d1();
+  await db.prepare(`UPDATE accounts SET meta_fbp = ?, meta_fbc = ? WHERE id = ?`).bind('fb.1.1596403881668.1116446470', 'fb.1.1554763741205.IwAR2F4', 'acct_alice').run();
+  const account = (await accounts(db).byId('acct_alice'))!;
   const f = captureFetch();
   try {
     // Meta alone: GA's secret is unset, so every request is Meta's.
     const a = analytics({ DB: db, META_PIXEL_ID: '123', META_CAPI_TOKEN: 'tok' });
     await a.purchase(account, { transactionId: 'cs_1', cents: 2000, reload: false });
-    await a.track(account, [{ name: 'call_placed', params: { surface: 'mcp', category: 'dentist' } }]);
+    await a.track(account, [{ name: 'call_placed', params: { surface: 'mcp', category: 'dentist', call_id: 'call_1' } }]);
     await a.track(account, [{ name: 'call_ended', params: { status: 'completed' } }]);
-    assert.equal(f.bodies.length, 2, 'call_ended is not sent to Meta');
-    const events = f.bodies.map((b) => (b.data as Record<string, unknown>[]).map((e) => e.event_name));
-    assert.deepEqual(events, [['CompleteRegistration', 'Purchase'], ['CallPlaced']]);
-    const [signup, purchase] = f.bodies[0].data as Record<string, unknown>[];
+    assert.equal(f.bodies.length, 3, 'call_ended is not sent to Meta');
+    const [signup, purchase, call] = f.bodies.map((b) => (b.data as Record<string, unknown>[])[0]);
+    assert.deepEqual([signup.event_name, purchase.event_name, call.event_name], ['CompleteRegistration', 'Purchase', 'CallPlaced']);
+    assert.equal(signup.event_id, 'signup:acct_alice');
     assert.notEqual(signup.event_id, purchase.event_id);
     assert.equal(purchase.event_id, 'cs_1');
+    assert.equal(call.event_id, 'call_1');
     assert.deepEqual(purchase.custom_data, { currency: 'USD', value: 20 });
     // No browser was there: the account's stored ids stand in, and the event is not a website one.
-    assert.deepEqual(purchase.user_data, { external_id: [sha256('acct1')], fbp: account.meta_fbp, fbc: account.meta_fbc });
+    assert.deepEqual(purchase.user_data, { external_id: [sha256('acct_alice')], fbp: account.meta_fbp, fbc: account.meta_fbc });
     assert.equal(purchase.action_source, 'other');
-    const call = (f.bodies[1].data as Record<string, unknown>[])[0];
     assert.equal(call.custom_data, undefined);
-    assert.doesNotMatch(JSON.stringify(f.bodies), /dentist|example\.com|Ada|acct1/);
+    assert.doesNotMatch(JSON.stringify(f.bodies), /dentist|alice@example\.com/i);
+    const audit = await db.prepare(`SELECT status, attempts, last_http_status FROM meta_conversions WHERE conversion_id = ?`).bind('signup:acct_alice').first();
+    assert.deepEqual({ ...audit }, { status: 'sent', attempts: 1, last_http_status: 200 });
+  } finally {
+    f.restore();
+  }
+});
+
+test('analytics: a new account reports CompleteRegistration even when GA is blocked', async () => {
+  const db = d1();
+  const account = (await accounts(db).byId('acct_alice'))!;
+  const f = captureFetch();
+  try {
+    await analytics({ DB: db, META_PIXEL_ID: '123', META_CAPI_TOKEN: 'tok' }).seen(account, {
+      ga: null,
+      meta: { fbp: null, fbc: null, ip: '203.0.113.7', userAgent: 'Browser/1', url: 'https://call4.me/welcome' },
+    });
+    assert.equal((f.bodies[0].data as Record<string, unknown>[])[0].event_name, 'CompleteRegistration');
+    assert.equal((f.bodies[0].data as Record<string, unknown>[])[0].event_id, 'signup:acct_alice');
   } finally {
     f.restore();
   }

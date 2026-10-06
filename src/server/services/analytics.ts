@@ -8,7 +8,7 @@ import { decodeFirstTouch, firstTouchUserProperties, type FirstTouch } from '../
 import { gaEmailHash, sendGa, type GaClient, type GaEvent } from '../lib/ga';
 import { realEmail } from '../lib/auth-options';
 import { newId, now } from '../lib/ids';
-import { sendMeta, type MetaBrowser, type MetaEvent } from '../lib/meta';
+import { metaConversions, type MetaBrowser, type MetaEvent } from '../lib/meta';
 import type { Account } from './accounts';
 import { attachRedditVisit, redditConversions } from '../lib/reddit';
 
@@ -26,10 +26,10 @@ function serverClient(account: Account): GaClient {
  * The Meta side of an event. Calls carry nothing about who was called or why: the category
  * alone can be health information, which Meta must not get.
  */
-function metaEvent(e: GaEvent): MetaEvent | null {
+function metaEvent(account: Account, e: GaEvent): MetaEvent | null {
   switch (e.name) {
     case 'sign_up':
-      return { name: 'CompleteRegistration', id: newId() };
+      return { name: 'CompleteRegistration', id: `signup:${account.id}` };
     case 'purchase':
       return {
         name: 'Purchase',
@@ -38,7 +38,7 @@ function metaEvent(e: GaEvent): MetaEvent | null {
         customData: { currency: 'USD', value: Number(e.params?.value) },
       };
     case 'call_placed':
-      return { name: 'CallPlaced', id: newId() };
+      return { name: 'CallPlaced', id: String(e.params?.call_id ?? newId()) };
     default:
       return null;
   }
@@ -108,10 +108,12 @@ export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID
       userAgent: from.meta?.userAgent ?? null,
       url: from.meta?.url ?? null,
     };
-    const metaEvents = all.map(metaEvent).filter((e): e is MetaEvent => e !== null);
+    const metaEvents = all.map((event) => metaEvent(account, event)).filter((e): e is MetaEvent => e !== null);
+    const meta = metaConversions(env);
+    const eventAt = now();
     await Promise.all([
       sendGa(env, { client, userId: account.id, emailHash: await emailHashOf(account), userProperties: touch ? firstTouchUserProperties(touch) : undefined, events: all }),
-      sendMeta(env, { user: { externalId: account.id }, browser, events: metaEvents }),
+      ...metaEvents.map((event) => meta.queue(account, browser, event, eventAt)),
       signup.claimed
         ? redditConversions(env).queue(account, { trackingType: 'SIGN_UP', conversionId: `signup:${account.id}`, sourceRef: account.id, at: now(), website: true }, from.redditVisitId)
         : Promise.resolve(),
@@ -134,8 +136,7 @@ export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID
         await db.prepare(`UPDATE accounts SET meta_fbp = COALESCE(?, meta_fbp), meta_fbc = COALESCE(?, meta_fbc) WHERE id = ?`).bind(fbp, fbc, account.id).run();
       }
       await firstTouch(account, from);
-      if (!from.ga) return;
-      if (from.ga.clientId !== account.ga_client_id) await db.prepare(`UPDATE accounts SET ga_client_id = ? WHERE id = ?`).bind(from.ga.clientId, account.id).run();
+      if (from.ga && from.ga.clientId !== account.ga_client_id) await db.prepare(`UPDATE accounts SET ga_client_id = ? WHERE id = ?`).bind(from.ga.clientId, account.id).run();
       if (account.ga_signup_at === null) await track(account, [], from);
     },
 

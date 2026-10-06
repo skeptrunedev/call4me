@@ -34,6 +34,7 @@ import { exampleAudio } from './lib/example-audio';
 import { analytics, emailHashOf } from './services/analytics';
 import { firstTouchCookie, firstTouchOf, firstTouchSetCookie } from './lib/first-touch';
 import { redditConversions, redditCookies, redditVisitCookie, redditVisitOf, saveRedditVisit } from './lib/reddit';
+import { metaConversions } from './lib/meta';
 
 const app = new Hono<AppEnv>();
 
@@ -173,6 +174,7 @@ export default {
     ctx.waitUntil(failNeverDialed(env).then((n) => n && console.log('failed never-dialed calls', n)));
     ctx.waitUntil(settleLost(env).then((n) => n && console.log('settled lost calls', n)));
     const n = numbers(env);
+    ctx.waitUntil(metaConversions(env).flush().then((count) => count && console.log('meta conversions retried', count)));
     ctx.waitUntil(redditConversions(env).flush().then((count) => count && console.log('reddit conversions retried', count)));
     ctx.waitUntil(n.renewDue().then((r) => console.log('number renewals', JSON.stringify(r))));
     ctx.waitUntil(n.settlePending().then((r) => (r.activated || r.failed || r.waiting) && console.log('pending numbers', JSON.stringify(r))));

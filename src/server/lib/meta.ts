@@ -7,6 +7,8 @@
  * (the _fbp/_fbc cookies, IP address and user agent). Never an email, phone number or name.
  */
 import { sha256Hex } from './keys';
+import { now } from './ids';
+import type { Account } from '../services/accounts';
 
 /** Graph API version for the Conversions API (developers.facebook.com/docs/graph-api/changelog). */
 export const GRAPH_API_VERSION = 'v26.0';
@@ -39,6 +41,13 @@ export interface MetaEvent {
    */
   actionSource?: 'system_generated';
   customData?: Record<string, string | number>;
+}
+
+export interface MetaSendResult {
+  status: 'sent' | 'failed' | 'blocked';
+  httpStatus: number | null;
+  error: string | null;
+  response: string | null;
 }
 
 function cookie(header: string | null | undefined, name: string): string | null {
@@ -104,14 +113,72 @@ export async function metaPayload(opts: { user: MetaUser; browser: MetaBrowser |
  * Send one account's events to Meta. Unset META_PIXEL_ID or META_CAPI_TOKEN disables it, as in
  * local dev and tests. Never throws: analytics must not fail a payment webhook or a call.
  */
-export async function sendMeta(env: Pick<Env, 'META_PIXEL_ID' | 'META_CAPI_TOKEN'>, opts: { user: MetaUser; browser: MetaBrowser | null; events: MetaEvent[] }): Promise<void> {
-  if (!env.META_PIXEL_ID || !env.META_CAPI_TOKEN || opts.events.length === 0) return;
+async function postMeta(env: Pick<Env, 'META_PIXEL_ID' | 'META_CAPI_TOKEN'>, body: string): Promise<MetaSendResult> {
+  if (!env.META_PIXEL_ID || !env.META_CAPI_TOKEN) {
+    return { status: 'blocked', httpStatus: null, error: 'META_PIXEL_ID or META_CAPI_TOKEN is not configured', response: null };
+  }
   const url = `https://graph.facebook.com/${GRAPH_API_VERSION}/${encodeURIComponent(env.META_PIXEL_ID)}/events?access_token=${encodeURIComponent(env.META_CAPI_TOKEN)}`;
   try {
-    const body = JSON.stringify(await metaPayload(opts));
     const res = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body, signal: AbortSignal.timeout(3000) });
-    if (!res.ok) console.warn('meta send failed', res.status, (await res.text()).slice(0, 300), opts.events.map((e) => e.name).join(','));
+    const response = (await res.text()).slice(0, 1000);
+    return res.ok
+      ? { status: 'sent', httpStatus: res.status, error: null, response: response || null }
+      : { status: 'failed', httpStatus: res.status, error: `HTTP ${res.status}`, response: response || null };
   } catch (err) {
-    console.warn('meta send failed', String(err));
+    return { status: 'failed', httpStatus: null, error: String(err).slice(0, 500), response: null };
   }
+}
+
+export async function sendMeta(
+  env: Pick<Env, 'META_PIXEL_ID' | 'META_CAPI_TOKEN'>,
+  opts: { user: MetaUser; browser: MetaBrowser | null; events: MetaEvent[]; at?: number },
+): Promise<MetaSendResult> {
+  if (opts.events.length === 0) return { status: 'sent', httpStatus: null, error: null, response: null };
+  const result = await postMeta(env, JSON.stringify(await metaPayload(opts)));
+  if (result.status === 'failed') console.warn('meta send failed', result.httpStatus, result.error, result.response?.slice(0, 300), opts.events.map((e) => e.name).join(','));
+  return result;
+}
+
+type MetaEnv = Pick<Env, 'DB' | 'META_PIXEL_ID' | 'META_CAPI_TOKEN'>;
+
+/** Durable, auditable Meta CAPI delivery. The persisted payload is safe to inspect and retry. */
+export function metaConversions(env: MetaEnv) {
+  const configured = Boolean(env.META_PIXEL_ID && env.META_CAPI_TOKEN);
+
+  async function deliver(conversionId: string): Promise<void> {
+    const row = await env.DB.prepare(`SELECT payload FROM meta_conversions WHERE conversion_id = ? AND status != 'sent'`).bind(conversionId).first<{ payload: string }>();
+    if (!row) return;
+    const result = await postMeta(env, row.payload);
+    const attemptedAt = now();
+    await env.DB
+      .prepare(
+        `UPDATE meta_conversions SET status = ?, attempts = attempts + 1, last_http_status = ?, last_error = ?, last_response = ?, last_attempt_at = ?, delivered_at = CASE WHEN ? = 'sent' THEN ? ELSE delivered_at END WHERE conversion_id = ?`,
+      )
+      .bind(result.status, result.httpStatus, result.error, result.response, attemptedAt, result.status, attemptedAt, conversionId)
+      .run();
+    if (result.status === 'failed') console.warn('meta capi send failed', conversionId, result.error, result.response?.slice(0, 300));
+  }
+
+  return {
+    configured,
+    async queue(account: Account, browser: MetaBrowser | null, event: MetaEvent, at = now()): Promise<void> {
+      const payload = await metaPayload({ user: { externalId: account.id }, browser, events: [event], at });
+      await env.DB
+        .prepare(
+          `INSERT OR IGNORE INTO meta_conversions (conversion_id, account_id, event_name, source_ref, event_at, payload, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        )
+        .bind(event.id, account.id, event.name, event.id, at, JSON.stringify(payload), now())
+        .run();
+      await deliver(event.id);
+    },
+    deliver,
+    async flush(limit = 50): Promise<number> {
+      const { results } = await env.DB
+        .prepare(`SELECT conversion_id FROM meta_conversions WHERE status IN ('pending','failed','blocked') AND attempts < 8 ORDER BY event_at LIMIT ?`)
+        .bind(limit)
+        .all<{ conversion_id: string }>();
+      for (const row of results) await deliver(row.conversion_id);
+      return results.length;
+    },
+  };
 }
