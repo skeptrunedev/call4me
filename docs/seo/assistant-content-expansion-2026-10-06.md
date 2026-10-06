@@ -58,6 +58,18 @@ evidence improvement when its authenticated session is accessible.
 
 ## Verification
 
+## October 6 native session followthrough checkpoint
+
+The user requested completion after a Linux to Mac native desktop relay became
+available. Native observation confirms the signed in Muse application and a saved
+Call4me connector with a Disconnect action. This does not yet establish a fresh
+authenticated tool response or a call. The remaining test is a fresh conversation
+access check followed by one authorized Main Library inquiry, limited to four
+minutes and the original no booking, payment, voicemail or callback boundaries.
+Actual results and recording review will determine the publication changes.
+
+## Verification history
+
 Root reviewed all six articles and the new assets against the original stories.
 Existing audio files and source transcripts were reused without changes.
 Required checks include type checking, lint, the test suite, the deployment
