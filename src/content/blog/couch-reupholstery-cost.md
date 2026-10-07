@@ -13,6 +13,8 @@ imageAlt: Couch and chair reupholstery costs, compare fabric, labor and repairs
 
 We checked these official price pages on October 7, 2026. They are individual shops' published guides, not national averages or phone quotes obtained by call4me. Use them to structure your budget, then ask for an estimate for your actual piece.
 
+An AI agent can take on the calls needed to move from a price guide to your own estimate. [call4me](/) lets it ask shops about your sofa, photo requirements and collection area, then return the answers for your decision. See [how an AI calling agent handles a task for you](/blog/ai-agent-that-makes-phone-calls) for the overall workflow. For upholstery, the result should identify which shops can quote the work and what each still needs from you.
+
 ## Published couch reupholstery prices
 
 All figures below are in US dollars. The source links lead to each shop's price list.

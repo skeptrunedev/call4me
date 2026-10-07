@@ -11,7 +11,7 @@ imageAlt: Gyms with sauna near me, have your AI check access and hours
 
 **YMCA Fairfax County Reston confirmed a $30 day pass with dry sauna, steam room and pool access on our October 7, 2026 call.** Staff said an adult nonmember could visit without a member accompanying them. We asked general access questions through [call4me](/); no pass was purchased.
 
-To find gyms with a sauna near you, have your assistant check individual branches and call about access. Our Northern Virginia example also uncovered conflicting hours, exactly the kind of detail worth resolving before a trip.
+To find gyms with a sauna near you, have your assistant check individual branches and call about access. This is a practical task for an [AI phone assistant](/blog/ai-agent-that-makes-phone-calls): take the rooms and visit time you want, ask the branch about guest entry, and return whether the visit is feasible. Our Northern Virginia example also uncovered conflicting hours, exactly the kind of detail worth resolving before a trip.
 
 ## Ask your AI agent to find a sauna you can actually visit
 

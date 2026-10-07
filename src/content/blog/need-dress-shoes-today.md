@@ -14,6 +14,8 @@ imageAlt: Need dress shoes today, 3 DC stores called, 1 pair on hold by 11 am
 
 The user's ask: plain black men's dress shoes, size 10 or 10.5, no sneakers or white soles, **$120 or less including tax**, and something they could buy that day.
 
+This is the workflow behind an [AI agent that makes calls for you](/blog/ai-agent-that-makes-phone-calls): turn a deadline and item requirements into store questions, compare the answers, then act on the option you authorize. Here the user approved a hold after the search. The recorded result is a pair set aside, not a completed purchase or collection.
+
 What it took:
 
 1. **Two Nordstrom Racks, no specific pair.** One store put us on hold, and then our caller stopped hearing the line (our bug, more below). The other said it had "quite a variety" but needed an item number from the website to check a specific shoe.

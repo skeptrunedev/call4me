@@ -14,6 +14,8 @@ To **check store availability**, first select the location on the retailer's pro
 
 Already bought the item? Ask whether **your order is ready for pickup**, including every item and any alterations. The order workflow below includes a fresh Suitsupply policy inquiry and its published guidance, alongside the recorded Macy's inventory check.
 
+Shopping is one way to use an [AI agent to make calls and handle errands](/blog/ai-agent-that-makes-phone-calls). Give it the exact item or order, branch and collection deadline. It can ask staff for the missing facts and bring back a pickup plan; requesting a hold or changing an order needs its own instruction from you.
+
 If you already use Claude Code or Codex to research a purchase, [call4me](/) lets the same assistant call the store for the missing details. Connect through the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). These are suggested workflows; the recording below does not identify the customer's client.
 
 On October 6, 2026, a call4me customer's AI assistant called **Macy's Herald Square** about a Michelsons of London black silk bow tie that comes already tied. The assistant reached the accessories department after several phone menus. A representative checked the item and said the store had **88 available at a sale price of $33**.

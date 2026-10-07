@@ -1,4 +1,5 @@
 import type { PostSource } from '../../server/lib/blog';
+import aiAgentPhoneCalls from './ai-agent-that-makes-phone-calls.md';
 import gymDayPass from './gym-day-pass.md';
 import gymsWithSauna from './gyms-with-sauna-near-me.md';
 import bloodWorkCost from './how-much-does-blood-work-cost.md';
@@ -83,6 +84,7 @@ import metaMuseSupplierQuotes from './meta-muse-supplier-quotes.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'ai-agent-that-makes-phone-calls', markdown: aiAgentPhoneCalls },
   { slug: 'gym-day-pass', markdown: gymDayPass },
   { slug: 'gyms-with-sauna-near-me', markdown: gymsWithSauna },
   { slug: 'how-much-does-blood-work-cost', markdown: bloodWorkCost },

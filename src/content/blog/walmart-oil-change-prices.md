@@ -13,7 +13,7 @@ imageAlt: Walmart oil change prices, ask your AI agent to check locally
 
 We used [call4me](/) to call three Walmart locations about oil changes. Two could not connect us to an associate. The third connected us to Walmart's AI customer care agent, which gave a synthetic price that differed from the website. We reached no human and booked no service.
 
-That leaves a useful task for your own assistant: gather the starting prices, ask a local employee what your vehicle actually needs, and return the total and available times before you drive over.
+That leaves a useful task for an [AI assistant that calls businesses for you](/blog/ai-agent-that-makes-phone-calls): take your vehicle details, gather the starting prices and ask a local employee what your car actually needs. Have it return the quoted total and available times, or identify what it could not confirm, before you drive over.
 
 ## Walmart oil change price list
 

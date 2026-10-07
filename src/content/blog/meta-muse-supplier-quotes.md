@@ -12,6 +12,8 @@ imageAlt: Supplier phone calls share one specification and return comparable quo
 
 **Ask Muse to prepare supplier calls around one shared specification, then compare the answers it actually gets.** Use the phone to clarify dimensions, delivery charges and timing that published listings leave open. A useful quote identifies the exact order, who answered and which charges remain unconfirmed.
 
+Supplier research is one way to use an [AI agent that makes calls on your behalf](/blog/ai-agent-that-makes-phone-calls). [call4me](/) provides the phone connection; your agent carries the order brief through research, approved calls and a comparison you can act on. In this guide, the intended result is a sourced supplier shortlist with complete quotes or explicit next steps for missing information.
+
 Meta announced [Muse for Small Business](https://about.fb.com/news/2026/09/introducing-muse-small-business/) on September 29. It adds business skills and connectors, including custom connections for services outside the built in list. A supplier calling task is a practical use case: research the exact products, prepare one question set and ask each approved supplier about the same quantity and destination. This guide uses the consumer Muse app with a Call4me custom connection, rather than Muse Code.
 
 We researched the published listings below on October 5, 2026. We did not request a supplier quote, make a supplier call or execute this workflow in Muse. The delivered cost example later in this article is synthetic and is labeled accordingly.

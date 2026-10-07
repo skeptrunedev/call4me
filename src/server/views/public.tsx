@@ -87,6 +87,7 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
           <li>sitting through phone menus and hold music</li>
           <li>businesses abroad: europe, the uae and japan from your free us number, plus a local number in any of {offers(p.countries).live.length} countries (see the <a href="#faq">faq</a>)</li>
         </ul>
+        <p>start with a task: <a href="/blog/ai-agent-that-makes-phone-calls">how an AI agent makes calls and gets things done for you</a>.</p>
         <h3>how it sounds</h3>
         <p><a href="/examples">hear the agent on real calls</a></p>
         <ul>

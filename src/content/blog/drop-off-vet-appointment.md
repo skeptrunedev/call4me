@@ -4,6 +4,7 @@ seoTitle: Drop off vet appointment: book with your assistant
 subtitle: Give the assistant you already use the booking details and questions for the clinic. A real customer call confirmed Tuesday at 8:30 AM, with the branch still needing verification.
 description: Book a drop off vet appointment through your existing AI assistant. Hear a real call and use a suggested Claude Code or Codex booking prompt.
 date: 2026-10-05
+updated: 2026-10-07
 tags: vet appointments, pets, bookings, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Drop off vet appointment, Tuesday at 8:30 AM confirmed on a real call
@@ -13,7 +14,9 @@ A **drop off vet appointment** means you bring your pet to the clinic, leave the
 
 On October 4, 2026, a call4me customer had an AI assistant phone a veterinary clinic for the earliest available visit for a senior dog. The front desk confirmed **Tuesday at 8:30 AM as a dropoff**. The automated greeting and the person who answered used different branch names, so the destination still needed verification. The call did not establish an exam price, pickup time or whether the dog's symptoms required faster care.
 
-If you use Claude Code or Codex as a personal assistant, the booking call can stay part of the pet care task you already have open. [call4me](/) gives that assistant a way to phone the clinic and return the appointment details. Follow the [Claude Code setup](/blog/claude-code-phone-calls) or [Codex setup](/blog/codex-phone-calls), then use the suggested booking workflow below. Those instructions are separate from the recorded customer call, whose client is not established here.
+If you use Claude Code or Codex as a personal assistant, the booking call can stay part of the pet care task you already have open. [call4me](/) gives that assistant a way to phone the clinic and return the appointment details. Our [AI phone agent workflow guide](/blog/ai-agent-that-makes-phone-calls) explains how to give it a task with clear limits. For a vet visit, provide the pet details and arrival times you authorize, then ask for the confirmed appointment, location and any questions the veterinary team still needs to answer.
+
+Follow the [Claude Code setup](/blog/claude-code-phone-calls) or [Codex setup](/blog/codex-phone-calls), then use the suggested booking workflow below. Those instructions are separate from the recorded customer call, whose client is not established here.
 
 ## What happens at a drop off vet appointment?
 

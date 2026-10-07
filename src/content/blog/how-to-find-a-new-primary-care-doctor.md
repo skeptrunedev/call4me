@@ -2,7 +2,7 @@
 title: How to find a new primary care doctor with an out-of-state plan (15 recorded calls)
 seoTitle: "Find a new primary care doctor: 15 real calls"
 subtitle: A call4me user in Baltimore needed a new primary care doctor and had an out-of-state Blue Cross Blue Shield PPO. Their AI phone assistant called 10 practices. Here's who was taking new patients, who took the plan, how far out the first opening was, a $2,121 surprise, and all 15 recordings.
-description: We called 10 Baltimore-area practices to find a new primary care doctor on an out-of-state BCBS PPO. Who took it, the wait, and what to ask.
+description: Hear an AI agent call 10 practices to find a new primary care doctor. Compare insurance answers, openings and two bookings, then reuse the prompt.
 date: 2026-10-01
 updated: 2026-10-07
 tags: primary care doctor, new patient, bluecard, blue cross blue shield, insurance, ai phone assistant
@@ -11,6 +11,8 @@ imageAlt: Finding a new primary care doctor, 15 calls to 10 practices, 2 new-pat
 ---
 
 **The short answer:** how to find a new primary care doctor comes down to calling several practices and asking the same four questions at each one: **are you taking new patients**, **do you take my insurance**, **what's your first new-patient opening, with anyone**, and **is there a membership fee**. On 15 calls to 10 practices in and around Baltimore, it took an afternoon and a morning to get two new-patient visits booked, and both were **about 5 and 6 weeks out**.
+
+This is an example of using [call4me](/) to give an AI agent the phone work in a larger errand. The user supplied the search criteria, the caller asked practices about availability and insurance, and followup calls completed two bookings. Our [guide to AI agents that make calls and complete tasks](/blog/ai-agent-that-makes-phone-calls) explains how to define the outcome and check what was confirmed. The recordings here show both the successful bookings and the calls that needed another attempt.
 
 What the calls turned up:
 
@@ -254,7 +256,7 @@ An hour after the first call ran out, our caller called back and finished it.
 - **2:11** "What is your first name?" Our caller: "I'm [name removed]'s assistant"
 - **2:29** Last name and date of birth (muted)
 - **2:50** Home address and insurance details. The plan name stays in; the member and group numbers are muted
-- **3:21** Correcting the phone number. At **3:34**: "already updated here"
+- **3:21** Checking the phone number. At **3:34**: "already updated here"
 - **3:59** "Let me check here if he's accepting new patients"
 - **4:16** "Right now, Dr. [name removed] is accepting new patients. Let me just place the call on hold for a few minutes"
 - **4:30** About three and a half minutes of hold music
@@ -298,7 +300,7 @@ The morning's first call to this practice got three times on November 3, but the
 
 - **It went quiet at the worst moments.** At Sinai, right after "the earliest is October 8th," the front desk said "Hello?" three times and the call ended, with an October 8 opening on the table. At Meshulam Medicine, the call ended the same way before the opening came up. On the second call to 1st Medical Associates, our caller never answered the automated assistant's question, and then a person picked up and said "I am unable to hear you."
 - **Four calls hit an 8-minute limit** the user's agent had set, mid-conversation: one while the scheduler was asking which time to book, one while the front desk was still looking up a doctor, one during registration, and one on hold for the first opening. A longer limit on new-patient calls would likely have saved two callbacks. A fifth call sat in about 9 minutes of dead silence after a hold message and hit its 12-minute limit with no one picking up.
-- **It gave a wrong phone number,** twice, as the patient's callback number: once to the Baltimore County practice and once in the voicemail at Midtown. The second call to that practice corrected it.
+- **It gave a wrong phone number,** twice, as the patient's callback number: once to the Baltimore County practice and once in the voicemail at Midtown. The second call to that practice verified that the correct number was already on file.
 - **It wouldn't give a name.** Asked for its own name "for documentation," it said "I'm [name removed]'s assistant. I don't really have a name." It should have given the one it opened other calls with.
 - **It stopped at the menu at BW Primary Care.** The menu says the practice isn't taking new patients, and the call ended there. Pressing 3 for an office associate, to ask about other doctors or a waitlist, was the brief's backup plan.
 

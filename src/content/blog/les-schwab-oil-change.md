@@ -4,6 +4,7 @@ seoTitle: Does Les Schwab do oil changes? An AI phone quote
 subtitle: Let the assistant you already use ask your store about service, price and availability. A real customer call got a $100 to $110 combined quote and a walk in plan.
 description: Have your AI assistant check Les Schwab oil change cost and availability. Hear a real store quote and try a suggested Claude Code or Codex workflow.
 date: 2026-10-05
+updated: 2026-10-07
 tags: oil change, les schwab, tire rotation, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Does Les Schwab do oil changes, a real $100 to $110 store quote
@@ -15,7 +16,9 @@ On October 3, 2026, a call4me assistant phoned the [McKinleyville store](https:/
 
 **That was a price estimate and a walk in plan.** Monday's reserved appointments were already full. The call did not secure a reserved appointment or prove the work was later completed.
 
-If Claude Code or Codex is already helping you plan car maintenance, you can give that same assistant the store call. [call4me](/) lets it ask about your vehicle, price and availability and bring the answers back to your plan. Use the [Claude Code calling guide](/blog/claude-code-phone-calls) or [Codex calling guide](/blog/codex-phone-calls) to connect. The customer recording below does not establish which client they used; the assistant workflow is a suggested way to handle a similar task.
+If Claude Code or Codex is already helping you plan car maintenance, you can give that same assistant the store call. [call4me](/) connects it to the phone so it can ask about your vehicle, price and availability and bring the answers back to your plan. The [guide to using an AI agent for phone errands](/blog/ai-agent-that-makes-phone-calls) explains how to set the task and check the result. Here, that means giving it your vehicle and arrival window, then getting back a quote and a clear distinction between a reserved appointment and a walk in plan.
+
+Use the [Claude Code calling guide](/blog/claude-code-phone-calls) or [Codex calling guide](/blog/codex-phone-calls) to connect. The customer recording below does not establish which client they used; the assistant workflow is a suggested way to handle a similar task.
 
 ## Listen to the store call (2 minutes 47 seconds)
 

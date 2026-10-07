@@ -13,6 +13,8 @@ imageAlt: Dog teeth cleaning cost, three clinic calls with different prices and 
 
 The most useful finding was the difference in coverage. Houston Pet Dental included bloodwork and dental X rays in its base price. Chewy included dental X rays but charged separately for bloodwork. Houston Humane Society said it did not offer X rays. Comparing the advertised number alone would miss those differences.
 
+These calls show a practical task to delegate to an [AI agent that calls businesses for you](/blog/ai-agent-that-makes-phone-calls): ask each clinic the same pricing questions and bring back comparable answers. The prompt below uses that workflow for your pet. You choose the clinic, and the veterinary team determines the care needed.
+
 ## Compare the three dental cleaning quotes
 
 All phone answers below were obtained with [call4me](/) on October 7, 2026. We did not supply a pet profile, book care or authorize treatment. The full recordings and pricing excerpts appear below.

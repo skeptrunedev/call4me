@@ -16,7 +16,7 @@ We obtained those answers with [call4me](/) on October 6, 2026. This was a gener
 
 ## Give the cancellation task to your AI agent
 
-If cancelling Crunch is sitting on your task list, ask your existing assistant to work out the route and prepare what you need to submit. It can use the published instructions first, then [call4me](/mcp) to ask your home club about missing details. Follow the [Claude Code calling guide](/blog/claude-code-phone-calls) or [Codex calling guide](/blog/codex-phone-calls) to connect phone calls to your agent.
+If cancelling Crunch is sitting on your task list, give your home club, agreement type and renewal date to an [AI agent that calls and helps with errands](/blog/ai-agent-that-makes-phone-calls). Ask it to work out the accepted route and prepare what you need to submit. It can use the published instructions first, then [call4me](/mcp) to ask your home club about missing details. The result should identify what the club confirmed, what you still need to submit and how to verify that cancellation is complete. Follow the [Claude Code calling guide](/blog/claude-code-phone-calls) or [Codex calling guide](/blog/codex-phone-calls) to connect phone calls to your agent.
 
 Copy this suggested task into your assistant:
 

@@ -13,7 +13,7 @@ imageAlt: Gym and pool day passes, check price, access and the time you want to 
 
 The same conversation brought out the condition that matters: lessons and classes can close parts of the pool. A pass price does not establish that a lane or hot tub will be available at your arrival time. We also found a difference between the broad hours answer on the phone and the detailed published pool schedule, explained below.
 
-We made this general informational call with [call4me](/). No pass was bought and no visit or class was booked. These are dated answers from one facility, not a national price range.
+We made this general informational call with [call4me](/). No pass was bought and no visit or class was booked. These are dated answers from one facility, not a national price range. For your own trip, an [AI agent that calls for you](/blog/ai-agent-that-makes-phone-calls) can turn your location, budget and visit window into questions for the front desk, then return the access details you need to choose where to go.
 
 ## Ask your AI assistant to find a gym day pass
 

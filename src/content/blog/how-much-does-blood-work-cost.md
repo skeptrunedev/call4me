@@ -11,7 +11,7 @@ imageAlt: How much does blood work cost, compare the exact tests and complete pr
 
 **Blood work has no single price because the test list matters.** On October 7, 2026, Labcorp OnDemand listed a complete blood count (CBC) for **$29**, while Quest Health listed its CBC for **$29 plus a $6 physician service fee**, or **$35 for that test and stated fee**. A metabolic panel or a longer list of tests is a different purchase. These are published online prices, not estimates of what your insurance or a hospital will charge.
 
-Your AI assistant can help turn a clinician's test list into a comparison: find the matching tests, check fees, call about missing details and bring back a quote. The useful output is the price for the exact requested work at an available location.
+Your AI assistant can help turn a clinician's test list into a comparison: find the matching tests, check fees, call about missing details and bring back a quote. [call4me](/) supplies the phone calls so the assistant can continue the errand when a lab needs to answer directly. Our guide to [an AI agent that makes phone calls for you](/blog/ai-agent-that-makes-phone-calls) explains how to set the task and check the result. Here, the useful output is the price for the exact requested work at an available location.
 
 ## Published blood test prices to use as a starting point
 

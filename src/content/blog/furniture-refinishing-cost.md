@@ -13,6 +13,8 @@ imageAlt: Furniture refinishing cost, compare the piece, finish and complete est
 
 We checked three official shop pages on October 7, 2026. Use their prices to frame a request, then have your AI assistant find local shops, confirm the work they accept and collect comparable estimates. No phone price was obtained for this guide.
 
+With [call4me](/), you can delegate the shop calls to the same AI agent doing that research. Give it the piece, desired finish and deadline, and ask it to return suitable shops with the next step for each estimate. The broader [guide to delegating phone errands to an AI agent](/blog/ai-agent-that-makes-phone-calls) covers the brief, calls and result checks; the prompt below applies that process to refinishing.
+
 ## Published furniture refinishing prices by item
 
 All figures below are in US dollars. The shops serve different markets and describe their services differently. Their ranges are starting research, not competing bids for an identical job.

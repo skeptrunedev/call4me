@@ -15,7 +15,7 @@ That is a dated quote from one shop. We asked general pricing questions with [ca
 
 ## Have your AI agent compare wheel alignment prices
 
-Your assistant can turn a maintenance reminder into a short list of shops with prices and availability. Start with published information, then have it call about the details needed to choose. Connect [call4me](/mcp) using the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls), then give the assistant this task:
+Use an [AI agent that makes phone calls for you](/blog/ai-agent-that-makes-phone-calls) to turn your vehicle details and schedule into a comparison of local alignment options. Start with published information, then have it call about missing prices, warranty terms and availability. Ask it to return each shop’s confirmed answers and unresolved questions before you choose. Connect [call4me](/mcp) using the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls), then give the assistant this task:
 
 > Compare wheel alignment options near [city or ZIP code] for my [year, make, model and any suspension modifications]. Check official shop websites first, then use call4me to call up to [number] shops for missing details. Ask for the total estimate including taxes and fees, which wheels and adjustments it covers, whether a suspension inspection and alignment printout are included, and what could cost extra. Compare standard and lifetime options with their written warranty conditions. Ask about appointments on [dates], walk in waits and dropoff options. Return a table with the shop, quote date, source, price, coverage, availability and unanswered questions. Do not book, pay or authorize repairs yet.
 

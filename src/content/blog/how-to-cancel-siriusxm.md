@@ -15,7 +15,7 @@ We called SiriusXM with [call4me](/) on October 7, 2026. A human representative 
 
 ## Give your AI agent the cancellation task
 
-Your assistant can organize the task before you spend time in a support queue. Ask it to find the correct route, prepare your questions and keep track of what remains unfinished. If published instructions leave a question unanswered, it can use [call4me](/mcp) to call for clarification.
+An [AI agent that handles phone tasks for you](/blog/ai-agent-that-makes-phone-calls) can use your billing provider and renewal date to find the correct cancellation route, prepare your questions and track what remains unfinished. If published instructions leave a question unanswered, it can use [call4me](/mcp) to call for clarification. Ask it to return the confirmed route and any remaining account holder steps, then track cancellation separately until you have confirmation.
 
 Connect your assistant using the [Claude Code phone calling guide](/blog/claude-code-phone-calls) or [Codex phone calling guide](/blog/codex-phone-calls), then give it this task:
 
