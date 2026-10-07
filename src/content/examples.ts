@@ -9,6 +9,7 @@ export interface CallExample {
   audio: string | null;
   duration: string;
   guide?: { href: string; label: string };
+  highlight?: { seconds: number; label: string };
   transcript: TranscriptLine[];
 }
 
@@ -20,6 +21,52 @@ export type TranscriptLine =
 
 /** Recorded conversations keep normal speed; unrecorded calls are explicitly labeled. */
 export const EXAMPLES: CallExample[] = [
+  {
+    slug: 'wheel-alignment-cost',
+    title: 'get a wheel alignment quote without waiting on hold',
+    business: 'Wheel Works, Franklin Street, San Francisco',
+    date: 'October 7, 2026',
+    request: 'ask for standard and lifetime alignment prices, what the service includes, and whether an appointment is needed.',
+    outcome: 'after waiting on hold, the agent got a $129.99 starting quote for standard alignment and about $210 for the lifetime option. staff said they check the suspension, accept walk ins and usually need one to two hours. this was a general quote, with no vehicle specified or service booked. taxes and extra repairs were not priced. the written standard warranty is limited to 12 months or 12,000 miles.',
+    audio: '/static/blog/wheel-alignment-cost.mp3',
+    duration: '6 minutes 15 seconds',
+    guide: { href: '/blog/wheel-alignment-cost', label: 'Wheel alignment cost: compare local quotes with your AI agent' },
+    highlight: { seconds: 298, label: 'jump to the price quote at 4:58' },
+    transcript: [
+      { note: 'Selected excerpts after the hold. The full recording preserves the greeting, hold advertisements, original voices and timing. These excerpts were checked against independent automatic transcriptions; no human listening verification is claimed.' },
+      { speaker: 'representative', text: 'So, our starting alignment is $129.99. It does come with a full year warranty, so you are able to bring it back to us or any other Wheel Works, Firestone, or Bridgestone to realign it for free for a full year.' },
+      { speaker: 'representative', text: "And then we offer a lifetime warranty for the alignment as well. It's about an $80 difference compared to the one year. And that one you can come as many times as needed for free for as long as you own the vehicle. And that's $210." },
+      { speaker: 'ai agent', text: 'Oh, great. That makes sense. And is the alignment just an adjustment or does it include things like checking suspension or any extra parts?' },
+      { speaker: 'representative', text: 'When we do the alignment, we double check the suspension as well.' },
+      { speaker: 'ai agent', text: "Awesome, thanks. And do you need an appointment for that? And what's the usual time it takes?" },
+      { speaker: 'representative', text: "No appointment needed necessary. We do schedule them if you do, if you did want to make them. I'm sorry, and it takes anywhere from maybe one to two hours. Just depends on how out the vehicle is. If it's not so out, then it would take a little less time." },
+      { note: 'The written warranty qualification is explained in the linked guide. The phone answer did not establish taxes, fees or extra repair costs. Closing acknowledgments are omitted from these excerpts, but remain in the audio.' },
+    ],
+  },
+  {
+    slug: 'siriusxm-cancellation-inquiry',
+    title: 'reach a person to check SiriusXM cancellation instructions',
+    business: 'SiriusXM customer support',
+    date: 'October 7, 2026',
+    request: 'reach a human and ask how direct subscribers can cancel and how the cancellation is confirmed.',
+    outcome: 'the agent asked the virtual assistant for a person and reached a representative, who confirmed phone or online chat cancellation and an email after processing. no subscription was cancelled or account accessed. account verification, assistant authorization, refunds and the effective date were not tested.',
+    audio: '/static/blog/how-to-cancel-siriusxm.mp3',
+    duration: '3 minutes 14 seconds',
+    guide: { href: '/blog/how-to-cancel-siriusxm', label: 'How to cancel SiriusXM with help from your AI agent' },
+    highlight: { seconds: 165, label: 'jump to the representative’s answer at 2:45' },
+    transcript: [
+      { note: 'Selected excerpts. The full recording preserves the transfer, pauses and original timing. The employee name and a brief ambiguous greeting are muted. These excerpts were checked against independent automatic transcriptions; no human listening verification is claimed.' },
+      { speaker: 'ai agent', text: 'This is actually just a general policy question. Could I speak with the representative, please?' },
+      { note: 'The virtual assistant asks what help is needed.' },
+      { speaker: 'ai agent', text: "It's kind of a general policy question for a consumer guide, not for a specific account. Could I talk with a live person about that?" },
+      { speaker: 'phone system', text: "Since you're looking for details on our policies for your consumer guide, I'll connect you to a live specialist who can help you out." },
+      { note: 'Transfer and introductions omitted from these excerpts. The representative asks whether the caller has an active subscription.' },
+      { speaker: 'ai agent', text: "No, this isn't about an account. It's just a general policy question." },
+      { speaker: 'ai agent', text: "Sure. So for direct billed subscriptions, what cancellation routes are currently available? Phone, online, chat, and how do customers confirm it's actually canceled?" },
+      { speaker: 'representative', text: 'So we can cancel the service through online chat and call, and once this cancellation has been processed, the subscriber will be receiving a confirmation email.' },
+      { note: 'Closing acknowledgments omitted from these excerpts. No cancellation was requested or performed.' },
+    ],
+  },
   {
     slug: 'wyoming-registered-agent-consent',
     title: 'get a Wyoming registered agent consent emailed',

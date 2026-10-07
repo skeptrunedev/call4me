@@ -9,7 +9,19 @@ const AUDIO_SCRIPT = `document.addEventListener('play', function (event) {
   document.querySelectorAll('.example audio').forEach(function (audio) {
     if (audio !== event.target) audio.pause();
   });
-}, true);`;
+}, true);
+document.addEventListener('click', function (event) {
+  var link = event.target instanceof Element && event.target.closest('a.example-highlight');
+  if (!link) return;
+  var audio = link.closest('.example').querySelector('audio');
+  if (!audio) return;
+  event.preventDefault();
+  audio.currentTime = Number(link.dataset.t);
+  audio.play().catch(function (error) {
+    if (error.name !== 'AbortError') throw error;
+  });
+  audio.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+});`;
 
 export const ExamplesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ signedIn, agentPrompt }) => (
   <Layout title="examples" page="examples" signedIn={signedIn}>
@@ -27,6 +39,7 @@ export const ExamplesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
           {example.audio ? <audio controls preload="metadata" aria-label={`listen: ${example.title}`} src={example.audio}>
             <a href={example.audio}>listen to the recording</a>
           </audio> : <p class="small">no recording is available for this call. the transcript below is saved call text with private details removed, rather than an audio verified transcript.</p>}
+          {example.audio && example.highlight && <p class="small"><a class="example-highlight" href={`${example.audio}#t=${example.highlight.seconds}`} data-t={example.highlight.seconds}>{example.highlight.label}</a></p>}
           <details>
             <summary>read the transcript</summary>
             <div class="example-transcript">
