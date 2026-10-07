@@ -98,6 +98,7 @@ export const BlogIndex: FC<{
       title="blog: real calls to businesses, recorded"
       page="blog"
       signedIn={signedIn}
+      noindex={Boolean(q) || tab !== 'latest'}
       meta={{
         jsonLd: {
           '@context': 'https://schema.org',

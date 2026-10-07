@@ -1,6 +1,6 @@
 ---
 title: "Wyoming registered agent consent form: how to get it"
-seoTitle: "Wyoming registered agent consent form: how to get it"
+seoTitle: "Wyoming registered agent consent form guide"
 subtitle: I asked my assistant to call our Wyoming provider and get the signed consent emailed to us. Here is the real call, the official form, and a prompt you can use.
 description: Get your Wyoming registered agent consent form. See the official form, hear a real call that got the document emailed, and use an assistant prompt.
 date: 2026-10-05

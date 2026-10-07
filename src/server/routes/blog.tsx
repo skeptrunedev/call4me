@@ -6,7 +6,7 @@ import { archive, atomFeed, related, renderAll, searchPosts, type Post } from '.
 import { clientIp, field, origin, safeNext, stripeFor, viewerKey, type AppContext, type AppEnv } from '../lib/context';
 import { blogPrompt, postPrompt } from '../lib/prompts';
 import { messengerFor } from '../lib/messaging';
-import { blog as blogService, BlogError } from '../services/blog';
+import { blog as blogService, BlogError, type CommentRow } from '../services/blog';
 import { supporters } from '../services/supporters';
 import { BlogArchive, BlogIndex, BlogPost, SubscribeConfirm, SubscribeResult, type Tab } from '../views/blog';
 
@@ -41,6 +41,14 @@ const supportOf = (c: AppContext) => supporters(c.env.DB, stripeFor(c), c.env);
 const CACHE = { 'cache-control': 'public, max-age=600' };
 const READER_COOKIE = 'cb_reader';
 
+/**
+ * Crawlers need the article, metadata and links, not viewer-specific likes or fresh social
+ * counters. Skipping those D1 reads keeps a cold crawl from waiting on the database while the
+ * rendered editorial content stays identical.
+ */
+const isCrawler = (c: AppContext) => /bot|crawler|spider|slurp|facebookexternalhit|bingpreview/i.test(c.req.header('user-agent') ?? '');
+const emptyEngagement = (all: Post[]) => new Map(all.map((p) => [p.slug, { likes: 0, comments: 0 }]));
+
 /** An opaque per-browser id so a like counts once. Functional only; nothing else reads it. */
 function reader(c: AppContext): string {
   let id = getCookie(c, READER_COOKIE);
@@ -63,21 +71,23 @@ blog.get('/', async (c) => {
   const all = posts();
   const tab = (['latest', 'top'].includes(c.req.query('tab') ?? '') ? c.req.query('tab') : 'latest') as Tab;
   const q = (c.req.query('q') ?? '').trim().slice(0, 100);
-  const s = svc(c, replica(c));
-  const [engagement, subscribers] = await Promise.all([s.engagement(all.map((p) => p.slug)), s.subscriberCount()]);
+  const crawler = !c.get('account') && isCrawler(c);
+  const s = crawler ? null : svc(c, replica(c));
+  const [engagement, subscribers] = crawler ? [emptyEngagement(all), 0] as const : await Promise.all([s!.engagement(all.map((p) => p.slug)), s!.subscriberCount()]);
   let list = q ? searchPosts(all, q) : all;
   const score = (p: Post) => {
     const e = engagement.get(p.slug)!;
     return e.likes * 10 + e.comments;
   };
   if (!q && tab !== 'latest') list = [...list].sort((a, b) => score(b) - score(a) || (a.date < b.date ? 1 : -1));
-  const agentPrompt = blogPrompt(origin(c), await viewerKey(c));
+  const agentPrompt = blogPrompt(origin(c), crawler ? null : await viewerKey(c));
   return c.html(<BlogIndex signedIn={Boolean(c.get('account'))} posts={list} all={all} engagement={engagement} tab={tab} q={q} subscribers={subscribers} subscribed={c.req.query('subscribed')} agentPrompt={agentPrompt} />);
 });
 
 blog.get('/archive', async (c) => {
   const all = posts();
-  return c.html(<BlogArchive signedIn={Boolean(c.get('account'))} groups={archive(all)} engagement={await svc(c, replica(c)).engagement(all.map((p) => p.slug))} agentPrompt={blogPrompt(origin(c), await viewerKey(c))} />);
+  const crawler = !c.get('account') && isCrawler(c);
+  return c.html(<BlogArchive signedIn={Boolean(c.get('account'))} groups={archive(all)} engagement={crawler ? emptyEngagement(all) : await svc(c, replica(c)).engagement(all.map((p) => p.slug))} agentPrompt={blogPrompt(origin(c), crawler ? null : await viewerKey(c))} />);
 });
 
 blog.get('/feed.xml', (c) => c.body(atomFeed(origin(c), posts()), 200, { 'content-type': 'application/atom+xml; charset=utf-8', ...CACHE }));
@@ -163,9 +173,11 @@ function find(slug: string): { post: Post; i: number; all: Post[] } {
 
 async function render(c: AppContext, slug: string, extra: { commentValues?: Record<string, string | undefined>; commentError?: string } = {}, status: 200 | 400 | 429 = 200) {
   const { post, i, all } = find(slug);
-  const s = svc(c, replica(c));
-  const r = reader(c);
-  const [engagement, liked, comments, subscribers, who, key] = await Promise.all([s.engagement([slug]), s.liked(slug, r), s.comments(slug), s.subscriberCount(), standing(c), viewerKey(c)]);
+  const crawler = !c.get('account') && isCrawler(c);
+  const s = crawler ? null : svc(c, replica(c));
+  const [engagement, liked, comments, subscribers, who, key] = crawler
+    ? [emptyEngagement([post]), false, [] as CommentRow[], 0, { signedIn: false, supporter: false, unlocked: false }, null] as const
+    : await Promise.all([s!.engagement([slug]), s!.liked(slug, reader(c)), s!.comments(slug), s!.subscriberCount(), standing(c), viewerKey(c)]);
   return c.html(
     <BlogPost
       signedIn={who.signedIn}

@@ -3,9 +3,28 @@ import { readFileSync, readdirSync } from 'node:fs';
 import test from 'node:test';
 import { renderPost } from '../src/server/lib/blog';
 import { BlogIndex, BlogPost } from '../src/server/views/blog';
+import { LoginPage } from '../src/server/views/account';
 import { HomePage, PrivacyPage, RulesPage, SupportPage } from '../src/server/views/public';
 
 const links = (html: string) => [...html.matchAll(/<a\b[^>]*\bhref="([^"]+)"/g)].map((m) => m[1]!.replace(/&amp;/g, '&'));
+
+test('transactional pages and blog query variants are noindex, while the canonical blog is indexable', () => {
+  assert.match(String(LoginPage({ next: '/', providers: { google: true, x: true } })), /<meta name="robots" content="noindex,follow"\/>/);
+  const props = { signedIn: false, posts: [], all: [], engagement: new Map(), subscribers: 0, agentPrompt: '' };
+  assert.doesNotMatch(String(BlogIndex({ ...props, tab: 'latest', q: '' })), /name="robots"/);
+  assert.match(String(BlogIndex({ ...props, tab: 'latest', q: 'dentist' })), /<meta name="robots" content="noindex,follow"\/>/);
+  assert.match(String(BlogIndex({ ...props, tab: 'top', q: '' })), /<meta name="robots" content="noindex,follow"\/>/);
+});
+
+test('published posts stay within Ahrefs title and meta-description limits', () => {
+  const dir = new URL('../src/content/blog/', import.meta.url);
+  for (const file of readdirSync(dir).filter((name) => name.endsWith('.md'))) {
+    const post = renderPost({ slug: file.slice(0, -3), markdown: readFileSync(new URL(file, dir), 'utf8') });
+    assert.ok(`${post.seoTitle} - call4me`.length <= 60, `${file}: title is too long`);
+    assert.ok(post.description.length >= 80, `${file}: description is too short`);
+    assert.ok(post.description.length <= 160, `${file}: description is too long`);
+  }
+});
 
 test('blog section labels display punctuation once and keep encoded markup as text', () => {
   const post = renderPost({

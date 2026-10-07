@@ -1,6 +1,6 @@
 ---
 title: "Why a Grok Bot phone calling template fails after sharing"
-seoTitle: "Grok Bot template troubleshooting for phone calling"
+seoTitle: "Grok Bot phone template troubleshooting"
 subtitle: A recipient needs their own working Call4Me connection, call brief and permission. Find the missing prerequisite before asking the Bot to dial again.
 description: "Fix a shared Grok Bot phone calling template by checking Call4Me setup, account access, required inputs and call evidence. Download the recipient checklist."
 date: 2026-10-05

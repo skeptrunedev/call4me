@@ -1,6 +1,6 @@
 ---
 title: "Grok Bot skills: save a phone calling workflow you can reuse"
-seoTitle: "Grok Bot skills: save a reusable phone calling workflow"
+seoTitle: "Grok Bot skills: reusable phone calling workflow"
 subtitle: Turn a restaurant inquiry into a reusable Call4Me skill that collects a fresh brief, caps the call and checks the transcript before answering.
 description: "Save a reusable Grok Bot phone calling skill with Call4Me. Includes a downloadable method, call duration cap, evidence checks and validation cases."
 date: 2026-10-05

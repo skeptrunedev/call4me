@@ -119,10 +119,12 @@ export const Layout: FC<{
   path?: string;
   /** Overrides for pages whose preview depends on their content (blog posts). */
   meta?: PageOverride;
+  /** Search/filter variants and other one-off pages should not compete with their canonical page. */
+  noindex?: boolean;
   /** Browser events also sent by CAPI, with the same conversion ids. */
   redditEvents?: RedditPixelEvent[];
   children?: Child;
-}> = ({ title, signedIn = false, page = 'message', path, meta: override, redditEvents = [], children }) => {
+}> = ({ title, signedIn = false, page = 'message', path, meta: override, noindex = false, redditEvents = [], children }) => {
   const meta = PAGES[page];
   const fullTitle = title ? `${title} - call4me` : SITE_TITLE;
   const description = override?.description ?? meta.description;
@@ -145,6 +147,7 @@ export const Layout: FC<{
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{fullTitle}</title>
         <meta name="description" content={description} />
+        {(noindex || ('noindex' in meta && meta.noindex)) && <meta name="robots" content="noindex,follow" />}
         <meta name="theme-color" content="#551a8b" />
         {ctx?.env.META_DOMAIN_VERIFICATION && <meta name="facebook-domain-verification" content={ctx.env.META_DOMAIN_VERIFICATION} />}
         <link rel="canonical" href={url} />

@@ -19,6 +19,8 @@ export interface PageMeta {
   card: string;
   /** The page's canonical path (pages with an id pass their own to the layout). */
   path: string;
+  /** Private or transactional pages should be followed but not shown in search results. */
+  noindex?: boolean;
 }
 
 /**
@@ -43,19 +45,19 @@ export const PAGES = {
   examples: { description: 'listen to real call4me calls: dinner reservations, a dentist reschedule, a junk removal quote, and more. original voices and full transcripts.', card: 'examples', path: '/examples' },
   voices: { description: 'hear every call4me caller voice (marin, cedar, gleam, meridian) saying the same line at phone quality, and how to pick one for your calls.', card: 'voices', path: '/voices' },
   mcp: { description: 'install call4me in claude code, codex, claude desktop, claude.ai, chatgpt, muse, or grok bot with one prompt. your agent gets a tool that makes phone calls.', card: 'mcp', path: '/mcp' },
-  login: { description: 'sign in to call4me with google or x to load credits and connect your AI agent.', card: 'login', path: '/login' },
-  account: { description: 'your call4me balance, monthly reload, key, and every call with its transcript.', card: 'account', path: '/account' },
-  call: { description: 'the outcome and transcript of a call call4me made for you.', card: 'call', path: '/account' },
-  welcome: { description: 'credits loaded. copy the prompt into your agent and it installs call4me itself.', card: 'welcome', path: '/welcome' },
-  key: { description: 'a new call4me key and the prompt that installs it in your agent.', card: 'key', path: '/account' },
-  consent: { description: 'let an AI agent make phone calls from your call4me account.', card: 'connect', path: '/oauth/consent' },
+  login: { description: 'sign in to call4me with google or x to load credits and connect your AI agent.', card: 'login', path: '/login', noindex: true },
+  account: { description: 'your call4me balance, monthly reload, key, and every call with its transcript.', card: 'account', path: '/account', noindex: true },
+  call: { description: 'the outcome and transcript of a call call4me made for you.', card: 'call', path: '/account', noindex: true },
+  welcome: { description: 'credits loaded. copy the prompt into your agent and it installs call4me itself.', card: 'welcome', path: '/welcome', noindex: true },
+  key: { description: 'a new call4me key and the prompt that installs it in your agent.', card: 'key', path: '/account', noindex: true },
+  consent: { description: 'let an AI agent make phone calls from your call4me account.', card: 'connect', path: '/oauth/consent', noindex: true },
   rules: { description: 'what call4me will and will not call for: bookings, appointments, questions for a business. no telemarketing, no pretending to be you.', card: 'rules', path: '/rules' },
   privacy: { description: 'what call4me stores (your email, balance history, call briefs, outcomes, transcripts) and what it never records.', card: 'privacy', path: '/privacy' },
   support: { description: 'help with call4me: credits and the monthly reload, a call that went wrong, connecting your agent, and deleting your account. email me@call4.me.', card: 'support', path: '/support' },
   terms: { description: 'call4me terms: prepaid credits that never expire, talk time billed from pickup, unanswered calls free, monthly reload you can stop anytime.', card: 'terms', path: '/terms' },
   blog: { description: 'notes from call4me on AI agents that make phone calls for you: what they are good at, how they sound, and what changed.', card: 'blog', path: '/blog' },
   blogArchive: { description: 'every post on the call4me blog, by month: real recorded calls to businesses, phone trees, what to say, and what AI phone agents can do.', card: 'blog', path: '/blog/archive' },
-  message: { description: SITE_DESCRIPTION, card: 'site', path: '/' },
+  message: { description: SITE_DESCRIPTION, card: 'site', path: '/', noindex: true },
 } satisfies Record<string, PageMeta>;
 
 export type PageKey = keyof typeof PAGES;
