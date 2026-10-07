@@ -213,6 +213,19 @@ available for Bland; Agent Phone returned destination evidence without a
 keypad event trace. These one branch tests do not measure nested menus, holds,
 repeatability or relative speed.
 
+The October 6 research guides add five full recordings: Santa Clara and
+Mountain View Costco optometry inquiries, Crunch Polk Street cancellation
+instructions, and an LA Fitness Irvine Jamboree inquiry plus an unanswered
+clarification attempt. The exports are `costco-eye-exam-bayside.mp3`,
+`costco-eye-exam-mountain-view.mp3`, `cancel-crunch.mp3`,
+`cancel-la-fitness.mp3` and `cancel-la-fitness-followup.mp3` under
+`public/static/blog/`. Each source and export received independent automatic
+transcription review, with focused checks around staff names and unclear
+speech. No human listening review is claimed. All original timing is retained.
+The unsuccessful calls remain included, and no booking or membership change
+was made. The articles distinguish phone answers, official website evidence
+and unresolved questions, including LA Fitness's conflicting instructions.
+
 Preserve greetings, menus, questions, lookup pauses, and holds. Replace actual
 private identifiers with silence at the same source timestamps instead of
 removing the surrounding conversation. Muted fields include names, addresses,

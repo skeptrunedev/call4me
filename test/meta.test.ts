@@ -96,8 +96,12 @@ test('analytics: sign_up reaches Meta once as CompleteRegistration; calls carry 
     await a.track(account, [{ name: 'call_placed', params: { surface: 'mcp', category: 'dentist', call_id: 'call_1' } }]);
     await a.track(account, [{ name: 'call_ended', params: { status: 'completed' } }]);
     assert.equal(f.bodies.length, 3, 'call_ended is not sent to Meta');
-    const [signup, purchase, call] = f.bodies.map((b) => (b.data as Record<string, unknown>[])[0]);
-    assert.deepEqual([signup.event_name, purchase.event_name, call.event_name], ['CompleteRegistration', 'Purchase', 'CallPlaced']);
+    // Meta queues run concurrently, so fetch arrival order is not event order.
+    const events = f.bodies.flatMap((b) => b.data as Record<string, unknown>[]);
+    assert.deepEqual(events.map((event) => event.event_name).sort(), ['CallPlaced', 'CompleteRegistration', 'Purchase']);
+    const signup = events.find((event) => event.event_name === 'CompleteRegistration')!;
+    const purchase = events.find((event) => event.event_name === 'Purchase')!;
+    const call = events.find((event) => event.event_name === 'CallPlaced')!;
     assert.equal(signup.event_id, 'signup:acct_alice');
     assert.notEqual(signup.event_id, purchase.event_id);
     assert.equal(purchase.event_id, 'cs_1');

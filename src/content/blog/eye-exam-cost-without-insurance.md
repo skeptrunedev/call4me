@@ -4,7 +4,7 @@ seoTitle: How much is an eye exam without insurance?
 subtitle: Two recorded Katy calls returned routine exam quotes of $143 and $99. Compare the stated prices, see which inclusions remain unconfirmed, and ask for the total before booking.
 description: Hear two real Katy eye exam quotes of $143 and $99. Compare refraction, contact fitting, retinal imaging and required fees before booking without insurance.
 date: 2026-10-01
-updated: 2026-10-04
+updated: 2026-10-06
 tags: eye exam, eye exam cost, eye exam without insurance, same day eye exam, self pay, ai phone assistant
 authors: nick
 imageAlt: How much is an eye exam without insurance, two real quotes of $143 and $99, recorded
@@ -18,6 +18,8 @@ imageAlt: How much is an eye exam without insurance, two real quotes of $143 and
 | Revolution Eyes, Katy | "Out of pocket price is 99 for the routine" | 4 PM the same day, booked on the call |
 
 The stated routine exam prices differ by $44. We did not establish that both prices cover the same services or the final amount due. Two calls are two data points, not a price list. Prices vary by office and by city, and these were stated on that day's calls. Ask what yours costs and includes before you book.
+
+Comparing warehouse optometrists too? Our [Costco eye exam cost guide](/blog/costco-eye-exam-cost) adds a dated Santa Clara quote and explains the optional imaging package, with both research calls included.
 
 The calls were made from our own call4me account by its AI phone assistant, for a person who needed an exam and gave us permission to publish them. Their name, date of birth and phone numbers are muted in the audio, and so are the staff names.
 

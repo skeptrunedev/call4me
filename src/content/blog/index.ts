@@ -1,4 +1,7 @@
 import type { PostSource } from '../../server/lib/blog';
+import costcoEyeExamCost from './costco-eye-exam-cost.md';
+import cancelCrunch from './cancel-crunch.md';
+import cancelLaFitness from './cancel-la-fitness.md';
 import aiPersonalAssistantAppointmentBooking from './ai-personal-assistant-appointment-booking.md';
 import macysBowTieStockCheck from './macys-bow-tie-stock-check.md';
 import bookDinnerReservationByPhone from './book-dinner-reservation-by-phone.md';
@@ -71,6 +74,9 @@ import metaMuseSupplierQuotes from './meta-muse-supplier-quotes.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'costco-eye-exam-cost', markdown: costcoEyeExamCost },
+  { slug: 'cancel-crunch', markdown: cancelCrunch },
+  { slug: 'cancel-la-fitness', markdown: cancelLaFitness },
   { slug: 'ai-personal-assistant-appointment-booking', markdown: aiPersonalAssistantAppointmentBooking },
   { slug: 'macys-bow-tie-stock-check', markdown: macysBowTieStockCheck },
   { slug: 'book-dinner-reservation-by-phone', markdown: bookDinnerReservationByPhone },
