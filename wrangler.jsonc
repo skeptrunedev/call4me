@@ -62,7 +62,7 @@
     // Meta Pixel (lib/meta.ts) and Meta's domain verification tag (views/layout.tsx). Public by
     // design: both are served in every page's head. Server-side events also need META_CAPI_TOKEN.
     "META_PIXEL_ID": "4163316840469209",
-    "META_DOMAIN_VERIFICATION": "gu3s9uylqgxfi97umjy2w79w97u964",
+    "META_DOMAIN_VERIFICATION": "gf1qik193n0hko29lbzpinlopd8gr1",
     // Reddit Events Manager data source. Public by design: the browser Pixel embeds it.
     // Server-side events additionally require the REDDIT_CAPI_TOKEN Worker secret.
     "REDDIT_PIXEL_ID": "a2_hr0qowc8yf1f",
