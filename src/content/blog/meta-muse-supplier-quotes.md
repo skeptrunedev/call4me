@@ -4,7 +4,7 @@ seoTitle: "Meta Muse supplier quotes by phone"
 subtitle: Give every supplier the same phone brief. Includes published price preparation, questions for comparable delivered quotes and a worksheet for actual call outcomes.
 description: Prepare supplier calls in Meta Muse with one shared specification, published prices, approval boundaries and a downloadable phone quote worksheet.
 date: 2026-10-05
-updated: 2026-10-06
+updated: 2026-10-07
 tags: meta muse, small business, ai agents, supplier quotes
 authors: nick
 imageAlt: Supplier phone calls share one specification and return comparable quotes with unresolved costs visible
@@ -17,6 +17,8 @@ Meta announced [Muse for Small Business](https://about.fb.com/news/2026/09/intro
 We researched the published listings below on October 5, 2026. We did not request a supplier quote, make a supplier call or execute this workflow in Muse. The delivered cost example later in this article is synthetic and is labeled accordingly.
 
 ## Define the order before asking for a winner
+
+For furniture projects, use our [furniture refinishing cost guide](/blog/furniture-refinishing-cost) or [couch and chair reupholstery cost guide](/blog/couch-reupholstery-cost). Each includes published shop prices and an AI prompt for checking scope, photos, transport and estimates.
 
 Our example scope is 25 brown corrugated boxes advertised as 12 by 12 by 12 inches with a 32 ECT strength rating. No delivery address, deadline, account discount or approved substitute was supplied. Exact inside versus outside dimensions still need checking where a listing does not make that distinction clear.
 

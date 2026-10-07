@@ -4,7 +4,7 @@ seoTitle: "Find a new primary care doctor: 15 real calls"
 subtitle: A call4me user in Baltimore needed a new primary care doctor and had an out-of-state Blue Cross Blue Shield PPO. Their AI phone assistant called 10 practices. Here's who was taking new patients, who took the plan, how far out the first opening was, a $2,121 surprise, and all 15 recordings.
 description: We called 10 Baltimore-area practices to find a new primary care doctor on an out-of-state BCBS PPO. Who took it, the wait, and what to ask.
 date: 2026-10-01
-updated: 2026-10-04
+updated: 2026-10-07
 tags: primary care doctor, new patient, bluecard, blue cross blue shield, insurance, ai phone assistant
 authors: nick
 imageAlt: Finding a new primary care doctor, 15 calls to 10 practices, 2 new-patient visits booked, recorded
@@ -23,6 +23,8 @@ What the calls turned up:
 These calls were made by a call4me user's AI phone assistant on Wednesday, September 30, 2026, between about 3:25 and 4:03 pm Eastern, and Thursday, October 1, between about 8:30 and 9:52 am Eastern. The user is okay with us sharing them, and every call is below with its recording and transcript. In the audio and transcripts, we muted the patient's name, date of birth, address, phone numbers and insurance member and group numbers, plus every staff member's and clinician's name. The visits got booked at two practices that we describe but don't name, because naming them would say where this patient will be seen. We muted their names, their health system's name and their addresses in the recordings too. We also cut silences longer than about 3 seconds down to about a second. Conversation, hold music, hold messages and menus are all left in, and each cut is marked in the transcript. A 37-second test call the user placed to a personal contact isn't included.
 
 ## All 15 calls, side by side
+
+If your clinician orders lab tests after the visit, our [blood work cost guide](/blog/how-much-does-blood-work-cost) shows published prices and an AI prompt for comparing the exact tests, collection fees and order requirements.
 
 For a new adult patient establishing primary care, with a Blue Cross Blue Shield of Alabama PPO, living in Baltimore:
 
