@@ -1,19 +1,29 @@
 ---
-title: How to cancel Crunch membership: app, email and a real club call
-seoTitle: How to cancel Crunch membership: a real club call
-subtitle: Crunch Polk Street told us which cancellation routes it accepts and what happens if the app does not work. Listen to the call, with the uncertain deadline left explicit.
-description: Learn how to cancel Crunch membership through your home club. Our recorded Polk Street call covers app, email and in person options, plus an unclear cutoff.
+title: How to cancel Crunch membership with help from your AI agent
+seoTitle: How to cancel Crunch membership with AI agent help
+subtitle: Give your AI assistant the job of finding your home club’s cancellation route, checking the deadline and preparing the next step. Hear what Crunch Polk Street told our caller.
+description: Want help cancelling Crunch? Give your AI agent this prompt to check your club’s rules, call for missing details and prepare a cancellation request to review.
 date: 2026-10-06
 tags: crunch, cancel subscription, gym membership, personal assistant, ai phone assistant
 authors: nick
-imageAlt: How to cancel Crunch membership, app and email options from a recorded club call
+imageAlt: How to cancel Crunch membership, let your AI agent prepare the next step
 ---
 
 **To cancel a Crunch membership, check the cancellation options for your home club and agreement.** At Crunch Polk Street in San Francisco, a representative told us members can use the **app, an iPad at the club, or an email request to operations or a sales member**. They said a phone call provides instructions but does not itself complete cancellation.
 
 We obtained those answers with [call4me](/) on October 6, 2026. This was a general inquiry, not a member account cancellation. Crunch's [official FAQ](https://www.crunch.com/faq) says cancellation policies depend on the location and agreement. Do not assume the Polk Street answer applies to every franchise or membership.
 
-If you already use Claude Code or Codex as a personal assistant, you can have it ask your home club for the missing details. Follow the [Claude Code calling guide](/blog/claude-code-phone-calls) or [Codex calling guide](/blog/codex-phone-calls). Our example prompt below is suggested; the recording establishes this club conversation, not a newly tested client setup.
+## Give the cancellation task to your AI agent
+
+If cancelling Crunch is sitting on your task list, ask your existing assistant to work out the route and prepare what you need to submit. It can use the published instructions first, then [call4me](/mcp) to ask your home club about missing details. Follow the [Claude Code calling guide](/blog/claude-code-phone-calls) or [Codex calling guide](/blog/codex-phone-calls) to connect phone calls to your agent.
+
+Copy this suggested task into your assistant:
+
+> Help me cancel my Crunch membership at [home club and city]. My membership type is [type or unknown], my next payment is [date], and my goal is [stop renewal or cancel as soon as the agreement allows]. Check the official cancellation options. If a deadline, recipient or required step is unclear, use call4me to call my home club at its published number. Ask what method applies, what information is required, whether another monthly or annual fee remains, and how cancellation is confirmed. Return the confirmed next steps and mark any unanswered questions. If email is accepted, draft the request for my review using the verified recipient and mark any missing details. Ask me before submitting a request, agreeing to a fee or accepting a retention offer.
+
+**What you get back:** the route for your club and a prepared request or checklist. Ask for the confirmed deadline, or the billing question your club still needs to answer. If the club requires you to sign in or visit, your agent should say exactly what you need to do there.
+
+Our Polk Street call demonstrates gathering instructions. Staff said phone calls cannot complete cancellation there, and we did not test an assistant submitting an email or using a member account.
 
 ## How to cancel Crunch membership online or in the app
 
@@ -57,15 +67,13 @@ For your own membership, ask the club to check:
 
 Get the answers for your agreement, and keep the confirmation. We did not ask staff to review an actual bill or waive a fee.
 
-## A prompt for your existing AI assistant
+## Finish the task with your agent
 
-After [connecting call4me](/mcp), try this suggested inquiry:
+After you review the instructions, choose the accepted route. For an email request, have your assistant check the draft against the club's requirements before you authorize sending it. For an app or club visit, use its checklist while you complete the required step. If a representative needs to verify the account holder, be ready to take part.
 
-> Call my Crunch home club at [official club number]. Ask which cancellation methods work for my [membership type], including whether online or app cancellation is available. If a phone call cannot complete it, get the accepted recipient or exact next step. Confirm the deadline relative to my next charge on [date] and any annual fee. Ask what information I need and how cancellation is confirmed. Return the instructions to this conversation. Do not cancel, accept a retention offer or change my plan yet.
+Ask your assistant to keep the submitted request, effective date, final charge and confirmation together in the task. Leave it marked as awaiting confirmation until the club actually confirms cancellation. Our research call did not cancel an account or establish whether Crunch accepts an assistant as an authorized representative.
 
-Only authorize an account change when you are ready. The caller may need your verification, and this inquiry does not show that Crunch accepts every assistant as an authorized account representative.
-
-Compare our [LA Fitness cancellation inquiry](/blog/cancel-la-fitness) and [Planet Fitness cancellation guide](/blog/cancel-planet-fitness) for other gym policies. Each guide keeps its own evidence and location limits.
+If you are clearing several subscriptions, add the [LA Fitness cancellation guide](/blog/cancel-la-fitness) and [Planet Fitness cancellation guide](/blog/cancel-planet-fitness) to your assistant's reading. Have it track a separate result and next action for each membership.
 
 ## Listen to our Crunch cancellation inquiry
 

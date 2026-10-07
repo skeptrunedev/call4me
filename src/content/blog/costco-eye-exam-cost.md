@@ -1,19 +1,29 @@
 ---
-title: Costco eye exam cost: a $99 quote and what costs extra
-seoTitle: Costco eye exam cost: $99 quote, extras and calls
-subtitle: We called two independent optometry offices inside Costco. Santa Clara quoted its exam prices; Mountain View reached voicemail. Hear both calls and see what remains unconfirmed.
-description: Costco eye exam cost varies by doctor. Hear a Santa Clara office quote $99 for glasses, compare contact exam prices, and check optional imaging before booking.
+title: Costco eye exam cost: let your AI agent get local quotes
+seoTitle: Costco eye exam cost: ask your AI agent to call
+subtitle: Let your existing AI assistant call nearby Costco optometrists and bring back a price comparison. Hear the real call that returned a $99 glasses exam quote.
+description: Compare Costco eye exam costs with your AI agent. Use our call prompt to collect local quotes, check optional fees and return a table before choosing an office.
 date: 2026-10-06
 tags: costco, eye exam, prices, personal assistant, ai phone assistant
 authors: nick
-imageAlt: Costco eye exam cost, a $99 Santa Clara quote with optional imaging
+imageAlt: Costco eye exam cost, let your AI agent collect local quotes
 ---
 
 **A glasses eye exam at Bayside Family Eyecare inside Costco Santa Clara was quoted at $99 on October 6, 2026.** The representative said the health check was optional. The practice's [booking page](https://baysidefamilyeyecare.setmore.com/book) lists a **$138 total package with Optomap retinal imaging**, alongside the $99 glasses exam without imaging.
 
 That is one independent doctor's price, not a nationwide Costco rate. [Costco directs people to call their local warehouse or independent optometrist](https://www.costco.com/f/-/optical) to arrange an exam. We used [call4me](/) to ask two Bay Area offices about prices. Santa Clara answered; Mountain View reached a recorded greeting. We did not book an appointment or receive care.
 
-If your existing AI assistant is helping compare eye exam options, it can make these calls and bring the quotes back to the same conversation. Connect through the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). The prompt below is a suggested workflow; these recordings do not establish a new test of either client.
+## Give the price comparison to your AI agent
+
+If you are already asking an AI assistant to find an eye exam near you, give it the phone research too. Have it check published prices, call the offices with missing details and return one comparison you can use to choose a practice. [call4me](/mcp) gives your existing agent the calling tools; connect it through the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls).
+
+Copy this suggested task into your assistant and fill in the brackets:
+
+> Help me compare Costco eye exam costs near [city or ZIP code] for [a glasses exam or contact lens exam]. I am [an established contact lens wearer, a new wearer, or not buying contacts], and I need [preferred dates]. Find the independent optometrists at the nearby locations and check their published prices. Use call4me to call up to [number] offices to fill in missing details: total without insurance, refraction, optional imaging, fitting or training fees, followup coverage and appointment availability. Return a table with each practice, the date and source of its quote, the total for my requested services, available times and unanswered questions. Do not book or pay yet.
+
+**What you get back:** a comparison for your location and exam type. A practice that reaches voicemail should stay marked as unanswered. Once you choose an office, give your agent a separate booking instruction with the time and cost limits you accept.
+
+Our calls below show the research step: one office supplied prices, and the other reached voicemail. They did not establish available appointments or complete a booking.
 
 ## How much is a Costco eye exam without insurance?
 
@@ -54,13 +64,13 @@ We called around 6:14 PM Pacific on Tuesday, October 6. Mountain View's website 
 
 Santa Clara provides an [online booking page](https://baysidefamilyeyecare.setmore.com/book). Its existence is a website finding; we did not verify a live appointment slot or complete a booking.
 
-## Have your assistant compare local exam prices
+## Turn the quotes into your next step
 
-Use this suggested prompt after [connecting call4me](/mcp):
+Ask your assistant to separate the exam total from optional services and to flag quotes that cover different things. The lowest headline price may not cover the contact fitting or training you need. Keep the practice name, quote date and unanswered items beside each amount.
 
-> Call the independent optometrists at the Costco locations near [city] and compare prices for [a glasses exam or contact lens exam]. Ask for the total without insurance, whether refraction is included, whether imaging is optional, and any fitting or new wearer training fee. Check followup coverage and the next available appointment. Return a table with each practice, the date, the exact quote and anything unanswered. Do not book or pay without asking me.
+If your preferred office did not answer, ask your agent to check its office hours and propose a callback time. If you are ready to book, use the [AI appointment booking guide](/blog/ai-personal-assistant-appointment-booking) to specify acceptable dates, costs and confirmation details.
 
-Keep each quote attached to its practice. For a broader comparison, see our [eye exam cost without insurance guide](/blog/eye-exam-cost-without-insurance), which contains calls to other providers.
+For a broader comparison, ask it to include providers from our [eye exam cost without insurance guide](/blog/eye-exam-cost-without-insurance). The same research brief works beyond Costco.
 
 ## Listen to both Costco optometry calls
 
