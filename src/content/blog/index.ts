@@ -1,4 +1,5 @@
 import type { PostSource } from '../../server/lib/blog';
+import dogTeethCleaningCost from './dog-teeth-cleaning-cost.md';
 import wheelAlignmentCost from './wheel-alignment-cost.md';
 import walmartOilChangePrices from './walmart-oil-change-prices.md';
 import howToCancelSiriusxm from './how-to-cancel-siriusxm.md';
@@ -77,6 +78,7 @@ import metaMuseSupplierQuotes from './meta-muse-supplier-quotes.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'dog-teeth-cleaning-cost', markdown: dogTeethCleaningCost },
   { slug: 'wheel-alignment-cost', markdown: wheelAlignmentCost },
   { slug: 'walmart-oil-change-prices', markdown: walmartOilChangePrices },
   { slug: 'how-to-cancel-siriusxm', markdown: howToCancelSiriusxm },

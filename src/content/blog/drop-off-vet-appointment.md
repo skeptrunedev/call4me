@@ -43,6 +43,8 @@ The customer's dog needed a checkup, with a digestive concern also mentioned on 
 
 These are questions to ask the clinic, rather than instructions to withhold food, change medication or decide whether symptoms can wait.
 
+For a dental visit, compare the consultation fee and included services before booking. Our [dog and cat teeth cleaning cost guide](/blog/dog-teeth-cleaning-cost) includes three recorded clinic quotes and an AI assistant prompt for checking local prices.
+
 ## A simple vet booking script
 
 > Hi, I'd like to schedule a visit for my dog. They're an existing patient and need a checkup. I've also noticed [concern]. Could the veterinary team tell me how soon they should be seen? What appointment times are available, and is this a dropoff visit?
