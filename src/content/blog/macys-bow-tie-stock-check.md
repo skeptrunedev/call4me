@@ -1,15 +1,18 @@
 ---
 title: Check store availability with your AI assistant: a Macy's call
 seoTitle: Check store availability: an AI call to Macy's
-subtitle: A real call reached the Herald Square accessories department and checked the quantity, price, finish and neck strap before a shopping trip.
-description: Check store availability through your existing AI assistant. Hear a real Macy's stock call and use a suggested Claude Code or Codex shopping prompt.
+subtitle: Hear a real Macy's stock check, then use the same AI workflow to confirm store inventory, order readiness and pickup details before you go.
+description: Check store availability and order pickup with an AI assistant. Hear a real Macy's call, check Suitsupply order status and copy the shopping prompts.
 date: 2026-10-06
-tags: store stock, shopping, personal assistant, ai phone assistant
+updated: 2026-10-07
+tags: store stock, order pickup, Suitsupply order status, shopping, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Macy's bow tie stock check, 88 reported in stock at $33
 ---
 
 To **check store availability**, first select the location on the retailer's product page. If the listing does not answer your question, call the department with the exact item details. Ask staff to check the local quantity, current price and features that matter before you travel. Stock availability alone does not confirm a hold or pickup order.
+
+Already bought the item? Ask whether **your order is ready for pickup**, including every item and any alterations. The order workflow below includes a fresh Suitsupply policy inquiry and its published guidance, alongside the recorded Macy's inventory check.
 
 If you already use Claude Code or Codex to research a purchase, [call4me](/) lets the same assistant call the store for the missing details. Connect through the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). These are suggested workflows; the recording below does not identify the customer's client.
 
@@ -333,3 +336,78 @@ The requested department extension remained unresolved. A personal contact numbe
 > Use call4me to call [store and location] and reach the department that sells [item]. Check the exact brand, color, material and product code. Ask for the local quantity, price, finish and fastening, and whether it will be available for collection [date and time]. Do not buy or reserve anything. Return the answers and any details the staff could not confirm.
 
 See the [Macy's stock check on our examples page](/examples#macys-bow-tie-stock-check).
+
+## Is my order ready for pickup?
+
+An inventory check asks whether a store has an item to sell. An order readiness check asks whether the goods you already bought are there and ready for you to collect. Give your assistant the correct task so it can reach the right team. Macy's phone menu in the recording has separate options for purchased merchandise pickup and stock availability.
+
+Start with the order confirmation and any readiness notification. If they answer everything, you can plan the trip. Call when the status is unclear, an item is missing from the notice, or you need staff to confirm a fitting or collection detail.
+
+| Detail to confirm | Question for the store |
+| --- | --- |
+| Correct order and branch | Can you check order [number] at [location]? |
+| Complete order | Are all the items ready, or only part of the order? |
+| Alterations | Is the requested work finished, or has the garment only arrived? |
+| Collection window | What is the latest pickup date, and when can I collect it today? |
+| Try on and staff availability | Can I try it on when I arrive, and will someone be available to help with the fit? |
+| Collection requirements | What confirmation or identification should I bring? |
+| Remaining step | Is there anything I need to do before visiting? |
+
+Ask the assistant to return the exact confirmed items, location and collection window. If a representative says a shipment should arrive tomorrow, report that as an estimate. It is not confirmation that the order is ready today.
+
+## Check Suitsupply order status before visiting
+
+For **Suitsupply order status**, start with the Orders section of your account or the tracking link in the shipping email. Suitsupply says it emails tracking information after dispatch. That can answer a shipping question; for store pickup, ask the receiving branch whether the complete order is ready to collect. See the [official Suitsupply FAQ](https://suitsupply.com/en-us/faq.html).
+
+The same FAQ says completed alterations and online orders sent to a store are held for **30 days**, with availability no longer guaranteed after that period. Confirm the final collection date for your particular order when planning a later visit.
+
+If a fitting is part of your trip, ask about both staff availability and tailoring. Suitsupply's [alterations page](https://suitsupply.com/en-us/journal/alter-your-fit.html) lists different times for different jobs: shortening or lengthening trousers is listed at 30 minutes, while shortening shirt sleeves is listed at 2 to 3 days. Those published estimates do not confirm a particular store's capacity at your arrival time.
+
+Give your agent the branch shown on the order, the garments you expect and your intended visit time. Ask whether you can try everything on and whether an appointment is needed. These questions help you learn whether one trip will cover collection and a fitting, or whether another visit may be necessary.
+
+The Suitsupply policies above were checked on October 7, 2026. They are website information, not a completed order lookup or a promise that a garment is ready.
+
+### What Suitsupply Washington told our AI caller
+
+On October 7, we called the number on Suitsupply's [official Washington store page](https://suitsupply.com/en-us/stores/washington), **(202) 280 1742**, to ask how the process works. This was a general inquiry with no customer account or order lookup.
+
+The representative said staff could check readiness on their side and asked for the telephone number associated with the account. They described email notifications when shipped items or altered garments are ready. Asked whether pickup and trying items on required an appointment, they said customers could walk in.
+
+At the end of the recording, the representative confirmed that an assistant could call with the **telephone number on file**. The recording ends during the explanation. This answers a general question about an assistant calling; it does not establish a specific stylist's availability or confirm that any actual order was ready. Have your assistant introduce itself and follow the store's verification process for your order.
+
+### Listen to the Suitsupply pickup inquiry
+
+The complete recording lasts **2 minutes 55 seconds**. Original voices, pauses and timing are retained. No customer's order details were supplied and no order was checked.
+
+<audio controls preload="metadata" src="/static/blog/store-pickup-suitsupply.mp3" style="width:100%"><a href="/static/blog/store-pickup-suitsupply.mp3">Listen to the Suitsupply order pickup inquiry</a></audio>
+
+<details>
+<summary>Read the order pickup transcript excerpts</summary>
+
+These excerpts use approximate timestamps and were checked against independent automatic transcriptions of the source and export. No human listening verification is claimed.
+
+**1:05** **Representative:** What's the telephone number that you usually use?
+
+**1:12** **Caller:** Oh, is there a general way customers can check that? I'm just trying to understand the process, really.
+
+**1:22** **Representative:** You usually get an email notification when stuff is ready for pickup, whether it is being shipped in or if it is garments being altered.
+
+**1:58** **Caller:** And do they need an appointment to come in for their pickup and try things on?
+
+**2:05** **Representative:** No, they do not. They can stop in as a walk in at their own pace.
+
+**2:40** **Caller:** I was just asking, can someone's assistant call in to check for them that everything's ready?
+
+**2:48** **Representative:** Yes, absolutely. As long as they have the telephone number on file, that way we can look up [recording ends].
+
+</details>
+
+## Ask your AI assistant to confirm an existing order
+
+Use the [Claude Code setup](/blog/claude-code-phone-calls) or [Codex setup](/blog/codex-phone-calls) to connect call4me, then give your assistant this task:
+
+> Use call4me to call [store and branch] about my existing order [order number]. Introduce yourself as my AI assistant. I authorize you to share [my name and the specific order contact details needed for lookup]. Confirm whether every item in [item list] is physically there and ready for collection, including any requested alterations. I plan to arrive [date and time]. Ask about pickup hours, the last collection date, what I should bring, whether I can try the items on and whether staff can help with the fit then. Do not change the order, pay, book an appointment or approve extra work. If the store needs me to verify anything myself, tell me the next step. Return confirmed facts separately from estimates and unanswered questions.
+
+Keep the order number and contact details in your private conversation with the assistant. It needs the details you authorize for this lookup, not unrelated purchase history. If the shop cannot discuss the order with an assistant, have it report how you can complete the check yourself.
+
+For an urgent purchase you have not made yet, use the inventory prompt above. Our [same day dress shoe guide](/blog/need-dress-shoes-today) shows a separate workflow in which the customer authorized a hold after the assistant found an available pair. Finding stock, reserving it and confirming a paid order each need their own clear result.

@@ -267,3 +267,16 @@ Before pushing, run `npm run check`, `npm run lint`, `npm test`, and
 navigation from the home page, every audio file decoding and seeking, a second
 player pausing the first, transcripts, narrow screens, and the purchase and
 installation links. Repeat against the deployed page after CI completes.
+
+The October 7 gym and pickup guides use three fresh informational calls,
+not customer recordings: `gym-day-pass-long-bridge.mp3`,
+`gyms-with-sauna-reston.mp3` and `store-pickup-suitsupply.mp3` under
+`public/static/blog/`. Full source timelines and original voices are retained.
+Staff names are muted in the two gym calls; the pickup inquiry contains no
+customer identifiers. Exact provider associations, source and export automatic
+transcriptions, decoded durations and mute silence were checked. No human
+listening review is claimed. Gym guides retain conflicts between phone answers
+and published access rules. The pickup inquiry establishes general process
+information and permission for an assistant to call with the telephone number
+on file, not successful access to a customer's order. Its final sentence is
+incomplete and must remain marked that way in the excerpts.

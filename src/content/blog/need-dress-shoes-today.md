@@ -4,7 +4,7 @@ seoTitle: "Need dress shoes today? 3 DC stores (Oct 2026)"
 subtitle: A call4me user's dress shoe broke on the morning of a 5 pm gala. Their AI phone assistant called two Nordstrom Racks and a Men's Wearhouse, found Stacy Adams loafers in a 10.5 for $119, and got them set aside for pickup. Here's what each store said, all 6 recordings, and how to do it yourself.
 description: A shoe broke the morning of a gala. We called 2 Nordstrom Racks and a Men's Wearhouse in DC, found a $119 pair, and got it held for pickup. All 6 calls.
 date: 2026-10-01
-updated: 2026-10-04
+updated: 2026-10-07
 tags: dress shoes, men's wearhouse, nordstrom rack, same day pickup, ai phone assistant
 authors: nick
 imageAlt: Need dress shoes today, 3 DC stores called, 1 pair on hold by 11 am
@@ -24,6 +24,8 @@ What it took:
 All six calls were made by a call4me user in Washington, DC. Our caller didn't buy anything or give a card. The user's name and phone number and the store staff's names are muted in the audio and shown in brackets in the transcripts. Stretches of dead air longer than about 3 seconds are shortened to about 1 second, and each cut is marked in the transcript. Prices and stock are what each store said on that morning, and they can change any day.
 
 ## The six calls, in order
+
+For another shopping trip, our [store availability and order pickup guide](/blog/macys-bow-tie-stock-check) includes separate AI prompts for finding stock and checking whether an order you already bought is ready to collect.
 
 All times Eastern, Thursday, October 1, 2026.
 

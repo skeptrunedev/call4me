@@ -4,6 +4,7 @@ seoTitle: How to cancel Crunch membership with AI agent help
 subtitle: Give your AI assistant the job of finding your home club’s cancellation route, checking the deadline and preparing the next step. Hear what Crunch Polk Street told our caller.
 description: Want help cancelling Crunch? Give your AI agent this prompt to check your club’s rules, call for missing details and prepare a cancellation request to review.
 date: 2026-10-06
+updated: 2026-10-07
 tags: crunch, cancel subscription, gym membership, personal assistant, ai phone assistant
 authors: nick
 imageAlt: How to cancel Crunch membership, let your AI agent prepare the next step
@@ -76,6 +77,8 @@ Ask your assistant to keep the submitted request, effective date, final charge a
 If you are clearing several subscriptions, add the [LA Fitness cancellation guide](/blog/cancel-la-fitness) and [Planet Fitness cancellation guide](/blog/cancel-planet-fitness) to your assistant's reading. Have it track a separate result and next action for each membership. For a radio or streaming subscription, the [SiriusXM cancellation guide](/blog/how-to-cancel-siriusxm) shows how to start with the billing provider.
 
 ## Listen to our Crunch cancellation inquiry
+
+If you want occasional gym access after cancelling, our [gym day pass guide](/blog/gym-day-pass) shows how to check prices, pool access and actual visit hours. For a specific amenity, use the [gyms with saunas workflow](/blog/gyms-with-sauna-near-me) to confirm the branch and guest rules before going.
 
 This is the full Polk Street recording, with original timing and staff names muted. No membership was cancelled. The uncertain deadline remains in the transcript.
 
