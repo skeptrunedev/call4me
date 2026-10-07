@@ -71,6 +71,9 @@ export function canonicalRedirect(url: URL, env: Pick<Env, 'CANONICAL_HOST' | 'L
   to.hostname = canonical;
   to.protocol = 'https:';
   to.port = '';
+  // Collapse the legacy homepage alias while canonicalizing the host so crawlers and
+  // visitors need only one permanent redirect.
+  if (to.pathname === '/home') to.pathname = '/';
   return to.toString();
 }
 

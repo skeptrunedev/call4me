@@ -16,6 +16,7 @@ test('plain http on the canonical host moves to https', () => {
 
 test('www and legacy hosts move to the canonical host over https', () => {
   assert.equal(to('http://www.call4.me/'), 'https://call4.me/');
+  assert.equal(to('https://www.call4.me/home'), 'https://call4.me/');
   assert.equal(to('https://callbay.skeptrune.com/examples'), 'https://call4.me/examples');
 });
 

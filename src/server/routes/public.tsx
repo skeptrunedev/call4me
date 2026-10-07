@@ -25,6 +25,9 @@ const home = async (c: AppContext, extra: { error?: string; amount?: string } = 
   );
 
 pub.get('/', (c) => home(c));
+// `/home` was an early public URL and is still in Google's crawl history. Keep it as a
+// permanent alias so old links resolve to the canonical root instead of ending at a 404.
+pub.get('/home', (c) => c.redirect('/', 301));
 pub.get('/examples', async (c) => c.html(<ExamplesPage signedIn={signedIn(c)} agentPrompt={examplesPrompt(origin(c), await viewerKey(c))} />));
 pub.get('/voices', async (c) => c.html(<VoicesPage signedIn={signedIn(c)} agentPrompt={voicesPrompt(origin(c), await viewerKey(c))} />));
 
