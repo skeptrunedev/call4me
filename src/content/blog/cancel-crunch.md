@@ -73,7 +73,7 @@ After you review the instructions, choose the accepted route. For an email reque
 
 Ask your assistant to keep the submitted request, effective date, final charge and confirmation together in the task. Leave it marked as awaiting confirmation until the club actually confirms cancellation. Our research call did not cancel an account or establish whether Crunch accepts an assistant as an authorized representative.
 
-If you are clearing several subscriptions, add the [LA Fitness cancellation guide](/blog/cancel-la-fitness) and [Planet Fitness cancellation guide](/blog/cancel-planet-fitness) to your assistant's reading. Have it track a separate result and next action for each membership.
+If you are clearing several subscriptions, add the [LA Fitness cancellation guide](/blog/cancel-la-fitness) and [Planet Fitness cancellation guide](/blog/cancel-planet-fitness) to your assistant's reading. Have it track a separate result and next action for each membership. For a radio or streaming subscription, the [SiriusXM cancellation guide](/blog/how-to-cancel-siriusxm) shows how to start with the billing provider.
 
 ## Listen to our Crunch cancellation inquiry
 

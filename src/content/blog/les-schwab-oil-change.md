@@ -68,7 +68,7 @@ After connecting [call4me](/), use this suggested prompt in Claude Code or Codex
 
 > Use call4me to call my local Les Schwab about the maintenance plan we are working on. Ask whether it does oil changes for my [vehicle]. Get an estimate for an oil change and tire rotation, including what the price covers. Ask about [day and time]. If appointments are full, check walk in dropoff options and the expected wait. Return the quote, confirmed availability and unanswered questions to this conversation. Clearly distinguish a reserved appointment from a walk in plan. Do not authorize extra work or make a payment.
 
-See the [store call in examples](/examples#les-schwab-oil-change), or another real call about [finding a tire order at Costco](/blog/costco-tire-appointment-cancel-refund).
+See the [store call in examples](/examples#les-schwab-oil-change), or another real call about [finding a tire order at Costco](/blog/costco-tire-appointment-cancel-refund). For your next comparison, use the [Walmart oil change price guide](/blog/walmart-oil-change-prices) and [wheel alignment cost guide](/blog/wheel-alignment-cost) to give your assistant a specific research brief.
 
 <details>
 <summary>Read the transcript</summary>
