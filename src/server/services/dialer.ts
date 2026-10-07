@@ -7,7 +7,7 @@ import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions
 import type { SessionSetup } from '../voice/session';
 import { sessionFor } from '../voice/stub';
 import { accounts, type Account } from './accounts';
-import { mayCall, numbers } from './numbers';
+import { answeringAccountId, mayCall, numbers } from './numbers';
 import { profiles } from './profiles';
 import { assistantNameOf, type Profile, type Surface } from './intake';
 import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
@@ -200,11 +200,10 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
  * message-taking brief that knows what this number called about recently.
  */
 export async function answerInbound(env: Env, origin: string, opts: { controlId: string; from: string; to: string }): Promise<void> {
-  const account = await env.DB.prepare(
-    `SELECT a.id, a.email, a.display_name, a.key_prefix, a.created_at, a.ga_client_id, a.ga_signup_at, a.meta_fbp, a.meta_fbc, a.first_touch FROM accounts a JOIN numbers n ON n.account_id = a.id WHERE n.phone_number = ? AND n.status = 'active'`,
-  )
-    .bind(opts.to)
-    .first<Account>();
+  const accountId = await answeringAccountId(env.DB, opts.to, opts.from);
+  const account = accountId
+    ? await env.DB.prepare(`SELECT id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc, first_touch FROM accounts WHERE id = ?`).bind(accountId).first<Account>()
+    : null;
   const blocked = await env.DB.prepare(`SELECT 1 FROM blocked_numbers WHERE number = ?`).bind(opts.from).first();
   const price = pricePerMinute(env);
   const balance = account ? await accounts(env.DB).balanceCents(account.id) : 0;

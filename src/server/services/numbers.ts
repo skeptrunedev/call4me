@@ -3,6 +3,7 @@ import { CODE_ATTEMPTS, VERIFICATIONS_PER_DAY } from '../lib/number-schema';
 import { checkDialable, formatPhone, type PhoneCheck } from '../lib/phone';
 import { telnyx, TelnyxError, type AvailableNumber, type NumberOrderStatus } from '../lib/telnyx';
 import { accounts, dollars, type Account } from './accounts';
+import { CALLBACK_WINDOW_MS } from './calls';
 
 /**
  * The phone numbers an account holds. Its first US number is free and bought on its first
@@ -90,6 +91,8 @@ export interface NumberRow {
   created_at: number;
   released_at: number | null;
   order_id: string | null;
+  /** 1 when every account may call out from it (see sharedNumber). */
+  shared: number;
 }
 
 export interface NumberView {
@@ -258,7 +261,31 @@ export const CALLABLE = [...new Set(['US', 'CA', ...FROM_HOME, ...Object.keys(CO
 /** Whether the account may reach `to`: +1 numbers and FROM_HOME countries always, elsewhere a country it holds a number in. */
 export async function mayCall(db: D1Database, accountId: string, to: Extract<PhoneCheck, { ok: true }>): Promise<boolean> {
   if (to.home || FROM_HOME.has(to.country)) return true;
-  return Boolean(await db.prepare(`SELECT 1 FROM numbers WHERE account_id = ? AND country = ? AND status = 'active'`).bind(accountId, to.country).first());
+  if (await db.prepare(`SELECT 1 FROM numbers WHERE account_id = ? AND country = ? AND status = 'active'`).bind(accountId, to.country).first()) return true;
+  return Boolean(await sharedNumber(db, to.country));
+}
+
+/** The number call4me shares with every account in `country`, if it holds one there. */
+export async function sharedNumber(db: D1Database, country: string): Promise<string | null> {
+  const row = await db.prepare(`SELECT phone_number FROM numbers WHERE shared = 1 AND country = ? AND status = 'active' ORDER BY created_at LIMIT 1`).bind(country).first<{ phone_number: string }>();
+  return row?.phone_number ?? null;
+}
+
+/**
+ * Whose call it is when `from` rings our number `to`: the number's account, or for a shared
+ * number the account that last called `from` from it within the callback window. Null when no
+ * account placed that call, so a stranger reaching a shared number is never answered on anyone's
+ * balance.
+ */
+export async function answeringAccountId(db: D1Database, to: string, from: string, at = now()): Promise<string | null> {
+  const row = await db.prepare(`SELECT account_id, shared FROM numbers WHERE phone_number = ? AND status = 'active'`).bind(to).first<{ account_id: string; shared: number }>();
+  if (!row) return null;
+  if (!row.shared) return row.account_id;
+  const caller = await db
+    .prepare(`SELECT account_id FROM calls WHERE direction = 'outbound' AND from_number = ? AND to_number = ? AND created_at > ? ORDER BY created_at DESC LIMIT 1`)
+    .bind(to, from, at - CALLBACK_WINDOW_MS)
+    .first<{ account_id: string }>();
+  return caller?.account_id ?? null;
 }
 
 /**
@@ -622,7 +649,7 @@ export function numbers(env: Env) {
     /**
      * The number a call to `to` goes out from: `requested` when given (one of the account's
      * call4me numbers, or one of the user's own verified numbers: `own`), else one in the callee's
-     * country, else (calling Europe) a European one, else (calling a +1 number or a FROM_HOME
+     * country, else call4me's shared number there, else (calling Europe) a European one, else (calling a +1 number or a FROM_HOME
      * country) its US number, buying the free one on the first call. An own number is never
      * picked unless requested.
      */
@@ -643,6 +670,8 @@ export function numbers(env: Env) {
       }
       const sameCountry = owned.find((n) => n.country === to.country);
       if (sameCountry) return { number: sameCountry.phone_number, own: false };
+      const shared = await sharedNumber(db, to.country);
+      if (shared) return { number: shared, own: false };
       if (EUROPE.has(to.country)) {
         const european = owned.find((n) => EUROPE.has(n.country));
         if (european) return { number: european.phone_number, own: false };
