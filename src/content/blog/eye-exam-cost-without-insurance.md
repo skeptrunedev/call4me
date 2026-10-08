@@ -4,7 +4,7 @@ seoTitle: How much is an eye exam without insurance?
 subtitle: Two recorded Katy calls returned routine exam quotes of $143 and $99. Compare the stated prices, see which inclusions remain unconfirmed, and ask for the total before booking.
 description: Hear two real Katy eye exam quotes of $143 and $99. Compare refraction, contact fitting, retinal imaging and required fees before booking without insurance.
 date: 2026-10-01
-updated: 2026-10-06
+updated: 2026-10-07
 tags: eye exam, eye exam cost, eye exam without insurance, same day eye exam, self pay, ai phone assistant
 authors: nick
 imageAlt: How much is an eye exam without insurance, two real quotes of $143 and $99, recorded
@@ -74,16 +74,16 @@ To book:
 
 ## What does an eye exam price include?
 
-The original calls establish the stated routine exam prices and available appointments on September 28. They do not establish the total checkout price. On October 4, we checked the offices' official websites to separate published service descriptions from what the recordings actually confirm.
+The September 28 calls establish routine exam quotes, not complete totals. We checked official websites October 4 and reviewed the saved transcript of Revolution Eyes' October 5 followup. MyEyeDr.'s column remains limited to the original call and published information.
 
 | Item to compare | MyEyeDr. Cinco Ranch | Revolution Eyes, Katy |
 |---|---|---|
 | Routine exam quote on September 28 | $143 | $99, stated as routine after the office asked about contacts versus glasses |
-| Refraction, the test that determines a glasses prescription | Included in this quoted price: unconfirmed | Included in this quoted price: unconfirmed |
-| Contact lens evaluation or fitting | MyEyeDr.'s general FAQ describes a separate evaluation and charge; local amount unconfirmed | The call distinguished contacts from a routine glasses exam; fitting fee unconfirmed |
-| Retinal imaging | Included, extra fee or required at this location: unconfirmed | Website advertises Optos imaging; included, extra fee or required: unconfirmed |
-| Dilation, if the clinician recommends it | Included or extra fee: unconfirmed | Included or extra fee: unconfirmed |
-| Total with every required service | Unconfirmed | Unconfirmed |
+| Refraction, the test that determines a glasses prescription | Included in this quoted price: unconfirmed | Included, with eye health check and prescription copy, per October 5 staff answer |
+| Contact lens evaluation or fitting | MyEyeDr.'s general FAQ describes a separate evaluation and charge; local amount unconfirmed | Starts at $89 for spherical lenses, per October 5 staff answer; combined exam total unconfirmed |
+| Retinal imaging | Included, extra fee or required at this location: unconfirmed | Optional, $44, per October 5 staff answer |
+| Dilation, if the clinician recommends it | Included or extra fee: unconfirmed | Staff said not included in routine exam; price unconfirmed |
+| Routine exam total | Unconfirmed | $99; no other mandatory fees stated October 5 |
 
 An office listing a service does not tell you whether it is included in a quoted price. An unconfirmed item is not proof of an extra charge.
 
@@ -91,19 +91,19 @@ An office listing a service does not tell you whether it is included in a quoted
 
 Ask whether the routine exam quote includes **refraction**, the measurement used to determine your glasses prescription. That resolves a different question from whether you can receive a copy afterward.
 
-The [FTC's prescription guidance](https://consumer.ftc.gov/articles/buying-prescription-glasses-or-contact-lenses-your-rights) says a prescriber must give you a copy immediately after an exam that includes refraction, at no extra charge and before offering to sell glasses. You can buy the glasses elsewhere. This does not make the exam free or establish whether either quoted price includes refraction.
+The [FTC's prescription guidance](https://consumer.ftc.gov/articles/buying-prescription-glasses-or-contact-lenses-your-rights) says a prescriber must give you a copy immediately after an exam that includes refraction, at no extra charge and before offering to sell glasses. You can buy the glasses elsewhere. This does not make the exam free or establish its price.
 
 ### Is a contact lens exam the same price?
 
 [MyEyeDr.'s general FAQ](https://www.myeyedr.com/patients/info-center) separates the comprehensive exam from the contact lens evaluation. It describes a separate evaluation charge whose amount depends on the lenses and care needed. This is chainwide information, not a confirmed Cinco Ranch contact exam quote.
 
-Revolution Eyes asked whether the appointment was for contacts or a routine glasses exam before stating $99. The recording supplies no contact fitting price. Ask for the combined exam and fitting total, whether trial lenses and fitting followups are included, and when the fitting is complete. The [FTC explains](https://consumer.ftc.gov/articles/buying-prescription-glasses-or-contact-lenses-your-rights) that the contact prescription copy is due after the fitting is complete, which can require a later visit.
+Revolution Eyes asked whether the appointment was for contacts or a routine glasses exam before stating $99. The September 28 recording supplies no contact fitting price. Ask for the combined exam and fitting total, whether trial lenses and fitting followups are included, and when the fitting is complete. The [FTC explains](https://consumer.ftc.gov/articles/buying-prescription-glasses-or-contact-lenses-your-rights) that the contact prescription copy is due after the fitting is complete, which can require a later visit.
 
 ### Are retinal imaging and dilation included?
 
-Revolution Eyes' [technology page](https://www.revolutioneyeskaty.com/eye-care-services/advanced-technology/) says it offers an Optos retinal exam. Its [comprehensive exam page](https://www.revolutioneyeskaty.com/eye-care-services/comprehensive-eye-exams/) describes prescription determination and eye health assessment. Neither page ties those services to the $99 recorded quote or specifies an imaging fee.
+Revolution Eyes staff described imaging as optional on October 5. Ask the clinician which services your own exam requires.
 
-MyEyeDr.'s [general FAQ](https://www.myeyedr.com/patients/info-center) describes retinal photos and says dilation depends on the patient's eye health at the visit. Its [video assisted exam page](https://www.myeyedr.com/video-assisted-eye-exam) says retinal imaging is required for that exam format and may cost extra depending on insurance. We did not confirm whether Cinco Ranch uses that format or how it prices imaging for someone paying without insurance.
+MyEyeDr.'s [general FAQ](https://www.myeyedr.com/patients/info-center) describes retinal photos and says dilation depends on the patient's eye health at the visit. Its [video assisted exam page](https://www.myeyedr.com/video-assisted-eye-exam) says retinal imaging is required for that exam format and may cost extra depending on insurance. The September 28 call did not establish Cinco Ranch's exam format or imaging price.
 
 Ask the office to distinguish **required services, services recommended after the exam, and optional purchases**, with a price for each. Decisions about which clinical tests you need belong with the examining clinician.
 
@@ -126,16 +126,14 @@ For a price check without booking, use this:
 
 ## Contact the two Katy offices
 
-We checked these official listings on October 4, 2026. Both list Sunday as closed, so we did not place a new confirmation call that evening. The price inclusions above remain unresolved.
+These official listings were checked October 4, 2026. Both listed Sunday as closed.
 
 | Office | Official contact page | Listed Monday hours, Central time |
 |---|---|---|
 | MyEyeDr. Cinco Ranch | [23702 Westheimer Parkway, Suite C](https://locations.myeyedr.com/tx/katy/23702-westheimer-pkwy), (281) 391 2020 | 9 AM to 5 PM |
 | Revolution Eyes | [27110 Cinco Ranch Boulevard, Suite 400](https://www.revolutioneyeskaty.com/hours-location/), (281) 394 5222 | 10 AM to 6 PM |
 
-The next listed opening after our check is Monday, October 5. Office opening hours are not appointment availability. Confirm the current price and available exam times directly.
-
-We have scheduled general pricing followups for October 5 at 9:15 AM Central for MyEyeDr. and 10:15 AM Central for Revolution Eyes. These are information requests only, with no appointment or purchase. A scheduled call is not a price confirmation. The table will continue to show unknown amounts until we have reviewed a staff answer.
+Office opening hours are not appointment availability. Confirm the current price and available exam times directly.
 
 ## The followup call: fixing the phone number (1 minute 27 seconds)
 

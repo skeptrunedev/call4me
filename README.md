@@ -111,6 +111,14 @@ To manage another site's committed policy, pass `--policy /path/to/cloudflare.cr
 `public/static/blog/<slug>.svg`), with an Atom feed, likes, comments, an email newsletter (sent from
 `/admin/blog`, for the `ADMIN_EMAILS` accounts), and paid posts for monthly supporters.
 
+Related articles use local CPU embeddings, ranked within editorial subjects from
+`scripts/related-topics.ts`. After adding an article or changing its SEO title, tags or subject,
+run `npm run blog:related`, review the matches in `src/content/blog/related.generated.ts`, and
+commit the index. The first run downloads the pinned EmbeddingGemma model; later runs use
+`~/.cache/call4me/transformers`. Article text stays local. The site serves the generated index
+without model inference. Articles can have fewer than three recommendations when matches
+fall below the similarity threshold. `npm test` checks freshness without downloading a model.
+
 ## Self-hosting
 
 Fork it, create your own D1 database (`wrangler d1 create callbay`) and put its id and your own hostname in `wrangler.jsonc`.

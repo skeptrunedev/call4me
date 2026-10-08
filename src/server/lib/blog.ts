@@ -1,7 +1,8 @@
 import { Marked, Renderer, type Tokens } from 'marked';
 import markedFootnote from 'marked-footnote';
 import { AUTHORS, type Author } from '../../content/blog/authors';
-import { decodeEntities } from './markdown';
+import { RELATED_INDEX } from '../../content/blog/related.generated';
+import { decodeEntities, htmlToReadableText } from './markdown';
 
 /**
  * The blog: markdown files in src/content/blog, one per post, with YAML-ish frontmatter
@@ -131,7 +132,8 @@ export function renderPost(src: PostSource): Post {
   const marker = `<p>${cutWord}</p>`;
   const rendered = linkTimestamps(md.parse(rest ? `${body}\n\n${cutWord}\n\n${rest}` : body, { async: false }) as string);
   const [html, paidHtml] = rest ? rendered.split(marker) : [rendered, ''];
-  const words = full.split(/\s+/).filter(Boolean).length;
+  const words = htmlToReadableText(`${html ?? ''}\n${paidHtml ?? ''}`)
+    .split(/\s+/).filter((word) => /[\p{L}\p{N}]/u.test(word)).length;
   const authors = (meta.authors ?? 'nick')
     .split(',')
     .map((k) => k.trim())
@@ -178,14 +180,15 @@ export function renderAll(sources: PostSource[]): Post[] {
   return posts;
 }
 
-/** Posts sharing the most tags, newest first among ties; never the post itself. */
+/** Semantic matches generated locally from article subjects, without per-request inference. */
 export function related(post: Post, all: Post[], limit = 3): Post[] {
-  return all
-    .filter((p) => p.slug !== post.slug)
-    .map((p) => ({ p, shared: p.tags.filter((t) => post.tags.includes(t)).length }))
-    .sort((a, b) => b.shared - a.shared || (a.p.date < b.p.date ? 1 : -1))
-    .slice(0, limit)
-    .map((x) => x.p);
+  const matches = RELATED_INDEX[post.slug];
+  if (!matches) throw new Error(`Missing related article index for ${post.slug}; run npm run blog:related.`);
+  const available = new Map(all.map((p) => [p.slug, p]));
+  return matches
+    .filter((match) => match.slug !== post.slug && available.has(match.slug))
+    .slice(0, Math.max(0, limit))
+    .map((match) => available.get(match.slug)!);
 }
 
 /** Plain substring search over title, subtitle, tags, and body; ranked by where it hits. */

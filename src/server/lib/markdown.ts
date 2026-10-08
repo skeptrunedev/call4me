@@ -46,6 +46,33 @@ function tokenize(html: string): Tok[] {
   return out;
 }
 
+/** Visible prose for reading estimates; optional collapsed details and media are excluded. */
+export function htmlToReadableText(html: string): string {
+  const out: string[] = [];
+  const stack: { name: string; dropped: boolean }[] = [];
+  const blocks = new Set(['p', 'div', 'section', 'article', 'main', 'blockquote', 'li', 'tr', 'th', 'td', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'hr']);
+  for (const token of tokenize(html)) {
+    if (token.type === 'text') {
+      if (!stack.at(-1)?.dropped) out.push(decodeEntities(token.text!));
+      continue;
+    }
+    const name = token.name!;
+    if (token.type === 'open') {
+      const attrs = token.attrs ?? {};
+      const dropped = !!stack.at(-1)?.dropped || DROP.has(name) || name === 'audio' || name === 'video'
+        || (name === 'details' && attrs.open === undefined)
+        || attrs.hidden !== undefined || attrs['aria-hidden'] === 'true';
+      if (!dropped && blocks.has(name)) out.push(' ');
+      if (!token.selfClosing) stack.push({ name, dropped });
+    } else {
+      const index = stack.map((entry) => entry.name).lastIndexOf(name);
+      if (index >= 0) stack.splice(index);
+      if (!stack.at(-1)?.dropped && blocks.has(name)) out.push(' ');
+    }
+  }
+  return out.join('').replace(/\s+/g, ' ').trim();
+}
+
 /** Convert a page's HTML to markdown. `base` makes relative links absolute. */
 export function htmlToMarkdown(html: string, base: string): string {
   const toks = tokenize(html);

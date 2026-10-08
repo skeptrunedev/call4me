@@ -53,7 +53,7 @@ Our [Spectrum retention call](/blog/spectrum-retention-department) shows why thi
 
 `max_minutes` sets a cap on talk time. `call4me_hang_up` lets your agent end an active call. When a business is closed, `call4me_schedule_call` stores the complete brief and a future time on Call4me's server. A later session can retrieve the schedule and linked call.
 
-Our [scheduling walkthrough](/blog/schedule-phone-calls-claude-code-codex) verified stored schedules, timezone conversion, cancellation, and retrieval. Its evidence does not establish a completed unattended call. A closed agent session also cannot answer a new question, so scheduled calls need all essential facts and acceptable alternatives up front.
+Our [scheduling walkthrough](/blog/schedule-phone-calls-claude-code-codex) verifies saved schedules and later completed calls. Delivery into a closed agent session remains unverified. A closed session cannot answer new questions, so include essential facts and acceptable alternatives in the brief.
 
 ## Call4me versus Agent Phone at a glance
 

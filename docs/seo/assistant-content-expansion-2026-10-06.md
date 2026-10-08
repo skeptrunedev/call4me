@@ -105,3 +105,80 @@ updated guides at 320px and 1280px without document overflow, canonical URLs,
 valid structured data, the recording anchor, the 108.72 second player loading
 and seeking to 100 seconds, the expanded transcript, and both dated execution
 report downloads. The public audio hash matches the independently reviewed export.
+
+## Article customer measurement, October 7
+
+The reusable report reads current Search Console page results and aggregates
+existing first touch attribution in D1. It does not change production data:
+
+```sh
+npm run seo:conversions -- --start 2026-09-28 --end 2026-10-07 --data-state all
+```
+
+The default Search Console data state is `final`. Use `all` to include recent
+provisional data. The report returns Google's first incomplete date and last
+available date separately. Google dates use Pacific time. The account cohort
+uses inclusive UTC calendar dates, with conversion followup through the run's
+`conversionsAsOf` timestamp. An optional `--as-of` ISO timestamp fixes that
+cutoff for comparisons. Account and payment statuses remain their current
+values, so this does not reconstruct a historical database snapshot.
+
+The Google read uses `gws` and the existing personal profile for
+`me@skeptrune.com`, restricted to `sc-domain:call4.me`. No authentication or
+permission changes are needed. If Google fails, the JSON explicitly marks
+Search Console unavailable and the command exits unsuccessfully; D1 attribution
+is still available in the output. Missing Google rows are null rather than
+claims that a page has never appeared in search. No clicks to signup percentage
+is calculated across these different systems and timezones.
+
+The D1 query excludes the same internal accounts as the dashboard. It returns
+aggregate counts only, never account identifiers, emails, telephone numbers,
+transcripts or call content. An article receives acquisition credit only when
+the stored first touch names that exact article path and its timestamp is no
+later than account creation. Later observed touches are reported separately.
+Touches dated after the requested conversion cutoff, and missing or malformed
+attribution, remain unknown. Visits to articles after a
+homepage landing are not observable as assisted conversions in this report.
+
+The report's `fundedCheckoutAccounts` metric means successful checkout funding currently
+marked `paid`, with `paid_at`
+before the conversion cutoff, matching the dashboard's purchase definition.
+Pending and refunded topups do not count. Each account counts once regardless
+of the number of purchases. Credit balance is not evidence of a purchase.
+The stored amount represents credits before discounts, not net cash received.
+A completed checkout can have no charge, so this metric does not establish a
+cash positive customer or revenue.
+First completed call means an outbound call marked `completed`, whose earliest
+`ended_at` is before the cutoff. Inbound callbacks and attempts that failed,
+were canceled or were unanswered do not count. Call completion does not imply
+a resolved task or prove which assistant initiated it.
+
+At 18:05 Pacific on October 7, the September 28 through October 7 cohort had
+122 noninternal accounts. Of those, 56 had unknown attribution and 16 had a
+first touch recorded after signup. The remaining 50 had a stored first touch
+recorded before signup. Only one of those named an article:
+
+| Article | Google impressions | Google clicks | Attributed signups | Funded checkout accounts | First completed call accounts |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| Grok connectors and phone calls | 8 | 0 | 1 | 1 | 0 |
+| Muse setup | 11 | 1 | 0 | 0 | 0 |
+| Codex calling | 21 | 0 | 0 | 0 | 0 |
+| Calling MCP comparison | 12 | 0 | 0 | 0 | 0 |
+| Claude calling | 7 | 0 | 0 | 0 | 0 |
+
+The Grok customer's source is recorded as direct, not Google. It is evidence
+of an article landing followed by signup and completed checkout funding, not
+a proven SEO conversion or verified net cash receipt. Across all current articles, Google reported 149 impressions and
+one click, with data through October 6 and October 5 onward incomplete. The
+Muse page has the one reported Google click, without an attributed signup.
+Other articles have no recorded acquisition in this cohort. Unknown attribution
+prevents interpreting that as proof they never influenced a customer. Ahrefs'
+zero keyword estimate does not override Google's observed impressions or click.
+
+The private aggregate JSON is in
+`scratch/article-conversions-2026-10-07.json` in the main checkout. Its SHA256
+is `3c5b6b0f461a0357047fa2c2acf15acea745e280d9fc48652ffba9081303b911`.
+The command above independently refreshes both sources. SQL tests cover
+internal exclusions, missing and late attribution, distinct accounts with
+multiple purchases and calls, inbound and failed call exclusions, conversion
+followup, cohort boundaries and unreported search rows.

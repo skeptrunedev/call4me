@@ -44,9 +44,9 @@ Our [Spectrum retention case](/blog/spectrum-retention-department) shows why thi
 
 ### Schedule the phone step and retrieve it later
 
-`call4me_schedule_call` stores the complete brief and intended time. You can close the agent session, inspect the schedule later, or cancel it before dialing. Our [scheduling walkthrough](/blog/schedule-phone-calls-claude-code-codex) verifies saved schedules, timezone conversion, cancellation and retrieval.
+`call4me_schedule_call` stores the complete brief and intended time. You can close the agent session, inspect the schedule later, or cancel it before dialing. Our [scheduling walkthrough](/blog/schedule-phone-calls-claude-code-codex) verifies schedules, cancellation and later completed calls.
 
-Put all essential facts into the brief. A closed agent session cannot answer a new question from the business, and the published schedule checks do not establish a completed unattended call.
+Put essential facts into the brief. A closed agent session cannot answer new questions; delivery of results into it remains unverified.
 
 ### Bring back a confirmed result
 

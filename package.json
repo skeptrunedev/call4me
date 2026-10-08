@@ -25,6 +25,8 @@
     "password-user": "node scripts/create-password-user.mjs",
     "plugin:zip": "rm -f dist/call4me-chatgpt-plugin.zip && mkdir -p dist && cd chatgpt-plugin && zip -qr ../dist/call4me-chatgpt-plugin.zip . -x '*.svg'",
     "openapi:generate": "tsx scripts/generate-openapi.ts",
+    "blog:related": "tsx scripts/generate-related-posts.ts",
+    "seo:conversions": "tsx scripts/article-conversions.ts",
     "test": "node --import tsx --test test/*.test.ts",
     "test:menu:live": "tsx scripts/eval-menu-recovery.ts"
   },
@@ -46,6 +48,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@huggingface/transformers": "4.3.1",
     "@modelcontextprotocol/client": "^2.1.0",
     "@types/node": "^26.6.3",
     "auth": "^1.7.6",

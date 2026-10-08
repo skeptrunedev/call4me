@@ -1,9 +1,10 @@
 ---
 title: "Schedule phone calls from Claude Code or Codex for tomorrow"
 seoTitle: "Schedule phone calls with Claude Code or Codex"
-subtitle: Give your agent the full brief now, let call4me keep the schedule, and retrieve the result in a later session. Here are the exact tools, time formats, and live pending and canceled records we checked.
+subtitle: Give your agent the full brief now, let call4me keep the schedule, and retrieve the result in a later session. Here are the tools, time formats and dated schedule records we checked.
 description: "Schedule AI phone calls from Claude Code or Codex through MCP. Check timezones, status and results, or cancel and reschedule before a call starts."
 date: 2026-10-04
+updated: 2026-10-07
 tags: claude code, codex, mcp, scheduled phone calls, ai phone assistant
 authors: nick
 imageAlt: Claude Code or Codex saves a call schedule, call4me waits until the chosen time, and a later agent session retrieves the result
@@ -11,7 +12,7 @@ imageAlt: Claude Code or Codex saves a call schedule, call4me waits until the ch
 
 **You can schedule a phone call from Claude Code or Codex through call4me's MCP server.** Your agent sends the destination, complete calling brief, and an absolute time. Call4me stores the schedule and its server handles the later dial. You can close the agent session and check the same schedule from another session connected to your call4me account.
 
-On October 4, 2026, we checked real production schedules for the next day through a fresh authenticated MCP client. We verified pending records, local time conversion, a canceled record, and a replacement schedule. **Those calls had not run when we checked.** This article demonstrates scheduling and retrieval, not a completed unattended call or a new scheduling test inside either harness.
+On October 4, 2026, we checked real production schedules for the next day through a fresh authenticated MCP client. We verified pending records, local time conversion, a canceled record, and a replacement schedule. **Those calls had not run when we checked.** These were scheduling snapshots, not call results or new tests inside either harness.
 
 ## Queue the phone part of your personal assistant's task
 
@@ -64,7 +65,7 @@ Use `call4me_get_requirements` for the category before scheduling. A `general` i
 
 ## The exact MCP scheduling input
 
-`call4me_schedule_call` takes the same calling brief as `call4me_place_call`, plus `call_at`. [Call4me's agent reference](https://call4.me/llms.txt) links its MCP endpoint and [published calling skill](https://call4.me/.well-known/agent-skills/call4me/SKILL.md), which describes scheduling, status checks, and cancellation. This example shows the shape using our real MyEyeDr. general pricing inquiry and its original scheduled time. **The date is historical once October 5 passes. Choose your own authorized destination and a future time before using it.**
+`call4me_schedule_call` takes the same calling brief as `call4me_place_call`, plus `call_at`. [Call4me's agent reference](https://call4.me/llms.txt) links its MCP endpoint and [published calling skill](https://call4.me/.well-known/agent-skills/call4me/SKILL.md), which describes scheduling, status checks, and cancellation. This example shows the shape using our real MyEyeDr. general pricing inquiry and its original scheduled time. **This date is historical. Choose your own authorized destination and a future time.**
 
 ```json
 {
@@ -124,9 +125,9 @@ Before dialing, the response contains `scheduled.status`, `scheduled.call_at`, `
 
 ## What we verified against production
 
-We created the following editorial research schedules through the authenticated MCP endpoint on October 4, and canceled the original M Hansik schedule when changing its date. We retained those original tool responses. For this article, a fresh client retrieved the records and listed the pending calls without creating, canceling, or changing anything. Dates below are the business's local dates.
+These are the October 4 scheduling snapshots, with business local dates. A fresh authenticated MCP client retrieved them after creation and cancellation; it did not change them.
 
-| Record | Server state when checked | Local time | Stored UTC time |
+| Record | State checked October 4 | Local time | Stored UTC time |
 |---|---|---|---|
 | MyEyeDr. Cinco Ranch general pricing inquiry | `pending` | October 5, 9:15 AM Central | `2026-10-05T14:15:00.000Z` |
 | The Lenny general private dining inquiry | `pending` | October 5, 4:15 PM Eastern | `2026-10-05T20:15:00.000Z` |
@@ -137,7 +138,7 @@ The M Hansik replacement also illustrates why hours need an independent check. I
 
 The canceled schedule returned `finished: true` and `call_id: null`. That means the schedule is finished without a linked call. It does not mean a business conversation happened.
 
-The saved creation and cancellation responses, together with the fresh reads, verify those earlier actions, persistence, retrieval, and the displayed timezone conversion. **They do not yet verify the later dial, staff answers, unattended question handling, or delivery of a completed result back into an agent thread.** The result evidence will belong in the [eye exam cost article](/blog/eye-exam-cost-without-insurance) and [private dining walkthrough](/blog/agent-web-research-phone-calls-sf-private-dining) after the calls actually finish.
+On October 7, we checked the linked production call records and saved transcripts. The three October 5 schedules above were `placed`, with completed calls: MyEyeDr. reached staff; The Lenny and M Hansik reached voicemail. The original M Hansik schedule remained `canceled`, without a call. This verifies later dialing, not delivery into a closed agent session. See the [eye exam comparison](/blog/eye-exam-cost-without-insurance) and [Durham dining followups](/blog/private-dining-room-cost).
 
 ## Change the time without leaving two calls queued
 
