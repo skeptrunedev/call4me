@@ -1,7 +1,7 @@
 import type { FC } from 'hono/jsx';
 import { raw } from 'hono/html';
 import { dollars } from '../services/accounts';
-import { isAwaitingApproval, type CountryOffer, type NumberView } from '../services/numbers';
+import type { CountryOffer, NumberView } from '../services/numbers';
 import { MIN_TOPUP_CENTS } from '../services/topups';
 import { MonthlyBox } from './account';
 import { accountPath, SITE, SITE_DESCRIPTION } from '../lib/pages';
@@ -30,7 +30,6 @@ export const BuyForm: FC<{ signedIn: boolean; error?: string; amount?: string }>
   </form>
 );
 
-const names = (cs: CountryOffer[]) => cs.map((c) => c.name.toLowerCase()).join(', ');
 const regionName = new Intl.DisplayNames(['en'], { type: 'region' });
 
 /** "the uae at $0.40/min": destinations billed above the standard rate (lib/rates.ts). */
@@ -38,11 +37,6 @@ const pricierDestinations = () =>
   Object.entries(DESTINATION_PRICE_CENTS)
     .map(([country, cents]) => `${country === 'AE' ? 'the uae' : (regionName.of(country) ?? country).toLowerCase()} at ${dollars(cents)}/min`)
     .join(', ');
-
-/** Countries with numbers for sale now, and the ones held back by regulator paperwork. */
-function offers(countries: CountryOffer[]): { live: CountryOffer[]; soon: CountryOffer[] } {
-  return { live: countries.filter((c) => c.available), soon: countries.filter(isAwaitingApproval) };
-}
 
 export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; countries: CountryOffer[]; error?: string; amount?: string }> = (p) => {
   return (
@@ -122,7 +116,7 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
 
 /** The faq on the home page and the rules page. */
 const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ signedIn, pricePerMinuteCents, countries }) => {
-  const { live, soon } = offers(countries);
+  const live = countries.filter((c) => c.available);
   const extra = pricierDestinations();
   return (
   <>
@@ -131,26 +125,25 @@ const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries: Count
       <details>
         <summary>which countries can it call?</summary>
         <p>
-          every account can call businesses in the us, canada, europe, the uae, and japan from its free us number. european calls go out from your european call4me number if
-          you have one. anywhere else, buy a call4me number in that country and calls there go out from it, so the business sees a local number it can call back
-          cheaply.{live.length > 0 && <> you can buy numbers in {live.length} countries today: {names(live)}.</>}
-          {soon.length > 0 && <> waiting on regulator approval, usually a few days: {names(soon)}.</>} calls cost {dollars(pricePerMinuteCents)}/min wherever you call
-          {extra ? <>, except {extra}</> : null}.
+          the us, canada, the eu, the uk, iceland, liechtenstein, norway, switzerland, the uae, and japan work with your free us number.
+          other supported destinations may need a local call4me number. check availability in <a href={accountPath(signedIn)}>my account</a>
+          {live.length > 0 ? <> (numbers available in {live.length} countries)</> : null}.
         </p>
       </details>
       <details>
         <summary>what does it cost?</summary>
         <p>
-          {dollars(pricePerMinuteCents)} per minute of talk time, prepaid, from {dollars(MIN_TOPUP_CENTS)}. each call holds its maximum cost up front and gives back what it didn't use
-          when it ends. unanswered, busy, and failed calls are free.
+          from {dollars(pricePerMinuteCents)} per minute from pickup, rounded up to the minute. prepaid credits start at {dollars(MIN_TOPUP_CENTS)}.
+          each call reserves its maximum cost and returns unused credit when it ends. unanswered, busy, and failed calls are free.
         </p>
+        {extra && <p>higher rates: {extra}.</p>}
+        <p>monthly reload is on by default. untick it before paying or stop it in <a href={accountPath(signedIn)}>my account</a>.</p>
       </details>
       <details>
         <summary>do i need my own phone number?</summary>
         <p>
-          no. your first call assigns you a free us number. calls use one of your own call4me numbers, depending on the country you're calling.
-          when a business calls that number back, call4me answers, finishes the task
-          if it was left open, or takes a message for your agent.
+          no. call4me provides a free us number, and the agent answers callbacks to it.
+          you can also verify your own number as caller ID; callbacks then go directly to your phone.
         </p>
       </details>
       <details>
@@ -163,17 +156,10 @@ const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries: Count
       </details>
       <details>
         <summary>which agents does it work with?</summary>
-        <p>claude code, codex, claude desktop, claude.ai, chatgpt, muse, grok bot, and anything else that speaks mcp. paste the prompt above and your agent sets itself up.</p>
-      </details>
-      <details>
-        <summary>can i use it with muse?</summary>
-        <p>yes. paste the prompt above into muse and it builds its own call4me integration, asking for your api key (from your account page) through its secure credential prompt. then it makes calls for you from the chat.</p>
-      </details>
-      <details>
-        <summary>can i use it with grok bot?</summary>
         <p>
-          yes. paste the prompt above into grok bot and approve when it asks to add the custom mcp server, and it can make calls for you. on grok.com, add it yourself
-          under grok.com/connectors → new connector → custom.
+          claude code, codex, claude desktop, claude.ai, chatgpt, grok bot, and other MCP clients. muse can build its own integration.
+          follow the <a href="/#install-prompt">setup prompt</a>; some apps need you to add the connector yourself.
+          see the <a href="/blog/meta-muse-ai-agent-phone-calls">muse</a> and <a href="/blog/grok-connectors-mcp-phone-calls">grok</a> guides.
         </p>
       </details>
       <details>
@@ -187,8 +173,7 @@ const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries: Count
       <details>
         <summary>will they know it's an AI?</summary>
         <p>
-          it doesn't announce itself and it sounds like a normal person calling for you. if someone sincerely asks, it says yes and carries on. it never pretends to be
-          you. see <a href="/rules">rules</a>.
+          it doesn't announce itself. if asked whether it's an AI, it says yes. it calls for you and never claims to be you. see <a href="/rules">rules</a>.
         </p>
       </details>
       <details>
