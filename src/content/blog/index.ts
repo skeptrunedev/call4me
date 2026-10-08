@@ -1,4 +1,5 @@
 import type { PostSource } from '../../server/lib/blog';
+import everythingImprovedSinceLaunch from './everything-we-have-improved-since-launch.md';
 import vapiAlternatives from './vapi-alternatives.md';
 import blandAiAlternatives from './bland-ai-alternatives.md';
 import aiAgentPhoneCalls from './ai-agent-that-makes-phone-calls.md';
@@ -86,6 +87,7 @@ import metaMuseSupplierQuotes from './meta-muse-supplier-quotes.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'everything-we-have-improved-since-launch', markdown: everythingImprovedSinceLaunch },
   { slug: 'vapi-alternatives', markdown: vapiAlternatives },
   { slug: 'bland-ai-alternatives', markdown: blandAiAlternatives },
   { slug: 'ai-agent-that-makes-phone-calls', markdown: aiAgentPhoneCalls },

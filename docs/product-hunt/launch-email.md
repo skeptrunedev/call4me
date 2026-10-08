@@ -12,4 +12,4 @@ i'm grateful for all of your support. please do let me know if there's anything 
 
 Nick
 
-p.s. here's [everything we've improved since launch](BLOG_URL).
+p.s. here's [everything we've improved since launch](https://call4.me/blog/everything-we-have-improved-since-launch).

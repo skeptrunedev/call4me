@@ -1,6 +1,6 @@
 # Product Hunt launch drafts
 
-Prepared October 7, 2026, Pacific time. The email and blog are drafts for Nick's review. No email has been sent or scheduled. The blog is deliberately outside the published blog inventory.
+Prepared October 7, 2026, Pacific time. The email remains a draft for Nick's review. No email has been sent or scheduled. Following Nick's request for the missing blog link, the article is now registered for publication at https://call4.me/blog/everything-we-have-improved-since-launch. The source is `src/content/blog/everything-we-have-improved-since-launch.md`; the copy in this directory preserves the reviewed draft.
 
 ## Timing and links
 
@@ -8,7 +8,7 @@ The original Twitter launch was September 30, 2026, at 08:34:00 Pacific. The pos
 
 Nick's October 7 email, “Quick help enabling Thursday’s call4me launch,” identifies Thursday, October 8 as the intended Product Hunt date. Fastmail message `StmDpTr771cg` contains the request, and `StmDo2SyrqMR` confirms posting access worked. These establish intended timing and account access, not a scheduled listing. Nick confirmed midnight Pacific in this conversation, corresponding to October 8 at 07:00 UTC.
 
-Nick supplied the launch URL: https://www.producthunt.com/products/call4me?launch=call4me. It is included in the email. The web fetch could not access the listing, so its live state is not independently verified. The email's blog link still needs the actual published URL after the article is approved and published. Do not send that placeholder.
+Nick supplied the launch URL: https://www.producthunt.com/products/call4me?launch=call4me. It is included in the email. The web fetch could not access the listing, so its live state is not independently verified. The email's P.S. now links to https://call4.me/blog/everything-we-have-improved-since-launch.
 
 ## Call count
 
@@ -87,6 +87,6 @@ The draft rendered successfully through the existing blog renderer. Email and bl
 
 1. Review the email and blog wording with Nick, as required by the session's rule for outreach drafts.
 2. Verify the supplied Product Hunt listing is live at the intended time.
-3. Publish the approved blog using the existing Markdown, blog inventory and headline image pattern, then verify its public URL.
+3. Confirm the published blog URL still works before distributing the email.
 4. Refresh the call count and prepare the actual eligible recipient list.
 5. Obtain approval of the finished message and recipients before sending or scheduling the email. The current request is to prepare the content for the midnight launch.

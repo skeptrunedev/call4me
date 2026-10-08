@@ -36,6 +36,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'dog-teeth-cleaning-cost': ['veterinary'],
   'drop-off-vet-appointment': ['veterinary'],
   'etihad-customer-service': ['airlines'],
+  'everything-we-have-improved-since-launch': ['agent-software', 'voice-technology'],
   'experian-phone-number': ['personal-finance'],
   'eye-exam-cost-without-insurance': ['healthcare'],
   'fabletics-customer-service': ['subscription-cancellation', 'retail-shopping'],

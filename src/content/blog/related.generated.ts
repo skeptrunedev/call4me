@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "baf07287d447acf2bc5804fd96205ebf4d378fec92dc794ab156f9771d650bb8"
+  "sourceHash": "66a5a9f6ba7a50a9fffdab6b7f78e2825856a34db9b1e74fb27a3819fa374c50"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -111,7 +111,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "follow-up-appointment-telehealth",
-      "similarity": 0.670663
+      "similarity": 0.670662
     }
   ],
   "ai-phone-tree-navigation": [
@@ -564,6 +564,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.622989
     }
   ],
+  "everything-we-have-improved-since-launch": [
+    {
+      "slug": "meta-muse-first-task",
+      "similarity": 0.620394
+    }
+  ],
   "experian-phone-number": [
     {
       "slug": "usaa-phone-number",
@@ -603,7 +609,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ai-personal-assistant-appointment-booking",
-      "similarity": 0.670663
+      "similarity": 0.670662
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -914,7 +920,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "twilio-mcp-phone-calls",
-      "similarity": 0.694327
+      "similarity": 0.694326
     },
     {
       "slug": "claude-code-phone-calls",
