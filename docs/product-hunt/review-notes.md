@@ -1,6 +1,6 @@
 # Product Hunt launch drafts
 
-Prepared October 7, 2026, Pacific time. Nick approved the tested email for all users at 08:15 Pacific on October 8, equivalent to 2026-10-08T15:15:00Z. Scheduling is being prepared through Fastmail's native delayed submission support. The eligible audience audit found 120 registered accounts after existing opt outs, internal accounts and placeholder addresses were excluded. Following Nick's request for the missing blog link, the article is published at https://call4.me/blog/everything-we-have-improved-since-launch. The source is `src/content/blog/everything-we-have-improved-since-launch.md`; the copy in this directory preserves the reviewed draft.
+Prepared October 7, 2026, Pacific time. Nick approved the tested email for all users at 08:15 Pacific on October 8, equivalent to 2026-10-08T15:15:00Z. All 120 messages are scheduled through Fastmail's native delayed submission support and independently verified pending for the exact requested time. The eligible audience audit found 120 registered accounts after existing opt outs, internal accounts and placeholder addresses were excluded. Following Nick's request for the missing blog link, the article is published at https://call4.me/blog/everything-we-have-improved-since-launch. The source is `src/content/blog/everything-we-have-improved-since-launch.md`; the copy in this directory preserves the reviewed draft.
 
 ## Timing and links
 
@@ -96,3 +96,12 @@ The local development signing key does not match production. Campaign links ther
 ## Website footer
 
 Nick separately requested the live aggregate call count in the website footer. The shared footer queries provider accepted outbound calls across all accounts from D1 for each rendered page and labels the result “calls placed.” Inbound calls and requests that never reached the phone provider are excluded. The email keeps its approved customer usage count, which excludes internal accounts.
+
+
+## Final production verification
+
+Release `d6a1291` passed [CI and deployment](https://github.com/skeptrunedev/call4me/actions/runs/37737903809). Local checks passed with 286 tests and one skipped test, plus type checking, linting and the Worker build.
+
+Fastmail submissions `S3612` through `S3731` were verified at 2026-10-08T06:35:15Z. All 120 have `sendAt: 2026-10-08T15:15:00Z` and `undoStatus: pending`, with the expected sender, exactly one intended recipient and the saved email ID. There are zero remaining or skipped recipients. This verifies scheduled delivery, not inbox receipt. The private manifest is `scratch/product-hunt-2026-10-08.v2.json`; the earlier manifest uses invalid development signatures and was never submitted. Use `npm run campaign -- status --state scratch/product-hunt-2026-10-08.v2.json` before delivery to verify pending status.
+
+Production browser checks passed on the homepage and launch blog at 375 and 1440 pixel widths, with all footer links present, no horizontal overflow and “962 calls placed,” matching the production SQL count. The footer reads fresh usage on each page render. Three campaign unsubscribe URLs returned valid confirmation pages, and the live browser confirmed the preserved token and POST confirmation form without opting out a customer. Real SQLite route tests verified that POST changes only the intended account and existing signed links remain valid.
