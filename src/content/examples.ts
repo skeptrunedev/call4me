@@ -771,7 +771,7 @@ export const EXAMPLES: CallExample[] = [
     business: 'a law firm in Michigan',
     date: 'October 1, 2026',
     request: 'book a 30-minute or 1-hour consultation with an attorney who handles software and internet law, on a weekday evening or a weekend, for $300 or less.',
-    outcome: 'the firm quoted $400, applied to the bill if hired. our caller checked with the user, asked for 30 minutes at $300 or less, and got a yes: a phone consultation on tuesday, october 6 at 6:30 pm, a calendar invite by email, and a conflict check on the call.',
+    outcome: 'the firm quoted $400, applied to the bill if hired. after checking with the user, our caller negotiated 30 minutes for $300 on tuesday, october 6 at 6:30 pm by phone. the firm completed a conflict check and promised an email invite; receipt was not verified.',
     audio: '/static/examples/lawyer-consultation-booked.mp3',
     duration: '3 minutes 33 seconds',
     transcript: [

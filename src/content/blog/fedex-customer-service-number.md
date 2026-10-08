@@ -12,7 +12,7 @@ imageAlt: FedEx customer service number 1-800-463-3339, how we reached a person 
 
 **The short answer:** the FedEx customer service number in the U.S. is **1-800-463-3339** (1.800.GoFedEx), as listed on [fedex.com](https://www.fedex.com/en-us/customer-support/call-us.html). A voice assistant answers.
 
-**To reach a person, you need a tracking number or a door tag number.** Without one, the voice assistant says: "Our representatives can only assist you or share shipment details if you have either of them." We tried three times and never got past it.
+**Our three calls without a tracking number never reached a person.** The voice assistant requested a tracking or door tag number each time. We did not test every route.
 
 **With a tracking number, here's what got us a person:**
 
@@ -155,7 +155,7 @@ Every time, the voice assistant understood the question ("Holding a package at a
 
 FedEx's own [phone menu page](https://www.fedex.com/en-us/customer-support/phone-menu.html) lists **"Representative" as 0**. On our calls, saying "representative" still led back to the tracking number. **We didn't try pressing 0, and we didn't try saying "help me find it" or pressing star.** We don't know where those go.
 
-What you need before you call:
+Have these ready for the route we used:
 
 1. **A tracking number,** from your shipping confirmation or the sender's email. If you don't have it, the voice assistant says to ask the shipper.
 2. **Or a door tag number,** from the note FedEx leaves after a missed delivery. It starts with **DT** and has **12 digits**.

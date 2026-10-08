@@ -1,10 +1,10 @@
 ---
 title: Experian phone number: what actually happens when you call to freeze your credit
 seoTitle: Experian phone number for a credit freeze
-subtitle: We called Experian's freeze line 15 times in one afternoon. Here is the whole phone tree, every dead end, and a 9 minute recording of the call that got furthest.
+subtitle: We called Experian’s freeze line 15 times in one afternoon. Here are the routes we tried and a 9 minute recording of the call that got furthest.
 description: Experian's number is 1-888-397-3742. It asks for your full SSN first, and we found no way to reach a person without it. Full recording and phone tree.
 date: 2026-09-30
-updated: 2026-10-04
+updated: 2026-10-07
 tags: experian, credit freeze, phone trees, customer service
 authors: nick
 imageAlt: Experian 1-888-397-3742, what happens when you call to freeze your credit
@@ -65,7 +65,7 @@ If any identity step fails (we missed the date of birth on the first pass), you 
 
 ## Things that don't work
 
-We tried every route people suggest online. On September 30, 2026, none of them reached a person.
+These routes did not reach a consumer support agent on September 30, 2026.
 
 - **Saying "representative" at the Social Security prompt.** It answers "I don't recognize that entry" and asks for the number again.
 - **Pressing 0 at the Social Security prompt.** It skips ahead to a spoken menu (freeze or unfreeze, fraud alert, report or score). Asking for anything there sends you to experian.com/help.

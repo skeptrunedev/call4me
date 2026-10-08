@@ -1,22 +1,23 @@
 ---
-title: Wayfair customer service: the phone number, what happens when you call, and what returning a sofa costs
+title: Wayfair customer service: phone number and return shipping rules
 seoTitle: Wayfair customer service: phone number and returns
 subtitle: We called Wayfair twice in one evening to ask how returning a big item works and who pays to ship it back. Here's the phone path to a person, what the agents said, and both recordings.
-description: Wayfair's number is 844-403-5086. Describing our question got us a live agent in about a minute. What returning a sofa costs, from a real call.
+description: Call Wayfair at 844-403-5086. Two recorded calls cover reaching a person, return shipping rules and a sales agent’s hypothetical fee example.
 date: 2026-09-30
+updated: 2026-10-07
 tags: wayfair, customer service, returns, phone trees
 authors: nick
-imageAlt: Wayfair 844-403-5086, what returning a sofa actually costs
+imageAlt: Wayfair 844-403-5086, return shipping rules from two calls
 ---
 
-**The short answer:** Wayfair's customer service number is **844-403-5086** (from wayfair.com/help-and-contact). An **AI virtual assistant** answers and asks why you're calling. Say what you need in a sentence and it transfers you to a live agent. Both our calls reached a person in about a minute. On returns, the agents told us:
+**The short answer:** Wayfair's customer service number is **844-403-5086** (from wayfair.com/help-and-contact). An **AI virtual assistant** asked why we were calling. Both calls reached sales agents in about a minute. We had no specific item; they gave return rules and hypothetical fees:
 
 - **30 days** from delivery, for a refund or store credit. Not every item is eligible, and you need the original packaging.
 - You **call Wayfair to start** a return and get a label. It then goes back via **FedEx pickup, FedEx drop off, or a store** if one is nearby.
-- If you just changed your mind, **return shipping is deducted from your refund** and depends on the item's price: "if the item is about $300, there will be a shipping fee of about $30 to $45." If something is wrong with the item, **there's no cost**.
+- **Return shipping is deducted from your refund** if you changed your mind. The agent’s example was **$30 to $45 for a $300 item**, not a quote for a sofa we chose. They said there was no shipping cost for a faulty item.
 - Refunds: **store credit in 24 to 48 hours**, or **3 to 5 business days** back to your card.
 
-We called on Wednesday, September 30, 2026, at about 7:40 and 7:45 pm Eastern, with [call4me](/) asking the questions. Both times the virtual assistant sent us to **Wayfair Sales**, which makes sense because we didn't have an order yet.
+We called on Wednesday, September 30, 2026, at about 7:40 and 7:45 pm Eastern, with [call4me](/) asking the questions. Both calls reached **Wayfair Sales**.
 
 ## Listen: how returns work (4 minutes 16 seconds)
 
@@ -59,15 +60,13 @@ A second call, just for the question the first one didn't answer. The agent's fi
 4. **"Let me connect you with a live agent."** "A member of our team will be with you shortly."
 5. **A person picks up.** For us, 10 and 14 seconds after the transfer, and about a minute after the call started.
 
-There's no keypad menu to learn: speaking your question is the whole tree.
-
 ## Returning a large item, step by step
 
 1. **Check the item is returnable** before you order. "Not all the items are eligible for a return", and the item page and Wayfair's return policy have the details for "small and large parcels".
 2. **Keep the original packaging.** "You always have to have the content that it comes in."
 3. **Call customer service within 30 days of delivery** to start the return. They send you a return label.
 4. **Pick how it goes back.** You'll get "two options, or possibly three": a Wayfair store if there's one nearby, FedEx drop off, or FedEx pickup. For big items they may send "one of our other trucking companies".
-5. **Expect a deduction if you changed your mind.** It's based on the item's price (about $30 to $45 for a $300 item, in the agent's example) and comes off your refund. If the item arrived damaged or has a problem, return shipping is free.
+5. **Ask for the return shipping cost for your item.** The agent gave examples, not a typical sofa fee, and said faulty items had no shipping charge.
 6. **Choose store credit or a refund.** The agent said store credit takes 24 to 48 hours ("it may just arrive in a few hours"), and a refund to your card 3 to 5 business days after the return is processed.
 
 ## Have your agent make this call

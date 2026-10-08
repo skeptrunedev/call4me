@@ -4,7 +4,7 @@ seoTitle: OpenAI realtime voices on a real phone call
 subtitle: Hear marin, cedar, gleam and meridian in five languages, then inspect repeated calls captured at the receiving end. We test dates, times, reference codes and corrections, with the recordings and transcription disagreements included.
 description: "Compare OpenAI realtime voices marin, cedar, gleam and meridian on real SIP calls. Hear samples and inspect date, time, code and correction tests."
 date: 2026-09-30
-updated: 2026-10-04
+updated: 2026-10-07
 tags: ai voice, openai, phone calls, ai phone assistant
 authors: nick
 imageAlt: OpenAI realtime voices on a real phone call, four voices compared
@@ -384,7 +384,7 @@ The same samples are on the [voices page](/voices), which is the one to send som
 
 ## How each voice speaks, measured
 
-Adjectives like "warm" and "crisp" don't survive a phone line, so we measured the samples instead: how fast each voice says the 22-word line, its typical pitch, and how much its pitch moves (in semitones, between its lowest and highest tenth of voiced speech).
+We measured each sample's speaking speed, typical pitch, and pitch movement (in semitones, between its lowest and highest tenth of voiced speech).
 
 | Voice | Length | Words per minute | Typical pitch | Pitch movement |
 |---|---:|---:|---:|---:|
@@ -396,7 +396,7 @@ Adjectives like "warm" and "crisp" don't survive a phone line, so we measured th
 One take per voice and one line, so treat the numbers as a description of these samples rather than a law. Two things still stand out:
 
 - **gleam takes its time.** It's about 15% slower than the others and has the most melody in it. That's the voice our early user liked best after calling himself with three of them.
-- **cedar is quick and flat.** It's the fastest and moves its pitch the least. The same user said it sounded synthetic. A small difference in numbers, but on a phone line, where there's little else to go on, flat delivery is what people notice.
+- **cedar is quick and flat.** It's the fastest and moves its pitch the least. The same user said it sounded synthetic.
 
 ## Every voice in the five most spoken languages
 
@@ -529,9 +529,9 @@ We went back through every call with a transcript, 109 real conversations, and c
 - People on the line **called it "Sarah" back in 6 calls**, like the hauler in [our junk removal post](/blog/junk-removal-cost) who signed off with "Sounds good, Miss Sarah".
 - People on the line **asked if they were talking to an AI 2 times.** It said yes both times and kept going.
 
-Then the feedback came in. An early user set call4me up and placed three test calls to himself, and wrote back that marin introducing itself as "Sarah" was odd. He's right. When you call yourself, a stranger's name for your own assistant is jarring, and on a business call a name only changes anything when someone asks for it, which happened 6 times in 109 calls. It also made marin behave differently from the other three voices for no reason anyone could see.
+An early user placed three test calls to himself and said marin introducing itself as "Sarah" was odd. We removed that default name to make its instructions consistent with the other voices.
 
-So we removed it. The diff in the caller's instructions:
+The instruction change:
 
 ```diff
 -/** "Sarah, Nick's assistant" when the voice has a name, else "Nick's assistant". */
@@ -544,18 +544,15 @@ So we removed it. The diff in the caller's instructions:
 +  `- If they ask your name, you're ${owner}'s assistant; you don't need a name of your own.`;
 ```
 
-Every voice now opens with "Hi! This is [your name]'s assistant", and if someone asks its name, it says it's your assistant and doesn't need one.
+The current personal caller instructions say to get to the request without an introduction, and identify itself as the assistant if asked. Instructions describe intended behavior; the recording establishes what happened.
 
-## How to tell if a voice is AI on a phone call
+<span id="how-to-tell-if-a-voice-is-ai-on-a-phone-call"></span>
 
-From the side that makes the calls: on a short business call, mostly you can't, and people rarely try. In 109 conversations the question came up twice. What gives an AI caller away usually isn't the voice:
+## What the AI questions establish
 
-- **Reading everything back.** Real people don't repeat the whole booking at the end of a call. Our caller doesn't either.
-- **Narrating what it's doing.** "I'm going to press 2 now" is something no person says. It's an open bug for us; it still happens.
-- **Pauses in the wrong places.** A caller that waits too long after "how can I help you?" sounds like a machine thinking.
-- **A disclosure script up front.** A person calling for someone else doesn't open with one, and our caller doesn't either.
+The two explicit AI questions count what people asked. They do not measure how many recognized the caller as AI without asking.
 
-The one thing call4me won't do is lie about it. If someone sincerely asks whether they're talking to an AI, the caller says yes. This is the rule, word for word:
+The caller is instructed to answer honestly when asked directly. This excerpt remains in the current instructions:
 
 ```text
 Only if they ask directly whether you're an AI, a bot, or a real person, don't deny it:
@@ -564,20 +561,15 @@ Just trying to grab that table for four at seven." If they'd rather not deal wit
 thank them and hand off to hang up (end_call).
 ```
 
-## How to make an AI voice sound more human on the phone
+<span id="how-to-make-an-ai-voice-sound-more-human-on-the-phone"></span>
 
-What we changed, roughly in order of how much it mattered:
+## The phone audio setting
 
-1. **Test at phone quality, not in a demo.** A voice that sounds rich at 24 kHz loses most of what made it sound rich at 8 kHz. Choose by listening at the format your calls use. This is the session setting our caller runs with:
+The caller uses this 8 kHz format. The samples above let you compare voices at that format:
 
-   ```json
-   { "audio": { "format": { "type": "audio/pcmu", "rate": 8000 }, "output": { "voice": "marin" } } }
-   ```
-
-2. **One sentence to get to the point.** "Hi! This is Alex's assistant, I was hoping to get a table for four tonight, around seven?" People on business lines want the ask in the first breath.
-3. **Let them talk first.** The caller waits for "thanks for calling" before it speaks, and only says "Hi, hello?" if nobody has said anything.
-4. **Don't read back, don't narrate, don't disclaim.** See above.
-5. **Be honest about who it is.** It's your assistant, not you, and it says so.
+```json
+{ "audio": { "format": { "type": "audio/pcmu", "rate": 8000 }, "output": { "voice": "marin" } } }
+```
 
 ## How we recorded the original direct samples
 

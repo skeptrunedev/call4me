@@ -1,13 +1,13 @@
 ---
 title: How much does a private dining room cost? We called 5 restaurants for a dinner for 10
-seoTitle: Private dining room cost: 5 real quotes for 10
-subtitle: Five recorded Durham restaurant quotes for 10 people, with a cost worksheet that separates room rental, food minimums and deposits. Hear our followup attempt and see which amounts still need confirmation.
-description: Five real private dining quotes for 10, with recordings, room fee versus food minimum calculations, deposit questions and an honest followup on unclear costs.
+seoTitle: Private dining room cost: 5 restaurant calls
+subtitle: Five Durham restaurant calls for a dinner for 10. Hear the recordings, compare room fees and food costs, and see which amounts remain unconfirmed.
+description: Five recorded restaurant calls about private dining for 10, with room fees, food costs and unanswered deposit questions.
 date: 2026-10-01
 updated: 2026-10-07
 tags: private dining room, restaurants, group dinner, reservations, ai phone assistant
 authors: nick
-imageAlt: Private dining room for 10, five restaurants, five quotes, recorded
+imageAlt: Private dining for 10, five restaurant calls recorded
 ---
 
 **The short answer:** in our five Durham calls, a dinner for 10 ranged from an ordinary table reservation with no room fee mentioned to a quoted **$350** or **$1,500** private room charge. The smallest calculable subtotal was M Hansik's **$1,000 for the room and food**, before drinks and unconfirmed tax and service charges. We could not calculate The Lenny's total because the recording does not clearly establish whether its $1,500 counts toward food and drink. Two places already had their private space booked that night, and one would only discuss it by email.
@@ -20,14 +20,16 @@ What a restaurant will ask, and what you should ask back:
 2. **How private it needs to be.** "Private or semi-private, or a table that feels set apart" got different answers at every place: a separate downstairs area, an outdoor pergola, a table set apart, a private room.
 3. **The room fee,** and **whether it counts toward food and drink.** M Hansik said its $350 is a room fee on top of the food. At The Lenny, our recording is unclear on that exact point (more below).
 4. **The food minimum or spend per person,** and **whether there's a set menu.**
-5. **The deposit, or a card on file.** All three places that quoted asked for one or the other.
+5. **The deposit, or a card on file.** M Hansik, The Lenny and Mateo required one or the other.
 6. **Who books it.** At four of the five, a private room or a party goes through an events contact or an email address, not the person who answers the phone.
 
 These calls were made on Wednesday, September 30, 2026, between about 5:08 and 5:20 pm Eastern, by a call4me user's AI phone assistant planning a company dinner for Thursday, November 5. It rang all five restaurants in under 12 minutes, some of them at the same time. Nothing was booked or held: the brief said to collect quotes and not give a card. The user is okay with us sharing the calls. Their name, the staff names and the email addresses are muted in the audio. Prices and availability are what each restaurant said on that date.
 
-## The five quotes, side by side
+<span id="the-five-quotes-side-by-side"></span>
 
-For a party of 10 on Thursday, November 5, 2026, around 6 pm, as quoted on September 30, 2026:
+## Five restaurant calls
+
+For 10 people on November 5, 2026, around 6 pm. Answers from September 30:
 
 | Restaurant | Private space that night | Room fee | Food and drink | Deposit or card | How to book the room |
 |---|---|---|---|---|---|
@@ -143,7 +145,9 @@ The October 5 followups to The Lenny and M Hansik both reached voicemail, accord
 
 Right after "$1,500," the host says whether the fee counts toward food and drink, and we can't tell you which way it went. We ran that phrase through three transcription models several times. One heard "that doesn't go towards food or beverage." The other two heard "that does include towards food or beverage." Our caller didn't ask again. If the same meal costs at least $1,500 and the full charge is either additional or credited against it, those interpretations differ by $1,500 before other charges. We do not have the meal price or credit terms, so we cannot calculate the actual difference. Get those terms in writing from the events coordinator.
 
-## Listen: Mateo Bar de Tapas, no room fee for 10 (2 minutes 36 seconds)
+<span id="listen-mateo-bar-de-tapas-no-room-fee-for-10-2-minutes-36-seconds"></span>
+
+## Listen: Mateo Bar de Tapas, a regular table for 10 (2 minutes 36 seconds)
 
 <audio controls preload="metadata" src="/static/examples/private-dining-mateo.mp3" style="width:100%"><a href="/static/examples/private-dining-mateo.mp3">listen to the Mateo Bar de Tapas call</a></audio>
 

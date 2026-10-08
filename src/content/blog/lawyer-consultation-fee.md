@@ -4,6 +4,7 @@ seoTitle: Lawyer consultation fee: a real $300 booking
 subtitle: A call4me user had their AI phone assistant call four Michigan law firms to book a consultation about software and internet law. One firm quoted $400, agreed to $300 for 30 minutes, and booked it. Here's what the firm asked, the recordings, and what our caller got wrong at the other three.
 description: We called four Michigan law firms to book a lawyer consultation. One quoted $400, then booked 30 minutes by phone for $300. The recordings and what to ask.
 date: 2026-10-01
+updated: 2026-10-07
 tags: lawyer consultation, lawyer consultation fee, legal help, attorneys, ai phone assistant
 authors: nick
 imageAlt: Lawyer consultation fee, four law firms, one $300 booking, recorded
@@ -15,7 +16,7 @@ What the firm asked before booking. Have these ready:
 
 1. **When you're free.** It opened with "How is Tuesday the 6th?" and settled on 6:30 pm, an evening slot.
 2. **Where you are.** "Are you close to [place removed]?" Not close, so it offered "an initial phone call" instead of meeting in person.
-3. **An email address,** for a calendar invite ("sort of Outlook notice").
+3. **An email address,** for a promised calendar invite.
 4. **Who's on the other side.** This is the conflict check: "before we can actually give any substantive advice," the firm has to make sure it doesn't already represent the party you're up against. It asked for the name, checked, and said "that's not going to be a conflict problem for us."
 
 It didn't ask for details of the legal problem on this call. The fee, the time and the conflict check were the whole booking.
@@ -28,7 +29,7 @@ Called on October 1, 2026, about a consultation on software and internet law:
 
 | Firm | What happened | Consultation fee | Booked? |
 |---|---|---|---|
-| **The firm we booked** (Michigan) | A person answered, checked their own calendar, and booked it in under four minutes | **$400** quoted ("if you hire us, we'll apply it to the bill"). **$300 for 30 minutes** agreed | **Yes:** 30 minutes by phone, Tuesday, October 6, 6:30 pm. Calendar invite by email. Conflict check done on the call |
+| **The firm we booked** (Michigan) | A person answered, checked their own calendar, and booked it in under four minutes | **$400** quoted ("if you hire us, we'll apply it to the bill"). **$300 for 30 minutes** agreed | **Yes:** 30 minutes by phone, Tuesday, October 6, 6:30 pm. Email invite promised. Conflict check done on the call |
 | **Silverstein Legal** | After a hold message, a person answered "Silverstein Legal." Our caller asked to book a consultation, and the firm's end hung up about a second later, without a reply | Not reached | No |
 | **Falkowski PLLC** | The line connected, but we hear nothing from the firm's side. Our caller said "Hi, hello?" once, then nothing for almost two minutes, until the firm's end hung up | Not reached | No |
 | **Oakland Law Group** | A voice-driven phone menu took our caller's words as menu choices, then said "we cannot connect your call at the moment" | Not reached | No |
@@ -106,7 +107,7 @@ We never heard the menu's options, because our caller never let the recording fi
 4. **Ask the fee before you agree to the time,** or right after. Then ask: **does it count toward the bill if I hire you?**
 5. **Set your limit ahead of time, and ask for a shorter consult if the price is over it.** "Could you do a 30-minute consult for $300 or less?" turned $400 into $300.
 6. **Ask whether it's by phone, video or in person,** and who calls whom.
-7. **Get the confirmation in writing.** Here it was a calendar invite by email. Have the date read back: the firm said "the 5th" before correcting itself to "the 6th."
+7. **Get written confirmation.** The firm promised an invite; receipt was unverified. Confirm the date: it corrected "the 5th" to "the 6th."
 8. **On a phone menu, wait for the whole recording.** Then pick the option or say "receptionist."
 
 ## Where our caller fell short

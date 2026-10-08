@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "8553a3566dfd50be30a23e70deff9472d9e2f122bb51d104d3f8f2a8bf545d9f"
+  "sourceHash": "baf07287d447acf2bc5804fd96205ebf4d378fec92dc794ab156f9771d650bb8"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -51,7 +51,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "private-dining-room-cost",
-      "similarity": 0.64048
+      "similarity": 0.639106
     }
   ],
   "ai-agent-that-makes-phone-calls": [
@@ -224,7 +224,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "private-dining-room-cost",
-      "similarity": 0.643606
+      "similarity": 0.65722
     }
   ],
   "book-haircut-appointment": [
@@ -523,12 +523,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.60358
     }
   ],
-  "costco-tire-appointment-cancel-refund": [
-    {
-      "slug": "wheel-alignment-cost",
-      "similarity": 0.604647
-    }
-  ],
+  "costco-tire-appointment-cancel-refund": [],
   "couch-reupholstery-cost": [
     {
       "slug": "furniture-refinishing-cost",
@@ -1166,11 +1161,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "private-dining-room-cost": [
     {
       "slug": "book-dinner-reservation-by-phone",
-      "similarity": 0.643606
+      "similarity": 0.65722
     },
     {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
-      "similarity": 0.64048
+      "similarity": 0.639106
     }
   ],
   "reschedule-dentist-appointment": [
@@ -1442,10 +1437,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "les-schwab-oil-change",
       "similarity": 0.766277
-    },
-    {
-      "slug": "costco-tire-appointment-cancel-refund",
-      "similarity": 0.604647
     }
   ],
   "wyoming-registered-agent-consent-form": []

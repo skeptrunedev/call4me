@@ -1,19 +1,20 @@
 ---
-title: Costco tire appointment: how to cancel it, find your online order, and get a refund (3 real calls)
-seoTitle: Costco tire appointment: cancel, find, refund
+title: Costco tire appointment: cancellation, order lookup and refund inquiry
+seoTitle: Costco tire appointment: cancel and refund steps
 subtitle: A call4me user ordered the wrong size tires on Costco.com for install at a Costco Tire Center. His agent made the calls to find the order, learn the refund process, and cancel the install appointment. Here's what worked, what didn't, and the recordings.
-description: To cancel a Costco tire appointment, call your warehouse and press 1, not the Tire Center option. Refunds come from Costco.com in 3 to 5 business days.
+description: Three Costco calls show a cancelled tire appointment, an order lookup and refund instructions. The agent said requests can go through a warehouse or Costco.com.
 date: 2026-09-30
+updated: 2026-10-07
 tags: costco, tires, cancel appointment, refunds, phone trees
 authors: nick
-imageAlt: Costco tire appointment, cancel it, find your order, get the refund
+imageAlt: Costco tire appointment cancellation, order lookup and refund inquiry
 ---
 
 **The short answer:**
 
 - **To cancel a Costco tire installation appointment by phone,** call your warehouse and **press 1 for the administrative staff**. Ask them to transfer you to the Tire Center. The menu route that sounds right ("press 5 for all other departments, then 4 for the Tire Center") went straight through once, but **looped back to the main menu on two other calls** and never reached a person.
 - **Cancelling the appointment is not cancelling the order.** In the Tire Center's words: "That's not a cancellation of the order or a refund... it's just for the appointment."
-- **The refund for a Costco.com tire order** comes from Costco.com customer service, not the warehouse. If the tires weren't installed, the full billed amount, taxes and fees included, goes back to your card in 3 to 5 business days. You don't pick up or ship the tires: "the warehouse will just absorb them into their inventory."
+- **Refund requests can go through Costco.com or the warehouse,** the agent said. For these uninstalled tires, they quoted a full refund including taxes and fees in **3 to 5 business days**, with the warehouse keeping the tires. The recording confirms instructions, not a submitted request or completed refund.
 
 These come from real calls a call4me user's agent made on September 30, 2026. He ordered the wrong size tires on Costco.com for install at the San Francisco Costco. He's okay with us publishing them; everything that identifies him (name, order number, address, email, card) is muted in the audio, and staff names are muted too.
 
@@ -38,7 +39,7 @@ These come from real calls a call4me user's agent made on September 30, 2026. He
 3. **Ask to be transferred to the Tire Center** if the person who answers isn't there. Expect a short hold.
 4. **Give the appointment date, time, and the member name on it.** For an online order they can see it as "the appointment for an online order".
 5. **Say whether you want to cancel or reschedule.** They asked us both.
-6. **If you also need the order cancelled or refunded, that's a separate call** to Costco.com (below).
+6. **Request any order cancellation or refund separately**, through Costco.com or the warehouse.
 
 ## Find a Costco.com tire order at the Tire Center (6 minutes 37 seconds)
 
@@ -55,7 +56,9 @@ This call is about tires that showed as shipped weeks earlier with no arrival no
 
 What helped: give the **online order number** and say it was **ordered online**. They also asked for the membership number.
 
-## Get a refund on a Costco.com tire order (6 minutes 51 seconds)
+<span id="get-a-refund-on-a-costco-com-tire-order-6-minutes-51-seconds"></span>
+
+## Refund inquiry for a Costco.com tire order (6 minutes 51 seconds)
 
 <audio controls preload="metadata" src="/static/blog/costco-tire-refund.mp3" style="width:100%"><a href="/static/blog/costco-tire-refund.mp3">listen to the refund call</a></audio>
 
@@ -71,16 +74,16 @@ What helped: give the **online order number** and say it was **ordered online**.
 - **6:24** "You can go into the warehouse and request a refund, or you can give us a call and we can take care of it"
 - **6:42** Order the right tires before the refund posts? "Yeah, absolutely."
 
-Our caller's audio dropped right after this, a bug on our side that we've since fixed, so the recording ends here.
+Our caller’s audio dropped here because of a bug we have since fixed.
 
 ## How to get a refund on wrong tires from Costco.com
 
-1. **Call Costco.com customer service** (not the warehouse) and press **1** (an order you placed), then **3** (cancellations or changes) or **4** (return or replace).
+1. **Call Costco.com customer service** and press **1** (an order you placed), then **3** (cancellations or changes) or **4** (return or replace).
 2. **Have the order number ready**; the menu asks you to enter it.
 3. **Expect to verify** the billing address and the email on the order.
 4. **Ask for a refund request on uninstalled tires.** No pickup or shipping: the warehouse keeps them.
-5. **The full billed amount, including taxes and fees, goes back to your card** in 3 to 5 business days.
-6. **You can place the correct order right away**; you don't have to wait for the refund.
+5. **Confirm the amount and timing.** The agent quoted a full refund in 3 to 5 business days.
+6. **The agent said we could reorder before the refund posted.**
 7. **Cancel the install appointment separately** with the warehouse (above), or it stays on the calendar.
 
 ## Have your agent make these calls
