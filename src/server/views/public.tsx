@@ -86,17 +86,29 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
         <p class="small">top up anytime from <a href={accountPath(p.signedIn)}>my account</a> or ask your agent (call4me_add_funds).</p>
       </div>
       <div>
-        <h3>what it's good at</h3>
-        <ul>
-          <li>dinner reservations, including "anything between 6:30 and 8"</li>
-          <li>doctor, dentist, vet, and salon appointments</li>
-          <li>asking a dealership about a car, price, or service slot</li>
-          <li>home internet: new service, outages and credits, lowering the bill, moving, cancelling</li>
-          <li>flight rebooking after a cancellation or delay, date changes, refunds</li>
-          <li>store hours, stock checks, quotes, "do you do X"</li>
-          <li>sitting through phone menus and hold music</li>
-          <li>businesses abroad: europe, the uae and japan from your free us number, plus a local number in any of {offers(p.countries).live.length} countries (see the <a href="#faq">faq</a>)</li>
-        </ul>
+        <section class="customer-stories" aria-labelledby="customer-stories">
+          <h3 id="customer-stories">from people using call4me</h3>
+          <figure>
+            <p><b>$100 flight credit</b></p>
+            <blockquote>“literally zero chance i was going to do that myself”</blockquote>
+            <figcaption><a href="https://x.com/sheherenow_/status/2105785991839850786">@sheherenow_ on X</a></figcaption>
+          </figure>
+          <figure>
+            <p><b>dinner reservation</b></p>
+            <blockquote>“Booked a dinner reservation in one prompt. Only cost me 25 cents.”</blockquote>
+            <figcaption><a href="https://x.com/rickmanelius/status/2105825199015030846">@rickmanelius on X</a></figcaption>
+          </figure>
+          <figure>
+            <p><b>dental appointments that day</b></p>
+            <blockquote>“Just got my mind blown by the call quality”</blockquote>
+            <figcaption><a href="https://x.com/araa3185/status/2105740108926513203">@araa3185 on X</a></figcaption>
+          </figure>
+          <figure>
+            <p><b>found shoes at Men's Wearhouse</b></p>
+            <blockquote>“this thing saved so much time.”</blockquote>
+            <figcaption><a href="https://x.com/JoeFinberg/status/2105727961882398781">@JoeFinberg on X</a></figcaption>
+          </figure>
+        </section>
         <p>start with a task: <a href="/blog/ai-agent-that-makes-phone-calls">how an AI agent makes calls and gets things done for you</a>.</p>
         <h3>how it sounds</h3>
         <p><a href="/examples">hear the agent on real calls</a></p>
