@@ -112,7 +112,7 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
         </div>
       ))}
     </section>
-    <p class="hero-links"><a href="#buy">add credits</a> · <a href="/examples">more real calls</a> · <a href="/mcp">works with claude code, codex and any MCP agent</a></p>
+    <p class="hero-links"><a href="#buy">add credits</a> <a href="/examples">more real calls</a> <a href="/mcp">works with any agent</a></p>
     <script>{raw(PLAYER_SCRIPT)}</script>
     <p class="product-hunt-badge">
       <a href="https://www.producthunt.com/products/call4me?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-call4me" target="_blank" rel="noopener noreferrer">

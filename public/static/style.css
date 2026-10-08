@@ -93,7 +93,7 @@ footer .rss-link svg { vertical-align: -0.125em; }
 .player .bar span { display: block; height: 100%; width: 0; background: #0000ee; }
 .player-meta { display: flex; justify-content: space-between; gap: 8px; }
 .player-time { font-variant-numeric: tabular-nums; white-space: nowrap; }
-.hero-links { margin: 6px 0 18px; }
+.hero-links { display: flex; flex-wrap: wrap; gap: 6px 24px; margin: 6px 0 18px; }
 .customer-stories figure { margin: 0; padding: 8px 0; border-top: 1px solid #ddd; }
 .customer-stories p { margin: 0 0 4px; }
 .customer-stories blockquote { margin: 0 0 4px; }
