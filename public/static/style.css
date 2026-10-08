@@ -65,6 +65,7 @@ h1 .price { font-family: inherit; }
 .copy { color: #551a8b; }
 footer { margin-top: 36px; padding-top: 8px; border-top: 1px solid #ccc; color: #666; font-size: 14px; }
 footer a { margin-right: 8px; }
+footer .rss-button { display: inline-block; border: 1px solid #ccc; padding: 2px 8px; }
 
 /* call4me */
 .product-hunt-badge { margin: 16px 0; }
@@ -146,6 +147,7 @@ form.inline { margin: 6px 0; }
 .counts span { margin-right: 6px; }
 .tabs { margin: 8px 0 12px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 .tabs a.on { font-weight: bold; text-decoration: none; color: #000; }
+.pagination { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 20px; margin: 24px 0; }
 .recs { padding-left: 18px; }
 .badge { color: #551a8b; font-weight: bold; }
 .post { max-width: 720px; }

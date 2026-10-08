@@ -10,7 +10,7 @@ const links = (html: string) => [...html.matchAll(/<a\b[^>]*\bhref="([^"]+)"/g)]
 
 test('transactional pages and blog query variants are noindex, while the canonical blog is indexable', () => {
   assert.match(String(LoginPage({ next: '/', providers: { google: true, x: true } })), /<meta name="robots" content="noindex,follow"\/>/);
-  const props = { signedIn: false, posts: [], all: [], engagement: new Map(), subscribers: 0, agentPrompt: '' };
+  const props = { signedIn: false, posts: [], page: 1, totalPages: 1, total: 0, engagement: new Map(), subscribers: 0, agentPrompt: '' };
   assert.doesNotMatch(String(BlogIndex({ ...props, tab: 'latest', q: '' })), /name="robots"/);
   assert.match(String(BlogIndex({ ...props, tab: 'latest', q: 'dentist' })), /<meta name="robots" content="noindex,follow"\/>/);
   assert.match(String(BlogIndex({ ...props, tab: 'top', q: '' })), /<meta name="robots" content="noindex,follow"\/>/);
@@ -65,7 +65,7 @@ test('supporter links preserve checkout and the return page through sign-in, inc
   const post = renderPost({ slug: 'paid-example', markdown: '---\ntitle: Example\ndate: 2026-10-04\nsubtitle: Example article\npaid: true\n---\nPreview\n<!-- paywall -->\nPaid text' });
   for (const signedIn of [false, true]) {
     const pages = [
-      { node: BlogIndex({ signedIn, posts: [], all: [], engagement: new Map(), tab: 'latest', q: '', subscribers: 0, agentPrompt: '' }), next: '/blog' },
+      { node: BlogIndex({ signedIn, posts: [], page: 1, totalPages: 1, total: 0, engagement: new Map(), tab: 'latest', q: '', subscribers: 0, agentPrompt: '' }), next: '/blog' },
       { node: BlogPost({ signedIn, supporter: false, post, older: null, newer: null, related: [], engagement: { likes: 0, comments: 0 }, liked: false, comments: [], subscribers: 0, unlocked: false, agentPrompt: '' }), next: '/blog/paid-example' },
     ];
     for (const { node, next } of pages) {

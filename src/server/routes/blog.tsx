@@ -2,7 +2,8 @@ import { Hono } from 'hono';
 import { getCookie, setCookie } from 'hono/cookie';
 import { POST_SOURCES } from '../../content/blog/index';
 import { isAdmin } from '../lib/auth';
-import { archive, atomFeed, related, renderAll, searchPosts, type Post } from '../lib/blog';
+import { archive, atomFeed, rssFeed, related, renderAll, searchPosts, type Post } from '../lib/blog';
+import { blogIndexPath, paginatePosts } from '../lib/blog-pagination';
 import { clientIp, field, origin, safeNext, stripeFor, viewerKey, type AppContext, type AppEnv } from '../lib/context';
 import { blogPrompt, postPrompt } from '../lib/prompts';
 import { messengerFor } from '../lib/messaging';
@@ -13,7 +14,7 @@ import { BlogArchive, BlogIndex, BlogPost, SubscribeConfirm, SubscribeResult, ty
 /**
  * The blog: index with tabs and search, archive, posts with likes and comments, the
  * newsletter (subscribe, confirm, unsubscribe), the supporter tier for paid posts, and an
- * Atom feed. Posts are markdown files in src/content/blog. Ported from skillbay.
+ * Atom and RSS feeds. Posts are markdown files in src/content/blog. Ported from skillbay.
  */
 export const blog = new Hono<AppEnv>();
 
@@ -80,8 +81,13 @@ blog.get('/', async (c) => {
     return e.likes * 10 + e.comments;
   };
   if (!q && tab !== 'latest') list = [...list].sort((a, b) => score(b) - score(a) || (a.date < b.date ? 1 : -1));
+  const pagination = paginatePosts(list, c.req.query('page'));
+  const requested = c.req.query('page');
+  if (requested !== undefined && (pagination.page === 1 || requested !== String(pagination.page))) {
+    return c.redirect(blogIndexPath({ page: pagination.page, tab, q }), 302);
+  }
   const agentPrompt = blogPrompt(origin(c), crawler ? null : await viewerKey(c));
-  return c.html(<BlogIndex signedIn={Boolean(c.get('account'))} posts={list} all={all} engagement={engagement} tab={tab} q={q} subscribers={subscribers} subscribed={c.req.query('subscribed')} agentPrompt={agentPrompt} />);
+  return c.html(<BlogIndex signedIn={Boolean(c.get('account'))} {...pagination} engagement={engagement} tab={tab} q={q} subscribers={subscribers} subscribed={c.req.query('subscribed')} agentPrompt={agentPrompt} />);
 });
 
 blog.get('/archive', async (c) => {
@@ -91,6 +97,7 @@ blog.get('/archive', async (c) => {
 });
 
 blog.get('/feed.xml', (c) => c.body(atomFeed(origin(c), posts()), 200, { 'content-type': 'application/atom+xml; charset=utf-8', ...CACHE }));
+blog.get('/rss.xml', (c) => c.body(rssFeed(origin(c), posts()), 200, { 'content-type': 'application/rss+xml; charset=utf-8', ...CACHE }));
 
 // ---- newsletter
 

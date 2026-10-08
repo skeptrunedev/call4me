@@ -171,6 +171,7 @@ export const Layout: FC<{
         {ctx?.env.META_DOMAIN_VERIFICATION && <meta name="facebook-domain-verification" content={ctx.env.META_DOMAIN_VERIFICATION} />}
         <link rel="canonical" href={url} />
         <link rel="alternate" type="application/atom+xml" href="/blog/feed.xml" title="call4me blog" />
+        <link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="call4me blog RSS" />
         {override?.published && <meta property="article:published_time" content={override.published} />}
         {override?.modified && <meta property="article:modified_time" content={override.modified} />}
         {override?.type === 'article' && <meta property="article:author" content="https://x.com/skeptrune" />}
@@ -238,6 +239,7 @@ export const Layout: FC<{
           <a href="/support">support</a>
           <a href="/blog">blog</a>
           <a href="/voices">voices</a>
+          <a class="rss-button" href="/blog/rss.xml" type="application/rss+xml" aria-label="Subscribe to the RSS feed">RSS</a>
           <span> · © call4me</span>
           <CallCount />
         </footer>

@@ -2,6 +2,7 @@ import type { FC } from 'hono/jsx';
 import { raw } from 'hono/html';
 import { RECOMMENDATIONS } from '../../content/blog/recommendations';
 import { longDate, postDate, shortPostDate, type Post } from '../lib/blog';
+import { blogIndexPath } from '../lib/blog-pagination';
 import { SITE } from '../lib/pages';
 import type { CommentRow, Engagement } from '../services/blog';
 import { CopyBlock, Layout } from './layout';
@@ -55,7 +56,7 @@ const SubscribeBox: FC<{ signedIn: boolean; count: number; next: string; compact
     )}
     {!compact && (
       <div class="small muted">
-        no tracking, no spam; one email per post, unsubscribe in one click. or use the <a href="/blog/feed.xml">atom feed</a>. posts marked <span class="badge">paid</span> need a{' '}
+        no tracking, no spam; one email per post, unsubscribe in one click. or use the <a href="/blog/rss.xml">RSS feed</a>. posts marked <span class="badge">paid</span> need a{' '}
         <a href={supportPath(signedIn, next)}>supporter subscription</a> (monthly, cancel any time).
       </div>
     )}
@@ -83,20 +84,24 @@ const Card: FC<{ p: Post; e: Engagement | undefined; featured?: boolean }> = ({ 
 export const BlogIndex: FC<{
   signedIn: boolean;
   posts: Post[];
-  all: Post[];
+  page: number;
+  totalPages: number;
+  total: number;
   engagement: Map<string, Engagement>;
   tab: Tab;
   q: string;
   subscribers: number;
   subscribed?: 'sent' | string;
   agentPrompt: string;
-}> = ({ signedIn, posts, all, engagement, tab, q, subscribers, subscribed, agentPrompt }) => {
-  const featured = !q && tab === 'latest' ? all.slice(0, 3) : [];
-  const rest = featured.length ? posts.filter((p) => !featured.includes(p)) : posts;
+}> = ({ signedIn, posts, page, totalPages, total, engagement, tab, q, subscribers, subscribed, agentPrompt }) => {
+  const featured = !q && tab === 'latest' && page === 1 ? posts.slice(0, 3) : [];
+  const rest = posts.slice(featured.length);
+  const path = blogIndexPath({ page, tab, q });
   return (
     <Layout
-      title="blog: real calls to businesses, recorded"
+      title={page === 1 ? 'blog: real calls to businesses, recorded' : `blog: page ${page}`}
       page="blog"
+      path={path}
       signedIn={signedIn}
       noindex={Boolean(q) || tab !== 'latest'}
       meta={{
@@ -104,9 +109,9 @@ export const BlogIndex: FC<{
           '@context': 'https://schema.org',
           '@type': 'Blog',
           name: 'call4me blog',
-          url: `${SITE}/blog`,
+          url: `${SITE}${path}`,
           publisher: PUBLISHER,
-          blogPost: all.map((p) => ({ '@type': 'BlogPosting', headline: p.title, url: `${SITE}/blog/${p.slug}`, datePublished: p.date, image: `${SITE}/og/blog/${p.slug}.png`, author: AUTHOR_LD(p) })),
+          blogPost: posts.map((p) => ({ '@type': 'BlogPosting', headline: p.title, url: `${SITE}/blog/${p.slug}`, datePublished: p.date, image: `${SITE}/og/blog/${p.slug}.png`, author: AUTHOR_LD(p) })),
         },
       }}
     >
@@ -127,26 +132,35 @@ export const BlogIndex: FC<{
 
       <div class="tabs">
         {(['latest', 'top'] as Tab[]).map((t) => (
-          <a href={`/blog?tab=${t}`} class={t === tab && !q ? 'on' : ''}>
+          <a href={blogIndexPath({ tab: t })} class={t === tab && !q ? 'on' : ''}>
             {t}
           </a>
         ))}
         <form class="inline-form" method="get" action="/blog">
+          {tab !== 'latest' && <input type="hidden" name="tab" value={tab} />}
           <input type="search" name="q" placeholder="search posts" aria-label="search posts" value={q} maxlength={100} /> <button type="submit">&gt;</button>
         </form>
         <a href="/blog/archive">archive</a>
-        <a href="/blog/feed.xml">feed</a>
+        <a href="/blog/rss.xml">RSS</a>
       </div>
 
       {q && (
         <p class="small muted">
-          {posts.length} {posts.length === 1 ? 'post' : 'posts'} matching "{q}". <a href="/blog">clear</a>
+          {total} {total === 1 ? 'post' : 'posts'} matching "{q}". <a href="/blog">clear</a>
         </p>
       )}
       {rest.length === 0 && featured.length === 0 && <p class="muted">{q ? 'no posts match that.' : 'no posts yet. subscribe above and the first one lands in your inbox.'}</p>}
       {rest.map((p) => (
         <Card p={p} e={engagement.get(p.slug)} />
       ))}
+
+      {totalPages > 1 && (
+        <nav class="pagination" aria-label="blog pagination">
+          {page > 1 && <a href={blogIndexPath({ page: page - 1, tab, q })} rel="prev">previous</a>}
+          <span class="muted" aria-current="page">page {page} of {totalPages}</span>
+          {page < totalPages && <a href={blogIndexPath({ page: page + 1, tab, q })} rel="next">next</a>}
+        </nav>
+      )}
 
       <h3>recommendations</h3>
       <ul class="recs">

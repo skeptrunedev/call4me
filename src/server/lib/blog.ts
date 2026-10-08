@@ -166,7 +166,7 @@ export function renderPost(src: PostSource): Post {
 }
 
 /** Paths under /blog that are routes, not posts. */
-const RESERVED_SLUGS = new Set(['archive', 'feed.xml', 'subscribe', 'unsubscribe', 'support']);
+const RESERVED_SLUGS = new Set(['archive', 'feed.xml', 'rss.xml', 'subscribe', 'unsubscribe', 'support']);
 
 /** Newest first; slugs must be unique, lowercase-with-dashes, and not a /blog route. */
 export function renderAll(sources: PostSource[]): Post[] {
@@ -257,6 +257,51 @@ export function atomFeed(site: string, posts: Post[]): string {
       '  </entry>',
     ]),
     '</feed>',
+    '',
+  ].join('\n');
+}
+
+/** Feed readers need absolute links, including images and section anchors in the body. */
+function feedHtml(html: string, articleUrl: string): string {
+  return html.replace(/<[a-z][^>]*>/gi, (tag) => tag.replace(/\s(href|src|poster)=("[^"]*"|'[^']*')/gi, (_attribute, name: string, quoted: string) => {
+    const url = new URL(decodeEntities(quoted.slice(1, -1)), articleUrl).href;
+    return ` ${name}="${escapeAttr(url)}"`;
+  }));
+}
+
+/** RSS 2.0 with full public HTML and only the free preview of paid posts. */
+export function rssFeed(site: string, posts: Post[]): string {
+  const blogUrl = new URL('/blog', site).href;
+  const feedUrl = new URL('/blog/rss.xml', site).href;
+  const updated = posts.map((post) => post.updated ?? post.date).sort().at(-1);
+  const rssDate = (date: string) => new Date(`${date}T00:00:00Z`).toUTCString();
+  return [
+    '<?xml version="1.0" encoding="utf-8"?>',
+    '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">',
+    '  <channel>',
+    '    <title>call4me blog</title>',
+    `    <link>${xml(blogUrl)}</link>`,
+    '    <description>notes on AI agents that make phone calls for you</description>',
+    '    <language>en-us</language>',
+    `    <atom:link href="${xml(feedUrl)}" rel="self" type="application/rss+xml"/>`,
+    ...(updated ? [`    <lastBuildDate>${rssDate(updated)}</lastBuildDate>`] : []),
+    ...posts.flatMap((post) => {
+      const articleUrl = new URL(`/blog/${post.slug}`, site).href;
+      return [
+        '    <item>',
+        `      <title>${xml(post.title)}</title>`,
+        `      <link>${xml(articleUrl)}</link>`,
+        `      <guid isPermaLink="true">${xml(articleUrl)}</guid>`,
+        `      <pubDate>${rssDate(post.date)}</pubDate>`,
+        `      <description>${xml(post.description)}</description>`,
+        `      <content:encoded>${xml(feedHtml(post.html, articleUrl))}</content:encoded>`,
+        ...post.authors.map((author) => `      <dc:creator>${xml(author.name)}</dc:creator>`),
+        ...post.tags.map((tag) => `      <category>${xml(tag)}</category>`),
+        '    </item>',
+      ];
+    }),
+    '  </channel>',
+    '</rss>',
     '',
   ].join('\n');
 }
