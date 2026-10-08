@@ -9,6 +9,7 @@ import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { CopyBlock, Layout } from './layout';
 import { CallOnboarding } from './onboarding';
 import type { RedditPixelEvent } from '../lib/reddit';
+import { EXAMPLES } from '../../content/examples';
 
 /** Who runs the site and what it is, for search and answer engines (schema.org). */
 const HOME_LD = {
@@ -38,15 +39,81 @@ const pricierDestinations = () =>
     .map(([country, cents]) => `${country === 'AE' ? 'the uae' : (regionName.of(country) ?? country).toLowerCase()} at ${dollars(cents)}/min`)
     .join(', ');
 
+/** Short, everyday calls that show the whole idea in a listen: what you asked, then the call. */
+const HOME_EXAMPLES = ['dinner-reservation', 'dentist-reschedule', 'eye-exam-booking', 'wheel-alignment-cost'].map((slug) => {
+  const example = EXAMPLES.find((e) => e.slug === slug && e.audio);
+  if (!example) throw new Error(`home example ${slug} is missing or has no audio`);
+  return example;
+});
+
+/** "1 minute 25 seconds" -> "1:25" */
+const clock = (duration: string) => {
+  const minutes = Number(/(\d+) minutes?/.exec(duration)?.[1] ?? 0);
+  const seconds = Number(/(\d+) seconds?/.exec(duration)?.[1] ?? 0);
+  return `${minutes}:${String(seconds).padStart(2, '0')}`;
+};
+
+/** One shared audio element behind the little players; tapping the bar seeks. */
+const PLAYER_SCRIPT = `(function () {
+  var audio = new Audio();
+  audio.preload = 'none';
+  var current = null;
+  var clock = function (t) { t = Math.max(0, Math.floor(t)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
+  var paint = function () {
+    if (!current) return;
+    var d = audio.duration || 0;
+    current.querySelector('.bar span').style.width = (d ? audio.currentTime / d * 100 : 0) + '%';
+    current.querySelector('.player-time').textContent = clock(audio.currentTime) + ' / ' + current.dataset.length;
+  };
+  var state = function (playing) {
+    if (!current) return;
+    current.classList.toggle('playing', playing);
+    current.querySelector('.play').setAttribute('aria-label', (playing ? 'pause: ' : 'play: ') + current.dataset.title);
+  };
+  audio.addEventListener('timeupdate', paint);
+  audio.addEventListener('play', function () { state(true); });
+  audio.addEventListener('pause', function () { state(false); });
+  audio.addEventListener('ended', function () { state(false); });
+  document.querySelectorAll('.player').forEach(function (player) {
+    var start = function (at) {
+      if (current !== player) {
+        if (current) { state(false); current.querySelector('.bar span').style.width = '0'; current.querySelector('.player-time').textContent = current.dataset.length; }
+        current = player;
+        audio.src = player.dataset.src;
+      }
+      if (at !== undefined) audio.currentTime = at;
+      audio.play().catch(function (error) { if (error.name !== 'AbortError') throw error; });
+    };
+    player.querySelector('.play').addEventListener('click', function () {
+      if (current === player && !audio.paused) audio.pause(); else start();
+    });
+    player.querySelector('.bar').addEventListener('click', function (event) {
+      var rect = event.currentTarget.getBoundingClientRect();
+      var ratio = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+      if (current === player && audio.duration) audio.currentTime = ratio * audio.duration;
+      else { start(); audio.addEventListener('loadedmetadata', function once() { audio.removeEventListener('loadedmetadata', once); audio.currentTime = ratio * audio.duration; }); }
+    });
+  });
+})();`;
+
 export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; countries: CountryOffer[]; error?: string; amount?: string }> = (p) => {
   return (
   <Layout page="home" signedIn={p.signedIn} meta={{ jsonLd: HOME_LD }}>
-    <h1>give your personal AI assistant the ability to make phone calls</h1>
-    <p>
-      your personal AI assistant or coding agent gets one new ability: <b>make a phone call</b> through MCP.
-      ask it to check cancellation rules, book an appointment or get an answer a website cannot give you.
-      call4me calls the business, follows your brief, and brings the result back to the task your agent is already doing.
-    </p>
+    <h1>let your agents make phone calls</h1>
+    <section class="players" aria-label="real calls made by call4me">
+      {HOME_EXAMPLES.map((e) => (
+        <div class="player" data-src={e.audio} data-length={clock(e.duration)} data-title={e.title}>
+          <button type="button" class="play" aria-label={`play: ${e.title}`}></button>
+          <div class="player-body">
+            <div class="player-ask">“{e.request}”</div>
+            <div class="bar"><span></span></div>
+            <div class="player-meta small"><a href={`/examples#${e.slug}`}>{e.business}</a> <span class="player-time">{clock(e.duration)}</span></div>
+          </div>
+        </div>
+      ))}
+    </section>
+    <p class="hero-links"><a href="#buy">add credits</a> · <a href="/examples">more real calls</a> · <a href="/mcp">works with claude code, codex and any MCP agent</a></p>
+    <script>{raw(PLAYER_SCRIPT)}</script>
     <p class="product-hunt-badge">
       <a href="https://www.producthunt.com/products/call4me?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-call4me" target="_blank" rel="noopener noreferrer">
         <img
@@ -56,11 +123,6 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
           src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1272895&amp;theme=light&amp;t=1791439678864"
         />
       </a>
-    </p>
-    <p class="small">
-      setup and calling guides: <a href="/blog/claude-code-phone-calls">claude code</a>, <a href="/blog/codex-phone-calls">codex</a>,
-      {' '}<a href="/blog/meta-muse-ai-agent-phone-calls">muse</a>, <a href="/blog/instinct-ai-phone-calls">instinct</a>,
-      {' '}<a href="/blog/t3-code-phone-calls">t3 code</a>.
     </p>
     <div class="cols">
       <div>
@@ -74,41 +136,51 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
             ask for things like normal. <span class="sample">"book me a table for 4 at nopa tomorrow around 7."</span>
           </li>
         </ol>
-        <h3>add credits</h3>
-        <p class="small">want to hear it first? <a href="/examples">listen to real calls</a>.</p>
-        <BuyForm signedIn={p.signedIn} error={p.error} amount={p.amount} />
-        <p class="small">top up anytime from <a href={accountPath(p.signedIn)}>my account</a> or ask your agent (call4me_add_funds).</p>
       </div>
       <div>
-        <section class="customer-stories" aria-labelledby="customer-stories">
-          <h3 id="customer-stories">from people using call4me</h3>
-          <figure>
-            <p><b>$100 flight credit</b></p>
-            <blockquote>“literally zero chance i was going to do that myself”</blockquote>
-            <figcaption><a href="https://x.com/sheherenow_/status/2105785991839850786">@sheherenow_ on X</a></figcaption>
-          </figure>
-          <figure>
-            <p><b>dinner reservation</b></p>
-            <blockquote>“Booked a dinner reservation in one prompt. Only cost me 25 cents.”</blockquote>
-            <figcaption><a href="https://x.com/rickmanelius/status/2105825199015030846">@rickmanelius on X</a></figcaption>
-          </figure>
-          <figure>
-            <p><b>dental appointments that day</b></p>
-            <blockquote>“Just got my mind blown by the call quality”</blockquote>
-            <figcaption><a href="https://x.com/araa3185/status/2105740108926513203">@araa3185 on X</a></figcaption>
-          </figure>
-          <figure>
-            <p><b>found shoes at Men's Wearhouse</b></p>
-            <blockquote>“this thing saved so much time.”</blockquote>
-            <figcaption><a href="https://x.com/JoeFinberg/status/2105727961882398781">@JoeFinberg on X</a></figcaption>
-          </figure>
-        </section>
-        <p>start with a task: <a href="/blog/ai-agent-that-makes-phone-calls">how an AI agent makes calls and gets things done for you</a>.</p>
+        <h3>add credits</h3>
+        <BuyForm signedIn={p.signedIn} error={p.error} amount={p.amount} />
+        <p class="small">top up anytime from <a href={accountPath(p.signedIn)}>my account</a> or ask your agent (call4me_add_funds).</p>
       </div>
     </div>
     <h3>the prompt</h3>
     <p class="small">{p.signedIn ? 'this is what you paste into your agent. your key is already in it.' : 'this is what you paste into your agent. it signs you in; sign in here first and your key comes in the prompt instead.'}</p>
     <CopyBlock id="install-prompt" text={p.installPrompt} rows={12} />
+    <h3>what it is</h3>
+    <p>
+      your personal AI assistant or coding agent gets one new ability: <b>make a phone call</b> through MCP.
+      ask it to check cancellation rules, book an appointment or get an answer a website cannot give you.
+      call4me calls the business, follows your brief, and brings the result back to the task your agent is already doing.
+    </p>
+    <p class="small">
+      setup and calling guides: <a href="/blog/claude-code-phone-calls">claude code</a>, <a href="/blog/codex-phone-calls">codex</a>,
+      {' '}<a href="/blog/meta-muse-ai-agent-phone-calls">muse</a>, <a href="/blog/instinct-ai-phone-calls">instinct</a>,
+      {' '}<a href="/blog/t3-code-phone-calls">t3 code</a>.
+      {' '}start with a task: <a href="/blog/ai-agent-that-makes-phone-calls">how an AI agent makes calls and gets things done for you</a>.
+    </p>
+    <section class="customer-stories" aria-labelledby="customer-stories">
+      <h3 id="customer-stories">from people using call4me</h3>
+      <figure>
+        <p><b>$100 flight credit</b></p>
+        <blockquote>“literally zero chance i was going to do that myself”</blockquote>
+        <figcaption><a href="https://x.com/sheherenow_/status/2105785991839850786">@sheherenow_ on X</a></figcaption>
+      </figure>
+      <figure>
+        <p><b>dinner reservation</b></p>
+        <blockquote>“Booked a dinner reservation in one prompt. Only cost me 25 cents.”</blockquote>
+        <figcaption><a href="https://x.com/rickmanelius/status/2105825199015030846">@rickmanelius on X</a></figcaption>
+      </figure>
+      <figure>
+        <p><b>dental appointments that day</b></p>
+        <blockquote>“Just got my mind blown by the call quality”</blockquote>
+        <figcaption><a href="https://x.com/araa3185/status/2105740108926513203">@araa3185 on X</a></figcaption>
+      </figure>
+      <figure>
+        <p><b>found shoes at Men's Wearhouse</b></p>
+        <blockquote>“this thing saved so much time.”</blockquote>
+        <figcaption><a href="https://x.com/JoeFinberg/status/2105727961882398781">@JoeFinberg on X</a></figcaption>
+      </figure>
+    </section>
     <Faq signedIn={p.signedIn} pricePerMinuteCents={p.pricePerMinuteCents} countries={p.countries} />
   </Layout>
   );
