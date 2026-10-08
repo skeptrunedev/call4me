@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Vapi alternatives for your assistant</title>
+  <desc id="desc">Call4me connects an existing agent to a phone task, questions during the call, and the result.</desc>
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <text x="80" y="130" font-family="Times New Roman, Times, serif" font-size="40" fill="#551a8b">call4me field notes · oct 7, 2026</text>
+  <text x="80" y="235" font-family="Times New Roman, Times, serif" font-size="74" fill="#000000">Vapi alternatives</text>
+  <text x="80" y="310" font-family="Times New Roman, Times, serif" font-size="40" fill="#333333">phone calls inside the work your agent already does</text>
+  <g fill="none" stroke="#0000ee" stroke-width="3">
+    <rect x="80" y="385" width="260" height="85"/>
+    <rect x="450" y="385" width="300" height="85"/>
+    <rect x="860" y="385" width="260" height="85"/>
+    <path d="M 355 427 H 432 M 421 416 L 432 427 L 421 438"/>
+    <path d="M 765 427 H 842 M 831 416 L 842 427 L 831 438"/>
+  </g>
+  <g font-family="Times New Roman, Times, serif" font-size="36" fill="#000000" text-anchor="middle">
+    <text x="210" y="440">your task</text>
+    <text x="600" y="440">call + questions</text>
+    <text x="990" y="440">usable result</text>
+  </g>
+  <text x="80" y="550" font-family="Times New Roman, Times, serif" font-size="32" fill="#333333">answer · join · listen · schedule · set limits</text>
+</svg>

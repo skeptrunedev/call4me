@@ -4,7 +4,7 @@ seoTitle: "Phone calling MCP: Claude Code and Codex compared"
 subtitle: Compare call4me, Vapi Agent Phone, Bland, ClawCall, Cocall, and Patter by account setup, calling workflow, and the evidence your agent gets back.
 description: "Compare phone calling MCP servers for Claude Code and Codex. Real call4me, Vapi and Bland calls, recordings, transcripts, setup and observed limits."
 date: 2026-10-03
-updated: 2026-10-04
+updated: 2026-10-07
 tags: mcp, claude code, codex, ai agents, ai phone assistant
 authors: nick
 imageAlt: Phone calling MCP services compared by setup and calling workflow
@@ -14,7 +14,30 @@ You already use Claude Code or Codex as your personal assistant or coding agent.
 
 Several services now provide this. **Vapi Agent Phone is a ready to use calling service**, separate from Vapi's developer dashboard. **Bland has an official operational MCP server and skills plugin** that can place calls as well as build voice agents. call4me, ClawCall, Cocall, and Patter also support outbound calling from an existing agent. The useful choice is how you connect, what the call can ask you, and what comes back.
 
-We make call4me. Our initial documentation and public MCP connection review took place on **October 3, 2026**. On **October 4**, we checked the relevant phone menu documentation and added the Foreign Cinema calls below. The bounded harness examples show each workflow and its limits. We did not run the same live call through every service, so this comparison does not rank call quality.
+**Choose Call4me when you want your existing assistant to finish a personal task that needs a phone conversation.** It takes a goal, known facts and permitted alternatives, lets your assistant answer questions while the call is active, and gives you a way to listen or take over. The returned transcript and available recording let you check what the business actually confirmed.
+
+We make Call4me. This comparison combines our October 3 and 4 provider calls with a documentation refresh on **October 7, 2026**. We have recorded calls through Call4me, Vapi Agent Phone and Bland, including calls to the same restaurant. The briefs, limits and dates differ, so those recordings show actual behavior without establishing a reliability ranking.
+
+## Why choose Call4me for your existing assistant?
+
+The useful distinction is how much of the task you can keep in the assistant you already use. These are the reasons we built Call4me this way, with evidence you can inspect:
+
+| Reason to choose Call4me | What it lets you do | Evidence and limits |
+| :--- | :--- | :--- |
+| Give the caller a task and permitted choices | Ask it to take the earliest appointment within your windows, or compare the same service across businesses | A [recorded rescheduling call](/blog/reschedule-doctor-appointment) checked the old appointment, considered two offered times and received confirmation of the new booking. The customer's assistant client is unknown. |
+| Keep questions connected to the original assistant | Read an open question with `call4me_get_call` and send an answer with `call4me_answer_question` while the call continues | This is part of the [current calling interface](/llms.txt). Our [Codex research trial](/blog/agent-web-research-phone-calls-sf-private-dining) also records an answer submitted after the call had ended. Keep following the call. |
+| Listen, join and hand the call back | Have Call4me ring your phone, listen privately, press 1 to speak, then press star or hang up to let the caller continue | In our [Spectrum example](/blog/spectrum-retention-department), the user joined for account verification and completed the conversation. The published recording covers the AI portion. The [tool reference](/llms.txt) explains listening and handing control back. |
+| Call several options at once | Ask several restaurants or offices the same questions without waiting for each conversation to finish before starting another | A customer [called five restaurants in under twelve minutes](/blog/private-dining-room-cost), with some calls overlapping. Set duration limits that leave enough available credits for each call. |
+| Save the call for when the office opens | Store the brief and intended time with Call4me, then retrieve the same schedule from another session | The [scheduling guide](/blog/schedule-phone-calls-claude-code-codex) verifies saved schedules, retrieval and cancellation. Its tests did not establish the later completed call. |
+| Inspect a real outcome before depending on it | Hear what staff agreed to and distinguish a completed request from an unanswered inquiry | Hear a [confirmed dinner reservation](/blog/book-dinner-reservation-by-phone) and a [fresh Muse library inquiry](/blog/meta-muse-first-task) that returned staff answers to the same conversation. |
+
+For example, your assistant can compare offices online, call with your appointment windows, ask you about an unexpected offer, and return the agreed time to the original task. Calendar updates still depend on the assistant's separate calendar tools. Call4me does not automatically inherit the assistant's context; include the facts the caller needs in its brief.
+
+Our [voice architecture](/blog/cascaded-voice-stack-vs-gpt-live) separates the audio conversation from a task reasoner with call controls and a bridge back to your assistant. That explains how the workflow is implemented. The completed calls above are the evidence that it has handled actual errands. Neither is a measured claim that our voice is faster or more reliable than another service.
+
+These benefits form a reason to choose the complete workflow. They are not all exclusive features: Cocall also documents questions returned to Claude, and other products support transfers, scheduling or custom tools. For a specific switch, read [Vapi alternatives for Claude Code and Codex](/blog/vapi-alternatives) or [Bland AI alternatives for personal assistant calls](/blog/bland-ai-alternatives).
+
+One concrete difference today: [Vapi Agent Phone's published limits](https://phone.vapi.ai/discovery.json), checked October 7, allow one concurrent call per user. Its [call schema](https://phone.vapi.ai/openapi.json) does not expose a duration parameter. Call4me exposes concurrent calling and an enforced `max_minutes` cap directly to your assistant. Those are useful reasons to choose it for comparing several options. Bland supports concurrency and duration controls too, so this distinction applies to Agent Phone's current interface.
 
 ## Which Claude Code MCP servers can make phone calls?
 
@@ -22,14 +45,14 @@ We make call4me. Our initial documentation and public MCP connection review took
 |---|---|---|
 | [call4me](https://call4.me/llms.txt) | Hosted HTTP MCP; browser OAuth or a personal API key; call4me credits | You want calls, questions, and results inside the agent's existing task |
 | [Vapi Agent Phone](https://phone.vapi.ai/) | Hosted HTTP MCP with browser OAuth; no Vapi developer API key or phone number setup | You want hosted calling within Agent Phone's account and service limits |
-| [Bland](https://docs.bland.ai/integrations/mcp/overview) | Hosted HTTP MCP with a Bland API key; official plugin adds skills and workspace commands | You already use Bland or want calling alongside pathways, call review, and evals |
+| [Bland](https://docs.bland.ai/integrations/mcp/overview) | Hosted HTTP MCP; browser sign in for supported clients or a Bland API key; official plugin adds skills and workspace commands | You already use Bland or want calling alongside pathways, call review, and evals |
 | [ClawCall](https://clawcall.dev/docs) | Hosted HTTP MCP with OAuth; a skill and REST API are alternative paths | You want a hosted calling workflow for English language calls to US numbers |
 | [Cocall](https://cocall.ai/docs/claude) | Hosted HTTP MCP with OAuth; docs require adding a verified number before the first call | You want a documented question and resume loop during a call |
 | [Patter Claude Call](https://github.com/PatterAI/awesome-claude-call) | Local Claude Code plugin and stdio MCP; Twilio account and owned number, OpenAI key, Node 20 or newer | You want a local plugin with third party calls, completion notifications, and inbound voice access |
 
 For a hosted service with a documented answer loop during a call, compare call4me and Cocall. For an existing Bland account, try its operational MCP before building a new integration. For a local Claude Code plugin that also supports notifications and inbound access, look at Patter. Vapi Agent Phone funds calls within a limited allowance. ClawCall focuses on English language US calls and offers REST and skill alternatives to MCP.
 
-The linked pages are the sources for this matrix. These choices follow the documented workflows; a shared live benchmark remains pending.
+The linked pages are the sources for this matrix. Choose Call4me for the task workflow above, Vapi Agent Phone for its hosted calling interface, or Bland when its wider account tools are part of the work you want your assistant to do. The recordings below help you inspect the calls behind this comparison.
 
 ## Phone calls for your personal assistant's tasks
 
@@ -43,7 +66,7 @@ If you want the caller to book, cancel or accept an alternative, supply that aut
 
 For calling from Claude Code or Codex, the shortlist includes Vapi Agent Phone, Bland's operational MCP, Call4me, ClawCall, Cocall and Patter. Vapi Agent Phone provides hosted calling through browser authentication. Bland adds broader platform tools alongside calling. Call4me and Cocall document questions returned to your session during a call. Patter's local plugin requires your own provider accounts. The setup and result tables above explain these choices.
 
-Replacing a whole voice platform is a larger decision involving its APIs, call flows and deployment model. Our actual calls establish the particular outcomes below; they do not establish feature parity across those platforms or a reliability ranking. If you want to build the calling application yourself, see the [Twilio MCP server guide](/blog/twilio-mcp-phone-calls) and [voice architecture guide](/blog/cascaded-voice-stack-vs-gpt-live).
+Our [Vapi alternatives guide](/blog/vapi-alternatives) focuses on choosing a hosted calling service for Claude Code or Codex. Our [Bland alternatives guide](/blog/bland-ai-alternatives) separates a personal calling task from operating pathways and a wider voice platform. If you want to build the calling application yourself, see the [Twilio MCP server guide](/blog/twilio-mcp-phone-calls) and [voice architecture guide](/blog/cascaded-voice-stack-vs-gpt-live).
 
 ## What comes back to the agent?
 
@@ -108,7 +131,7 @@ Use the Agent Phone instructions, rather than Vapi developer dashboard instructi
 
 ### Bland's official MCP and plugin
 
-For an existing Bland account, connect `https://api.bland.ai/v1/mcp` with an `Authorization: Bearer` header containing your Bland API key. **`https://docs.bland.ai/mcp` is the documentation search server**, a different surface from the account tools that place calls. The [MCP overview](https://docs.bland.ai/integrations/mcp/overview) explains both.
+Connect to `https://api.bland.ai/v1/mcp`. Bland's current documentation supports browser sign in for ChatGPT, Claude and Claude Code, or a Bland API key in an `Authorization: Bearer` header. Other clients still need a compatible authentication path; our historical Codex trial used an API key. **`https://docs.bland.ai/mcp` is the documentation search server**, a different surface from the account tools that place calls. The [MCP overview](https://docs.bland.ai/integrations/mcp/overview) explains both.
 
 The [official Bland plugin](https://docs.bland.ai/integrations/mcp/norm) is the recommended path for supported coding clients. In Claude Code:
 

@@ -1,4 +1,6 @@
 import type { PostSource } from '../../server/lib/blog';
+import vapiAlternatives from './vapi-alternatives.md';
+import blandAiAlternatives from './bland-ai-alternatives.md';
 import aiAgentPhoneCalls from './ai-agent-that-makes-phone-calls.md';
 import gymDayPass from './gym-day-pass.md';
 import gymsWithSauna from './gyms-with-sauna-near-me.md';
@@ -84,6 +86,8 @@ import metaMuseSupplierQuotes from './meta-muse-supplier-quotes.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'vapi-alternatives', markdown: vapiAlternatives },
+  { slug: 'bland-ai-alternatives', markdown: blandAiAlternatives },
   { slug: 'ai-agent-that-makes-phone-calls', markdown: aiAgentPhoneCalls },
   { slug: 'gym-day-pass', markdown: gymDayPass },
   { slug: 'gyms-with-sauna-near-me', markdown: gymsWithSauna },
