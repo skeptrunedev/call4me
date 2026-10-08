@@ -110,16 +110,6 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
           </figure>
         </section>
         <p>start with a task: <a href="/blog/ai-agent-that-makes-phone-calls">how an AI agent makes calls and gets things done for you</a>.</p>
-        <h3>how it sounds</h3>
-        <p><a href="/examples">hear the agent on real calls</a></p>
-        <ul>
-          <li>short, casual turns. no "certainly!", no support-bot voice.</li>
-          <li>no recap at the end. it says "perfect, thanks!" and hangs up. your agent gets the recap.</li>
-          <li>asks your agent mid-call when the business needs something it wasn't given.</li>
-          <li>
-            it doesn't announce itself. if someone sincerely asks whether it's an AI, it says yes and carries on. see <a href="/rules">rules</a>.
-          </li>
-        </ul>
       </div>
     </div>
     <h3>the prompt</h3>
