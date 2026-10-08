@@ -43,6 +43,10 @@ export function authOptions(deps: AuthDeps) {
       accountLinking: { enabled: true, allowDifferentEmails: true },
     },
     session: {
+      // Signed in for good: 400 days is the longest cookie browsers keep, and any visit
+      // after a day pushes the expiry out again.
+      expiresIn: 400 * 24 * 3600,
+      updateAge: 24 * 3600,
       cookieCache: { enabled: true, maxAge: 5 * 60 },
     },
     rateLimit: { enabled: true, storage: 'database' },
@@ -71,6 +75,12 @@ export function authOptions(deps: AuthDeps) {
           { identifier: siteResource(deps.baseURL), name: `${deps.appName} API`, accessTokenTtl: 7 * 24 * 3600 },
         ],
         clientRegistrationDefaultResources: [mcpResource(deps.baseURL), ...DIRECTORY_SERVERS.map((s) => mcpResourceAt(s.path, deps.baseURL)), siteResource(deps.baseURL)],
+        // A connected client never has to sign in again: every refresh rotates the token for
+        // another ten years. Revoking consent is how a connection ends.
+        refreshTokenExpiresIn: 10 * 365 * 24 * 3600,
+        // The signed authorize query the login page carries (and the code) live this long; the
+        // default 10 minutes sends anyone who pauses mid-sign-in (app reviewers too) back to the start.
+        codeExpiresIn: 3600,
         loginPage: '/login',
         consentPage: '/oauth/consent',
         allowDynamicClientRegistration: true,
