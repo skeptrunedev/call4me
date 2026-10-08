@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "a8abde1f55e319580f2b7cdd262508ea61f20c30ae0c13113f879c6e69367ee5"
+  "sourceHash": "1760caf0a7f3aa846ee9edfd5dbff8c7337289aba7332c99ed7e0f823631c8a4"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -274,7 +274,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "directv-customer-service",
-      "similarity": 0.629754
+      "similarity": 0.643833
     },
     {
       "slug": "cancel-la-fitness",
@@ -311,12 +311,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.667022
     },
     {
-      "slug": "cancel-factor",
-      "similarity": 0.652617
+      "slug": "directv-customer-service",
+      "similarity": 0.652966
     },
     {
-      "slug": "directv-customer-service",
-      "similarity": 0.635619
+      "slug": "cancel-factor",
+      "similarity": 0.652617
     },
     {
       "slug": "gyms-with-sauna-near-me",
@@ -327,6 +327,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "cancel-hellofresh",
       "similarity": 0.770875
+    },
+    {
+      "slug": "directv-customer-service",
+      "similarity": 0.669382
     },
     {
       "slug": "cancel-planet-fitness",
@@ -341,19 +345,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.652617
     },
     {
-      "slug": "directv-customer-service",
-      "similarity": 0.651555
-    },
-    {
       "slug": "how-to-cancel-siriusxm",
       "similarity": 0.648412
     }
   ],
   "cancel-fubo": [
-    {
-      "slug": "directv-customer-service",
-      "similarity": 0.615761
-    },
     {
       "slug": "cancel-audible",
       "similarity": 0.614567
@@ -378,7 +374,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "directv-customer-service",
-      "similarity": 0.65525
+      "similarity": 0.648485
     },
     {
       "slug": "cancel-planet-fitness",
@@ -411,12 +407,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.680435
     },
     {
-      "slug": "directv-customer-service",
-      "similarity": 0.629307
-    },
-    {
       "slug": "gyms-with-sauna-near-me",
       "similarity": 0.62754
+    },
+    {
+      "slug": "directv-customer-service",
+      "similarity": 0.625885
     },
     {
       "slug": "cancel-audible",
@@ -437,6 +433,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.765293
     },
     {
+      "slug": "directv-customer-service",
+      "similarity": 0.681225
+    },
+    {
       "slug": "cancel-audible",
       "similarity": 0.677504
     },
@@ -447,10 +447,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "cancel-factor",
       "similarity": 0.665681
-    },
-    {
-      "slug": "directv-customer-service",
-      "similarity": 0.65365
     },
     {
       "slug": "cancel-hellofresh",
@@ -597,35 +593,35 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "directv-customer-service": [
     {
       "slug": "verizon-customer-service",
-      "similarity": 0.703073
-    },
-    {
-      "slug": "hulu-customer-service-number",
-      "similarity": 0.701524
+      "similarity": 0.72871
     },
     {
       "slug": "how-to-cancel-siriusxm",
-      "similarity": 0.688614
+      "similarity": 0.714801
     },
     {
-      "slug": "windstream-customer-service",
-      "similarity": 0.659189
-    },
-    {
-      "slug": "spectrum-retention-department",
-      "similarity": 0.655624
-    },
-    {
-      "slug": "cancel-hellofresh",
-      "similarity": 0.65525
+      "slug": "hulu-customer-service-number",
+      "similarity": 0.7114
     },
     {
       "slug": "cancel-planet-fitness",
-      "similarity": 0.65365
+      "similarity": 0.681225
     },
     {
       "slug": "cancel-factor",
-      "similarity": 0.651555
+      "similarity": 0.669382
+    },
+    {
+      "slug": "windstream-customer-service",
+      "similarity": 0.656042
+    },
+    {
+      "slug": "cancel-crunch",
+      "similarity": 0.652966
+    },
+    {
+      "slug": "cancel-hellofresh",
+      "similarity": 0.648485
     }
   ],
   "dog-teeth-cleaning-cost": [
@@ -707,7 +703,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "directv-customer-service",
-      "similarity": 0.626412
+      "similarity": 0.606411
     }
   ],
   "fedex-customer-service-number": [
@@ -987,7 +983,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "directv-customer-service",
-      "similarity": 0.688614
+      "similarity": 0.714801
     },
     {
       "slug": "cancel-planet-fitness",
@@ -1029,7 +1025,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "hulu-customer-service-number": [
     {
       "slug": "directv-customer-service",
-      "similarity": 0.701524
+      "similarity": 0.7114
     },
     {
       "slug": "fabletics-customer-service",
@@ -1457,16 +1453,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "spectrum-retention-department": [
     {
-      "slug": "directv-customer-service",
-      "similarity": 0.655624
-    },
-    {
       "slug": "fabletics-customer-service",
       "similarity": 0.626885
     },
     {
-      "slug": "windstream-customer-service",
-      "similarity": 0.62514
+      "slug": "directv-customer-service",
+      "similarity": 0.61774
     }
   ],
   "t3-code-phone-calls": [
@@ -1626,11 +1618,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "verizon-customer-service": [
     {
       "slug": "directv-customer-service",
-      "similarity": 0.703073
+      "similarity": 0.72871
     },
     {
       "slug": "windstream-customer-service",
-      "similarity": 0.648509
+      "similarity": 0.644289
     }
   ],
   "veterinary-behavior-consultation-call": [
@@ -1676,15 +1668,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "windstream-customer-service": [
     {
       "slug": "directv-customer-service",
-      "similarity": 0.659189
+      "similarity": 0.656042
     },
     {
       "slug": "verizon-customer-service",
-      "similarity": 0.648509
-    },
-    {
-      "slug": "spectrum-retention-department",
-      "similarity": 0.62514
+      "similarity": 0.644289
     }
   ],
   "wyoming-registered-agent-consent-form": []
