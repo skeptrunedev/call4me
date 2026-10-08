@@ -1,6 +1,6 @@
 ---
 title: "Phone calls for Vercel AI SDK agents: the call4me tools package"
-seoTitle: "Vercel AI SDK phone call tools: call4me"
+seoTitle: "Vercel AI SDK phone call tools for agents"
 subtitle: call4me-ai-sdk gives an AI SDK agent a phone. It calls a business, has the conversation, waits on hold, and hands the outcome and transcript back to your code. Here is the setup, the tools, how mid-call questions work, and what happened when we ran it.
 description: "Add phone calls to a Vercel AI SDK agent with the call4me-ai-sdk tools package: install, API key, a working generateText example, and a real test call."
 date: 2026-10-08
