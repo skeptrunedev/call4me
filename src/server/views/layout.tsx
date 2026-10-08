@@ -5,6 +5,7 @@ import type { AppEnv } from '../lib/context';
 import { GA_MEASUREMENT_ID } from '../lib/ga';
 import type { RedditPixelEvent } from '../lib/reddit';
 import { PAGES, SITE, SITE_TITLE, type PageKey, type PageOverride } from '../lib/pages';
+import { OG_CARD_VERSION } from '../lib/og-card';
 
 export { SITE_DESCRIPTION } from '../lib/pages';
 
@@ -129,7 +130,7 @@ export const Layout: FC<{
   const fullTitle = title ? `${title} - call4me` : SITE_TITLE;
   const description = override?.description ?? meta.description;
   const url = `${SITE}${path ?? meta.path}`;
-  const image = `${SITE}${override?.image ?? `/og/${meta.card}.png`}`;
+  const image = `${SITE}${override?.image ?? `/og/${meta.card}.png?v=${OG_CARD_VERSION}`}`;
   const alt = override?.imageAlt ?? `call4me: ${title ?? 'your AI agent makes phone calls for you'}`;
   const ctx = tryGetContext<AppEnv>();
   const accountId = ctx?.get('account')?.id ?? null;

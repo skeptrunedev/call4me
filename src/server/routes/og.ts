@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import type { AppContext, AppEnv } from '../lib/context';
-import { cardSvg, type OgCard } from '../lib/og-card';
+import { cardSvg, OG_CARD_VERSION, type OgCard } from '../lib/og-card';
 import { renderPng } from '../lib/og';
 import { CARDS } from '../lib/pages';
 import { posts } from './blog';
@@ -17,12 +17,16 @@ const PNG_HEADERS = (bytes: number, maxAge: number) => ({ 'content-type': 'image
 /** An SVG rendered to PNG once per URL, then served from the edge cache for `maxAge` seconds. */
 async function png(c: AppContext, source: () => Promise<{ svg: string; maxAge: number }>) {
   const cache = caches.default;
-  const cached = await cache.match(c.req.raw);
+  // Existing image URLs must refresh too, including directory embeds using /og/site.png.
+  const cacheUrl = new URL(c.req.url);
+  cacheUrl.searchParams.set('__og_version', OG_CARD_VERSION);
+  const cacheKey = new Request(cacheUrl, c.req.raw);
+  const cached = await cache.match(cacheKey);
   if (cached) return cached;
   const { svg, maxAge } = await source();
   const body = await renderPng(svg);
   const res = new Response(body as unknown as BodyInit, { headers: PNG_HEADERS(body.byteLength, maxAge) });
-  c.executionCtx.waitUntil(cache.put(c.req.raw, res.clone()));
+  c.executionCtx.waitUntil(cache.put(cacheKey, res.clone()));
   return res;
 }
 

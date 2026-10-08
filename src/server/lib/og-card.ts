@@ -6,6 +6,8 @@
 
 export const OG_WIDTH = 1200;
 export const OG_HEIGHT = 630;
+/** Bump when the shared card changes so edge caches and new link previews refresh. */
+export const OG_CARD_VERSION = '2';
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -46,7 +48,7 @@ export function cardSvg(card: OgCard): string {
   <rect width="${OG_WIDTH}" height="${OG_HEIGHT}" fill="#ffffff"/>
   <rect x="24" y="24" width="${OG_WIDTH - 48}" height="${OG_HEIGHT - 48}" fill="none" stroke="#cccccc" stroke-width="3"/>
   <text x="72" y="130" font-family="DejaVu Sans" font-weight="bold" font-size="64" fill="#551a8b">call4me</text>
-  <text x="352" y="130" font-family="DejaVu Sans" font-size="30" fill="#666666">your AI agent makes phone calls for you</text>
+  <text x="384" y="130" font-family="DejaVu Sans" font-size="30" fill="#666666">your AI agent makes phone calls for you</text>
   <line x1="72" y1="166" x2="${OG_WIDTH - 72}" y2="166" stroke="#cccccc" stroke-width="3"/>
   ${titleLines.map((l, i) => `<text x="72" y="${titleY + i * lineH}" font-family="DejaVu Sans" font-weight="bold" font-size="${titleSize}" fill="#222222">${esc(l)}</text>`).join('\n  ')}
   ${subtitleLines.map((l, i) => `<text x="72" y="${subY + i * 44}" font-family="DejaVu Sans" font-size="34" fill="#444444">${esc(l)}</text>`).join('\n  ')}

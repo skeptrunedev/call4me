@@ -53,6 +53,16 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
       ask it to check cancellation rules, book an appointment or get an answer a website cannot give you.
       call4me calls the business, follows your brief, and brings the result back to the task your agent is already doing.
     </p>
+    <p class="product-hunt-badge">
+      <a href="https://www.producthunt.com/products/call4me?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-call4me" target="_blank" rel="noopener noreferrer">
+        <img
+          alt="call4me - Give your AI agent one new tool: make a phone call | Product Hunt"
+          width="250"
+          height="54"
+          src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1272895&amp;theme=light&amp;t=1791439678864"
+        />
+      </a>
+    </p>
     <p class="small">
       setup and calling guides: <a href="/blog/claude-code-phone-calls">claude code</a>, <a href="/blog/codex-phone-calls">codex</a>,
       {' '}<a href="/blog/meta-muse-ai-agent-phone-calls">muse</a>, <a href="/blog/instinct-ai-phone-calls">instinct</a>,

@@ -67,6 +67,9 @@ footer { margin-top: 36px; padding-top: 8px; border-top: 1px solid #ccc; color: 
 footer a { margin-right: 8px; }
 
 /* call4me */
+.product-hunt-badge { margin: 16px 0; }
+.product-hunt-badge a { display: inline-block; max-width: 100%; }
+.product-hunt-badge img { display: block; max-width: 100%; height: auto; }
 .copyblock { margin: 8px 0; }
 .server-url { overflow-wrap: anywhere; }
 .copyblock textarea:not([hidden]) { display: block; margin-top: 6px; width: 100%; max-width: 980px; font-family: "Courier New", Courier, monospace; font-size: 13px; }
