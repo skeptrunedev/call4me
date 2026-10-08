@@ -65,7 +65,7 @@ h1 .price { font-family: inherit; }
 .copy { color: #551a8b; }
 footer { margin-top: 36px; padding-top: 8px; border-top: 1px solid #ccc; color: #666; font-size: 14px; }
 footer a { margin-right: 8px; }
-footer .rss-button { display: inline-block; border: 1px solid #ccc; padding: 2px 8px; }
+footer .rss-link svg { vertical-align: -0.125em; }
 
 /* call4me */
 .product-hunt-badge { margin: 16px 0; }

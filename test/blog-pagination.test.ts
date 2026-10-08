@@ -95,5 +95,5 @@ test('RSS and Atom routes serve complete feeds and footer RSS is discoverable', 
   const html = await (await request('/blog')).text();
   assert.match(html, /<link rel="alternate" type="application\/rss\+xml" href="\/blog\/rss.xml"/);
   const footer = /<footer>([\s\S]*?)<\/footer>/.exec(html)![1];
-  assert.match(footer, /class="rss-button" href="\/blog\/rss.xml"/);
+  assert.match(footer, /class="rss-link" href="\/blog\/rss.xml"/);
 });
