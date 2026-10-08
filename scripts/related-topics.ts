@@ -92,6 +92,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'ups-contact-number': ['shipping'],
   'usaa-phone-number': ['insurance', 'personal-finance'],
   'vapi-alternatives': ['agent-software'],
+  'vercel-ai-sdk-phone-calls': ['agent-software'],
   'verizon-customer-service': ['telecom'],
   'veterinary-behavior-consultation-call': ['veterinary'],
   'walmart-oil-change-prices': ['car-maintenance'],

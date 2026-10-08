@@ -63,6 +63,7 @@ import fableticsCustomerService from './fabletics-customer-service.md';
 import cancelFactor from './cancel-factor.md';
 import cancelFubo from './cancel-fubo.md';
 import cancelHelloFresh from './cancel-hellofresh.md';
+import vercelAiSdkPhoneCalls from './vercel-ai-sdk-phone-calls.md';
 import deltaCustomerService from './delta-customer-service.md';
 import paypalCustomerServiceNumber from './paypal-customer-service-number.md';
 import fifthThirdBankCustomerService from './fifth-third-bank-customer-service.md';
@@ -188,4 +189,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'hulu-customer-service-number', markdown: huluCustomerServiceNumber },
   { slug: 'windstream-customer-service', markdown: windstreamCustomerService },
   { slug: 'how-long-to-reach-a-human', markdown: howLongToReachAHuman },
+  { slug: 'vercel-ai-sdk-phone-calls', markdown: vercelAiSdkPhoneCalls },
 ];

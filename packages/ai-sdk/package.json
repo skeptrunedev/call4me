@@ -1,0 +1,39 @@
+{
+  "name": "call4me-ai-sdk",
+  "version": "0.1.0",
+  "description": "Phone call tools for the Vercel AI SDK: your agent calls businesses to book, cancel, ask and wait on hold. Backed by the call4me MCP server.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "sideEffects": false,
+  "keywords": ["ai", "ai-sdk", "vercel-ai-sdk", "tools", "phone", "phone-calls", "voice", "mcp", "agents", "call4me"],
+  "homepage": "https://call4.me/blog/vercel-ai-sdk-phone-calls",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skeptrunedev/call4me.git",
+    "directory": "packages/ai-sdk"
+  },
+  "bugs": "https://github.com/skeptrunedev/call4me/issues",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "ai": "^7.0.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "ai": "^7.0.135",
+    "typescript": "^5.9.0",
+    "zod": "^4.6.5"
+  }
+}

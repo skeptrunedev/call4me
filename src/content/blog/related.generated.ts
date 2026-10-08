@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "b93993c0806ab49ba140b211a95cdddf4b689e3107c86701b4160bd3e9841324"
+  "sourceHash": "a09157b1eb5fce53ce75fa17f3e32d774efae87f96a5efb7c3cda70a17ee09bb"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -64,15 +64,19 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.660738
     },
     {
-      "slug": "claude-code-phone-calls",
-      "similarity": 0.650623
+      "slug": "vercel-ai-sdk-phone-calls",
+      "similarity": 0.653575
     },
     {
-      "slug": "private-dining-room-cost",
-      "similarity": 0.639106
+      "slug": "claude-code-phone-calls",
+      "similarity": 0.650623
     }
   ],
   "ai-agent-that-makes-phone-calls": [
+    {
+      "slug": "vercel-ai-sdk-phone-calls",
+      "similarity": 0.802288
+    },
     {
       "slug": "instinct-ai-phone-calls",
       "similarity": 0.798701
@@ -100,10 +104,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "bland-ai-alternatives",
       "similarity": 0.705434
-    },
-    {
-      "slug": "schedule-phone-calls-claude-code-codex",
-      "similarity": 0.702685
     }
   ],
   "ai-personal-assistant-appointment-booking": [
@@ -162,8 +162,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.701629
     },
     {
-      "slug": "muse-code-mcp-phone-calls",
-      "similarity": 0.684942
+      "slug": "vercel-ai-sdk-phone-calls",
+      "similarity": 0.698151
     }
   ],
   "allstate-customer-service-number": [
@@ -229,6 +229,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "cascaded-voice-stack-vs-gpt-live",
       "similarity": 0.645466
+    },
+    {
+      "slug": "vercel-ai-sdk-phone-calls",
+      "similarity": 0.63265
     },
     {
       "slug": "openai-realtime-voices-phone-calls",
@@ -475,16 +479,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.70033
     },
     {
+      "slug": "vercel-ai-sdk-phone-calls",
+      "similarity": 0.695389
+    },
+    {
       "slug": "ai-phone-tree-navigation",
       "similarity": 0.680091
     },
     {
       "slug": "grok-connectors-mcp-phone-calls",
       "similarity": 0.674866
-    },
-    {
-      "slug": "twilio-mcp-phone-calls",
-      "similarity": 0.652773
     }
   ],
   "claude-code-phone-calls": [
@@ -664,6 +668,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "everything-we-have-improved-since-launch": [
     {
+      "slug": "vercel-ai-sdk-phone-calls",
+      "similarity": 0.634782
+    },
+    {
       "slug": "meta-muse-first-task",
       "similarity": 0.620394
     }
@@ -785,16 +793,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.676581
     },
     {
+      "slug": "vercel-ai-sdk-phone-calls",
+      "similarity": 0.661641
+    },
+    {
       "slug": "instinct-ai-phone-calls",
       "similarity": 0.647303
     },
     {
       "slug": "cascaded-voice-stack-vs-gpt-live",
       "similarity": 0.642589
-    },
-    {
-      "slug": "claude-code-phone-calls",
-      "similarity": 0.641242
     }
   ],
   "grok-bot-template-troubleshooting": [
@@ -857,12 +865,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.659982
     },
     {
-      "slug": "meta-muse-first-task",
-      "similarity": 0.634193
+      "slug": "vercel-ai-sdk-phone-calls",
+      "similarity": 0.637192
     },
     {
-      "slug": "openai-realtime-voices-phone-calls",
-      "similarity": 0.632526
+      "slug": "meta-muse-first-task",
+      "similarity": 0.634193
     }
   ],
   "grok-bot-vs-meta-muse": [
@@ -1056,6 +1064,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.798701
     },
     {
+      "slug": "vercel-ai-sdk-phone-calls",
+      "similarity": 0.750655
+    },
+    {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
       "similarity": 0.715197
     },
@@ -1078,10 +1090,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "twilio-mcp-phone-calls",
       "similarity": 0.694327
-    },
-    {
-      "slug": "claude-code-phone-calls",
-      "similarity": 0.691204
     }
   ],
   "junk-removal-cost": [
@@ -1185,8 +1193,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.644284
     },
     {
-      "slug": "instinct-ai-phone-calls",
-      "similarity": 0.640881
+      "slug": "vercel-ai-sdk-phone-calls",
+      "similarity": 0.642454
     }
   ],
   "meta-muse-supplier-quotes": [
@@ -1279,6 +1287,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.720596
     },
     {
+      "slug": "vercel-ai-sdk-phone-calls",
+      "similarity": 0.711173
+    },
+    {
       "slug": "instinct-ai-phone-calls",
       "similarity": 0.704765
     },
@@ -1289,10 +1301,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "claude-code-phone-calls",
       "similarity": 0.680441
-    },
-    {
-      "slug": "grok-connectors-mcp-phone-calls",
-      "similarity": 0.675499
     }
   ],
   "paypal-customer-service-number": [
@@ -1629,6 +1637,40 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.624342
     }
   ],
+  "vercel-ai-sdk-phone-calls": [
+    {
+      "slug": "ai-agent-that-makes-phone-calls",
+      "similarity": 0.802288
+    },
+    {
+      "slug": "instinct-ai-phone-calls",
+      "similarity": 0.750655
+    },
+    {
+      "slug": "openai-realtime-voices-phone-calls",
+      "similarity": 0.711173
+    },
+    {
+      "slug": "ai-phone-tree-navigation",
+      "similarity": 0.698151
+    },
+    {
+      "slug": "cascaded-voice-stack-vs-gpt-live",
+      "similarity": 0.695389
+    },
+    {
+      "slug": "muse-code-mcp-phone-calls",
+      "similarity": 0.693975
+    },
+    {
+      "slug": "grok-connectors-mcp-phone-calls",
+      "similarity": 0.685915
+    },
+    {
+      "slug": "twilio-mcp-phone-calls",
+      "similarity": 0.675152
+    }
+  ],
   "verizon-customer-service": [
     {
       "slug": "directv-customer-service",
@@ -1636,7 +1678,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "windstream-customer-service",
-      "similarity": 0.644289
+      "similarity": 0.64429
     },
     {
       "slug": "how-long-to-reach-a-human",
@@ -1690,7 +1732,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "verizon-customer-service",
-      "similarity": 0.644289
+      "similarity": 0.64429
     }
   ],
   "wyoming-registered-agent-consent-form": []
