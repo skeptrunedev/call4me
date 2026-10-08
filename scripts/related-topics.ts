@@ -56,6 +56,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'gym-day-pass': ['fitness'],
   'gyms-with-sauna-near-me': ['fitness'],
   'hertz-customer-service-number': ['car-rental'],
+  'how-long-to-reach-a-human': ['airlines', 'insurance', 'personal-finance', 'subscription-cancellation', 'telecom'],
   'how-much-does-blood-work-cost': ['healthcare'],
   'how-to-cancel-siriusxm': ['subscription-cancellation', 'media-subscriptions'],
   'how-to-find-a-new-primary-care-doctor': ['healthcare', 'insurance'],

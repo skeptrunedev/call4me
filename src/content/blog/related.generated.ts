@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "1760caf0a7f3aa846ee9edfd5dbff8c7337289aba7332c99ed7e0f823631c8a4"
+  "sourceHash": "b93993c0806ab49ba140b211a95cdddf4b689e3107c86701b4160bd3e9841324"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -181,7 +181,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ohio-workers-compensation-insurance",
-      "similarity": 0.657669
+      "similarity": 0.65767
     }
   ],
   "amazon-pharmacy-phone-number": [
@@ -588,6 +588,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "etihad-customer-service",
       "similarity": 0.736721
+    },
+    {
+      "slug": "how-long-to-reach-a-human",
+      "similarity": 0.621233
     }
   ],
   "directv-customer-service": [
@@ -958,6 +962,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "hertz-customer-service-number": [],
+  "how-long-to-reach-a-human": [
+    {
+      "slug": "delta-customer-service",
+      "similarity": 0.621233
+    },
+    {
+      "slug": "verizon-customer-service",
+      "similarity": 0.607962
+    }
+  ],
   "how-much-does-blood-work-cost": [
     {
       "slug": "eye-exam-cost-without-insurance",
@@ -1055,7 +1069,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openai-realtime-voices-phone-calls",
-      "similarity": 0.704766
+      "similarity": 0.704765
     },
     {
       "slug": "cascaded-voice-stack-vs-gpt-live",
@@ -1236,11 +1250,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "ohio-workers-compensation-insurance": [
     {
       "slug": "allstate-customer-service-number",
-      "similarity": 0.657669
+      "similarity": 0.65767
     },
     {
       "slug": "unitedhealthcare-phone-number",
-      "similarity": 0.616726
+      "similarity": 0.616727
     },
     {
       "slug": "aaa-insurance-customer-service",
@@ -1266,7 +1280,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "instinct-ai-phone-calls",
-      "similarity": 0.704766
+      "similarity": 0.704765
     },
     {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
@@ -1558,7 +1572,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ohio-workers-compensation-insurance",
-      "similarity": 0.616726
+      "similarity": 0.616727
     }
   ],
   "ups-contact-number": [
@@ -1623,6 +1637,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "windstream-customer-service",
       "similarity": 0.644289
+    },
+    {
+      "slug": "how-long-to-reach-a-human",
+      "similarity": 0.607962
     }
   ],
   "veterinary-behavior-consultation-call": [

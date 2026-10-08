@@ -72,6 +72,7 @@ import potteryBarnCustomerService from './pottery-barn-customer-service.md';
 import hertzCustomerServiceNumber from './hertz-customer-service-number.md';
 import huluCustomerServiceNumber from './hulu-customer-service-number.md';
 import windstreamCustomerService from './windstream-customer-service.md';
+import howLongToReachAHuman from './how-long-to-reach-a-human.md';
 import claudeCodePhoneCalls from './claude-code-phone-calls.md';
 import codexPhoneCalls from './codex-phone-calls.md';
 import agentResearchPhoneCalls from './agent-web-research-phone-calls-sf-private-dining.md';
@@ -186,4 +187,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'hertz-customer-service-number', markdown: hertzCustomerServiceNumber },
   { slug: 'hulu-customer-service-number', markdown: huluCustomerServiceNumber },
   { slug: 'windstream-customer-service', markdown: windstreamCustomerService },
+  { slug: 'how-long-to-reach-a-human', markdown: howLongToReachAHuman },
 ];
