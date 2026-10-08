@@ -54,20 +54,6 @@ For a hosted service with a documented answer loop during a call, compare call4m
 
 The linked pages are the sources for this matrix. Choose Call4me for the task workflow above, Vapi Agent Phone for its hosted calling interface, or Bland when its wider account tools are part of the work you want your assistant to do. The recordings below help you inspect the calls behind this comparison.
 
-## Phone calls for your personal assistant's tasks
-
-Claude Code or Codex selects the business and sends a goal and limits to the calling tool. The voice service runs the conversation, while your original agent follows the transcript and brings the result back into your task.
-
-For a cancellation task, our [Planet Fitness inquiries](/blog/cancel-planet-fitness) show why calling the right location can matter: two clubs described different commitment terms. We asked about the rules without canceling a membership. For a research task, our [private dining walkthrough](/blog/agent-web-research-phone-calls-sf-private-dining) shows web findings, recorded phone answers and questions that stayed unresolved.
-
-If you want the caller to book, cancel or accept an alternative, supply that authority and the required facts. Judge the tool by the confirmation it returns and the decisions it brings back to you. For a call after the business opens, see [scheduling from Claude Code or Codex](/blog/schedule-phone-calls-claude-code-codex).
-
-### Vapi and Bland alternatives for your existing assistant
-
-For calling from Claude Code or Codex, the shortlist includes Vapi Agent Phone, Bland's operational MCP, Call4me, ClawCall, Cocall and Patter. Vapi Agent Phone provides hosted calling through browser authentication. Bland adds broader platform tools alongside calling. Call4me and Cocall document questions returned to your session during a call. Patter's local plugin requires your own provider accounts. The setup and result tables above explain these choices.
-
-Our [Vapi alternatives guide](/blog/vapi-alternatives) focuses on choosing a hosted calling service for Claude Code or Codex. Our [Bland alternatives guide](/blog/bland-ai-alternatives) separates a personal calling task from operating pathways and a wider voice platform. If you want to build the calling application yourself, see the [Twilio MCP server guide](/blog/twilio-mcp-phone-calls) and [voice architecture guide](/blog/cascaded-voice-stack-vs-gpt-live).
-
 ## What comes back to the agent?
 
 An outbound call tool is only the start. The original task needs an answer it can use: a quote, availability, a confirmation, or an explicit failure.
@@ -84,107 +70,6 @@ An outbound call tool is only the start. The original task needs an answer it ca
 These are documented interfaces, not results from a shared live test. A feature missing from the reviewed reference is an uncertainty, rather than proof that the entire platform lacks it. See [call4me's instructions](https://call4.me/llms.txt), [Vapi's protocol](https://phone.vapi.ai/llms.txt), [Bland's call tools](https://docs.bland.ai/integrations/mcp/tools), [ClawCall's handoff documentation](https://clawcall.dev/docs#live-handoff), [Cocall's tools](https://cocall.ai/docs/claude), and [Patter's README](https://github.com/PatterAI/awesome-claude-call).
 
 **Connected, answered, and completed are different claims.** A tool appearing in your agent proves discovery. A call reaching a person proves connection. The transcript or confirmation must support the actual task result. ClawCall makes this distinction explicit in its documentation: a network outcome of `answered` does not prove a booking succeeded.
-
-## Setup paths for Claude Code and Codex
-
-Start with one integration. Check the connection with a read operation before asking it to dial.
-
-### call4me
-
-For browser OAuth, add the hosted server:
-
-```bash
-claude mcp add --scope user --transport http call4me https://call4.me/mcp
-```
-
-Open `/mcp` in Claude Code and authenticate. In Codex:
-
-```bash
-codex mcp add call4me --url https://call4.me/mcp
-codex mcp login call4me
-```
-
-Ask it to run `call4me_get_balance` without placing a call. The [account page](/login?next=/account) also provides a personal server URL carrying your API key. Treat that URL as a credential.
-
-We verified fresh browser OAuth and a balance read on the canonical endpoint with Codex CLI 0.160.0. Our restaurant calls used an earlier bearer connection; the [Codex walkthrough](/blog/codex-phone-calls) distinguishes these tests and explains the discovery bug we found and fixed during sign in.
-
-call4me exposes the call to the existing agent as a goal, facts, and flexibility. For a restaurant research task, those facts might include the group size, date, and whether the agent may reserve anything. Follow `call4me_get_call` while the call is active, answer open questions, then return the result to the original task. Available carrier recordings can be retrieved separately; a recording can be pending or absent.
-
-### Vapi Agent Phone
-
-[Agent Phone's setup page](https://phone.vapi.ai/) gives this Claude Code connection:
-
-```bash
-claude mcp add --transport http agent-phone https://phone.vapi.ai/mcp
-```
-
-Complete browser authentication through your client's MCP controls. For Codex, the standard MCP commands are:
-
-```bash
-codex mcp add agent-phone --url https://phone.vapi.ai/mcp
-codex mcp login agent-phone
-```
-
-Our live example below reused a browser authorized MCP connection in a fresh Codex session. See [Codex's MCP documentation](https://learn.chatgpt.com/docs/extend/mcp) for the client commands. Agent Phone also documents an HTTP device connection for agents with HTTP access and secure credential storage. Its device credential is separate from its MCP OAuth credential.
-
-Use the Agent Phone instructions, rather than Vapi developer dashboard instructions. Its [discovery document](https://phone.vapi.ai/discovery.json) currently lists account and shared attempt limits. This is a limited calling allowance, not unlimited service. Its [call schema](https://phone.vapi.ai/openapi.json) defaults voicemail to `on`, which requires a user supplied caller name and callback number. Our task explicitly prohibited voicemail, so we sent `voicemail: "off"` and omitted both contact fields. Do not invent them to satisfy validation. The live MCP schema did not expose a duration setting; a duration instruction in the goal is not an enforced cap.
-
-### Bland's official MCP and plugin
-
-Connect to `https://api.bland.ai/v1/mcp`. Bland's current documentation supports browser sign in for ChatGPT, Claude and Claude Code, or a Bland API key in an `Authorization: Bearer` header. Other clients still need a compatible authentication path; our historical Codex trial used an API key. **`https://docs.bland.ai/mcp` is the documentation search server**, a different surface from the account tools that place calls. The [MCP overview](https://docs.bland.ai/integrations/mcp/overview) explains both.
-
-The [official Bland plugin](https://docs.bland.ai/integrations/mcp/norm) is the recommended path for supported coding clients. In Claude Code:
-
-```text
-/plugin marketplace add CINTELLILABS/bland-plugins
-/plugin install bland@bland
-```
-
-It adds skills, `/bland:*` commands, and Norm's pathway workflow. You can also connect the remote server alone. Bland's [Codex guide](https://docs.bland.ai/integrations/mcp/clients/codex) documents this configuration:
-
-```toml
-[mcp_servers.bland]
-url = "https://api.bland.ai/v1/mcp"
-bearer_token_env_var = "BLAND_API_KEY"
-```
-
-The process launching Codex must receive that environment variable. For a new account, Bland also documents a [browser approval flow for connecting an agent](https://docs.bland.ai/platform/connect-your-agent). Our account connected on the free option without buying a paid plan. Account allowance and billing still limit actual calling.
-
-Bland's tools can place a call with a task, so an existing agent does not necessarily need to build a pathway first. Its broader platform also supports voice agent development. The compact `create_call` tool does not expose every call setting. In our discovered schema, setting a duration cap, recording, and voicemail behavior required `call_bland_api` with the documented `POST /v1/calls` body. Inspect those fields before dialing rather than assuming the simpler tool applies your limits.
-
-### ClawCall
-
-The [Claude setup guide](https://clawcall.dev/guides/claude-mcp) documents:
-
-```bash
-claude mcp add --transport http clawcall https://api.clawcall.dev/mcp
-```
-
-Authenticate through `/mcp`, then ask for plan and allowance information without dialing. The [Codex guide](https://clawcall.dev/guides/codex-mcp) documents `codex mcp add` and `codex mcp login`, but explicitly labels its instructions as based on OpenAI documentation and not yet tested live with ClawCall. That qualification matters if you choose it for Codex.
-
-Its REST and skill paths are alternatives to hosted MCP. The docs distinguish captured transcript evidence from network outcome and explain temporary recording access.
-
-### Cocall
-
-[Cocall's Claude Code guide](https://cocall.ai/docs/claude) documents:
-
-```bash
-claude mcp add cocall --transport http https://cocall.ai/mcp
-```
-
-Complete browser OAuth and verify the connection with `claude mcp list`. Its documented call loop can pause for an answer and resume with that answer. The site also names Codex as supported, but our review did not establish a dedicated Codex setup guide or a live Codex test.
-
-### Patter Claude Call
-
-Follow the [repository's plugin installation and setup](https://github.com/PatterAI/awesome-claude-call). It bundles a local MCP server with commands and a phone subagent, and starts a Cloudflare tunnel when needed. Have Twilio credentials, an owned number, and an OpenAI API key ready. Alternative voice engines have their own credentials.
-
-Choose its third party call command for business research. Its completion notifications and inbound voice access are useful additional workflows, with separate commands.
-
-## Using a calling MCP from T3 Code
-
-Keep the underlying provider in mind. T3 Code's [Codex provider guide](https://github.com/pingdotgg/t3code/blob/main/docs/user/providers-codex.md) and [Claude provider guide](https://github.com/pingdotgg/t3code/blob/main/docs/user/providers-claude.md) describe provider configuration. An MCP added on another machine or to another provider profile may not reach the session you are using.
-
-Check which provider and environment the thread actually uses, configure the calling integration there, then verify its tools in a fresh thread. Our [T3 Code calling guide](/blog/t3-code-phone-calls) now verifies Call4me with T3 0.0.45 and its Codex provider, including a real automated time line call that returned a partial outcome. It does not establish compatibility across every provider or calling service.
 
 ## An actual Bland call from Codex
 
@@ -359,26 +244,3 @@ For a menu task, check both the destination and the action evidence. A spoken pr
 Bland's [call documentation](https://docs.bland.ai/api-v1/post/calls) describes `ivr_mode: true` for phone menus. It also says that this mode overrides automatic voicemail hangup and makes the effective voicemail action `ignore`. A task that might pass from a menu into voicemail therefore needs an explicit ending instruction. That documented behavior alone is not evidence that a particular Bland call navigated a menu successfully. Our [phone tree troubleshooting guide](/blog/ai-phone-tree-navigation) separates keypad actions, destination evidence, voicemail behavior and task completion.
 
 For developers considering their own calling application, our [Twilio MCP guide](/blog/twilio-mcp-phone-calls) includes an actual public documentation MCP test and explains what the execution and conversational layers still need to supply.
-
-## A useful first task: web research, then phone confirmation
-
-The payoff is filling a specific gap in research. Keep the agent's browser and search tools in the same task as its phone tools.
-
-Our [fresh Claude Code and Codex private dining research sessions](/blog/agent-web-research-phone-calls-sf-private-dining) start with official websites, identify missing information, and return telephone findings to the same task. The call recordings also show limits: automated restaurant concierges could not supply every requested detail, and one call ended before a follow up answer could be delivered. These are actual harness sessions, with setup and outcome boundaries documented. They are not a controlled comparison against the other services here. Our [earlier five restaurant calls](/blog/private-dining-room-cost) provide additional recordings and transcripts.
-
-For example, use this prompt after connecting a service:
-
-> Find three restaurants near [area] that might host [group size] on [date]. Read their official websites first and show the sources. Identify which questions are still unanswered online. Ask me to approve the businesses and phone numbers before dialing. Then call only to confirm room availability, fees, minimum spend, and accessibility. Do not book anything or agree to a charge. Ask me if a call requires a decision outside these instructions. Return one comparison with web findings and phone confirmations labeled separately, including unanswered questions and call evidence where available.
-
-Judge the result against the task you gave it:
-
-| Check | Evidence to look for |
-|---|---|
-| Correct business | Official website source and the number actually dialed |
-| Clear authority | Research only, with no reservation or charge agreed |
-| Missing information handled | The question, your answer if needed, and the caller's response |
-| Usable result | Specific answers tied to the business and call date |
-| Honest failure | Voicemail, no answer, missing recording, or unresolved question reported clearly |
-| Return to the task | A final comparison that distinguishes online information from what was confirmed by phone |
-
-A service can support the right tools and still fail this task. A fair live comparison would preserve the same instructions, record the integration and version used, show the actual transcripts, and account for changing availability between calls. Until those sessions exist, setup documentation supports a choice of workflow. It does not support a claim that one caller is faster, more reliable, or better sounding than another.

@@ -4,7 +4,7 @@ seoTitle: "Muse MCP: Meta Muse connectors for phone calls"
 subtitle: Connect Meta Muse to a phone calling service through a custom connector. Includes our tested setup, successful reuse in a fresh conversation and a recorded library inquiry.
 description: "Use Muse MCP through a Meta Muse custom connector for phone calls. Tested setup, saved connector reuse and a recorded library call with staff answers."
 date: 2026-10-01
-updated: 2026-10-06
+updated: 2026-10-07
 tags: meta muse, ai agents, mcp, ai phone assistant
 authors: nick
 imageAlt: Meta Muse AI agent connectors, with phone calls as the worked example
@@ -53,7 +53,7 @@ Meta's [technical safety description](https://research.meta.ai/blog/security-and
 
 Meta describes a credential store separated from Muse's runtime. Code receives a surrogate token; Sentinel authorizes network requests and inserts the real credential at the network boundary. Meta also says Muse can still make mistakes. This is Meta's documented architecture, not a security audit of our custom connector.
 
-In our test, we entered the Call4me key in the **Connect** page and did not paste it into chat. That is the credential entry path this guide uses. A successful balance check proves that authentication worked for that request, not that we independently verified every credential protection.
+In our test, we entered the Call4me key in the **Connect** page and did not paste it into chat. That is the credential entry path this guide uses.
 
 ## Does Muse support MCP?
 
@@ -86,40 +86,16 @@ Its report, in short:
 
 - **Balance check passed.** It called `call4me_get_balance` and read back the account's real balance, minutes left at $0.25/min, and the account's call4me phone numbers, all matching the account page.
 - **Tool discovery reported.** Muse listed calling, status, transcript, recording, profile and account tools. We did not execute every tool in that setup test.
-- **Key entered outside chat.** We used the connector's credential page. Muse described secure token substitution; our balance result does not independently prove that implementation.
+- **Key entered outside chat.** We used the connector's credential page.
 - **Reusable skill reported.** Muse said it saved a skill named `call4me`. That statement alone does not establish that every future conversation will discover or execute it.
 
 It also volunteered the one thing worth knowing before the first call: call4me may ring your own phone to verify you with a business or patch you in, so it said it would always give you a heads up first.
 
-### Rechecking the saved connector on October 4
-
-We reopened muse.ai in the same signed in account to test reuse before attempting a business call. It restored the October 1 main conversation and its connector setup task history. Opening the website did **not** create a fresh conversation.
-
-The page first showed **Warming up**. Our message requested a balance check only, with no call authorized. Its delivery label changed from **Still sending** to **Delivery not confirmed**. The agent later showed **Connected**, but we did not receive a new balance result or a new connector task.
-
-This October 4 attempt did not establish that the saved connector failed or worked from a fresh conversation. Message delivery and connector execution are separate checks. We did not place a call during that attempt.
-
-### Inspecting the saved connector on October 6
-
-In the signed in Muse account, we opened **Settings**, then **Connectors**, then **Call4me**. The saved connector's detail page showed a **Disconnect** button and **Background sync** set to **Allow**. It did not display an explicit enabled toggle or the connector's tool names. We did not change any settings.
-
-This establishes that the saved connector was visible in the account. It does not establish that its credential still authenticates, that a fresh conversation can execute it or that a phone call works. No new balance request or call was executed during this inspection.
-
 ### Reusing the connector in a fresh conversation on October 6
 
-After the settings inspection, we opened a fresh Muse conversation and requested an access check without dialing. Muse returned a successful balance result and reported reading the existing Call4me skill and connector, discovering the current server tools and running `call4me_get_balance` exactly once. It also reported reading the general calling requirements and caller profile without changing the profile. No error was reported, and no call was placed or scheduled during this check.
+We opened a fresh Muse conversation and requested an access check without dialing. Muse returned a successful balance result and reported reading the existing Call4me skill and connector, discovering the current server tools and running `call4me_get_balance` exactly once. It also reported reading the general calling requirements and caller profile without changing the profile. No error was reported, and no call was placed or scheduled during this check.
 
-This is a successful fresh conversation reuse result observed in Muse. It is not an independent audit of credential handling or a guarantee that later conversations will work. The October 4 delivery problem remains a separate historical result; it did not establish a connector failure.
-
-| Check | What our evidence supports |
-| :--- | :--- |
-| October 1 setup | A Connect card, credential entry outside chat and a balance result matching our account |
-| Saved skill claim | Muse reported saving the skill, and the old setup task history remained visible on October 4. That October 4 check did not inspect the saved skill itself |
-| October 6 connector inspection | Call4me appeared under Settings and Connectors, with Disconnect and Background sync Allow visible. No tool execution was tested |
-| October 4 balance request | Message delivery was not confirmed and no result returned |
-| October 6 fresh conversation check | Muse returned a successful balance result and reported reading the saved skill and connector, discovering tools and executing the balance request once |
-| October 6 library call | Muse placed one call through the saved connector, followed its status and retrieved the transcript and an available recording. Staff answered the informational questions |
-| Native Muse phone calling | Not tested |
+This is a successful fresh conversation reuse result observed in Muse.
 
 ### The completed Muse library call
 
@@ -153,47 +129,7 @@ Ask Muse to locate and read the existing `call4me` skill, then run `call4me_get_
 
 Read the outcome and transcript. A recorded menu may state general policy without confirming availability for your group. Voicemail is a destination, not a booking. Ask for separate lists of confirmed answers and open questions before deciding what to do next.
 
-## Prepare a first informational call from Muse
-
-For a first test, ask a general question that does not require a reservation or payment. The following is an illustrative tool request, not a recording of a call from our October 1 setup:
-
-```json
-{
-  "name": "call4me_place_call",
-  "arguments": {
-    "to": "+15550100199",
-    "business": "Example Restaurant",
-    "category": "general",
-    "goal": "Ask whether four people can walk in for dinner tonight and what arrival time is recommended. Do not reserve, hold a table, purchase, leave a message or share callback details.",
-    "details": {"questions": "Walk in policy for four and recommended arrival time"},
-    "max_minutes": 4
-  }
-}
-```
-
-Replace the example number with the business's published number, and check its local hours. Ask Muse to run `call4me_get_requirements` for category `general` before dialing and use the live tool schema for required fields. For a real reservation, use the appropriate category and supply the actual date, party size and name.
-
-Call4me exposes status and transcripts through `call4me_get_call`. A finished call can still have an unresolved goal. Ask Muse to distinguish answers from a human, recorded menu information and unanswered questions. If a caller question comes back, `call4me_answer_question` can relay an answer. We did not exercise that live question path in the October 1 test.
-
-## Why not just paste the key into the chat?
-
-A personal Call4me MCP URL contains a credential. Pasting it into chat exposes that credential to the conversation and can carry it into generated code or shared screenshots. Use the **Connect** card and the canonical endpoint, `https://call4.me/mcp`, for this setup.
-
-That follows Meta's documented credential entry path. We did not audit the custom connector's storage, generated code or logs, and a balance check should not be presented as that audit.
-
 For a first phone task, use our [Muse library calling tutorial](/blog/meta-muse-first-task). For supplier calls, try the [supplier inquiry brief](/blog/meta-muse-supplier-quotes). The developer client has a separate [Muse Code MCP setup guide](/blog/muse-code-mcp-phone-calls), including a configuration mismatch found in our native client tests. Our [Grok Bot versus Meta Muse comparison](/blog/grok-bot-vs-meta-muse) explains the consumer workflow differences.
-
-## Choose a useful task after the connection check
-
-Our customer recordings show the kinds of outcomes to request once your calling connection works. These customers' assistant clients are unknown, so the examples below do not establish that Muse placed their calls.
-
-| Task | Recorded result | What to ask Muse to return |
-| :--- | :--- | :--- |
-| [Check a store's stock](/blog/macys-bow-tie-stock-check) | Staff confirmed a matching bow tie and quoted a price. Nothing was held or purchased | Exact item match, quoted price, who checked and whether a hold exists |
-| [Book a dinner table](/blog/book-dinner-reservation-by-phone) | Staff confirmed a table for four on October 8 at 7:30 pm. Cancellation terms were not established | Agreed date, local time, party size, booking name and any unresolved terms |
-| [Replace an appointment](/blog/reschedule-doctor-appointment) | The old slot was already canceled; staff confirmed a replacement for October 8 at 1:30 pm | Old slot status, confirmed replacement and anything still needing your attention |
-
-Each linked story contains its reviewed recording and transcript. For appointments, use the [personal assistant booking brief and confirmation checklist](/blog/ai-personal-assistant-appointment-booking) to define your acceptable times and permitted changes before calling. A suggested Muse brief is separate from proof that Muse executed it.
 
 ## Let your agent make the call
 

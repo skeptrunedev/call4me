@@ -4,7 +4,7 @@ seoTitle: "FedEx customer service number: reach a person"
 subtitle: We called 1.800.GoFedEx to ask how to hold a package at a FedEx location or redirect one on the way. Without a tracking number, the voice assistant never put us through. With one, asking for a representative got us a callback, and a FedEx agent was on the line about 4 minutes after we dialed. What she told us, all five recordings, and what fedex.com says.
 description: The FedEx customer service number is 1-800-463-3339. With a tracking number, asking for a representative got us a callback from a live agent.
 date: 2026-10-01
-updated: 2026-10-04
+updated: 2026-10-07
 tags: fedex, package delivery, phone trees, customer service, phone numbers
 authors: nick
 imageAlt: FedEx customer service number 1-800-463-3339, how we reached a person when FedEx called us back
@@ -82,19 +82,6 @@ Jump to a moment:
 - **3:09** "It looks like we weren't able to catch the reason for your call"
 - **3:22** "If you'd like for us to call you back at this number, please press 1"
 - **3:32** "We will call you back as soon as an agent becomes available"
-
-What happened, in order:
-
-1. **"Welcome to FedEx. This call may be monitored or recorded for quality assurance."** Then: "What specifically can I help you with?"
-2. **We said we had a tracking number and wanted a representative.** It went straight to "Sure. Tracking a package. Please tell me either your tracking number or your door tag number, or say, hold on a minute."
-3. **We gave the tracking number.** About 6 seconds later: "This FedEx Express shipment was returned to the shipper. Would you like to hear the latest status of this returned shipment?"
-4. **The status.** It said the shipment was delivered "Monday, July 13th, at 12:12 p.m." and read out who signed for it. That's the return delivery to the seller.
-5. **A menu:** repeat that (1), track another package (2), proof of delivery (3) or main menu (4). Our caller said only "Hmm", and it went to the main menu.
-6. **We asked a representative what happened after the delivery attempts.** It asked "You're calling about a missed delivery, right?", then "is this the shipment we just checked on?", read the status again and asked "do you have your shipment?"
-7. **We said no.** "To help us locate your shipment, you'll need to file a claim. Since you're on your mobile phone, I can text you a link to file your claim online more easily." We said no and asked for a representative.
-8. **"You want to speak with a representative, right?"** It asked twice. We said "Exactly" and "That's right."
-9. **The callback offer.** "It looks like we weren't able to catch the reason for your call." It read back the number we called from (our call4me number), then: "If you'd like for us to call you back at this number, please press 1. Or if you'd like us to call you at a different number, please press 2."
-10. **"We will call you back as soon as an agent becomes available. Thank you for calling FedEx. Goodbye."**
 
 Our caller said "Huh" at the callback offer, and FedEx confirmed the callback a few seconds later. Keypad presses don't show up in our recordings, and the call log doesn't list them, so we can't tell whether our caller pressed 1. If you get this offer, press 1.
 
@@ -221,19 +208,6 @@ What you need before you call:
 - **0:48** "Let me check on that real quick"
 - **0:50** what a door tag is, and "Our representatives can only assist you or share shipment details if you have either of them"
 - **1:22** "Okay, I'm just gonna try a different..." The recording ends
-
-## The FedEx phone number's phone tree, step by step
-
-This is what the FedEx voice assistant did on our four calls to 1-800-463-3339, on October 1, 2026.
-
-1. **"Welcome to FedEx. This call may be monitored or recorded for quality assurance."** On the 1:01 pm call it also said "Para español, marque asterisco" and asked "Are you calling from a cell phone?"
-2. **"What specifically can I help you with?"** Say what you need in a few words.
-3. **It may guess.** On the 1:13 pm call it asked, "You're calling for the status of a package, right?" We said no, and it asked again in its own words.
-4. **It asks for a tracking or door tag number.** "Please tell me either your tracking number or your door tag number, or say hold on a minute." Say "hold on a minute" if you need time. It answers "when you're ready, just say I'm back, or press pound."
-5. **Without a number, it stops here.** It explains what a door tag is and where the tracking number comes from, and "Representative" gets: "To connect you to a representative, I just need a valid door tag or tracking number."
-6. **With a tracking number, it reads you the status.** Then a menu: repeat that (1), track another package (2), proof of delivery (3), main menu (4).
-7. **Ask for a representative.** On our call it asked about a missed delivery, whether we had the shipment, and offered to text a claim link. Then "You want to speak with a representative, right?"
-8. **The callback.** "If you'd like for us to call you back at this number, please press 1. Or if you'd like us to call you at a different number, please press 2." FedEx called back from 1-800-GO-FedEx, said "Please hold while we connect you to an agent", and an agent answered.
 
 ## Where to find your tracking number or door tag number
 

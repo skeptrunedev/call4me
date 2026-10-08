@@ -4,6 +4,7 @@ seoTitle: Verizon customer service number: reach a person
 subtitle: We called Verizon customer service on my family's real account, with 3 lines on 5G Do More. An AI assistant answered and checked the Account PIN, "An agent, please" got us a person, and they said switching to Unlimited Welcome would take the bill from $219.08 to $170.58 a month. When our call hit its time limit, the representative called us back. All three recordings, the phone tree, and what to have ready.
 description: Verizon customer service is 800-922-0204. An AI assistant answers; "An agent, please" reached a person, who said a plan switch saves about $48 a month.
 date: 2026-10-01
+updated: 2026-10-07
 tags: verizon, customer service, phone plans, phone trees
 authors: nick
 imageAlt: Verizon customer service, 800-922-0204, how we reached a person and found a plan about $48 cheaper
@@ -57,26 +58,6 @@ Jump to a moment:
 - **15:11** "$170.58", including "surcharges, government taxes, and everything"
 - **15:19** cancelling a line and the multi-line discount
 - **16:06** "One more thing. If we did cancel a line..." and the call hits our 25 minute limit
-
-## The Verizon phone tree, step by step
-
-Times are minutes into the actual call, before anything was shortened.
-
-1. **0:06, the AI assistant.** "I'm Verizon's AI assistant." It says Verizon and its partners monitor and record calls.
-2. **0:19, "What are you calling about today?"** You answer out loud. There's no keypad menu.
-3. **0:34, it checks who's calling.** "To confirm, am I speaking with the user of the number ending in 5256?" That's the call4me number we called from, not a line on the account. Our caller said no and gave the last four of the account's number instead.
-4. **0:51, "Which would you like to take care of first?"** We'd asked about cheaper plans and cancelling a line, so it asked which one to start with.
-5. **1:08, the phone number on the account.** "Are you able to provide your telephone number?" It reads the number back to confirm.
-6. **1:42, a text confirmation.** "To keep your account details safe, let's quickly confirm it's you. I can send a quick confirmation to your phone." It sent a text to the line on the account at 2:01.
-7. **2:30, the text expired.** "Your previous request has expired. Would you like me to send it again?" We said yes, and it sent another at 2:43.
-8. **3:12, the Account PIN.** "I'm having trouble verifying your identity. That text request didn't go through. We can try using your account PIN instead." At 3:29: "Please say or enter your account PIN." The PIN worked.
-9. **4:02, which line.** "There are multiple lines on your account. Which line would you like to manage?" You can say the last four digits or "list lines".
-10. **4:20, the plans.** It read the line's plan and price, three cheaper plans, and asked "Which plan would you like to switch to?"
-11. **5:05, it got stuck.** We asked for the monthly total for all three lines with taxes and fees. It said "I'm having trouble with that. Do you want me to try again?" three times.
-12. **5:52, "An agent, please."** At 5:31 "Could I just speak with a representative, please?" got the same "I'm having trouble with that." "An agent, please" got "I'll get you connected with a representative who can help you with your plan options and line cancellation."
-13. **6:34, a person.** Before that, a recording says "During this call, your account may be reviewed for recommendations and offers."
-14. **8:43, verification again.** The representative asked for "your full name, please, and the mobile number that you're contacting us about, just for verification purposes."
-15. **Then holds.** About 1 minute 22 seconds from 9:37, about 5 minutes 28 seconds from 13:35, and about 59 seconds from 22:32. All three were silent.
 
 ## What Verizon told us
 
@@ -173,16 +154,6 @@ Jump to a moment:
 - **2:20** "I wasn't able to pull up an account with that number"
 - **2:35** we ask for a representative again
 - **2:46** "Please call back once you have that information ready"
-
-What happened, in order:
-
-1. **"Verizon's AI assistant."** It says Verizon and its partners monitor and record calls.
-2. **"What are you calling about today?"**
-3. **"What's the phone number on that account?"** This came right after we said what we were calling about.
-4. **If you ask for a representative,** it says there's "quite a wait" and that the representative will "still need your phone or account number to look up your details." Then it asks for the number again.
-5. **"Is this for a personal or business account?"**
-6. **It asks for the mobile number on the account,** then offers to take the **account number** instead.
-7. **With neither,** it says "We need a valid phone number or account number to access your account. Please call back once you have that information ready. Thank you for calling. Goodbye."
 
 ## Changing your Verizon plan
 
