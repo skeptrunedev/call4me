@@ -1,6 +1,6 @@
 # Product Hunt launch drafts
 
-Prepared October 7, 2026, Pacific time. The customer email remains a draft for Nick's review; no customer send has been scheduled. Nick explicitly requested a test, which was sent only to his personal inbox. Following Nick's request for the missing blog link, the article is published at https://call4.me/blog/everything-we-have-improved-since-launch. The source is `src/content/blog/everything-we-have-improved-since-launch.md`; the copy in this directory preserves the reviewed draft.
+Prepared October 7, 2026, Pacific time. Nick approved the tested email for all users at 08:15 Pacific on October 8, equivalent to 2026-10-08T15:15:00Z. Scheduling is being prepared through Fastmail's native delayed submission support. The eligible audience audit found 120 registered accounts after existing opt outs, internal accounts and placeholder addresses were excluded. Following Nick's request for the missing blog link, the article is published at https://call4.me/blog/everything-we-have-improved-since-launch. The source is `src/content/blog/everything-we-have-improved-since-launch.md`; the copy in this directory preserves the reviewed draft.
 
 ## Timing and links
 
