@@ -63,6 +63,15 @@ import fableticsCustomerService from './fabletics-customer-service.md';
 import cancelFactor from './cancel-factor.md';
 import cancelFubo from './cancel-fubo.md';
 import cancelHelloFresh from './cancel-hellofresh.md';
+import deltaCustomerService from './delta-customer-service.md';
+import paypalCustomerServiceNumber from './paypal-customer-service-number.md';
+import fifthThirdBankCustomerService from './fifth-third-bank-customer-service.md';
+import aaaInsuranceCustomerService from './aaa-insurance-customer-service.md';
+import directvCustomerService from './directv-customer-service.md';
+import potteryBarnCustomerService from './pottery-barn-customer-service.md';
+import hertzCustomerServiceNumber from './hertz-customer-service-number.md';
+import huluCustomerServiceNumber from './hulu-customer-service-number.md';
+import windstreamCustomerService from './windstream-customer-service.md';
 import claudeCodePhoneCalls from './claude-code-phone-calls.md';
 import codexPhoneCalls from './codex-phone-calls.md';
 import agentResearchPhoneCalls from './agent-web-research-phone-calls-sf-private-dining.md';
@@ -168,4 +177,13 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'cancel-factor', markdown: cancelFactor },
   { slug: 'cancel-fubo', markdown: cancelFubo },
   { slug: 'cancel-hellofresh', markdown: cancelHelloFresh },
+  { slug: 'delta-customer-service', markdown: deltaCustomerService },
+  { slug: 'paypal-customer-service-number', markdown: paypalCustomerServiceNumber },
+  { slug: 'fifth-third-bank-customer-service', markdown: fifthThirdBankCustomerService },
+  { slug: 'aaa-insurance-customer-service', markdown: aaaInsuranceCustomerService },
+  { slug: 'directv-customer-service', markdown: directvCustomerService },
+  { slug: 'pottery-barn-customer-service', markdown: potteryBarnCustomerService },
+  { slug: 'hertz-customer-service-number', markdown: hertzCustomerServiceNumber },
+  { slug: 'hulu-customer-service-number', markdown: huluCustomerServiceNumber },
+  { slug: 'windstream-customer-service', markdown: windstreamCustomerService },
 ];
