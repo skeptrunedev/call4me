@@ -16,5 +16,9 @@ export function d1(): D1Database {
     all: async () => ({ results: sqlite.prepare(sql).all(...args) }),
     run: async () => ({ meta: { changes: Number(sqlite.prepare(sql).run(...args).changes) } }),
   });
-  return { prepare: (sql: string) => statement(sql) } as unknown as D1Database;
+  return { prepare: (sql: string) => statement(sql), batch: async (statements: { run: () => Promise<unknown> }[]) => {
+    const results = [];
+    for (const s of statements) results.push(await s.run());
+    return results;
+  } } as unknown as D1Database;
 }

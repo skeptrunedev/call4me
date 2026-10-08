@@ -1,4 +1,5 @@
-import type { AccountRow, CallRow, Cohort, CreditRow, CreditStatus, Day, LedgerRow, Metrics, TopupRow, UserRow } from "../shared/types";
+import type { Cohort, CreditRow, CreditStatus, Day, LedgerRow, Metrics, TopupRow, UserRow } from "../shared/types";
+import { computeReddit, type RedditInput } from "./reddit";
 
 const DAY = 24 * 60 * 60 * 1000;
 const COHORT_DAYS = 7;
@@ -39,7 +40,7 @@ function group<T>(rows: T[], key: (row: T) => string): Map<string, T[]> {
  * outbound call; inbound calls are businesses calling back, not something the user did.
  */
 export function computeMetrics(
-  input: { accounts: AccountRow[]; topups: TopupRow[]; calls: CallRow[]; ledger: LedgerRow[] },
+  input: RedditInput & { topups: TopupRow[]; ledger: LedgerRow[] },
   internalEmails: Set<string>,
   now: number,
 ): Metrics {
@@ -181,5 +182,5 @@ export function computeMetrics(
     };
   });
 
-  return { generatedAt: now, summary, funnel, outcomes, days, cohorts, users, credits };
+  return { generatedAt: now, summary, funnel, outcomes, days, cohorts, users, credits, reddit: computeReddit(input, internalEmails, now) };
 }

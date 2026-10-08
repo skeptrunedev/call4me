@@ -7,6 +7,8 @@ export interface AccountRow {
   reload_status: string | null;
   reload_cents: number | null;
   reload_renews_at: number | null;
+  reddit_attribution?: string | null;
+  reddit_last_touch?: string | null;
 }
 export interface TopupRow {
   account_id: string;
@@ -15,6 +17,7 @@ export interface TopupRow {
   monthly: number;
 }
 export interface CallRow {
+  id?: string;
   account_id: string;
   created_at: number;
   direction: string;
@@ -22,6 +25,7 @@ export interface CallRow {
   billed_seconds: number | null;
   cost_cents: number | null;
   result: string | null;
+  answered_at?: number | null;
 }
 export interface LedgerRow {
   account_id: string;
@@ -82,6 +86,7 @@ export interface CreditRow {
 }
 
 export interface Metrics {
+  reddit: RedditMetrics;
   generatedAt: number;
   summary: {
     users: number;
@@ -103,4 +108,57 @@ export interface Metrics {
   cohorts: Cohort[];
   users: UserRow[];
   credits: CreditRow[];
+}
+
+export interface RedditVisitRow {
+  id: string;
+  visitor_id: string;
+  account_id: string | null;
+  campaign: string | null;
+  ad_group: string | null;
+  ad_id: string | null;
+  audience: string | null;
+  creative: string | null;
+  at: number;
+}
+export interface RedditPaymentRow {
+  id: string;
+  account_id: string;
+  paid_at: number;
+  paid_amount_cents: number | null;
+  kind: string;
+}
+export interface RedditPaidHistoryRow { account_id: string; paid_at: number }
+export interface RedditDeliveryRow { event_name: string; state: string; count: number; account_id?: string }
+export interface RedditDeliveryStatusRow { configured: number; checked_at: number }
+export interface RedditGroup {
+  campaign: string | null;
+  audience: string | null;
+  creative: string | null;
+  adGroup: string | null;
+  adId: string | null;
+  visitors: number;
+  acquiredAccounts: number;
+  firstPaying: number;
+  paidCallers: number;
+  successfulCallers: number;
+  successfulTasks: number;
+  returningPaidCallers: number;
+  returningEligible: number;
+  matureReturningPaidCallers: number;
+  repeatBuyers: number;
+  revenueCents: number | null;
+  unknownPayments: number;
+}
+export interface RedditMetrics {
+  state: "ready" | "awaiting migration";
+  summary: Omit<RedditGroup, "campaign" | "audience" | "creative" | "adGroup" | "adId">;
+  groups: RedditGroup[];
+  reengagedAccounts: number;
+  invalidAttributions: number;
+  metadataPendingAccounts: number;
+  delivery: RedditDeliveryRow[];
+  conversionConfigured: boolean | null;
+  conversionCheckedAt: number | null;
+  spendState: "not connected";
 }

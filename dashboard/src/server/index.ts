@@ -1,7 +1,8 @@
 import { Hono } from "hono";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import { computeMetrics } from "./metrics";
-import type { AccountRow, CallRow, LedgerRow, TopupRow } from "../shared/types";
+import { redditSchemaReady } from "./reddit-schema";
+import type { AccountRow, CallRow, LedgerRow, RedditDeliveryRow, RedditDeliveryStatusRow, RedditPaidHistoryRow, RedditPaymentRow, RedditVisitRow, TopupRow } from "../shared/types";
 
 export interface Env {
   DB: D1Database;
@@ -59,11 +60,12 @@ app.use("*", async (c, next) => {
 });
 
 app.get("/api/metrics", async (c) => {
+  const redditReady = await redditSchemaReady(c.env.DB);
   const [accounts, topups, calls, ledger] = await c.env.DB.batch([
-    c.env.DB.prepare("SELECT id, email, created_at, reload_status, reload_cents, reload_renews_at FROM accounts"),
+    c.env.DB.prepare(`SELECT id, email, created_at, reload_status, reload_cents, reload_renews_at${redditReady ? ", reddit_attribution, reddit_last_touch" : ""} FROM accounts`),
     c.env.DB.prepare("SELECT account_id, amount_cents, paid_at, monthly FROM topups WHERE status = 'paid' AND account_id IS NOT NULL"),
     c.env.DB.prepare(
-      "SELECT account_id, created_at, direction, status, billed_seconds, cost_cents, json_extract(outcome, '$.result') AS result FROM calls",
+      "SELECT id, account_id, created_at, answered_at, direction, status, billed_seconds, cost_cents, json_extract(outcome, '$.result') AS result FROM calls",
     ),
     c.env.DB.prepare(
       `SELECT account_id, SUM(amount_cents) AS balance_cents,
@@ -73,6 +75,19 @@ app.get("/api/metrics", async (c) => {
        FROM ledger GROUP BY account_id`,
     ),
   ]);
+  const redditRows = redditReady ? await c.env.DB.batch([
+    c.env.DB.prepare("SELECT id, visitor_id, account_id, campaign, ad_group, ad_id, audience, creative, at FROM reddit_visits"),
+    c.env.DB.prepare("SELECT id, account_id, paid_at, paid_amount_cents, kind FROM reddit_payments"),
+    c.env.DB.prepare(`SELECT account_id, paid_at FROM topups
+      WHERE account_id IS NOT NULL AND paid_at IS NOT NULL AND (paid_amount_cents IS NULL OR paid_amount_cents > 0)
+      UNION ALL SELECT l.account_id, l.created_at AS paid_at FROM ledger l
+      WHERE l.kind IN ('topup', 'reload') AND l.amount_cents > 0 AND NOT EXISTS (
+        SELECT 1 FROM reddit_payments p WHERE p.paid_amount_cents = 0
+        AND (l.ref = 'stripe:' || p.id OR l.ref = 'invoice:' || p.id)
+      )`),
+    c.env.DB.prepare("SELECT account_id, event_name, state, COUNT(*) AS count FROM reddit_events GROUP BY account_id, event_name, state"),
+    c.env.DB.prepare("SELECT configured, checked_at FROM reddit_delivery_status WHERE id = 1"),
+  ]) : [];
   return c.json(
     computeMetrics(
       {
@@ -80,6 +95,12 @@ app.get("/api/metrics", async (c) => {
         topups: topups.results as unknown as TopupRow[],
         calls: calls.results as unknown as CallRow[],
         ledger: ledger.results as unknown as LedgerRow[],
+        redditReady,
+        redditVisits: redditRows[0]?.results as unknown as RedditVisitRow[] | undefined,
+        redditPayments: redditRows[1]?.results as unknown as RedditPaymentRow[] | undefined,
+        redditPaidHistory: redditRows[2]?.results as unknown as RedditPaidHistoryRow[] | undefined,
+        redditDelivery: redditRows[3]?.results as unknown as RedditDeliveryRow[] | undefined,
+        redditDeliveryStatus: redditRows[4]?.results[0] as unknown as RedditDeliveryStatusRow | undefined,
       },
       list(c.env.INTERNAL_EMAILS),
       Date.now(),

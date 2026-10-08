@@ -13,6 +13,8 @@ import { machineEventOf } from '../voice/voicemail';
 import { accounts } from '../services/accounts';
 import { analytics } from '../services/analytics';
 import { decodeFirstTouch } from '../lib/first-touch';
+import { decodeRedditTouch } from '../lib/reddit';
+import { redditAttribution } from '../services/reddit-attribution';
 
 export const webhooks = new Hono<AppEnv>();
 
@@ -43,6 +45,7 @@ async function reportCallEnded(env: Env, callId: string): Promise<void> {
   const row = await calls(env.DB).byId(callId);
   const account = row && (await accounts(env.DB).byId(row.account_id));
   if (!row || !account) return;
+  await redditAttribution(env).callCompleted(account, callId);
   const params = { status: row.status, direction: row.direction, talk_seconds: row.billed_seconds ?? 0, currency: 'USD', value: (row.cost_cents ?? 0) / 100 };
   await analytics(env).track(account, [{ name: 'call_ended', params }]);
 }
@@ -86,7 +89,7 @@ webhooks.post('/stripe', async (c) => {
           const ga = topup.ga_client_id ? { clientId: topup.ga_client_id, sessionId: topup.ga_session_id } : null;
           // The checkout's browser, which finishes the purchase on the welcome page.
           const meta = { fbp: topup.meta_fbp, fbc: topup.meta_fbc, ip: topup.meta_ip, userAgent: topup.meta_user_agent, url: `https://${c.env.CANONICAL_HOST}/welcome` };
-          c.executionCtx.waitUntil(analytics(c.env).purchase(done.account, { transactionId: session.id, cents: done.paidCents, reload: false, from: { ga, meta, touch: decodeFirstTouch(topup.first_touch) } }));
+          c.executionCtx.waitUntil(analytics(c.env).purchase(done.account, { transactionId: session.id, cents: done.paidCents, reload: false, at: event.created * 1000, from: { ga, meta, touch: decodeFirstTouch(topup.first_touch), reddit: decodeRedditTouch(topup.reddit_attribution) } }));
         }
       }
       break;
@@ -97,7 +100,7 @@ webhooks.post('/stripe', async (c) => {
       if (isSupporterObject(invoice.parent?.subscription_details?.metadata)) break;
       const reload = await t.invoicePaid(invoice);
       const account = reload && (await accounts(c.env.DB).byId(reload.accountId));
-      if (reload && account) c.executionCtx.waitUntil(analytics(c.env).purchase(account, { transactionId: invoice.id!, cents: reload.cents, reload: true }));
+      if (reload && account) c.executionCtx.waitUntil(analytics(c.env).purchase(account, { transactionId: invoice.id!, cents: reload.cents, reload: true, at: event.created * 1000 }));
       break;
     }
     case 'customer.subscription.created':

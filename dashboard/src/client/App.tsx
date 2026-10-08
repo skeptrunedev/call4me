@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState, type CSSProperties, type Rea
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis } from "recharts";
 import type { Cohort, CreditRow, CreditStatus, Metrics, UserRow } from "../shared/types";
 import { useSort, type SortValue } from "./sort";
+import { Reddit } from "./Reddit";
 
 const usd = (cents: number) => {
   const digits = cents % 100 ? 2 : 0;
@@ -106,6 +107,7 @@ function Dashboard({ m }: { m: Metrics }) {
       </section>
 
       <CreditBurn credits={m.credits} now={m.generatedAt} c={c} />
+      <Reddit data={m.reddit} />
 
       <section className="grid">
         <Panel title="Signups and new paying users" legend={[["var(--accent)", "Signups"], ["var(--money)", "New paying"]]}>

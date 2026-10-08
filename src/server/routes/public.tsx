@@ -55,7 +55,7 @@ pub.post('/buy', async (c) => {
 pub.get('/welcome', async (c) => {
   const sessionId = c.req.query('session_id');
   if (!sessionId) return c.redirect('/', 302);
-  const t = topups(c.env.DB, stripeFor(c));
+  const t = topups(c.env.DB, stripeFor(c), c.env);
   const done = await t.fulfill(sessionId);
   if (!done) return c.html(<WelcomePage pending apiKey={null} installPrompt="" balanceCents={0} email="" />);
   const viewer = c.get('account');

@@ -33,6 +33,9 @@ import { BlogError } from './services/blog';
 import { exampleAudio } from './lib/example-audio';
 import { analytics, emailHashOf } from './services/analytics';
 import { firstTouchCookie, firstTouchOf, firstTouchSetCookie } from './lib/first-touch';
+import { redditTouchCookie, redditTouchOf, redditTouchSetCookie } from './lib/reddit';
+import { deliverReddit, reconcileReddit, redditAttribution } from './services/reddit-attribution';
+import { sha256Hex } from './lib/keys';
 
 const app = new Hono<AppEnv>();
 
@@ -49,8 +52,19 @@ app.use('*', async (c, next) => {
 // A browser's first page records where it came from (lib/first-touch.ts), so checkouts and
 // accounts can say so to GA even when gtag is blocked.
 app.use('*', async (c, next) => {
+  // Parse once: a fresh click gets one stable touch id throughout this request.
+  const redditTouch = redditTouchOf(new URL(c.req.url), c.req.raw.headers);
+  c.set('redditTouch', redditTouch);
   await next();
   if (c.req.method !== 'GET' || c.res.status !== 200 || !(c.res.headers.get('content-type') ?? '').includes('text/html')) return;
+  if (!prefersMarkdown(c.req.header('accept'))) {
+    const touch = redditTouch;
+    if (touch) {
+      const previous = redditTouchCookie(c.req.header('cookie'));
+      if (!previous || JSON.stringify(previous) !== JSON.stringify(touch)) c.header('set-cookie', redditTouchSetCookie(touch), { append: true });
+      c.executionCtx.waitUntil(redditAttribution(c.env).visit(touch, c.get('account')?.id ?? null));
+    }
+  }
   if (firstTouchCookie(c.req.header('cookie'))) return;
   const touch = firstTouchOf(new URL(c.req.url), c.req.header('referer'));
   if (touch) c.header('set-cookie', firstTouchSetCookie(touch), { append: true });
@@ -116,6 +130,7 @@ app.use('*', async (c, next) => {
   const account = await sessionAccount(c);
   c.set('account', account);
   c.set('gaEmailHash', account ? await emailHashOf(account) : null);
+  c.set('redditExternalId', account ? await sha256Hex(account.id) : null);
   if (account) c.executionCtx.waitUntil(analytics(c.env).seen(account, visitor(c)));
   await next();
 });
@@ -152,6 +167,7 @@ export default {
   // is empty.
   async scheduled(event, env, ctx) {
     if (event.cron === EVERY_MINUTE) {
+      ctx.waitUntil(reconcileReddit(env).then(() => deliverReddit(env)).then((r) => (r.delivered || r.failed) && console.log('reddit delivery', JSON.stringify(r))));
       ctx.waitUntil(placeDueCalls(env).then((r) => (r.placed || r.failed || r.missed) && console.log('scheduled calls', JSON.stringify(r))));
       return;
     }

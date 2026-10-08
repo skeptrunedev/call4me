@@ -63,6 +63,10 @@
     // design: both are served in every page's head. Server-side events also need META_CAPI_TOKEN.
     "META_PIXEL_ID": "971191426037374",
     "META_DOMAIN_VERIFICATION": "gu3s9uylqgxfi97umjy2w79w97u964",
+    // Set the verified Reddit Pixel id here; REDDIT_CAPI_TOKEN is a Worker secret.
+    // Acquisition is captured even while delivery is not yet configured.
+    "REDDIT_PIXEL_ID": "",
+    "REDDIT_INTERNAL_EMAILS": "me@skeptrune.com,nicholas.khami@gmail.com,khamikeira@gmail.com,chatgpt-review@call4.me,claude-review@call4.me",
     "APP_NAME": "call4me",
     // US cents per started minute of talk time.
     "PRICE_PER_MINUTE_CENTS": "25",

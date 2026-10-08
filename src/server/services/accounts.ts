@@ -16,10 +16,13 @@ export interface Account {
   meta_fbc: string | null;
   /** Where the account first came from, as JSON (lib/first-touch.ts); null until a browser shows it. */
   first_touch: string | null;
+  /** First eligible paid Reddit touch and most recent paid touch, kept separately. */
+  reddit_attribution?: string | null;
+  reddit_last_touch?: string | null;
 }
 
 /** The columns every Account is read with. */
-export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc, first_touch`;
+export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc, first_touch, reddit_attribution, reddit_last_touch`;
 
 export type LedgerKind = 'topup' | 'reload' | 'hold' | 'release' | 'call' | 'refund' | 'adjustment' | 'number';
 

@@ -5,6 +5,7 @@ import type { Visitor } from '../services/analytics';
 import { firstTouchCookie } from './first-touch';
 import { gaClient } from './ga';
 import { metaBrowser } from './meta';
+import { redditTouchOf, type RedditTouch } from './reddit';
 import { makeStripe } from '../services/topups';
 
 export type AppEnv = {
@@ -14,6 +15,8 @@ export type AppEnv = {
     account: Account | null;
     /** The signed-in account's hashed email for GA's user-provided data (services/analytics.ts). */
     gaEmailHash: string | null;
+    redditExternalId: string | null;
+    redditTouch: RedditTouch | null;
   };
 };
 
@@ -38,6 +41,7 @@ export const visitor = (c: AppContext): Visitor => ({
   ga: gaClient(c.req.header('cookie')),
   meta: metaBrowser(c.req.url, c.req.raw.headers),
   touch: firstTouchCookie(c.req.header('cookie')),
+  reddit: c.get('redditTouch') ?? redditTouchOf(new URL(c.req.url), c.req.raw.headers),
 });
 
 /** Hosts call4me used to live on (LEGACY_HOSTS in wrangler.jsonc). */

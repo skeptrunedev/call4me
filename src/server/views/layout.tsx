@@ -3,6 +3,7 @@ import { raw } from 'hono/html';
 import { tryGetContext } from 'hono/context-storage';
 import type { AppEnv } from '../lib/context';
 import { GA_MEASUREMENT_ID } from '../lib/ga';
+import { redditPixelScript } from '../lib/reddit';
 import { PAGES, SITE, SITE_TITLE, type PageKey, type PageOverride } from '../lib/pages';
 
 export { SITE_DESCRIPTION } from '../lib/pages';
@@ -110,6 +111,11 @@ export const Layout: FC<{
   const ctx = tryGetContext<AppEnv>();
   const accountId = ctx?.get('account')?.id ?? null;
   const pixelId = ctx?.env.META_PIXEL_ID;
+  // The third party Pixel belongs on marketing pages, never private accounts, checkout or
+  // potentially sensitive call stories. Backend events cover payments and agent activity.
+  const redditPublic = ['/', '/mcp', '/blog/t3-code-phone-calls', '/blog/claude-code-phone-calls', '/blog/codex-phone-calls'].includes(path ?? meta.path);
+  // Signed-in setup pages can contain the owner's install key, so keep the Pixel off them too.
+  const redditPixelId = redditPublic && !accountId ? ctx?.env.REDDIT_PIXEL_ID : null;
   return (
   <>
     {raw('<!DOCTYPE html>')}
@@ -157,6 +163,7 @@ export const Layout: FC<{
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
         <script>{raw(gaScript(accountId, ctx?.get('gaEmailHash') ?? null))}</script>
         {pixelId && <script>{raw(metaPixelScript(pixelId, accountId))}</script>}
+        {redditPixelId && <script>{raw(redditPixelScript(redditPixelId, ctx?.get('redditExternalId') ?? null))}</script>}
       </head>
       <body>
         {pixelId && (

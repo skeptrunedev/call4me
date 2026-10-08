@@ -195,3 +195,14 @@ th.num .sort { justify-content: flex-end; }
 .sort:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .sort .arrow { font-size: 9px; opacity: 0.45; }
 .sort.on .arrow { opacity: 1; color: var(--accent); }
+
+.reddit .kpis { gap: 8px; }
+.reddit .kpi { background: var(--bg); padding: 10px 12px; }
+.reddit .kpi .value { font-size: 22px; }
+.reddit-table-head { margin-top: 16px; font-size: 12px; }
+.reddit-filter { display: flex; align-items: center; gap: 8px; }
+.reddit-filter select { font: inherit; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; max-width: 240px; }
+.reddit-filter select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.reddit-dimension { max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+.reddit-delivery { margin-top: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12px; }
+.reddit-delivery .chip { margin-left: 0; }

@@ -10,6 +10,8 @@ import { realEmail } from '../lib/auth-options';
 import { newId, now } from '../lib/ids';
 import { sendMeta, type MetaBrowser, type MetaEvent } from '../lib/meta';
 import type { Account } from './accounts';
+import type { RedditTouch } from '../lib/reddit';
+import { redditAttribution, type RedditEnv } from './reddit-attribution';
 
 /**
  * A stable stand-in client id for an account GA has never seen in a browser, shaped like gtag's
@@ -48,6 +50,7 @@ export interface Visitor {
   ga: GaClient | null;
   meta: MetaBrowser | null;
   touch?: FirstTouch | null;
+  reddit?: RedditTouch | null;
 }
 
 /** GA's hashed email for an account; none for X sign-ins known only by a placeholder address. */
@@ -56,7 +59,7 @@ export const emailHashOf = async (account: Pick<Account, 'email'>): Promise<stri
   return email ? gaEmailHash(email) : null;
 };
 
-export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID' | 'META_CAPI_TOKEN'>) {
+export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID' | 'META_CAPI_TOKEN'> & Partial<Omit<RedditEnv, 'DB'>>) {
   const db = env.DB;
   const metaOn = Boolean(env.META_PIXEL_ID && env.META_CAPI_TOKEN);
 
@@ -108,6 +111,7 @@ export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID
 
     /** A signed-in page view: remember the browser for later server-side events, and report a new sign-up from it. */
     async seen(account: Account, from: Visitor): Promise<void> {
+      await redditAttribution(env).seen(account, from.reddit ?? null);
       const fbp = from.meta?.fbp ?? null;
       const fbc = from.meta?.fbc ?? null;
       if ((fbp && fbp !== account.meta_fbp) || (fbc && fbc !== account.meta_fbc)) {
@@ -120,9 +124,10 @@ export function analytics(env: Pick<Env, 'DB' | 'GA_API_SECRET' | 'META_PIXEL_ID
     },
 
     /** Credits bought: a checkout (`transactionId` is its Stripe session) or a monthly reload (its invoice). */
-    purchase(account: Account, opts: { transactionId: string; cents: number; reload: boolean; from?: Visitor }): Promise<void> {
+    async purchase(account: Account, opts: { transactionId: string; cents: number; reload: boolean; from?: Visitor; at?: number }): Promise<void> {
+      await redditAttribution(env).purchase(account, { ...opts, from: opts.from?.reddit });
       const params = { transaction_id: opts.transactionId, currency: 'USD', value: opts.cents / 100, reload: opts.reload };
-      return track(account, [{ name: 'purchase', params }], opts.from);
+      await track(account, [{ name: 'purchase', params }], opts.from);
     },
   };
 }

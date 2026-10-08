@@ -9,6 +9,7 @@ async function setup(monthly: boolean, total = 1500) {
   const db = d1();
   const invoice = {
     id: 'in_initial', status: 'paid', subtotal: 3000, amount_paid: total,
+    created: Math.floor(Date.now() / 1000), status_transitions: { paid_at: Math.floor(Date.now() / 1000) },
     billing_reason: 'subscription_create',
     parent: { subscription_details: { subscription: 'sub_reload' } },
   } as Stripe.Invoice;

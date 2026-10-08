@@ -3,6 +3,8 @@ import { newId, now } from '../lib/ids';
 import { accounts, type Account } from './accounts';
 import { realEmail } from '../lib/auth-options';
 import type { Visitor } from './analytics';
+import { sha256Hex } from '../lib/keys';
+import { decodeRedditTouch } from '../lib/reddit';
 
 export const MIN_TOPUP_CENTS = 1000;
 /** "Add funds" sells credits in $10 units; the buyer picks how many on Stripe's page. */
@@ -40,6 +42,8 @@ interface TopupRow {
   meta_user_agent: string | null;
   /** The checkout browser's first touch, as JSON (lib/first-touch.ts). */
   first_touch: string | null;
+  reddit_attribution: string | null;
+  paid_amount_cents: number | null;
 }
 
 export interface Reload {
@@ -67,7 +71,7 @@ export async function reloadOf(db: D1Database, accountId: string): Promise<Reloa
   return { cents: r.reload_cents, status: r.reload_status, renewsAt: r.reload_renews_at };
 }
 
-export function topups(db: D1Database, stripe: Stripe) {
+export function topups(db: D1Database, stripe: Stripe, redditConfig: { REDDIT_INTERNAL_EMAILS?: string } = {}) {
   const ledger = accounts(db);
 
   async function attach(account: Account, customerId: string | null): Promise<void> {
@@ -155,13 +159,13 @@ export function topups(db: D1Database, stripe: Stripe) {
         if (promotion && err instanceof Stripe.errors.StripeInvalidRequestError && /^(discounts|promotion_code|coupon)(\[|$)/.test(err.param ?? '')) throw new TopupError(PROMOTION_ERROR);
         throw err;
       });
-      const { ga, meta, touch } = opts.from ?? { ga: null, meta: null, touch: null };
+      const { ga, meta, touch, reddit } = opts.from ?? { ga: null, meta: null, touch: null, reddit: null };
       await db
         .prepare(
-          `INSERT INTO topups (id, account_id, email, amount_cents, monthly, stripe_session_id, ga_client_id, ga_session_id, meta_fbp, meta_fbc, meta_ip, meta_user_agent, first_touch, created_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          `INSERT INTO topups (id, account_id, email, amount_cents, monthly, stripe_session_id, ga_client_id, ga_session_id, meta_fbp, meta_fbc, meta_ip, meta_user_agent, first_touch, reddit_attribution, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         )
-        .bind(id, opts.account?.id ?? null, email ?? null, opts.amountCents, opts.monthly ? 1 : 0, session.id, ga?.clientId ?? null, ga?.sessionId ?? null, meta?.fbp ?? null, meta?.fbc ?? null, meta?.ip ?? null, meta?.userAgent ?? null, touch ? JSON.stringify(touch) : null, now())
+        .bind(id, opts.account?.id ?? null, email ?? null, opts.amountCents, opts.monthly ? 1 : 0, session.id, ga?.clientId ?? null, ga?.sessionId ?? null, meta?.fbp ?? null, meta?.fbc ?? null, meta?.ip ?? null, meta?.userAgent ?? null, touch ? JSON.stringify(touch) : null, reddit ? JSON.stringify(reddit) : null, now())
         .run();
       return session.url!;
     },
@@ -185,9 +189,14 @@ export function topups(db: D1Database, stripe: Stripe) {
       // What was actually bought: with an adjustable quantity the buyer may have changed it.
       const creditCents = session.amount_subtotal ?? topup.amount_cents;
       await db
-        .prepare(`UPDATE topups SET account_id = ?, amount_cents = ?, status = 'paid', paid_at = COALESCE(paid_at, ?) WHERE id = ?`)
-        .bind(account.id, creditCents, now(), topup.id)
+        .prepare(`UPDATE topups SET account_id = ?, amount_cents = ?, paid_amount_cents = ?, status = 'paid', paid_at = COALESCE(paid_at, ?) WHERE id = ?`)
+        .bind(account.id, creditCents, session.amount_total ?? creditCents, now(), topup.id)
         .run();
+      // Persist the confirmed cash event alongside fulfillment. The attribution cron can
+      // recover conversion delivery even if the webhook's background analytics is interrupted.
+      await db.prepare(`INSERT OR IGNORE INTO reddit_payments (id, account_id, paid_at, paid_amount_cents, kind)
+        SELECT stripe_session_id, account_id, paid_at, paid_amount_cents, 'checkout' FROM topups WHERE id = ?`)
+        .bind(topup.id).run();
 
       if (session.mode === 'subscription') {
         const sub = session.subscription as Stripe.Subscription;
@@ -199,7 +208,7 @@ export function topups(db: D1Database, stripe: Stripe) {
       } else {
         await ledger.post(account.id, creditCents, 'topup', `stripe:${sessionId}`, 'card');
       }
-      return { account, topup: { ...topup, account_id: account.id, amount_cents: creditCents, status: 'paid' }, paidCents: session.amount_total ?? creditCents };
+      return { account, topup: { ...topup, account_id: account.id, amount_cents: creditCents, paid_amount_cents: session.amount_total ?? creditCents, status: 'paid' }, paidCents: session.amount_total ?? creditCents };
     },
 
     /**
@@ -213,6 +222,8 @@ export function topups(db: D1Database, stripe: Stripe) {
       if (!row) return null; // the first invoice can beat checkout.session.completed; fulfill credits it
       const kind = invoice.billing_reason === 'subscription_cycle' ? 'reload' : 'topup';
       await ledger.post(row.id, invoice.subtotal, kind, `invoice:${invoice.id}`, kind === 'reload' ? 'monthly reload' : 'card, reloads monthly');
+      if (kind === 'reload') await db.prepare(`INSERT OR IGNORE INTO reddit_payments (id, account_id, paid_at, paid_amount_cents, kind) VALUES (?, ?, ?, ?, 'reload')`)
+        .bind(invoice.id!, row.id, (invoice.status_transitions?.paid_at ?? invoice.created) * 1000, invoice.amount_paid).run();
       return kind === 'reload' ? { accountId: row.id, cents: invoice.amount_paid } : null;
     },
 
@@ -227,12 +238,46 @@ export function topups(db: D1Database, stripe: Stripe) {
     async claim(fromId: string, to: Account): Promise<boolean> {
       const from = await db
         .prepare(
-          `SELECT reload_subscription_id, reload_cents, reload_status, reload_renews_at, stripe_customer_id FROM accounts
+          `SELECT reload_subscription_id, reload_cents, reload_status, reload_renews_at, stripe_customer_id, reddit_attribution, reddit_last_touch, first_touch FROM accounts
            WHERE id = ? AND user_id IS NULL AND key_hash IS NULL AND NOT EXISTS (SELECT 1 FROM calls WHERE account_id = accounts.id)`,
         )
         .bind(fromId)
-        .first<{ reload_subscription_id: string | null; reload_cents: number | null; reload_status: string | null; reload_renews_at: number | null; stripe_customer_id: string | null }>();
+        .first<{ reload_subscription_id: string | null; reload_cents: number | null; reload_status: string | null; reload_renews_at: number | null; stripe_customer_id: string | null; reddit_attribution: string | null; reddit_last_touch: string | null; first_touch: string | null }>();
       if (!from || fromId === to.id) return false;
+      const externalId = await sha256Hex(to.id);
+      const internal = new Set((redditConfig.REDDIT_INTERNAL_EMAILS ?? '').split(',').map((email) => email.trim().toLowerCase()).filter(Boolean)).has(to.email.toLowerCase());
+      // Check the destination before moving money records. A payer remains an existing customer.
+      const priorPayment = await db.prepare(`SELECT 1 FROM reddit_payments WHERE account_id = ?1 AND paid_amount_cents > 0
+        UNION ALL SELECT 1 FROM topups WHERE account_id = ?1 AND paid_at IS NOT NULL AND (paid_amount_cents IS NULL OR paid_amount_cents > 0)
+        UNION ALL SELECT 1 FROM ledger l WHERE account_id = ?1 AND kind IN ('topup', 'reload')
+          AND NOT EXISTS (SELECT 1 FROM reddit_payments p WHERE p.account_id = l.account_id AND p.paid_amount_cents = 0
+            AND (l.ref = 'stripe:' || p.id OR l.ref = 'invoice:' || p.id)) LIMIT 1`).bind(to.id).first();
+      const first = !internal && !priorPayment ? decodeRedditTouch(from.reddit_attribution) : null;
+      const targetLast = decodeRedditTouch(to.reddit_last_touch);
+      const sourceLast = decodeRedditTouch(from.reddit_last_touch);
+      const latest = !internal && sourceLast && (!targetLast || sourceLast.at > targetLast.at) ? sourceLast : targetLast;
+      const { results: pending } = await db.prepare(`SELECT id, event_name FROM reddit_events WHERE account_id = ? AND state = 'pending'`)
+        .bind(fromId).all<{ id: string; event_name: string }>();
+      const milestones: Record<string, string> = { SIGN_UP: 'signup', FirstPayment: 'first-payment', FirstCompletedCall: 'first-call', ReturningCaller: 'returning-caller' };
+      const mergedEvents: D1PreparedStatement[] = [];
+      for (const event of pending) {
+        if (internal || (priorPayment && ['SIGN_UP', 'FirstPayment'].includes(event.event_name))) {
+          mergedEvents.push(db.prepare(`UPDATE reddit_events SET state = 'failed', last_error = 'account_merge_ineligible'
+            WHERE id = ? AND state = 'pending'`).bind(event.id));
+          continue;
+        }
+        const prefix = milestones[event.event_name];
+        if (!prefix) continue;
+        const canonical = `${prefix}:${to.id}`;
+        if (canonical === event.id) continue;
+        // A target milestone that already exists wins. Keep the excluded source row for audit.
+        mergedEvents.push(db.prepare(`UPDATE reddit_events SET id = ?1,
+          payload = json_set(payload, '$.data.events[0].metadata.conversion_id', ?1)
+          WHERE id = ?2 AND state = 'pending' AND NOT EXISTS (SELECT 1 FROM reddit_events WHERE id = ?1)`)
+          .bind(canonical, event.id));
+        mergedEvents.push(db.prepare(`UPDATE reddit_events SET state = 'failed', last_error = 'account_merge_duplicate'
+          WHERE id = ? AND state = 'pending'`).bind(event.id));
+      }
       // The claimed purchase is the newest, so its monthly reload replaces any the account had.
       if (from.reload_subscription_id) {
         const prev = await db.prepare(`SELECT reload_subscription_id FROM accounts WHERE id = ?`).bind(to.id).first<{ reload_subscription_id: string | null }>();
@@ -241,6 +286,15 @@ export function topups(db: D1Database, stripe: Stripe) {
         }
       }
       await db.batch([
+        db.prepare(`UPDATE reddit_visits SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
+        db.prepare(`UPDATE reddit_payments SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
+        db.prepare(`UPDATE reddit_events SET account_id = ?1,
+          payload = CASE WHEN state = 'pending' THEN json_set(payload, '$.data.events[0].user.external_id', ?3) ELSE payload END
+          WHERE account_id = ?2`).bind(to.id, fromId, externalId),
+        ...mergedEvents,
+        ...(internal ? [db.prepare(`UPDATE reddit_events SET state = 'failed', last_error = 'account_merge_ineligible' WHERE account_id = ? AND state = 'pending'`).bind(to.id)] : []),
+        db.prepare(`UPDATE accounts SET first_touch = COALESCE(first_touch, ?), reddit_attribution = COALESCE(reddit_attribution, ?), reddit_last_touch = ? WHERE id = ?`)
+          .bind(from.first_touch, first ? JSON.stringify(first) : null, latest ? JSON.stringify(latest) : null, to.id),
         db.prepare(`UPDATE ledger SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
         db.prepare(`UPDATE topups SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
         db.prepare(`UPDATE OR IGNORE drip_sends SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
@@ -254,6 +308,8 @@ export function topups(db: D1Database, stripe: Stripe) {
           : db.prepare(`UPDATE accounts SET stripe_customer_id = COALESCE(stripe_customer_id, ?) WHERE id = ?`).bind(from.stripe_customer_id, to.id),
         db.prepare(`DELETE FROM accounts WHERE id = ?`).bind(fromId),
       ]);
+      to.reddit_attribution ??= first ? JSON.stringify(first) : null;
+      to.reddit_last_touch = latest ? JSON.stringify(latest) : null;
       return true;
     },
 
