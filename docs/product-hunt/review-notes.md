@@ -8,7 +8,7 @@ The original Twitter launch was September 30, 2026, at 08:34:00 Pacific. The pos
 
 Nick's October 7 email, “Quick help enabling Thursday’s call4me launch,” identifies Thursday, October 8 as the intended Product Hunt date. Fastmail message `StmDpTr771cg` contains the request, and `StmDo2SyrqMR` confirms posting access worked. These establish intended timing and account access, not a scheduled listing. Nick confirmed midnight Pacific in this conversation, corresponding to October 8 at 07:00 UTC.
 
-The Product Hunt URL still needs to be supplied. The email's blog link needs the actual published URL after the article is approved and published. Do not send either placeholder.
+Nick supplied the launch URL: https://www.producthunt.com/products/call4me?launch=call4me. It is included in the email. The web fetch could not access the listing, so its live state is not independently verified. The email's blog link still needs the actual published URL after the article is approved and published. Do not send that placeholder.
 
 ## Call count
 
@@ -86,7 +86,7 @@ The draft rendered successfully through the existing blog renderer. Email and bl
 ## Before distribution
 
 1. Review the email and blog wording with Nick, as required by the session's rule for outreach drafts.
-2. Obtain the Product Hunt listing URL and verify the listing is live at the intended time.
+2. Verify the supplied Product Hunt listing is live at the intended time.
 3. Publish the approved blog using the existing Markdown, blog inventory and headline image pattern, then verify its public URL.
 4. Refresh the call count and prepare the actual eligible recipient list.
 5. Obtain approval of the finished message and recipients before sending or scheduling the email. The current request is to prepare the content for the midnight launch.

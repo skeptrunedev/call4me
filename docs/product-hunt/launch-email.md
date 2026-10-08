@@ -4,7 +4,7 @@ hey everyone,
 
 i'm really happy you signed up and have had the chance to use Call4me.
 
-we are launching today on Product Hunt! please support us there if you have an account: [Product Hunt launch link].
+we are launching today on Product Hunt! please support us there if you have an account: [Call4me on Product Hunt](https://www.producthunt.com/products/call4me?launch=call4me).
 
 to date, users have made 798 calls, with successful outcomes ranging from booking a haircut with their preferred stylist to getting an oil change and tire rotation quote.
 
