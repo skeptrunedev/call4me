@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-  <title id="title">Five Grok Bot phone calling templates</title>
-  <desc id="desc">A Call4Me phone workflow starts with a clear call brief and finishes with checked answers.</desc>
+  <title id="title">Five Grok Bot phone inquiry prompts</title>
+  <desc id="desc">Draft inquiry prompts with call limits and result checks.</desc>
   <rect width="1200" height="630" fill="#fff"/>
   <text x="80" y="112" font-family="Times New Roman, Times, serif" font-size="35" fill="#551a8b">call4me guides · oct 5, 2026</text>
-  <text x="80" y="212" font-family="Times New Roman, Times, serif" font-size="68" fill="#111">5 Grok Bot calling templates</text>
-  <text x="80" y="277" font-family="Times New Roman, Times, serif" font-size="39" fill="#444">Give your agent a phone and a clear brief.</text>
+  <text x="80" y="212" font-family="Times New Roman, Times, serif" font-size="68" fill="#111">5 Grok Bot inquiry prompts</text>
+  <text x="80" y="277" font-family="Times New Roman, Times, serif" font-size="39" fill="#444">Download complete text prompts.</text>
   <g font-family="Times New Roman, Times, serif" font-size="31">
     <rect x="80" y="340" width="1040" height="185" rx="8" fill="#f5f3ff"/>
     <text x="112" y="393" fill="#0000ee">appointments</text>
@@ -13,5 +13,5 @@
     <text x="112" y="467" fill="#0000ee">cancellation inquiries</text>
     <text x="580" y="467" fill="#0000ee">refund follow ups</text>
   </g>
-  <text x="80" y="583" font-family="Times New Roman, Times, serif" font-size="28" fill="#555">call brief → approved call → transcript and answers</text>
+  <text x="80" y="583" font-family="Times New Roman, Times, serif" font-size="28" fill="#555">inquiry brief → call limits → result checks</text>
 </svg>

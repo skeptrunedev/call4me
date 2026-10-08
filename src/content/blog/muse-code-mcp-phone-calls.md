@@ -138,4 +138,4 @@ Our [recorded private dining research](/blog/agent-web-research-phone-calls-sf-p
 
 **Call ended but the question remains unanswered:** inspect the outcome and transcript. Return the missing answer as unresolved. The caller reaching a menu is a narrower result than a person confirming availability.
 
-For reusable consumer workflows, use our [Grok Bot templates](/blog/grok-bot-templates) or [first Muse task](/blog/meta-muse-first-task). For the developer client, finish the configuration and access checks here before trying a bounded inquiry.
+For reusable consumer workflows, use our [Grok Bot prompts](/blog/grok-bot-templates) or [first Muse task](/blog/meta-muse-first-task). For the developer client, finish the configuration and access checks here before trying a bounded inquiry.

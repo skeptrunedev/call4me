@@ -1,25 +1,20 @@
 ---
-title: "5 Grok Bot templates for phone calls that get errands moving"
-seoTitle: "5 Grok Bot templates for useful phone calls"
-subtitle: Give Grok a phone calling workflow for appointments, restaurants, service quotes, cancellation questions and refunds, from the call brief to the actual answer.
-description: "Five Grok Bot phone calling templates using Call4Me, with call briefs, duration caps, approval rules and transcript checks. Download the complete prompt pack."
+title: "5 Grok Bot prompts for phone inquiries"
+seoTitle: "5 Grok Bot phone inquiry prompts"
+subtitle: Download complete prompts for appointment, restaurant, service quote, cancellation and refund inquiries through Call4Me.
+description: "Five Grok Bot phone inquiry prompts with call briefs, duration caps and result checks. Download the complete text prompts and adapt them to your task."
 date: 2026-10-05
-tags: grok, templates, ai agents, ai phone assistant
+updated: 2026-10-07
+tags: grok, prompts, ai agents, ai phone assistant
 authors: nick
-imageAlt: Five Grok Bot phone calling workflows, from a clear call brief to a checked answer
+imageAlt: Five Grok Bot phone inquiry prompts for appointments, restaurants, quotes, cancellation and refunds
 ---
 
-**These Grok Bot templates help your agent make a useful phone call through Call4Me.** Each turns an errand into a clear call brief, collects missing information, asks permission for one call and checks what the call actually answered.
+**These five Grok Bot prompts prepare phone inquiries through Call4Me.** Each asks for a call brief, permission for one call and a report of what it answered.
 
-Below are five phone calling workflows you can copy into a Bot today. [Download all five prompts](/static/blog/resources/grok-bot-templates/errand-prompts.txt), or copy the one you need. They are instructions you can adapt, not published Grok template install links. We have not run these five complete workflows in Grok Bot.
+[Download all five complete prompts](/static/blog/resources/grok-bot-templates/errand-prompts.txt). The excerpts below show each inquiry's questions and limits; use the download for the complete instructions. These are text prompts, not installable Bot templates. We have not run these five complete workflows in Grok Bot.
 
-Our [existing Grok calling guide](/blog/grok-connectors-mcp-phone-calls) contains a real setup check and restaurant call. That call returned a general walk in policy from a recorded menu, but did not confirm space for our party. The templates below build that distinction into the result: a published policy, a live answer and an unanswered question should look different.
-
-## What is a Grok Bot template?
-
-A product template packages a Bot for someone else to add as their own copy. It can include instructions, selected context, skills and supported plugins. xAI warns that custom MCP servers, scripts and code may need separate setup. [Official template guide](https://x.ai/bot/guides/templates-for-grok-bot).
-
-The workflows here are the content to put into your Bot before you share it. After a workflow works for you, [save its method as a skill](/blog/grok-bot-reusable-skills). If you want to distribute a product template, verify the recipient's setup using our [template troubleshooting checklist](/blog/grok-bot-template-troubleshooting).
+Our [October 4 Grok call](/blog/grok-connectors-mcp-phone-calls) documents a working connection and restaurant inquiry. That call returned a general walk in policy from a recorded menu, but did not confirm space for our party. The prompts preserve that distinction: a published policy, a live answer and an unanswered question should look different.
 
 ## Connect Call4Me and define the call boundary
 
@@ -50,28 +45,6 @@ an insurer's name. Let me choose one office to call.
 Ask that office about suitable openings, any required referral, insurance
 questions I specify and the steps needed to book. Do not book, agree to
 fees, share information outside my approved facts or leave a message.
-
-Check Call4Me access with call4me_get_balance and confirm it is my account.
-Use call4me_get_requirements for the appropriate category and collect any
-missing facts in one message. If tools or access are missing, stop with
-setup instructions. Do not fill private information from an old task.
-
-Show a call brief: business, published number, questions, permitted facts,
-actions it must not take and proposed [minutes] talk time limit. Wait for
-my specific permission for this one call. If approved, make only one call
-with call4me_place_call and set max_minutes to the approved whole minutes.
-Do not agree to anything outside this brief.
-
-Follow that same returned call id with call4me_get_call. Report an active
-call as active. Review the completed outcome and transcript, then retrieve
-recording metadata for the same id with call4me_get_recordings. If a
-recording is unavailable, say so. Check ambiguous claims against audio.
-Do not automatically redial after an error; check the existing call first.
-
-Return the actual call id, observed final state, confirmed answers with
-source type, unanswered questions, transcript and available recording
-references, plus the next step. Preserve distinctions between recorded
-policy, a live representative's answer and evidence from my documents.
 ```
 
 **What a useful result contains:** the office's offered openings, whether a slot was held, the actual call id and unanswered coverage questions. A provider being open on Tuesday is not evidence of a Tuesday appointment. Run the same brief separately for another office after reviewing and approving that call.
@@ -94,35 +67,13 @@ request a callback or leave a voicemail without separate permission.
 
 Keep a menu's general walk in policy separate from a live availability
 answer. A visible online slot is also a different source from the call.
-
-Check Call4Me access with call4me_get_balance and confirm it is my account.
-Use call4me_get_requirements for the appropriate category and collect any
-missing facts in one message. If tools or access are missing, stop with
-setup instructions. Do not fill private information from an old task.
-
-Show a call brief: business, published number, questions, permitted facts,
-actions it must not take and proposed [minutes] talk time limit. Wait for
-my specific permission for this one call. If approved, make only one call
-with call4me_place_call and set max_minutes to the approved whole minutes.
-Do not agree to anything outside this brief.
-
-Follow that same returned call id with call4me_get_call. Report an active
-call as active. Review the completed outcome and transcript, then retrieve
-recording metadata for the same id with call4me_get_recordings. If a
-recording is unavailable, say so. Check ambiguous claims against audio.
-Do not automatically redial after an error; check the existing call first.
-
-Return the actual call id, observed final state, confirmed answers with
-source type, unanswered questions, transcript and available recording
-references, plus the next step. Preserve distinctions between recorded
-policy, a live representative's answer and evidence from my documents.
 ```
 
 **What a useful result contains:** an answer to the specific party and date, or a plain statement that availability is unresolved. The distinction matters even when a call is marked complete.
 
 **Check before relying on it:** inspect the transcript or recording if the summary turns a general policy into a guaranteed table. Our [actual Grok restaurant call](/blog/grok-connectors-mcp-phone-calls#an-actual-grok-bot-call-october-4) is an example of a narrower result.
 
-Here is how that existing October 4 call should read in this template's output format:
+Here is how that existing October 4 call should read in the prompt's output format:
 
 | Field | Supported result |
 | :--- | :--- |
@@ -151,28 +102,6 @@ have not given you. Do not send photos or messages.
 Use this same brief for separately approved calls to other providers.
 Keep an estimate separate from a confirmed quote. Do not rank a provider
 as cheapest while material charges remain unknown.
-
-Check Call4Me access with call4me_get_balance and confirm it is my account.
-Use call4me_get_requirements for the appropriate category and collect any
-missing facts in one message. If tools or access are missing, stop with
-setup instructions. Do not fill private information from an old task.
-
-Show a call brief: business, published number, questions, permitted facts,
-actions it must not take and proposed [minutes] talk time limit. Wait for
-my specific permission for this one call. If approved, make only one call
-with call4me_place_call and set max_minutes to the approved whole minutes.
-Do not agree to anything outside this brief.
-
-Follow that same returned call id with call4me_get_call. Report an active
-call as active. Review the completed outcome and transcript, then retrieve
-recording metadata for the same id with call4me_get_recordings. If a
-recording is unavailable, say so. Check ambiguous claims against audio.
-Do not automatically redial after an error; check the existing call first.
-
-Return the actual call id, observed final state, confirmed answers with
-source type, unanswered questions, transcript and available recording
-references, plus the next step. Preserve distinctions between recorded
-policy, a live representative's answer and evidence from my documents.
 ```
 
 **What a useful result contains:** one row per provider, the same scope in every row and a call id for each phone answer. For junk removal, for example, access stairs, item volume and disposal restrictions can change what a headline estimate means.
@@ -196,28 +125,6 @@ Do not cancel, change billing, accept a retention offer or agree to fees.
 Do not ask for a callback or leave a message without separate approval.
 
 Return a cancellation plan, not a claim that the account was cancelled.
-
-Check Call4Me access with call4me_get_balance and confirm it is my account.
-Use call4me_get_requirements for the appropriate category and collect any
-missing facts in one message. If tools or access are missing, stop with
-setup instructions. Do not fill private information from an old task.
-
-Show a call brief: business, published number, questions, permitted facts,
-actions it must not take and proposed [minutes] talk time limit. Wait for
-my specific permission for this one call. If approved, make only one call
-with call4me_place_call and set max_minutes to the approved whole minutes.
-Do not agree to anything outside this brief.
-
-Follow that same returned call id with call4me_get_call. Report an active
-call as active. Review the completed outcome and transcript, then retrieve
-recording metadata for the same id with call4me_get_recordings. If a
-recording is unavailable, say so. Check ambiguous claims against audio.
-Do not automatically redial after an error; check the existing call first.
-
-Return the actual call id, observed final state, confirmed answers with
-source type, unanswered questions, transcript and available recording
-references, plus the next step. Preserve distinctions between recorded
-policy, a live representative's answer and evidence from my documents.
 ```
 
 **What a useful result contains:** the support representative's answer, its call record and an actionable cancellation plan. Compare the answer with your account terms. A generic policy may not establish the terms you agreed to.
@@ -242,38 +149,18 @@ details, threaten legal action or leave a message.
 
 A merchant saying it issued the refund does not prove money arrived.
 Keep any mismatch with my payment record visible.
-
-Check Call4Me access with call4me_get_balance and confirm it is my account.
-Use call4me_get_requirements for the appropriate category and collect any
-missing facts in one message. If tools or access are missing, stop with
-setup instructions. Do not fill private information from an old task.
-
-Show a call brief: business, published number, questions, permitted facts,
-actions it must not take and proposed [minutes] talk time limit. Wait for
-my specific permission for this one call. If approved, make only one call
-with call4me_place_call and set max_minutes to the approved whole minutes.
-Do not agree to anything outside this brief.
-
-Follow that same returned call id with call4me_get_call. Report an active
-call as active. Review the completed outcome and transcript, then retrieve
-recording metadata for the same id with call4me_get_recordings. If a
-recording is unavailable, say so. Check ambiguous claims against audio.
-Do not automatically redial after an error; check the existing call first.
-
-Return the actual call id, observed final state, confirmed answers with
-source type, unanswered questions, transcript and available recording
-references, plus the next step. Preserve distinctions between recorded
-policy, a live representative's answer and evidence from my documents.
 ```
 
 **What a useful result contains:** a status and reference you can act on. A merchant saying it issued a refund is a different fact from money arriving in your account.
 
 **Check before relying on it:** compare the summary with the call transcript and your payment record. Keep an unresolved discrepancy visible.
 
-## Test a workflow before you turn it into a template
+<span id="test-a-workflow-before-you-turn-it-into-a-template"></span>
 
-Start with preparation only. Replace the bracketed inputs, give the Bot the relevant documents and ask it to produce the call brief without dialing. Check that it asks for missing facts, identifies the correct published phone number and proposes questions with a duration cap. It should stop before the approval boundary.
+## Check a prompt before calling
 
-Next, test an awkward input. Remove the date, provide conflicting availability or omit an account reference. The Bot should identify the gap rather than quietly guess. These are suggested checks for your setup, not results from a test we have already run.
+Replace the bracketed inputs in the complete prompt and ask for a call brief without dialing. Check the business, number, questions, permitted facts and duration before approving a call.
 
-Once an authorized task produces a useful result, save the corrected process as a [reusable Grok skill](/blog/grok-bot-reusable-skills). If you share it, include the setup steps too. The next person needs their own working access, not just a good prompt.
+<span id="what-is-a-grok-bot-template"></span>
+
+For a method you plan to reuse, see the [draft Grok skill and review checklist](/blog/grok-bot-reusable-skills). If you share a Bot or instruction file, use the [recipient setup checklist](/blog/grok-bot-template-troubleshooting). xAI's [template guide](https://x.ai/bot/guides/templates-for-grok-bot) explains the separate process for publishing an installable Bot template.

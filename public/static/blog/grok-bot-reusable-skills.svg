@@ -1,19 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-  <title id="title">Save a reusable Grok Bot phone calling skill</title>
-  <desc id="desc">Keep the calling method, collect new inputs and check the actual call evidence.</desc>
+  <title id="title">Grok Bot calling skill draft and review checklist</title>
+  <desc id="desc">A draft method with documented saving controls and reuse checks.</desc>
   <rect width="1200" height="630" fill="#fff"/>
   <text x="80" y="112" font-family="Times New Roman, Times, serif" font-size="35" fill="#551a8b">call4me guides · oct 5, 2026</text>
-  <text x="80" y="212" font-family="Times New Roman, Times, serif" font-size="66" fill="#111">Save a phone calling skill.</text>
-  <text x="80" y="280" font-family="Times New Roman, Times, serif" font-size="40" fill="#444">New restaurant, new brief, checked answers.</text>
+  <text x="80" y="212" font-family="Times New Roman, Times, serif" font-size="66" fill="#111">A draft Grok calling skill.</text>
+  <text x="80" y="280" font-family="Times New Roman, Times, serif" font-size="40" fill="#444">A method to review before saving.</text>
   <g font-family="Times New Roman, Times, serif" font-size="33" fill="#0000ee">
     <rect x="80" y="368" width="260" height="112" rx="8" fill="#f5f3ff"/>
     <rect x="470" y="368" width="260" height="112" rx="8" fill="#f5f3ff"/>
     <rect x="860" y="368" width="260" height="112" rx="8" fill="#f5f3ff"/>
-    <text x="120" y="433">review call</text>
-    <text x="507" y="433">save method</text>
-    <text x="899" y="433">new call brief</text>
+    <text x="120" y="433">draft method</text>
+    <text x="507" y="433">review rules</text>
+    <text x="899" y="433">check reuse</text>
     <text x="391" y="435" font-size="54">→</text>
     <text x="781" y="435" font-size="54">→</text>
   </g>
-  <text x="80" y="581" font-family="Times New Roman, Times, serif" font-size="29" fill="#555">Cap each approved call. Follow its transcript and recording.</text>
+  <text x="80" y="581" font-family="Times New Roman, Times, serif" font-size="29" fill="#555">Download the draft method and review checklist.</text>
 </svg>
