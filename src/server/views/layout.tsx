@@ -6,8 +6,26 @@ import { GA_MEASUREMENT_ID } from '../lib/ga';
 import type { RedditPixelEvent } from '../lib/reddit';
 import { PAGES, SITE, SITE_TITLE, type PageKey, type PageOverride } from '../lib/pages';
 import { OG_CARD_VERSION } from '../lib/og-card';
+import { placedCallCount } from '../services/stats';
 
 export { SITE_DESCRIPTION } from '../lib/pages';
+
+/** Read fresh aggregate usage from the nearest D1 replica, like the blog's social counts. */
+const CallCount: FC = () => {
+  const ctx = tryGetContext<AppEnv>();
+  // Standalone rendering (for previews and tests) has no database binding.
+  return ctx ? renderCallCount(ctx.env.DB) : null;
+};
+
+async function renderCallCount(db: D1Database) {
+  try {
+    const count = await placedCallCount(db.withSession('first-unconstrained'));
+    return <span> · {count.toLocaleString('en-US')} {count === 1 ? 'call' : 'calls'} placed</span>;
+  } catch (error) {
+    console.error('footer call count failed', error);
+    return <span> · call count unavailable</span>;
+  }
+}
 
 /** Copies the textarea that follows a `.copy-prompt` button: execCommand first (works on any real click), clipboard API second. */
 const COPY_SCRIPT = `
@@ -221,6 +239,7 @@ export const Layout: FC<{
           <a href="/blog">blog</a>
           <a href="/voices">voices</a>
           <span> · © call4me</span>
+          <CallCount />
         </footer>
         <script>{raw(COPY_SCRIPT)}</script>
         <script>{raw(WEBMCP_SCRIPT)}</script>

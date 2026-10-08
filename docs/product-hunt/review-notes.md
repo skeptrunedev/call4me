@@ -41,7 +41,7 @@ WHERE c.direction = 'outbound'
   );
 ```
 
-Run with the existing CLI: `npx wrangler d1 execute callbay --remote --json --command '<SQL>'`. Refresh before sending. For the requested audience, use distinct accounts with a placed outbound call, then apply the existing mail opt out and deliverability rules. Do not treat the count of callers as a finalized recipient list.
+Run with the existing CLI: `npx wrangler d1 execute callbay --remote --json --command '<SQL>'`. The approved email preserves the tested count of 798. Nick later expanded the audience to all users, so the scheduled campaign includes eligible registered accounts whether or not they have placed a call, while respecting account and blog opt outs, internal exclusions and invalid addresses.
 
 The successful examples are already published with permission. The haircut call booked the preferred stylist, but not the earliest available appointment. The oil change call obtained a combined oil change and tire rotation estimate and a walk in plan, not a reserved appointment or completed service. The email preserves those distinctions and includes no prices.
 
@@ -81,14 +81,18 @@ MCP Registry publication was separately confirmed by the successful October 1 [p
 
 ## Verification
 
-The draft rendered successfully through the existing blog renderer. Email and blog prose were checked for dashes. All seven Call4me links returned HTTP 200. Type checking, linting, and the Worker deployment build passed. The existing test suite reported 260 passing tests and one skipped test, with no failures. A separate claim review found no remaining factual blockers. No production UI was changed.
+The draft rendered successfully through the existing blog renderer. Email and blog prose were checked for dashes. All seven Call4me links returned HTTP 200. Type checking, linting, and the Worker deployment build passed. The existing test suite reported 260 passing tests and one skipped test, with no failures. A separate claim review found no remaining factual blockers. The blog was subsequently published and verified on the production site.
 
 ## Before distribution
 
 Test delivery: Fastmail message `StmD5xeWYcwg`, submission `S3611`, sent to `me@skeptrune.com` with subject “Call4me is live on Product Hunt!” The sent copy was retrieved and verified to contain both actual HTML links, no draft flag, and the Sent mailbox. The reusable command is `npm run outreach -- mail-send <email> docs/product-hunt/launch-email.md`; add `--dry-run` to inspect the body and HTML without sending. This test is not approval to send to customers.
 
-1. Review the email and blog wording with Nick, as required by the session's rule for outreach drafts.
-2. Verify the supplied Product Hunt listing is live at the intended time.
-3. Confirm the published blog URL still works before distributing the email.
-4. Refresh the call count and prepare the actual eligible recipient list.
-5. Obtain approval of the finished message and recipients before sending or scheduling the email. The current request is to prepare the content for the midnight launch.
+Nick subsequently approved the tested copy with “cool schedule that for all users at 8:15AM PT.” This supersedes the earlier midnight delivery time and the original callers only audience.
+
+The campaign CLI prepares a private audience manifest, creates opaque unsubscribe links with only token hashes stored in D1, and schedules individual Fastmail submissions using HOLDUNTIL. It verifies the provider returned the exact intended sendAt and a pending state. Interrupted submissions are inspected before any retry, and a local lock prevents concurrent scheduling of the same manifest. No customer addresses or token URLs are committed.
+
+The local development signing key does not match production. Campaign links therefore use their own persisted opaque tokens and the existing confirmation page and POST opt out flow. Existing signed drip links continue to work.
+
+## Website footer
+
+Nick separately requested the live aggregate call count in the website footer. The shared footer queries provider accepted outbound calls across all accounts from D1 for each rendered page and labels the result “calls placed.” Inbound calls and requests that never reached the phone provider are excluded. The email keeps its approved customer usage count, which excludes internal accounts.

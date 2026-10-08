@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { fastmail, messageHtml, statusAfterDraft } from '../scripts/outreach-mail.mjs';
+import { fastmail, messageHtml, parseMessage, statusAfterDraft } from '../scripts/outreach-mail.mjs';
 
 const MAIL = 'urn:ietf:params:jmap:mail';
 const SUBMISSION = 'urn:ietf:params:jmap:submission';
@@ -197,6 +197,108 @@ const draftSubmissionResponse = {
 const sendDraftOverrides = (original: object = originalDraft) => ({
   'Email/get': methodResult('Email/get', { state: 'original-state', list: [original] }),
   'EmailSubmission/set': draftSubmissionResponse,
+});
+
+const sendAt = new Date(Math.floor(Date.now() / 1000 + 3600) * 1000).toISOString().replace('.000Z', 'Z');
+const scheduled = { id: 'submission', emailId: originalDraft.id, sendAt, undoStatus: 'pending' };
+const scheduleSession = { ...session, accounts: { account: { accountCapabilities: { [MAIL]: {}, [SUBMISSION]: { maxDelayedSend: 86400 } } } } };
+const scheduleOverrides = () => ({
+  ...sendDraftOverrides(),
+  'EmailSubmission/query': methodResult('EmailSubmission/query', { ids: [], total: 0 }),
+  'EmailSubmission/get': methodResult('EmailSubmission/get', { list: [scheduled], notFound: [] }),
+});
+const scheduleMessage = { ...sendDraftMessage, sendAt };
+
+test('message parsing requires a subject and body and handles CRLF', () => {
+  assert.deepEqual(parseMessage('Subject: hello\r\n\r\nbody\r\n'), { subject: 'hello', text: 'body' });
+  for (const value of ['', 'Subject: hello\nbody', 'Subject: \n\nbody', 'Subject: hello\n\n ', 'Subject: hi\rBcc: surprise\n\nbody']) assert.throws(() => parseMessage(value), /Subject/);
+});
+
+test('native scheduling uses HOLDUNTIL, verifies provider state and files the existing message', async () => {
+  const { client, calls } = mock(scheduleOverrides(), scheduleSession);
+  assert.equal((await client.status()).maxDelayedSend, 86400);
+  assert.deepEqual(await client.scheduleDraft(scheduleMessage), { provider: 'fastmail', id: originalDraft.id, submissionId: 'submission', sendAt, undoStatus: 'pending' });
+  const writes = calls.filter((call) => call.body?.methodCalls[0][0].endsWith('/set'));
+  assert.equal(writes.length, 1);
+  const args = writes[0].body.methodCalls[0][1];
+  assert.deepEqual(args.create.submission, {
+    identityId: 'sender', emailId: originalDraft.id,
+    envelope: { mailFrom: { email: 'me@skeptrune.com', parameters: { HOLDUNTIL: sendAt } }, rcptTo: [{ email: message.to }] },
+  });
+  assert.deepEqual(args.onSuccessUpdateEmail, { '#submission': { 'mailboxIds/drafts': null, 'mailboxIds/sent': true, 'keywords/$draft': null } });
+  assert.deepEqual(calls.at(-1)!.body.methodCalls[0][1].ids, ['submission']);
+});
+
+test('scheduling rejects invalid dates, expired times and unsupported or excessive delays before writes', async () => {
+  for (const date of ['nonsense', '2026-02-30T15:15:00Z', '2000-01-01T00:00:00Z', '2026-10-08T08:15:00-07:00', new Date(Date.now() + 172800000).toISOString().replace(/\.\d{3}Z$/, 'Z')]) {
+    const { client, calls } = mock(scheduleOverrides(), scheduleSession);
+    await assert.rejects(client.scheduleDraft({ ...scheduleMessage, sendAt: date }), /Scheduled time/);
+    assert.ok(calls.every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+  }
+  const unsupported = mock(scheduleOverrides());
+  await assert.rejects(unsupported.client.scheduleDraft(scheduleMessage), /delayed send window/);
+  assert.ok(unsupported.calls.every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+});
+
+test('scheduling refuses active or uncertain previous submissions and altered drafts before writing', async () => {
+  for (const undoStatus of ['pending', 'final', undefined]) {
+    const { client, calls } = mock({ ...scheduleOverrides(),
+      'EmailSubmission/query': methodResult('EmailSubmission/query', { ids: ['submission'], total: 1 }),
+      'EmailSubmission/get': methodResult('EmailSubmission/get', { list: [{ ...scheduled, undoStatus }], notFound: [] }),
+    }, scheduleSession);
+    await assert.rejects(client.scheduleDraft(scheduleMessage), /already has an active submission/);
+    assert.ok(calls.every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+  }
+  for (const overrides of [
+    { 'EmailSubmission/query': methodResult('EmailSubmission/query', { ids: [], total: 1 }) },
+    { 'Email/get': methodResult('Email/get', { state: 'state', list: [{ ...originalDraft, subject: 'changed' }] }) },
+  ]) {
+    const { client, calls } = mock({ ...scheduleOverrides(), ...overrides }, scheduleSession);
+    await assert.rejects(client.scheduleDraft(scheduleMessage));
+    assert.ok(calls.every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+  }
+});
+
+test('provider schedule mismatches preserve the native id and never retry or fall back to immediate send', async () => {
+  for (const providerState of [
+    { ...scheduled, sendAt: '2000-01-01T00:00:00Z' },
+    { ...scheduled, undoStatus: 'final' },
+    { ...scheduled, emailId: 'wrong' },
+    null,
+  ]) {
+    const { client, calls } = mock({ ...scheduleOverrides(), 'EmailSubmission/get': methodResult('EmailSubmission/get', { list: providerState ? [providerState] : [], notFound: providerState ? [] : ['submission'] }) }, scheduleSession);
+    await assert.rejects(client.scheduleDraft(scheduleMessage), (error: any) => {
+      assert.equal(error.submissionId, 'submission');
+      assert.equal(error.emailId, originalDraft.id);
+      assert.match(error.message, /inspect provider submissions before retrying/);
+      return true;
+    });
+    assert.equal(calls.filter((call) => call.body?.methodCalls[0][0].endsWith('/set')).length, 1);
+  }
+});
+
+test('native schedule rejection never attempts immediate delivery and filing failures remain verified schedules', async () => {
+  const failed = mock({ ...scheduleOverrides(), 'EmailSubmission/set': methodResult('EmailSubmission/set', { notCreated: { submission: { type: 'invalidProperties' } } }) }, scheduleSession);
+  await assert.rejects(failed.client.scheduleDraft(scheduleMessage), /invalidProperties/);
+  assert.equal(failed.calls.filter((call) => call.body?.methodCalls[0][0].endsWith('/set')).length, 1);
+  const filing = mock({ ...scheduleOverrides(), 'EmailSubmission/set': methodResult('EmailSubmission/set', { created: { submission: { id: 'submission' } } }) }, scheduleSession);
+  const result = await filing.client.scheduleDraft(scheduleMessage);
+  assert.equal(result.submissionId, 'submission');
+  assert.equal(result.sendAt, sendAt);
+  assert.match(result.warning!, /mail scheduled.*Sent mailbox update/);
+});
+
+test('cancellation updates undoStatus and confirms canceled status without deleting anything', async () => {
+  const { client, calls } = mock({
+    'EmailSubmission/set': methodResult('EmailSubmission/set', { updated: { submission: null } }),
+    'EmailSubmission/get': methodResult('EmailSubmission/get', { list: [{ ...scheduled, undoStatus: 'canceled' }] }),
+  });
+  assert.equal((await client.cancelSubmission('submission')).undoStatus, 'canceled');
+  const write = calls.find((call) => call.body?.methodCalls[0][0] === 'EmailSubmission/set')!.body.methodCalls[0][1];
+  assert.deepEqual(write, { accountId: 'account', update: { submission: { undoStatus: 'canceled' } } });
+  const failed = mock({ 'EmailSubmission/set': methodResult('EmailSubmission/set', { notUpdated: { submission: { type: 'cannotUnsend' } } }) });
+  await assert.rejects(failed.client.cancelSubmission('submission'), /cannotUnsend/);
+  assert.equal(failed.calls.filter((call) => call.body?.methodCalls[0][0].endsWith('/set')).length, 1);
 });
 
 test('sending an existing draft submits its verified native id without creating another email', async () => {

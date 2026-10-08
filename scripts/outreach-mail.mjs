@@ -5,6 +5,12 @@ const MAIL = 'urn:ietf:params:jmap:mail';
 const SUBMISSION = 'urn:ietf:params:jmap:submission';
 export const SENDER = { name: 'Nick Khami', email: 'me@skeptrune.com' };
 
+export function parseMessage(source) {
+  const match = typeof source === 'string' && /^Subject: ([^\r\n]+)\n\n([\s\S]+)$/.exec(source.replace(/\r\n/g, '\n'));
+  if (!match || !match[1].trim() || !match[2].trim()) throw new Error('Message file needs a Subject: line, a blank line, and a body');
+  return { subject: match[1].trim(), text: match[2].trim() };
+}
+
 export function messageHtml(text) {
   const escape = (value) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const lineHtml = (line) => escape(line).replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
@@ -62,7 +68,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     const draftMailboxId = mailboxes.list?.find((item) => item.role === 'drafts')?.id;
     const sentMailboxId = mailboxes.list?.find((item) => item.role === 'sent')?.id;
     if (!draftMailboxId || !sentMailboxId) throw new Error('Fastmail account needs drafts and sent mailboxes');
-    context = { ...discovered, identityId: identity.id, draftMailboxId, sentMailboxId };
+    context = { ...discovered, identityId: identity.id, draftMailboxId, sentMailboxId, maxDelayedSend: account.accountCapabilities[SUBMISSION].maxDelayedSend ?? 0 };
     return context;
   }
 
@@ -172,6 +178,77 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     return submitDraft({ provider: 'fastmail', id });
   }
 
+  async function submissions(ids) {
+    if (!Array.isArray(ids) || !ids.length || ids.length > 100 || ids.some((id) => typeof id !== 'string' || !id)) throw new Error('Provide 1 to 100 submission ids');
+    return call(await discover(), 'EmailSubmission/get', { ids, properties: ['id', 'emailId', 'identityId', 'envelope', 'sendAt', 'undoStatus', 'deliveryStatus'] });
+  }
+
+  async function submissionsForEmail(emailId) {
+    if (typeof emailId !== 'string' || !emailId) throw new Error('Email id is required');
+    const session = await discover();
+    const result = await call(session, 'EmailSubmission/query', { filter: { emailIds: [emailId] }, limit: 100, calculateTotal: true });
+    if (!Array.isArray(result.ids) || !Number.isInteger(result.total) || result.total !== result.ids.length) throw new Error(`Incomplete submission query for email ${emailId}; inspect before submitting`);
+    if (!result.ids.length) return [];
+    const fetched = await submissions(result.ids);
+    if (fetched.notFound?.length || fetched.list?.length !== result.ids.length || fetched.list.some((item) => item.emailId !== emailId || !result.ids.includes(item.id))) throw new Error(`Incomplete submission read for email ${emailId}; inspect before submitting`);
+    return fetched.list;
+  }
+
+  async function cancelSubmission(id) {
+    if (typeof id !== 'string' || !id) throw new Error('Submission id is required');
+    const session = await discover();
+    const result = await call(session, 'EmailSubmission/set', { update: { [id]: { undoStatus: 'canceled' } } });
+    if (!Object.hasOwn(result.updated ?? {}, id)) throw new Error(`Cancellation of submission ${id} failed: ${result.notUpdated?.[id]?.type ?? 'missing update confirmation'}`);
+    const verified = (await submissions([id])).list?.find((item) => item.id === id);
+    if (verified?.undoStatus !== 'canceled') throw new Error(`Cancellation of submission ${id} was not verified; inspect before submitting again`);
+    return verified;
+  }
+
+  async function scheduleDraft({ id, to, subject, text, sendAt }) {
+    if (!subject) throw new Error('Approved subject is required');
+    const timestamp = typeof sendAt === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(sendAt) ? Date.parse(sendAt) : NaN;
+    if (!Number.isFinite(timestamp) || new Date(timestamp).toISOString().replace('.000Z', 'Z') !== sendAt || timestamp <= Date.now()) throw new Error('Scheduled time must be a future UTC timestamp with whole seconds');
+    const session = await discover();
+    const checkDelay = () => {
+      const delay = (timestamp - Date.now()) / 1000;
+      if (delay <= 0 || !Number.isSafeInteger(session.maxDelayedSend) || session.maxDelayedSend <= 0 || delay > session.maxDelayedSend) throw new Error('Scheduled time is outside the provider delayed send window');
+    };
+    checkDelay();
+    const existing = await submissionsForEmail(id);
+    if (existing.some((item) => item.undoStatus !== 'canceled')) throw new Error(`Email ${id} already has an active submission; inspect before scheduling`);
+    await verifiedDraft({ id, to, expectedText: text, expectedSubject: subject });
+    checkDelay();
+    let submissionId;
+    try {
+      // RFC 8621 sendAt is server set. RFC 4865 HOLDUNTIL requests future release.
+      const result = await call(session, 'EmailSubmission/set', {
+        create: { submission: {
+          identityId: session.identityId, emailId: id,
+          envelope: { mailFrom: { email: SENDER.email, parameters: { HOLDUNTIL: sendAt } }, rcptTo: [{ email: to }] },
+        } },
+        onSuccessUpdateEmail: { '#submission': {
+          [`mailboxIds/${session.draftMailboxId}`]: null,
+          [`mailboxIds/${session.sentMailboxId}`]: true,
+          'keywords/$draft': null,
+        } },
+      });
+      submissionId = result.created?.submission?.id;
+      if (!submissionId) throw new Error(result.notCreated?.submission?.type ?? 'missing submission id');
+      const verified = (await submissions([submissionId])).list?.find((item) => item.id === submissionId);
+      if (verified?.emailId !== id || verified.sendAt !== sendAt || verified.undoStatus !== 'pending') throw new Error('Provider schedule does not match the requested email, time and pending status');
+      const filingError = result.emailUpdate?.notUpdated?.[id]?.type ?? result.updateError?.type;
+      return {
+        provider: 'fastmail', id, submissionId, sendAt: verified.sendAt, undoStatus: verified.undoStatus,
+        ...(filingError || !Object.hasOwn(result.emailUpdate?.updated ?? {}, id) ? { warning: `mail scheduled, but Sent mailbox update was not confirmed (${filingError ?? 'missing update response'})` } : {}),
+      };
+    } catch (cause) {
+      const error = new Error(`Fastmail scheduling failed for email ${id}${submissionId ? `, submission ${submissionId}` : ''}; inspect provider submissions before retrying: ${cause.message}`, { cause });
+      error.emailId = id;
+      if (submissionId) error.submissionId = submissionId;
+      throw error;
+    }
+  }
+
   async function replyMessage({ id, to, text }) {
     if (!id || !to || !text?.trim()) throw new Error('Reply source, recipient and body are required');
     const session = await discover();
@@ -192,7 +269,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
   return {
     async status() {
       const session = await discover();
-      return { provider: 'fastmail', sender: SENDER, accountId: session.accountId, draftMailboxId: session.draftMailboxId, sentMailboxId: session.sentMailboxId };
+      return { provider: 'fastmail', sender: SENDER, accountId: session.accountId, draftMailboxId: session.draftMailboxId, sentMailboxId: session.sentMailboxId, maxDelayedSend: session.maxDelayedSend };
     },
     async search({ filter = {}, position = 0, limit = 100 } = {}) {
       if (!Number.isInteger(position) || position < 0 || !Number.isInteger(limit) || limit < 1 || limit > 100) throw new Error('Search position must be nonnegative and limit must be 1 to 100');
@@ -212,6 +289,10 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     replaceDraft,
     send,
     sendDraft,
+    scheduleDraft,
+    submissions,
+    submissionsForEmail,
+    cancelSubmission,
     sendReplyDraft,
     replyMessage,
     async reply(message) {

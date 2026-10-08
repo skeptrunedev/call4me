@@ -41,7 +41,7 @@
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
-import { fastmail, messageHtml, statusAfterDraft } from './outreach-mail.mjs';
+import { fastmail, messageHtml, parseMessage, statusAfterDraft } from './outreach-mail.mjs';
 
 const STATUSES = ['new', 'drafted', 'sent', 'replied', 'won', 'declined', 'no_contact'];
 const CHANNELS = ['x', 'email', 'other'];
@@ -128,10 +128,7 @@ if (command === 'import') {
 } else if (command === 'mail-send') {
   const [to, file] = rest;
   if (!to || !file || rest.length !== 2 || !/^[^@\s<>,;]+@[^@\s<>,;]+\.[^@\s<>,;]+$/.test(to)) fail('usage: mail-send <email> <message file> [--dry-run]');
-  const source = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
-  const match = /^Subject: ([^\n]+)\n\n([\s\S]+)$/.exec(source);
-  if (!match || !match[1].trim() || !match[2].trim()) fail('Message file needs a Subject: line, a blank line, and a body');
-  const message = { to, subject: match[1].trim(), text: match[2].trim() };
+  const message = { to, ...parseMessage(readFileSync(file, 'utf8')) };
   if (dryRun) {
     console.log(JSON.stringify({ ...message, html: messageHtml(message.text) }, null, 2));
   } else {

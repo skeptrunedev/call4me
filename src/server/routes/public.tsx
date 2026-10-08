@@ -9,6 +9,7 @@ import { pricePerMinute } from '../services/dialer';
 import { NumberError, numbers } from '../services/numbers';
 import { MIN_TOPUP_CENTS, parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
 import { addCreditsAccount, addCreditsPath, validUnsubscribe } from '../services/drip';
+import { validCampaignUnsubscribe } from '../services/campaign-unsubscribe';
 import { getCallRecordings, recordingUrl } from '../services/recordings';
 import { AccountPage, CallPage, NewKeyPage, type CallRecordings } from '../views/account';
 import { AddCreditsPage, HomePage, MessagePage, PrivacyPage, RulesPage, SupportPage, TermsPage, UnsubscribePage, WelcomePage } from '../views/public';
@@ -290,19 +291,24 @@ pub.post('/add/:code', async (c) => {
   }
 });
 
-// Drip unsubscribe. GET only shows a confirm button: mail scanners open every link in an
+// Email unsubscribe. GET only shows a confirm button: mail scanners open every link in an
 // email, so the opt-out itself is a POST.
 pub.get('/unsubscribe', async (c) => {
   const a = c.req.query('a') ?? '';
   const s = c.req.query('s') ?? '';
-  if (!(await validUnsubscribe(c.env.BETTER_AUTH_SECRET, a, s))) return c.html(<MessagePage title="link not valid" message="this unsubscribe link is not valid." />, 400);
-  return c.html(<UnsubscribePage accountId={a} sig={s} />);
+  const token = c.req.query('token') ?? '';
+  const valid = (s && await validUnsubscribe(c.env.BETTER_AUTH_SECRET, a, s)) || await validCampaignUnsubscribe(c.env.DB, a, token);
+  if (!valid) return c.html(<MessagePage title="link not valid" message="this unsubscribe link is not valid." />, 400);
+  return c.html(<UnsubscribePage accountId={a} sig={s} token={token} />);
 });
 
 pub.post('/unsubscribe', async (c) => {
   const form = await c.req.formData();
   const a = field(form, 'a', 100);
-  if (!(await validUnsubscribe(c.env.BETTER_AUTH_SECRET, a, field(form, 's', 200)))) return c.html(<MessagePage title="link not valid" message="this unsubscribe link is not valid." />, 400);
+  const s = field(form, 's', 200);
+  const token = field(form, 'token', 200);
+  const valid = (s && await validUnsubscribe(c.env.BETTER_AUTH_SECRET, a, s)) || await validCampaignUnsubscribe(c.env.DB, a, token);
+  if (!valid) return c.html(<MessagePage title="link not valid" message="this unsubscribe link is not valid." />, 400);
   await c.env.DB.prepare(`UPDATE accounts SET email_opt_out = 1 WHERE id = ?`).bind(a).run();
   return c.html(<MessagePage title="unsubscribed" message="you won't get these emails anymore. your account and credits are unchanged." />);
 });

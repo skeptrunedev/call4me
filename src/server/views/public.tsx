@@ -284,13 +284,14 @@ export const AddCreditsPage: FC<{ path: string }> = ({ path }) => (
   </Layout>
 );
 
-export const UnsubscribePage: FC<{ accountId: string; sig: string }> = ({ accountId, sig }) => (
+export const UnsubscribePage: FC<{ accountId: string; sig: string; token?: string }> = ({ accountId, sig, token }) => (
   <Layout title="unsubscribe">
     <h1>unsubscribe</h1>
     <p>stop getting emails from nick about call4me? your account and credits stay as they are.</p>
     <form method="post" action="/unsubscribe" class="inline">
       <input type="hidden" name="a" value={accountId} />
       <input type="hidden" name="s" value={sig} />
+      {token && <input type="hidden" name="token" value={token} />}
       <button type="submit">unsubscribe</button>
     </form>
   </Layout>

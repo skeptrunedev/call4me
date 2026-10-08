@@ -19,6 +19,7 @@
     "requirements": "node scripts/requirements.mjs",
     "reddit:spend": "node scripts/sync-reddit-spend.mjs",
     "outreach": "node scripts/outreach.mjs",
+    "campaign": "tsx scripts/campaign.ts",
     "transfer": "node scripts/transfer-credits.mjs",
     "template": "tsx scripts/email-template.ts",
     "recap": "tsx scripts/recap.ts",
