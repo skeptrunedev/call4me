@@ -24,6 +24,9 @@
  *   npm run outreach -- mail-status                   verify Fastmail account and sender (read only)
  *   npm run outreach -- mail-search '<query JSON>'    read only JMAP Email/query arguments: filter, position, limit
  *   npm run outreach -- mail-read <id> [id ...]        fetch email bodies without changing read state
+ *   npm run outreach -- mail-send <email> <message file> [--dry-run]
+ *                                                      send a file starting with Subject: and a blank line;
+ *                                                      preserves Markdown HTTP links, no outreach tracker entry
  *   npm run outreach -- email-reply <person id> <email id> <body file> [--dry-run]
  *                                                      reply in the existing Fastmail thread
  *   npm run outreach -- mail-reply <email> <email id> <body file> [--dry-run]
@@ -122,6 +125,22 @@ if (command === 'import') {
   const p = one(id);
   d1(`UPDATE outreach SET ${field} = ${sql(value)}, updated_at = ${Date.now()} WHERE id = ${sql(id)}`);
   console.log(`${p.name}: ${field} = ${value}`);
+} else if (command === 'mail-send') {
+  const [to, file] = rest;
+  if (!to || !file || rest.length !== 2 || !/^[^@\s<>,;]+@[^@\s<>,;]+\.[^@\s<>,;]+$/.test(to)) fail('usage: mail-send <email> <message file> [--dry-run]');
+  const source = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
+  const match = /^Subject: ([^\n]+)\n\n([\s\S]+)$/.exec(source);
+  if (!match || !match[1].trim() || !match[2].trim()) fail('Message file needs a Subject: line, a blank line, and a body');
+  const message = { to, subject: match[1].trim(), text: match[2].trim() };
+  if (dryRun) {
+    console.log(JSON.stringify({ ...message, html: messageHtml(message.text) }, null, 2));
+  } else {
+    try {
+      console.log(JSON.stringify(await fastmail().send(message), null, 2));
+    } catch (error) {
+      fail(error.message);
+    }
+  }
 } else if (['mail-status', 'mail-search', 'mail-read'].includes(command)) {
   try {
     const client = fastmail();
@@ -237,5 +256,5 @@ if (command === 'import') {
   console.log(`emailed ${p.name} <${p.email}>: ${delivery.id}`);
   if (delivery.warning) console.warn(delivery.warning);
 } else {
-  fail('usage: npm run outreach -- import|list|show|draft|sent|status|set|mail-status|mail-search|mail-read|mail-reply|mail-send-reply-draft|email-draft|email-draft-update|email-send-draft|email-send-reply-draft|email-reply|email ... (see scripts/outreach.mjs)');
+  fail('usage: npm run outreach -- import|list|show|draft|sent|status|set|mail-status|mail-search|mail-read|mail-send|mail-reply|mail-send-reply-draft|email-draft|email-draft-update|email-send-draft|email-send-reply-draft|email-reply|email ... (see scripts/outreach.mjs)');
 }

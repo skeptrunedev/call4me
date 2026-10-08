@@ -7,7 +7,8 @@ export const SENDER = { name: 'Nick Khami', email: 'me@skeptrune.com' };
 
 export function messageHtml(text) {
   const escape = (value) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  return text.split(/\n\s*\n/).map((paragraph) => `<p>${paragraph.split('\n').map(escape).join('<br>')}</p>`).join('\n');
+  const lineHtml = (line) => escape(line).replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
+  return text.split(/\n\s*\n/).map((paragraph) => `<p>${paragraph.split('\n').map(lineHtml).join('<br>')}</p>`).join('\n');
 }
 
 export const statusAfterDraft = (status) => ['new', 'drafted', 'no_contact'].includes(status) ? 'drafted' : status;

@@ -1,6 +1,6 @@
 # Product Hunt launch drafts
 
-Prepared October 7, 2026, Pacific time. The email remains a draft for Nick's review. No email has been sent or scheduled. Following Nick's request for the missing blog link, the article is now registered for publication at https://call4.me/blog/everything-we-have-improved-since-launch. The source is `src/content/blog/everything-we-have-improved-since-launch.md`; the copy in this directory preserves the reviewed draft.
+Prepared October 7, 2026, Pacific time. The customer email remains a draft for Nick's review; no customer send has been scheduled. Nick explicitly requested a test, which was sent only to his personal inbox. Following Nick's request for the missing blog link, the article is published at https://call4.me/blog/everything-we-have-improved-since-launch. The source is `src/content/blog/everything-we-have-improved-since-launch.md`; the copy in this directory preserves the reviewed draft.
 
 ## Timing and links
 
@@ -84,6 +84,8 @@ MCP Registry publication was separately confirmed by the successful October 1 [p
 The draft rendered successfully through the existing blog renderer. Email and blog prose were checked for dashes. All seven Call4me links returned HTTP 200. Type checking, linting, and the Worker deployment build passed. The existing test suite reported 260 passing tests and one skipped test, with no failures. A separate claim review found no remaining factual blockers. No production UI was changed.
 
 ## Before distribution
+
+Test delivery: Fastmail message `StmD5xeWYcwg`, submission `S3611`, sent to `me@skeptrune.com` with subject “Call4me is live on Product Hunt!” The sent copy was retrieved and verified to contain both actual HTML links, no draft flag, and the Sent mailbox. The reusable command is `npm run outreach -- mail-send <email> docs/product-hunt/launch-email.md`; add `--dry-run` to inspect the body and HTML without sending. This test is not approval to send to customers.
 
 1. Review the email and blog wording with Nick, as required by the session's rule for outreach drafts.
 2. Verify the supplied Product Hunt listing is live at the intended time.

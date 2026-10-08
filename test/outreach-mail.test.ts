@@ -27,6 +27,21 @@ const defaults: Record<string, unknown> = {
 };
 const message = { to: 'creator@example.com', subject: 'hello', text: 'hi <creator> & team\nnext line\n\nnick' };
 
+test('email links stay clickable while HTML and unsafe links remain escaped text', () => {
+  assert.equal(messageHtml('[read <this>](https://example.com/?a=1&b=2)'), '<p><a href="https://example.com/?a=1&amp;b=2">read &lt;this&gt;</a></p>');
+  assert.equal(messageHtml('[bad](javascript:alert(1))'), '<p>[bad](javascript:alert(1))</p>');
+  assert.equal(messageHtml('<script>bad()</script>'), '<p>&lt;script&gt;bad()&lt;/script&gt;</p>');
+  assert.equal(messageHtml('[quote](https://example.com/"onclick="bad)'), '<p><a href="https://example.com/&quot;onclick=&quot;bad">quote</a></p>');
+});
+
+test('mail-send previews the exact launch file without credentials or network writes', () => {
+  const result = JSON.parse(execFileSync(process.execPath, ['scripts/outreach.mjs', 'mail-send', 'me@skeptrune.com', 'docs/product-hunt/launch-email.md', '--dry-run'], { encoding: 'utf8', env: { ...process.env, FASTMAIL_JMAP_TOKEN: '' } }));
+  assert.equal(result.to, 'me@skeptrune.com');
+  assert.equal(result.subject, 'Call4me is live on Product Hunt!');
+  assert.ok(result.html.includes('href="https://call4.me/blog/everything-we-have-improved-since-launch"'));
+  assert.ok(!result.text.startsWith('Subject:'));
+});
+
 function mock(overrides: Record<string, unknown> = {}, sessionData: unknown = session) {
   const calls: { url: string; body?: any }[] = [];
   const fetchImpl = async (url: string, options: any) => {
