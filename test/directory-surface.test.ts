@@ -34,7 +34,7 @@ async function rpc(surface: 'agents' | 'chatgpt' | 'claude', method: string, par
   return (JSON.parse(json) as { result: Record<string, unknown> }).result;
 }
 
-type Tool = { name: string; description?: string; annotations?: Record<string, boolean | string>; inputSchema: { properties?: Record<string, { enum?: string[] }> } };
+type Tool = { name: string; description?: string; annotations?: Record<string, boolean | string>; _meta?: Record<string, unknown>; inputSchema: { properties?: Record<string, { enum?: string[] }> } };
 const tools = async (surface: 'agents' | 'chatgpt' | 'claude') => (await rpc(surface, 'tools/list')).tools as Tool[];
 
 test('the directory servers sell nothing: no credit or number purchase tools', async () => {
@@ -72,6 +72,14 @@ test('placing a call is marked irreversible on every surface', async () => {
 test('every tool states each hint explicitly', async () => {
   for (const tool of await tools('chatgpt')) {
     for (const hint of ['readOnlyHint', 'destructiveHint', 'openWorldHint']) assert.equal(typeof tool.annotations?.[hint], 'boolean', `${tool.name} ${hint}`);
+  }
+});
+
+test('every tool advertises its OAuth policy in the serialized discovery response', async () => {
+  for (const surface of ['agents', 'chatgpt', 'claude'] as const) {
+    for (const tool of await tools(surface)) {
+      assert.deepEqual(tool._meta?.securitySchemes, [{ type: 'oauth2', scopes: ['calls'] }], `${surface} ${tool.name}`);
+    }
   }
 });
 

@@ -108,8 +108,16 @@ The caller sounds like a normal person calling for the user. It keeps turns shor
 Only call businesses and services the user wants to reach, never personal numbers they don't expect a call from.`;
 }
 
-/** The title in annotations too: Claude's connector directory reads it there, other hosts read the top-level one. */
-const titled = <C extends { title: string; annotations?: ToolAnnotations }>(config: C): C => ({ ...config, annotations: { ...config.annotations, title: config.title } });
+/**
+ * Directory metadata belongs on every tool, including read-only tools: the HTTP endpoint
+ * requires authentication for all of them. The SDK serializes the documented _meta mirror
+ * of securitySchemes (but drops unknown top-level fields). Claude reads titles in annotations.
+ */
+const titled = <C extends { title: string; annotations?: ToolAnnotations; _meta?: Record<string, unknown> }>(config: C): C => ({
+  ...config,
+  annotations: { ...config.annotations, title: config.title },
+  _meta: { ...config._meta, securitySchemes: [{ type: 'oauth2', scopes: ['calls'] }] },
+});
 
 const RO: ToolAnnotations = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
 const OPEN: ToolAnnotations = { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true };
