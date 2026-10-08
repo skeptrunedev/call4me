@@ -1,8 +1,8 @@
 ---
-title: "UPS phone number: how to reach a person at UPS's contact number, from two recorded calls"
-seoTitle: UPS phone number and contact number: 2 real calls
-subtitle: We called UPS customer service twice to ask how to change a delivery that's already on the way. The first call got lost in the voice menu. The second reached a person. Here are both recordings, the exact words that got through, and what the agent said it costs.
-description: The UPS phone number and contact number is 1-800-742-5877. Saying "representative" twice at the tracking number prompt got us a person. Both calls recorded.
+title: "UPS phone number: how we reached a person"
+seoTitle: "UPS phone number: reach a person"
+subtitle: "Two recorded calls show what got us past the voice menu and what an agent quoted for delivery changes."
+description: The UPS phone number is 1-800-742-5877. Saying "representative" twice at the tracking number prompt got us a person. Both calls recorded.
 date: 2026-10-01
 updated: 2026-10-04
 tags: ups, package delivery, phone trees, customer service, phone numbers
@@ -10,7 +10,7 @@ authors: nick
 imageAlt: UPS phone number 1-800-742-5877, two calls to UPS customer service, recorded
 ---
 
-**The short answer:** the UPS customer service number, which is also the main UPS phone number and contact number, is **1-800-742-5877** (1-800-PICK-UPS). UPS lists its hours as "Monday–Friday: 7 AM – 11 PM ET, and Saturday: 8 AM – 8 PM ET" ([ups.com](https://www.ups.com/us/en/support/contact-us)). A voice menu answers. To reach a person, say **"change my delivery"**, then say **"representative"** twice at the tracking number prompt, then say whether you're the **receiver or sender**. On our call, a person picked up about 6 minutes in, after about 3 minutes 20 seconds of hold music.
+**The short answer:** the UPS customer service number is **1-800-742-5877** (1-800-PICK-UPS). UPS lists its hours as "Monday–Friday: 7 AM – 11 PM ET, and Saturday: 8 AM – 8 PM ET" ([ups.com](https://www.ups.com/us/en/support/contact-us)). A voice menu answers. To reach a person, say **"change my delivery"**, then say **"representative"** twice at the tracking number prompt, then say whether you're the **receiver or sender**. On our call, a person picked up about 6 minutes in, after about 3 minutes 20 seconds of hold music.
 
 We tested this on Thursday, October 1, 2026, at 12:33 pm and 12:52 pm Eastern, with [call4me](/) placing the calls. We asked one question: how do you change or intercept a UPS delivery that's already on the way, who can do it, and what does it cost? The first call never reached a person. The second did. This page is what we heard.
 

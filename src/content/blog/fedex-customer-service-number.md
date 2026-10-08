@@ -1,7 +1,7 @@
 ---
-title: "FedEx customer service number: how we reached a person (FedEx called us back)"
+title: "FedEx customer service number: how we got a callback"
 seoTitle: "FedEx customer service number: reach a person"
-subtitle: We called 1.800.GoFedEx to ask how to hold a package at a FedEx location or redirect one on the way. Without a tracking number, the voice assistant never put us through. With one, asking for a representative got us a callback, and a FedEx agent was on the line about 4 minutes after we dialed. What she told us, all five recordings, and what fedex.com says.
+subtitle: "Five recordings show why our calls needed a tracking number, how the callback worked, and what the agent said about holding a package."
 description: The FedEx customer service number is 1-800-463-3339. With a tracking number, asking for a representative got us a callback from a live agent.
 date: 2026-10-01
 updated: 2026-10-07
@@ -10,7 +10,7 @@ authors: nick
 imageAlt: FedEx customer service number 1-800-463-3339, how we reached a person when FedEx called us back
 ---
 
-**The short answer:** the FedEx customer service number in the U.S., the main FedEx phone number, is **1-800-463-3339** (1.800.GoFedEx), as listed on [fedex.com](https://www.fedex.com/en-us/customer-support/call-us.html). A voice assistant answers.
+**The short answer:** the FedEx customer service number in the U.S. is **1-800-463-3339** (1.800.GoFedEx), as listed on [fedex.com](https://www.fedex.com/en-us/customer-support/call-us.html). A voice assistant answers.
 
 **To reach a person, you need a tracking number or a door tag number.** Without one, the voice assistant says: "Our representatives can only assist you or share shipment details if you have either of them." We tried three times and never got past it.
 

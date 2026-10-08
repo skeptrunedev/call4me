@@ -250,10 +250,10 @@ const Share: FC<{ post: Post }> = ({ post }) => {
   );
 };
 
-/** Put the subscribe box after the first section of the article, like a newsletter does. */
-function splitAfterFirstSection(html: string): [string, string] {
-  const second = html.indexOf('<h2', html.indexOf('<h2') + 1);
-  return second > 0 ? [html.slice(0, second), html.slice(second)] : [html, ''];
+/** Keep the introduction ahead of the hero image and section navigation. */
+function splitIntroduction(html: string): [string, string] {
+  const heading = html.indexOf('<h2');
+  return heading >= 0 ? [html.slice(0, heading), html.slice(heading)] : [html, ''];
 }
 
 export const BlogPost: FC<{
@@ -274,7 +274,7 @@ export const BlogPost: FC<{
   agentPrompt: string;
 }> = ({ signedIn, supporter, post, older, newer, related, engagement, liked, comments, subscribers, unlocked, commentValues = {}, commentError, subscribed, agentPrompt }) => {
   const v = (k: string) => commentValues[k] ?? '';
-  const [first, more] = splitAfterFirstSection(post.html);
+  const [introduction, sections] = splitIntroduction(post.html);
   const here = `/blog/${post.slug}`;
   return (
     <Layout
@@ -321,7 +321,6 @@ export const BlogPost: FC<{
       <article class="post">
         <h1>{post.title}</h1>
         <p class="dek">{post.subtitle}</p>
-        <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
         <div class="byline">
           {post.authors.map((a) => (
             <a href={a.url} rel="author me noopener" class="author">
@@ -340,14 +339,8 @@ export const BlogPost: FC<{
             · {post.readingMinutes} min read{post.paid && <span class="badge"> paid</span>}
           </span>
         </div>
-        <div class="actions-row small">
-          <form class="inline-form" method="post" action={`${here}/like`}>
-            <button type="submit" class={`linkbutton like${liked ? ' on' : ''}`} title={liked ? 'you liked this; press to take it back' : 'like this post'}>
-              [ {liked ? '♥' : '♡'} {engagement.likes} ]
-            </button>
-          </form>{' '}
-          <a href="#comments">[ 💬 {engagement.comments} ]</a> <Share post={post} />
-        </div>
+        {raw(introduction)}
+        <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
         <figure class="hero">
           <img src={post.image} alt={post.imageAlt} width={1200} height={630} />
           {post.imageCaption && <figcaption>{post.imageCaption}</figcaption>}
@@ -362,13 +355,7 @@ export const BlogPost: FC<{
             ))}
           </nav>
         )}
-        {raw(first)}
-        {more && (
-          <>
-            <SubscribeBox signedIn={signedIn} count={subscribers} next={here} compact />
-            {raw(more)}
-          </>
-        )}
+        {raw(sections)}
         {post.paid &&
           (unlocked ? (
             <div class="paid">{raw(post.paidHtml)}</div>
@@ -402,9 +389,18 @@ export const BlogPost: FC<{
               [ {liked ? '♥' : '♡'} {engagement.likes} ]
             </button>
           </form>{' '}
-          <Share post={post} />
+          <a href="#comments">[ 💬 {engagement.comments} ]</a> <Share post={post} />
         </div>
       </article>
+
+      {related.length > 0 && (
+        <>
+          <h3>read next</h3>
+          {related.map((p) => (
+            <Card p={p} e={undefined} />
+          ))}
+        </>
+      )}
 
       <div class="author-box">
         {post.authors.map((a) => (
@@ -462,14 +458,6 @@ export const BlogPost: FC<{
         </div>
       </form>
 
-      {related.length > 0 && (
-        <>
-          <h3>read next</h3>
-          {related.map((p) => (
-            <Card p={p} e={undefined} />
-          ))}
-        </>
-      )}
       <p class="small">
         {newer && (
           <>
