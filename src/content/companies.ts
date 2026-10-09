@@ -54,6 +54,7 @@ export const COMPANIES: Company[] = [
   { slug: 'unitedhealthcare-phone-number', name: 'UnitedHealthcare', industry: 'insurance and health', number: '1-888-585-0631', timeToHuman: '1:04', aiFirst: false, reached: true, calls: 1, called: '2026-10-01' },
   { slug: 'ups-contact-number', name: 'UPS', industry: 'shipping', number: '1-800-742-5877', timeToHuman: '5:57', aiFirst: false, reached: true, calls: 2, called: '2026-10-01' },
   { slug: 'usaa-phone-number', name: 'USAA', industry: 'insurance and health', number: '800-531-8722', timeToHuman: '3:28', aiFirst: false, reached: true, calls: 1, called: '2026-10-01' },
+  { slug: 'venmo-customer-service-number', name: 'Venmo', industry: 'banking, payments and credit', number: '(855) 812-4430', timeToHuman: '4:57', aiFirst: false, reached: true, calls: 2, called: '2026-10-09' },
   { slug: 'verizon-customer-service', name: 'Verizon', industry: 'phone, internet and tv', number: '800-922-0204', timeToHuman: '5:52', aiFirst: true, reached: true, calls: 2, called: '2026-10-01' },
   { slug: 'wayfair-customer-service', name: 'Wayfair', industry: 'shopping and home', number: '844-403-5086', timeToHuman: '1:12', aiFirst: true, reached: true, calls: 2, called: '2026-09-30' },
   { slug: 'windstream-customer-service', name: 'Windstream (Kinetic)', industry: 'phone, internet and tv', number: '(866) 703-8175', timeToHuman: '0:55', aiFirst: false, reached: true, calls: 3, called: '2026-10-08' },

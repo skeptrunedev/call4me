@@ -18,7 +18,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/companies": {
     "html": "/__pages/965e43e2b9e71740.html",
     "markdown": "/__pages/965e43e2b9e71740.md",
-    "tokens": 1389
+    "tokens": 1419
   },
   "/students": {
     "html": "/__pages/9a3f77bd97426a79.html",
@@ -53,12 +53,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 1970
+    "tokens": 1993
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 1986
+    "tokens": 2030
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
@@ -68,37 +68,37 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 1716
+    "tokens": 1700
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 1881
+    "tokens": 1870
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 1824
+    "tokens": 1829
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2080
+    "tokens": 2095
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2011
+    "tokens": 1974
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 718
+    "tokens": 876
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 8444
+    "tokens": 8564
   },
   "/blog/customer-story-flight-credit": {
     "html": "/__pages/4d462d33064c5ddf.html",
@@ -128,17 +128,22 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/doordash-customer-service-number": {
     "html": "/__pages/ff70cf03e5b76586.html",
     "markdown": "/__pages/ff70cf03e5b76586.md",
-    "tokens": 4567
+    "tokens": 4439
   },
   "/blog/priceline-customer-service": {
     "html": "/__pages/2a91c0a6d3a54c7c.html",
     "markdown": "/__pages/2a91c0a6d3a54c7c.md",
-    "tokens": 5254
+    "tokens": 5257
+  },
+  "/blog/venmo-customer-service-number": {
+    "html": "/__pages/8ddc0d8e5d387de7.html",
+    "markdown": "/__pages/8ddc0d8e5d387de7.md",
+    "tokens": 9268
   },
   "/blog/everything-we-have-improved-since-launch": {
     "html": "/__pages/ee53e230a99841c0.html",
     "markdown": "/__pages/ee53e230a99841c0.md",
-    "tokens": 2487
+    "tokens": 2488
   },
   "/blog/delta-customer-service": {
     "html": "/__pages/61e1d8ba2e5289ea.html",
@@ -148,12 +153,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/paypal-customer-service-number": {
     "html": "/__pages/14df76f086347bc7.html",
     "markdown": "/__pages/14df76f086347bc7.md",
-    "tokens": 5832
+    "tokens": 6019
   },
   "/blog/fifth-third-bank-customer-service": {
     "html": "/__pages/84b4a369f5053ffa.html",
     "markdown": "/__pages/84b4a369f5053ffa.md",
-    "tokens": 3894
+    "tokens": 4080
   },
   "/blog/aaa-insurance-customer-service": {
     "html": "/__pages/40f19e9468e5378f.html",
@@ -163,7 +168,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/directv-customer-service": {
     "html": "/__pages/3ae0ffa568610e73.html",
     "markdown": "/__pages/3ae0ffa568610e73.md",
-    "tokens": 6827
+    "tokens": 6843
   },
   "/blog/pottery-barn-customer-service": {
     "html": "/__pages/7d519b6ada502c05.html",
@@ -178,7 +183,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/hulu-customer-service-number": {
     "html": "/__pages/4f5cdd1adcfe8559.html",
     "markdown": "/__pages/4f5cdd1adcfe8559.md",
-    "tokens": 3666
+    "tokens": 3942
   },
   "/blog/windstream-customer-service": {
     "html": "/__pages/1b78d55294739307.html",
@@ -188,7 +193,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-long-to-reach-a-human": {
     "html": "/__pages/1624f2222bb89bf3.html",
     "markdown": "/__pages/1624f2222bb89bf3.md",
-    "tokens": 6630
+    "tokens": 6685
   },
   "/blog/vercel-ai-sdk-phone-calls": {
     "html": "/__pages/ff098db0a2035f3b.html",
@@ -433,7 +438,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/cancel-fubo": {
     "html": "/__pages/3dc7b09613d1d44b.html",
     "markdown": "/__pages/3dc7b09613d1d44b.md",
-    "tokens": 6259
+    "tokens": 6234
   },
   "/blog/cancel-hellofresh": {
     "html": "/__pages/aaaf2401e7aa337b.html",
@@ -448,12 +453,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/cancel-audible": {
     "html": "/__pages/5aba5afde50e26d0.html",
     "markdown": "/__pages/5aba5afde50e26d0.md",
-    "tokens": 4750
+    "tokens": 4758
   },
   "/blog/fabletics-customer-service": {
     "html": "/__pages/5b5c1e7011303734.html",
     "markdown": "/__pages/5b5c1e7011303734.md",
-    "tokens": 5553
+    "tokens": 5556
   },
   "/blog/eye-exam-cost-without-insurance": {
     "html": "/__pages/759663bac5eb4427.html",
@@ -568,7 +573,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/cancel-planet-fitness": {
     "html": "/__pages/a9a59bfd1e8c3da5.html",
     "markdown": "/__pages/a9a59bfd1e8c3da5.md",
-    "tokens": 3772
+    "tokens": 3757
   },
   "/blog/wayfair-customer-service": {
     "html": "/__pages/3ce73872b4d7c2b7.html",

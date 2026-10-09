@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "92e5c8ff150f66be429bfe9bd1a8d84ceef982878783e4b62b0ad980ba24180d"
+  "sourceHash": "3f50286271c02514e45065ba698f30baaaecd5e559ba973dedba966b05feef57"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -181,7 +181,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "usaa-phone-number",
-      "similarity": 0.612889
+      "similarity": 0.612888
     }
   ],
   "amazon-pharmacy-phone-number": [
@@ -266,195 +266,239 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "cancel-audible": [
     {
       "slug": "how-to-cancel-siriusxm",
-      "similarity": 0.72005
+      "similarity": 0.769827
     },
     {
       "slug": "cancel-planet-fitness",
-      "similarity": 0.677504
-    },
-    {
-      "slug": "cancel-crunch",
-      "similarity": 0.667022
+      "similarity": 0.730684
     },
     {
       "slug": "cancel-factor",
-      "similarity": 0.656854
+      "similarity": 0.718364
     },
     {
-      "slug": "cancel-la-fitness",
-      "similarity": 0.622397
+      "slug": "cancel-crunch",
+      "similarity": 0.707406
     },
     {
       "slug": "cancel-fubo",
-      "similarity": 0.614567
+      "similarity": 0.68403
+    },
+    {
+      "slug": "cancel-la-fitness",
+      "similarity": 0.661249
+    },
+    {
+      "slug": "hulu-customer-service-number",
+      "similarity": 0.657974
+    },
+    {
+      "slug": "cancel-hellofresh",
+      "similarity": 0.656605
     }
   ],
   "cancel-crunch": [
     {
       "slug": "cancel-la-fitness",
-      "similarity": 0.900761
+      "similarity": 0.908865
     },
     {
       "slug": "how-to-cancel-siriusxm",
-      "similarity": 0.800201
+      "similarity": 0.840042
     },
     {
       "slug": "cancel-planet-fitness",
-      "similarity": 0.790517
+      "similarity": 0.791928
     },
     {
       "slug": "cancel-hellofresh",
-      "similarity": 0.681279
+      "similarity": 0.725035
     },
     {
       "slug": "cancel-audible",
-      "similarity": 0.667022
+      "similarity": 0.707406
     },
     {
       "slug": "cancel-factor",
-      "similarity": 0.652617
+      "similarity": 0.706993
+    },
+    {
+      "slug": "fabletics-customer-service",
+      "similarity": 0.643524
     },
     {
       "slug": "gyms-with-sauna-near-me",
-      "similarity": 0.618997
-    },
-    {
-      "slug": "gym-day-pass",
-      "similarity": 0.61053
+      "similarity": 0.609428
     }
   ],
   "cancel-factor": [
     {
       "slug": "cancel-hellofresh",
-      "similarity": 0.770875
+      "similarity": 0.798304
     },
     {
       "slug": "cancel-planet-fitness",
-      "similarity": 0.665681
+      "similarity": 0.730911
     },
     {
       "slug": "cancel-audible",
-      "similarity": 0.656854
-    },
-    {
-      "slug": "cancel-crunch",
-      "similarity": 0.652617
+      "similarity": 0.718364
     },
     {
       "slug": "how-to-cancel-siriusxm",
-      "similarity": 0.648412
+      "similarity": 0.712482
     },
     {
-      "slug": "doordash-customer-service-number",
-      "similarity": 0.605512
+      "slug": "cancel-crunch",
+      "similarity": 0.706993
+    },
+    {
+      "slug": "cancel-fubo",
+      "similarity": 0.655278
+    },
+    {
+      "slug": "cancel-la-fitness",
+      "similarity": 0.650122
+    },
+    {
+      "slug": "fabletics-customer-service",
+      "similarity": 0.620788
     }
   ],
   "cancel-fubo": [
     {
-      "slug": "directv-customer-service",
-      "similarity": 0.617825
-    },
-    {
       "slug": "cancel-audible",
-      "similarity": 0.614567
+      "similarity": 0.68403
     },
     {
       "slug": "cancel-hellofresh",
-      "similarity": 0.607155
+      "similarity": 0.669083
+    },
+    {
+      "slug": "cancel-factor",
+      "similarity": 0.655278
+    },
+    {
+      "slug": "how-to-cancel-siriusxm",
+      "similarity": 0.647649
+    },
+    {
+      "slug": "cancel-planet-fitness",
+      "similarity": 0.64761
+    },
+    {
+      "slug": "directv-customer-service",
+      "similarity": 0.646362
+    },
+    {
+      "slug": "hulu-customer-service-number",
+      "similarity": 0.643225
+    },
+    {
+      "slug": "cancel-la-fitness",
+      "similarity": 0.621413
     }
   ],
   "cancel-hellofresh": [
     {
       "slug": "cancel-factor",
-      "similarity": 0.770875
+      "similarity": 0.798304
     },
     {
       "slug": "cancel-crunch",
-      "similarity": 0.681279
+      "similarity": 0.725035
     },
     {
       "slug": "cancel-la-fitness",
-      "similarity": 0.680435
+      "similarity": 0.71116
     },
     {
       "slug": "cancel-planet-fitness",
-      "similarity": 0.640502
-    },
-    {
-      "slug": "doordash-customer-service-number",
-      "similarity": 0.629524
-    },
-    {
-      "slug": "directv-customer-service",
-      "similarity": 0.621414
+      "similarity": 0.688412
     },
     {
       "slug": "how-to-cancel-siriusxm",
-      "similarity": 0.610796
+      "similarity": 0.675742
     },
     {
       "slug": "cancel-fubo",
-      "similarity": 0.607155
+      "similarity": 0.669083
+    },
+    {
+      "slug": "hulu-customer-service-number",
+      "similarity": 0.662263
+    },
+    {
+      "slug": "cancel-audible",
+      "similarity": 0.656605
     }
   ],
   "cancel-la-fitness": [
     {
       "slug": "cancel-crunch",
-      "similarity": 0.900761
-    },
-    {
-      "slug": "cancel-planet-fitness",
-      "similarity": 0.765293
+      "similarity": 0.908865
     },
     {
       "slug": "how-to-cancel-siriusxm",
-      "similarity": 0.748767
+      "similarity": 0.800584
+    },
+    {
+      "slug": "cancel-planet-fitness",
+      "similarity": 0.779216
     },
     {
       "slug": "cancel-hellofresh",
-      "similarity": 0.680435
+      "similarity": 0.71116
     },
     {
-      "slug": "gyms-with-sauna-near-me",
-      "similarity": 0.62754
+      "slug": "fabletics-customer-service",
+      "similarity": 0.687841
     },
     {
       "slug": "cancel-audible",
-      "similarity": 0.622397
+      "similarity": 0.661249
     },
     {
-      "slug": "gym-day-pass",
-      "similarity": 0.605106
+      "slug": "cancel-factor",
+      "similarity": 0.650122
     },
     {
-      "slug": "directv-customer-service",
-      "similarity": 0.601554
+      "slug": "gyms-with-sauna-near-me",
+      "similarity": 0.636173
     }
   ],
   "cancel-planet-fitness": [
     {
       "slug": "cancel-crunch",
-      "similarity": 0.790517
+      "similarity": 0.791928
     },
     {
       "slug": "cancel-la-fitness",
-      "similarity": 0.765293
-    },
-    {
-      "slug": "cancel-audible",
-      "similarity": 0.677504
+      "similarity": 0.779216
     },
     {
       "slug": "how-to-cancel-siriusxm",
-      "similarity": 0.674339
+      "similarity": 0.741887
     },
     {
       "slug": "cancel-factor",
-      "similarity": 0.665681
+      "similarity": 0.730911
+    },
+    {
+      "slug": "cancel-audible",
+      "similarity": 0.730684
     },
     {
       "slug": "cancel-hellofresh",
-      "similarity": 0.640502
+      "similarity": 0.688412
+    },
+    {
+      "slug": "cancel-fubo",
+      "similarity": 0.64761
+    },
+    {
+      "slug": "fabletics-customer-service",
+      "similarity": 0.634147
     }
   ],
   "cascaded-voice-stack-vs-gpt-live": [
@@ -636,16 +680,28 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "directv-customer-service": [
     {
-      "slug": "how-to-cancel-siriusxm",
-      "similarity": 0.644367
+      "slug": "fabletics-customer-service",
+      "similarity": 0.69159
     },
     {
-      "slug": "cancel-hellofresh",
-      "similarity": 0.621414
+      "slug": "hulu-customer-service-number",
+      "similarity": 0.684769
+    },
+    {
+      "slug": "how-to-cancel-siriusxm",
+      "similarity": 0.662874
     },
     {
       "slug": "cancel-fubo",
-      "similarity": 0.617825
+      "similarity": 0.646362
+    },
+    {
+      "slug": "cancel-hellofresh",
+      "similarity": 0.639926
+    },
+    {
+      "slug": "cancel-la-fitness",
+      "similarity": 0.620714
     },
     {
       "slug": "spectrum-retention-department",
@@ -654,14 +710,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "verizon-customer-service",
       "similarity": 0.609813
-    },
-    {
-      "slug": "windstream-customer-service",
-      "similarity": 0.601894
-    },
-    {
-      "slug": "cancel-la-fitness",
-      "similarity": 0.601554
     }
   ],
   "dog-teeth-cleaning-cost": [
@@ -677,11 +725,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "doordash-customer-service-number": [
     {
       "slug": "cancel-hellofresh",
-      "similarity": 0.629524
-    },
-    {
-      "slug": "cancel-factor",
-      "similarity": 0.605512
+      "similarity": 0.637767
     }
   ],
   "drop-off-vet-appointment": [
@@ -732,16 +776,36 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "fabletics-customer-service": [
     {
-      "slug": "wayfair-customer-service",
-      "similarity": 0.644565
-    },
-    {
       "slug": "hulu-customer-service-number",
-      "similarity": 0.613033
+      "similarity": 0.723351
     },
     {
-      "slug": "pottery-barn-customer-service",
-      "similarity": 0.604234
+      "slug": "directv-customer-service",
+      "similarity": 0.69159
+    },
+    {
+      "slug": "cancel-la-fitness",
+      "similarity": 0.687841
+    },
+    {
+      "slug": "wayfair-customer-service",
+      "similarity": 0.653133
+    },
+    {
+      "slug": "cancel-audible",
+      "similarity": 0.64699
+    },
+    {
+      "slug": "how-to-cancel-siriusxm",
+      "similarity": 0.644677
+    },
+    {
+      "slug": "cancel-crunch",
+      "similarity": 0.643524
+    },
+    {
+      "slug": "cancel-hellofresh",
+      "similarity": 0.638181
     }
   ],
   "fedex-customer-service-number": [
@@ -750,7 +814,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.707105
     }
   ],
-  "fifth-third-bank-customer-service": [],
+  "fifth-third-bank-customer-service": [
+    {
+      "slug": "venmo-customer-service-number",
+      "similarity": 0.634519
+    }
+  ],
   "follow-up-appointment-telehealth": [
     {
       "slug": "reschedule-doctor-appointment",
@@ -982,12 +1051,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.752682
     },
     {
-      "slug": "cancel-crunch",
-      "similarity": 0.61053
+      "slug": "cancel-la-fitness",
+      "similarity": 0.620487
     },
     {
-      "slug": "cancel-la-fitness",
-      "similarity": 0.605106
+      "slug": "cancel-crunch",
+      "similarity": 0.602484
     }
   ],
   "gyms-with-sauna-near-me": [
@@ -997,11 +1066,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "cancel-la-fitness",
-      "similarity": 0.62754
+      "similarity": 0.636173
     },
     {
       "slug": "cancel-crunch",
-      "similarity": 0.618997
+      "similarity": 0.609428
     }
   ],
   "hertz-customer-service-number": [
@@ -1024,31 +1093,35 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "how-to-cancel-siriusxm": [
     {
       "slug": "cancel-crunch",
-      "similarity": 0.800201
+      "similarity": 0.840042
     },
     {
       "slug": "cancel-la-fitness",
-      "similarity": 0.748767
+      "similarity": 0.800584
     },
     {
       "slug": "cancel-audible",
-      "similarity": 0.72005
+      "similarity": 0.769827
     },
     {
       "slug": "cancel-planet-fitness",
-      "similarity": 0.674339
+      "similarity": 0.741887
     },
     {
       "slug": "cancel-factor",
-      "similarity": 0.648412
-    },
-    {
-      "slug": "directv-customer-service",
-      "similarity": 0.644367
+      "similarity": 0.712482
     },
     {
       "slug": "cancel-hellofresh",
-      "similarity": 0.610796
+      "similarity": 0.675742
+    },
+    {
+      "slug": "directv-customer-service",
+      "similarity": 0.662874
+    },
+    {
+      "slug": "cancel-fubo",
+      "similarity": 0.647649
     }
   ],
   "how-to-find-a-new-primary-care-doctor": [
@@ -1074,7 +1147,31 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "hulu-customer-service-number": [
     {
       "slug": "fabletics-customer-service",
-      "similarity": 0.613033
+      "similarity": 0.723351
+    },
+    {
+      "slug": "directv-customer-service",
+      "similarity": 0.684769
+    },
+    {
+      "slug": "cancel-hellofresh",
+      "similarity": 0.662263
+    },
+    {
+      "slug": "cancel-audible",
+      "similarity": 0.657974
+    },
+    {
+      "slug": "cancel-fubo",
+      "similarity": 0.643225
+    },
+    {
+      "slug": "how-to-cancel-siriusxm",
+      "similarity": 0.638336
+    },
+    {
+      "slug": "cancel-la-fitness",
+      "similarity": 0.614758
     }
   ],
   "instinct-ai-phone-calls": [
@@ -1313,7 +1410,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.680441
     }
   ],
-  "paypal-customer-service-number": [],
+  "paypal-customer-service-number": [
+    {
+      "slug": "venmo-customer-service-number",
+      "similarity": 0.67058
+    }
+  ],
   "phone-calling-mcp-comparison": [
     {
       "slug": "twilio-mcp-phone-calls",
@@ -1355,7 +1457,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "fabletics-customer-service",
-      "similarity": 0.604234
+      "similarity": 0.603007
     }
   ],
   "priceline-customer-service": [
@@ -1587,7 +1689,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "allstate-customer-service-number",
-      "similarity": 0.612889
+      "similarity": 0.612888
     },
     {
       "slug": "geico-customer-service",
@@ -1618,6 +1720,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "schedule-phone-calls-claude-code-codex",
       "similarity": 0.624342
+    }
+  ],
+  "venmo-customer-service-number": [
+    {
+      "slug": "paypal-customer-service-number",
+      "similarity": 0.67058
+    },
+    {
+      "slug": "fifth-third-bank-customer-service",
+      "similarity": 0.634519
     }
   ],
   "vercel-ai-sdk-phone-calls": [
@@ -1691,7 +1803,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "fabletics-customer-service",
-      "similarity": 0.644565
+      "similarity": 0.653133
     }
   ],
   "wheel-alignment-cost": [

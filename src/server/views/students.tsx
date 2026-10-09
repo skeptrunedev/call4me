@@ -40,7 +40,7 @@ export const StudentsPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
       <ul>
         <li>appointments: <a href="/blog/reschedule-dentist-appointment">rescheduling a dentist appointment</a>, <a href="/blog/book-haircut-appointment">booking a haircut</a>, <a href="/blog/follow-up-appointment-telehealth">switching a doctor's visit to telehealth</a></li>
         <li>pharmacy: <a href="/blog/how-to-transfer-a-prescription">transferring a prescription</a>, <a href="/blog/amazon-pharmacy-phone-number">calling amazon pharmacy</a></li>
-        <li>customer service: waiting on hold and getting a person at <a href="/companies">33 companies</a>, from airlines to banks</li>
+        <li>customer service: waiting on hold and getting a person at <a href="/companies">34 companies</a>, from airlines to banks</li>
         <li>anything routine where a phone call is the only way to get an answer</li>
       </ul>
 

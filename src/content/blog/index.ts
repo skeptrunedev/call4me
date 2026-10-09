@@ -68,6 +68,7 @@ import cancelFactor from './cancel-factor.md';
 import cancelFubo from './cancel-fubo.md';
 import cancelHelloFresh from './cancel-hellofresh.md';
 import vercelAiSdkPhoneCalls from './vercel-ai-sdk-phone-calls.md';
+import venmoCustomerServiceNumber from './venmo-customer-service-number.md';
 import geicoCustomerService from './geico-customer-service.md';
 import doordashCustomerServiceNumber from './doordash-customer-service-number.md';
 import pricelineCustomerService from './priceline-customer-service.md';
@@ -204,4 +205,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'geico-customer-service', markdown: geicoCustomerService },
   { slug: 'doordash-customer-service-number', markdown: doordashCustomerServiceNumber },
   { slug: 'priceline-customer-service', markdown: pricelineCustomerService },
+  { slug: 'venmo-customer-service-number', markdown: venmoCustomerServiceNumber },
 ];

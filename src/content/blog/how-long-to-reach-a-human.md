@@ -1,22 +1,22 @@
 ---
-title: "How long it takes to reach a human at 33 companies (we recorded every call)"
-seoTitle: "How long to reach a human: 33 companies timed"
-subtitle: We went back through every customer service call we've published, 53 calls to 33 companies, and timed how long each one took to reach a live person. Here is what got through, what didn't, where AI assistants and account number prompts stopped us, and the full dataset as a CSV.
-description: We timed 53 recorded calls to 33 customer service lines. The median time to a live person was 2:08. What got through, what didn't, and the data.
+title: "How long it takes to reach a human at 34 companies (we recorded every call)"
+seoTitle: "How long to reach a human: 34 companies timed"
+subtitle: We went back through every customer service call we've published, 55 calls to 34 companies, and timed how long each one took to reach a live person. Here is what got through, what didn't, where AI assistants and account number prompts stopped us, and the full dataset as a CSV.
+description: We timed 55 recorded calls to 34 customer service lines. The median time to a live person was 2:08. What got through, what didn't, and the data.
 date: 2026-10-08
 updated: 2026-10-09
 tags: customer service, phone trees, hold times, talk to a real person, data
 authors: nick
-imageAlt: Time to a human at 33 companies, median 2:08 across 34 recorded calls
+imageAlt: Time to a human at 34 companies, median 2:08 across 35 recorded calls
 ---
 
-**The short answer:** across the 34 calls where we reached a live person and the post says when, the **median time to a human was 2:08**, measured from the start of each published recording. Half of them got there between **1:40 and 3:40**. The fastest was **Pottery Barn at 0:49**. The slowest were **Priceline at 25:09**, **United at 19:09** and **Delta at 16:15**, and on all three most of that was hold time after the menu had already put us in the queue.
+**The short answer:** across the 35 calls where we reached a live person and the post says when, the **median time to a human was 2:08**, measured from the start of each published recording. Half of them got there between **1:40 and 4:30**. The fastest was **Pottery Barn at 0:49**. The slowest were **Priceline at 25:09**, **United at 19:09** and **Delta at 16:15**, and on all three most of that was hold time after the menu had already put us in the queue.
 
-Those 34 calls come from 53 calls we made to 33 companies' customer service lines between September 28 and October 9, 2026, all recorded and published on this blog. Some more numbers from the same set:
+Those 35 calls come from 55 calls we made to 34 companies' customer service lines between September 28 and October 9, 2026, all recorded and published on this blog. Some more numbers from the same set:
 
-- **18 of the 53 calls never reached a person.** At 2 of the 33 companies, Experian and FedEx, no call we dialed did. FedEx's agent only came on when FedEx called us back.
-- **An AI or virtual assistant answered first on 25 of 52 calls**, at 15 of the 33 companies. (On the 53rd call, the post doesn't say.) When one did, the median time to a person was **2:57** (14 calls). When a plain phone menu answered, it was **1:56** (19 calls). The three slowest calls are all in the assistant group, so don't read too much into a sample this small.
-- **14 of the 34 calls reached a person in under 2 minutes.** Seven took more than 5 minutes.
+- **19 of the 55 calls never reached a person.** At 2 of the 34 companies, Experian and FedEx, no call we dialed did. FedEx's agent only came on when FedEx called us back.
+- **An AI or virtual assistant answered first on 25 of 54 calls**, at 15 of the 34 companies. (On the 55th call, the post doesn't say.) When one did, the median time to a person was **2:57** (14 calls). When a plain phone menu answered, it was **1:58** (20 calls). The three slowest calls are all in the assistant group, so don't read too much into a sample this small.
+- **14 of the 35 calls reached a person in under 2 minutes.** Seven took more than 5 minutes.
 
 Four things got us through, again and again:
 
@@ -56,6 +56,7 @@ Every company's number, grouped by industry, is also on the [customer service nu
 | [Amazon Pharmacy](/blog/amazon-pharmacy-phone-number) | Sep 28 | 3:40, and 3:18 on a [second call](/blog/how-to-transfer-a-prescription) | Yes (first call; the second post doesn't say) | Stating the request; the system transferred us |
 | [USAA](/blog/usaa-phone-number) | Oct 1 | 3:28 | No | Press 1 (not a member), press 2, say "membership" twice |
 | [PayPal](/blog/paypal-customer-service-number) | Oct 8 | 4:30 | Yes | "General question", "something else", then the keypad menu |
+| [Venmo](/blog/venmo-customer-service-number) | Oct 9 | 4:57 on the 2nd call; the 1st didn't reach a person | No | Press 4, 2, 1, 2 (a dispute by phone), then stay on the line when no account is found |
 | [Verizon](/blog/verizon-customer-service) | Oct 1 | 5:52 on the 2nd call; the 1st didn't reach a person | Yes | Saying "an agent, please" |
 | [UPS](/blog/ups-contact-number) | Oct 1 | 5:57 on the 2nd call; the 1st didn't reach a person | No | "Representative", twice, at the tracking number prompt |
 | [Aquasana](/blog/aquasana-return-exception) | Oct 6 | 7:49 | No | Staying on hold instead of taking a callback |
@@ -156,12 +157,12 @@ And sometimes the answer is to do nothing. At [Hulu](/blog/hulu-customer-service
 - **Which calls count:** every call in our published customer service, cancellation and retention posts, one row per published call. Most companies got one call. The Experian post describes 15 calls but publishes one recording, so Experian counts as one call. Where a post has several, each one is a separate row in the data, and the table above says which call reached a person. We left out two calls that don't measure a company's line: a follow-up to the LA Fitness club that nobody answered, and Verizon's callback after our call hit call4me's time limit (the representative was already reached on the call before). The four gym club calls and FedEx's callback are in the CSV, marked by line type, and left out of the stats.
 - **How times were measured:** from the start of each published recording to the first moment a live person speaks, read from the timestamps in each post. Several recordings have long silences shortened, so on those the real wait was a little longer. Where the post gives the real elapsed time, the CSV notes it. For example, United's person picked up 19 minutes 27 seconds after dialing, and Verizon's 6 minutes 34 seconds into the call. If a post doesn't say when a person answered (SiriusXM), we left the time blank rather than estimate it.
 - **"AI assistant first"** means the post itself calls what answered an AI, virtual, voice or automated assistant, or an AI agent. A speech or keypad menu that the post calls a menu or phone system counts as no.
-- **Our caller made mistakes.** In 7 of the 18 calls that didn't reach a person, the post puts at least part of the blame on our caller: never asking for a person (Hertz), staying silent when an assistant came back (Hertz), turning down a transfer (DIRECTV), letting the AI assistant answer instead (Fubo), a bug on our side (UPS), stalling (Windstream) and picking the wrong option (Windstream). They're still in the data.
+- **Our caller made mistakes.** In 7 of the 19 calls that didn't reach a person, the post puts at least part of the blame on our caller: never asking for a person (Hertz), staying silent when an assistant came back (Hertz), turning down a transfer (DIRECTV), letting the AI assistant answer instead (Fubo), a bug on our side (UPS), stalling (Windstream) and picking the wrong option (Windstream). They're still in the data.
 - **What this isn't:** a ranking of customer service quality. It's a small sample, mostly one call per company, and how fast someone picks up says nothing about whether they can help. Several of the fast answers were sales teams.
 
 ## Download the data
 
-The full dataset is here: **[how-long-to-reach-a-human.csv](/static/blog/how-long-to-reach-a-human.csv)**. It has 58 rows: the 53 calls to company lines, FedEx's callback and the four gym club calls. Each row has the company, the post it comes from, which call it was, the date, the number dialed, the line type, whether we reached a person, the time to a person, whether an AI assistant answered first, what the menu asked for, what got through, a link to the post and notes. Every value comes from the linked post, which has the recording and the full transcript. You're welcome to use it. Please link back to this page.
+The full dataset is here: **[how-long-to-reach-a-human.csv](/static/blog/how-long-to-reach-a-human.csv)**. It has 60 rows: the 55 calls to company lines, FedEx's callback and the four gym club calls. Each row has the company, the post it comes from, which call it was, the date, the number dialed, the line type, whether we reached a person, the time to a person, whether an AI assistant answered first, what the menu asked for, what got through, a link to the post and notes. Every value comes from the linked post, which has the recording and the full transcript. You're welcome to use it. Please link back to this page.
 
 ## Have your agent make these calls
 
