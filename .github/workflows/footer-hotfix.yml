@@ -1,0 +1,55 @@
+name: Footer and account UI hotfix
+
+on:
+  push:
+    branches: [hotfix/footer-account-live]
+
+permissions:
+  contents: read
+
+# The normal site job is waiting for a voice update. This release uses the
+# currently deployed application's unchanged voice interface instead.
+concurrency:
+  group: footer-account-ui-hotfix
+  cancel-in-progress: false
+
+env:
+  ONNXRUNTIME_NODE_INSTALL: skip
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Verify the release contains only the reviewed UI patch
+        run: |
+          git diff --name-only f7b43d90088b97fdd727ab424003bb11891fe048 HEAD > changed-files
+          if grep -Ev '^(.github/workflows/footer-hotfix.yml|public/static/site-data.js|src/server/views/layout.tsx|test/seo-links.test.ts)$' changed-files; then
+            echo 'Unexpected change outside the UI hotfix' >&2
+            exit 1
+          fi
+      - run: npm ci
+      - run: npm run cf-typegen
+      - run: npm run build:site
+      - run: npm run check
+      - run: npm run lint
+      - run: npm test
+      - run: npx wrangler deploy --dry-run
+      - name: Verify production is still the reviewed base and deploy only the site
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx wrangler deployments list --json > deployments.json
+          current=$(jq -r 'sort_by(.created_on) | last | .versions | if length == 1 and .[0].percentage == 100 then .[0].version_id else "split-deployment" end' deployments.json)
+          test "$current" = '8bf7e39e-9a88-449a-a1c8-5fe0edd51806'
+          test "$(curl -fsS --max-time 10 https://voice.call4.me/contract)" = "$(scripts/voice-contract.sh)"
+          scripts/deploy-site.sh
