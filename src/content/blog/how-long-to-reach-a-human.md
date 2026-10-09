@@ -1,27 +1,28 @@
 ---
-title: "How long it takes to reach a human at 30 companies (we recorded every call)"
-seoTitle: "How long to reach a human: 30 companies timed"
-subtitle: We went back through every customer service call we've published, 49 calls to 30 companies, and timed how long each one took to reach a live person. Here is what got through, what didn't, where AI assistants and account number prompts stopped us, and the full dataset as a CSV.
-description: We timed 49 recorded calls to 30 customer service lines. The median time to a live person was 2:00. What got through, what didn't, and the data.
+title: "How long it takes to reach a human at 33 companies (we recorded every call)"
+seoTitle: "How long to reach a human: 33 companies timed"
+subtitle: We went back through every customer service call we've published, 53 calls to 33 companies, and timed how long each one took to reach a live person. Here is what got through, what didn't, where AI assistants and account number prompts stopped us, and the full dataset as a CSV.
+description: We timed 53 recorded calls to 33 customer service lines. The median time to a live person was 2:08. What got through, what didn't, and the data.
 date: 2026-10-08
+updated: 2026-10-09
 tags: customer service, phone trees, hold times, talk to a real person, data
 authors: nick
-imageAlt: Time to a human at 30 companies, median 2 minutes across 31 recorded calls
+imageAlt: Time to a human at 33 companies, median 2:08 across 34 recorded calls
 ---
 
-**The short answer:** across the 31 calls where we reached a live person and the post says when, the **median time to a human was 2:00**, measured from the start of each published recording. Half of them got there between **1:28 and 3:40**. The fastest was **Pottery Barn at 0:49**. The slowest were **United at 19:09** and **Delta at 16:15**, and on both most of that was hold time after the menu had already put us in the queue.
+**The short answer:** across the 34 calls where we reached a live person and the post says when, the **median time to a human was 2:08**, measured from the start of each published recording. Half of them got there between **1:40 and 3:40**. The fastest was **Pottery Barn at 0:49**. The slowest were **Priceline at 25:09**, **United at 19:09** and **Delta at 16:15**, and on all three most of that was hold time after the menu had already put us in the queue.
 
-Those 31 calls come from 49 calls we made to 30 companies' customer service lines between September 28 and October 8, 2026, all recorded and published on this blog. Some more numbers from the same set:
+Those 34 calls come from 53 calls we made to 33 companies' customer service lines between September 28 and October 9, 2026, all recorded and published on this blog. Some more numbers from the same set:
 
-- **17 of the 49 calls never reached a person.** At 2 of the 30 companies, Experian and FedEx, no call we dialed did. FedEx's agent only came on when FedEx called us back.
-- **An AI or virtual assistant answered first on 21 of 48 calls**, at 12 of the 30 companies. (On the 49th call, the post doesn't say.) When one did, the median time to a person was **3:07** (11 calls). When a plain phone menu answered, it was **1:56** (19 calls). The two slowest calls are both in the assistant group, so don't read too much into a sample this small.
-- **14 of the 31 calls reached a person in under 2 minutes.** Six took more than 5 minutes.
+- **18 of the 53 calls never reached a person.** At 2 of the 33 companies, Experian and FedEx, no call we dialed did. FedEx's agent only came on when FedEx called us back.
+- **An AI or virtual assistant answered first on 25 of 52 calls**, at 15 of the 33 companies. (On the 53rd call, the post doesn't say.) When one did, the median time to a person was **2:57** (14 calls). When a plain phone menu answered, it was **1:56** (19 calls). The three slowest calls are all in the assistant group, so don't read too much into a sample this small.
+- **14 of the 34 calls reached a person in under 2 minutes.** Seven took more than 5 minutes.
 
 Four things got us through, again and again:
 
 1. **Say you don't have the number they're asking for, or don't enter one.** [Fifth Third](/blog/fifth-third-bank-customer-service) transferred us "due to invalid entries" at 1:44. [Fabletics](/blog/fabletics-customer-service) sent us to a consultant at 1:08 once we said we didn't have the account phone number. [DIRECTV](/blog/directv-customer-service) put a person on at 2:47 after we said we had no account number.
-2. **Pick the option for new customers.** The sales line at [Windstream (Kinetic)](/blog/windstream-customer-service) answered in 0:55, after two calls on the customer lines stopped at an account prompt. "Insurance for you or your family" at [UnitedHealthcare](/blog/unitedhealthcare-phone-number) took 1:04, the quote option at [AAA](/blog/aaa-insurance-customer-service) 1:24, and "not a member" at [USAA](/blog/usaa-phone-number) 3:28.
-3. **Give the menu a short, specific reason.** "Customer service" at [Pottery Barn](/blog/pottery-barn-customer-service) (0:49). "Flight change fee" at [United](/blog/united-change-flight), where a long sentence got "Sorry, I didn't understand." "Book a held reservation" at [American Airlines](/blog/american-airlines-flight-credit). "Cancel my account", then "disconnect", at [Spectrum](/blog/spectrum-retention-department).
+2. **Pick the option for new customers.** The sales line at [Windstream (Kinetic)](/blog/windstream-customer-service) answered in 0:55, after two calls on the customer lines stopped at an account prompt. "Insurance for you or your family" at [UnitedHealthcare](/blog/unitedhealthcare-phone-number) took 1:04, the quote option at [AAA](/blog/aaa-insurance-customer-service) 1:24, "get a new policy", then "auto", at [GEICO](/blog/geico-customer-service) 2:35, and "not a member" at [USAA](/blog/usaa-phone-number) 3:28.
+3. **Give the menu a short, specific reason.** "Customer service" at [Pottery Barn](/blog/pottery-barn-customer-service) (0:49). "Missing item", then "refund", at [DoorDash](/blog/doordash-customer-service-number) (2:08). "Flight change fee" at [United](/blog/united-change-flight), where a long sentence got "Sorry, I didn't understand." "Book a held reservation" at [American Airlines](/blog/american-airlines-flight-credit). "Cancel my account", then "disconnect", at [Spectrum](/blog/spectrum-retention-department).
 4. **Ask for a person again, and keep answering.** [Hertz](/blog/hertz-customer-service-number)'s virtual assistant connected us after our sixth request (3:07). [Fubo](/blog/cancel-fubo)'s took two requests (1:59). At [UPS](/blog/ups-contact-number), "representative" said twice at the tracking number prompt got us into the queue (5:57).
 
 Saying "representative" on its own was the most common thing that **didn't** work. More on that below.
@@ -46,7 +47,9 @@ Every company's number, grouped by industry, is also on the [customer service nu
 | [Fubo](/blog/cancel-fubo) | Oct 3 | 1:59 on the 2nd call; the 1st didn't reach a person | Yes | Asking twice for a human, then "customer service" |
 | [Audible](/blog/cancel-audible) | Oct 2 | 2:00 | No | Typing the digits it reads out, then 2 |
 | [Allstate](/blog/allstate-customer-service-number) | Oct 2 | 2:08 | No | Answering every question, even with "I'm not sure" |
+| [DoorDash](/blog/doordash-customer-service-number) | Oct 9 | 2:08 | Yes | Naming the problem ("missing item", then "refund") instead of asking for a representative |
 | [Etihad](/blog/etihad-customer-service) | Oct 1 | 2:21 | No | Press 1, your cabin class, then 2 |
+| [GEICO](/blog/geico-customer-service) | Oct 9 | 2:35 on the 2nd call; the 1st didn't reach a person | Yes | "Get a new policy", then "auto", and answering every question |
 | [DIRECTV](/blog/directv-customer-service) | Oct 8 | 2:47 on the 2nd call; the 1st didn't reach a person | Yes | "Cancel service", no account number, then satellite |
 | [FPL](/blog/fpl-phone-number) | Oct 1 | 3:07 on the 5th call; 4 calls didn't reach a person | No | "Open a new account", then asking for a representative |
 | [Hertz](/blog/hertz-customer-service-number) | Oct 8 | 3:07 on the 3rd call; 2 calls didn't reach a person | Yes | Asking for a representative six times |
@@ -59,6 +62,7 @@ Every company's number, grouped by industry, is also on the [customer service nu
 | [Spectrum](/blog/spectrum-retention-department) | Oct 1 | 7:49 | No | "Cancel my account", then "disconnect" |
 | [Delta](/blog/delta-customer-service) | Oct 8 | 16:15 | Yes | No confirmation number, "I need a representative", then hold |
 | [United Airlines](/blog/united-change-flight) | Oct 1 | 19:09 | Yes | "Flight change fee", then hold |
+| [Priceline](/blog/priceline-customer-service) | Oct 9 | 25:09 | Yes | Saying we had no trip number, again and again, then about 22 minutes of hold |
 | [SiriusXM](/blog/how-to-cancel-siriusxm) | Oct 7 | Reached a person; the post doesn't say when | Yes | Calling it a general policy question and asking twice for a person |
 | [FedEx](/blog/fedex-customer-service-number) | Oct 1 | No person on 4 calls; an agent at 0:23 on FedEx's callback | Yes | A tracking number, then the callback offer |
 | [Experian](/blog/experian-phone-number) | Sep 30 | No person | No | Nothing we tried |
@@ -82,6 +86,7 @@ This doesn't always work. Experian, FedEx, Verizon and Windstream stopped us at 
 - [UnitedHealthcare](/blog/unitedhealthcare-phone-number): press 1, "insurance for you or your family". A licensed agent at 1:04.
 - [AAA Mountain West Group](/blog/aaa-insurance-customer-service): press 4, "to become a AAA member or obtain an insurance quote", then a ZIP code. A person at 1:24.
 - [Allstate](/blog/allstate-customer-service-number): "Let's get you to an agent. Just a few quick questions first to tailor your quote." A licensed insurance agent answered at 2:08.
+- [GEICO](/blog/geico-customer-service): "get a new policy", then "auto", and saying we wanted a new quote at the date of birth prompt. A licensed agent at 2:35, on our second call.
 - [USAA](/blog/usaa-phone-number): press 1 for "not a member", then 2 for joining. The eligibility department at 3:28.
 
 Both [Wayfair](/blog/wayfair-customer-service) calls also ended up with Wayfair Sales (0:56 and 1:12). The catch: you may get a salesperson, not the team that can fix your problem. Ask them to transfer you.
@@ -89,6 +94,7 @@ Both [Wayfair](/blog/wayfair-customer-service) calls also ended up with Wayfair 
 **Give a short reason in the menu's own words.** Speech menus want a few words, not a sentence:
 
 - [Pottery Barn](/blog/pottery-barn-customer-service): "customer service", a person at 0:49.
+- [DoorDash](/blog/doordash-customer-service-number): asking for a representative got "you can say things like, Dasher never arrived, missing item, or refund." Naming the problem, "missing item", then "refund", got a person at 2:08.
 - [United](/blog/united-change-flight): "flight change fee". A long sentence about fees got "Sorry, I didn't understand."
 - [American Airlines](/blog/american-airlines-flight-credit): "Apply a flight credit to a held reservation and ticket it" wasn't understood. "Book a held reservation" was.
 - [Spectrum](/blog/spectrum-retention-department): "cancel my account", then "disconnect", to reach the people who make retention offers.
@@ -140,22 +146,22 @@ And sometimes the answer is to do nothing. At [Hulu](/blog/hulu-customer-service
 
 - **Ask for a callback.** [FedEx](/blog/fedex-customer-service-number) only offered one once we gave it a tracking number. It called back about 4 minutes after we first dialed, and an agent was on the line 23 seconds into the callback. [Delta](/blog/delta-customer-service) offered a callback "within 14 minutes" or messaging with "the wait time is zero minutes". We stayed on hold instead, so we can't say how those went.
 - **Try a different number.** At [Windstream](/blog/windstream-customer-service), the support line and the existing customer option both stopped at an account prompt. The sales line's new customer option reached a person.
-- **Call again with a different approach.** Our second calls to DIRECTV, Fubo, UPS and Verizon reached a person after the first didn't, and so did our third call to Hertz and our fifth to FPL. Each time we changed something.
+- **Call again with a different approach.** Our second calls to DIRECTV, Fubo, GEICO, UPS and Verizon reached a person after the first didn't, and so did our third call to Hertz and our fifth to FPL. Each time we changed something.
 - **Some lines are built so you can't.** Across 15 calls one afternoon, no route on [Experian](/blog/experian-phone-number)'s credit freeze line reached a consumer support agent. Pressing 2 on its headquarters line, 714-830-7000, got a real operator, but only to transfer us back into the same system. It kept steering us to freeze online or by mail.
 
 ## Methodology
 
 - **Who called:** call4me, our AI phone caller, on behalf of an AI agent. Five calls (American Airlines twice, Aquasana, Etihad and Spectrum) were made by call4me users' agents for their own errands. The rest were our own calls, mostly general questions with no account, plus a few on our own accounts (Amazon Pharmacy, Experian, a FedEx package, Verizon).
-- **When:** September 28 to October 8, 2026. Each company was called on a single day, at whatever time we were writing about it, so these numbers say nothing about how hold times change by time of day or day of week.
+- **When:** September 28 to October 9, 2026. Each company was called on a single day, at whatever time we were writing about it, so these numbers say nothing about how hold times change by time of day or day of week.
 - **Which calls count:** every call in our published customer service, cancellation and retention posts, one row per published call. Most companies got one call. The Experian post describes 15 calls but publishes one recording, so Experian counts as one call. Where a post has several, each one is a separate row in the data, and the table above says which call reached a person. We left out two calls that don't measure a company's line: a follow-up to the LA Fitness club that nobody answered, and Verizon's callback after our call hit call4me's time limit (the representative was already reached on the call before). The four gym club calls and FedEx's callback are in the CSV, marked by line type, and left out of the stats.
 - **How times were measured:** from the start of each published recording to the first moment a live person speaks, read from the timestamps in each post. Several recordings have long silences shortened, so on those the real wait was a little longer. Where the post gives the real elapsed time, the CSV notes it. For example, United's person picked up 19 minutes 27 seconds after dialing, and Verizon's 6 minutes 34 seconds into the call. If a post doesn't say when a person answered (SiriusXM), we left the time blank rather than estimate it.
 - **"AI assistant first"** means the post itself calls what answered an AI, virtual, voice or automated assistant, or an AI agent. A speech or keypad menu that the post calls a menu or phone system counts as no.
-- **Our caller made mistakes.** In 7 of the 17 calls that didn't reach a person, the post puts at least part of the blame on our caller: never asking for a person (Hertz), staying silent when an assistant came back (Hertz), turning down a transfer (DIRECTV), letting the AI assistant answer instead (Fubo), a bug on our side (UPS), stalling (Windstream) and picking the wrong option (Windstream). They're still in the data.
+- **Our caller made mistakes.** In 7 of the 18 calls that didn't reach a person, the post puts at least part of the blame on our caller: never asking for a person (Hertz), staying silent when an assistant came back (Hertz), turning down a transfer (DIRECTV), letting the AI assistant answer instead (Fubo), a bug on our side (UPS), stalling (Windstream) and picking the wrong option (Windstream). They're still in the data.
 - **What this isn't:** a ranking of customer service quality. It's a small sample, mostly one call per company, and how fast someone picks up says nothing about whether they can help. Several of the fast answers were sales teams.
 
 ## Download the data
 
-The full dataset is here: **[how-long-to-reach-a-human.csv](/static/blog/how-long-to-reach-a-human.csv)**. It has 53 rows: the 49 calls to company lines, FedEx's callback and the four gym club calls. Each row has the company, the post it comes from, which call it was, the date, the number dialed, the line type, whether we reached a person, the time to a person, whether an AI assistant answered first, what the menu asked for, what got through, a link to the post and notes. Every value comes from the linked post, which has the recording and the full transcript. You're welcome to use it. Please link back to this page.
+The full dataset is here: **[how-long-to-reach-a-human.csv](/static/blog/how-long-to-reach-a-human.csv)**. It has 58 rows: the 53 calls to company lines, FedEx's callback and the four gym club calls. Each row has the company, the post it comes from, which call it was, the date, the number dialed, the line type, whether we reached a person, the time to a person, whether an AI assistant answered first, what the menu asked for, what got through, a link to the post and notes. Every value comes from the linked post, which has the recording and the full transcript. You're welcome to use it. Please link back to this page.
 
 ## Have your agent make these calls
 

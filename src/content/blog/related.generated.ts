@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "a82426ded9d50082938b13b18e7375ee2623b147c1197058741dd1ae6be21ec5"
+  "sourceHash": "92e5c8ff150f66be429bfe9bd1a8d84ceef982878783e4b62b0ad980ba24180d"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
