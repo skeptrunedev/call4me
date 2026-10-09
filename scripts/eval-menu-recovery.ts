@@ -19,7 +19,7 @@ const brief: CallBrief = {
   callbackNumber: '+12025550100', callbackRingsOwner: false, localTime: null, connectWhen: null, assistantName: null, callingAs: null,
 };
 
-type Scenario = { name: string; before?: { prompt: string; digits: string }[]; prompt: string; goal?: string; expected: { tool: string; digits?: string }[] };
+type Scenario = { name: string; before?: { prompt: string; digits: string }[]; prompt: string; caller?: string; goal?: string; expected: { tool: string; digits?: string }[] };
 const scenarios: Scenario[] = [
   {
     name: 'choose a person instead of the recorded refund policy',
@@ -33,8 +33,11 @@ const scenarios: Scenario[] = [
     expected: [{ tool: 'press_digits', digits: '#' }],
   },
   {
-    name: 'choose a different route when the unsuccessful menu repeats',
-    before: [{ prompt: 'For returns, press one. For all other questions, press five.', digits: '1' }],
+    name: 'choose a different route after returning from recorded instructions',
+    before: [
+      { prompt: 'For returns, press one. For all other questions, press five.', digits: '1' },
+      { prompt: 'For an immediate refund, return the order to any warehouse. If this has answered your question, you may hang up. To return to the previous menu, press pound.', digits: '#' },
+    ],
     prompt: 'For returns, press one. For all other questions, press five.',
     expected: [{ tool: 'press_digits', digits: '5' }],
   },
@@ -69,6 +72,17 @@ const scenarios: Scenario[] = [
     prompt: 'Please listen to the following security challenge code and provide the requested response to continue. The security code is two, three, six, nine. Please enter the middle two digits of the security code followed by the pound key.',
     expected: [{ tool: 'press_digits', digits: '36#' }],
   },
+  {
+    name: 'submit an announced star action after two confirmed keypad inputs',
+    goal: 'Test the automated keypad echo line. Send 5 and then 2, waiting for each remote confirmation. Then use its announced star option to replay the menu and its hash option to end. Do not repeat keys already confirmed.',
+    before: [
+      { prompt: 'You are now entering the DTMF echo test. Press any key on your keypad and you will hear it played back. Press the star key to hear this menu again. Press the hash key to end the call.', digits: '5' },
+      { prompt: ' You pressed five.', digits: '2' },
+    ],
+    prompt: ' You pressed two.',
+    caller: 'Nice. Now star to hear the menu again.',
+    expected: [{ tool: 'press_digits', digits: '*' }],
+  },
 ];
 
 for (const scenario of scenarios) {
@@ -78,6 +92,7 @@ for (const scenario of scenarios) {
     recovery.submitted(step.digits, recovery.snapshot());
   }
   recovery.observe(scenario.prompt, Date.now());
+  if (scenario.caller) recovery.observeCaller(scenario.caller, Date.now());
   const pending = recovery.pending();
   assert.ok(pending, `${scenario.name}: recovery should detect the menu`);
   const instructions = backOfficeInstructions({ ...brief, ...(scenario.goal ? { goal: scenario.goal } : {}) });

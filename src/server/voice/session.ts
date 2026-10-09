@@ -543,7 +543,9 @@ export class VoiceSession extends DurableObject<Env> {
       }
       case 'session.output_transcript.delta':
         if (!this.endingCall && !this.personOn) {
-          this.appendTranscript('caller', (ev as { delta: string }).delta);
+          const delta = (ev as { delta: string }).delta;
+          this.appendTranscript('caller', delta);
+          if (delta) this.menuRecovery.observeCaller(delta, Date.now());
           this.scheduleHandoffCheck();
           this.scheduleHoldingLine();
         }

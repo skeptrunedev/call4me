@@ -31,6 +31,7 @@ function harness(t: TestContext) {
   session.phone = new Socket();
   session.flushTimer = 1; // Transcript persistence is tested elsewhere.
   const input = (delta: string) => session.onLive(JSON.stringify({ type: 'session.input_transcript.delta', delta }));
+  const output = (delta: string) => session.onLive(JSON.stringify({ type: 'session.output_transcript.delta', delta }));
   const response = (type: string, item?: unknown) => session.onLive(JSON.stringify({ type: 'response.event', delegation_id: 'test-delegation', event: { type, ...(item ? { item } : {}) } }));
   const forced = () => session.live.sent.filter((message: any) => message.item?.role === 'user');
   const keypress = (digits: string) => session.runTool({ call_id: 'test-keypress', name: 'press_digits', arguments: JSON.stringify({ digits }) });
@@ -40,7 +41,120 @@ function harness(t: TestContext) {
     assert.equal(url.pathname, '/v2/calls/test-control/actions/send_dtmf');
     return Response.json({ data: {} });
   });
-  return { session, input, response, forced, keypress };
+  return { session, input, output, response, forced, keypress };
+}
+
+const echoMenu = 'You are now entering the DTMF echo test. Press any key on your keypad and you will hear it played back. Press the star key to hear this menu again. Press the hash key to end the call.';
+
+test('a spoken next keypad action after confirmed keys gets a real delegation', async (t) => {
+  const h = harness(t);
+  await h.input(echoMenu);
+  await h.output('Pressing five now.');
+  await h.keypress('5');
+  await h.response('response.completed');
+  t.mock.timers.tick(1_000);
+  await h.input(' You pressed five.');
+  await h.output('Okay. Got that. Now, two. Waiting for the line to confirm.');
+  await h.keypress('2');
+  await h.response('response.completed');
+  t.mock.timers.tick(1_000);
+  await h.input(' You pressed two.');
+  await h.output('Nice. Now star to hear the menu again.');
+  t.mock.timers.tick(3_000);
+  assert.equal(h.forced().length, 1, 'speaking about star is not the same as pressing it');
+  const request = h.forced()[0].item.content[0].text;
+  assert.match(request, /Now star/);
+  assert.match(request, /Press the star key/);
+  assert.match(request, /Keypad submitted: 5/);
+  assert.match(request, /Keypad submitted: 2/);
+  await h.keypress('*');
+  await h.response('response.completed');
+  t.mock.timers.tick(10_000);
+  assert.equal(h.forced().length, 1, 'accepted star does not get submitted twice');
+});
+
+test('keypad prompts with articles and arbitrary keys are recognized without caller speech', () => {
+  for (const text of [echoMenu, 'Press any key to continue.', 'Press the pound key to finish.']) {
+    const recovery = new MenuRecovery();
+    recovery.observe(text, 1);
+    assert.equal(recovery.pending()?.reason, 'menu', text);
+  }
+});
+
+test('no input detected after a submitted key creates a fresh recovery opportunity', () => {
+  const recovery = new MenuRecovery();
+  recovery.observe(echoMenu, 1);
+  recovery.submitted('5', recovery.snapshot());
+  recovery.observe(' No input detected.', 2);
+  assert.equal(recovery.pending()?.reason, 'menu_recovery');
+});
+
+for (const action of ['Now, two.', 'Pressing the star key.', "I'll dial pound.", 'Next, 3.', '2.']) {
+  test(`fresh keypad commitment is recognized in active menu context: ${action}`, () => {
+    const recovery = new MenuRecovery();
+    recovery.observe(echoMenu, 1);
+    recovery.submitted('5', recovery.snapshot());
+    recovery.observe(' You pressed five.', 2);
+    recovery.observeCaller(action, 3);
+    assert.equal(recovery.pending()?.reason, 'keypad');
+  });
+}
+
+test('late acceptance of one key preserves a newer different commitment', async (t) => {
+  const h = harness(t);
+  await h.input(echoMenu);
+  await h.output('Pressing five.');
+  let resolve!: (value: Response) => void;
+  t.mock.method(globalThis, 'fetch', () => new Promise<Response>((done) => { resolve = done; }));
+  const running = h.keypress('5');
+  await Promise.resolve();
+  await h.input(' You pressed five.');
+  await h.output('Now two.');
+  resolve(Response.json({ data: {} }));
+  await running;
+  await h.response('response.completed');
+  t.mock.timers.tick(3_000);
+  assert.equal(h.forced().length, 1);
+  assert.match(h.forced()[0].item.content[0].text, /Now two/);
+});
+
+test('accepted keys and acknowledgments cannot reopen their own keypad action', () => {
+  const recovery = new MenuRecovery();
+  recovery.observe(echoMenu, 1);
+  recovery.observeCaller('Pressing five.', 2);
+  const submitted = recovery.snapshot();
+  recovery.observeCaller(' Now five.', 3);
+  recovery.submitted('5', submitted);
+  assert.equal(recovery.pending(), null, 'same key spoken while submission was pending is consumed');
+  recovery.observeCaller(' Pressing five.', 4);
+  assert.equal(recovery.pending(), null, 'same key spoken after acceptance is not replayed before new input');
+  recovery.submitted('5', recovery.snapshot());
+  recovery.observe(' You pressed five.', 5);
+  recovery.observeCaller('Got five. Nice. Hmm.', 6);
+  assert.equal(recovery.pending(), null, 'acknowledging the returned digit is not an action');
+});
+
+test('a human greeting without provider punctuation closes the previous menu context', () => {
+  const recovery = new MenuRecovery();
+  recovery.observe('For support press one', 1);
+  recovery.observeCaller('Pressing one', 2);
+  recovery.submitted('1', recovery.snapshot());
+  recovery.observe('Hello, this is Jane speaking', 3);
+  recovery.observeCaller('Now star to hear the menu again', 4);
+  assert.equal(recovery.pending(), null);
+});
+
+for (const response of ['Hello, this is Jane speaking.', 'Please hold while I check.', 'Please remain on the line.']) {
+  test(`old keypad context cannot trigger spoken key recovery after ${response}`, async (t) => {
+    const h = harness(t);
+    await h.input('For support press one. Press star to repeat the menu.');
+    await h.keypress('1');
+    await h.response('response.completed');
+    await h.input(` ${response}`);
+    await h.output('Now star to hear the menu again.');
+    t.mock.timers.tick(10_000);
+    assert.equal(h.forced().length, 0);
+  });
 }
 
 test('a repeated menu on the same transcript line is a fresh recovery opportunity', async (t) => {

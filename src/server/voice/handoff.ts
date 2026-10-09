@@ -8,10 +8,11 @@ import type { TranscriptLine } from '../services/calls';
  * the back office itself (response.item.create + response.create) when no hand-off follows.
  */
 
-const KEY = String.raw`(?:\d|one|two|three|four|five|six|seven|eight|nine|zero|pound|star|hash)`;
+const KEY = String.raw`(?:\d+|one|two|three|four|five|six|seven|eight|nine|zero|pound|star|hash|asterisk|[*#])`;
 const KEYPAD_MENU = [
-  new RegExp(String.raw`\bpress(?:ing)?\s+${KEY}\b`, 'i'),
-  new RegExp(String.raw`\bdial\s+${KEY}\b`, 'i'),
+  new RegExp(String.raw`\bpress(?:ing)?\s+(?:the\s+)?${KEY}(?!\w)`, 'i'),
+  new RegExp(String.raw`\bdial\s+(?:the\s+)?${KEY}(?!\w)`, 'i'),
+  /\bpress (?:any|a) key\b/i,
   /\b(?:enter|type|key in)\b[^.?!]{0,60}\b(?:keypad|followed by (?:the )?(?:pound|hash|star))\b/i,
   /\bmenu options\b/i,
   /\bappuyez\b[^.?!]{0,30}\b(?:sur|le)\b/i,
@@ -52,7 +53,7 @@ export function promisesAction(text: string): boolean {
 }
 
 const MENU_FAILURE = [
-  /\bno (?:input|selection|entry|response) (?:was )?received\b/i,
+  /\bno (?:input|selection|entry|response) (?:was )?(?:received|detected)\b/i,
   /\b(?:did not|didn't|haven't|have not) receive (?:your |an? )?(?:input|selection|entry|response)\b/i,
   /\b(?:entry|selection|input) (?:is |was )?(?:invalid|not (?:recognized|recognised|valid))\b/i,
   /\b(?:don't|do not|didn't|did not) (?:recognize|recognise) (?:that|your) (?:entry|selection|input)\b/i,
@@ -62,7 +63,7 @@ const MENU_FAILURE = [
 ];
 const HUMAN_GREETING = /(?:^|[.!?\n])\s*(?:my name is\b|how (?:can|may) i (?:help|assist)\b|thank you for (?:holding|waiting)\b)/i;
 const WAIT_OR_PERSON = [
-  /\b(?:please (?:hold|stay on the line)|on hold|all (?:our )?representatives are busy|call (?:is )?being transferred)\b/i,
+  /\b(?:please (?:hold|stay on the line|remain on the line)|on hold|all (?:our )?representatives are busy|call (?:is )?being transferred)\b/i,
   /(?:^|[.!?\n])\s*(?:hello\b|hi\b|my name is\b|how (?:can|may) i (?:help|assist)\b|thank you for (?:holding|waiting)\b)/i,
 ];
 
@@ -74,9 +75,20 @@ function lastMatch(text: string, patterns: RegExp[]): number {
   return index;
 }
 
-export type MissedHandoff = { reason: 'menu' | 'menu_recovery' | 'promise'; line: TranscriptLine };
-type MenuSnapshot = { text: string; end: number; at: number };
-type KeypadAttempt = { digits: string; prompt: string };
+/** Recognize keypad intent, not acknowledgments such as "you pressed two" or ordinary filler. */
+function spokenKeypadDigits(text: string): string | null {
+  const action = new RegExp(String.raw`\b(?:press(?:ing)?|dial(?:ing)?|enter(?:ing)?|send(?:ing)?|select(?:ing)?|choos(?:e|ing)|try(?:ing)?|hit(?:ting)?|tap(?:ping)?|now|next)[\s,:]+(?:the\s+)?(${KEY}(?:[\s,]+${KEY})*)(?!\w)`, 'gi');
+  const words: Record<string, string> = { zero: '0', one: '1', two: '2', three: '3', four: '4', five: '5', six: '6', seven: '7', eight: '8', nine: '9', star: '*', asterisk: '*', pound: '#', hash: '#' };
+  let keys = new RegExp(String.raw`^\s*(${KEY})[.!?\s]*$`, 'i').exec(text)?.[1];
+  for (const match of text.matchAll(action)) {
+    if (!/\b(?:don't|do not|not|never)\s*$/i.test(text.slice(0, match.index))) keys = match[1];
+  }
+  return keys ? [...keys.toLowerCase().matchAll(new RegExp(KEY, 'g'))].map(([key]) => words[key] ?? key).join('') : null;
+}
+
+export type MissedHandoff = { reason: 'menu' | 'menu_recovery' | 'keypad' | 'promise'; line: TranscriptLine; menuContext?: string };
+type MenuSnapshot = { text: string; end: number; at: number; callerEnd: number };
+type KeypadAttempt = { digits: string; prompt: string; inputEnd: number };
 
 /** Fresh IVR input is tracked separately: a transcript line can span several menus. */
 export class MenuRecovery {
@@ -86,42 +98,66 @@ export class MenuRecovery {
   private menuContext = '';
   private personSpeaking = false;
   private attempts: KeypadAttempt[] = [];
+  private callerInput = '';
+  private callerBoundary = 0;
+  private callerAt = 0;
+  private observedCallerEnd = 0;
 
   observe(delta: string, at: number): void {
+    // Providers may omit sentence punctuation between turns. Preserve that turn boundary.
+    if (this.callerInput.length > this.observedCallerEnd) this.input += '\n';
+    this.observedCallerEnd = this.callerInput.length;
     this.input += delta;
     this.at = at;
     // A person can give website instructions too. Those are not a new phone menu.
-    if (HUMAN_GREETING.test(this.input.slice(this.boundary))) {
+    const fresh = this.input.slice(this.boundary);
+    if (HUMAN_GREETING.test(fresh) || lastMatch(fresh, WAIT_OR_PERSON) > lastMatch(fresh, MENU)) {
       this.personSpeaking = true;
       this.menuContext = '';
       this.boundary = this.input.length;
+      this.callerBoundary = this.callerInput.length;
     }
   }
 
+  observeCaller(delta: string, at: number): void {
+    this.callerInput += delta;
+    this.callerAt = at;
+  }
+
   snapshot(): MenuSnapshot {
-    return { text: this.input.slice(this.boundary).trim(), end: this.input.length, at: this.at };
+    return { text: this.input.slice(this.boundary).trim(), end: this.input.length, at: this.at, callerEnd: this.callerInput.length };
   }
 
   pending(): (MissedHandoff & { snapshot: MenuSnapshot }) | null {
     const snapshot = this.snapshot();
     const menu = lastMatch(snapshot.text, this.personSpeaking || WEB_ENTRY.test(snapshot.text) ? KEYPAD_MENU : MENU);
     const failure = this.menuContext && !this.personSpeaking ? lastMatch(snapshot.text, MENU_FAILURE) : -1;
-    if (Math.max(menu, failure) < 0 || lastMatch(snapshot.text, WAIT_OR_PERSON) > Math.max(menu, failure)) return null;
-    return { reason: failure > menu ? 'menu_recovery' : 'menu', line: { role: 'them', text: snapshot.text, at: snapshot.at }, snapshot };
+    if (Math.max(menu, failure) >= 0 && lastMatch(snapshot.text, WAIT_OR_PERSON) <= Math.max(menu, failure)) {
+      return { reason: failure > menu ? 'menu_recovery' : 'menu', line: { role: 'them', text: snapshot.text, at: snapshot.at }, snapshot };
+    }
+    const spoken = this.callerInput.slice(this.callerBoundary).trim();
+    const digits = spokenKeypadDigits(spoken);
+    if (!this.menuContext || this.personSpeaking || !digits) return null;
+    const last = this.attempts.at(-1);
+    // A spoken confirmation arriving after its tool result must not press the same key twice.
+    if (last?.digits === digits && snapshot.end <= last.inputEnd) return null;
+    return { reason: 'keypad', line: { role: 'caller', text: spoken, at: this.callerAt }, menuContext: this.menuContext, snapshot: { ...snapshot, at: Math.max(snapshot.at, this.callerAt) } };
   }
 
   checked(snapshot: MenuSnapshot): void {
     // Input may have switched to a person while a keypad request was in flight.
     if (snapshot.end < this.boundary) return;
-    if (snapshot.text) this.menuContext = snapshot.text;
+    if (lastMatch(snapshot.text, MENU) >= 0) this.menuContext = snapshot.text;
     if (lastMatch(snapshot.text, KEYPAD_MENU) >= 0) this.personSpeaking = false;
     this.boundary = Math.max(this.boundary, snapshot.end);
+    this.callerBoundary = Math.max(this.callerBoundary, snapshot.callerEnd);
   }
 
   /** Call only after the carrier accepts DTMF, consuming input from before submission. */
   submitted(digits: string, snapshot: MenuSnapshot): void {
-    this.attempts.push({ digits, prompt: snapshot.text || this.menuContext });
+    this.attempts.push({ digits, prompt: snapshot.text || this.menuContext, inputEnd: snapshot.end });
     this.checked(snapshot);
+    if (spokenKeypadDigits(this.callerInput.slice(this.callerBoundary)) === digits) this.callerBoundary = this.callerInput.length;
   }
 
   history(): string {
@@ -147,7 +183,9 @@ export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[
     .map((l) => `${l.role}: ${l.text.trim()}`)
     .join('\n');
   const what =
-    miss.reason !== 'promise'
+    miss.reason === 'keypad'
+      ? `The caller announced a keypad action but no matching keypad submission followed. Speaking a key does not press it. Use press_digits if the announced action is still needed and supported by the task and the menu. Do not repeat a key already submitted or speak an acknowledgment. Stay silent while a person speaks or during hold.\n\nCaller's unfulfilled keypad action:\n${miss.line.text}\n\nActive menu instructions:\n${miss.menuContext}\n\nKeypad history (carrier accepted these requests; navigation may still have failed):\n${keypadHistory}`
+      : miss.reason !== 'promise'
       ? `The latest phone menu needs attention. ${miss.reason === 'menu_recovery' ? 'It reported missing/invalid input or led to recorded instructions instead of completing the task.' : 'Choose from the fully heard options.'} Use press_digits for an announced option that serves the task or reaches a person. Wait if the options are incomplete. If a choice led to instructions only, use an announced back/main-menu option, then another relevant route such as other questions or a representative. Never assume 0, star or pound works when it was not offered. Do not repeat an unsuccessful route unchanged. Stay silent on hold or while a person speaks. A voicemail after a message was left needs end_call. If there is no supported route left, ask_user or end_call according to the brief.\n\nFresh menu input:\n${miss.line.text}\n\nKeypad history (carrier accepted these requests; navigation may still have failed):\n${keypadHistory}`
       : 'The caller said it would do something but never handed it off. Do it now: if they asked for something the caller does not have, ask_user; if the call is over, end_call; if a menu needs a key, press_digits.';
   return `${what} If nothing is actually needed, write nothing.
