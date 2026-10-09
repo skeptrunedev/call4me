@@ -290,6 +290,8 @@ export const BlogPost: FC<{
   const v = (k: string) => commentValues[k] ?? '';
   const [introduction, sections] = splitIntroduction(post.html);
   const here = `/blog/${post.slug}`;
+  // Call posts lead with the recording; search engines read it as the article's audio.
+  const recording = /<audio[^>]*\ssrc="(\/[^"]+\.mp3)"/.exec(post.html)?.[1];
   return (
     <Layout
       title={post.seoTitle}
@@ -317,6 +319,7 @@ export const BlogPost: FC<{
           publisher: PUBLISHER,
           image: [`${SITE}/og/blog/${post.slug}.png`, `${SITE}${post.image}`],
           keywords: post.tags.join(', '),
+          ...(recording ? { audio: { '@type': 'AudioObject', contentUrl: `${SITE}${recording}`, encodingFormat: 'audio/mpeg', name: `Recording: ${post.title}` } } : {}),
           wordCount: post.body.split(/\s+/).filter(Boolean).length,
           inLanguage: 'en',
           isAccessibleForFree: !post.paid,

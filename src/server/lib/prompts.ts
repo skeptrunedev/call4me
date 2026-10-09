@@ -149,6 +149,17 @@ ${connect(origin, key)}
 }
 
 /** Voices: pick the caller voice, then make a call with it. */
+export function companiesPrompt(origin: string, key: string | null): string {
+  return `I looked at the customer service numbers at ${origin}/companies. Call one of these companies for me.
+
+${connect(origin, key)}
+
+1. Ask me which company and what I need from them. Open its call4me post (linked on that page) for the number and the phone tree path that reached a person.
+2. Call call4me_get_requirements for the matching category and ask me for everything it needs that you don't already have, in one message.
+3. Place the call with call4me_place_call, put the phone tree path from the post in the goal, show me the calling_number it returns, then keep calling call4me_get_call with wait_seconds until it finishes. Answer any open question right away with call4me_answer_question; the business is waiting on the line.
+4. Tell me the result in one or two lines.`;
+}
+
 export function voicesPrompt(origin: string, key: string | null): string {
   return `I listened to the caller voices at ${origin}/voices. Use the voice I pick for my calls.
 

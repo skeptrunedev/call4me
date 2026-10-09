@@ -1,6 +1,6 @@
 ---
 title: "Windstream customer service: the line where a person answered"
-seoTitle: "Windstream customer service: how we got a person"
+seoTitle: "Windstream customer service: call 866-703-8175"
 subtitle: "Windstream is now Kinetic. We called three times. Two calls stopped at an account number prompt. The third, on the sales line with option 1, reached a live rep in under a minute. Here are all three recordings, the menus, and what the rep said."
 description: "Windstream customer service is now Kinetic. Calling sales at (866) 703-8175 and pressing 1 got us a live person; the support line stopped at an account prompt."
 date: 2026-10-08

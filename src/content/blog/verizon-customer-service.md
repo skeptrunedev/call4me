@@ -1,6 +1,6 @@
 ---
 title: "Verizon customer service number: how we reached a person"
-seoTitle: Verizon customer service number: reach a person
+seoTitle: "Verizon customer service number: 800-922-0204"
 subtitle: "Three recordings cover account verification, a cheaper plan quote and the representative's callback. Nothing on the account was changed."
 description: Verizon customer service is 800-922-0204. An AI assistant answers; "An agent, please" reached a person, who said a plan switch saves about $48 a month.
 date: 2026-10-01

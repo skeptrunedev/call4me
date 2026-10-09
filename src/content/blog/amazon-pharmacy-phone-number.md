@@ -1,6 +1,6 @@
 ---
 title: "Amazon Pharmacy phone number: what happens when you call, and how we got a stuck prescription moving in under an hour"
-seoTitle: Amazon Pharmacy phone number (we called it)
+seoTitle: "Amazon Pharmacy phone number: 855-745-5725"
 subtitle: Two of my prescriptions sat in "pharmacist review" for days. One phone call to Amazon Pharmacy got them marked important, and 48 minutes later the "ready to order" email arrived. Here's the number, every step of the phone menu, the recording, and what to say.
 description: Amazon Pharmacy customer care is 855-745-5725. We called about prescriptions stuck in pharmacist review: the recording, the menu, and what got them moving.
 date: 2026-10-01

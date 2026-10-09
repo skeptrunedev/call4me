@@ -1,6 +1,6 @@
 ---
 title: "FPL phone number: how we reached a person at Florida Power & Light to ask about starting service"
-seoTitle: "FPL phone number: how to reach a person"
+seoTitle: "FPL phone number: 1-888-988-8249, reach a person"
 subtitle: We called FPL customer service five times to ask how starting electric service works for someone new to FPL. Four calls stayed in the voice menu. On the fifth, one route got us to an agent, who told us what you need, how fast service is connected, and how the deposit is decided. All five recordings, the exact route, and the phone tree.
 description: FPL's phone number is 1-888-988-8249. "Representative" gets "That option is not available." The route that reached a person, and what the agent said.
 date: 2026-10-01

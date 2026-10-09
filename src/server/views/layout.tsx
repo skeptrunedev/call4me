@@ -238,6 +238,7 @@ export const Layout: FC<{
           <a href="/terms">terms</a>
           <a href="/support">support</a>
           <a href="/blog">blog</a>
+          <a href="/companies">companies</a>
           <a href="/voices">voices</a>
           <a class="rss-link" href="/blog/rss.xml" type="application/rss+xml" aria-label="Subscribe to the RSS feed" title="RSS feed">
             <svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false">

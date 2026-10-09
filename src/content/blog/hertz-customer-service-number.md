@@ -1,6 +1,6 @@
 ---
 title: "Hertz customer service number: how to get past the virtual assistant to a person"
-seoTitle: "Hertz customer service number: reach a person"
+seoTitle: "Hertz customer service number: 1-800-654-4173"
 subtitle: "We called Hertz three times. On the past rentals line, a virtual assistant named Haley answers first. One call reached a live representative after six requests. One call ended when Haley hung up on us. Here are all three recordings, the exact prompts, and what the person told us."
 description: "The Hertz customer service number for past rentals is 1-800-654-4173. A virtual assistant answers. How we got a live person, from real recorded calls."
 date: 2026-10-08

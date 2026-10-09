@@ -1,6 +1,6 @@
 ---
 title: "DIRECTV customer service: how we reached a live person"
-seoTitle: "DIRECTV customer service: how to reach a person"
+seoTitle: "DIRECTV customer service: 800-531-5000"
 subtitle: 'We called DIRECTV customer service twice. The first time its AI agent answered and we never got past it. The second time we said "cancel service", said we had no account number, chose satellite, and a live representative picked up. The route, what each said, and both recordings.'
 description: 'DIRECTV customer service is 800-531-5000. We reached a live person by saying "cancel service", saying we had no account number and choosing satellite.'
 date: 2026-10-08

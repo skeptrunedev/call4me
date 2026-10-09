@@ -1,6 +1,6 @@
 ---
 title: "Fifth Third Bank customer service: how to reach a person"
-seoTitle: "Fifth Third Bank customer service: reach a person"
+seoTitle: "Fifth Third Bank customer service: 800-972-3030"
 subtitle: We called Fifth Third's customer service line without an account number. Here is what the phone menu asked for, how we got to a live representative anyway, what they told us about fees and verification, and the full 4 minute recording.
 description: Fifth Third Bank customer service is 800-972-3030. The menu asks for an account or card number; with none entered, a live person answered in under 2 minutes.
 date: 2026-10-08

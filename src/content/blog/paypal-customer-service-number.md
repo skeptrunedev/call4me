@@ -1,6 +1,6 @@
 ---
 title: "PayPal customer service number: how we got past the AI to a person"
-seoTitle: "PayPal customer service number: reach a person"
+seoTitle: "PayPal customer service number: 1-888-221-1161"
 subtitle: "We called PayPal's customer service line without logging in. Here is how the AI assistant handled us, the menu that ended in a transfer, what the representative said about disputes, holds and verification, and the full 8 minute recording."
 description: The PayPal customer service number is 1-888-221-1161. An AI assistant answers first; here's how we reached a live representative, from a real recorded call.
 date: 2026-10-08

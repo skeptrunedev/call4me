@@ -28,7 +28,7 @@ Saying "representative" on its own was the most common thing that **didn't** wor
 
 ## Customer service hold times: every company we called
 
-Sorted from fastest to slowest. Times are minutes:seconds from the start of the published recording to the first live person. Where we made more than one call, the table says which. Each company links to the post with the recording, the phone tree and the full transcript.
+Every company's number, grouped by industry, is also on the [customer service numbers page](/companies). Sorted from fastest to slowest. Times are minutes:seconds from the start of the published recording to the first live person. Where we made more than one call, the table says which. Each company links to the post with the recording, the phone tree and the full transcript.
 
 | Company | Called (2026) | Time to a person | AI assistant first? | What got us through |
 |---|---|---|---|---|

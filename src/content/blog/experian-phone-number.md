@@ -1,6 +1,6 @@
 ---
 title: Experian phone number: what actually happens when you call to freeze your credit
-seoTitle: Experian phone number for a credit freeze
+seoTitle: "Experian phone number: 1-888-397-3742"
 subtitle: We called Experian’s freeze line 15 times in one afternoon. Here are the routes we tried and a 9 minute recording of the call that got furthest.
 description: Experian's number is 1-888-397-3742. It asks for your full SSN first, and we found no way to reach a person without it. Full recording and phone tree.
 date: 2026-09-30
