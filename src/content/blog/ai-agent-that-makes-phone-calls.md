@@ -4,6 +4,7 @@ seoTitle: AI agent that makes phone calls for you
 subtitle: Give your assistant the outcome you want, let it call the business, and check what was actually confirmed. Start with a practical task guide and a reusable prompt.
 description: Use an AI agent that makes phone calls for you. Compare quotes, check stock, arrange appointments and follow up on errands with call4me and your assistant.
 date: 2026-10-07
+updated: 2026-10-08
 tags: ai agent, ai phone assistant, personal assistant, phone calls
 authors: nick
 imageAlt: An AI agent that calls for you, from a clear task to a confirmed result
@@ -38,6 +39,8 @@ Each guide below gives the details to supply, questions to ask and a way to chec
 | Resolve a subscription task | Use the [SiriusXM cancellation guide](/blog/how-to-cancel-siriusxm) to prepare the account questions and distinguish cancellation instructions from a completed cancellation. |
 
 For scheduling across other businesses, the [AI appointment booking guide](/blog/ai-personal-assistant-appointment-booking) includes a reusable brief and confirmation checklist.
+
+A job search can involve both online work and everyday errands. [Applystead](https://applystead.com/) offers AI resume tailoring and job application help. Your personal assistant can use call4me for separate tasks around your search, such as checking whether a store has interview clothes available or arranging an appointment.
 
 ## A prompt for an agent that calls and does things for you
 

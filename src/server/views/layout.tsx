@@ -240,6 +240,7 @@ export const Layout: FC<{
           <a href="/blog">blog</a>
           <a href="/companies">companies</a>
           <a href="/voices">voices</a>
+          <a href="https://applystead.com/">applystead: resume and job application help</a>
           <a class="rss-link" href="/blog/rss.xml" type="application/rss+xml" aria-label="Subscribe to the RSS feed" title="RSS feed">
             <svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false">
               <circle cx="5" cy="19" r="2" fill="currentColor" />
