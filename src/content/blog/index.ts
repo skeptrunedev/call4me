@@ -68,6 +68,9 @@ import cancelFactor from './cancel-factor.md';
 import cancelFubo from './cancel-fubo.md';
 import cancelHelloFresh from './cancel-hellofresh.md';
 import vercelAiSdkPhoneCalls from './vercel-ai-sdk-phone-calls.md';
+import geicoCustomerService from './geico-customer-service.md';
+import doordashCustomerServiceNumber from './doordash-customer-service-number.md';
+import pricelineCustomerService from './priceline-customer-service.md';
 import deltaCustomerService from './delta-customer-service.md';
 import paypalCustomerServiceNumber from './paypal-customer-service-number.md';
 import fifthThirdBankCustomerService from './fifth-third-bank-customer-service.md';
@@ -198,4 +201,7 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'windstream-customer-service', markdown: windstreamCustomerService },
   { slug: 'how-long-to-reach-a-human', markdown: howLongToReachAHuman },
   { slug: 'vercel-ai-sdk-phone-calls', markdown: vercelAiSdkPhoneCalls },
+  { slug: 'geico-customer-service', markdown: geicoCustomerService },
+  { slug: 'doordash-customer-service-number', markdown: doordashCustomerServiceNumber },
+  { slug: 'priceline-customer-service', markdown: pricelineCustomerService },
 ];

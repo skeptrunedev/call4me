@@ -5,7 +5,7 @@ import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { createHash } from 'node:crypto';
-import { downloadRecording, muteFilter, privatePath, silenceChecks, validateMutes } from '../scripts/review-call-audio';
+import { asrWindows, downloadRecording, muteFilter, privatePath, silenceChecks, validateMutes } from '../scripts/review-call-audio';
 
 test('ranged acquisition preserves exact bytes and rejects changed provider objects', async t => {
   const source = Buffer.alloc(3 * 1024 * 1024 + 37);
@@ -67,4 +67,17 @@ test('real MP3 export preserves full duration, mutes interior and retains surrou
   assert.ok(samples.slice(35000, 45000).some(sample => Math.abs(sample) > 0.01));
   writeFileSync(manifest, JSON.stringify({ source, sourceSha256: 'incorrect source hash', reviewed: true, mutes }));
   assert.throws(() => execFileSync(process.execPath, ['--import', 'tsx', 'scripts/review-call-audio.ts', 'export', '--manifest', manifest, '--out', out, '--ffmpeg', binary], { stdio: 'pipe' }), /source hash does not match/);
+});
+
+test('long recordings split into contiguous gpt-4o-transcribe windows under its 1400 second limit', () => {
+  assert.deepEqual(asrWindows(663), [{ start: 0, end: 663 }]);
+  const windows = asrWindows(1591.32);
+  assert.equal(windows.length, 2);
+  assert.equal(windows[0].start, 0);
+  assert.equal(windows.at(-1)!.end, 1591.32);
+  for (const [index, window] of windows.entries()) {
+    assert.ok(window.end - window.start < 1400);
+    if (index) assert.equal(window.start, windows[index - 1].end);
+  }
+  assert.equal(asrWindows(5000).length, 4);
 });

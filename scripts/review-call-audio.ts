@@ -41,6 +41,11 @@ export function validateMutes(mutes: Mute[], duration: number) {
 export function muteFilter(mutes: Mute[]) {
   return mutes.length ? `aeval=exprs='val(0)*(${mutes.map(m => `not(between(t,${m.start},${m.end}))`).join('*')})'` : 'anull';
 }
+/** gpt-4o-transcribe rejects audio over 1400 s; split longer files into equal windows under that limit. */
+export function asrWindows(duration: number, limit = 1400) {
+  const count = Math.max(1, Math.ceil(duration / (limit - 60)));
+  return Array.from({ length: count }, (_, index) => ({ start: (duration * index) / count, end: (duration * (index + 1)) / count }));
+}
 function ffmpeg(binary: string, args: string[]) {
   return execFileSync(binary, ['-hide_banner', '-loglevel', 'error', '-nostdin', ...args], { maxBuffer: 512 * 1024 * 1024 });
 }
@@ -128,14 +133,10 @@ async function transcribe(file: string, out: string, binary = 'ffmpeg') {
     chmodSync(uploadFile, 0o600);
     assert.ok(readFileSync(uploadFile).length < 24_000_000, 'full duration ASR input remains too large');
   }
-  const results = await Promise.allSettled(['whisper-1', 'gpt-4o-transcribe'].map(async model => {
-    const destination = join(out, `${model}.private.json`);
-    if (existsSync(destination)) {
-      const cached = JSON.parse(readFileSync(destination, 'utf8'));
-      if (cached.inputSha256 === inputSha256 && typeof cached.result?.text === 'string') return destination;
-    }
+  const duration = decode(file, binary).length / 16000;
+  const request = async (model: string, upload: string) => {
     const form = new FormData();
-    form.set('file', new Blob([readFileSync(uploadFile)]), uploadFile.endsWith('.mp3') ? 'audio.mp3' : 'audio.wav');
+    form.set('file', new Blob([readFileSync(upload)]), upload.endsWith('.mp3') ? 'audio.mp3' : 'audio.wav');
     form.set('model', model);
     if (model === 'whisper-1') {
       form.set('response_format', 'verbose_json');
@@ -147,6 +148,30 @@ async function transcribe(file: string, out: string, binary = 'ffmpeg') {
     assert.ok(response.ok, `ASR ${model} failed: ${response.status}`);
     const result = await response.json() as { text?: string };
     assert.equal(typeof result.text, 'string', 'ASR returned no text');
+    return result as { text: string };
+  };
+  const results = await Promise.allSettled(['whisper-1', 'gpt-4o-transcribe'].map(async model => {
+    const destination = join(out, `${model}.private.json`);
+    if (existsSync(destination)) {
+      const cached = JSON.parse(readFileSync(destination, 'utf8'));
+      if (cached.inputSha256 === inputSha256 && typeof cached.result?.text === 'string') return destination;
+    }
+    // whisper-1 is bounded by upload size and keeps full-file word timestamps;
+    // gpt-4o-transcribe rejects long audio, so it reads consecutive windows.
+    const windows = model === 'gpt-4o-transcribe' ? asrWindows(duration) : [{ start: 0, end: duration }];
+    let result: { text: string; windows?: { start: number; end: number; text: string }[] };
+    if (windows.length === 1) result = await request(model, uploadFile);
+    else {
+      mkdirSync(out, { recursive: true, mode: 0o700 });
+      const parts = [];
+      for (const [index, window] of windows.entries()) {
+        const piece = join(out, `${model}-window-${index}.private.mp3`);
+        ffmpeg(binary, ['-y', '-ss', String(window.start), '-t', String(window.end - window.start), '-i', file, '-map', '0:a:0', '-ac', '1', '-ar', '24000', '-b:a', '64k', '-map_metadata', '-1', piece]);
+        chmodSync(piece, 0o600);
+        parts.push({ ...window, text: (await request(model, piece)).text });
+      }
+      result = { text: parts.map(part => part.text).join(' '), windows: parts };
+    }
     save(destination, { inputSha256, uploadedSha256: hash(uploadFile), model, createdAt: new Date().toISOString(), result });
     return destination;
   }));

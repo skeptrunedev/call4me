@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "f092bdc5f7e1fe30103a6e0729a2413a0a383c9d251c73abb55fad2ce74f6a6c"
+  "sourceHash": "a82426ded9d50082938b13b18e7375ee2623b147c1197058741dd1ae6be21ec5"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -14,6 +14,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "allstate-customer-service-number",
       "similarity": 0.699861
+    },
+    {
+      "slug": "geico-customer-service",
+      "similarity": 0.669445
     },
     {
       "slug": "usaa-phone-number",
@@ -168,12 +172,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.699861
     },
     {
+      "slug": "geico-customer-service",
+      "similarity": 0.680688
+    },
+    {
       "slug": "unitedhealthcare-phone-number",
       "similarity": 0.62134
     },
     {
       "slug": "usaa-phone-number",
-      "similarity": 0.612888
+      "similarity": 0.612889
     }
   ],
   "amazon-pharmacy-phone-number": [
@@ -335,6 +343,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "how-to-cancel-siriusxm",
       "similarity": 0.648412
+    },
+    {
+      "slug": "doordash-customer-service-number",
+      "similarity": 0.605512
     }
   ],
   "cancel-fubo": [
@@ -367,6 +379,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "cancel-planet-fitness",
       "similarity": 0.640502
+    },
+    {
+      "slug": "doordash-customer-service-number",
+      "similarity": 0.629524
     },
     {
       "slug": "directv-customer-service",
@@ -658,6 +674,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.629749
     }
   ],
+  "doordash-customer-service-number": [
+    {
+      "slug": "cancel-hellofresh",
+      "similarity": 0.629524
+    },
+    {
+      "slug": "cancel-factor",
+      "similarity": 0.605512
+    }
+  ],
   "drop-off-vet-appointment": [
     {
       "slug": "veterinary-behavior-consultation-call",
@@ -672,6 +698,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "delta-customer-service",
       "similarity": 0.647401
+    },
+    {
+      "slug": "priceline-customer-service",
+      "similarity": 0.646238
     },
     {
       "slug": "american-airlines-flight-credit",
@@ -756,6 +786,24 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "junk-removal-cost",
       "similarity": 0.673814
+    }
+  ],
+  "geico-customer-service": [
+    {
+      "slug": "allstate-customer-service-number",
+      "similarity": 0.680688
+    },
+    {
+      "slug": "aaa-insurance-customer-service",
+      "similarity": 0.669445
+    },
+    {
+      "slug": "unitedhealthcare-phone-number",
+      "similarity": 0.649165
+    },
+    {
+      "slug": "usaa-phone-number",
+      "similarity": 0.603076
     }
   ],
   "grok-bot-reusable-skills": [
@@ -956,7 +1004,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.618997
     }
   ],
-  "hertz-customer-service-number": [],
+  "hertz-customer-service-number": [
+    {
+      "slug": "priceline-customer-service",
+      "similarity": 0.604421
+    }
+  ],
   "how-long-to-reach-a-human": [],
   "how-much-does-blood-work-cost": [
     {
@@ -1305,6 +1358,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.604234
     }
   ],
+  "priceline-customer-service": [
+    {
+      "slug": "etihad-customer-service",
+      "similarity": 0.646238
+    },
+    {
+      "slug": "hertz-customer-service-number",
+      "similarity": 0.604421
+    }
+  ],
   "private-dining-room-cost": [
     {
       "slug": "customer-story-rick-dinner-reservation",
@@ -1499,6 +1562,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "unitedhealthcare-phone-number": [
     {
+      "slug": "geico-customer-service",
+      "similarity": 0.649165
+    },
+    {
       "slug": "allstate-customer-service-number",
       "similarity": 0.62134
     },
@@ -1520,7 +1587,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "allstate-customer-service-number",
-      "similarity": 0.612888
+      "similarity": 0.612889
+    },
+    {
+      "slug": "geico-customer-service",
+      "similarity": 0.603076
     },
     {
       "slug": "experian-phone-number",
@@ -1576,7 +1647,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "muse-code-mcp-phone-calls",
-      "similarity": 0.677881
+      "similarity": 0.677882
     },
     {
       "slug": "twilio-mcp-phone-calls",
