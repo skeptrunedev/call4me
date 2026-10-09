@@ -43,6 +43,7 @@ export interface PageOverride {
 export const PAGES = {
   home: { description: SITE_DESCRIPTION, card: 'site', path: '/' },
   examples: { description: 'listen to real call4me calls: dinner reservations, a dentist reschedule, a junk removal quote, and more. original voices and full transcripts.', card: 'examples', path: '/examples' },
+  students: { description: 'free call4me credits for students: an AI assistant that makes phone calls for you, built for students the phone gets in the way of. approved by hand.', card: 'students', path: '/students' },
   companies: { description: 'customer service phone numbers for delta, paypal, verizon, hulu and 25 more, each with a real recorded call, the phone tree, and how long it took to reach a person.', card: 'companies', path: '/companies' },
   voices: { description: 'hear every call4me caller voice (marin, cedar, gleam, meridian) saying the same line at phone quality, and how to pick one for your calls.', card: 'voices', path: '/voices' },
   mcp: { description: 'install call4me in claude code, codex, claude desktop, claude.ai, chatgpt, muse, or grok bot with one prompt. your agent gets a tool that makes phone calls.', card: 'mcp', path: '/mcp' },
@@ -66,6 +67,7 @@ export type PageKey = keyof typeof PAGES;
 /** The card image behind each /og/<name>.png. */
 export const CARDS: Record<string, OgCard> = {
   examples: { title: 'listen to real calls', subtitle: 'hear the agent ask questions and get things done before you buy', footer: 'original voices · edited excerpts · transcripts' },
+  students: { title: "we'll make the call", subtitle: 'free call credits for students. appointments, pharmacies, customer service, waiting on hold.', footer: '$50 free for students · approved by hand' },
   companies: { title: 'customer service numbers we called', subtitle: 'a real recorded call to each one, and how long it took to reach a person', footer: 'airlines · banks · telecom · insurance · subscriptions' },
   voices: { title: 'hear every caller voice', subtitle: 'the same line in each voice, recorded at phone quality', footer: 'marin · cedar · gleam · meridian' },
   site: { title: 'book dinners, doctor appointments, call dealerships', subtitle: 'one prompt installs it in claude code, codex, claude desktop, or chatgpt', footer: 'prepaid credits from $10' },

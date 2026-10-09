@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { field, origin, ownerKey, stripeFor, viewerKey, visitor, type AppContext, type AppEnv } from '../lib/context';
-import { accountPrompt, callPrompt, companiesPrompt, examplesPrompt, voicesPrompt, installPrompt, privacyPrompt, rulesPrompt, supportPrompt, termsPrompt } from '../lib/prompts';
+import { accountPrompt, callPrompt, companiesPrompt, studentsPrompt, examplesPrompt, voicesPrompt, installPrompt, privacyPrompt, rulesPrompt, supportPrompt, termsPrompt } from '../lib/prompts';
 import { confirmVerificationInput } from '../lib/number-schema';
 import { callView } from '../mcp/server';
 import { accounts, type Account } from '../services/accounts';
@@ -16,6 +16,7 @@ import { AddCreditsPage, HomePage, MessagePage, PrivacyPage, RulesPage, SupportP
 import { ExamplesPage } from '../views/examples';
 import { VoicesPage } from '../views/voices';
 import { CompaniesPage } from '../views/companies';
+import { StudentsPage } from '../views/students';
 import { PrototypePage, PROTOTYPE_STYLES, type PrototypeStyle } from '../views/prototypes';
 
 export const pub = new Hono<AppEnv>();
@@ -41,6 +42,10 @@ pub.get('/prototypes/:style', async (c) => {
 // permanent alias so old links resolve to the canonical root instead of ending at a 404.
 pub.get('/home', (c) => c.redirect('/', 301));
 pub.get('/examples', async (c) => c.html(<ExamplesPage signedIn={signedIn(c)} agentPrompt={examplesPrompt(origin(c), await viewerKey(c))} />));
+pub.get('/students', async (c) => c.html(<StudentsPage signedIn={signedIn(c)} agentPrompt={studentsPrompt(origin(c), await viewerKey(c))} />));
+// Where the GitHub Student Developer Pack and accessibility outreach point.
+pub.get('/github-students', (c) => c.redirect('/students', 301));
+pub.get('/accessibility', (c) => c.redirect('/students', 301));
 pub.get('/companies', async (c) => c.html(<CompaniesPage signedIn={signedIn(c)} agentPrompt={companiesPrompt(origin(c), await viewerKey(c))} />));
 pub.get('/voices', async (c) => c.html(<VoicesPage signedIn={signedIn(c)} agentPrompt={voicesPrompt(origin(c), await viewerKey(c))} />));
 

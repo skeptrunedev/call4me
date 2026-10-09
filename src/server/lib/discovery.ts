@@ -39,6 +39,7 @@ export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: stri
   { page: 'examples', changefreq: 'monthly', priority: '0.9' },
   { page: 'mcp', changefreq: 'monthly', priority: '0.9' },
   { page: 'companies', changefreq: 'weekly', priority: '0.8' },
+  { page: 'students', changefreq: 'monthly', priority: '0.7' },
   { page: 'voices', changefreq: 'monthly', priority: '0.6' },
   { page: 'blog', changefreq: 'weekly', priority: '0.7' },
   { page: 'blogArchive', changefreq: 'weekly' },

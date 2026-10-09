@@ -20,6 +20,11 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
     "markdown": "/__pages/965e43e2b9e71740.md",
     "tokens": 1306
   },
+  "/students": {
+    "html": "/__pages/9a3f77bd97426a79.html",
+    "markdown": "/__pages/9a3f77bd97426a79.md",
+    "tokens": 896
+  },
   "/mcp": {
     "html": "/__pages/88fe637beab867e2.html",
     "markdown": "/__pages/88fe637beab867e2.md",

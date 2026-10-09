@@ -13,6 +13,7 @@ import { HomePage, RulesPage, PrivacyPage, TermsPage, SupportPage } from '../src
 import { ExamplesPage } from '../src/server/views/examples';
 import { VoicesPage } from '../src/server/views/voices';
 import { CompaniesPage } from '../src/server/views/companies';
+import { StudentsPage } from '../src/server/views/students';
 import { McpPage } from '../src/server/views/account';
 import { BlogIndex, BlogArchive, BlogPost } from '../src/server/views/blog';
 import { archive, atomFeed, related, renderAll, rssFeed } from '../src/server/lib/blog';
@@ -79,6 +80,7 @@ await page('/', <HomePage {...common} origin={origin} pricePerMinuteCents={price
 await page('/examples', <ExamplesPage {...common} agentPrompt={prompts.examplesPrompt(origin, null)} />);
 await page('/voices', <VoicesPage {...common} agentPrompt={prompts.voicesPrompt(origin, null)} />);
 await page('/companies', <CompaniesPage {...common} agentPrompt={prompts.companiesPrompt(origin, null)} />);
+await page('/students', <StudentsPage {...common} agentPrompt={prompts.studentsPrompt(origin, null)} />);
 await page('/mcp', <McpPage {...common} origin={origin} installPrompt={installPrompt} apiKey={null} />);
 await page('/rules', <RulesPage {...common} pricePerMinuteCents={price} countries={[]} agentPrompt={prompts.rulesPrompt(origin, null)} />);
 await page('/privacy', <PrivacyPage {...common} agentPrompt={prompts.privacyPrompt(origin, null)} />);
