@@ -239,7 +239,8 @@ export const Layout: FC<{
             <a href="/mcp" aria-current={page === 'mcp' ? 'page' : undefined}>install mcp</a>
             <a href="/blog" aria-current={page === 'blog' || page === 'blogArchive' ? 'page' : undefined}>blog</a>
             <a href="/rules" aria-current={page === 'rules' ? 'page' : undefined}>rules</a>
-            {signedIn ? <a class="account-link" data-site-account href="/account">my account</a> : <a class="account-link" data-site-account href="/login">sign up / sign in</a>}
+            {/* Stable on static pages; /account handles sign in when needed. */}
+            <a class="account-link" href="/account">my account</a>
             <form method="post" action="/add-funds" class="navform">
               <button type="submit">add funds</button>
             </form>
@@ -263,11 +264,9 @@ export const Layout: FC<{
               <nav class="footer-socials" aria-label="follow Nick Khami">
                 <a href="https://x.com/skeptrune" aria-label="Nick Khami on X" title="Nick Khami on X">
                   <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="m4 3 12 18h4L8 3H4Zm1 18L19 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /></svg>
-                  <span>X</span>
                 </a>
                 <a href="https://www.linkedin.com/in/nkhami/" aria-label="Nick Khami on LinkedIn" title="Nick Khami on LinkedIn">
                   <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.5" /><path d="M7 10v7m0-11v2m4 9v-7m0 3c0-4 6-4 6 0v4" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
-                  <span>LinkedIn</span>
                 </a>
               </nav>
             </div>
