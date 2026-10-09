@@ -60,6 +60,8 @@ A second call, just for the question the first one didn't answer. The agent's fi
 4. **"Let me connect you with a live agent."** "A member of our team will be with you shortly."
 5. **A person picks up.** For us, 10 and 14 seconds after the transfer, and about a minute after the call started.
 
+If you run an online store and want the same setup (an assistant that sorts the call, then a quick handoff to a person), here's an overview of [ecommerce call center services](https://www.ringly.io/blog/ecommerce-call-center-services).
+
 ## Returning a large item, step by step
 
 1. **Check the item is returnable** before you order. "Not all the items are eligible for a return", and the item page and Wayfair's return policy have the details for "small and large parcels".
