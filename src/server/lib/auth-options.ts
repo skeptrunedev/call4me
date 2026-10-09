@@ -22,6 +22,7 @@ export interface AuthDeps {
 
 /** Prefix of better-auth's cookies (`callbay.session_token`); kept from before the rename so sessions survive. */
 export const COOKIE_PREFIX = 'callbay';
+const ACCESS_TOKEN_TTL = 7 * 24 * 3600;
 
 export function authOptions(deps: AuthDeps) {
   return {
@@ -43,7 +44,7 @@ export function authOptions(deps: AuthDeps) {
       accountLinking: { enabled: true, allowDifferentEmails: true },
     },
     session: {
-      // Signed in for good: 400 days is the longest cookie browsers keep, and any visit
+      // Long-lived browser sessions: 400 days is the longest cookie browsers keep, and any visit
       // after a day pushes the expiry out again.
       expiresIn: 400 * 24 * 3600,
       updateAge: 24 * 3600,
@@ -67,16 +68,18 @@ export function authOptions(deps: AuthDeps) {
         resource: mcpResource(deps.baseURL),
         // A week: clients that did not ask for offline_access get no refresh token, and signing
         // in every hour would make the connector useless. Consent can be revoked.
+        // Resource TTLs can only shorten the provider-wide limit, whose default is one hour.
+        accessTokenExpiresIn: ACCESS_TOKEN_TTL,
         resources: [
-          { identifier: mcpResource(deps.baseURL), name: `${deps.appName} MCP`, accessTokenTtl: 7 * 24 * 3600 },
+          { identifier: mcpResource(deps.baseURL), name: `${deps.appName} MCP`, accessTokenTtl: ACCESS_TOKEN_TTL },
           // The app directories' servers (routes/mcp.tsx), each a resource of its own so a host's token is bound to its URL.
-          ...DIRECTORY_SERVERS.map((s) => ({ identifier: mcpResourceAt(s.path, deps.baseURL), name: `${deps.appName} for ${s.host}`, accessTokenTtl: 7 * 24 * 3600 })),
+          ...DIRECTORY_SERVERS.map((s) => ({ identifier: mcpResourceAt(s.path, deps.baseURL), name: `${deps.appName} for ${s.host}`, accessTokenTtl: ACCESS_TOKEN_TTL })),
           // The site itself (GET /api, credits over x402) accepts the same tokens, so agents can hold one token for both.
-          { identifier: siteResource(deps.baseURL), name: `${deps.appName} API`, accessTokenTtl: 7 * 24 * 3600 },
+          { identifier: siteResource(deps.baseURL), name: `${deps.appName} API`, accessTokenTtl: ACCESS_TOKEN_TTL },
         ],
         clientRegistrationDefaultResources: [mcpResource(deps.baseURL), ...DIRECTORY_SERVERS.map((s) => mcpResourceAt(s.path, deps.baseURL)), siteResource(deps.baseURL)],
-        // A connected client never has to sign in again: every refresh rotates the token for
-        // another ten years. Revoking consent is how a connection ends.
+        // Active clients can renew without signing in: each refresh rotates the token for
+        // another ten years. Revocation or a refresh token left unused past expiry ends access.
         refreshTokenExpiresIn: 10 * 365 * 24 * 3600,
         // The signed authorize query the login page carries (and the code) live this long; the
         // default 10 minutes sends anyone who pauses mid-sign-in (app reviewers too) back to the start.
