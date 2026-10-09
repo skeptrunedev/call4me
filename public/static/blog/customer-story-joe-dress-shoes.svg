@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Joe needed dress shoes before a gala</title>
+  <desc id="desc">Six calls to three stores ended with one pair of shoes held for pickup</desc>
+  <rect width="1200" height="630" fill="#f6f6f2"/>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="80" y="130" font-size="34" fill="#866000">call4me customer stories</text>
+    <text x="80" y="235" font-size="68" font-weight="700" fill="#151515">Joe needed dress shoes</text>
+    <text x="80" y="315" font-size="42" fill="#64645f">A pair set aside before the evening gala</text>
+    <g fill="#ffffff" stroke="#ffb000" stroke-width="3">
+      <rect x="80" y="390" width="320" height="105"/>
+      <rect x="425" y="390" width="330" height="105"/>
+      <rect x="780" y="390" width="340" height="105"/>
+    </g>
+    <g font-size="34" fill="#151515" text-anchor="middle">
+      <text x="240" y="454">Three stores</text>
+      <text x="590" y="454">Six calls</text>
+      <text x="950" y="454">One pair held</text>
+    </g>
+    <text x="80" y="570" font-size="30" fill="#866000">Men's Wearhouse confirmed the hold</text>
+  </g>
+</svg>

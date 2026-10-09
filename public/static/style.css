@@ -96,6 +96,10 @@ footer { border-top: 1px solid var(--line); background: var(--paper); padding: 4
 .footer-links a { text-decoration: none; }
 .footer-links a:hover { text-decoration: underline; }
 .footer-meta { grid-column: 1 / -1; display: flex; gap: 20px; flex-wrap: wrap; padding-top: 28px; border-top: 1px solid var(--line); }
+.footer-socials { display: flex; align-items: center; gap: 22px; margin-left: auto; }
+.footer-socials a { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); text-decoration: none; }
+.footer-socials a:hover { text-decoration: underline; }
+.footer-socials svg { flex: none; }
 footer .rss-link svg { vertical-align: -.125em; }
 
 /* Reusable forms and setup panels. Hidden prompts stay hidden until requested. */
@@ -249,6 +253,7 @@ details[open] > summary::after { content: '−'; }
   .faq details p { margin-right: 0; font-size: 15px; }
   .footer-links { gap: 14px 23px; }
   .footer-meta { padding-top: 24px; gap: 12px; }
+  .footer-socials { width: 100%; margin: 10px 0 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }

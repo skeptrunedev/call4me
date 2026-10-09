@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "563115002ddb8ab522ac886a18a4a255b0144561aac12a76f1603882779aa157"
+  "sourceHash": "f092bdc5f7e1fe30103a6e0729a2413a0a383c9d251c73abb55fad2ce74f6a6c"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -122,6 +122,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "follow-up-appointment-telehealth",
       "similarity": 0.670663
+    },
+    {
+      "slug": "customer-story-dental-appointments",
+      "similarity": 0.632978
     }
   ],
   "ai-phone-tree-navigation": [
@@ -169,7 +173,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "usaa-phone-number",
-      "similarity": 0.612889
+      "similarity": 0.612888
     }
   ],
   "amazon-pharmacy-phone-number": [
@@ -182,6 +186,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "united-change-flight",
       "similarity": 0.656043
+    },
+    {
+      "slug": "customer-story-flight-credit",
+      "similarity": 0.637164
     },
     {
       "slug": "etihad-customer-service",
@@ -224,6 +232,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "book-dinner-reservation-by-phone": [
+    {
+      "slug": "customer-story-rick-dinner-reservation",
+      "similarity": 0.712725
+    },
     {
       "slug": "ai-personal-assistant-appointment-booking",
       "similarity": 0.694747
@@ -556,6 +568,50 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.650278
     }
   ],
+  "customer-story-dental-appointments": [
+    {
+      "slug": "follow-up-appointment-telehealth",
+      "similarity": 0.663111
+    },
+    {
+      "slug": "reschedule-dentist-appointment",
+      "similarity": 0.636452
+    },
+    {
+      "slug": "ai-personal-assistant-appointment-booking",
+      "similarity": 0.632978
+    }
+  ],
+  "customer-story-flight-credit": [
+    {
+      "slug": "american-airlines-flight-credit",
+      "similarity": 0.637164
+    }
+  ],
+  "customer-story-joe-dress-shoes": [
+    {
+      "slug": "need-dress-shoes-today",
+      "similarity": 0.729795
+    },
+    {
+      "slug": "macys-bow-tie-stock-check",
+      "similarity": 0.6512
+    }
+  ],
+  "customer-story-rick-dinner-reservation": [
+    {
+      "slug": "book-dinner-reservation-by-phone",
+      "similarity": 0.712725
+    },
+    {
+      "slug": "private-dining-room-cost",
+      "similarity": 0.671405
+    },
+    {
+      "slug": "agent-web-research-phone-calls-sf-private-dining",
+      "similarity": 0.639954
+    }
+  ],
   "delta-customer-service": [
     {
       "slug": "etihad-customer-service",
@@ -673,6 +729,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "ai-personal-assistant-appointment-booking",
       "similarity": 0.670663
+    },
+    {
+      "slug": "customer-story-dental-appointments",
+      "similarity": 0.663111
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -1021,6 +1081,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "macys-bow-tie-stock-check": [
     {
+      "slug": "customer-story-joe-dress-shoes",
+      "similarity": 0.6512
+    },
+    {
       "slug": "need-dress-shoes-today",
       "similarity": 0.640336
     }
@@ -1153,6 +1217,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "need-dress-shoes-today": [
     {
+      "slug": "customer-story-joe-dress-shoes",
+      "similarity": 0.729795
+    },
+    {
       "slug": "macys-bow-tie-stock-check",
       "similarity": 0.640336
     }
@@ -1239,6 +1307,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "private-dining-room-cost": [
     {
+      "slug": "customer-story-rick-dinner-reservation",
+      "similarity": 0.671405
+    },
+    {
       "slug": "book-dinner-reservation-by-phone",
       "similarity": 0.65722
     },
@@ -1255,6 +1327,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "follow-up-appointment-telehealth",
       "similarity": 0.659237
+    },
+    {
+      "slug": "customer-story-dental-appointments",
+      "similarity": 0.636452
     }
   ],
   "reschedule-doctor-appointment": [
@@ -1354,7 +1430,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "twilio-mcp-phone-calls",
-      "similarity": 0.785476
+      "similarity": 0.785475
     },
     {
       "slug": "phone-calling-mcp-comparison",
@@ -1396,7 +1472,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "t3-code-phone-calls",
-      "similarity": 0.785476
+      "similarity": 0.785475
     },
     {
       "slug": "codex-phone-calls",
@@ -1444,7 +1520,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "allstate-customer-service-number",
-      "similarity": 0.612889
+      "similarity": 0.612888
     },
     {
       "slug": "experian-phone-number",

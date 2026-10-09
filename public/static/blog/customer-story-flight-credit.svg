@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f6f5f1"/>
+  <path d="M0 504H1200M828 0V630" fill="none" stroke="#d7d6ce"/>
+  <text x="70" y="87" font-family="Arial, Helvetica, sans-serif" fill="#55584d" font-size="23" letter-spacing="3">CALL4ME / CUSTOMER STORY</text>
+  <text x="65" y="262" font-family="Arial, Helvetica, sans-serif" fill="#25291f" font-size="156" letter-spacing="-7">$100</text>
+  <text x="72" y="332" font-family="Arial, Helvetica, sans-serif" fill="#25291f" font-size="46">flight credit</text>
+  <text x="72" y="411" font-family="Arial, Helvetica, sans-serif" fill="#62665b" font-size="27">One less call to put off</text>
+  <rect x="886" y="176" width="240" height="168" rx="10" fill="#e5e8d9" stroke="#c9cdbb"/>
+  <path d="M933 250H1067M1039 224L1067 250L1039 276" stroke="#596345" stroke-width="7" fill="none" stroke-linecap="square"/>
+  <text x="72" y="563" font-family="Arial, Helvetica, sans-serif" fill="#25291f" font-size="27">Grok Bot + call4me</text>
+  <text x="890" y="563" font-family="Arial, Helvetica, sans-serif" fill="#62665b" font-size="24">Jem's story</text>
+</svg>

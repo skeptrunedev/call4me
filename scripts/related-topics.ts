@@ -8,6 +8,10 @@
  * Add subjects for every new article without selecting individual related links.
  */
 export const RELATED_TOPICS: Record<string, string[]> = {
+  'customer-story-flight-credit': ['airlines'],
+  'customer-story-rick-dinner-reservation': ['dining'],
+  'customer-story-dental-appointments': ['healthcare'],
+  'customer-story-joe-dress-shoes': ['retail-shopping'],
   'aaa-insurance-customer-service': ['insurance'],
   'adderall-shortage': ['pharmacy'],
   'agent-web-research-phone-calls-sf-private-dining': ['agent-software', 'dining'],

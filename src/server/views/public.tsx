@@ -144,10 +144,46 @@ export const HomeCredits: FC<HomePageProps> = (p) => (
         <h3>how it works</h3>
         <ol class="steps">
           <li>
+            <svg class="step-graphic" viewBox="0 0 320 190" width="320" height="190" aria-hidden="true" focusable="false">
+              <rect x="35" y="24" width="250" height="142" rx="5" fill="#fff" stroke="#ddddd6" />
+              <path d="M35 62h250" stroke="#e5e5df" />
+              <rect x="53" y="39" width="25" height="14" rx="2" fill="none" stroke="#77776d" />
+              <path d="M54 44h23" stroke="#77776d" />
+              <text x="89" y="50" font-size="12" fill="#66665f">call4me credits</text>
+              <text x="54" y="103" font-size="30" font-weight="600" fill="#151515">{dollars(MIN_TOPUP_CENTS)}</text>
+              <rect x="54" y="126" width="84" height="5" rx="1" fill="#e5e5df" />
+              <rect x="54" y="137" width="55" height="5" rx="1" fill="#eeeee9" />
+              <rect x="198" y="112" width="68" height="34" rx="3" fill="#ffb000" />
+              <path d="M222 129h19m-6-6 6 6-6 6" fill="none" stroke="#151515" stroke-width="1.5" />
+            </svg>
             load credits (<span class="price">from {dollars(MIN_TOPUP_CENTS)}</span>, reloads monthly unless you untick it). calls cost <span class="price">{dollars(p.pricePerMinuteCents)}/min</span> of talk time, held up front and settled when the call ends.
           </li>
-          <li>you get a key and one prompt. paste the prompt into your agent. it installs call4me itself.</li>
           <li>
+            <svg class="step-graphic" viewBox="0 0 320 190" width="320" height="190" aria-hidden="true" focusable="false">
+              <rect x="43" y="19" width="145" height="40" rx="4" fill="#fff" stroke="#ddddd6" />
+              <path d="M61 33h9l4 6-4 6h-9l-4-6 4-6Zm13 6h19m-5 0v5m-6-5v4" fill="none" stroke="#77776d" stroke-width="1.5" />
+              <text x="104" y="43" font-size="12" fill="#66665f">your key</text>
+              <path d="M116 60v19m-5-5 5 5 5-5" fill="none" stroke="#a5a59b" stroke-width="1.5" />
+              <rect x="43" y="89" width="235" height="82" rx="4" fill="#fff" stroke="#ddddd6" />
+              <path d="m60 105 6 5-6 5m12 0h9" fill="none" stroke="#77776d" stroke-width="1.5" />
+              <text x="92" y="114" font-size="12" fill="#66665f">call4me</text>
+              <rect x="60" y="132" width="151" height="5" rx="1" fill="#e5e5df" />
+              <rect x="60" y="144" width="108" height="5" rx="1" fill="#eeeee9" />
+              <rect x="222" y="120" width="38" height="35" rx="3" fill="#e6efdf" />
+              <path d="m233 137 5 5 10-11" fill="none" stroke="#52864e" stroke-width="1.8" />
+            </svg>
+            you get a key and one prompt. paste the prompt into your agent. it installs call4me itself.
+          </li>
+          <li>
+            <svg class="step-graphic" viewBox="0 0 320 190" width="320" height="190" aria-hidden="true" focusable="false">
+              <rect x="24" y="26" width="249" height="76" rx="5" fill="#fff" stroke="#ddddd6" />
+              <text x="42" y="54" font-size="13" fill="#55554e">book me a table for 4 at nopa</text>
+              <text x="42" y="74" font-size="13" fill="#55554e">tomorrow around 7</text>
+              <path d="M146 103v26h30m-5-5 5 5-5 5" fill="none" stroke="#a5a59b" stroke-width="1.5" />
+              <rect x="191" y="112" width="105" height="56" rx="4" fill="#fff" stroke="#ddddd6" />
+              <path d="m211 127 5-2 5 8-4 3c3 5 5 7 10 10l3-4 8 5-2 5c-1 2-5 2-8 0-9-4-15-10-19-19-1-3 0-5 2-6Z" fill="#fff3cd" stroke="#b77900" stroke-width="1.4" />
+              <path d="M246 132h30m-30 8h20m-20 8h25" stroke="#deded6" stroke-width="3" />
+            </svg>
             ask for things like normal. <span class="sample">"book me a table for 4 at nopa tomorrow around 7."</span>
           </li>
         </ol>
@@ -193,22 +229,22 @@ export const HomeStories: FC = () => (
       <figure>
         <p><b>$100 flight credit</b></p>
         <blockquote>“literally zero chance i was going to do that myself”</blockquote>
-        <figcaption><a href="https://x.com/sheherenow_/status/2105785991839850786">@sheherenow_ on X</a></figcaption>
+        <figcaption><a href="https://x.com/sheherenow_/status/2105785991839850786">@sheherenow_ on X</a><a class="customer-story-link" href="/blog/customer-story-flight-credit">read the story <span aria-hidden="true">→</span></a></figcaption>
       </figure>
       <figure>
         <p><b>dinner reservation</b></p>
         <blockquote>“Booked a dinner reservation in one prompt. Only cost me 25 cents.”</blockquote>
-        <figcaption><a href="https://x.com/rickmanelius/status/2105825199015030846">@rickmanelius on X</a></figcaption>
+        <figcaption><a href="https://x.com/rickmanelius/status/2105825199015030846">@rickmanelius on X</a><a class="customer-story-link" href="/blog/customer-story-rick-dinner-reservation">read the story <span aria-hidden="true">→</span></a></figcaption>
       </figure>
       <figure>
         <p><b>dental appointments that day</b></p>
         <blockquote>“Just got my mind blown by the call quality”</blockquote>
-        <figcaption><a href="https://x.com/araa3185/status/2105740108926513203">@araa3185 on X</a></figcaption>
+        <figcaption><a href="https://x.com/araa3185/status/2105740108926513203">@araa3185 on X</a><a class="customer-story-link" href="/blog/customer-story-dental-appointments">read the story <span aria-hidden="true">→</span></a></figcaption>
       </figure>
       <figure>
         <p><b>found shoes at Men's Wearhouse</b></p>
         <blockquote>“this thing saved so much time.”</blockquote>
-        <figcaption><a href="https://x.com/JoeFinberg/status/2105727961882398781">@JoeFinberg on X</a></figcaption>
+        <figcaption><a href="https://x.com/JoeFinberg/status/2105727961882398781">@JoeFinberg on X</a><a class="customer-story-link" href="/blog/customer-story-joe-dress-shoes">read the story <span aria-hidden="true">→</span></a></figcaption>
       </figure>
     </section>
   </>

@@ -1,4 +1,8 @@
 import type { PostSource } from '../../server/lib/blog';
+import customerFlightCredit from './customer-story-flight-credit.md';
+import customerRickDinner from './customer-story-rick-dinner-reservation.md';
+import customerDentalAppointments from './customer-story-dental-appointments.md';
+import customerJoeShoes from './customer-story-joe-dress-shoes.md';
 import everythingImprovedSinceLaunch from './everything-we-have-improved-since-launch.md';
 import vapiAlternatives from './vapi-alternatives.md';
 import blandAiAlternatives from './bland-ai-alternatives.md';
@@ -98,6 +102,10 @@ import metaMuseSupplierQuotes from './meta-muse-supplier-quotes.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'customer-story-flight-credit', markdown: customerFlightCredit },
+  { slug: 'customer-story-rick-dinner-reservation', markdown: customerRickDinner },
+  { slug: 'customer-story-dental-appointments', markdown: customerDentalAppointments },
+  { slug: 'customer-story-joe-dress-shoes', markdown: customerJoeShoes },
   { slug: 'everything-we-have-improved-since-launch', markdown: everythingImprovedSinceLaunch },
   { slug: 'vapi-alternatives', markdown: vapiAlternatives },
   { slug: 'bland-ai-alternatives', markdown: blandAiAlternatives },

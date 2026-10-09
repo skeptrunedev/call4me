@@ -173,13 +173,14 @@
   content: counter(step, decimal-leading-zero);
   display: block;
   position: static;
-  margin-bottom: 44px;
-  font-size: 38px;
+  margin-bottom: 12px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1;
-  letter-spacing: -2px;
-  color: #b57600;
+  letter-spacing: .04em;
+  color: #77776d;
 }
+.home-credits .step-graphic { display: block; width: 100%; height: auto; margin: 0 0 24px; overflow: visible; font-family: Arial, Helvetica, sans-serif; }
 .home-credits .sample { font-style: normal; color: #222; }
 .home-credits .price { color: #151515; }
 .home-credits .cols > div + div {
@@ -202,6 +203,8 @@
 .customer-stories blockquote { margin: 0 0 30px; font-size: 25px; font-weight: 600; line-height: 1.18; letter-spacing: -.8px; }
 .customer-stories figcaption { font-size: 13px; color: #757575; }
 .customer-stories figcaption a { text-decoration: none; }
+.customer-stories .customer-story-link { display: flex; align-items: center; gap: 10px; width: fit-content; margin-top: 18px; color: #151515; font-weight: 600; }
+.customer-stories .customer-story-link:hover { text-decoration: underline; text-underline-offset: 4px; }
 .customer-stories figure:first-of-type {
   display: grid;
   grid-template-columns: 1.6fr 1fr;
@@ -262,7 +265,8 @@
   .home-credits { padding-top: 15px; }
   .home-credits .steps { grid-template-columns: 1fr; gap: 12px; }
   .home-credits .steps li { padding: 26px; }
-  .home-credits .steps li::before { margin-bottom: 20px; font-size: 30px; }
+  .home-credits .steps li::before { margin-bottom: 12px; font-size: 12px; }
+  .home-credits .step-graphic { max-width: 360px; margin: 0 auto 24px; }
   .home-credits .cols > div + div { display: block; padding: 25px; margin-top: 38px; }
   .home-credits .cols > div + div h3 { margin-bottom: 25px; }
   .customer-stories { grid-template-columns: 1fr; }
