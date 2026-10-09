@@ -484,7 +484,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         const text = [
           `${category.name}. Before calling, make sure you have:`,
           ...fields.map((f) => `- ${f.key}${f.required ? '' : ' (optional)'}: ${f.known ? `have it (profile ${f.from_profile})` : f.ask}`),
-          'Pass per-call answers in place_call "details" by key. Missing profile fields: ask once and save with call4me_save_profile.',
+          "Pass answers for this call in place_call \"details\" by key. Ask only for missing details this call needs. Offer to save reusable details with call4me_save_profile only with the user's agreement.",
         ].join('\n');
         return ok(text, { category: category.slug, fields });
       })()) as never,
@@ -494,7 +494,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     'call4me_get_profile',
     titled({
       title: 'Saved caller profile',
-      description: `The facts saved for every call (name, DOB, phone, address, ${health ? 'insurance, ' : ''}car) and which are still missing.`,
+      description: `Saved details available to reuse for relevant calls (name, DOB, phone, address, ${health ? 'insurance, ' : ''}car). An incomplete profile is fine. Only request missing details that a specific call needs.`,
       inputSchema: z.object({}),
       annotations: RO,
     }),
@@ -505,7 +505,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         const missing = intake.profileKeys.filter((k) => !profile[k] && !PROFILE_FIELDS[k].optional);
         const text = [
           ...Object.entries(profile).map(([k, v]) => `${k}: ${v}`),
-          missing.length ? `missing: ${missing.map((k) => `${k} (${PROFILE_FIELDS[k].ask})`).join('; ')}` : 'complete',
+          missing.length ? `not saved: ${missing.join(', ')}. These are not setup requirements. Only ask for details needed by a specific call, using call4me_get_requirements.` : 'complete',
         ].join('\n');
         return ok(text, { profile, missing });
       })()) as never,
@@ -515,7 +515,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     'call4me_save_profile',
     titled({
       title: 'Save caller profile',
-      description: 'Save facts that are the same on every call, so they never have to be asked again. Merges into what is saved; an empty string removes a field. Only save what the user gave you.',
+      description: 'Save facts that are the same on every call, so they never have to be asked again. Merges into what is saved; an empty string removes a field. Only save details the user agreed to keep for future calls; use place_call details for information supplied for one call.',
       inputSchema: z.object(Object.fromEntries(intake.profileKeys.map((k) => [k, z.string().max(500).optional().describe(PROFILE_FIELDS[k].label)]))),
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
     }),

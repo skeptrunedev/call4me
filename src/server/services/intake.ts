@@ -372,7 +372,7 @@ export function missingMessage(category: Category, r: Resolved, forSomeoneElse: 
     return lines.join('\n');
   }
   const profileKeys = [...r.missing, ...r.invalid.map((i) => i.field)].map((f) => f.profile).filter(Boolean);
-  if (profileKeys.length) lines.push(`Save the ones that don't change (${[...new Set(profileKeys)].join(', ')}) with call4me_save_profile so you never have to ask again.`);
+  if (profileKeys.length) lines.push(`These details can be used for this call without saving a profile. Offer to save reusable details (${[...new Set(profileKeys)].join(', ')}) with call4me_save_profile only with the user's agreement.`);
   return lines.join('\n');
 }
 
