@@ -22,8 +22,6 @@ It's a keypad menu, not a person and not an AI assistant. There's no "press 0" o
 
 **A live Venmo representative answered 4 minutes 57 seconds into the call,** about 26 seconds after the transfer message.
 
-That "yes" wasn't true for us: we called from call4me's number, which isn't on a Venmo account, and we never gave the phone number on my account. So we don't know what happens when Venmo does find your account at that step. What we do know is the other answer doesn't get you far: on our first call we said "no", and the line asked for "the 10-digit phone number associated with your Venmo account" and wouldn't take "representative" instead ([that recording is below](#things-that-dont-work)). If you call Venmo customer service from the phone on your account, you can answer that question truthfully.
-
 What the representative told us:
 
 - **Sent money to the wrong person? Call Venmo.** "The sender of the payment would have to call us, then we'll determine the factors around it, and we will do the reversal." He said they'd "return the payment that went to the wrong account" and "help them block that person so it can be avoided."
@@ -146,7 +144,6 @@ call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) t
 Our caller got a few things wrong, and you should know which:
 
 - **What it said didn't match what it pressed.** On the second call it said "I'll try eight" and pressed 4, said "three" twice and pressed 2 and then 1, and said "Three to return to the main menu" and pressed 2. The keys above are from our call logs, and the menus that played next match them.
-- **It said yes to a number that isn't on a Venmo account.** At the calling number check it said "One says that's the number on the account" and, about a second and a half later, also pressed 2 ("no"). Venmo answered as if it heard the yes: it looked up our number, found nothing, and transferred us. We can't tell you what happens if you press 2 with nothing else said; on the first call, saying "No" got the 10-digit prompt.
 - **On the first call it went in circles.** It didn't have an account number to give, chose the dispute branch as a way to reach a person (it isn't one), keyed in a number that isn't on my Venmo account once, and hung up after its sixth request for a representative.
 - **On the second call it didn't hang up after the goodbyes.** The line stayed open for about 3 minutes of near silence until Venmo ended the call. It's left in the recording.
 

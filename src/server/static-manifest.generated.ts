@@ -138,7 +138,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/venmo-customer-service-number": {
     "html": "/__pages/8ddc0d8e5d387de7.html",
     "markdown": "/__pages/8ddc0d8e5d387de7.md",
-    "tokens": 9268
+    "tokens": 8997
   },
   "/blog/everything-we-have-improved-since-launch": {
     "html": "/__pages/ee53e230a99841c0.html",
