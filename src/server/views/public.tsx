@@ -10,6 +10,7 @@ import { CopyBlock, Layout } from './layout';
 import { CallOnboarding } from './onboarding';
 import type { RedditPixelEvent } from '../lib/reddit';
 import { EXAMPLES } from '../../content/examples';
+import { useStaticRender } from '../lib/static-render';
 
 /** Who runs the site and what it is, for search and answer engines (schema.org). */
 const HOME_LD = {
@@ -257,6 +258,7 @@ export const HomePage: FC<HomePageProps> = (p) => (
 
 /** The faq on the home page and the rules page. */
 export const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ signedIn, pricePerMinuteCents, countries }) => {
+  const staticConfig = useStaticRender();
   const live = countries.filter((c) => c.available);
   const extra = pricierDestinations();
   return (
@@ -268,7 +270,7 @@ export const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries
         <p>
           the us, canada, the eu, the uk, iceland, liechtenstein, norway, switzerland, the uae, and japan work with your free us number.
           other supported destinations may need a local call4me number. check availability in <a href={accountPath(signedIn)}>my account</a>
-          {live.length > 0 ? <> (numbers available in {live.length} countries)</> : null}.
+          {staticConfig ? <span data-site-countries></span> : live.length > 0 ? <> (numbers available in {live.length} countries)</> : null}.
         </p>
       </details>
       <details>

@@ -1,0 +1,45 @@
+/* The browser owns navigation and history; unsupported browsers ignore these rules. */
+@view-transition {
+  navigation: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+/* A short dissolve keeps the page stable and never delays the next document request. */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-group(root) {
+  animation-duration: 140ms;
+}
+
+::view-transition-old(root) {
+  animation: navigation-out 100ms ease-out both;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  animation: navigation-in 140ms ease-out both;
+  mix-blend-mode: normal;
+}
+
+@keyframes navigation-out {
+  to { opacity: 0; }
+}
+
+@keyframes navigation-in {
+  from { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+}

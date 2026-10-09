@@ -1,3 +1,4 @@
+import { COOKIE_PREFIX } from './session-credentials';
 import type { BetterAuthOptions } from 'better-auth';
 import { bearer, jwt } from 'better-auth/plugins';
 import { mcp } from '@better-auth/mcp';
@@ -21,7 +22,7 @@ export interface AuthDeps {
 }
 
 /** Prefix of better-auth's cookies (`callbay.session_token`); kept from before the rename so sessions survive. */
-export const COOKIE_PREFIX = 'callbay';
+export { COOKIE_PREFIX } from './session-credentials';
 const ACCESS_TOKEN_TTL = 7 * 24 * 3600;
 
 export function authOptions(deps: AuthDeps) {

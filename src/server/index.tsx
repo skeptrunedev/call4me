@@ -35,6 +35,7 @@ import { analytics, emailHashOf } from './services/analytics';
 import { firstTouchCookie, firstTouchOf, firstTouchSetCookie } from './lib/first-touch';
 import { redditConversions, redditCookies, redditVisitCookie, redditVisitOf, saveRedditVisit } from './lib/reddit';
 import { metaConversions } from './lib/meta';
+import { siteData } from './routes/site-data';
 
 const app = new Hono<AppEnv>();
 
@@ -143,6 +144,8 @@ app.use('/', async (c, next) => {
 });
 
 app.route('/', authRoutes);
+app.route('/api/site-data', siteData);
+app.route('/blog/site-data', siteData);
 app.route('/blog', blog);
 app.route('/admin', admin);
 app.route('/', pub);
