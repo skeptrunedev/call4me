@@ -365,21 +365,66 @@ export const RulesPage: FC<{ signedIn: boolean; pricePerMinuteCents: number; cou
 
 export const PrivacyPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ signedIn, agentPrompt }) => (
   <Layout title="privacy" page="privacy" signedIn={signedIn}>
-    <h1>privacy</h1>
-    <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
+    <h1>privacy policy</h1>
+    <p>updated October 8, 2026</p>
+    <p>This policy covers call4me at call4.me, our phone-calling service, and our connected tools, including the call4me plugin in ChatGPT. Contact <a href="mailto:me@call4.me">me@call4.me</a> with privacy questions or requests.</p>
+
+    <h2 id="data">What we collect and why</h2>
     <ul>
-      <li>we store your email, your balance history, and for each call: the number, the brief your agent sent, the outcome, and a text transcript.</li>
-      <li>if you save a calling profile (name, date of birth, phone, address, insurance, car), we store it so your agent doesn't have to ask before every call. the caller only shares it with the place it's calling, and only when asked. your agent can remove any of it with call4me_save_profile.</li>
-      <li>our phone carrier (Telnyx) records and stores call audio. audio also passes through our speech model provider (OpenAI) while the call is live. after a call ends, you can play or save available recordings from <a href={accountPath(signedIn)}>my account</a>, or ask your agent for them. recording links can expire and anyone you share a link with can use it.</li>
-      <li>payments are handled by Stripe; we never see your card.</li>
-      <li>we count visits to this site with Google Analytics and Ahrefs Web Analytics. Google Analytics sets a cookie to tell repeat visits apart. when you're signed in, Google Analytics also gets your account's internal id and a one-way hash of your email (never the email itself or your phone number) along with sign-ups, purchases, and when calls are placed and how they ended, without who was called or what was said. we also set our own cookie on your first visit that remembers where you came from (the referring site or link tag and the first page you saw), and keep that with your account so we know which channels bring people who use call4me.</li>
-      <li>we measure our Facebook and Instagram ads with Meta's pixel, which sets a cookie to recognize your browser and the ad you clicked. Meta gets that cookie, your IP address and browser type, and, when you're signed in, a scrambled (hashed) copy of your account's internal id, along with sign-ups, purchases and amounts, and that a call was placed. never your email, phone number or name, who was called, or what was said.</li>
-      <li>we measure Reddit ads with Reddit's pixel and server-side conversions. we keep the Reddit click and campaign labels from a paid visit with your account so later purchases and usage can be attributed. Reddit may receive the click id, browser identifiers, IP address and browser type, plus scrambled copies of your account id and email, purchase amounts, and milestones such as a first completed call, returning use, or a resolved task. Reddit never receives a phone number, destination, call category, brief, transcript, recording, or call outcome details.</li>
-      <li>on the blog, a cookie remembers which posts you liked. a comment stores the name and email you give (the email is never shown), and the newsletter stores your email until you unsubscribe.</li>
-      <li>
-        email <a href="mailto:me@call4.me">me@call4.me</a> to delete your account and its call history.
-      </li>
+      <li><strong>Account and sign-in information.</strong> We store your email, account identifier, and information supplied by your sign-in provider, such as your name and profile image. We store sign-in sessions, authorization grants and tokens, and a password hash for accounts that use password sign-in. This lets us identify you, protect your account, and authorize the clients you connect. Security records can include IP addresses, browser information, and request times.</li>
+      <li><strong>Call requests and history.</strong> We store the destination number, business and task details you or your agent provide, scheduling information, answers you give during a call, call status, timing and charges, outcomes, text transcripts, and recording references. If you join a call or receive a callback, we also process your phone number and your part of the conversation. We use this information to make and manage the requested calls, return results, maintain your history, resolve problems, and prevent abuse.</li>
+      <li><strong>Saved calling profile.</strong> If you choose to save details, we store fields such as your name, date of birth, phone number, address, and vehicle details so they can be reused for relevant calls. Some integrations outside the ChatGPT plugin also support health or dental insurance fields. Saving a profile is separate from giving details for one call; you can remove saved fields.</li>
+      <li><strong>Payments.</strong> We store your balance, purchases, charges, and payment-provider references for billing and reconciliation. Stripe handles card payments; call4me does not receive your full card number or security code.</li>
+      <li><strong>Support and email.</strong> We process the messages and contact details you send us to answer requests, plus delivery and subscription records for account emails and newsletters. Blog comments store the name, email, comment, IP address and posting time; your name and comment are public, but your email is not displayed. Blog likes use a browser identifier.</li>
+      <li><strong>Website and usage information.</strong> We process browser and device information, IP addresses, referring sites, landing pages, campaign and click identifiers, cookie identifiers, and account-linked usage events for site analytics and advertising measurement. The recipients and limits are described below.</li>
     </ul>
+
+    <h2 id="chatgpt">Data used by the ChatGPT plugin</h2>
+    <p>Connecting the plugin links it to your call4me account. We receive the inputs sent with a tool request, not your entire ChatGPT conversation. These inputs can include the business to call, the task, necessary contact or booking details, and answers you authorize your agent to pass along.</p>
+    <p>The tools return information to your connected client, including the requested call status, outcome, transcript, recording links, saved profile fields, or balance. Your client processes those results under its own privacy settings and policy. Only send information needed for the task and information you have permission to share about another person.</p>
+    <p>The ChatGPT plugin excludes medical and dental appointment categories and health-insurance profile fields. Do not send protected health information, government identifiers, payment-card details, passwords, API keys, or one-time authentication codes in call briefs, profiles, or tool inputs. Sign in through the dedicated authorization flow, not by putting credentials into a chat or call request.</p>
+
+    <h2 id="recipients">Who receives information</h2>
+    <ul>
+      <li><strong>The people and businesses you call</strong> receive the information shared during the conversation to carry out your task. They may keep their own records. Anyone you share a recording link with may be able to use it while it remains valid.</li>
+      <li><strong>Cloudflare</strong> hosts our application, databases, call-session state, and operational logs. <strong>Telnyx</strong> carries calls and processes phone numbers, call metadata, and recorded audio.</li>
+      <li><strong>OpenAI</strong> processes call instructions, relevant calling details, live audio, transcripts, and generated responses for the voice agent, its supporting reasoning, and call summaries. This API processing is separate from your use of ChatGPT as the connected client.</li>
+      <li><strong>Raindrop, when monitoring is enabled,</strong> receives diagnostic information about voice sessions and summaries, including account and call identifiers, model activity, and conversation content. We enable its personal-information redaction and apply additional redaction to supported fields; this is not a guarantee that every personal detail is removed.</li>
+      <li><strong>Stripe</strong> processes payments. <strong>Google or X</strong> handles the sign-in method you choose. Our email service, normally <strong>Fastmail</strong>, processes message addresses and content to deliver account, support, and newsletter emails.</li>
+      <li><strong>Your connected client</strong> receives tool results as described above. Our service providers may process information outside your country. Their separate retention and legal obligations can apply to information they receive.</li>
+    </ul>
+
+    <h2 id="analytics">Analytics, advertising measurement, and cookies</h2>
+    <p>We use Google Analytics and Ahrefs Web Analytics to understand site visits, and Meta and Reddit to measure our ads. Website scripts receive visit and browser information. Some account events are also sent from our servers, including when a connected agent uses call4me without an open browser.</p>
+    <ul>
+      <li><strong>Google Analytics</strong> receives browser identifiers, our internal account identifier, a one-way hash of your email when available, acquisition information, and sign-up, purchase, and call-usage events. Our server-side events do not include call destinations, briefs, transcripts, or audio.</li>
+      <li><strong>Meta</strong> receives browser and ad-click identifiers, IP address and browser type when available, a hashed account identifier, and sign-up, purchase and call-placement events. Our conversion payloads do not include your email, phone number, name, destination, or conversation content.</li>
+      <li><strong>Reddit</strong> receives click and campaign information, available browser information, hashed account and email identifiers, purchase amounts, and milestones such as a first completed call, returning use, or a resolved task. Our conversion payloads exclude phone numbers, destinations, call categories, briefs, transcripts, recordings, and detailed outcomes.</li>
+    </ul>
+    <p>Hashed identifiers are pseudonymous, not anonymous: a recipient may match them to information it already holds. We keep first-visit attribution and paid Reddit visit records so we can connect later purchases and usage to their source.</p>
+
+    <h2 id="retention">How long information is kept</h2>
+    <ul>
+      <li><strong>Account records and text call history:</strong> there is currently no automatic age-based deletion. Account details, call briefs, transcripts, outcomes, schedules, and balance history remain stored until removed through an account or data-deletion request. Disconnecting a plugin or not using the service does not delete these records.</li>
+      <li><strong>Saved profiles:</strong> fields remain until you remove them or request account deletion. Removing a profile field does not erase a copy already used in an earlier call or shared with a business.</li>
+      <li><strong>Call recordings:</strong> Telnyx stores the audio. Its <a href="https://support.telnyx.com/en/articles/5377454-call-recording">published recording policy</a> currently states that recordings are stored for one year unless deleted earlier, and that this maximum may change. We do not guarantee availability for that whole period. An expiring download link is not deletion of the underlying audio. Contact us to request earlier removal of a recording.</li>
+      <li><strong>Sign-in and authorization:</strong> our browser sessions are configured for up to 400 days and renew with active use. OAuth access tokens last seven days; refresh tokens can last ten years and rotate when used. Tokens can be revoked before expiry. These are access lifetimes, not promises to erase the associated account, authorization records, or call history when a token expires.</li>
+      <li><strong>Our cookies:</strong> first-visit attribution lasts up to 365 days, paid Reddit visitor and visit cookies up to 90 days, and the blog reader cookie up to 365 days. The blog database bookmark cookie lasts up to ten minutes. Browsers may remove cookies earlier. Attribution copied into our database has no automatic age-based expiry; deleting a cookie does not delete that copy.</li>
+      <li><strong>Blog, email, support, and measurement records:</strong> stored comments, subscription and delivery records, support correspondence, attribution records, and conversion-delivery records do not currently have a fixed automatic deletion period. Unsubscribing stops the relevant emails but keeps the subscription record, including its unsubscribed status, so we can honor that choice. Ask us about removing these records.</li>
+      <li><strong>Provider logs and copies:</strong> providers may retain security logs, backups, payment records, and diagnostic data on their own schedules. For example, OpenAI's <a href="https://developers.openai.com/api/docs/guides/your-data">API data controls</a> describe default abuse-monitoring retention of up to 30 days, with legal and safety exceptions and separate rules for stored application data. We do not promise immediate erasure of every provider copy when data is removed from call4me. Contact us for help with provider-held data related to your account.</li>
+    </ul>
+
+    <h2 id="controls">Your choices and deletion requests</h2>
+    <ul>
+      <li><strong>View and correct:</strong> use <a href={accountPath(signedIn)}>my account</a> or the connected tools to review your calls and available recordings. Use call4me_get_profile to inspect your saved profile and call4me_save_profile with an empty string for a field to remove it. Only save details you want reused.</li>
+      <li><strong>Disconnect:</strong> remove the plugin or connection in your client's settings to stop using it there. Contact us if you also need help revoking access. Disconnecting, signing out, and deleting an account are different actions.</li>
+      <li><strong>Email choices:</strong> use the unsubscribe link in the relevant newsletter or promotional email. This does not stop essential account or support messages, or automatically delete subscription records.</li>
+      <li><strong>Browser controls:</strong> your browser can block or clear cookies and block third-party scripts. This can affect sign-in and preferences. These controls do not by themselves stop account-linked events sent from our servers or delete information already shared. Contact us about objecting to measurement or requesting removal of associated data; there is currently no in-product account-wide analytics switch.</li>
+      <li><strong>Access, deletion, and other privacy requests:</strong> email <a href="mailto:me@call4.me">me@call4.me</a> from the address associated with your account. Say whether the request concerns your account, particular calls or recordings, profile, comments, newsletter, or measurement data. We may need to verify account ownership before acting. Account and call-history deletion is handled by support, not by a plugin tool.</li>
+    </ul>
+    <p>Some records may need to be retained for applicable legal, payment, fraud-prevention, or dispute obligations; ask us about the reason and applicable period for your request. Deletion from call4me does not recall information already shared with a business, exported by you, or stored in your connected client's conversation. Those recipients have their own controls.</p>
+    <p>We may update this policy as the service changes; the date above identifies this version. Privacy questions and requests always go to <a href="mailto:me@call4.me">me@call4.me</a>.</p>
+    <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
   </Layout>
 );
 
