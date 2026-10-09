@@ -126,6 +126,7 @@ export const BlogIndex: FC<{
         <h1>call4me blog</h1>
         <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
         <p class="muted">notes on AI agents that make phone calls for you.</p>
+        <p class="small"><a href="/superintelligence-calling-index">Superintelligence Calling Index</a>: compare personal superintelligence phone calling tools, hear the evidence and download the dataset.</p>
         <SubscribeBox signedIn={signedIn} count={subscribers} next="/blog" compact anchor sent={subscribed === 'sent'} error={subscribed && subscribed !== 'sent' ? subscribed : undefined} />
       </div>
 

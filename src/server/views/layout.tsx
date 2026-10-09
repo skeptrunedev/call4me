@@ -175,6 +175,7 @@ export const Layout: FC<{
         <link rel="stylesheet" href="/static/style.css" />
         {(page === "blog" || page === "blogArchive" || page === "message") && <link rel="stylesheet" href="/static/blog.css" />}
         {page === 'home' && <link rel="stylesheet" href="/static/home.css" />}
+        {page === 'superintelligenceCalling' && <link rel="stylesheet" href="/static/superintelligence-calling.css" />}
         {publicNavigation && <link rel="stylesheet" href="/static/navigation.css" />}
         <title>{fullTitle}</title>
         <meta name="description" content={description} />
@@ -257,6 +258,7 @@ export const Layout: FC<{
               <a href="/support">support</a>
               <a href="/blog">blog</a>
               <a href="/voices">voices</a>
+              <a href="/superintelligence-calling-index">superintelligence calling index</a>
               <a class="rss-link" href="/blog/rss.xml" type="application/rss+xml" aria-label="Subscribe to the RSS feed" title="RSS feed">RSS</a>
             </nav>
             <div class="footer-meta">

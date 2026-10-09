@@ -26,7 +26,7 @@
     "binding": "ASSETS",
     // Static files go directly to the CDN. HTML needs a small dispatcher for content
     // negotiation, query variants, canonical URLs, and attribution. Audio needs ranges.
-    "run_worker_first": ["/", "/blog", "/blog/*", "/mcp", "/mcp/*", "/examples", "/voices", "/companies", "/rules", "/privacy", "/terms", "/support", "/static/examples/*", "/static/blog/*.mp3", "/static/voices/*", "/__pages/*"]
+    "run_worker_first": ["/", "/blog", "/blog/*", "/mcp", "/mcp/*", "/examples", "/voices", "/companies", "/superintelligence-calling-index", "/rules", "/privacy", "/terms", "/support", "/static/examples/*", "/static/blog/*.mp3", "/static/voices/*", "/__pages/*"]
   },
   // Every minute: scheduled calls that came due (services/scheduled.ts). Every 15: the sweeps and
   // emails in index.tsx scheduled().

@@ -16,6 +16,7 @@ import { AddCreditsPage, HomePage, MessagePage, PrivacyPage, RulesPage, SupportP
 import { ExamplesPage } from '../views/examples';
 import { VoicesPage } from '../views/voices';
 import { CompaniesPage } from '../views/companies';
+import { SuperintelligenceCallingPage } from '../views/superintelligence-calling';
 import { StudentsPage } from '../views/students';
 import { PrototypePage, PROTOTYPE_STYLES, type PrototypeStyle } from '../views/prototypes';
 
@@ -47,6 +48,7 @@ pub.get('/students', async (c) => c.html(<StudentsPage signedIn={signedIn(c)} ag
 pub.get('/github-students', (c) => c.redirect('/students', 301));
 pub.get('/accessibility', (c) => c.redirect('/students', 301));
 pub.get('/companies', async (c) => c.html(<CompaniesPage signedIn={signedIn(c)} agentPrompt={companiesPrompt(origin(c), await viewerKey(c))} />));
+pub.get('/superintelligence-calling-index', (c) => c.html(<SuperintelligenceCallingPage signedIn={signedIn(c)} />));
 pub.get('/voices', async (c) => c.html(<VoicesPage signedIn={signedIn(c)} agentPrompt={voicesPrompt(origin(c), await viewerKey(c))} />));
 
 /**

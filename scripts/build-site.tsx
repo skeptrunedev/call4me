@@ -13,6 +13,8 @@ import { HomePage, RulesPage, PrivacyPage, TermsPage, SupportPage } from '../src
 import { ExamplesPage } from '../src/server/views/examples';
 import { VoicesPage } from '../src/server/views/voices';
 import { CompaniesPage } from '../src/server/views/companies';
+import { SuperintelligenceCallingPage } from '../src/server/views/superintelligence-calling';
+import { SI_DATA_PATH, SI_PATH, siCsv, siDataset } from '../src/content/superintelligence-calling';
 import { StudentsPage } from '../src/server/views/students';
 import { McpPage } from '../src/server/views/account';
 import { BlogIndex, BlogArchive, BlogPost } from '../src/server/views/blog';
@@ -41,6 +43,9 @@ const destination = 'dist/site';
 await rm(destination, { recursive: true, force: true });
 await mkdir(destination, { recursive: true });
 await cp('public', destination, { recursive: true });
+await mkdir(join(destination, 'static/data'), { recursive: true });
+await writeFile(join(destination, `${SI_DATA_PATH}.csv`), siCsv());
+await writeFile(join(destination, `${SI_DATA_PATH}.json`), JSON.stringify(siDataset(), null, 2) + '\n');
 
 async function files(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -80,6 +85,7 @@ await page('/', <HomePage {...common} origin={origin} pricePerMinuteCents={price
 await page('/examples', <ExamplesPage {...common} agentPrompt={prompts.examplesPrompt(origin, null)} />);
 await page('/voices', <VoicesPage {...common} agentPrompt={prompts.voicesPrompt(origin, null)} />);
 await page('/companies', <CompaniesPage {...common} agentPrompt={prompts.companiesPrompt(origin, null)} />);
+await page(SI_PATH, <SuperintelligenceCallingPage {...common} />);
 await page('/students', <StudentsPage {...common} agentPrompt={prompts.studentsPrompt(origin, null)} />);
 await page('/mcp', <McpPage {...common} origin={origin} installPrompt={installPrompt} apiKey={null} />);
 await page('/rules', <RulesPage {...common} pricePerMinuteCents={price} countries={[]} agentPrompt={prompts.rulesPrompt(origin, null)} />);

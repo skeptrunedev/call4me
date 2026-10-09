@@ -1,5 +1,6 @@
 import type { Post } from './blog';
 import { PAGES, type PageKey } from './pages';
+import { SI_UPDATED } from '../../content/superintelligence-calling';
 
 /** What the sitemap and llms.txt need from a blog post. */
 export type PostEntry = Pick<Post, 'slug' | 'title' | 'description' | 'date' | 'updated'>;
@@ -39,6 +40,7 @@ export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: stri
   { page: 'examples', changefreq: 'monthly', priority: '0.9' },
   { page: 'mcp', changefreq: 'monthly', priority: '0.9' },
   { page: 'companies', changefreq: 'weekly', priority: '0.8' },
+  { page: 'superintelligenceCalling', changefreq: 'weekly', priority: '0.8' },
   { page: 'students', changefreq: 'monthly', priority: '0.7' },
   { page: 'voices', changefreq: 'monthly', priority: '0.6' },
   { page: 'blog', changefreq: 'weekly', priority: '0.7' },
@@ -61,7 +63,7 @@ export interface SitemapEntry {
 /** The public pages, then every blog post with its last-modified date. The sitemap and IndexNow (services/indexnow.ts) both read this. */
 export function sitemapEntries(site: string, posts: PostEntry[] = []): SitemapEntry[] {
   return [
-    ...SITEMAP_PAGES.map((e) => ({ loc: `${site}${PAGES[e.page].path}`, changefreq: e.changefreq, priority: e.priority })),
+    ...SITEMAP_PAGES.map((e) => ({ loc: `${site}${PAGES[e.page].path}`, changefreq: e.changefreq, priority: e.priority, ...(e.page === 'superintelligenceCalling' ? { lastmod: SI_UPDATED } : {}) })),
     ...posts.map((p) => ({ loc: `${site}/blog/${p.slug}`, lastmod: `${p.updated ?? p.date}T00:00:00Z`, changefreq: 'monthly', priority: '0.7' })),
   ];
 }
@@ -102,6 +104,7 @@ export function llmsTxt(site: string, pricePerMinuteCents: number, posts: PostEn
     '',
     `- [Home](${site}/): what call4me does, pricing, and the install prompt`,
     `- [Examples](${site}/examples): real call recordings with edited excerpts, outcomes, and transcripts`,
+    `- [Superintelligence Calling Index](${site}/superintelligence-calling-index): personal superintelligence phone calling tools, dated evidence and recordings. Download the evidence dataset as [CSV](${site}/static/data/superintelligence-calling-index.csv) or [JSON](${site}/static/data/superintelligence-calling-index.json).`,
     `- [Voices](${site}/voices): a phone-quality sample of each caller voice, and how to pick one`,
     `- [Install MCP](${site}/mcp): one prompt for Claude Code, Codex, Claude Desktop, claude.ai, ChatGPT, Muse, and Grok Bot`,
     `- [Rules](${site}/rules): what call4me will and will not call for`,
@@ -111,7 +114,7 @@ export function llmsTxt(site: string, pricePerMinuteCents: number, posts: PostEn
     '## Optional',
     '',
     `- [Terms](${site}/terms)`,
-    `- [Privacy](${site}/privacy): what is stored; call audio is never recorded; content signals: ${CONTENT_SIGNAL}`,
+    `- [Privacy](${site}/privacy): what is stored, how call recordings are handled, and deletion; content signals: ${CONTENT_SIGNAL}`,
     '',
   ].join('\n');
 }

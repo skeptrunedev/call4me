@@ -1,0 +1,66 @@
+.si-index { --si-green: #285943; }
+.si-hero { padding: 10px 0 44px; border-bottom: 1px solid var(--line); }
+.si-eyebrow { color: var(--muted); font-size: 12px; letter-spacing: .075em; text-transform: uppercase; }
+.si-hero h1 { max-width: 1120px; font-size: clamp(42px, 5.7vw, 78px); margin: 28px 0; }
+.si-dek { max-width: 800px; font-size: clamp(18px, 2vw, 23px); line-height: 1.5; color: #53534c; }
+.si-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 20px 28px; margin: 32px 0 42px; font-size: 14px; }
+.si-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 13px 22px; background: var(--accent); border: 1px solid var(--accent); border-radius: 4px; font-size: 14px; font-weight: 600; text-decoration: none; }
+.si-primary:hover { background: #f0a600; border-color: #f0a600; }
+.si-stats { display: flex; flex-wrap: wrap; gap: 26px 70px; margin: 0; }
+.si-stats > div { display: flex; flex-direction: column-reverse; gap: 2px; }
+.si-stats dt { font-size: 12px; color: var(--muted); }
+.si-stats dd { font-size: 36px; line-height: 1.2; margin: 0; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.si-intro, .si-measure { max-width: 850px; }
+.si-index section { scroll-margin-top: 24px; }
+.si-index section > h2, .si-intro h2 { max-width: 900px; }
+.si-filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px; margin: 30px 0 16px; }
+.si-filters > div:first-child { flex: 1 1 280px; }
+.si-filters > div:nth-child(2) { flex: 0 1 240px; }
+.si-filters input, .si-filters select { width: 100%; }
+.si-filters label { margin-top: 0; }
+.si-filters button { background: #fff; border-color: var(--line); min-height: 48px; }
+.si-table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: 4px; margin: 16px 0; }
+.si-table { margin: 0; min-width: 830px; table-layout: fixed; }
+.si-table th:nth-child(1) { width: 18%; }
+.si-table th:nth-child(2) { width: 18%; }
+.si-table th:nth-child(3) { width: 19%; }
+.si-table th:nth-child(4) { width: 45%; }
+.si-table tbody th { background: #fff; color: var(--ink); font-size: 15px; font-weight: 600; }
+.si-table td, .si-table th { padding: 24px 18px; }
+.si-table tr:last-child > * { border-bottom: 0; }
+.si-table p { margin-bottom: 12px; }
+.si-table details { margin-top: 14px; }
+.si-table summary { cursor: pointer; font-size: 13px; text-decoration: underline; text-underline-offset: 4px; }
+.si-table details[open] summary { margin-bottom: 16px; }
+.si-table tr:target > * { background: #fff8e6; }
+.si-cell-note, .si-setup { display: block; font-size: 12px; color: var(--muted); margin-top: 10px; font-weight: 400; }
+.si-badge { display: inline-block; border: 1px solid var(--line); padding: 4px 8px; border-radius: 3px; font-size: 11px; line-height: 1.5; }
+.si-badge-recorded { background: #edf4ef; color: var(--si-green); border-color: #c9ddcf; }
+.si-badge-announced { background: #fff4da; color: #76510d; border-color: #e9d8ac; }
+.si-badge-documented { background: var(--paper); }
+.si-sources { margin: 12px 0; }
+.si-sources li { padding: 6px 0; border: 0; font-size: 13px; }
+.si-scroll-hint { display: none; }
+.si-recordings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.si-recording { background: var(--paper); padding: 30px; border: 1px solid var(--line); border-radius: 4px; }
+.si-recording h3 { margin: 14px 0 20px; }
+.si-recording audio { margin: 24px 0; }
+.si-recording > a { font-size: 14px; }
+.si-scenarios { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; margin: 28px 0; align-items: start; }
+.si-scenarios details { border-top: 1px solid var(--line); padding: 18px 0; }
+.si-scenarios summary { cursor: pointer; font-size: 15px; font-weight: 600; }
+.si-scenario-number { color: var(--muted); margin: 0 12px 0 5px; font-size: 12px; font-weight: 400; }
+.si-scenarios p { font-size: 14px; margin: 16px 0 0; }
+.si-dataset { margin-top: 60px; padding: 38px; background: var(--paper); border: 1px solid var(--line); border-radius: 4px; display: grid; grid-template-columns: 1fr auto; gap: 20px 40px; }
+.si-dataset h2 { margin: 12px 0 20px; }
+.si-dataset p { max-width: 760px; }
+.si-downloads { display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+.si-secondary { background: #fff; border-color: var(--ink); }
+.si-secondary:hover { background: #eee; border-color: var(--ink); }
+.si-dataset-notes { grid-column: 1 / -1; font-size: 13px; overflow-wrap: anywhere; border-top: 1px solid var(--line); padding-top: 24px; }
+.si-dataset-notes p:last-child { margin-bottom: 0; }
+.si-cta { margin-top: 60px; padding: 40px 0 0; border-top: 1px solid var(--line); }
+.si-cta h2 { margin-top: 0; max-width: 850px; }
+.si-visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 900px) { .si-scroll-hint { display: block; } .si-desktop-break { display: none; } .si-recordings { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .si-stats { gap: 24px; } .si-stats dt { max-width: 95px; } .si-stats dd { font-size: 30px; } .si-scenarios, .si-dataset { grid-template-columns: 1fr; } .si-dataset { padding: 24px; } .si-downloads { align-items: stretch; } .si-recording { padding: 24px; } .si-filters > div:nth-child(2) { flex: 1 1 200px; } }

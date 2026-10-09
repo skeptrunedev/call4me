@@ -3,7 +3,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/": {
     "html": "/__pages/8a5edab282632443.html",
     "markdown": "/__pages/8a5edab282632443.md",
-    "tokens": 2917
+    "tokens": 2952
   },
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
@@ -19,6 +19,11 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
     "html": "/__pages/965e43e2b9e71740.html",
     "markdown": "/__pages/965e43e2b9e71740.md",
     "tokens": 1419
+  },
+  "/superintelligence-calling-index": {
+    "html": "/__pages/7fec148cf54c375f.html",
+    "markdown": "/__pages/7fec148cf54c375f.md",
+    "tokens": 3362
   },
   "/students": {
     "html": "/__pages/9a3f77bd97426a79.html",
@@ -53,47 +58,47 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 1993
+    "tokens": 2040
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2030
+    "tokens": 2077
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 1754
+    "tokens": 1800
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 1700
+    "tokens": 1747
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 1870
+    "tokens": 1916
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 1829
+    "tokens": 1876
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2095
+    "tokens": 2142
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 1974
+    "tokens": 2021
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 876
+    "tokens": 923
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",

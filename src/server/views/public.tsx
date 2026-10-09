@@ -202,6 +202,7 @@ export const HomeAbout: FC = () => (
       {' '}<a href="/blog/meta-muse-ai-agent-phone-calls">muse</a>, <a href="/blog/instinct-ai-phone-calls">instinct</a>,
       {' '}<a href="/blog/t3-code-phone-calls">t3 code</a>.
       {' '}start with a task: <a href="/blog/ai-agent-that-makes-phone-calls">how an AI agent makes calls and gets things done for you</a>.
+      {' '}compare personal superintelligence calling tools in the <a href="/superintelligence-calling-index">Superintelligence Calling Index</a>.
     </p>
   </>
 );
