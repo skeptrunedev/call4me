@@ -7,11 +7,14 @@ import type { RedditPixelEvent } from '../lib/reddit';
 import { PAGES, SITE, SITE_TITLE, type PageKey, type PageOverride } from '../lib/pages';
 import { OG_CARD_VERSION } from '../lib/og-card';
 import { placedCallCount } from '../services/stats';
+import { useStaticRender } from '../lib/static-render';
 
 export { SITE_DESCRIPTION } from '../lib/pages';
 
 /** Read fresh aggregate usage from the nearest D1 replica, like the blog's social counts. */
 export const CallCount: FC<{ separator?: string }> = ({ separator = ' · ' }) => {
+  const staticConfig = useStaticRender();
+  if (staticConfig) return <span data-site-call-count aria-live="polite">{separator}loading call count</span>;
   const ctx = tryGetContext<AppEnv>();
   // Standalone rendering (for previews and tests) has no database binding.
   return ctx ? renderCallCount(ctx.env.DB, separator) : null;
@@ -151,12 +154,17 @@ export const Layout: FC<{
   const image = `${SITE}${override?.image ?? `/og/${meta.card}.png?v=${OG_CARD_VERSION}`}`;
   const alt = override?.imageAlt ?? `call4me: ${title ?? 'your AI agent makes phone calls for you'}`;
   const ctx = tryGetContext<AppEnv>();
+  const staticConfig = useStaticRender();
   const accountId = ctx?.get('account')?.id ?? null;
-  const pixelId = ctx?.env.META_PIXEL_ID;
+  // Native transitions need both documents to opt in. Keep private and transactional
+  // renders out, including signed-in public pages that can contain an install key.
+  const publicNavigation = !signedIn && !accountId && !('noindex' in meta && meta.noindex) && (!ctx || ctx.req.method === 'GET');
+  const pixelId = ctx?.env.META_PIXEL_ID ?? staticConfig?.metaPixelId;
   // Never give third-party browser code access to account pages, call transcripts/recordings,
   // admin pages, or public examples/blog posts that contain call content. CAPI covers later usage.
-  const redditSafePath = ctx ? ['/', '/mcp', '/login', '/rules', '/privacy', '/terms', '/support', '/voices', '/welcome'].includes(new URL(ctx.req.url).pathname) : false;
-  const redditPixelId = redditSafePath ? ctx?.env.REDDIT_PIXEL_ID : undefined;
+  const redditSafePath = ['/', '/mcp', '/login', '/rules', '/privacy', '/terms', '/support', '/voices', '/welcome'].includes(ctx ? new URL(ctx.req.url).pathname : (path ?? meta.path));
+  const redditPixelId = redditSafePath ? (ctx?.env.REDDIT_PIXEL_ID ?? staticConfig?.redditPixelId) : undefined;
+  const domainVerification = ctx?.env.META_DOMAIN_VERIFICATION ?? staticConfig?.metaDomainVerification;
   return (
   <>
     {raw('<!DOCTYPE html>')}
@@ -164,11 +172,15 @@ export const Layout: FC<{
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="/static/style.css" />
+        {(page === "blog" || page === "blogArchive" || page === "message") && <link rel="stylesheet" href="/static/blog.css" />}
+        {page === 'home' && <link rel="stylesheet" href="/static/home.css" />}
+        {publicNavigation && <link rel="stylesheet" href="/static/navigation.css" />}
         <title>{fullTitle}</title>
         <meta name="description" content={description} />
         {(noindex || ('noindex' in meta && meta.noindex)) && <meta name="robots" content="noindex,follow" />}
         <meta name="theme-color" content="#ffb000" />
-        {ctx?.env.META_DOMAIN_VERIFICATION && <meta name="facebook-domain-verification" content={ctx.env.META_DOMAIN_VERIFICATION} />}
+        {domainVerification && <meta name="facebook-domain-verification" content={domainVerification} />}
         <link rel="canonical" href={url} />
         <link rel="alternate" type="application/atom+xml" href="/blog/feed.xml" title="call4me blog" />
         <link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="call4me blog RSS" />
@@ -200,9 +212,6 @@ export const Layout: FC<{
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={image} />
         <meta name="twitter:image:alt" content={alt} />
-        <link rel="stylesheet" href="/static/style.css" />
-        <link rel="stylesheet" href="/static/blog.css" />
-        {page === 'home' && <link rel="stylesheet" href="/static/home.css" />}
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <script src="https://analytics.ahrefs.com/analytics.js" data-key="Sy+Jmk5GRDykk/0THUQjsg" async></script>
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
@@ -210,7 +219,7 @@ export const Layout: FC<{
         {pixelId && <script>{raw(metaPixelScript(pixelId, accountId))}</script>}
         {redditPixelId && <script>{raw(redditPixelScript(redditPixelId, accountId, redditEvents))}</script>}
       </head>
-      <body class={`site-page page-${page}`} data-page={page}>
+      <body class={`site-page page-${page}`} data-page={page} data-site-static={staticConfig ? "true" : undefined}>
         {pixelId && (
           <noscript>
             <img height="1" width="1" style="display:none" alt="" src={`https://www.facebook.com/tr?id=${encodeURIComponent(pixelId)}&ev=PageView&noscript=1`} />
@@ -230,7 +239,7 @@ export const Layout: FC<{
             <a href="/mcp" aria-current={page === 'mcp' ? 'page' : undefined}>install mcp</a>
             <a href="/blog" aria-current={page === 'blog' || page === 'blogArchive' ? 'page' : undefined}>blog</a>
             <a href="/rules" aria-current={page === 'rules' ? 'page' : undefined}>rules</a>
-            {signedIn ? <a class="account-link" href="/account">my account</a> : <a class="account-link" href="/login">sign up / sign in</a>}
+            {signedIn ? <a class="account-link" data-site-account href="/account">my account</a> : <a class="account-link" data-site-account href="/login">sign up / sign in</a>}
             <form method="post" action="/add-funds" class="navform">
               <button type="submit">add funds</button>
             </form>
@@ -264,6 +273,7 @@ export const Layout: FC<{
             </div>
           </div>
         </footer>
+        {staticConfig && <script src="/static/site-data.js" defer></script>}
         <script>{raw(COPY_SCRIPT)}</script>
         <script>{raw(WEBMCP_SCRIPT)}</script>
       </body>

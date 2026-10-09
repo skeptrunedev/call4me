@@ -9,7 +9,6 @@
 }
 * { box-sizing: border-box; }
 html { background: #fff; scroll-padding-top: 24px; }
-@view-transition { navigation: auto; }
 body {
   margin: 0;
   color: var(--ink);
@@ -127,8 +126,6 @@ form.inline { margin: 18px 0; }
 .form .row { margin: 18px 0; }
 .form input[type=text], .form input[type=email] { width: 360px; }
 .form .actions { margin-top: 22px; }
-.product-hunt-badge a { display: inline-block; max-width: 100%; }
-.product-hunt-badge img { display: block; max-width: 100%; height: auto; }
 
 /* Account and directory tables retain their structure on small screens. */
 table { width: 100%; border-collapse: collapse; margin: 24px 0; }

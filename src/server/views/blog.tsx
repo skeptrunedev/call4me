@@ -4,6 +4,7 @@ import { RECOMMENDATIONS } from '../../content/blog/recommendations';
 import { longDate, postDate, shortPostDate, type Post } from '../lib/blog';
 import { blogIndexPath } from '../lib/blog-pagination';
 import { SITE } from '../lib/pages';
+import { useStaticRender } from '../lib/static-render';
 import type { CommentRow, Engagement } from '../services/blog';
 import { CopyBlock, Layout } from './layout';
 
@@ -28,23 +29,29 @@ const supportPath = (signedIn: boolean, next: string) => {
 
 const byline = (p: Post) => p.authors.map((a) => a.name).join(', ');
 
-const Counts: FC<{ e: Engagement | undefined }> = ({ e }) =>
-  e ? (
-    <span class="muted small counts">
-      {e.likes > 0 && <span title="likes">♥ {e.likes}</span>} {e.comments > 0 && <span title="comments">💬 {e.comments}</span>}
-    </span>
-  ) : null;
+const Counts: FC<{ e: Engagement | undefined; slug: string }> = ({ e, slug }) => (
+  <span class="muted small counts" data-site-engagement={slug} aria-busy={useStaticRender() ? 'true' : undefined}>
+    {useStaticRender() ? 'loading counts' : e && <>{e.likes > 0 && <span title="likes">♥ {e.likes}</span>} {e.comments > 0 && <span title="comments">💬 {e.comments}</span>}</>}
+  </span>
+);
+
+/** Shared escaped markup for dynamic pages and the public live data fragment. */
+export const BlogComments: FC<{ comments: CommentRow[] }> = ({ comments }) => <>
+  {comments.map((c) => (
+    <div class="comment" id={`c-${c.id}`}>
+      <b>{c.name}</b> <span class="small muted">{longDate(c.created_at)}</span>
+      <pre class="wrap">{c.body}</pre>
+    </div>
+  ))}
+</>;
 
 /** `anchor` marks the box that shows the result of a sign-up (the redirect lands on #subscribe). */
 const SubscribeBox: FC<{ signedIn: boolean; count: number; next: string; compact?: boolean; anchor?: boolean; email?: string; error?: string; sent?: boolean }> = ({ signedIn, count, next, compact, anchor, email, error, sent }) => (
   <div class={`box subscribe${compact ? ' compact' : ''}`} id={anchor ? 'subscribe' : undefined}>
     <b>get new posts by email</b>
-    {count > 0 && (
-      <span class="muted">
-        {' '}
-        / {count} {count === 1 ? 'reader' : 'readers'} subscribed
-      </span>
-    )}
+    <span class="muted" data-site-subscribers aria-busy={useStaticRender() ? 'true' : undefined}>
+      {useStaticRender() ? ' / loading reader count' : count > 0 && <> / {count} {count === 1 ? 'reader' : 'readers'} subscribed</>}
+    </span>
     {sent ? (
       <p class="ok">check your inbox: click the link we sent to confirm.</p>
     ) : (
@@ -75,7 +82,7 @@ const Card: FC<{ p: Post; e: Engagement | undefined; featured?: boolean }> = ({ 
       <div class="dek">{p.subtitle}</div>
       <div class="small muted">
         {shortPostDate(p.date)} / {byline(p)}
-        {p.paid && <span class="badge"> paid</span>} <Counts e={e} />
+        {p.paid && <span class="badge"> paid</span>} <Counts e={e} slug={p.slug} />
       </div>
     </div>
   </div>
@@ -198,7 +205,7 @@ export const BlogArchive: FC<{ signedIn: boolean; groups: { month: string; posts
             <tr>
               <td class="d">{p.date}</td>
               <td>
-                <a href={`/blog/${p.slug}`}>{p.title}</a> <span class="muted">- {p.subtitle}</span> <Counts e={engagement.get(p.slug)} />
+                <a href={`/blog/${p.slug}`}>{p.title}</a> <span class="muted">- {p.subtitle}</span> <Counts e={engagement.get(p.slug)} slug={p.slug} />
               </td>
             </tr>
           ))}
@@ -287,6 +294,7 @@ export const BlogPost: FC<{
   subscribed?: 'sent' | string;
   agentPrompt: string;
 }> = ({ signedIn, supporter, post, older, newer, related, engagement, liked, comments, subscribers, unlocked, commentValues = {}, commentError, subscribed, agentPrompt }) => {
+  const staticPage = Boolean(useStaticRender());
   const v = (k: string) => commentValues[k] ?? '';
   const [introduction, sections] = splitIntroduction(post.html);
   const here = `/blog/${post.slug}`;
@@ -324,18 +332,20 @@ export const BlogPost: FC<{
           inLanguage: 'en',
           isAccessibleForFree: !post.paid,
           ...(post.paid ? { hasPart: { '@type': 'WebPageElement', isAccessibleForFree: false, cssSelector: '.paid' } } : {}),
-          interactionStatistic: [
-            { '@type': 'InteractionCounter', interactionType: { '@type': 'LikeAction' }, userInteractionCount: engagement.likes },
-            { '@type': 'InteractionCounter', interactionType: { '@type': 'CommentAction' }, userInteractionCount: engagement.comments },
-          ],
-          commentCount: engagement.comments,
+          ...(!staticPage ? {
+            interactionStatistic: [
+              { '@type': 'InteractionCounter', interactionType: { '@type': 'LikeAction' }, userInteractionCount: engagement.likes },
+              { '@type': 'InteractionCounter', interactionType: { '@type': 'CommentAction' }, userInteractionCount: engagement.comments },
+            ],
+            commentCount: engagement.comments,
+          } : {}),
         },
       }}
     >
       <p class="small">
         <a href="/blog">blog</a> &gt; {post.slug}
       </p>
-      <article class="post">
+      <article class="post" data-site-post={post.slug}>
         <h1>{post.title}</h1>
         <p class="dek">{post.subtitle}</p>
         <div class="byline">
@@ -402,11 +412,11 @@ export const BlogPost: FC<{
         </p>
         <div class="actions-row small">
           <form class="inline-form" method="post" action={`${here}/like`}>
-            <button type="submit" class={`linkbutton like${liked ? ' on' : ''}`}>
-              [ {liked ? '♥' : '♡'} {engagement.likes} ]
+            <button type="submit" class={`linkbutton like${liked ? ' on' : ''}`} data-site-like aria-pressed={liked} aria-busy={staticPage ? 'true' : undefined}>
+              {staticPage ? 'loading likes' : <>[ {liked ? '♥' : '♡'} {engagement.likes} ]</>}
             </button>
           </form>{' '}
-          <a href="#comments">[ 💬 {engagement.comments} ]</a> <Share post={post} />
+          <a href="#comments" data-site-comment-link>{staticPage ? 'comments' : <>[ 💬 {engagement.comments} ]</>}</a> <Share post={post} />
         </div>
       </article>
 
@@ -435,21 +445,19 @@ export const BlogPost: FC<{
       </div>
 
       <SubscribeBox signedIn={signedIn} count={subscribers} next={here} anchor sent={subscribed === 'sent'} error={subscribed && subscribed !== 'sent' ? subscribed : undefined} />
-      {supporter && (
-        <p class="small muted">
+      {(supporter || staticPage) && (
+        <p class="small muted" data-site-supporter hidden={!supporter}>
           you support call4me, thank you. <a href="/blog/support/manage">manage the subscription</a>.
         </p>
       )}
 
-      <h2 id="comments">
-        {engagement.comments} {engagement.comments === 1 ? 'comment' : 'comments'}
+      <h2 id="comments" data-site-comment-heading>
+        {staticPage ? 'comments' : <>{engagement.comments} {engagement.comments === 1 ? 'comment' : 'comments'}</>}
       </h2>
-      {comments.map((c) => (
-        <div class="comment" id={`c-${c.id}`}>
-          <b>{c.name}</b> <span class="small muted">{longDate(c.created_at)}</span>
-          <pre class="wrap">{c.body}</pre>
-        </div>
-      ))}
+      <div data-site-comments aria-busy={staticPage ? 'true' : undefined}>
+        {staticPage ? <p class="small muted">loading comments</p> : <BlogComments comments={comments} />}
+      </div>
+      {staticPage && <noscript><p><a href={`${here}?live=1#comments`}>view current comments and likes</a></p></noscript>}
       {commentError && <p class="err">{commentError}</p>}
       <form class="form" method="post" action={`${here}/comments`}>
         <div class="row">

@@ -130,10 +130,6 @@
 .player-meta.small { font-size: 10px; }
 .player-meta a { text-decoration: none; }
 .player-time { font-variant-numeric: tabular-nums; white-space: nowrap; }
-.home-endorsement { padding: 40px 24px 90px; }
-.home-endorsement .product-hunt-badge { margin: 0; text-align: center; }
-.home-endorsement .product-hunt-badge a { display: inline-block; }
-.product-hunt-badge img { display: block; max-width: 100%; height: auto; }
 .home-section { width: 88.9%; max-width: 1280px; margin: 0 auto; padding: 86px 0; }
 .home-section h3 { margin: 0 0 28px; font-size: clamp(32px, 3.2vw, 44px); line-height: 1.12; letter-spacing: -.045em; font-weight: 700; }
 .home-about {
@@ -256,7 +252,6 @@
   .home-hero-media { max-width: 620px; }
   .player { padding: 22px 18px; }
   .player-ask { font-size: 13px; }
-  .home-endorsement { padding: 34px 24px 50px; }
   .home-section { width: calc(100% - 48px); padding: 54px 0; }
   .home-about, .home-setup { grid-template-columns: 1fr; gap: 18px; }
   .home-about h3, .home-setup h3, .home-setup > p, .home-setup .copyblock { grid-column: auto; grid-row: auto; }

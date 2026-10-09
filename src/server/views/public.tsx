@@ -10,6 +10,7 @@ import { CopyBlock, Layout } from './layout';
 import { CallOnboarding } from './onboarding';
 import type { RedditPixelEvent } from '../lib/reddit';
 import { EXAMPLES } from '../../content/examples';
+import { useStaticRender } from '../lib/static-render';
 
 /** Who runs the site and what it is, for search and answer engines (schema.org). */
 const HOME_LD = {
@@ -119,21 +120,6 @@ export const HomeRecordings: FC = () => (
 export const HomeActions: FC = () => (
   <>
     <p class="hero-links"><a href="#buy">add credits</a> <a href="/examples">more real calls</a> <a href="/mcp">works with any agent</a></p>
-  </>
-);
-
-export const HomeBadge: FC = () => (
-  <>
-    <p class="product-hunt-badge">
-      <a href="https://www.producthunt.com/products/call4me?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-call4me" target="_blank" rel="noopener noreferrer">
-        <img
-          alt="call4me - Give your AI agent one new tool: make a phone call | Product Hunt"
-          width="250"
-          height="54"
-          src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1272895&amp;theme=light&amp;t=1791439678864"
-        />
-      </a>
-    </p>
   </>
 );
 
@@ -258,7 +244,6 @@ export const HomePage: FC<HomePageProps> = (p) => (
       </div>
       <div class="home-hero-media"><HomeRecordings /></div>
     </section>
-    <div class="home-endorsement"><HomeBadge /></div>
     <section class="home-section home-about"><HomeAbout /></section>
     <section class="home-section home-credits"><HomeCredits {...p} /></section>
     <section class="home-stories"><div class="home-section"><HomeStories /></div></section>
@@ -273,6 +258,7 @@ export const HomePage: FC<HomePageProps> = (p) => (
 
 /** The faq on the home page and the rules page. */
 export const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ signedIn, pricePerMinuteCents, countries }) => {
+  const staticConfig = useStaticRender();
   const live = countries.filter((c) => c.available);
   const extra = pricierDestinations();
   return (
@@ -284,7 +270,7 @@ export const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries
         <p>
           the us, canada, the eu, the uk, iceland, liechtenstein, norway, switzerland, the uae, and japan work with your free us number.
           other supported destinations may need a local call4me number. check availability in <a href={accountPath(signedIn)}>my account</a>
-          {live.length > 0 ? <> (numbers available in {live.length} countries)</> : null}.
+          {staticConfig ? <span data-site-countries></span> : live.length > 0 ? <> (numbers available in {live.length} countries)</> : null}.
         </p>
       </details>
       <details>

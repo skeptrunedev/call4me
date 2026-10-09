@@ -70,8 +70,6 @@ body.bland {
 .bland .player-meta { font-size: 10px !important; gap: 7px; align-items: flex-start; line-height: 1.4; }
 .bland .player-meta a { text-decoration: none; color: #757570; }
 .bland .player-meta a:hover { text-decoration: underline; }
-.bland .endorsement { padding: 36px 24px 117px; }
-.bland .product-hunt-badge { opacity: .72; filter: grayscale(1); }
 .bland .content-section { max-width: 1280px; padding: 77px 0 87px; border-color: #e9e9e7; margin-left: auto; margin-right: auto; width: 88.9%; }
 .bland .content-section h3 { font-weight: 700; font-size: 44px; letter-spacing: -1.7px; line-height: 1.12; margin-bottom: 27px; }
 .bland .about-section { border-top: 0; padding-top: 22px; }
@@ -125,7 +123,6 @@ body.bland {
   .bland .play { width: 30px; min-width: 30px; height: 30px; }
   .bland .player-ask { font-size: 13px; }
   .bland .player:nth-child(even) { transform: none; }
-  .bland .endorsement { padding: 38px 24px 69px; }
   .bland .content-section { width: auto; margin: 0 24px; padding: 58px 0; }
   .bland .about-section { padding-top: 0; }
   .bland .content-section h3 { font-size: 36px; letter-spacing: -1.3px; }

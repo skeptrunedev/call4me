@@ -1,14 +1,14 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { PrototypePage, PROTOTYPE_STYLES } from '../src/server/views/prototypes';
-import { HomePage, HomeRecordings, HomeActions, HomeBadge, HomeCredits, HomeSetup, HomeAbout, HomeStories, Faq } from '../src/server/views/public';
+import { HomePage, HomeRecordings, HomeActions, HomeCredits, HomeSetup, HomeAbout, HomeStories, Faq } from '../src/server/views/public';
 import { pub } from '../src/server/routes/public';
 
 const props = { origin: 'https://call4.me', pricePerMinuteCents: 25, signedIn: false, installPrompt: 'Install https://call4.me/mcp and sign in', countries: [] };
 
 test('every design preserves each original content section and functional recording payload', () => {
   const original = String(HomePage(props));
-  const sections = [HomeRecordings({}), HomeActions({}), HomeBadge({}), HomeCredits(props), HomeSetup(props), HomeAbout({}), HomeStories({}), Faq(props)].map(String);
+  const sections = [HomeRecordings({}), HomeActions({}), HomeCredits(props), HomeSetup(props), HomeAbout({}), HomeStories({}), Faq(props)].map(String);
   for (const style of PROTOTYPE_STYLES) {
     const html = String(PrototypePage({ ...props, style }));
     for (const section of sections) {

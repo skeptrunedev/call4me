@@ -29,7 +29,8 @@
     "blog:related": "tsx scripts/generate-related-posts.ts",
     "seo:conversions": "tsx scripts/article-conversions.ts",
     "test": "node --import tsx --test test/*.test.ts",
-    "test:menu:live": "tsx scripts/eval-menu-recovery.ts"
+    "test:menu:live": "tsx scripts/eval-menu-recovery.ts",
+    "build:site": "tsx scripts/build-site.tsx"
   },
   "dependencies": {
     "@better-auth/mcp": "^1.7.6",

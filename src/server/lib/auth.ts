@@ -1,8 +1,9 @@
+import { hasCredentials } from './session-credentials';
 import { betterAuth } from 'better-auth';
 import type { Hono } from 'hono';
 import { createLocalJWKSet, jwtVerify, type JWTPayload } from 'jose';
 import { newId, now } from './ids';
-import { authOptions, COOKIE_PREFIX, DIRECTORY_SERVERS, mcpResource, mcpResourceAt as resourceAt, realEmail, siteResource, type McpPath } from './auth-options';
+import { authOptions, DIRECTORY_SERVERS, mcpResource, mcpResourceAt as resourceAt, realEmail, siteResource, type McpPath } from './auth-options';
 import { origin, type AppContext, type AppEnv } from './context';
 import { ACCOUNT_COLUMNS, accounts, type Account } from '../services/accounts';
 
@@ -43,10 +44,6 @@ export function createAuth(c: AppContext) {
   }
   return auth;
 }
-
-/** Whether a request carries anything getSession could resolve: our session cookie or a bearer token. */
-const SESSION_COOKIE = new RegExp(`(^|;\\s*)(__Secure-)?${COOKIE_PREFIX}\\.session_token=`);
-const hasCredentials = (headers: Headers) => headers.has('authorization') || SESSION_COOKIE.test(headers.get('cookie') ?? '');
 
 export function mountAuth(app: Hono<AppEnv>) {
   app.on(['GET', 'POST'], '/api/auth/*', (c) => createAuth(c).handler(c.req.raw));

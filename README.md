@@ -105,6 +105,26 @@ The token editor calls Write permissions Edit. Account tokens may be unsupported
 products; use a user token from My Profile if Cloudflare rejects a correctly scoped account token.
 To manage another site's committed policy, pass `--policy /path/to/cloudflare.crawlers.json`.
 
+## Public page delivery
+
+`npm run build:site` renders public HTML and Markdown from the existing Hono views into
+`dist/site`, copies the public assets, and fingerprints CSS and JavaScript. Wrangler runs
+this build automatically before local development, dry runs, and deployments. CI also
+builds before checking the generated route manifest and tests. No database or credentials
+are used to generate public pages. Paid articles are excluded from the static manifest.
+
+`src/server/static-entry.ts` serves these documents through Cloudflare's cached asset
+binding without initializing the application or reading D1. CSS, images, and scripts go
+straight to static asset delivery. Native page transitions progressively enhance ordinary
+navigation and honor reduced motion. Audio keeps the byte range handler needed for seeking.
+
+Public content is identical for every viewer. Account navigation, counts, and escaped blog
+comments load after the page paints from private, uncached live endpoints. Search, top
+sorting, subscription feedback, authenticated MCP setup, accounts, payments, OAuth, and
+all writes still use the existing server. `?live=1` opens the dynamic page when JavaScript
+is disabled or live comments cannot load. First touch cookies remain per visitor; a paid
+Reddit landing records its attribution before issuing the visit cookie.
+
 ## Blog
 
 `/blog` is markdown files in `src/content/blog` (one per post, listed in `index.ts`, headline image at

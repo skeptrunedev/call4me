@@ -4,7 +4,6 @@ import { CallCount } from "./layout";
 import {
   HomeRecordings,
   HomeActions,
-  HomeBadge,
   HomeCredits,
   HomeSetup,
   HomeAbout,
@@ -87,9 +86,6 @@ export const PrototypePage: FC<HomePageProps & { style: PrototypeStyle }> = (
               <HomeRecordings />
             </div>
           </section>
-          <div class="endorsement">
-            <HomeBadge />
-          </div>
           <section class="content-section about-section">
             <HomeAbout />
           </section>
