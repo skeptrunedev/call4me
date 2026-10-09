@@ -406,12 +406,21 @@
 }
 
 .page-blog .post ol {
-  padding-left: 24px;
+  padding-left: 0;
 }
 
+/* The shared stylesheet draws the step number in a 40px gutter; keep that gutter so it never overlaps the text. */
 .page-blog .post ol > li {
   margin: 12px 0;
-  padding-left: 6px;
+  padding-left: 40px;
+}
+
+.page-blog .post ol > li::before {
+  position: static;
+  display: inline-block;
+  width: 40px;
+  margin-left: -40px;
+  line-height: inherit;
 }
 
 .page-blog .post .table-scroll {
