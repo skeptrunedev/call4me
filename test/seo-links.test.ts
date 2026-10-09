@@ -46,7 +46,7 @@ test('blog section labels display punctuation once and keep encoded markup as te
   }
 });
 
-test('public account links go straight to sign-in for visitors and to the account for members', () => {
+test('the header keeps a stable account link while contextual links preserve sign-in routing', () => {
   for (const signedIn of [false, true]) {
     const props = { signedIn, agentPrompt: '', countries: [], pricePerMinuteCents: 25 };
     const pages = [
@@ -54,7 +54,10 @@ test('public account links go straight to sign-in for visitors and to the accoun
       RulesPage(props), PrivacyPage(props), SupportPage(props),
     ];
     for (const page of pages) {
-      const targets = links(String(page));
+      const html = String(page);
+      const accountLink = '<a class="account-link" href="/account">my account</a>';
+      assert.ok(html.includes(accountLink), 'account navigation must not depend on authentication');
+      const targets = links(html.replace(accountLink, ''));
       assert.ok(targets.includes(signedIn ? '/account' : '/login?next=/account'));
       if (!signedIn) assert.ok(!targets.includes('/account'), 'anonymous account links should skip the redirect');
     }

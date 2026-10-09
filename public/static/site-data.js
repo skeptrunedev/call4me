@@ -21,10 +21,6 @@
   }
 
   function apply(data) {
-    each('[data-site-account]', function (element) {
-      element.textContent = data.signedIn ? 'my account' : 'sign up / sign in';
-      element.setAttribute('href', data.signedIn ? '/account' : '/login');
-    });
     each('[data-site-call-count]', function (element) {
       element.textContent = ' / ' + data.callCount.toLocaleString('en-US') + (data.callCount === 1 ? ' call placed' : ' calls placed');
     });
