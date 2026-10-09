@@ -42,7 +42,7 @@ const SubscribeBox: FC<{ signedIn: boolean; count: number; next: string; compact
     {count > 0 && (
       <span class="muted">
         {' '}
-        · {count} {count === 1 ? 'reader' : 'readers'} subscribed
+        / {count} {count === 1 ? 'reader' : 'readers'} subscribed
       </span>
     )}
     {sent ? (
@@ -74,7 +74,7 @@ const Card: FC<{ p: Post; e: Engagement | undefined; featured?: boolean }> = ({ 
       </a>
       <div class="dek">{p.subtitle}</div>
       <div class="small muted">
-        {shortPostDate(p.date)} · {byline(p)}
+        {shortPostDate(p.date)} / {byline(p)}
         {p.paid && <span class="badge"> paid</span>} <Counts e={e} />
       </div>
     </div>
@@ -346,14 +346,14 @@ export const BlogPost: FC<{
           ))}
           <span class="muted small">
             {' '}
-            · <time datetime={post.date}>{postDate(post.date)}</time>
+            / <time datetime={post.date}>{postDate(post.date)}</time>
             {post.updated && (
               <>
                 {' '}
-                · updated <time datetime={post.updated}>{postDate(post.updated)}</time>
+                / updated <time datetime={post.updated}>{postDate(post.updated)}</time>
               </>
             )}{' '}
-            · {post.readingMinutes} min read{post.paid && <span class="badge"> paid</span>}
+            / {post.readingMinutes} min read{post.paid && <span class="badge"> paid</span>}
           </span>
         </div>
         {raw(introduction)}
@@ -366,7 +366,7 @@ export const BlogPost: FC<{
           <nav class="toc small" aria-label="sections">
             {post.sections.map((s, i) => (
               <>
-                {i > 0 && ' · '}
+                {i > 0 && ' / '}
                 <a href={`#${s.id}`}>{s.text}</a>
               </>
             ))}
@@ -395,7 +395,7 @@ export const BlogPost: FC<{
         <p class="small muted tags">
           {post.tags.map((t, i) => (
             <>
-              {i > 0 && ' · '}
+              {i > 0 && ' / '}
               <a href={`/blog?q=${encodeURIComponent(t)}`}>{t}</a>
             </>
           ))}
@@ -488,7 +488,7 @@ export const BlogPost: FC<{
             <br />
           </>
         )}
-        <a href="/blog">all posts</a> · <a href="/blog/archive">archive</a> · <a href="/blog/feed.xml">atom feed</a>
+        <a href="/blog">all posts</a> / <a href="/blog/archive">archive</a> / <a href="/blog/feed.xml">atom feed</a>
       </p>
       <script>{raw(SHARE_SCRIPT)}</script>
       <script>{raw(SEEK_SCRIPT)}</script>

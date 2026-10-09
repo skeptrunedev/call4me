@@ -1,19 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#ffffff"/>
-  <text x="80" y="145" font-family="Times New Roman, Times, serif" font-size="40" fill="#551a8b">call4me field notes · oct 3, 2026</text>
-  <text x="80" y="240" font-family="Times New Roman, Times, serif" font-size="68" fill="#000000">Web research, then phone calls</text>
-  <text x="80" y="315" font-family="Times New Roman, Times, serif" font-size="42" fill="#333333">A real SF private dining comparison in your agent</text>
-  <g fill="none" stroke="#0000ee" stroke-width="3">
+  <rect width="1200" height="630" fill="#f6f6f2"/>
+  <text x="80" y="145" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="40">call4me field notes · oct 3, 2026</text>
+  <text x="80" y="240" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="68">Web research, then phone calls</text>
+  <text x="80" y="315" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="42">A real SF private dining comparison in your agent</text>
+  <g fill="none" stroke="#ffb000" stroke-width="3">
     <rect x="80" y="390" width="300" height="100"/>
     <path d="M380 440H430M420 430L430 440L420 450"/>
     <rect x="430" y="390" width="300" height="100"/>
     <path d="M730 440H780M770 430L780 440L770 450"/>
     <rect x="780" y="390" width="340" height="100"/>
   </g>
-  <g font-family="Times New Roman, Times, serif" font-size="36" fill="#000000" text-anchor="middle">
+  <g font-family="Arial, Helvetica, sans-serif" font-size="36" fill="#151515" text-anchor="middle">
     <text x="230" y="452">Official websites</text>
     <text x="580" y="452">Call the gaps</text>
-    <text x="950" y="452">Return the evidence</text>
+    <text x="950" y="452" font-size="34.85">Return the evidence</text>
   </g>
-  <text x="80" y="560" font-family="Times New Roman, Times, serif" font-size="32" fill="#333333">Known facts, phone answers, and unanswered questions</text>
+  <text x="80" y="560" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="32">Known facts, phone answers, and unanswered questions</text>
 </svg>

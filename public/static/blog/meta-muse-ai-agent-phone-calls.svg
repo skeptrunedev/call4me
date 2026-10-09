@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#ffffff"/>
-  <text x="80" y="150" font-family="Times New Roman, Times, serif" font-size="40" fill="#551a8b">call4me field test · oct 1, 2026</text>
-  <text x="80" y="250" font-family="Times New Roman, Times, serif" font-size="76" fill="#000000">The Meta Muse AI agent</text>
-  <text x="80" y="330" font-family="Times New Roman, Times, serif" font-size="44" fill="#333333">how its connectors work, and how to give it a phone</text>
-  <g fill="#0000ee">
-    <rect x="80" y="410" width="80" height="80" rx="8"/><rect x="100" y="430" width="16" height="16" fill="#ffffff"/><rect x="124" y="430" width="16" height="16" fill="#ffffff"/>
-    <rect x="100" y="454" width="16" height="16" fill="#ffffff"/><rect x="124" y="454" width="16" height="16" fill="#ffffff"/>
+  <rect width="1200" height="630" fill="#f6f6f2"/>
+  <text x="80" y="150" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="40">call4me field test · oct 1, 2026</text>
+  <text x="80" y="250" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="76">The Meta Muse AI agent</text>
+  <text x="80" y="330" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="44">how its connectors work, and how to give it a phone</text>
+  <g fill="#ffb000">
+    <rect x="80" y="410" width="80" height="80" rx="8"/><rect x="100" y="430" width="16" height="16" fill="#f6f6f2"/><rect x="124" y="430" width="16" height="16" fill="#f6f6f2"/>
+    <rect x="100" y="454" width="16" height="16" fill="#f6f6f2"/><rect x="124" y="454" width="16" height="16" fill="#f6f6f2"/>
   </g>
-  <text x="190" y="465" font-family="Times New Roman, Times, serif" font-size="40" fill="#000000">a custom connector, with the key kept out of the chat</text>
+  <text x="190" y="465" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-size="40">a custom connector, with the key kept out of the chat</text>
 </svg>

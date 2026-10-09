@@ -1,16 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#ffffff"/>
-  <text x="80" y="130" font-family="Times New Roman, Times, serif" font-size="38" fill="#551a8b">call4me workflow · oct 4, 2026</text>
-  <text x="80" y="230" font-family="Times New Roman, Times, serif" font-size="70" fill="#000000">Tell your agent now.</text>
-  <text x="80" y="310" font-family="Times New Roman, Times, serif" font-size="70" fill="#000000">Call the business tomorrow.</text>
-  <g fill="none" stroke="#0000ee" stroke-width="4">
+  <rect width="1200" height="630" fill="#f6f6f2"/>
+  <text x="80" y="130" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="38">call4me workflow · oct 4, 2026</text>
+  <text x="80" y="230" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="70">Tell your agent now.</text>
+  <text x="80" y="310" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="70">Call the business tomorrow.</text>
+  <g fill="none" stroke="#ffb000" stroke-width="4">
     <rect x="80" y="390" width="290" height="110"/>
     <path d="M370 445h55m-15-15 15 15-15 15"/>
     <rect x="435" y="390" width="300" height="110"/>
     <path d="M735 445h55m-15-15 15 15-15 15"/>
     <rect x="800" y="390" width="320" height="110"/>
   </g>
-  <g font-family="Times New Roman, Times, serif" font-size="30" fill="#000000" text-anchor="middle">
+  <g font-family="Arial, Helvetica, sans-serif" font-size="30" fill="#151515" text-anchor="middle">
     <text x="225" y="438" font-size="23">Claude Code or Codex</text>
     <text x="225" y="477">complete brief</text>
     <text x="585" y="438">call4me schedule</text>
@@ -18,5 +18,5 @@
     <text x="960" y="438">later agent session</text>
     <text x="960" y="477">retrieve the result</text>
   </g>
-  <text x="80" y="570" font-family="Times New Roman, Times, serif" font-size="29" fill="#551a8b">Verified schedule states. Next day's calls still pending.</text>
+  <text x="80" y="570" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="29">Verified schedule states. Next day's calls still pending.</text>
 </svg>

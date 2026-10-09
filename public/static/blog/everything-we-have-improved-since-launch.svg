@@ -1,19 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">What's new in Call4me since launch</title>
   <desc id="desc">Scheduled calls, your own caller ID, and live listening, with more improvements since September 30.</desc>
-  <rect width="1200" height="630" fill="#ffffff"/>
-  <text x="80" y="130" font-family="Times New Roman, Times, serif" font-size="38" fill="#551a8b">call4me updates · october 8, 2026</text>
-  <text x="80" y="230" font-family="Times New Roman, Times, serif" font-size="70" fill="#000000">Everything we've improved</text>
-  <text x="80" y="310" font-family="Times New Roman, Times, serif" font-size="70" fill="#000000">since launch.</text>
-  <g fill="none" stroke="#0000ee" stroke-width="3">
+  <rect width="1200" height="630" fill="#f6f6f2"/>
+  <text x="80" y="130" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="38">call4me updates · october 8, 2026</text>
+  <text x="80" y="230" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="70">Everything we've improved</text>
+  <text x="80" y="310" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="70">since launch.</text>
+  <g fill="none" stroke="#ffb000" stroke-width="3">
     <rect x="80" y="390" width="320" height="105"/>
     <rect x="425" y="390" width="330" height="105"/>
     <rect x="780" y="390" width="340" height="105"/>
   </g>
-  <g font-family="Times New Roman, Times, serif" font-size="32" fill="#000000" text-anchor="middle">
+  <g font-family="Arial, Helvetica, sans-serif" font-size="32" fill="#151515" text-anchor="middle">
     <text x="240" y="454">Scheduled calls</text>
     <text x="590" y="454">Your own caller ID</text>
     <text x="950" y="454">Live listening</text>
   </g>
-  <text x="80" y="570" font-family="Times New Roman, Times, serif" font-size="29" fill="#551a8b">Built around your first calls and feedback.</text>
+  <text x="80" y="570" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="29">Built around your first calls and feedback.</text>
 </svg>

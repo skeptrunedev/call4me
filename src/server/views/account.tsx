@@ -100,14 +100,14 @@ export const AccountPage: FC<{
       balance: <span class="price">{dollars(p.balanceCents)}</span>
     </h1>
     <p class="small">
-      {p.account.email} · {dollars(p.pricePerMinuteCents)}/min · about {Math.floor(p.balanceCents / p.pricePerMinuteCents)} minutes left
+      {p.account.email} / {dollars(p.pricePerMinuteCents)}/min / about {Math.floor(p.balanceCents / p.pricePerMinuteCents)} minutes left
     </p>
     <CopyBlock id="agent-prompt" text={p.agentPrompt} rows={12} hidden />
     {p.reload ? (
       <form method="post" action="/account/reload/stop" class="inline">
         reloads <span class="price">{dollars(p.reload.cents)}</span> every month
         {p.reload.renewsAt && <> (next {new Date(p.reload.renewsAt).toISOString().slice(0, 10)})</>}
-        {p.reload.status !== 'active' && <span class="err"> · {p.reload.status.replace('_', ' ')}</span>} · <button type="submit" class="linkbutton">stop reloading</button>
+        {p.reload.status !== 'active' && <span class="err"> / {p.reload.status.replace('_', ' ')}</span>} / <button type="submit" class="linkbutton">stop reloading</button>
       </form>
     ) : (
       <p class="small muted">no monthly reload.</p>
@@ -314,11 +314,11 @@ const RecordingSection: FC<{ callId: string; recordings: CallRecordings }> = ({ 
               <a href={`${base}/${formats[0]}`}>listen to the recording</a>
             </audio>
             <p class="small">
-              {recordings.recordings.length > 1 && <>part {i + 1} · </>}
-              {r.duration_millis !== null && <>{clock(r.duration_millis)} · </>}
+              {recordings.recordings.length > 1 && <>part {i + 1} / </>}
+              {r.duration_millis !== null && <>{clock(r.duration_millis)} / </>}
               {formats.map((f, j) => (
                 <>
-                  {j > 0 && ' · '}
+                  {j > 0 && ' / '}
                   <a href={`${base}/${f}`}>open {f}</a>
                 </>
               ))}
@@ -335,7 +335,7 @@ export const CallPage: FC<{ call: CallView; recordings: CallRecordings; agentPro
       {call.business} <span class="small muted">{call.number}</span>
     </h1>
     <p>
-      <span class={`st st-${call.status}`}>{call.status.replace('_', ' ')}</span> · {call.direction} · {call.created_at.slice(0, 16).replace('T', ' ')} UTC · {call.talk_minutes} min · {call.cost}
+      <span class={`st st-${call.status}`}>{call.status.replace('_', ' ')}</span> / {call.direction} / {call.created_at.slice(0, 16).replace('T', ' ')} UTC / {call.talk_minutes} min / {call.cost}
     </p>
     <p>
       <b>goal:</b> {call.goal}

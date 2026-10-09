@@ -1,25 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">Twilio MCP for phone calls</title>
   <desc id="desc">Documentation search helps an agent build an application. Calling also needs execution, a voice runtime, and a result returned to the agent.</desc>
-  <rect width="1200" height="630" fill="#ffffff"/>
-  <text x="80" y="108" font-family="Times New Roman, Times, serif" font-size="34" fill="#551a8b">call4me field notes · oct 4, 2026</text>
-  <text x="80" y="205" font-family="Times New Roman, Times, serif" font-size="70" fill="#000000">Twilio MCP for phone calls</text>
-  <text x="80" y="267" font-family="Times New Roman, Times, serif" font-size="35" fill="#333333">what we connected, what you still need to build</text>
-  <g fill="none" stroke="#0000ee" stroke-width="3">
+  <rect width="1200" height="630" fill="#f6f6f2"/>
+  <text x="80" y="108" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="34">call4me field notes · oct 4, 2026</text>
+  <text x="80" y="205" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="70">Twilio MCP for phone calls</text>
+  <text x="80" y="267" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="35">what we connected, what you still need to build</text>
+  <g fill="none" stroke="#ffb000" stroke-width="3">
     <rect x="80" y="338" width="295" height="125"/>
     <rect x="454" y="338" width="292" height="125"/>
     <rect x="825" y="338" width="295" height="125"/>
     <path d="M 391 400 H 438 M 426 388 L 438 400 L 426 412"/>
     <path d="M 762 400 H 809 M 797 388 L 809 400 L 797 412"/>
   </g>
-  <g font-family="Times New Roman, Times, serif" fill="#000000" text-anchor="middle">
+  <g font-family="Arial, Helvetica, sans-serif" fill="#151515" text-anchor="middle">
     <text x="227" y="382" font-size="35">docs MCP</text>
-    <text x="227" y="428" font-size="26" fill="#333333">search and schemas</text>
+    <text x="227" y="428" fill="#64645f" font-size="26">search and schemas</text>
     <text x="600" y="382" font-size="29">voice application</text>
-    <text x="600" y="419" font-size="24" fill="#333333">execution and</text>
-    <text x="600" y="450" font-size="24" fill="#333333">conversation</text>
+    <text x="600" y="419" fill="#64645f" font-size="24">execution and</text>
+    <text x="600" y="450" fill="#64645f" font-size="24">conversation</text>
     <text x="972" y="382" font-size="35">task result</text>
-    <text x="972" y="428" font-size="23" fill="#333333">answers and evidence</text>
+    <text x="972" y="428" fill="#64645f" font-size="23">answers and evidence</text>
   </g>
-  <text x="80" y="550" font-family="Times New Roman, Times, serif" font-size="31" fill="#333333">an actual public MCP connection and API retrieval test</text>
+  <text x="80" y="550" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="31">an actual public MCP connection and API retrieval test</text>
 </svg>

@@ -167,7 +167,7 @@ export const Layout: FC<{
         <title>{fullTitle}</title>
         <meta name="description" content={description} />
         {(noindex || ('noindex' in meta && meta.noindex)) && <meta name="robots" content="noindex,follow" />}
-        <meta name="theme-color" content="#551a8b" />
+        <meta name="theme-color" content="#ffb000" />
         {ctx?.env.META_DOMAIN_VERIFICATION && <meta name="facebook-domain-verification" content={ctx.env.META_DOMAIN_VERIFICATION} />}
         <link rel="canonical" href={url} />
         <link rel="alternate" type="application/atom+xml" href="/blog/feed.xml" title="call4me blog" />
@@ -201,6 +201,8 @@ export const Layout: FC<{
         <meta name="twitter:image" content={image} />
         <meta name="twitter:image:alt" content={alt} />
         <link rel="stylesheet" href="/static/style.css" />
+        <link rel="stylesheet" href="/static/blog.css" />
+        {page === 'home' && <link rel="stylesheet" href="/static/home.css" />}
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <script src="https://analytics.ahrefs.com/analytics.js" data-key="Sy+Jmk5GRDykk/0THUQjsg" async></script>
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
@@ -208,45 +210,47 @@ export const Layout: FC<{
         {pixelId && <script>{raw(metaPixelScript(pixelId, accountId))}</script>}
         {redditPixelId && <script>{raw(redditPixelScript(redditPixelId, accountId, redditEvents))}</script>}
       </head>
-      <body>
+      <body class={`site-page page-${page}`} data-page={page}>
         {pixelId && (
           <noscript>
             <img height="1" width="1" style="display:none" alt="" src={`https://www.facebook.com/tr?id=${encodeURIComponent(pixelId)}&ev=PageView&noscript=1`} />
           </noscript>
         )}
-        <div id="masthead">
-          <a class="logo" href="/">call4me</a>
-          <span class="bc">your AI agent makes phone calls for you</span>
-        </div>
-        <div id="topnav">
-          <a href="/">home</a>
-          <a href="/examples">examples</a>
-          {/* A form, not a link: it opens a Stripe checkout, which crawlers and link previews must not do. */}
-          <form method="post" action="/add-funds" class="navform">
-            <button type="submit" class="linkbutton">add funds</button>
-          </form>
-          <a href="/mcp">install mcp</a>
-          <a href="/blog">blog</a>
-          {signedIn ? <a href="/account">my account</a> : <a href="/login">sign up / sign in</a>}
-          <a href="/rules">rules</a>
-        </div>
-        <hr />
-        {children}
+        <header class="site-header">
+          <div id="masthead">
+            <a class="logo" href="/" aria-label="call4me home">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true"><path d="M7 3H4a1 1 0 0 0-1 1c0 9.4 7.6 17 17 17a1 1 0 0 0 1-1v-3l-5-2-2 2a15 15 0 0 1-7-7l2-2-2-5Z" /></svg>
+              call4me
+            </a>
+            {page !== 'home' && <span class="bc">your AI agent makes phone calls for you</span>}
+          </div>
+          <nav id="topnav" aria-label="main navigation">
+            <a href="/" aria-current={page === 'home' ? 'page' : undefined}>home</a>
+            <a href="/examples" aria-current={page === 'examples' ? 'page' : undefined}>examples</a>
+            <a href="/mcp" aria-current={page === 'mcp' ? 'page' : undefined}>install mcp</a>
+            <a href="/blog" aria-current={page === 'blog' || page === 'blogArchive' ? 'page' : undefined}>blog</a>
+            <a href="/rules" aria-current={page === 'rules' ? 'page' : undefined}>rules</a>
+            {signedIn ? <a class="account-link" href="/account">my account</a> : <a class="account-link" href="/login">sign up / sign in</a>}
+            <form method="post" action="/add-funds" class="navform">
+              <button type="submit">add funds</button>
+            </form>
+          </nav>
+        </header>
+        <div class="site-content" id="content">{children}</div>
         <footer>
-          <a href="/rules">rules</a>
-          <a href="/privacy">privacy</a>
-          <a href="/terms">terms</a>
-          <a href="/support">support</a>
-          <a href="/blog">blog</a>
-          <a href="/voices">voices</a>
-          <a class="rss-link" href="/blog/rss.xml" type="application/rss+xml" aria-label="Subscribe to the RSS feed" title="RSS feed">
-            <svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true" focusable="false">
-              <circle cx="5" cy="19" r="2" fill="currentColor" />
-              <path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
-          </a>
-          <span> · © call4me</span>
-          <CallCount />
+          <div class="footer-inner">
+            <a class="footer-brand" href="/">call4me</a>
+            <nav class="footer-links" aria-label="footer navigation">
+              <a href="/rules">rules</a>
+              <a href="/privacy">privacy</a>
+              <a href="/terms">terms</a>
+              <a href="/support">support</a>
+              <a href="/blog">blog</a>
+              <a href="/voices">voices</a>
+              <a class="rss-link" href="/blog/rss.xml" type="application/rss+xml" aria-label="Subscribe to the RSS feed" title="RSS feed">RSS</a>
+            </nav>
+            <div class="footer-meta"><span>© call4me</span><CallCount separator=" / " /></div>
+          </div>
         </footer>
         <script>{raw(COPY_SCRIPT)}</script>
         <script>{raw(WEBMCP_SCRIPT)}</script>

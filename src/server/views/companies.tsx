@@ -65,7 +65,7 @@ export const CompaniesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ 
       <h2>have your agent make the call</h2>
       <p>
         call4me is a phone for your AI agent. tell claude code, codex or chatgpt what you need from a company and it calls, gets through the menu,
-        waits on hold and brings back the answer. <a href="/mcp">install it</a> · <a href="/examples">listen to more calls</a>
+        waits on hold and brings back the answer. <a href="/mcp">install it</a> / <a href="/examples">listen to more calls</a>
       </p>
     </main>
   </Layout>

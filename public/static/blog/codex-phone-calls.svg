@@ -1,21 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">Give Codex a phone</title>
   <desc id="desc">Codex researches online, calls through MCP, and returns phone answers to the same task.</desc>
-  <rect width="1200" height="630" fill="#ffffff"/>
-  <text x="80" y="130" font-family="Times New Roman, Times, serif" font-size="40" fill="#551a8b">call4me field test · oct 3, 2026</text>
-  <text x="80" y="235" font-family="Times New Roman, Times, serif" font-size="80" fill="#000000">Give Codex a phone</text>
-  <text x="80" y="315" font-family="Times New Roman, Times, serif" font-size="44" fill="#333333">web research, real calls, answers in the same task</text>
-  <g fill="none" stroke="#0000ee" stroke-width="3">
+  <rect width="1200" height="630" fill="#f6f6f2"/>
+  <text x="80" y="130" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="40">call4me field test · oct 3, 2026</text>
+  <text x="80" y="235" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="80">Give Codex a phone</text>
+  <text x="80" y="315" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="44">web research, real calls, answers in the same task</text>
+  <g fill="none" stroke="#ffb000" stroke-width="3">
     <rect x="80" y="390" width="290" height="85"/>
     <rect x="465" y="390" width="275" height="85"/>
     <rect x="835" y="390" width="285" height="85"/>
     <path d="M 385 432 H 447 M 436 421 L 447 432 L 436 443"/>
     <path d="M 755 432 H 817 M 806 421 L 817 432 L 806 443"/>
   </g>
-  <g font-family="Times New Roman, Times, serif" font-size="34" fill="#000000" text-anchor="middle">
+  <g font-family="Arial, Helvetica, sans-serif" font-size="34" fill="#151515" text-anchor="middle">
     <text x="225" y="445">official websites</text>
-    <text x="602" y="445">phone questions</text>
-    <text x="977" y="445">Codex comparison</text>
+    <text x="602" y="445" font-size="33.51">phone questions</text>
+    <text x="977" y="445" font-size="30.7">Codex comparison</text>
   </g>
-  <text x="80" y="555" font-family="Times New Roman, Times, serif" font-size="32" fill="#333333">MCP setup · approval behavior · actual call evidence</text>
+  <text x="80" y="555" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="32">MCP setup · approval behavior · actual call evidence</text>
 </svg>

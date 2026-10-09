@@ -32,7 +32,7 @@ export const ExamplesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
       {EXAMPLES.map((example) => (
         <article class="example" id={example.slug} aria-labelledby={`${example.slug}-title`}>
           <h2 id={`${example.slug}-title`}>{example.title}</h2>
-          <p class="small">{example.business} · {example.date} · {example.duration}</p>
+          <p class="small">{example.business} / {example.date} / {example.duration}</p>
           <p><b>the request:</b> {example.request}</p>
           <p><b>what happened:</b> {example.outcome}</p>
           {example.guide && <p><a href={example.guide.href}>{example.guide.label}</a></p>}
@@ -53,7 +53,7 @@ export const ExamplesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
         </article>
       ))}
       <h2>let your agent make the next call</h2>
-      <p><a href="/#buy">add credits</a> · <a href="/mcp">see how to install it</a> · <a href="/voices">hear every caller voice</a></p>
+      <p><a href="/#buy">add credits</a> / <a href="/mcp">see how to install it</a> / <a href="/voices">hear every caller voice</a></p>
     </main>
     <script>{raw(AUDIO_SCRIPT)}</script>
   </Layout>

@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">Five Grok Bot phone inquiry prompts</title>
   <desc id="desc">Draft inquiry prompts with call limits and result checks.</desc>
-  <rect width="1200" height="630" fill="#fff"/>
-  <text x="80" y="112" font-family="Times New Roman, Times, serif" font-size="35" fill="#551a8b">call4me guides · oct 5, 2026</text>
-  <text x="80" y="212" font-family="Times New Roman, Times, serif" font-size="68" fill="#111">5 Grok Bot inquiry prompts</text>
-  <text x="80" y="277" font-family="Times New Roman, Times, serif" font-size="39" fill="#444">Download complete text prompts.</text>
-  <g font-family="Times New Roman, Times, serif" font-size="31">
-    <rect x="80" y="340" width="1040" height="185" rx="8" fill="#f5f3ff"/>
-    <text x="112" y="393" fill="#0000ee">appointments</text>
-    <text x="390" y="393" fill="#0000ee">restaurants</text>
-    <text x="730" y="393" fill="#0000ee">service quotes</text>
-    <text x="112" y="467" fill="#0000ee">cancellation inquiries</text>
-    <text x="580" y="467" fill="#0000ee">refund follow ups</text>
+  <rect width="1200" height="630" fill="#f6f6f2"/>
+  <text x="80" y="112" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="35">call4me guides · oct 5, 2026</text>
+  <text x="80" y="212" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="68">5 Grok Bot inquiry prompts</text>
+  <text x="80" y="277" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="39">Download complete text prompts.</text>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="31">
+    <rect x="80" y="340" width="1040" height="185" rx="8" fill="#ffffff"/>
+    <text x="112" y="393" fill="#ffb000">appointments</text>
+    <text x="390" y="393" fill="#ffb000">restaurants</text>
+    <text x="730" y="393" fill="#ffb000">service quotes</text>
+    <text x="112" y="467" fill="#ffb000">cancellation inquiries</text>
+    <text x="580" y="467" fill="#ffb000">refund follow ups</text>
   </g>
-  <text x="80" y="583" font-family="Times New Roman, Times, serif" font-size="28" fill="#555">inquiry brief → call limits → result checks</text>
+  <text x="80" y="583" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="28">inquiry brief → call limits → result checks</text>
 </svg>

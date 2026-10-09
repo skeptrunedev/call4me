@@ -216,15 +216,24 @@ export const HomeStories: FC = () => (
 
 export const HomePage: FC<HomePageProps> = (p) => (
   <Layout page="home" signedIn={p.signedIn} meta={{ jsonLd: HOME_LD }}>
-    <h1>let your agents make phone calls</h1>
-    <HomeRecordings />
-    <HomeActions />
-    <HomeBadge />
-    <HomeCredits {...p} />
-    <HomeSetup {...p} />
-    <HomeAbout />
-    <HomeStories />
-    <Faq {...p} />
+    <section class="home-hero" aria-labelledby="home-title">
+      <div class="home-hero-copy">
+        <h1 id="home-title">let your agents<br />make phone calls</h1>
+        <p class="home-description">your AI agent makes phone calls for you</p>
+        <HomeActions />
+      </div>
+      <div class="home-hero-media"><HomeRecordings /></div>
+    </section>
+    <div class="home-endorsement"><HomeBadge /></div>
+    <section class="home-section home-about"><HomeAbout /></section>
+    <section class="home-section home-credits"><HomeCredits {...p} /></section>
+    <section class="home-stories"><div class="home-section"><HomeStories /></div></section>
+    <section class="home-section home-setup"><HomeSetup {...p} /></section>
+    <section class="home-section home-faq"><Faq {...p} /></section>
+    <section class="home-section home-closing">
+      <h2>let your agents make phone calls</h2>
+      <a href="#buy" class="button">add credits <span aria-hidden="true">→</span></a>
+    </section>
   </Layout>
 );
 

@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">AI phone tree navigation</title>
   <desc id="desc">A keypad action routes a phone menu to either a person or voicemail. Routing and task completion have separate evidence checks.</desc>
-  <rect width="1200" height="630" fill="#ffffff"/>
-  <text x="80" y="110" font-family="Times New Roman, Times, serif" font-size="34" fill="#551a8b">call4me field notes · oct 4, 2026</text>
-  <text x="80" y="200" font-family="Times New Roman, Times, serif" font-size="68" fill="#000000">Can AI navigate phone trees?</text>
-  <text x="80" y="267" font-family="Times New Roman, Times, serif" font-size="35" fill="#333333">Vapi · Bland · Call4me · real call evidence</text>
-  <g fill="none" stroke="#0000ee" stroke-width="3">
+  <rect width="1200" height="630" fill="#f6f6f2"/>
+  <text x="80" y="110" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="34">call4me field notes · oct 4, 2026</text>
+  <text x="80" y="200" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="68">Can AI navigate phone trees?</text>
+  <text x="80" y="267" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="35">Vapi · Bland · Call4me · real call evidence</text>
+  <g fill="none" stroke="#ffb000" stroke-width="3">
     <rect x="80" y="355" width="250" height="85"/>
     <rect x="420" y="355" width="300" height="85"/>
     <rect x="870" y="310" width="250" height="70"/>
@@ -14,11 +14,11 @@
     <path d="M735 397H790V345H853 M843 335L853 345L843 355"/>
     <path d="M790 397V450H853 M843 440L853 450L843 460"/>
   </g>
-  <g font-family="Times New Roman, Times, serif" font-size="34" fill="#000000" text-anchor="middle">
+  <g font-family="Arial, Helvetica, sans-serif" font-size="34" fill="#151515" text-anchor="middle">
     <text x="205" y="410">phone menu</text>
     <text x="570" y="410">keypad action</text>
     <text x="995" y="358">person</text>
     <text x="995" y="463">voicemail</text>
   </g>
-  <text x="80" y="563" font-family="Times New Roman, Times, serif" font-size="34" fill="#333333">correct branch ≠ completed task</text>
+  <text x="80" y="563" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="34">correct branch ≠ completed task</text>
 </svg>

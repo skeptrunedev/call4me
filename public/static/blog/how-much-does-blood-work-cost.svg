@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#ffffff"/>
-  <text x="80" y="150" font-family="Times New Roman, Times, serif" font-size="40" fill="#551a8b">call4me task guides · oct 7, 2026</text>
-  <text x="80" y="250" font-family="Times New Roman, Times, serif" font-size="56" fill="#000000">How much does blood work cost?</text>
-  <text x="80" y="330" font-family="Times New Roman, Times, serif" font-size="38" fill="#333333">Compare the exact tests and complete price</text>
-  <text x="80" y="450" font-family="Times New Roman, Times, serif" font-size="42" fill="#0000ee">Give your AI assistant the lab quote task</text>
-  <text x="80" y="520" font-family="Times New Roman, Times, serif" font-size="32" fill="#333333">Published prices, extra fees and callback questions</text>
+  <rect width="1200" height="630" fill="#f6f6f2"/>
+  <text x="80" y="150" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="40">call4me task guides · oct 7, 2026</text>
+  <text x="80" y="250" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="56">How much does blood work cost?</text>
+  <text x="80" y="330" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="38">Compare the exact tests and complete price</text>
+  <text x="80" y="450" font-family="Arial, Helvetica, sans-serif" fill="#ffb000" font-size="42">Give your AI assistant the lab quote task</text>
+  <text x="80" y="520" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="32">Published prices, extra fees and callback questions</text>
 </svg>
