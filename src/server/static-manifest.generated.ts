@@ -3,7 +3,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/": {
     "html": "/__pages/8a5edab282632443.html",
     "markdown": "/__pages/8a5edab282632443.md",
-    "tokens": 2769
+    "tokens": 2917
   },
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
@@ -23,12 +23,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/mcp": {
     "html": "/__pages/88fe637beab867e2.html",
     "markdown": "/__pages/88fe637beab867e2.md",
-    "tokens": 1622
+    "tokens": 1641
   },
   "/rules": {
     "html": "/__pages/933053fc294245bb.html",
     "markdown": "/__pages/933053fc294245bb.md",
-    "tokens": 1075
+    "tokens": 1190
   },
   "/privacy": {
     "html": "/__pages/0ece7f7c306b4cf6.html",
@@ -38,12 +38,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/terms": {
     "html": "/__pages/2dda5c6b8eee51aa.html",
     "markdown": "/__pages/2dda5c6b8eee51aa.md",
-    "tokens": 168
+    "tokens": 188
   },
   "/support": {
     "html": "/__pages/0b9f34c92865bdd1.html",
     "markdown": "/__pages/0b9f34c92865bdd1.md",
-    "tokens": 266
+    "tokens": 274
   },
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
