@@ -117,7 +117,6 @@ body.vercel {
 .vercel .player-ask { min-height: 72px; font-size: 15px; line-height: 1.5; letter-spacing: -.02em; }
 .vercel .player-meta { align-items: flex-start; font-size: 11px !important; }
 .vercel .bar { margin: 22px 0 10px; }
-.vercel .endorsement { padding: 50px 24px 65px; }
 .vercel .content-section { max-width: 1392px; padding: 96px 40px; border-color: var(--line); }
 .vercel .content-section h3 { font-size: 42px; font-weight: 400; letter-spacing: -.055em; }
 .vercel .about-section { display: grid; grid-template-columns: 1fr 2fr; column-gap: 80px; }
@@ -231,7 +230,6 @@ body.vercel {
   .vercel .player:last-child { border-bottom: 0; }
   .vercel .player-ask { min-height: 0; font-size: 16px; }
   .vercel .player-meta { font-size: 12px !important; }
-  .vercel .endorsement { padding: 42px 20px 54px; }
   .vercel .content-section { padding: 54px 20px; }
   .vercel .content-section h3 { font-size: 32px; }
   .vercel .about-section > p { font-size: 21px; }

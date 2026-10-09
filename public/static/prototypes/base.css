@@ -226,17 +226,6 @@ h1 {
 .player-time {
   white-space: nowrap;
 }
-.endorsement {
-  padding: 45px 24px;
-  text-align: center;
-}
-.product-hunt-badge {
-  margin: 0;
-}
-.product-hunt-badge img {
-  max-width: 100%;
-  height: auto;
-}
 .content-section {
   max-width: 1120px;
   margin: auto;

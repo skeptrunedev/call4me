@@ -112,7 +112,6 @@ body.userjot {
 .userjot .player-meta.small { font-size: 12px !important; color: #817f79; }
 .userjot .player-meta a { text-decoration: none; }
 .userjot .player-meta a:hover { text-decoration: underline; }
-.userjot .endorsement { padding: 49px 24px 64px; }
 
 .userjot .content-section {
   max-width: 1120px;
@@ -184,7 +183,6 @@ body.userjot {
   .userjot .players { gap: 12px; }
   .userjot .player { min-height: 163px; padding: 22px 18px; gap: 16px; }
   .userjot .player-ask { min-height: 48px; font-size: 15px; }
-  .userjot .endorsement { padding: 37px 20px 48px; }
   .userjot .content-section { padding: 55px 8px; }
   .userjot .content-section h3 { font-size: 33px; letter-spacing: -1.2px; }
   .userjot .about-section > p { font-size: 17px; }
