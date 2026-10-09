@@ -160,19 +160,17 @@ export const HomeCredits: FC<HomePageProps> = (p) => (
           </li>
           <li>
             <svg class="step-graphic" viewBox="0 0 320 190" width="320" height="190" aria-hidden="true" focusable="false">
-              <rect x="43" y="19" width="145" height="40" rx="4" fill="#fff" stroke="#ddddd6" />
-              <path d="M61 33h9l4 6-4 6h-9l-4-6 4-6Zm13 6h19m-5 0v5m-6-5v4" fill="none" stroke="#77776d" stroke-width="1.5" />
-              <text x="104" y="43" font-size="12" fill="#66665f">your key</text>
-              <path d="M116 60v19m-5-5 5 5 5-5" fill="none" stroke="#a5a59b" stroke-width="1.5" />
-              <rect x="43" y="89" width="235" height="82" rx="4" fill="#fff" stroke="#ddddd6" />
-              <path d="m60 105 6 5-6 5m12 0h9" fill="none" stroke="#77776d" stroke-width="1.5" />
-              <text x="92" y="114" font-size="12" fill="#66665f">call4me</text>
-              <rect x="60" y="132" width="151" height="5" rx="1" fill="#e5e5df" />
-              <rect x="60" y="144" width="108" height="5" rx="1" fill="#eeeee9" />
-              <rect x="222" y="120" width="38" height="35" rx="3" fill="#e6efdf" />
-              <path d="m233 137 5 5 10-11" fill="none" stroke="#52864e" stroke-width="1.8" />
+              <rect x="28" y="15" width="264" height="160" rx="5" fill="#fff" stroke="#ddddd6" />
+              <text x="46" y="41" font-size="13" font-weight="600" fill="#151515">ChatGPT</text>
+              <path d="M28 54h264" stroke="#e5e5df" />
+              <rect x="82" y="68" width="192" height="34" rx="8" fill="#f0f0eb" />
+              <text x="96" y="89" font-size="12" fill="#55554e">Can you call for me?</text>
+              <rect x="46" y="119" width="228" height="38" rx="4" fill="#fff" stroke="#ddddd6" />
+              <text x="60" y="143" font-size="12" fill="#151515">call4me</text>
+              <path d="m174 138 4 4 8-9" fill="none" stroke="#52864e" stroke-width="1.8" />
+              <text x="194" y="143" font-size="11" fill="#52864e">connected</text>
             </svg>
-            you get a key and one prompt. paste the prompt into your agent. it installs call4me itself.
+            connect call4me to ChatGPT and sign in. tell ChatGPT what you need, and it can make the call for you.
           </li>
           <li>
             <svg class="step-graphic" viewBox="0 0 320 190" width="320" height="190" aria-hidden="true" focusable="false">
@@ -229,22 +227,22 @@ export const HomeStories: FC = () => (
       <figure>
         <p><b>$100 flight credit</b></p>
         <blockquote>“literally zero chance i was going to do that myself”</blockquote>
-        <figcaption><a href="https://x.com/sheherenow_/status/2105785991839850786">@sheherenow_ on X</a><a class="customer-story-link" href="/blog/customer-story-flight-credit">read the story <span aria-hidden="true">→</span></a></figcaption>
+        <figcaption><a href="https://x.com/sheherenow_/status/2105785991839850786">@sheherenow_ on X</a><a class="customer-story-link" aria-label="Read the story about the $100 flight credit" href="/blog/customer-story-flight-credit">read the story <span aria-hidden="true">→</span></a></figcaption>
       </figure>
       <figure>
         <p><b>dinner reservation</b></p>
         <blockquote>“Booked a dinner reservation in one prompt. Only cost me 25 cents.”</blockquote>
-        <figcaption><a href="https://x.com/rickmanelius/status/2105825199015030846">@rickmanelius on X</a><a class="customer-story-link" href="/blog/customer-story-rick-dinner-reservation">read the story <span aria-hidden="true">→</span></a></figcaption>
+        <figcaption><a href="https://x.com/rickmanelius/status/2105825199015030846">@rickmanelius on X</a><a class="customer-story-link" aria-label="Read the story about Rick’s dinner reservation" href="/blog/customer-story-rick-dinner-reservation">read the story <span aria-hidden="true">→</span></a></figcaption>
       </figure>
       <figure>
         <p><b>dental appointments that day</b></p>
         <blockquote>“Just got my mind blown by the call quality”</blockquote>
-        <figcaption><a href="https://x.com/araa3185/status/2105740108926513203">@araa3185 on X</a><a class="customer-story-link" href="/blog/customer-story-dental-appointments">read the story <span aria-hidden="true">→</span></a></figcaption>
+        <figcaption><a href="https://x.com/araa3185/status/2105740108926513203">@araa3185 on X</a><a class="customer-story-link" aria-label="Read the story about Araa’s dental appointments" href="/blog/customer-story-dental-appointments">read the story <span aria-hidden="true">→</span></a></figcaption>
       </figure>
       <figure>
         <p><b>found shoes at Men's Wearhouse</b></p>
         <blockquote>“this thing saved so much time.”</blockquote>
-        <figcaption><a href="https://x.com/JoeFinberg/status/2105727961882398781">@JoeFinberg on X</a><a class="customer-story-link" href="/blog/customer-story-joe-dress-shoes">read the story <span aria-hidden="true">→</span></a></figcaption>
+        <figcaption><a href="https://x.com/JoeFinberg/status/2105727961882398781">@JoeFinberg on X</a><a class="customer-story-link" aria-label="Read the story about Joe’s dress shoe search" href="/blog/customer-story-joe-dress-shoes">read the story <span aria-hidden="true">→</span></a></figcaption>
       </figure>
     </section>
   </>

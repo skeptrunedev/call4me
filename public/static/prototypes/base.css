@@ -544,3 +544,10 @@ button:hover {
     animation: none !important;
   }
 }
+
+
+/* Extend the native story link across the card while keeping attribution separate. */
+.customer-stories figure { position: relative; isolation: isolate; }
+.customer-story-link::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.customer-story-link:focus-visible::after { outline: 3px solid #b77800; outline-offset: 4px; }
+.customer-stories figcaption a:not(.customer-story-link) { position: relative; z-index: 2; }
