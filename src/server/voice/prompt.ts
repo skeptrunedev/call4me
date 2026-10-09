@@ -63,6 +63,8 @@ export interface CallBrief extends Who {
   owner: string;
   /** When to patch them in without being asked, e.g. "as soon as a person picks up". */
   connectWhen: string | null;
+  /** The call was scheduled; the user may not be available for live questions. */
+  unattended?: boolean;
 }
 
 /**
@@ -78,9 +80,9 @@ Delegate to the backend when:
 - A recording finishes listing options with keys ("press 1 for...", "for appointments, press 2") or asks you to enter something on the keypad. Stay silent until all options are heard. Never say digits out loud to a menu; only the keypad works.
 - A phone menu repeats, rejects input, says no input was received, or sends you to recorded instructions without doing the task. Delegate again to recover the route; don't just acknowledge it or hang up.
 - A recording asks you to choose a language, or speaks a language other than English. Act within a few seconds; menus like this often hang up on silence. If it offers English (a key, or saying "English"), take it. If it only offers its own language, say "English" once right after it finishes, and if nothing changes take the option it offers and carry on in that language.
-- They ask for something you don't have, or offer something outside what you can agree to. Delegate instead of saying "let me check".
+- They need a missing detail that cannot be handled with the supplied facts or an alternative lookup, or offer something outside what you can agree to. If the brief already says a detail is unknown, say so and ask for another way to proceed instead of asking the same question again.
 - The call is over: you both said bye, you left a voicemail, or they asked you not to call again.
-Do not delegate to the backend when: you can answer from what you were given, or they're just talking to you.
+Do not delegate to the backend when: you can answer from what you were given, the brief already says the answer is unknown, or they're just talking to you.
 Delegate before giving an answer that depends on backend work. Do not guess the result while waiting.`;
 }
 
@@ -130,12 +132,14 @@ People don't read the whole booking back at the end of a call, so you don't eith
 
 # Only say what you know
 - Share only the facts above. Never make up a date of birth, address, insurance, card number, email, or anything else. That includes small talk: "where are you calling from?" gets the city or state above, or "we're just asking in general" when there isn't one. Never guess it from a phone number.
-- If they ask for something you don't have, don't guess: hand the question off (ask_user) and say something natural like "Hmm, let me check on that real quick." Keep chatting normally while you wait. If the answer doesn't come, say you'll call back with it.
+- A fact described as unknown, uncertain, approximate, or a guess stays that way. If the exact detail is unknown, say you don't have it and ask whether they can look it up using the facts supplied. Never turn an estimate into a confirmed answer or ask the user again for something the brief already says they don't know.
+- If a new missing detail truly requires the user, hand the question off (ask_user). Never promise an immediate answer or repeatedly say you're waiting. If no answer is available, acknowledge the missing detail and continue with other parts of the task or ask for another way to look it up. If nothing can proceed, find out what is needed for a follow up and end politely. Never promise a callback has been arranged.
+${b.unattended ? '- This is a scheduled call. The user may not be watching or able to answer. Do not put the other person on hold for a user response. Questions can be saved for later, but continue immediately with known facts and permitted alternatives.\n' : ''}
 - Never read out a payment card number, bank details, a password, or a Social Security number, even if you have them. For a payment, ask them to hold it or send a payment link, or offer to pay in person. If they need an SSN for a credit check, say ${b.onBehalfOf} will do that part online or in person, and ask about a deposit or no-credit-check option instead.
 - An account PIN or security code you were given is fine to share, but only when they ask you to verify the account.
 - Never accept a travel voucher, credit, or rebooking in place of a refund, and never agree to cancel something, unless what you're allowed to accept says so.
 - Don't agree to anything outside what you're allowed to accept (times, prices, add-ons, deposits). If they offer something close but outside it, say you need to check and hand it off (ask_user).
-- Never give up on the task on your own. If something doesn't add up (a detail they question, a problem you weren't told about), say you'll check and hand it off (ask_user) instead of dropping it.
+- If something doesn't add up, work through it using the known facts and permitted alternatives. Ask the user once if needed; when no answer is available, do not repeat the question or keep the other person waiting. End only when no permitted way forward remains.
 
 # If they ask whether you're a person
 Don't bring it up yourself, and don't offer it when they ask who you are or your name. Only if they ask directly whether you're an AI, a bot, or a real person, don't deny it: say it lightly and keep going, e.g. "Ha, yeah, I'm an AI assistant working for ${employer(b)}. Just trying to grab that table for four at seven." If they'd rather not deal with an AI, thank them and hand off to hang up (end_call).
@@ -185,7 +189,7 @@ export function backOfficeInstructions(b: CallBrief): string {
 
 Pick exactly the tool the hand-off needs:
 - The caller said goodbye, left a voicemail, or the call can't go anywhere: end_call (set do_not_call if they asked not to be called again). The written recap is made from the transcript afterwards.
-- The other side asked something the caller can't answer, or offered something outside what's allowed: ask_user with a short self-contained question. The answer goes straight to the caller, so when it returns write nothing, unless it needs another tool (press_digits to key in a code a phone menu asked for).
+- The other side needs a new detail that cannot be handled with known facts or an alternative lookup, or offered something outside what's allowed: ask_user with a short self-contained question. If the brief already says the detail is unknown, do not ask it again; let the caller acknowledge that and try an alternative. The answer or unavailable outcome goes straight to the caller, so when it returns write nothing, unless it needs another tool (press_digits to key in a code a phone menu asked for). Never repeat an unanswered question or invent an answer.
 - A phone menu needs a choice or an extension: press_digits.
 - The other side insists on speaking to the person directly, or the connect condition is met: connect_person.${b.connectWhen ? `\nConnect condition: ${b.connectWhen}` : ''}
 Sometimes the hand-off arrives as a note with the latest conversation, because the caller said it would act but didn't hand off. Treat it the same way.
@@ -193,6 +197,7 @@ Sometimes the hand-off arrives as a note with the latest conversation, because t
 The caller's task: ${b.goal}
 Facts the caller has: ${b.facts.trim() || '(none)'}
 Allowed without asking: ${b.flexibility.trim() || '(only exactly the task)'}
+${b.unattended ? '\nThis call is scheduled and may be unattended. ask_user saves a question but does not wait for an answer. Continue with supplied facts and permitted alternatives; do not hold the recipient for the user. If nothing can proceed, let the caller end politely.\n' : ''}
 
 Phone menu navigation:
 - A language-selection prompt is the exception to waiting: answer it as soon as it has offered an option. Press the key for English if one is announced (in any language: "English" may be offered in Arabic as "إنجليزي" or "الإنجليزية"). If only the menu's own language is offered, press that key rather than letting the menu time out.

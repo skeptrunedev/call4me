@@ -139,6 +139,44 @@ test('new input arriving during keypad submission is preserved', async (t) => {
   assert.equal(h.session.menuRecovery.pending()?.reason, 'menu_recovery');
 });
 
+test('cardholder menu rejection delegates again after caller filler and an accepted keypad request', async (t) => {
+  const h = harness(t);
+  const prompt = 'If you have your card handy, please press one. If you do not have your card handy, please press two.';
+  await h.input(prompt);
+  await h.session.onLive(JSON.stringify({ type: 'session.output_transcript.delta', delta: 'Hmm.' }));
+  t.mock.timers.tick(3_000);
+  assert.equal(h.forced().length, 1);
+  await h.keypress('2');
+  await h.response('response.completed');
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await h.input(` I am sorry, we did not understand your input, please try again. ${prompt}`);
+    await h.session.onLive(JSON.stringify({ type: 'session.output_transcript.delta', delta: 'Hmm.' }));
+    t.mock.timers.tick(3_000);
+    assert.equal(h.forced().length, attempt + 2, 'each fresh rejection gets a recovery handoff');
+    const recovery = h.forced().at(-1).item.content[0].text;
+    assert.match(recovery, /we did not understand your input/);
+    assert.match(recovery, /Keypad submitted: 2/);
+    await h.keypress('2');
+    await h.response('response.completed');
+  }
+});
+
+test('caller filler cannot postpone a finished menu beyond its keypad deadline', async (t) => {
+  const h = harness(t);
+  await h.input('If you have your card handy, please press one. If you do not have your card handy, please press two.');
+  t.mock.timers.tick(2_000);
+  await h.session.onLive(JSON.stringify({ type: 'session.output_transcript.delta', delta: 'Hmm.' }));
+  t.mock.timers.tick(1_000);
+  assert.equal(h.forced().length, 1, 'the deadline belongs to the finished menu, even if the caller speaks');
+  await h.response('response.completed');
+  for (let i = 0; i < 3; i++) {
+    await h.session.onLive(JSON.stringify({ type: 'session.output_transcript.delta', delta: ' Hmm.' }));
+    t.mock.timers.tick(3_000);
+  }
+  assert.equal(h.forced().length, 1, 'caller filler never reopens a menu already delegated');
+});
+
 test('a late keypad acceptance cannot reopen a menu after a person answers', () => {
   const recovery = new MenuRecovery();
   recovery.observe('For returns press one.', 1);

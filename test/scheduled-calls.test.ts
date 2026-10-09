@@ -3,6 +3,7 @@ import test from 'node:test';
 import type { Account } from '../src/server/services/accounts';
 import { CallError } from '../src/server/services/calls';
 import { parseCallAt, placeDueCalls, SCHEDULE_LIMITS, scheduledCalls, scheduledView } from '../src/server/services/scheduled';
+import type { SessionSetup } from '../src/server/voice/session';
 import { d1 } from './sqlite-d1';
 
 const alice = { id: 'acct_alice', email: 'alice@example.com', display_name: 'Alice', key_prefix: null, created_at: 0 } as unknown as Account;
@@ -111,4 +112,35 @@ test('the cron dials due calls once, leaves later ones, and never dials a long-m
   assert.equal(skipped.status, 'failed');
   assert.equal(skipped.call_id, null);
   assert.match(skipped.error!, /did not dial it late/);
+});
+
+test('the cron carries unattended execution into stored voice setup and both prompts', async (t) => {
+  const db = await setup();
+  await db.prepare(`INSERT INTO numbers (id, account_id, phone_number, country, number_type, included, monthly_cents, paid_through, status, created_at)
+    VALUES ('num_test', 'acct_alice', '+14155550100', 'US', 'local', 1, 0, 0, 'active', 0)`).run();
+  const setups: SessionSetup[] = [];
+  let dials = 0;
+  t.mock.method(globalThis, 'fetch', async (input: string | URL | Request) => {
+    assert.equal(String(input), 'https://api.telnyx.com/v2/calls', 'all carrier requests are intercepted');
+    dials++;
+    return Response.json({ data: { call_control_id: 'test-control' } });
+  });
+  const env = {
+    DB: db, PRICE_PER_MINUTE_CENTS: '25', CANONICAL_HOST: 'call4.me',
+    VOICE_HOST: 'voice.test', STREAM_SECRET: 'test-secret',
+    VOICE_SESSION: {
+      idFromName: (id: string) => id,
+      get: () => ({ fetch: async (url: string, init: RequestInit) => {
+        if (new URL(url).pathname === '/setup') setups.push(JSON.parse(init.body as string));
+        return new Response('ok');
+      } }),
+    },
+  } as unknown as Env;
+  await scheduledCalls(db).schedule(alice, canby, new Date(at + 60_000).toISOString(), 'agents', at);
+  assert.deepEqual(await placeDueCalls(env, at + 60_000), { placed: 1, failed: 0, missed: 0 });
+  assert.equal(dials, 1);
+  assert.equal(setups.length, 1);
+  assert.equal(setups[0].unattended, true);
+  assert.match(setups[0].instructions, /Do not put the other person on hold for a user response/);
+  assert.match(setups[0].backOffice, /saves a question but does not wait/);
 });

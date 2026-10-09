@@ -122,7 +122,7 @@ async function personFor(env: Env, origin: string, account: Account, profile: Pr
   return { name: profile.full_name || account.display_name || 'the account owner', phone: reachable, from, webhookUrl: `${origin}/webhooks/telnyx`, connectWhen, listenIn };
 }
 
-export async function placeCall(env: Env, origin: string, account: Account, input: PlaceCallInput & { voice?: Voice }, surface: Surface = 'agents'): Promise<CallRow> {
+export async function placeCall(env: Env, origin: string, account: Account, input: PlaceCallInput & { voice?: Voice }, surface: Surface = 'agents', execution: { unattended?: boolean } = {}): Promise<CallRow> {
   const price = pricePerMinuteTo(env, input.to);
   const db = calls(env.DB);
   const { call, secrets, to } = await db.create(account, input, price, surface);
@@ -155,12 +155,14 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       assistantName: brief.caller_name || assistantNameOf(profile),
       callingAs: brief.calling_as ?? null,
       connectWhen: brief.connect_when ?? null,
+      unattended: execution.unattended,
     };
     const stream = await streamUrl(env, call.id);
     const setup: SessionSetup = {
       callId: call.id,
       streamUrl: stream,
       person,
+      unattended: execution.unattended,
       instructions: callInstructions(cb),
       backOffice: backOfficeInstructions(cb),
       voice: input.voice ?? 'marin',

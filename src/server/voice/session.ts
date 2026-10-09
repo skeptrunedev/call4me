@@ -53,10 +53,9 @@ const MENU_QUIET_MS = 3_000;
 /** A back-office run that never reports back stops blocking new ones after this long. */
 const BACK_OFFICE_STALE_MS = QUESTION_WAIT_MS + 15_000;
 const MAX_FORCED_HANDOFFS = 12;
-/** While a question is out to the person: quiet before the caller says it's still checking, then how often it repeats. */
+/** One brief acknowledgment while an attended question is pending. */
 const HOLDING_LINE_QUIET_MS = 8_000;
-const HOLDING_LINE_REPEAT_MS = 15_000;
-const MAX_HOLDING_LINES = 4;
+const MAX_HOLDING_LINES = 1;
 /**
  * The alarm doubles as a heartbeat that outlives this instance: Cloudflare can reset a session
  * mid-call, and a fresh instance with no phone stream first asks Telnyx to reattach it, then
@@ -74,6 +73,8 @@ export interface SessionSetup {
   voice: string;
   maxSeconds: number;
   pricePerMinuteCents: number;
+  /** Scheduled calls cannot assume someone is watching and ready to answer questions. */
+  unattended?: boolean;
   /** Telnyx's id for the phone leg: known up front for inbound calls, after dialing for outbound. */
   controlId?: string;
   /** Where Telnyx streams the call's audio, to reattach it after a reset. */
@@ -152,9 +153,11 @@ export class VoiceSession extends DurableObject<Env> {
   /** Back-office functions still running (an ask_user waits on the person). Its response already reported completed. */
   private toolsRunning = 0;
   /** ask_user calls waiting on the person, by question id. */
-  private waiting = new Map<string, (answer: string) => void>();
-  /** The latest question still out to the person, and how many "still checking" lines it has had. */
-  private holding: { question: string; lines: number; lastAt: number } | null = null;
+  private waiting = new Map<string, (answer: string | null) => void>();
+  /** After an unanswered question, don't put the recipient through another wait unless the user returns. */
+  private userUnavailable = false;
+  /** The latest question still out to the person, and whether its one acknowledgment was sent. */
+  private holding: { question: string; lines: number } | null = null;
   private holdingTimer: ReturnType<typeof setTimeout> | null = null;
   /** Ordered carrier evidence survives retries and object resets without restarting a greeting. */
   private machineState: MachineState | null = null;
@@ -686,8 +689,11 @@ export class VoiceSession extends DurableObject<Env> {
   private scheduleHandoffCheck(): void {
     if (this.ended || this.endingCall) return;
     if (this.handoffTimer) clearTimeout(this.handoffTimer);
-    const quiet = this.menuRecovery.pending() ? MENU_QUIET_MS : HANDOFF_QUIET_MS;
-    const remaining = Math.max(0, this.lastTranscriptAt + quiet - Date.now());
+    const menu = this.menuRecovery.pending();
+    const quiet = menu ? MENU_QUIET_MS : HANDOFF_QUIET_MS;
+    // Only new menu input extends its deadline. Caller filler must not delay keypad recovery.
+    const quietSince = menu ? menu.snapshot.at : this.lastTranscriptAt;
+    const remaining = Math.max(0, quietSince + quiet - Date.now());
     this.handoffTimer = setTimeout(() => this.checkMissedHandoff(), remaining);
   }
 
@@ -1007,9 +1013,12 @@ export class VoiceSession extends DurableObject<Env> {
 
   private async askUser(s: Stored, question: string): Promise<string> {
     if (!question) return 'no question given';
+    const live = this.live;
     const db = calls(this.env.DB);
     const qid = await db.ask(s.callId, question);
-    this.holding = { question, lines: 0, lastAt: 0 };
+    if (this.ended) return 'the call has ended';
+    if (s.unattended || this.userUnavailable) return this.questionUnanswered(question, live);
+    this.holding = { question, lines: 0 };
     this.scheduleHoldingLine();
     const answer = await new Promise<string | null>((resolve) => {
       const timer = setTimeout(() => resolve(null), QUESTION_WAIT_MS);
@@ -1019,10 +1028,25 @@ export class VoiceSession extends DurableObject<Env> {
       });
     });
     this.waiting.delete(qid);
-    if (!this.waiting.size) this.holding = null;
+    if (!this.waiting.size) {
+      this.holding = null;
+      if (this.holdingTimer) clearTimeout(this.holdingTimer);
+      this.holdingTimer = null;
+    }
+    if (this.ended) return 'the call has ended';
     return answer === null
-      ? 'No answer came in time. Tell them you will check and call back about that, and carry on with anything else. If it comes in later, the caller is told directly.'
+      ? this.questionUnanswered(question, live)
       : `Answer: ${answer} (the caller has already been given it to say)`;
+  }
+
+  /** The voice must hear the outcome too: back-office tool results are not spoken automatically. */
+  private questionUnanswered(question: string, live: WebSocket | null): string {
+    this.userUnavailable = true;
+    if (this.live === live && !this.ended && !this.personOn) this.sendLive({
+      type: 'session.commentary.append', delegation_id: null,
+      content: `No answer is available from the person you work for about "${question.slice(0, 300)}". Stop waiting for it and do not keep saying you are checking or waiting to hear back. When the other person is waiting for your answer, say you don't have that detail and ask whether they can proceed or look it up using facts already supplied. Carry on with anything else you can accomplish. Never guess facts or accept anything outside your permission. If nothing can proceed, ask what is needed for a follow up, then say goodbye and delegate end_call. Do not promise a callback has been arranged. Stay silent during a phone menu, hold, transfer, or while the other person is speaking. A later answer will still be delivered.`,
+    });
+    return 'No answer is available. The caller has been told to acknowledge the missing detail and proceed using known facts or an alternative lookup. Do not ask the same question again or wait again. A later answer still reaches the caller. Write nothing unless another tool is needed.';
   }
 
   /**
@@ -1033,6 +1057,7 @@ export class VoiceSession extends DurableObject<Env> {
    */
   private answerCameIn(id: string, question: string, answer: string): void {
     if (this.ended) return;
+    this.userUnavailable = false;
     if (!this.personOn) {
       this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: `The answer came back for "${question.slice(0, 300)}": ${answer}. Say it to them now.` });
     }
@@ -1045,19 +1070,18 @@ export class VoiceSession extends DurableObject<Env> {
 
   // ---- keeping the line warm while the person answers
 
-  /** Check for dead air once the line has been quiet long enough since the last words on either side, or the last holding line. */
+  /** Acknowledge one pending question once the line has been quiet long enough on both sides. */
   private scheduleHoldingLine(): void {
-    if (!this.holding || this.ended || this.endingCall) return;
+    if (!this.holding || this.holding.lines >= MAX_HOLDING_LINES || this.ended || this.endingCall) return;
     if (this.holdingTimer) clearTimeout(this.holdingTimer);
     const quietSince = Math.max(this.lastTranscriptAt, this.speechEndsAt);
-    const due = Math.max(quietSince + HOLDING_LINE_QUIET_MS, this.holding.lastAt + HOLDING_LINE_REPEAT_MS);
+    const due = quietSince + HOLDING_LINE_QUIET_MS;
     this.holdingTimer = setTimeout(() => this.holdingLine(), Math.max(0, due - Date.now()));
   }
 
   /**
-   * The voice model is told to keep chatting while it waits for an answer, but it only speaks when
-   * it hears something. If someone is waiting on us (not a hold, a transfer or a phone menu), have
-   * it say it's still checking. New words on the line reschedule this; nothing fires on hold.
+   * If someone is waiting on us, acknowledge the missing detail and ask for an alternative once.
+   * New words reschedule this; nothing fires during a hold, transfer or phone menu.
    */
   private holdingLine(): void {
     this.holdingTimer = null;
@@ -1067,10 +1091,9 @@ export class VoiceSession extends DurableObject<Env> {
     if (Date.now() - quietSince < HOLDING_LINE_QUIET_MS) return this.scheduleHoldingLine();
     const lastThem = [...this.transcript].reverse().find((l) => l.role === 'them');
     if (!lastThem || isPhoneMenu(lastThem.text) || asksUsToWait(lastThem.text) || this.menuRecovery.pending()) return;
-    this.mark(`line quiet ${Math.round((Date.now() - quietSince) / 1000)}s while a question is out; saying the caller is still checking`);
-    this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: holdingLineMessage(h.question, this.setup?.person?.name ?? 'the person you work for', h.lines) });
+    this.mark(`line quiet ${Math.round((Date.now() - quietSince) / 1000)}s while a question is out; acknowledging the missing detail once`);
+    this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: holdingLineMessage(h.question, this.setup?.person?.name ?? 'the person you work for') });
     h.lines++;
-    h.lastAt = Date.now();
     this.scheduleHoldingLine();
   }
 
@@ -1169,6 +1192,7 @@ export class VoiceSession extends DurableObject<Env> {
     this.liveConnectAbort?.abort();
     if (this.handoffTimer) clearTimeout(this.handoffTimer);
     if (this.holdingTimer) clearTimeout(this.holdingTimer);
+    for (const finish of this.waiting.values()) finish(null);
     console.log('call session ending:', reason);
     const s = await this.load();
     if (s?.controlId && reason !== 'hangup webhook') {

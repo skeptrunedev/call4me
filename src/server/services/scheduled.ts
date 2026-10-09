@@ -183,7 +183,7 @@ async function dialScheduled(env: Env, origin: string, row: ScheduledRow): Promi
   try {
     const account = await accounts(db).byId(row.account_id);
     if (!account) throw new CallError('the account no longer exists');
-    const call = await placeCall(env, origin, account, JSON.parse(row.input) as ScheduledInput, row.surface);
+    const call = await placeCall(env, origin, account, JSON.parse(row.input) as ScheduledInput, row.surface, { unattended: true });
     await settle('placed', call.id, null);
     return 'placed';
   } catch (err) {

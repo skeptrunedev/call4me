@@ -84,7 +84,7 @@ export function llmsTxt(site: string, pricePerMinuteCents: number, posts: PostEn
   return [
     '# call4me',
     '',
-    `> your AI agent makes phone calls for you: restaurant bookings, doctor, dentist, and vet appointments, dealership and service questions, home internet, flight changes, and questions for any business in the US, Canada and Europe, or elsewhere with a call4me number in that country. The caller sounds like a normal person, asks your agent mid-call when it needs something, and your agent gets the outcome and transcript. Prepaid credits from $10; ${price} per minute of talk time; unanswered calls are free.`,
+    `> your AI agent makes phone calls for you: restaurant bookings, doctor, dentist, and vet appointments, dealership and service questions, home internet, flight changes, and questions for any business in the US, Canada and Europe, or elsewhere with a call4me number in that country. The caller sounds like a normal person, asks your agent mid-call when it needs something, and your agent gets the outcome and transcript. Prepaid credits from $10; ${price} per minute from pickup, including phone menus and hold time; unanswered calls are free.`,
     '',
     'Everything goes through the MCP server, signed in as a call4me user (Google or X in the browser, then OAuth for the agent), or with an API key from the account page. There is no separate sign-up: the first Google or X sign-in creates the account.',
     '',

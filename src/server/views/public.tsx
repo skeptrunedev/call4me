@@ -156,7 +156,7 @@ export const HomeCredits: FC<HomePageProps> = (p) => (
               <rect x="198" y="112" width="68" height="34" rx="3" fill="#ffb000" />
               <path d="M222 129h19m-6-6 6 6-6 6" fill="none" stroke="#151515" stroke-width="1.5" />
             </svg>
-            load credits (<span class="price">from {dollars(MIN_TOPUP_CENTS)}</span>, reloads monthly unless you untick it). calls cost <span class="price">{dollars(p.pricePerMinuteCents)}/min</span> of talk time, held up front and settled when the call ends.
+            load credits (<span class="price">from {dollars(MIN_TOPUP_CENTS)}</span>, reloads monthly unless you untick it). calls cost <span class="price">{dollars(p.pricePerMinuteCents)}/min</span> from pickup, including phone menus and hold time. the maximum cost is held up front and settled when the call ends.
           </li>
           <li>
             <svg class="step-graphic" viewBox="0 0 320 190" width="320" height="190" aria-hidden="true" focusable="false">
@@ -290,11 +290,19 @@ export const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries
       <details>
         <summary>what does it cost?</summary>
         <p>
-          from {dollars(pricePerMinuteCents)} per minute from pickup, rounded up to the minute. prepaid credits start at {dollars(MIN_TOPUP_CENTS)}.
+          from {dollars(pricePerMinuteCents)} per minute from pickup by a person or automated system, including phone menus and hold time, rounded up to the minute. prepaid credits start at {dollars(MIN_TOPUP_CENTS)}.
           each call reserves its maximum cost and returns unused credit when it ends. unanswered, busy, and failed calls are free.
         </p>
         {extra && <p>higher rates: {extra}.</p>}
         <p>monthly reload is on by default. untick it before paying or stop it in <a href={accountPath(signedIn)}>my account</a>.</p>
+      </details>
+      <details>
+        <summary>can it wait on hold and ring me when someone answers?</summary>
+        <p>
+          yes. ask your agent to have call4me ring you as soon as a person picks up. it calls your saved phone, and you press 1 to join.
+          phone menus and hold time cost the same per minute as the conversation. there is no discounted hold rate.
+          ask your agent to set a maximum call length to cap the cost, or schedule the call for a quieter time.
+        </p>
       </details>
       <details>
         <summary>do i need my own phone number?</summary>
@@ -522,7 +530,7 @@ export const SupportPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ si
       answers, usually the same day.
     </p>
     <ul>
-      <li>a call went wrong: open it in <a href={accountPath(signedIn)}>my account</a> for the outcome and the full transcript, and send us the call id. talk time is billed from pickup; unanswered, busy and failed calls are free.</li>
+      <li>a call went wrong: open it in <a href={accountPath(signedIn)}>my account</a> for the outcome and the full transcript, and send us the call id. time from pickup, including phone menus and hold time, is billed; unanswered, busy and failed calls are free.</li>
       <li>credits and the monthly reload: your balance and reload are in <a href={accountPath(signedIn)}>my account</a>, where you can stop the reload anytime. credits already loaded stay and don't expire.</li>
       <li>connecting your agent: the <a href="/mcp">install page</a> has the steps for each app. in chatgpt, add call4me from the plugins directory and sign in when it asks.</li>
       <li>someone you don't know called from a call4me number: tell us the number and we stop calls to yours.</li>
@@ -536,7 +544,7 @@ export const TermsPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ sign
     <h1>terms</h1>
     <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
     <ul>
-      <li>credits are prepaid and don't expire. a call holds its maximum cost from your balance before it dials and settles when it ends: talk time from pickup, rounded up to the minute. the rest of the hold comes back.</li>
+      <li>credits are prepaid and don't expire. a call holds its maximum cost from your balance before it dials and settles when it ends: time from pickup by a person or automated system, including phone menus and hold time at the same rate, rounded up to the minute. the rest of the hold comes back.</li>
       <li>by default, what you load reloads every month: the same amount is charged to your card and added as credits. stop it anytime from your account; credits already loaded stay.</li>
       <li>unanswered, busy, and failed calls are free.</li>
       <li>you're responsible for the calls you ask for and must follow the <a href="/rules">rules</a>.</li>

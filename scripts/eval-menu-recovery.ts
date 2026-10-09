@@ -51,6 +51,24 @@ const scenarios: Scenario[] = [
     prompt: 'Please enter your complete Social Security number using your phone keypad.',
     expected: [{ tool: 'ask_user' }, { tool: 'end_call' }],
   },
+  {
+    name: 'choose the no card option for a reward card that never arrived',
+    goal: 'Find a reward card that never arrived and ask a representative to reissue it. The caller has no card or card number.',
+    prompt: 'If you have your card handy, please press one. If you do not have your card handy, please press two.',
+    expected: [{ tool: 'press_digits', digits: '2' }],
+  },
+  {
+    name: 'retry the correct announced choice after rejected keypad input',
+    goal: 'Find a reward card that never arrived and ask a representative to reissue it. The caller has no card or card number.',
+    before: [{ prompt: 'If you have your card handy, please press one. If you do not have your card handy, please press two.', digits: '2' }],
+    prompt: 'I am sorry, we did not understand your input, please try again. If you have your card handy, please press one. If you do not have your card handy, please press two.',
+    expected: [{ tool: 'press_digits', digits: '2' }],
+  },
+  {
+    name: 'answer a spoken security challenge using only the requested digits',
+    prompt: 'Please listen to the following security challenge code and provide the requested response to continue. The security code is two, three, six, nine. Please enter the middle two digits of the security code followed by the pound key.',
+    expected: [{ tool: 'press_digits', digits: '36#' }],
+  },
 ];
 
 for (const scenario of scenarios) {

@@ -16,7 +16,7 @@ test('every design preserves each original content section and functional record
       assert.ok(html.includes(section), `${style} keeps original content`);
     }
     assert.equal((html.match(/class="player"/g) ?? []).length, 4);
-    assert.equal((html.match(/<details>/g) ?? []).length, 9);
+    assert.equal((html.match(/<details>/g) ?? []).length, (original.match(/<details>/g) ?? []).length);
     assert.match(html, /name="robots" content="noindex, nofollow"/);
     assert.match(html, /method="post" action="\/buy"/);
     assert.match(html, /<input type="checkbox" name="monthly" checked/);

@@ -161,9 +161,8 @@ ${recent}`;
  * only speaks when it hears something, so without this it sits silent until the answer lands
  * (Spectrum heard 41s of nothing after "Already sent" while a one-time code came back).
  */
-export function holdingLineMessage(question: string, owner: string, nth: number): string {
-  const line = nth === 0 ? '"Sorry, still checking on that, one sec."' : '"Still waiting to hear back, thanks for bearing with me."';
-  return `You're still waiting on ${owner}'s answer to: "${question.slice(0, 300)}". The line has gone quiet and they're waiting on you. Say one short casual line like ${line} and then wait. Don't make up the answer.`;
+export function holdingLineMessage(question: string, owner: string): string {
+  return `You're waiting on ${owner}'s answer to: "${question.slice(0, 300)}". The line has gone quiet and they're waiting on you. Say one short casual line like "I don't have that detail yet. Is there another way to look it up?" Only ask this once. Carry on with anything else you can accomplish using the facts you have. Don't make up the answer or repeat that you're waiting.`;
 }
 
 /**
