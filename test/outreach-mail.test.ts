@@ -117,6 +117,32 @@ test('replies preserve references and reject recipient or thread mismatches befo
   assert.ok(wrongThread.calls.every((call) => call.body?.methodCalls[0][0] !== 'EmailSubmission/set'));
 });
 
+test('follow-ups to sent mail from an authenticated alias preserve recipient and thread', async () => {
+  const source = { id: 'outgoing', threadId: 'thread', from: [{ email: 'me@call4.me' }], to: [{ email: message.to }], mailboxIds: { sent: true }, keywords: {}, subject: 'hello', messageId: ['parent@example.com'], references: ['root@example.com'] };
+  const identities = methodResult('Identity/get', { list: [{ id: 'sender', email: 'me@skeptrune.com' }, { id: 'alias', email: 'me@call4.me' }] });
+  const setup = (changes: object = {}) => mock({ 'Identity/get': identities, 'Email/get': methodResult('Email/get', { list: [{ ...source, ...changes }] }) });
+  const { client, calls } = setup();
+  assert.equal((await client.reply({ id: source.id, to: message.to, text: message.text })).submissionId, 'submission');
+  const draft = calls.find((call) => call.body?.methodCalls[0][0] === 'Email/set')!.body.methodCalls[0][1].create.draft;
+  assert.deepEqual(draft.to, [{ email: message.to }]);
+  assert.equal(draft.subject, 'Re: hello');
+  assert.deepEqual(draft.inReplyTo, source.messageId);
+  assert.deepEqual(draft.references, ['root@example.com', 'parent@example.com']);
+  for (const changes of [
+    { to: [{ email: 'wrong@example.com' }] },
+    { to: [{ email: message.to }, { email: 'other@example.com' }] },
+    { mailboxIds: { inbox: true } },
+    { keywords: { $draft: true } },
+    { cc: [{ email: 'other@example.com' }] },
+    { bcc: [{ email: 'other@example.com' }] },
+    { from: [{ email: 'unknown@example.com' }] },
+  ]) {
+    const rejected = setup(changes);
+    await assert.rejects(rejected.client.reply({ id: source.id, to: message.to, text: message.text }), /intended recipient|sent email/);
+    assert.ok(rejected.calls.every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+  }
+});
+
 test('only explicit send submits and moves the created draft to sent', async () => {
   const { client, calls } = mock();
   assert.deepEqual(await client.send(message), { provider: 'fastmail', id: 'draft-email', submissionId: 'submission' });

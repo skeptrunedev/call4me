@@ -68,7 +68,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     const draftMailboxId = mailboxes.list?.find((item) => item.role === 'drafts')?.id;
     const sentMailboxId = mailboxes.list?.find((item) => item.role === 'sent')?.id;
     if (!draftMailboxId || !sentMailboxId) throw new Error('Fastmail account needs drafts and sent mailboxes');
-    context = { ...discovered, identityId: identity.id, draftMailboxId, sentMailboxId, maxDelayedSend: account.accountCapabilities[SUBMISSION].maxDelayedSend ?? 0 };
+    context = { ...discovered, identityId: identity.id, senderEmails: identities.list.map((item) => item.email?.toLowerCase()).filter(Boolean), draftMailboxId, sentMailboxId, maxDelayedSend: account.accountCapabilities[SUBMISSION].maxDelayedSend ?? 0 };
     return context;
   }
 
@@ -252,10 +252,12 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
   async function replyMessage({ id, to, text }) {
     if (!id || !to || !text?.trim()) throw new Error('Reply source, recipient and body are required');
     const session = await discover();
-    const result = await call(session, 'Email/get', { ids: [id], properties: ['id', 'threadId', 'from', 'replyTo', 'subject', 'messageId', 'references'] });
+    const result = await call(session, 'Email/get', { ids: [id], properties: ['id', 'threadId', 'from', 'to', 'cc', 'bcc', 'mailboxIds', 'keywords', 'replyTo', 'subject', 'messageId', 'references'] });
     const original = result.list?.find((email) => email.id === id);
-    const recipients = original?.replyTo?.length ? original.replyTo : original?.from;
-    if (recipients?.length !== 1 || recipients[0].email.toLowerCase() !== to.toLowerCase()) throw new Error('Reply source does not match the intended recipient');
+    const fromSelf = original?.from?.length === 1 && session.senderEmails.includes(original.from[0].email?.toLowerCase());
+    if (fromSelf && (original.mailboxIds?.[session.sentMailboxId] !== true || original.keywords?.$draft || original.cc?.length || original.bcc?.length)) throw new Error('Follow-up source must be a sent email with no additional recipients');
+    const recipients = fromSelf ? original.to : original?.replyTo?.length ? original.replyTo : original?.from;
+    if (recipients?.length !== 1 || recipients[0].email?.toLowerCase() !== to.toLowerCase()) throw new Error('Reply source does not match the intended recipient');
     if (!original.messageId?.length || !original.threadId) throw new Error('Reply source has no message id or thread id');
     return { to, text, subject: /^re:/i.test(original.subject) ? original.subject : `Re: ${original.subject}`, inReplyTo: original.messageId, references: [...new Set([...(original.references ?? []), ...original.messageId])], expectedThreadId: original.threadId };
   }
