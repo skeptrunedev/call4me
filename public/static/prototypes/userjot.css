@@ -1,0 +1,208 @@
+body.userjot {
+  --paper: #f5f3ee;
+  --ink: #282725;
+  --muted: #65635f;
+  --line: #e5e2dc;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.userjot .site-header {
+  max-width: 1120px;
+  min-height: 88px;
+  padding: 24px 0;
+  gap: 46px;
+}
+
+.userjot .brand {
+  gap: 10px;
+  font-size: 16px;
+  letter-spacing: -.55px;
+}
+
+.userjot .brand-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #191919;
+  color: #fff;
+}
+
+.userjot .brand-mark svg { width: 16px; height: 16px; }
+.userjot .main-nav { gap: 27px; font-size: 15px; color: #41403d; }
+.userjot .header-actions { gap: 21px; font-size: 14px; }
+.userjot .header-cta { border-radius: 100px; padding: 8px 16px; }
+
+.userjot .hero {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-top: 78px;
+}
+
+.userjot .hero-copy { text-align: center; }
+.userjot h1 {
+  margin: 0 auto;
+  max-width: 1050px;
+  font-size: clamp(52px, 4.5vw, 66px);
+  line-height: 1.035;
+  font-weight: 400;
+  letter-spacing: -.06em;
+}
+
+.userjot h1 > span { display: block; }
+.userjot .headline-accent {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -.075em;
+  line-height: 1.13;
+}
+
+.userjot .hero-description {
+  max-width: 680px;
+  margin: 25px auto 0;
+  font-size: 19px;
+  line-height: 1.5;
+  color: #494844;
+  letter-spacing: -.2px;
+}
+
+.userjot .hero-links {
+  justify-content: center;
+  gap: 26px;
+  margin-top: 32px;
+  margin-bottom: 0;
+  font-size: 14px;
+}
+
+.userjot .hero-links a:first-child { border-radius: 100px; padding: 11px 21px; }
+.userjot .hero-links a:last-child { color: #494844; }
+.userjot .hero-media {
+  margin-top: 142px;
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #e3e0db;
+  border-radius: 23px;
+  box-shadow: 0 12px 36px #39322608;
+}
+
+.userjot .players { gap: 18px; }
+.userjot .player {
+  min-height: 191px;
+  padding: 29px 25px;
+  align-items: flex-start;
+  gap: 20px;
+  background: #f8f8f6;
+  border: 1px solid #edece8;
+  border-radius: 15px;
+}
+
+.userjot .player .play {
+  margin-top: 3px;
+  flex-basis: 35px;
+  width: 35px;
+  height: 35px;
+  border-radius: 9px;
+  background: #242320;
+}
+
+.userjot .player-ask { min-height: 72px; font-size: 16px; line-height: 1.55; letter-spacing: -.15px; }
+.userjot .bar { margin: 11px 0 7px; }
+.userjot .player-meta.small { font-size: 12px !important; color: #817f79; }
+.userjot .player-meta a { text-decoration: none; }
+.userjot .player-meta a:hover { text-decoration: underline; }
+.userjot .endorsement { padding: 49px 24px 64px; }
+
+.userjot .content-section {
+  max-width: 1120px;
+  padding: 85px 44px;
+  border-color: var(--line);
+}
+
+.userjot .content-section h3 {
+  font-size: 41px;
+  letter-spacing: -1.8px;
+  font-weight: 400;
+  margin-bottom: 27px;
+}
+
+.userjot .about-section { text-align: center; }
+.userjot .about-section > p { margin-right: auto; margin-left: auto; color: #56544f; font-size: 19px; }
+.userjot .about-section > .small { max-width: 720px; }
+.userjot .about-section b { color: #282725; font-weight: 500; }
+.userjot .cols { gap: 90px; }
+.userjot .steps li { color: #65635d; padding-left: 40px; }
+.userjot .steps li:before { color: #99958d; }
+.userjot .price { font-weight: 500; }
+.userjot .small { color: #757169; }
+.userjot .buy > .amount { border-color: #d9d5cd; background: #fff; border-radius: 9px; }
+.userjot .buy > button { border-radius: 100px; padding: 12px 22px; }
+.userjot .buy { gap: 15px; }
+.userjot .buy > label { color: #66615b; }
+.userjot .monthly { color: #65615b; }
+.userjot .setup-section > h3, .userjot .setup-section > p { text-align: center; }
+.userjot .copyblock { margin-top: 29px; }
+.userjot .copyblock button { border-radius: 100px; margin: 0 auto 24px; padding: 11px 22px; }
+.userjot .copyblock textarea { background: #fff; border: 1px solid var(--line); border-radius: 17px; padding: 30px; color: #5b5851; }
+.userjot .customer-stories { gap: 20px; }
+.userjot .customer-stories h3 { text-align: center; margin-bottom: 16px; }
+.userjot .customer-stories figure { padding: 34px; background: #fff; border: 1px solid var(--line); border-radius: 16px; }
+.userjot .customer-stories figure > p { color: #8a857b; }
+.userjot .customer-stories figure b { font-weight: 400; }
+.userjot .customer-stories blockquote { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: 28px; line-height: 1.35; }
+.userjot .customer-stories figcaption { color: #817c71; }
+.userjot .faq-section > h3 { text-align: center; }
+.userjot .faq { max-width: 760px; }
+.userjot .faq details { border-color: var(--line); }
+.userjot .faq summary { font-size: 17px; }
+.userjot .faq details p { color: #69655e; }
+.userjot .site-footer { max-width: 1120px; margin: 0 auto; padding: 42px 0 110px; border-color: var(--line); color: #827c72; }
+.userjot .site-footer .brand { color: var(--ink); }
+.userjot .prototype-picker { border-radius: 100px; border-color: #dedbd4; background: #fffffff5; }
+.userjot .prototype-picker a { border-radius: 100px; }
+
+@media (max-width: 1200px) {
+  .userjot .site-header, .userjot .hero, .userjot .content-section, .userjot .site-footer { margin-right: 32px; margin-left: 32px; }
+  .userjot .site-header { gap: 30px; }
+  .userjot .main-nav { gap: 21px; }
+}
+
+@media (max-width: 800px) {
+  .userjot .site-header { padding: 22px 0 17px; gap: 20px; }
+  .userjot .site-header, .userjot .hero, .userjot .content-section, .userjot .site-footer { margin-left: 22px; margin-right: 22px; }
+  .userjot .main-nav { font-size: 13px; gap: 25px; justify-content: center; }
+  .userjot .header-actions { gap: 13px; }
+  .userjot .header-cta { font-size: 12px; }
+  .userjot .hero { padding-top: 55px; }
+  .userjot h1 { font-size: clamp(42px, 8vw, 60px); letter-spacing: -.06em; }
+  .userjot .hero-description { font-size: 17px; max-width: 310px; margin-top: 24px; }
+  .userjot .hero-links { gap: 17px; margin-top: 26px; }
+  .userjot .hero-links a { font-size: 12px; }
+  .userjot .hero-links a:first-child { padding: 11px 18px; }
+  .userjot .hero-media { margin-top: 65px; padding: 14px; border-radius: 19px; }
+  .userjot .players { gap: 12px; }
+  .userjot .player { min-height: 163px; padding: 22px 18px; gap: 16px; }
+  .userjot .player-ask { min-height: 48px; font-size: 15px; }
+  .userjot .endorsement { padding: 37px 20px 48px; }
+  .userjot .content-section { padding: 55px 8px; }
+  .userjot .content-section h3 { font-size: 33px; letter-spacing: -1.2px; }
+  .userjot .about-section > p { font-size: 17px; }
+  .userjot .cols { gap: 38px; }
+  .userjot .copyblock textarea { padding: 20px; font-size: 12px; }
+  .userjot .customer-stories figure { padding: 27px; }
+  .userjot .customer-stories blockquote { font-size: 26px; }
+  .userjot .site-footer { padding: 37px 8px 100px; }
+  .userjot .site-footer nav { gap: 17px; }
+}
+
+@media (max-width: 390px) {
+  .userjot .site-header, .userjot .hero, .userjot .content-section, .userjot .site-footer { margin-left: 16px; margin-right: 16px; }
+  .userjot .header-actions { gap: 10px; }
+  .userjot .account-link { font-size: 11px; }
+  .userjot .header-cta { padding: 8px 12px; }
+  .userjot .hero-links { gap: 13px; }
+  .userjot .hero-links a { font-size: 11px; }
+  .userjot h1 { font-size: 41px; }
+  .userjot .player { padding: 20px 14px; gap: 13px; }
+}

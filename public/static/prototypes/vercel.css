@@ -1,0 +1,243 @@
+body.vercel {
+  --page: #fafafa;
+  --ink: #171717;
+  --line: #e8e8e8;
+  color: var(--ink);
+  background: var(--page);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.vercel .site-header {
+  min-height: 64px;
+  max-width: 1600px;
+  padding: 15px 24px;
+  gap: 34px;
+}
+
+.vercel .brand { font-size: 20px; letter-spacing: -1px; gap: 8px; }
+.vercel .brand-mark { width: 24px; height: 24px; }
+.vercel .brand-mark svg { width: 22px; height: 22px; }
+.vercel .main-nav { gap: 26px; color: #444; }
+.vercel .header-actions { gap: 10px; }
+.vercel .account-link,
+.vercel .header-cta {
+  padding: 8px 13px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  line-height: 16px;
+  background: #fff;
+}
+.vercel .header-cta { background: var(--ink); border-color: var(--ink); }
+
+.vercel .hero {
+  display: grid;
+  grid-template-columns: 40% 30% 30%;
+  grid-template-rows: auto auto auto;
+  max-width: 1600px;
+  margin: auto;
+  padding: clamp(170px, 33vh, 365px) 24px 0;
+}
+.vercel .hero-copy { display: contents; }
+.vercel h1 {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+  font-size: clamp(40px, 4.4vw, 68px);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -.065em;
+}
+.vercel h1 span { display: block; }
+.vercel .hero-description {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  align-self: center;
+  width: 260px;
+  max-width: 100%;
+  margin: 0 0 0 auto;
+  padding-right: 30px;
+  color: #111;
+  font-size: 17px;
+  line-height: 1.8;
+  letter-spacing: -.025em;
+}
+.vercel .hero-emblem {
+  display: grid;
+  grid-column: 2;
+  grid-row: 1 / 3;
+  place-items: center;
+  align-self: center;
+  justify-self: center;
+  width: 238px;
+  max-width: 80%;
+  color: #000;
+}
+.vercel .hero-emblem svg { display: block; width: 100%; height: auto; }
+.vercel .hero-links {
+  grid-column: 1;
+  grid-row: 2;
+  margin: 32px 0 0;
+  gap: 12px;
+  font-size: 15px;
+  line-height: 20px;
+}
+.vercel .hero-links a:first-child,
+.vercel .hero-links a:nth-child(2) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  background: #fff;
+  color: #111;
+  font-weight: 500;
+}
+.vercel .hero-links a:first-child { border-color: var(--ink); background: var(--ink); color: white; }
+.vercel .hero-links a:last-child { padding: 10px 0; color: #666; font-size: 13px; }
+.vercel .hero-media {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  margin-top: clamp(200px, 30vh, 350px);
+}
+.vercel .players { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-block: 1px solid var(--line); }
+.vercel .player {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 24px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  background: transparent;
+}
+.vercel .player:last-child { border-right: 0; }
+.vercel .play { width: 34px; height: 34px; flex-basis: 34px; border-radius: 6px; }
+.vercel .player-body { width: 100%; }
+.vercel .player-ask { min-height: 72px; font-size: 15px; line-height: 1.5; letter-spacing: -.02em; }
+.vercel .player-meta { align-items: flex-start; font-size: 11px !important; }
+.vercel .bar { margin: 22px 0 10px; }
+.vercel .endorsement { padding: 50px 24px 65px; }
+.vercel .content-section { max-width: 1392px; padding: 96px 40px; border-color: var(--line); }
+.vercel .content-section h3 { font-size: 42px; font-weight: 400; letter-spacing: -.055em; }
+.vercel .about-section { display: grid; grid-template-columns: 1fr 2fr; column-gap: 80px; }
+.vercel .about-section h3 { grid-column: 1; grid-row: 1 / 3; }
+.vercel .about-section > p { grid-column: 2; max-width: none; font-size: 25px; line-height: 1.5; letter-spacing: -.025em; color: #444; }
+.vercel .about-section > p b { color: #111; font-weight: 500; }
+.vercel .about-section > p.small { margin-bottom: 0; line-height: 1.8; letter-spacing: 0; }
+.vercel .cols { gap: 100px; }
+.vercel .steps li { padding-bottom: 32px; color: #666; font-size: 15px; }
+.vercel .steps li:before { color: #171717; }
+.vercel .buy { gap: 16px; }
+.vercel .buy > .amount { background: #fff; border-color: #ddd; }
+.vercel .buy > button,
+.vercel .copyblock button { border-radius: 6px; }
+.vercel .monthly { width: 100%; color: #666; }
+.vercel .credits-section .small { line-height: 1.8; }
+.vercel .setup-section { display: grid; grid-template-columns: 1fr 2fr; column-gap: 80px; }
+.vercel .setup-section h3 { grid-column: 1; margin-bottom: 20px; }
+.vercel .setup-section > p { grid-column: 1; align-self: start; line-height: 1.8; }
+.vercel .copyblock { grid-column: 2; grid-row: 1 / 3; }
+.vercel .copyblock textarea { background: #fff; border-color: var(--line); border-radius: 6px; color: #444; min-height: 320px; }
+.vercel .customer-stories { gap: 0; }
+.vercel .customer-stories h3 { margin-bottom: 50px; }
+.vercel .customer-stories figure { padding: 40px; border-color: var(--line); margin: 0 -1px -1px 0; min-height: 270px; display: flex; flex-direction: column; }
+.vercel .customer-stories figure p { color: #666; }
+.vercel .customer-stories figure p b { font-weight: 400; }
+.vercel .customer-stories blockquote { font-size: 27px; line-height: 1.35; letter-spacing: -.035em; margin: 12px 0 32px; }
+.vercel .customer-stories figcaption { margin-top: auto; }
+.vercel .faq-section { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; }
+.vercel .faq { max-width: none; width: 100%; }
+.vercel .faq details:first-child { padding-top: 0; }
+.vercel .faq details { border-color: var(--line); padding-block: 24px; }
+.vercel .faq summary { font-size: 17px; letter-spacing: -.025em; }
+.vercel .faq details p { line-height: 1.8; }
+.vercel .site-footer { max-width: 1600px; margin: auto; padding: 45px 40px 100px; border-color: var(--line); }
+.vercel .prototype-picker { border-radius: 8px; box-shadow: 0 2px 8px #00000008; }
+
+@media (min-width: 1600px) {
+  .vercel .hero-description { margin-right: 60px; }
+}
+
+@media (max-width: 1100px) {
+  .vercel .site-header { gap: 22px; }
+  .vercel .main-nav { gap: 18px; }
+  .vercel .hero { grid-template-columns: 44% 29% 27%; }
+  .vercel h1 { font-size: clamp(37px, 4.5vw, 50px); }
+  .vercel .hero-description { padding-right: 0; max-width: 185px; font-size: 16px; }
+  .vercel .hero-links { gap: 8px; }
+  .vercel .hero-links a:last-child { flex-basis: 100%; padding-top: 2px; }
+  .vercel .hero-emblem { width: 190px; }
+  .vercel .player { padding: 24px 18px; }
+  .vercel .player-ask { min-height: 100px; }
+  .vercel .content-section { padding-inline: 30px; }
+  .vercel .about-section,
+  .vercel .setup-section,
+  .vercel .faq-section { column-gap: 48px; }
+  .vercel .cols { gap: 60px; }
+}
+
+@media (max-width: 800px) {
+  .vercel .site-header { padding: 16px 24px; gap: 16px; }
+  .vercel .main-nav { gap: 24px; padding: 8px 0 0; }
+  .vercel .header-actions { gap: 8px; }
+  .vercel .account-link,
+  .vercel .header-cta { font-size: 12px; padding: 8px 10px; }
+  .vercel .hero { grid-template-columns: 1fr 210px; padding-top: 130px; }
+  .vercel h1 { font-size: clamp(38px, 6vw, 50px); }
+  .vercel .hero-emblem { grid-column: 2; grid-row: 1 / 3; width: 170px; }
+  .vercel .hero-description { grid-column: 1; grid-row: 2; margin: 20px 0 0; max-width: 310px; width: auto; font-size: 16px; }
+  .vercel .hero-links { grid-column: 1 / -1; grid-row: 3; margin-top: 28px; }
+  .vercel .hero-links a:last-child { flex-basis: auto; padding: 10px 0; }
+  .vercel .hero-media { grid-row: 4; margin-top: 140px; }
+  .vercel .players { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .vercel .player { flex-direction: row; align-items: flex-start; gap: 16px; padding: 26px 20px; border-bottom: 1px solid var(--line); }
+  .vercel .player:nth-child(2n) { border-right: 0; }
+  .vercel .player:nth-last-child(-n+2) { border-bottom: 0; }
+  .vercel .player-ask { min-height: 68px; }
+  .vercel .content-section { padding: 60px 24px; }
+  .vercel .content-section h3 { font-size: 34px; }
+  .vercel .about-section,
+  .vercel .setup-section,
+  .vercel .faq-section { display: block; }
+  .vercel .about-section > p { font-size: 22px; }
+  .vercel .cols { gap: 40px; }
+  .vercel .copyblock { margin-top: 28px; }
+  .vercel .customer-stories { grid-template-columns: 1fr 1fr; }
+  .vercel .customer-stories h3 { margin-bottom: 30px; }
+  .vercel .customer-stories figure { padding: 28px; }
+  .vercel .customer-stories blockquote { font-size: 24px; }
+  .vercel .site-footer { padding-inline: 24px; }
+}
+
+@media (max-width: 540px) {
+  .vercel .site-header { padding: 16px 20px; }
+  .vercel .brand { font-size: 19px; }
+  .vercel .brand-mark { width: 20px; }
+  .vercel .main-nav { gap: 22px; font-size: 13px; }
+  .vercel .account-link { border: 0; padding-inline: 0; background: transparent; }
+  .vercel .hero { grid-template-columns: 1fr; padding: 88px 20px 0; }
+  .vercel h1 { grid-column: 1; grid-row: 1; font-size: clamp(39px, 10.5vw, 53px); letter-spacing: -.06em; }
+  .vercel .hero-description { grid-column: 1; grid-row: 2; max-width: 250px; margin-top: 24px; }
+  .vercel .hero-links { grid-column: 1; grid-row: 3; gap: 10px; margin-top: 26px; }
+  .vercel .hero-links a:first-child,
+  .vercel .hero-links a:nth-child(2) { padding: 10px 18px; font-size: 14px; }
+  .vercel .hero-links a:last-child { flex-basis: 100%; font-size: 13px; padding: 4px 0; }
+  .vercel .hero-emblem { grid-column: 1; grid-row: 4; width: 146px; margin: 76px 0 0; }
+  .vercel .hero-media { grid-column: 1; grid-row: 5; margin-top: 82px; }
+  .vercel .players { grid-template-columns: 1fr; }
+  .vercel .player { border-right: 0; padding: 25px 4px; gap: 20px; }
+  .vercel .player:nth-last-child(-n+2) { border-bottom: 1px solid var(--line); }
+  .vercel .player:last-child { border-bottom: 0; }
+  .vercel .player-ask { min-height: 0; font-size: 16px; }
+  .vercel .player-meta { font-size: 12px !important; }
+  .vercel .endorsement { padding: 42px 20px 54px; }
+  .vercel .content-section { padding: 54px 20px; }
+  .vercel .content-section h3 { font-size: 32px; }
+  .vercel .about-section > p { font-size: 21px; }
+  .vercel .customer-stories { grid-template-columns: 1fr; }
+  .vercel .customer-stories figure { min-height: 230px; padding: 28px; }
+  .vercel .copyblock textarea { padding: 18px; }
+  .vercel .site-footer { padding-inline: 20px; }
+  .vercel .site-footer nav { gap: 20px; }
+}

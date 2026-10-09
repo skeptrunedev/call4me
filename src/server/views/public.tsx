@@ -96,10 +96,10 @@ const PLAYER_SCRIPT = `(function () {
   });
 })();`;
 
-export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; countries: CountryOffer[]; error?: string; amount?: string }> = (p) => {
-  return (
-  <Layout page="home" signedIn={p.signedIn} meta={{ jsonLd: HOME_LD }}>
-    <h1>let your agents make phone calls</h1>
+export type HomePageProps = { origin: string; pricePerMinuteCents: number; signedIn: boolean; installPrompt: string; countries: CountryOffer[]; error?: string; amount?: string };
+
+export const HomeRecordings: FC = () => (
+  <>
     <section class="players" aria-label="real calls made by call4me">
       {HOME_EXAMPLES.map((e) => (
         <div class="player" data-src={e.audio} data-length={clock(e.duration)} data-title={e.title}>
@@ -112,8 +112,18 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
         </div>
       ))}
     </section>
-    <p class="hero-links"><a href="#buy">add credits</a> <a href="/examples">more real calls</a> <a href="/mcp">works with any agent</a></p>
     <script>{raw(PLAYER_SCRIPT)}</script>
+  </>
+);
+
+export const HomeActions: FC = () => (
+  <>
+    <p class="hero-links"><a href="#buy">add credits</a> <a href="/examples">more real calls</a> <a href="/mcp">works with any agent</a></p>
+  </>
+);
+
+export const HomeBadge: FC = () => (
+  <>
     <p class="product-hunt-badge">
       <a href="https://www.producthunt.com/products/call4me?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-call4me" target="_blank" rel="noopener noreferrer">
         <img
@@ -124,6 +134,11 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
         />
       </a>
     </p>
+  </>
+);
+
+export const HomeCredits: FC<HomePageProps> = (p) => (
+  <>
     <div class="cols">
       <div>
         <h3>how it works</h3>
@@ -143,9 +158,19 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
         <p class="small">top up anytime from <a href={accountPath(p.signedIn)}>my account</a> or ask your agent (call4me_add_funds).</p>
       </div>
     </div>
+  </>
+);
+
+export const HomeSetup: FC<HomePageProps> = (p) => (
+  <>
     <h3>the prompt</h3>
     <p class="small">{p.signedIn ? 'this is what you paste into your agent. your key is already in it.' : 'this is what you paste into your agent. it signs you in; sign in here first and your key comes in the prompt instead.'}</p>
     <CopyBlock id="install-prompt" text={p.installPrompt} rows={12} />
+  </>
+);
+
+export const HomeAbout: FC = () => (
+  <>
     <h3>what it is</h3>
     <p>
       your personal AI assistant or coding agent gets one new ability: <b>make a phone call</b> through MCP.
@@ -158,6 +183,11 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
       {' '}<a href="/blog/t3-code-phone-calls">t3 code</a>.
       {' '}start with a task: <a href="/blog/ai-agent-that-makes-phone-calls">how an AI agent makes calls and gets things done for you</a>.
     </p>
+  </>
+);
+
+export const HomeStories: FC = () => (
+  <>
     <section class="customer-stories" aria-labelledby="customer-stories">
       <h3 id="customer-stories">from people using call4me</h3>
       <figure>
@@ -181,13 +211,25 @@ export const HomePage: FC<{ origin: string; pricePerMinuteCents: number; signedI
         <figcaption><a href="https://x.com/JoeFinberg/status/2105727961882398781">@JoeFinberg on X</a></figcaption>
       </figure>
     </section>
-    <Faq signedIn={p.signedIn} pricePerMinuteCents={p.pricePerMinuteCents} countries={p.countries} />
+  </>
+);
+
+export const HomePage: FC<HomePageProps> = (p) => (
+  <Layout page="home" signedIn={p.signedIn} meta={{ jsonLd: HOME_LD }}>
+    <h1>let your agents make phone calls</h1>
+    <HomeRecordings />
+    <HomeActions />
+    <HomeBadge />
+    <HomeCredits {...p} />
+    <HomeSetup {...p} />
+    <HomeAbout />
+    <HomeStories />
+    <Faq {...p} />
   </Layout>
-  );
-};
+);
 
 /** The faq on the home page and the rules page. */
-const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ signedIn, pricePerMinuteCents, countries }) => {
+export const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries: CountryOffer[] }> = ({ signedIn, pricePerMinuteCents, countries }) => {
   const live = countries.filter((c) => c.available);
   const extra = pricierDestinations();
   return (

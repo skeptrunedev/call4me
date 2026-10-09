@@ -11,19 +11,19 @@ import { placedCallCount } from '../services/stats';
 export { SITE_DESCRIPTION } from '../lib/pages';
 
 /** Read fresh aggregate usage from the nearest D1 replica, like the blog's social counts. */
-const CallCount: FC = () => {
+export const CallCount: FC<{ separator?: string }> = ({ separator = ' · ' }) => {
   const ctx = tryGetContext<AppEnv>();
   // Standalone rendering (for previews and tests) has no database binding.
-  return ctx ? renderCallCount(ctx.env.DB) : null;
+  return ctx ? renderCallCount(ctx.env.DB, separator) : null;
 };
 
-async function renderCallCount(db: D1Database) {
+async function renderCallCount(db: D1Database, separator: string) {
   try {
     const count = await placedCallCount(db.withSession('first-unconstrained'));
-    return <span> · {count.toLocaleString('en-US')} {count === 1 ? 'call' : 'calls'} placed</span>;
+    return <span>{separator}{count.toLocaleString('en-US')} {count === 1 ? 'call' : 'calls'} placed</span>;
   } catch (error) {
     console.error('footer call count failed', error);
-    return <span> · call count unavailable</span>;
+    return <span>{separator}call count unavailable</span>;
   }
 }
 

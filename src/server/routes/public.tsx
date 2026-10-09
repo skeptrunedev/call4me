@@ -16,6 +16,7 @@ import { AddCreditsPage, HomePage, MessagePage, PrivacyPage, RulesPage, SupportP
 import { ExamplesPage } from '../views/examples';
 import { VoicesPage } from '../views/voices';
 import { CompaniesPage } from '../views/companies';
+import { PrototypePage, PROTOTYPE_STYLES, type PrototypeStyle } from '../views/prototypes';
 
 export const pub = new Hono<AppEnv>();
 
@@ -27,6 +28,15 @@ const home = async (c: AppContext, extra: { error?: string; amount?: string } = 
   );
 
 pub.get('/', (c) => home(c));
+// Design comparisons reuse the homepage content and account-aware setup prompt.
+// They stay out of search results and never replace the live homepage.
+pub.get('/prototypes', (c) => c.redirect('/prototypes/userjot', 302));
+pub.get('/prototypes/:style', async (c) => {
+  const style = c.req.param('style');
+  if (!PROTOTYPE_STYLES.includes(style as PrototypeStyle)) return c.notFound();
+  c.header('cache-control', 'private, no-store');
+  return c.html(<PrototypePage style={style as PrototypeStyle} origin={origin(c)} pricePerMinuteCents={pricePerMinute(c.env)} signedIn={signedIn(c)} installPrompt={installPrompt(origin(c), await viewerKey(c))} countries={await numbers(c.env).offers()} />);
+});
 // `/home` was an early public URL and is still in Google's crawl history. Keep it as a
 // permanent alias so old links resolve to the canonical root instead of ending at a 404.
 pub.get('/home', (c) => c.redirect('/', 301));
