@@ -242,10 +242,10 @@ export const Layout: FC<{
             <a href="/rules" aria-current={page === 'rules' ? 'page' : undefined}>rules</a>
             {/* Stable on static pages; /account handles sign in when needed. */}
             <a class="account-link" href="/account">my account</a>
-            <form method="post" action="/add-funds" class="navform">
-              <button type="submit">add funds</button>
-            </form>
           </nav>
+          <form method="post" action="/add-funds" class="navform">
+            <button type="submit">add funds</button>
+          </form>
         </header>
         <div class="site-content" id="content">{children}</div>
         <footer>
