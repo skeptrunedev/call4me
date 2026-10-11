@@ -30,7 +30,7 @@ import { assembleReceivedAudio, hasSpeech } from './received-audio.mjs';
 const { values } = parseArgs({ options: {
   out: { type: 'string' }, cloudflared: { type: 'string' }, ffmpeg: { type: 'string' },
   from: { type: 'string' }, trials: { type: 'string', default: '3' },
-  voices: { type: 'string', default: 'marin,cedar,gleam,meridian,vesper' }, application: { type: 'string' },
+  voices: { type: 'string', default: 'marin,cedar,gleam,meridian,vesper,willow' }, application: { type: 'string' },
   'dns-server': { type: 'string' },
 } });
 for (const k of ['out', 'cloudflared', 'ffmpeg', 'from']) assert.ok(values[k], `--${k} is required`);
@@ -39,7 +39,7 @@ const out = resolve(values.out);
 const repository = resolve(import.meta.dirname, '..');
 assert.ok(out !== repository && !out.startsWith(repository + '/'), 'raw evidence must stay outside this repository');
 const voices = values.voices.split(',');
-assert.ok(voices.every(v => ['marin', 'cedar', 'gleam', 'meridian', 'vesper'].includes(v)), 'unsupported voice');
+assert.ok(voices.every(v => ['marin', 'cedar', 'gleam', 'meridian', 'vesper', 'willow'].includes(v)), 'unsupported voice');
 const count = Number(values.trials);
 assert.ok(Number.isInteger(count) && count >= 1 && count <= 5, 'trials must be 1 to 5');
 mkdirSync(out, { recursive: true, mode: 0o700 });

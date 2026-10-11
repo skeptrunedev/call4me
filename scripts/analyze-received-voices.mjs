@@ -44,7 +44,7 @@ async function transcribe(file, model, name) {
 }
 
 const manifest = [];
-const files = readdirSync(out).filter(f => /^t\d+-(marin|cedar|gleam|meridian|vesper)\.private\.json$/.test(f));
+const files = readdirSync(out).filter(f => /^t\d+-(marin|cedar|gleam|meridian|vesper|willow)\.private\.json$/.test(f));
 files.sort((a, b) => Number(a.match(/^t(\d+)/)[1]) - Number(b.match(/^t(\d+)/)[1]));
 for (const file of files) {
   const t = JSON.parse(readFileSync(join(out, file), 'utf8'));

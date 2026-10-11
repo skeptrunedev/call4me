@@ -14,7 +14,7 @@ import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MA
 import { analytics } from './analytics';
 
 /** Supported GPT-Live caller voices. marin is the model default. */
-export const VOICES = ['marin', 'cedar', 'gleam', 'meridian', 'vesper'] as const;
+export const VOICES = ['marin', 'cedar', 'gleam', 'meridian', 'vesper', 'willow'] as const;
 export type Voice = (typeof VOICES)[number];
 
 export const pricePerMinute = (env: Env) => Number(env.PRICE_PER_MINUTE_CENTS || 25);

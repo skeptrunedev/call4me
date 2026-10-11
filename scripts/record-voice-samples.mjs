@@ -15,7 +15,7 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const VOICES = ['marin', 'cedar', 'gleam', 'meridian', 'vesper'];
+const VOICES = ['marin', 'cedar', 'gleam', 'meridian', 'vesper', 'willow'];
 const LIVE_URL = 'wss://api.openai.com/v1/live/sessions';
 /**
  * The five most spoken languages (Ethnologue 2025, total speakers). Each has the business's
