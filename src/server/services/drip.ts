@@ -3,7 +3,7 @@
  * each step goes to an account at most once (drip_sends primary key).
  */
 import { hmacHex, safeEqual } from '../lib/keys';
-import type { Messenger } from '../lib/messaging';
+import { isRecipientRejected, type Messenger } from '../lib/messaging';
 import { now } from '../lib/ids';
 
 export interface DripEmail {
@@ -139,7 +139,8 @@ interface Candidate {
 
 /**
  * Send every due drip email. Claims a step before sending and releases the claim if the
- * send fails, so a retry on the next run sends it once.
+ * send fails, so a retry on the next run sends it once. An address the mail server rejects
+ * outright keeps its claim and is opted out of email, since retrying can only bounce again.
  */
 export async function runDrip(opts: {
   db: D1Database;
@@ -173,9 +174,16 @@ export async function runDrip(opts: {
         await opts.messenger.sendEmail(a.email, subject, text, html);
         tally.sent++;
       } catch (err) {
+        tally.failed++;
+        if (isRecipientRejected(err)) {
+          // The address doesn't exist: keep the claim and stop emailing it, instead of retrying
+          // a send that can only bounce on every run.
+          console.warn('drip recipient rejected, not emailing again', step.id, a.id, String(err));
+          await opts.db.prepare(`UPDATE accounts SET email_opt_out = 1 WHERE id = ?`).bind(a.id).run();
+          continue;
+        }
         console.error('drip send failed', step.id, a.id, String(err));
         await opts.db.prepare(`DELETE FROM drip_sends WHERE account_id = ? AND step = ?`).bind(a.id, step.id).run();
-        tally.failed++;
       }
     }
   }
