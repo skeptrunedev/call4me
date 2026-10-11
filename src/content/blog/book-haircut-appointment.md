@@ -146,3 +146,7 @@ Here is a suggested prompt:
 > Use call4me to call my salon and book a haircut with [stylist]. I can attend [dates and time windows]. Choose the earliest calendar appointment across those windows, comparing the date first and the time second. Ask for the haircut price and cancellation policy. Confirm the stylist, date and time before hanging up, then return those details to this conversation. If my preferred stylist is unavailable, ask me before booking with someone else. Do not change an existing booking unless I have asked for that change.
 
 See the [haircut booking on our examples page](/examples#haircut-booking), or read how another call [moved a dentist appointment](/blog/reschedule-dentist-appointment).
+
+## Another recorded customer call
+
+See [a confirmed reschedule at Salon Per Se Bellaire](/blog/salon-per-se-bellaire) for a named venue example with the full recording and the outcome confirmed on the call.

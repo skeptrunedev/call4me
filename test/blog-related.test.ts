@@ -14,7 +14,8 @@ test('recommendations keep cost, healthcare and developer articles on subject', 
   const top = (slug: string) => RELATED_INDEX[slug]!.slice(0, 3).map((match) => match.slug);
   assert.ok(top('costco-eye-exam-cost').includes('eye-exam-cost-without-insurance'));
   assert.ok(!top('costco-eye-exam-cost').includes('wheel-alignment-cost'));
-  assert.ok(top('private-dining-room-cost').includes('book-dinner-reservation-by-phone'));
+  assert.ok(top('private-dining-room-cost').includes('lai-wah-heen-private-dining'));
+  assert.ok(RELATED_INDEX['private-dining-room-cost']!.some((match) => match.slug === 'book-dinner-reservation-by-phone'));
   assert.ok(!top('private-dining-room-cost').includes('couch-reupholstery-cost'));
   assert.ok(!top('private-dining-room-cost').includes('furniture-refinishing-cost'));
   assert.ok(top('how-to-find-a-new-primary-care-doctor').includes('follow-up-appointment-telehealth'));

@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "3f50286271c02514e45065ba698f30baaaecd5e559ba973dedba966b05feef57"
+  "sourceHash": "76fd4ceaf2e7136ecccc08ee0a348d56629e078face9c1df7e1ccf13c1db9006"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -64,8 +64,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.65852
     },
     {
-      "slug": "claude-code-phone-calls",
-      "similarity": 0.650623
+      "slug": "lai-wah-heen-private-dining",
+      "similarity": 0.656858
     }
   ],
   "ai-agent-that-makes-phone-calls": [
@@ -245,12 +245,24 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.712725
     },
     {
+      "slug": "sabai-eugene-reservations",
+      "similarity": 0.704095
+    },
+    {
+      "slug": "pin-on-grand-reservations",
+      "similarity": 0.701474
+    },
+    {
       "slug": "ai-personal-assistant-appointment-booking",
       "similarity": 0.694747
     },
     {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
       "similarity": 0.688874
+    },
+    {
+      "slug": "lai-wah-heen-private-dining",
+      "similarity": 0.67184
     },
     {
       "slug": "private-dining-room-cost",
@@ -261,6 +273,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "running-late-to-barber",
       "similarity": 0.787512
+    },
+    {
+      "slug": "salon-per-se-bellaire",
+      "similarity": 0.688543
     }
   ],
   "cancel-audible": [
@@ -664,8 +680,20 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.712725
     },
     {
+      "slug": "pin-on-grand-reservations",
+      "similarity": 0.67472
+    },
+    {
       "slug": "private-dining-room-cost",
       "similarity": 0.671405
+    },
+    {
+      "slug": "sabai-eugene-reservations",
+      "similarity": 0.66883
+    },
+    {
+      "slug": "lai-wah-heen-private-dining",
+      "similarity": 0.66815
     },
     {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
@@ -1079,6 +1107,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.604421
     }
   ],
+  "hijinx-hotel-irvine": [
+    {
+      "slug": "icebar-orlando-tickets",
+      "similarity": 0.659572
+    }
+  ],
   "how-long-to-reach-a-human": [],
   "how-much-does-blood-work-cost": [
     {
@@ -1174,6 +1208,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.614758
     }
   ],
+  "icebar-orlando-tickets": [
+    {
+      "slug": "hijinx-hotel-irvine",
+      "similarity": 0.659572
+    }
+  ],
   "instinct-ai-phone-calls": [
     {
       "slug": "ai-agent-that-makes-phone-calls",
@@ -1216,6 +1256,32 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "couch-reupholstery-cost",
       "similarity": 0.650278
+    }
+  ],
+  "lai-wah-heen-private-dining": [
+    {
+      "slug": "private-dining-room-cost",
+      "similarity": 0.733423
+    },
+    {
+      "slug": "pin-on-grand-reservations",
+      "similarity": 0.722478
+    },
+    {
+      "slug": "book-dinner-reservation-by-phone",
+      "similarity": 0.67184
+    },
+    {
+      "slug": "customer-story-rick-dinner-reservation",
+      "similarity": 0.66815
+    },
+    {
+      "slug": "agent-web-research-phone-calls-sf-private-dining",
+      "similarity": 0.656858
+    },
+    {
+      "slug": "sabai-eugene-reservations",
+      "similarity": 0.647034
     }
   ],
   "lawyer-consultation-fee": [],
@@ -1450,6 +1516,28 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.739932
     }
   ],
+  "pin-on-grand-reservations": [
+    {
+      "slug": "lai-wah-heen-private-dining",
+      "similarity": 0.722478
+    },
+    {
+      "slug": "book-dinner-reservation-by-phone",
+      "similarity": 0.701474
+    },
+    {
+      "slug": "private-dining-room-cost",
+      "similarity": 0.699603
+    },
+    {
+      "slug": "sabai-eugene-reservations",
+      "similarity": 0.681578
+    },
+    {
+      "slug": "customer-story-rick-dinner-reservation",
+      "similarity": 0.67472
+    }
+  ],
   "pottery-barn-customer-service": [
     {
       "slug": "wayfair-customer-service",
@@ -1472,6 +1560,14 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "private-dining-room-cost": [
     {
+      "slug": "lai-wah-heen-private-dining",
+      "similarity": 0.733423
+    },
+    {
+      "slug": "pin-on-grand-reservations",
+      "similarity": 0.699603
+    },
+    {
       "slug": "customer-story-rick-dinner-reservation",
       "similarity": 0.671405
     },
@@ -1482,6 +1578,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
       "similarity": 0.639106
+    },
+    {
+      "slug": "sabai-eugene-reservations",
+      "similarity": 0.633499
     }
   ],
   "reschedule-dentist-appointment": [
@@ -1542,6 +1642,46 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "book-haircut-appointment",
       "similarity": 0.787512
+    },
+    {
+      "slug": "salon-per-se-bellaire",
+      "similarity": 0.644561
+    }
+  ],
+  "sabai-eugene-reservations": [
+    {
+      "slug": "book-dinner-reservation-by-phone",
+      "similarity": 0.704095
+    },
+    {
+      "slug": "pin-on-grand-reservations",
+      "similarity": 0.681578
+    },
+    {
+      "slug": "customer-story-rick-dinner-reservation",
+      "similarity": 0.66883
+    },
+    {
+      "slug": "lai-wah-heen-private-dining",
+      "similarity": 0.647034
+    },
+    {
+      "slug": "private-dining-room-cost",
+      "similarity": 0.633499
+    },
+    {
+      "slug": "agent-web-research-phone-calls-sf-private-dining",
+      "similarity": 0.602212
+    }
+  ],
+  "salon-per-se-bellaire": [
+    {
+      "slug": "book-haircut-appointment",
+      "similarity": 0.688543
+    },
+    {
+      "slug": "running-late-to-barber",
+      "similarity": 0.644561
     }
   ],
   "schedule-phone-calls-claude-code-codex": [
@@ -1759,7 +1899,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "muse-code-mcp-phone-calls",
-      "similarity": 0.677882
+      "similarity": 0.677881
     },
     {
       "slug": "twilio-mcp-phone-calls",

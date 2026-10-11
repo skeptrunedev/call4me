@@ -8,6 +8,13 @@
  * Add subjects for every new article without selecting individual related links.
  */
 export const RELATED_TOPICS: Record<string, string[]> = {
+  'hijinx-hotel-irvine': ['venue-activities'],
+  'lai-wah-heen-private-dining': ['dining'],
+  'pin-on-grand-reservations': ['dining'],
+  'salon-per-se-bellaire': ['hair-care'],
+  'sabai-eugene-reservations': ['dining'],
+  'icebar-orlando-tickets': ['venue-activities'],
+
   'customer-story-flight-credit': ['airlines'],
   'customer-story-rick-dinner-reservation': ['dining'],
   'customer-story-dental-appointments': ['healthcare'],

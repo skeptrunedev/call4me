@@ -1,5 +1,9 @@
 # Public call examples
 
+## October 11 named venue collection
+
+Nick confirmed permission for all six account owners and explicitly requested venue names and locations. The collection adds Hijinx Hotel Irvine Spectrum, Lai Wah Heen in Toronto, Pin On Grand in St. Petersburg, Salon Per Se Bellaire in Houston, Sabai in Eugene and ICEBAR Orlando. Each has a full reviewed recording, redacted dialogue and its own article. See [collection verification](six-call-stories-2026-10-11.md) and the [Ahrefs keyword audit](seo/six-call-stories-keywords-2026-10-11.md). Original timing is retained, including Sabai’s full hold. Private customer identifiers remain muted.
+
 ## October 6 consumer Muse library test
 
 The first Muse task guide now contains a founder informational call to SFPL Main

@@ -91,6 +91,7 @@ const Card: FC<{ p: Post; e: Engagement | undefined; featured?: boolean }> = ({ 
 export const BlogIndex: FC<{
   signedIn: boolean;
   posts: Post[];
+  searchCatalog?: Post[];
   page: number;
   totalPages: number;
   total: number;
@@ -100,7 +101,7 @@ export const BlogIndex: FC<{
   subscribers: number;
   subscribed?: 'sent' | string;
   agentPrompt: string;
-}> = ({ signedIn, posts, page, totalPages, total, engagement, tab, q, subscribers, subscribed, agentPrompt }) => {
+}> = ({ signedIn, posts, searchCatalog = posts, page, totalPages, total, engagement, tab, q, subscribers, subscribed, agentPrompt }) => {
   const featured = !q && tab === 'latest' && page === 1 ? posts.slice(0, 3) : [];
   const rest = posts.slice(featured.length);
   const path = blogIndexPath({ page, tab, q });
@@ -131,7 +132,7 @@ export const BlogIndex: FC<{
       </div>
 
       {featured.length > 0 && (
-        <div class="featured-row">
+        <div class="featured-row" data-search-original>
           {featured.map((p) => (
             <Card p={p} e={engagement.get(p.slug)} featured />
           ))}
@@ -144,14 +145,17 @@ export const BlogIndex: FC<{
             {t}
           </a>
         ))}
-        <form class="inline-form" method="get" action="/blog">
+        <form class="inline-form" method="get" action="/blog" data-collection-search="blog">
           {tab !== 'latest' && <input type="hidden" name="tab" value={tab} />}
-          <input type="search" name="q" placeholder="search posts" aria-label="search posts" value={q} maxlength={100} /> <button type="submit">&gt;</button>
+          <input type="search" name="q" placeholder="search posts" aria-label="search posts" aria-controls="blog-search-results" value={q} maxlength={100} /> <button type="submit">search</button> <button type="button" data-search-clear hidden>clear</button>
         </form>
         <a href="/blog/archive">archive</a>
         <a href="/blog/rss.xml">RSS</a>
       </div>
 
+      <p id="blog-search-status" class="small muted" role="status" aria-live="polite" hidden></p>
+      <div id="blog-search-results" hidden></div>
+      <div data-search-original>
       {q && (
         <p class="small muted">
           {total} {total === 1 ? 'post' : 'posts'} matching "{q}". <a href="/blog">clear</a>
@@ -170,6 +174,9 @@ export const BlogIndex: FC<{
         </nav>
       )}
 
+      </div>
+      <script id="blog-search-catalog" type="application/json">{raw(JSON.stringify(searchCatalog.map((p) => ({ slug: p.slug, title: p.title, subtitle: p.subtitle, date: shortPostDate(p.date), text: `${p.title} ${p.subtitle} ${p.description} ${p.tags.join(' ')}` }))).replace(/</g, '\\u003c'))}</script>
+      <script src="/static/collection-search.js" defer></script>
       <h3>recommendations</h3>
       <ul class="recs">
         {RECOMMENDATIONS.map((r) => (

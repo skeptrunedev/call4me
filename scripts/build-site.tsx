@@ -96,7 +96,7 @@ const all = renderAll(POST_SOURCES);
 const engagement = new Map(all.map(p => [p.slug, { likes: 0, comments: 0 }]));
 const pages = paginatePosts(all).totalPages;
 for (let number = 1; number <= pages; number++) {
-  await page(blogIndexPath({ page: number }), <BlogIndex {...common} {...paginatePosts(all, String(number))} engagement={engagement} tab="latest" q="" subscribers={0} agentPrompt={prompts.blogPrompt(origin, null)} />);
+  await page(blogIndexPath({ page: number }), <BlogIndex {...common} {...paginatePosts(all, String(number))} searchCatalog={all} engagement={engagement} tab="latest" q="" subscribers={0} agentPrompt={prompts.blogPrompt(origin, null)} />);
 }
 await page('/blog/archive', <BlogArchive {...common} groups={archive(all)} engagement={engagement} agentPrompt={prompts.blogPrompt(origin, null)} />);
 for (const [i, post] of all.entries()) {

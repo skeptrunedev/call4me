@@ -101,3 +101,7 @@ Connect [call4me](/) using the [Claude Code guide](/blog/claude-code-phone-calls
 > Use call4me to call [restaurant] and book dinner for [party size] on [full date]. Aim for [preferred time], with [acceptable time window] as alternatives. Use [reservation name] and [callback number]. Ask about deposits, card guarantees and cancellation terms before agreeing to anything that costs money. Confirm the date, time and party size, then return the booking details and any confirmation reference.
 
 See the [dinner reservation on our examples page](/examples#book-dinner-reservation-by-phone).
+
+## Another recorded customer call
+
+See [a table for seven at Pin On Grand](/blog/pin-on-grand-reservations) for a named venue example with the full recording and the outcome confirmed on the call.

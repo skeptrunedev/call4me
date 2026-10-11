@@ -29,6 +29,11 @@ export const ExamplesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
       <h1>listen to real calls</h1>
       <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
       <p>hear the agent call businesses and personal contacts, ask questions, and get an answer before you buy. one callback is available as a saved transcript only.</p>
+      <form class="inline-form" data-collection-search="examples" hidden>
+        <input type="search" name="q" aria-label="search examples" aria-controls="examples-search-results" placeholder="search examples" maxlength={100} /> <button type="submit">search</button> <button type="button" data-search-clear hidden>clear</button>
+      </form>
+      <p id="examples-search-status" class="small muted" role="status" aria-live="polite" hidden></p>
+      <div id="examples-search-results">
       {EXAMPLES.map((example) => (
         <article class="example" id={example.slug} aria-labelledby={`${example.slug}-title`}>
           <h2 id={`${example.slug}-title`}>{example.title}</h2>
@@ -36,7 +41,7 @@ export const ExamplesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
           <p><b>the request:</b> {example.request}</p>
           <p><b>what happened:</b> {example.outcome}</p>
           {example.guide && <p><a href={example.guide.href}>{example.guide.label}</a></p>}
-          {example.audio ? <audio controls preload="metadata" aria-label={`listen: ${example.title}`} src={example.audio}>
+          {example.audio ? <audio controls preload="none" aria-label={`listen: ${example.title}`} src={example.audio}>
             <a href={example.audio}>listen to the recording</a>
           </audio> : <p class="small">no recording is available for this call. the transcript below is saved call text with private details removed, rather than an audio verified transcript.</p>}
           {example.audio && example.highlight && <p class="small"><a class="example-highlight" href={`${example.audio}#t=${example.highlight.seconds}`} data-t={example.highlight.seconds}>{example.highlight.label}</a></p>}
@@ -52,9 +57,11 @@ export const ExamplesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
           </details>
         </article>
       ))}
+      </div>
       <h2>let your agent make the next call</h2>
       <p><a href="/#buy">add credits</a> / <a href="/mcp">see how to install it</a> / <a href="/voices">hear every caller voice</a></p>
     </main>
     <script>{raw(AUDIO_SCRIPT)}</script>
+    <script src="/static/collection-search.js" defer></script>
   </Layout>
 );

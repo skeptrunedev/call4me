@@ -87,7 +87,7 @@ blog.get('/', async (c) => {
     return c.redirect(blogIndexPath({ page: pagination.page, tab, q }), 302);
   }
   const agentPrompt = blogPrompt(origin(c), crawler ? null : await viewerKey(c));
-  return c.html(<BlogIndex signedIn={Boolean(c.get('account'))} {...pagination} engagement={engagement} tab={tab} q={q} subscribers={subscribers} subscribed={c.req.query('subscribed')} agentPrompt={agentPrompt} />);
+  return c.html(<BlogIndex signedIn={Boolean(c.get('account'))} {...pagination} searchCatalog={all} engagement={engagement} tab={tab} q={q} subscribers={subscribers} subscribed={c.req.query('subscribed')} agentPrompt={agentPrompt} />);
 });
 
 blog.get('/archive', async (c) => {

@@ -8,7 +8,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
     "markdown": "/__pages/1a130cabaa8a47b0.md",
-    "tokens": 34771
+    "tokens": 39978
   },
   "/voices": {
     "html": "/__pages/3c1d9b7cb97eed20.html",
@@ -58,62 +58,92 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2040
+    "tokens": 1824
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2077
+    "tokens": 2172
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 1800
+    "tokens": 1872
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 1747
+    "tokens": 1780
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 1916
+    "tokens": 1813
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 1876
+    "tokens": 1970
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2142
+    "tokens": 1909
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2021
+    "tokens": 2085
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 923
+    "tokens": 1811
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 8564
+    "tokens": 8981
+  },
+  "/blog/hijinx-hotel-irvine": {
+    "html": "/__pages/acb492544467c9de.html",
+    "markdown": "/__pages/acb492544467c9de.md",
+    "tokens": 2782
+  },
+  "/blog/lai-wah-heen-private-dining": {
+    "html": "/__pages/f2e99abd9b301d1a.html",
+    "markdown": "/__pages/f2e99abd9b301d1a.md",
+    "tokens": 3356
+  },
+  "/blog/pin-on-grand-reservations": {
+    "html": "/__pages/4516c0f5bee1ab82.html",
+    "markdown": "/__pages/4516c0f5bee1ab82.md",
+    "tokens": 2362
+  },
+  "/blog/salon-per-se-bellaire": {
+    "html": "/__pages/6c137945835b700a.html",
+    "markdown": "/__pages/6c137945835b700a.md",
+    "tokens": 2249
+  },
+  "/blog/sabai-eugene-reservations": {
+    "html": "/__pages/6310300d393da7e6.html",
+    "markdown": "/__pages/6310300d393da7e6.md",
+    "tokens": 2404
+  },
+  "/blog/icebar-orlando-tickets": {
+    "html": "/__pages/7a311d54a5cbca68.html",
+    "markdown": "/__pages/7a311d54a5cbca68.md",
+    "tokens": 2179
   },
   "/blog/customer-story-flight-credit": {
     "html": "/__pages/4d462d33064c5ddf.html",
     "markdown": "/__pages/4d462d33064c5ddf.md",
-    "tokens": 1273
+    "tokens": 1304
   },
   "/blog/customer-story-rick-dinner-reservation": {
     "html": "/__pages/5023fc4d4837d0ba.html",
     "markdown": "/__pages/5023fc4d4837d0ba.md",
-    "tokens": 1735
+    "tokens": 1689
   },
   "/blog/customer-story-dental-appointments": {
     "html": "/__pages/aa1cb4c062716d89.html",
@@ -293,7 +323,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/book-dinner-reservation-by-phone": {
     "html": "/__pages/91e553be51335771.html",
     "markdown": "/__pages/91e553be51335771.md",
-    "tokens": 2854
+    "tokens": 2828
   },
   "/blog/reschedule-doctor-appointment": {
     "html": "/__pages/58950964777a3366.html",
@@ -303,7 +333,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/running-late-to-barber": {
     "html": "/__pages/3df0f1db1eb5aeb6.html",
     "markdown": "/__pages/3df0f1db1eb5aeb6.md",
-    "tokens": 2201
+    "tokens": 2317
   },
   "/blog/mandarin-phone-call-scheduling": {
     "html": "/__pages/573dcb48f1d75341.html",
@@ -378,7 +408,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/book-haircut-appointment": {
     "html": "/__pages/9eaed74ec63d7553.html",
     "markdown": "/__pages/9eaed74ec63d7553.md",
-    "tokens": 3316
+    "tokens": 3488
   },
   "/blog/les-schwab-oil-change": {
     "html": "/__pages/ba48431d0e7bdb1b.html",
@@ -478,7 +508,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/private-dining-room-cost": {
     "html": "/__pages/071eeba541fc558a.html",
     "markdown": "/__pages/071eeba541fc558a.md",
-    "tokens": 9144
+    "tokens": 9166
   },
   "/blog/how-to-transfer-a-prescription": {
     "html": "/__pages/a4b0bfb79d180b15.html",

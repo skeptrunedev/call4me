@@ -1,3 +1,9 @@
+import hijinxHotelIrvine from './hijinx-hotel-irvine.md';
+import laiWahHeenPrivateDining from './lai-wah-heen-private-dining.md';
+import pinOnGrandReservations from './pin-on-grand-reservations.md';
+import salonPerSeBellaire from './salon-per-se-bellaire.md';
+import sabaiEugeneReservations from './sabai-eugene-reservations.md';
+import icebarOrlandoTickets from './icebar-orlando-tickets.md';
 import type { PostSource } from '../../server/lib/blog';
 import customerFlightCredit from './customer-story-flight-credit.md';
 import customerRickDinner from './customer-story-rick-dinner-reservation.md';
@@ -106,6 +112,13 @@ import metaMuseSupplierQuotes from './meta-muse-supplier-quotes.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'hijinx-hotel-irvine', markdown: hijinxHotelIrvine },
+  { slug: 'lai-wah-heen-private-dining', markdown: laiWahHeenPrivateDining },
+  { slug: 'pin-on-grand-reservations', markdown: pinOnGrandReservations },
+  { slug: 'salon-per-se-bellaire', markdown: salonPerSeBellaire },
+  { slug: 'sabai-eugene-reservations', markdown: sabaiEugeneReservations },
+  { slug: 'icebar-orlando-tickets', markdown: icebarOrlandoTickets },
+
   { slug: 'customer-story-flight-credit', markdown: customerFlightCredit },
   { slug: 'customer-story-rick-dinner-reservation', markdown: customerRickDinner },
   { slug: 'customer-story-dental-appointments', markdown: customerDentalAppointments },

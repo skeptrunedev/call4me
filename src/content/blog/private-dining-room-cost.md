@@ -401,3 +401,7 @@ About 25 seconds pass before anyone speaks.
 **1:09 AI agent:** Bye.
 
 </details>
+
+## Another recorded customer call
+
+See [a private dining reservation at Lai Wah Heen in Toronto](/blog/lai-wah-heen-private-dining) for a named venue example with the full recording and the outcome confirmed on the call.

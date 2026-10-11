@@ -139,3 +139,17 @@ salon appointment,us,90,1,2026-10-05T15:44:37+00:00,/blog/book-haircut-appointme
 does les schwab do oil changes,us,1400,0,2026-10-05T15:44:37+00:00,/blog/les-schwab-oil-change,task entry,Official select location availability and a recorded store inquiry with a suggested existing assistant prompt. Walk in plan rather than reserved appointment.
 les schwab oil change cost,us,40,0,2026-10-05T15:44:37+00:00,/blog/les-schwab-oil-change,supporting,Dated vehicle specific combined quote. No national fixed price or completed service claim.
 les schwab tire rotation cost,us,70,0,2026-10-05T15:44:37+00:00,/blog/les-schwab-oil-change,conditional supporting,Explain that the combined estimate does not establish standalone rotation cost. Ask the store for a separate quote; no complimentary eligibility claim.
+hijinx hotel irvine,us,2900,0,2026-10-11T18:46:40+00:00,/blog/hijinx-hotel-irvine,venue task entry,Family booking correction at the verified Irvine Spectrum attraction. Stored SERP includes child age questions.
+hijinx hotel,us,4400,0,2026-10-11T18:46:40+00:00,/blog/hijinx-hotel-irvine,supporting,Broader brand demand includes other locations; prioritize the exact Irvine phrase.
+salon per se,us,2200,0,2026-10-11T18:46:40+00:00,/blog/salon-per-se-bellaire,venue task entry,Preferred stylist rescheduling at the verified Bellaire branch in Houston. Local branded navigation intent limits traffic expectations.
+salon per se bellaire,us,10,,2026-10-11T18:46:40+00:00,/blog/salon-per-se-bellaire,supporting,Branch disambiguation. Unknown KD is not zero.
+sabai eugene,us,700,1,2026-10-11T18:46:40+00:00,/blog/sabai-eugene-reservations,venue task entry,Verified Eugene restaurant reservation with an accepted alternative time. Link official contact and separate real evidence from suggested prompts.
+sabai reservations,us,10,,2026-10-11T18:46:40+00:00,/blog/sabai-eugene-reservations,supporting,Task modifier with unknown KD.
+icebar orlando,us,700,0,2026-10-11T18:46:40+00:00,/blog/icebar-orlando-tickets,venue task entry,Recorded admission and walk in inquiry at the verified Orlando venue. No purchase or booking claimed.
+icebar orlando tickets,us,20,0,2026-10-11T18:46:40+00:00,/blog/icebar-orlando-tickets,supporting,Specific admission task; direct readers to official current ticket information.
+pin on grand,us,150,,2026-10-11T18:46:40+00:00,/blog/pin-on-grand-reservations,venue task entry,Verified St. Petersburg restaurant table booking. KD and stored SERP are unknown; not a proven low difficulty target.
+lai wah heen,ca,1300,0,2026-10-11T18:46:40+00:00,/blog/lai-wah-heen-private-dining,venue task entry,Canadian venue demand with private dining call evidence. Reservation does not establish completed payment or final proposal.
+lai wah heen toronto,us,40,1,2026-10-11T18:46:40+00:00,/blog/lai-wah-heen-private-dining,supporting,US phrase supports exact city; stored US SERP is null.
+private dining toronto,ca,300,2,2026-10-11T18:46:40+00:00,/blog/lai-wah-heen-private-dining,supporting,One named venue example rather than a citywide list or comparison.
+private dining rooms toronto,ca,100,0,2026-10-11T18:46:40+00:00,/blog/lai-wah-heen-private-dining,supporting,One named venue example rather than a citywide list or comparison.
+lai wah heen private dining,ca,,,2026-10-11T18:46:40+00:00,/blog/lai-wah-heen-private-dining,supporting,Accurate task scope with unknown standalone demand and difficulty.
