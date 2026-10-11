@@ -13,8 +13,8 @@ import { assistantNameOf, type Profile, type Surface } from './intake';
 import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 import { analytics } from './analytics';
 
-/** GPT-Live voices that read as a North American caller. marin is the model default. */
-export const VOICES = ['marin', 'cedar', 'gleam', 'meridian'] as const;
+/** Supported GPT-Live caller voices. marin is the model default. */
+export const VOICES = ['marin', 'cedar', 'gleam', 'meridian', 'vesper'] as const;
 export type Voice = (typeof VOICES)[number];
 
 export const pricePerMinute = (env: Env) => Number(env.PRICE_PER_MINUTE_CENTS || 25);
