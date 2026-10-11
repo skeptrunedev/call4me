@@ -4,13 +4,15 @@ seoTitle: OpenAI realtime voices on a real phone call
 subtitle: Hear marin, cedar, gleam and meridian in five languages, then inspect repeated calls captured at the receiving end. We test dates, times, reference codes and corrections, with the recordings and transcription disagreements included.
 description: "Compare OpenAI realtime voices marin, cedar, gleam and meridian on real SIP calls. Hear samples and inspect date, time, code and correction tests."
 date: 2026-09-30
-updated: 2026-10-07
+updated: 2026-10-11
 tags: ai voice, openai, phone calls, ai phone assistant
 authors: nick
 imageAlt: OpenAI realtime voices on a real phone call, four voices compared
 ---
 
-**The short answer:** call4me's caller can speak in four OpenAI realtime voices: **marin** (the default), **cedar**, **gleam** and **meridian**. Our original samples let you compare delivery at 8 kHz phone quality. The October 4 tests below add repeated carrier SIP calls captured at the receiving end, including a corrected appointment and a reference code. Those are different kinds of evidence: a sample can show how a voice sounds, while a received call can test whether facts survive the route.
+**The short answer:** this comparison tests four OpenAI realtime voices: **marin** (the default), **cedar**, **gleam** and **meridian**. Our original samples let you compare delivery at 8 kHz phone quality. The October 4 tests below add repeated carrier SIP calls captured at the receiving end, including a corrected appointment and a reference code. Those are different kinds of evidence: a sample can show how a voice sounds, while a received call can test whether facts survive the route.
+
+**October 11 update:** Vesper is now available too. Hear its samples on the [caller voices page](/voices#vesper). Vesper was not part of the October 4 carrier tests below.
 
 In the original English samples, gleam was slowest and cedar was fastest. That describes one line per voice, rather than a general reliability ranking. All four introduce themselves as your assistant, with no name of their own.
 
