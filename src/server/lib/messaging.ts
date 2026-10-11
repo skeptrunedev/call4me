@@ -38,6 +38,16 @@ export function makeMessenger(env: MessagingEnv): Messenger {
   };
 }
 
+/**
+ * The mail server refused the address itself (an SMTP 5xx reply to RCPT TO, e.g. "550 5.1.1
+ * user unknown"): sending again can only fail the same way. Anything else (a dropped connection,
+ * a 4xx try-again-later) may succeed on a retry.
+ */
+export function isRecipientRejected(err: unknown): boolean {
+  const message = String(err instanceof Error ? err.message : err);
+  return /RCPT TO/i.test(message) && /\b5\d\d\b/.test(message);
+}
+
 /** Local dev: print instead of sending so no provider credentials are needed. */
 export const consoleMessenger: Messenger = {
   async sendEmail(to, subject, text) {

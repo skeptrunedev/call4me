@@ -64,3 +64,40 @@ test('the CLI parses its commands and refuses bad ones', () => {
   assert.match(parse(['show', 'nope']) as string, /no email called "nope"/);
   assert.match(parse([]) as string, /^usage/);
 });
+
+/** A mail server that refuses one address the way Fastmail does, and delivers the rest. */
+function rejecting(address: string, error: string) {
+  const { sent, messenger } = capture();
+  return {
+    sent,
+    messenger: {
+      ...messenger,
+      sendEmail: async (to: string, subject: string, text: string, html?: string) => {
+        if (to === address) throw new Error(error);
+        return messenger.sendEmail(to, subject, text, html);
+      },
+    },
+  };
+}
+
+const userUnknown = 'Invalid RCPT TO: <alice@example.com> 550 5.1.1 <alice@example.com>: Recipient address rejected: User unknown in virtual mailbox table';
+
+test('an address the mail server rejects outright is not retried, and gets no more email', async () => {
+  const db = d1();
+  const { sent, messenger } = rejecting('alice@example.com', userUnknown);
+  assert.deepEqual(await drip(db, messenger), { sent: 1, failed: 1 });
+  assert.deepEqual(await drip(db, messenger), { sent: 0, failed: 0 });
+  assert.deepEqual(sent.map((m) => m.to), ['bob@example.com']);
+  const alice = await db.prepare(`SELECT email_opt_out FROM accounts WHERE id = 'acct_alice'`).first<{ email_opt_out: number }>();
+  assert.equal(alice!.email_opt_out, 1);
+});
+
+test('a temporary failure is retried on the next run', async () => {
+  const db = d1();
+  const { sent, messenger } = rejecting('alice@example.com', 'Invalid RCPT TO: <alice@example.com> 451 4.3.0 try again later');
+  assert.deepEqual(await drip(db, messenger), { sent: 1, failed: 1 });
+  assert.deepEqual(await drip(db, messenger), { sent: 0, failed: 1 });
+  const alice = await db.prepare(`SELECT email_opt_out FROM accounts WHERE id = 'acct_alice'`).first<{ email_opt_out: number }>();
+  assert.equal(alice!.email_opt_out, 0);
+  assert.deepEqual(sent.map((m) => m.to), ['bob@example.com']);
+});
