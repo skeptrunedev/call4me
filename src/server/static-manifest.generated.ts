@@ -13,7 +13,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/voices": {
     "html": "/__pages/3c1d9b7cb97eed20.html",
     "markdown": "/__pages/3c1d9b7cb97eed20.md",
-    "tokens": 1127
+    "tokens": 1240
   },
   "/companies": {
     "html": "/__pages/965e43e2b9e71740.html",
@@ -603,6 +603,6 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/openai-realtime-voices-phone-calls": {
     "html": "/__pages/bfa7fe3d0cc5780a.html",
     "markdown": "/__pages/bfa7fe3d0cc5780a.md",
-    "tokens": 9244
+    "tokens": 9245
   }
 };
