@@ -113,7 +113,7 @@ test('voice and back office honor known unknowns and unattended execution', () =
   const brief: CallBrief = {
     owner: 'Alice', assistantName: null, callingAs: null, onBehalfOf: 'Alice',
     business: 'Test business', goal: 'Look up a rebate', facts: 'Exact amount unknown, possibly $50 or $100.', flexibility: '',
-    callbackNumber: '+14155550100', callbackRingsOwner: false, localTime: null, connectWhen: null, unattended: true,
+    callbackNumber: '+14155550100', callbackRingsOwner: false, localTime: null, connectWhen: null, unattended: true, voice: 'marin',
   };
   const voice = callInstructions(brief);
   assert.match(voice, /Never turn an estimate into a confirmed answer/);

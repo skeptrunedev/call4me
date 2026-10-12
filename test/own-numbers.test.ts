@@ -155,7 +155,7 @@ test('own numbers reach their own country, and +1 numbers all of the US and Cana
 });
 
 test('the caller tells businesses that a callback to the owner\'s own number reaches them directly', () => {
-  const brief: CallBrief = { onBehalfOf: 'Sam', owner: 'Sam', business: 'Nopa', goal: 'Book a table.', facts: '', flexibility: '', callbackNumber: mine, callbackRingsOwner: true, localTime: null, connectWhen: null };
+  const brief: CallBrief = { onBehalfOf: 'Sam', owner: 'Sam', business: 'Nopa', goal: 'Book a table.', facts: '', flexibility: '', callbackNumber: mine, callbackRingsOwner: true, localTime: null, connectWhen: null, voice: 'marin' };
   assert.match(callInstructions(brief), /callback number is 202-555-0123, Sam's own phone: a callback reaches Sam directly/);
   assert.doesNotMatch(callInstructions({ ...brief, callbackRingsOwner: false }), /own phone/);
 });

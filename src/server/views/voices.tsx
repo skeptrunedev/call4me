@@ -25,7 +25,7 @@ export const VoicesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ sig
       </details>
       {VOICE_SAMPLES.map((s) => (
         <article class="example" id={s.voice} aria-labelledby={`${s.voice}-title`}>
-          <h2 id={`${s.voice}-title`}>{s.voice}{s.isDefault && <span class="small"> (default)</span>}</h2>
+          <h2 id={`${s.voice}-title`}>{s.voice}{s.isDefault && <span class="small"> (default)</span>}{s.accent && <span class="small"> ({s.accent.toLowerCase()} accent)</span>}</h2>
           {SAMPLE_LANGUAGES.map((l) => (
             <>
               <p class="small">{l.name.toLowerCase()}</p>

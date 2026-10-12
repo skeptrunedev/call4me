@@ -13,7 +13,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/voices": {
     "html": "/__pages/3c1d9b7cb97eed20.html",
     "markdown": "/__pages/3c1d9b7cb97eed20.md",
-    "tokens": 1240
+    "tokens": 1248
   },
   "/companies": {
     "html": "/__pages/965e43e2b9e71740.html",

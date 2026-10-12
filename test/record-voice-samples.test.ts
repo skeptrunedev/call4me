@@ -4,11 +4,12 @@ import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, rmSync, existsSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { runInNewContext } from 'node:vm';
+import { VOICE_ACCENTS, VOICES } from '../src/server/voice/voices';
 
 const source = readFileSync(new URL('../scripts/record-voice-samples.mjs', import.meta.url), 'utf8')
   .replace(/^#!.*\n/, '').replace(/^import .*;\n/gm, '').replaceAll('import.meta.dirname', 'scriptDir');
 
-async function trial({ mismatch = false, custom = true, extra = [] } = {}) {
+async function trial({ mismatch = false, custom = true, scripted = true, extra = [] } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'voice-recorder-test-'));
   const out = join(dir, 'private');
   const instructions = '  Exact experiment instructions.\n';
@@ -40,9 +41,9 @@ async function trial({ mismatch = false, custom = true, extra = [] } = {}) {
   let error;
   try {
     await runInNewContext(`(async () => { ${source}\n })()`, {
-      scriptDir: join(dir, 'scripts'), Buffer, WebSocket: Socket,
+      scriptDir: join(dir, 'scripts'), Buffer, WebSocket: Socket, VOICES, VOICE_ACCENTS,
       process: { env: { OPENAI_API_KEY: 'test-only' }, argv: ['node', 'recorder',
-        ...(custom ? ['--out', out] : []), '--instructions', join(dir, 'instructions.txt'), ...extra, 'willow'] },
+        ...(custom ? ['--out', out] : []), ...(scripted ? ['--instructions', join(dir, 'instructions.txt')] : []), ...extra, 'willow'] },
       console: { log() {}, error() {} },
       Date: class extends Date { static now() { return Date.now() + (++calls * 3000); } },
       setTimeout, clearTimeout, setInterval, clearInterval,
@@ -87,5 +88,14 @@ test('default recording still writes only MP3 in the public voices directory', a
     assert.ok(existsSync(`${stem}.mp3`));
     assert.equal(existsSync(`${stem}.json`), false);
     assert.equal(existsSync(`${stem}.ulaw`), false);
+  } finally { rmSync(result.dir, { recursive: true }); }
+});
+
+test('the default prompt carries the same accent rule as a real call for voices picked for their accent', async () => {
+  const result = await trial({ scripted: false });
+  try {
+    assert.equal(result.error, undefined);
+    assert.match(result.sent.session.instructions, /Speak in your natural Irish accent for the whole call/);
+    assert.match(result.sent.session.instructions, /say exactly this, warmly and naturally/);
   } finally { rmSync(result.dir, { recursive: true }); }
 });

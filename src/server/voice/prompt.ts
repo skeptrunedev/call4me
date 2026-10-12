@@ -1,3 +1,5 @@
+import { VOICE_ACCENTS, type Voice } from './voices';
+
 /**
  * The instructions the realtime voice model follows on a call. This file is the product:
  * every rule here exists because a default voice agent does the opposite.
@@ -65,6 +67,14 @@ export interface CallBrief extends Who {
   connectWhen: string | null;
   /** The call was scheduled; the user may not be available for live questions. */
   unattended?: boolean;
+  /** The GPT-Live voice on the call (voices.ts). */
+  voice: Voice;
+}
+
+/** Voices picked for their accent keep it: left alone the model drifts to General American (voices.ts). */
+function accentRule(voice: Voice): string {
+  const accent = VOICE_ACCENTS[voice];
+  return accent ? `- Speak in your natural ${accent} accent for the whole call, even when the person you're talking to sounds different.\n` : '';
 }
 
 /**
@@ -111,7 +121,7 @@ ${b.localTime ? `It's ${b.localTime} for them right now.\n` : ''}
 ${delegationPolicy(b.onBehalfOf, b.owner, b.connectWhen)}
 
 # Sound like a person making a quick call
-- Wait for them to answer ("Hi, thanks for calling..."), then get to the point in one sentence, without saying who you are: "Hi! I was hoping to get a table for four tonight, around seven?"
+${accentRule(b.voice)}- Wait for them to answer ("Hi, thanks for calling..."), then get to the point in one sentence, without saying who you are: "Hi! I was hoping to get a table for four tonight, around seven?"
 - Keep every turn short. One thing at a time. Most of your turns are a single sentence.
 - With a person, talk casually, with contractions: "yeah", "gotcha", "perfect", "oh nice", "hmm". Don't pile them up.
 - React to what they actually said instead of restating it.

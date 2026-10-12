@@ -6,6 +6,7 @@ import { telnyx } from '../lib/telnyx';
 import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions, inboundInstructions, type OpenTask } from '../voice/prompt';
 import type { SessionSetup } from '../voice/session';
 import { sessionFor } from '../voice/stub';
+import type { Voice } from '../voice/voices';
 import { accounts, type Account } from './accounts';
 import { answeringAccountId, mayCall, numbers } from './numbers';
 import { profiles } from './profiles';
@@ -13,9 +14,7 @@ import { assistantNameOf, type Profile, type Surface } from './intake';
 import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 import { analytics } from './analytics';
 
-/** Supported GPT-Live caller voices. marin is the model default. */
-export const VOICES = ['marin', 'cedar', 'gleam', 'meridian', 'vesper', 'willow'] as const;
-export type Voice = (typeof VOICES)[number];
+export { VOICES, type Voice } from '../voice/voices';
 
 export const pricePerMinute = (env: Env) => Number(env.PRICE_PER_MINUTE_CENTS || 25);
 
@@ -156,6 +155,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       callingAs: brief.calling_as ?? null,
       connectWhen: brief.connect_when ?? null,
       unattended: execution.unattended,
+      voice: input.voice ?? 'marin',
     };
     const stream = await streamUrl(env, call.id);
     const setup: SessionSetup = {
@@ -165,7 +165,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       unattended: execution.unattended,
       instructions: callInstructions(cb),
       backOffice: backOfficeInstructions(cb),
-      voice: input.voice ?? 'marin',
+      voice: cb.voice,
       maxSeconds: brief.max_minutes * 60,
       pricePerMinuteCents: price,
       redact: secrets.map((sec) => sec.value),

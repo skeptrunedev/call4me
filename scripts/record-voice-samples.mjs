@@ -3,11 +3,12 @@
  * Record the /voices page samples directly from one GPT-Live session per voice
  * at 8 kHz mu law. These do not traverse a carrier or a receiving phone.
  *
- *   OPENAI_API_KEY=... node scripts/record-voice-samples.mjs [--lang es] [--out DIR] [--instructions FILE] [marin cedar]
+ *   OPENAI_API_KEY=... node scripts/record-voice-samples.mjs [--lang es] [--out DIR] [--instructions FILE] [--greeting ash|fable|...|none] [marin cedar]
  * Custom output also retains raw audio and a private configuration/transcript manifest.
  *
- * A TTS "thanks for calling" in the chosen language plays in as the business answering; the
- * caller's reply is kept, loudness-normalized like the example recordings (docs/examples.md),
+ * A TTS "thanks for calling" in the chosen language plays in as the business answering (--greeting
+ * picks its gpt-4o-mini-tts voice, default ash; "none" sends only silence, so the caller speaks
+ * first and the sample shows the voice before it has heard anyone); the caller's reply is kept, loudness-normalized like the example recordings (docs/examples.md),
  * and written to public/static/voices/<voice>.mp3 (English) or <voice>-<lang>.mp3. Prints each
  * spoken transcript for src/content/voices.ts. Needs ffmpeg on PATH.
  */
@@ -15,8 +16,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-
-const VOICES = ['marin', 'cedar', 'gleam', 'meridian', 'vesper', 'willow'];
+import { VOICE_ACCENTS, VOICES } from '../src/server/voice/voices.ts';
 const LIVE_URL = 'wss://api.openai.com/v1/live/sessions';
 /**
  * The five most spoken languages (Ethnologue 2025, total speakers). Each has the business's
@@ -53,13 +53,17 @@ function option(name) {
 const lang = option('--lang') ?? 'en';
 const customOut = option('--out');
 const instructionsFile = option('--instructions');
+const greetingVoice = option('--greeting') ?? 'ash';
 const language = LANGUAGES[lang];
 if (!language) {
   console.error(`unknown language: ${lang} (one of ${Object.keys(LANGUAGES).join(', ')})`);
   process.exit(1);
 }
-const instructions = instructionsFile ? readFileSync(instructionsFile, 'utf8') : `You're on a live phone call, calling a restaurant for Alex as Alex's assistant. Speak only ${language.name}. When they answer, say exactly this, warmly and naturally, then stop and wait: "${language.line}"`;
-if (!instructions.trim()) throw new Error('instructions must not be empty');
+const customInstructions = instructionsFile ? readFileSync(instructionsFile, 'utf8') : null;
+if (customInstructions !== null && !customInstructions.trim()) throw new Error('instructions must not be empty');
+/** The same accent rule a real call's prompt carries (voice/prompt.ts), so the sample sounds like the call. */
+const accentRule = (voice) => VOICE_ACCENTS[voice] ? ` Speak in your natural ${VOICE_ACCENTS[voice]} accent for the whole call, even when the person you're talking to sounds different.` : '';
+const instructionsFor = (voice) => customInstructions ?? `You're on a live phone call, calling a restaurant for Alex as Alex's assistant. Speak only ${language.name}.${accentRule(voice)} When they answer, say exactly this, warmly and naturally, then stop and wait: "${language.line}"`;
 const voices = args.length ? args : VOICES;
 const unknown = voices.filter((v) => !VOICES.includes(v));
 if (unknown.length) {
@@ -72,14 +76,14 @@ const outDir = customOut ?? join(import.meta.dirname, '..', 'public', 'static', 
 mkdirSync(outDir, { recursive: true, ...(customOut ? { mode: 0o700 } : {}) });
 const ffmpeg = (...args) => execFileSync('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', ...args]);
 const sampleName = (voice) => lang === 'en' ? voice : `${voice}-${lang}`;
-const sessionConfig = (voice) => ({ model: 'gpt-live-1', instructions, audio: { format: { type: 'audio/pcmu', rate: 8000 }, output: { voice } } });
+const sessionConfig = (voice) => ({ model: 'gpt-live-1', instructions: instructionsFor(voice), audio: { format: { type: 'audio/pcmu', rate: 8000 }, output: { voice } } });
 
 /** The business picking up, as 8 kHz μ-law, the same as the phone side of a real call. */
 async function greeting() {
   const res = await fetch('https://api.openai.com/v1/audio/speech', {
     method: 'POST',
     headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ model: 'gpt-4o-mini-tts', voice: 'ash', input: language.greeting, response_format: 'wav' }),
+    body: JSON.stringify({ model: 'gpt-4o-mini-tts', voice: greetingVoice, input: language.greeting, response_format: 'wav' }),
   });
   if (!res.ok) throw new Error(`greeting TTS failed: ${res.status} ${await res.text()}`);
   const wav = join(work, 'greeting.wav');
@@ -117,7 +121,7 @@ function record(voice, phone) {
         writeFileSync(`${stem}.json`, `${JSON.stringify({
           startedAt, finishedAt: new Date().toISOString(), language: lang,
           requestedSession: sessionConfig(voice), sessionStarted, verification,
-          greeting: { model: 'gpt-4o-mini-tts', voice: 'ash', text: language.greeting },
+          greeting: greetingVoice === 'none' ? null : { model: 'gpt-4o-mini-tts', voice: greetingVoice, text: language.greeting },
           transcript: transcript.trim(), rawAudio: `${sampleName(voice)}.ulaw`,
           rawAudioBytes: Buffer.concat(audio).length, error: err?.message ?? null,
         }, null, 2)}\n`, { mode: 0o600 });
@@ -174,7 +178,7 @@ function record(voice, phone) {
   });
 }
 
-const phone = await greeting();
+const phone = greetingVoice === 'none' ? Buffer.alloc(0) : await greeting();
 for (const voice of voices) {
   const { audio, transcript } = await record(voice, phone);
   const raw = join(work, `${voice}.ulaw`);

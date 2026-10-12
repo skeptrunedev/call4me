@@ -55,7 +55,7 @@ test('voice instructions require quiet waiting while the other person checks', (
   const instructions = callInstructions({
     owner: 'Alex', assistantName: null, callingAs: null, onBehalfOf: 'Alex',
     business: 'Test store', goal: 'Reorder dog food', facts: '', flexibility: '',
-    callbackNumber: '+14155550100', callbackRingsOwner: false, localTime: null, connectWhen: null,
+    callbackNumber: '+14155550100', callbackRingsOwner: false, localTime: null, connectWhen: null, voice: 'marin',
   });
   assert.match(instructions, /When a person goes quiet, wait for them to speak/);
   assert.match(instructions, /Never ask whether they're still there just because the line is quiet/);

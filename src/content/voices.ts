@@ -1,4 +1,4 @@
-import { VOICES, type Voice } from '../server/services/dialer';
+import { VOICE_ACCENTS, VOICES, type Voice } from '../server/voice/voices';
 
 /**
  * The five most spoken languages (Ethnologue 2025, total speakers) and the line each sample
@@ -23,8 +23,9 @@ export const sampleAudio = (voice: Voice, code: string) => `/static/voices/${cod
  * One sample per caller voice per language, recorded straight from GPT-Live at the phone
  * format real calls use (8 kHz μ-law), so each sounds the way the business hears it.
  */
-export const VOICE_SAMPLES: { voice: Voice; audio: string; isDefault: boolean }[] = VOICES.map((voice) => ({
+export const VOICE_SAMPLES: { voice: Voice; audio: string; isDefault: boolean; accent: string | null }[] = VOICES.map((voice) => ({
   voice,
   audio: sampleAudio(voice, 'en'),
   isDefault: voice === 'marin',
+  accent: VOICE_ACCENTS[voice] ?? null,
 }));
