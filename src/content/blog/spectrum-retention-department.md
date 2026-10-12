@@ -1,16 +1,17 @@
 ---
-title: "Spectrum retention department: the number, what to say, and the offer we got ($85 to $55)"
-seoTitle: "Spectrum retention department: phone and offers"
+title: "Spectrum retention: what to say, and $85 cut to $55"
+seoTitle: "Spectrum retention department: (833) 267-6094"
 subtitle: A call4me user's Spectrum internet bill had climbed to $85 a month. Their AI phone assistant called Spectrum, said "cancel" to get routed to retention, sat through the hold, and got the user patched in. Spectrum offered $55 a month for a year. Here's the phone tree, the recording, both offers, and the free technician tip the rep gave.
 description: How to reach the Spectrum retention department: call (833) 267-6094 and say "cancel," then "disconnect." Our call got $85/mo internet cut to $55 for a year.
 date: 2026-10-01
 updated: 2026-10-04
+verified: 2026-10-01
 tags: spectrum retention, spectrum customer service, lower spectrum bill, cancel spectrum, ai phone assistant
 authors: nick
 imageAlt: Spectrum retention department, $85 a month down to $55
 ---
 
-**The short answer:** Spectrum doesn't publish a separate retention phone number. Call **(833) 267-6094**, the number Spectrum lists for TV, Internet and Home Phone, and when the automated system asks what you need, say **"cancel my account."** It then offers a list of options. Say **"disconnect."** After a few questions about why you're leaving, it puts you in line for a **"customer solutions specialist,"** which is Spectrum's retention team. The rep on our call later called it "the retention department or customer solutions department, either way."
+**The short answer:** Spectrum doesn't publish a separate retention phone number. Call **(833) 267-6094**, the number Spectrum lists for TV, Internet and Home Phone. An automated voice system answers, not a person. Say **"cancel my account"**, then **"disconnect"**, and answer its questions about which service and why you're leaving. It puts you in line for a **"customer solutions specialist,"** which is Spectrum's retention team. **A rep answered 7 minutes 49 seconds into our recording**, after about 5 minutes on hold. The rep later called it "the retention department or customer solutions department, either way."
 
 On Thursday, October 1, 2026, a call4me user's AI phone assistant did exactly that. The user's Spectrum internet, the 1 Gig plan, had gone from about $62 a month to $85. After a phone menu, about 5 minutes on hold and an identity check, the user joined the call, and the rep offered two deals:
 

@@ -1,17 +1,20 @@
 ---
-title: "DoorDash customer service number: how to reach a live person, and how long refunds take"
+title: "DoorDash customer service number: reaching a live person"
 seoTitle: "DoorDash customer service number: 855-431-0459"
 subtitle: "We called DoorDash's support line to ask about missing items and refunds. Here are the exact key presses, the words that got us transferred, what the live representative said, and the full recording."
 description: "855-431-0459 is the DoorDash customer service number. Press 1, press 1, then say \"missing item\" and \"refund\" to reach a person. From a real recorded call."
 date: 2026-10-09
+verified: 2026-10-09
 tags: doordash, food delivery, customer service, refunds, phone trees
 authors: nick
 imageAlt: "DoorDash customer service number 855-431-0459, how to reach a live person and how long refunds take"
 ---
 
-**The short answer:** the DoorDash customer service number is **855-431-0459**. DoorDash's [customer help page](https://help.doordash.com/en-us/consumers) lists it under "Can't find what you are looking for?": "Our chat and call support are available 24/7" and "Call Us at 855-431-0459". So the DoorDash phone number for customers is open **24 hours a day, 7 days a week**, and the representative we reached confirmed that a real person answers around the clock.
+**The short answer:** the DoorDash customer service number is **855-431-0459**, open **24 hours a day, 7 days a week**. A keypad menu and then an automated voice answer, not a person. Press **1**, press **1** again, then name the problem (we said "missing item") and say "refund". **A live representative picked up 2 minutes 8 seconds after we dialed**, and confirmed a real person answers around the clock.
 
-This got us to a live person in 2 minutes 8 seconds:
+DoorDash's [customer help page](https://help.doordash.com/en-us/consumers) lists the number under "Can't find what you are looking for?": "Our chat and call support are available 24/7" and "Call Us at 855-431-0459".
+
+This got us to a live person:
 
 1. At "To continue in English, press 1", **press 1**.
 2. At "If you are a customer, please press 1", **press 1**.

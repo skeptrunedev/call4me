@@ -1,16 +1,17 @@
 ---
-title: How to cancel an Audible membership: we called Audible (recording)
+title: "How to cancel Audible: 888-283-5051 and a real call"
 seoTitle: How to cancel an Audible membership, or pause it
 subtitle: We called Audible's customer service line to ask exactly how cancelling works. Here is the phone tree with its keypad check, what happens to your credits and books, the 90 day pause, and the full 7 minute recording.
 description: Cancel Audible online or by phone at 888-283-5051. Unused credits expire when it ends; pause for 90 days instead. From a real recorded call to Audible.
 date: 2026-10-02
 updated: 2026-10-04
+verified: 2026-10-02
 tags: audible, cancel subscription, streaming, phone trees
 authors: nick
 imageAlt: How to cancel an Audible membership, from a real call to Audible customer service
 ---
 
-**The short answer:** you can cancel an Audible membership **online**, in your membership settings at audible.com, or **by phone at 888-283-5051** (1-888-283-5051, the number in the title of Audible's [contact page](https://www.audible.com/contactus)). By phone, Audible verifies you by **sending an approval link to the phone number or email on your account**: you click approve, then ask them to cancel. The associate told us the line is open **24/7**.
+**The short answer:** you can cancel an Audible membership **online**, in your membership settings at audible.com, or **by phone at 888-283-5051** (1-888-283-5051, the number in the title of Audible's [contact page](https://www.audible.com/contactus)). A recording answers, not a person. Type the digits it reads out at the keypad check (we got **270**), press **2** for "pause or cancel your Audible membership", then type the new digits at the second check (we got **550**). **An associate answered 2 minutes after we dialed.** The associate told us the line is open **24/7**. By phone, Audible verifies you by **sending an approval link to the phone number or email on your account**: you click approve, then ask them to cancel.
 
 Before you cancel, know these, all from the associate on our call:
 
@@ -22,7 +23,7 @@ Before you cancel, know these, all from the associate on our call:
 - **Signed up through Apple or Google?** Then you have to cancel with Apple or Google subscriptions, not Audible. If you signed up through Amazon, Audible handles it.
 - **Ask about cheaper plans.** "We do have plans that are discounted", and you don't have to be cancelling to ask.
 
-We called on Friday, October 2, 2026, at about 2:18 pm Pacific, with [call4me](/) asking the questions. A person picked up 2 minutes after dialing. This page is what we heard.
+We called on Friday, October 2, 2026, at about 2:18 pm Pacific, with [call4me](/) asking the questions. This page is what we heard.
 
 ## Listen to the call
 

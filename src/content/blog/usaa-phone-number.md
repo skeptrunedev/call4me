@@ -5,6 +5,7 @@ subtitle: We called USAA's main number to ask who can join and what it takes. He
 description: The USAA phone number is 800-531-8722. Press 1, then 2, then say "membership" to reach the eligibility team. Who can join, from a real recorded call.
 date: 2026-10-01
 updated: 2026-10-04
+verified: 2026-10-01
 tags: usaa, customer service, membership, eligibility, phone trees
 authors: nick
 imageAlt: USAA 800-531-8722, how to reach a person and who can join

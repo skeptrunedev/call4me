@@ -1,15 +1,16 @@
 ---
-title: "Amazon Pharmacy phone number: what happens when you call, and how we got a stuck prescription moving in under an hour"
+title: "Amazon Pharmacy phone number, and a stuck prescription fixed"
 seoTitle: "Amazon Pharmacy phone number: 855-745-5725"
 subtitle: Two of my prescriptions sat in "pharmacist review" for days. One phone call to Amazon Pharmacy got them marked important, and 48 minutes later the "ready to order" email arrived. Here's the number, every step of the phone menu, the recording, and what to say.
 description: Amazon Pharmacy customer care is 855-745-5725. We called about prescriptions stuck in pharmacist review: the recording, the menu, and what got them moving.
 date: 2026-10-01
+verified: 2026-09-28
 tags: amazon pharmacy, pharmacy, prescriptions, phone numbers, ai phone assistant
 authors: nick
 imageAlt: Amazon Pharmacy phone number, the call that got stuck prescriptions moving, recorded
 ---
 
-**The short answer:** the Amazon Pharmacy phone number for customers is **855-745-5725** (Customer Care). Doctors and other pharmacies use a separate line, **855-206-3605**, open 8 am to 9 pm ET on weekdays and 10 am to 8 pm ET on weekends. Both are listed on [Amazon Pharmacy's page for prescribers](https://pharmacy.amazon.com/prescribers).
+**The short answer:** the Amazon Pharmacy phone number for customers is **855-745-5725** (Customer Care). An automated assistant answers, not a person. Say you're a customer, give the mobile number on the account, and enter the six digit code Amazon sends by email and text. Then say what you need in one sentence. On our call it transferred us to clinical customer care, quoted "approximately one minute", and **a person answered 3 minutes 40 seconds after we dialed**. Doctors and other pharmacies use a separate line, **855-206-3605**, open 8 am to 9 pm ET on weekdays and 10 am to 8 pm ET on weekends. Both are listed on [Amazon Pharmacy's page for prescribers](https://pharmacy.amazon.com/prescribers).
 
 If your prescription is stuck in **"pharmacist review"**, call Customer Care and ask a person to look at it. The automated assistant offered us an "expedited review", then said it had no tool to do one and connected us to clinical customer care. The representative there said she'd **mark the prescriptions as important**, and that "usually once that happens, they're done within like an hour." Our "ready to order" email arrived 48 minutes after we dialed.
 

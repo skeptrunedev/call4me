@@ -1,16 +1,19 @@
 ---
-title: "Allstate phone number: how to reach an agent"
+title: "Allstate phone number 800-726-6033: reach an agent"
 seoTitle: "Allstate customer service number: 800-726-6033"
 subtitle: "Our recorded call covers California auto quotes, claims and the details to have ready."
 description: "Call Allstate at 800-726-6033 for customer service and quotes, or 800-255-7828 for claims. Hear our recorded call and how we reached a licensed agent."
 date: 2026-10-02
 updated: 2026-10-04
+verified: 2026-10-02
 tags: allstate, customer service, insurance, claims, phone trees
 authors: nick
 imageAlt: Allstate 800-726-6033, customer service, claims, and reaching an agent
 ---
 
-**The short answer:** the Allstate customer service number is **800-726-6033**. Allstate's [call center page](https://www.allstate.com/help-support/contact/call-center) lists it under "Get 24/7 support" and says its licensed agents "are available any time." The agent we reached confirmed it's the number for **existing customers' billing and policy questions**, and said claims can go through it as well: "there's not like a direct line to claims," you call it and ask for claims in the automated system. Allstate's own [claims page](https://www.allstate.com/help-support/claims) does list a separate claims number, **800-255-7828** (1-800-ALLSTATE), for auto and property claims, and it's the one to call if you're not an Allstate customer.
+**The short answer:** the Allstate customer service number is **800-726-6033**. An automated voice menu answers, not a person. Say "no" to the claims question, say why you're calling in a sentence, answer the ZIP code and homeowner questions, and a **licensed insurance agent** picks up. On our call that took **2 minutes 9 seconds**, with about 7 seconds on hold. Allstate's [call center page](https://www.allstate.com/help-support/contact/call-center) lists the number under "Get 24/7 support". For auto and property claims, Allstate's [claims page](https://www.allstate.com/help-support/claims) lists **800-255-7828** (1-800-ALLSTATE), the one to call if you're not an Allstate customer.
+
+The agent we reached confirmed 800-726-6033 is the number for **existing customers' billing and policy questions**, and said claims can go through it as well: "there's not like a direct line to claims," you call it and ask for claims in the automated system.
 
 To reach a person, this got us through in 2 minutes 9 seconds:
 

@@ -5,6 +5,7 @@ subtitle: "Three recordings cover account verification, a cheaper plan quote and
 description: Verizon customer service is 800-922-0204. An AI assistant answers; "An agent, please" reached a person, who said a plan switch saves about $48 a month.
 date: 2026-10-01
 updated: 2026-10-07
+verified: 2026-10-01
 tags: verizon, customer service, phone plans, phone trees
 authors: nick
 imageAlt: Verizon customer service, 800-922-0204, how we reached a person and found a plan about $48 cheaper
@@ -12,9 +13,9 @@ imageAlt: Verizon customer service, 800-922-0204, how we reached a person and fo
 
 **The short answer:** the Verizon customer service number for wireless is **800-922-0204**. Verizon's support pages list it under "Speak to an agent", open **8 am to 7 pm Monday to Saturday** and **8 am to 5 pm Sunday**.
 
-**Verizon's AI assistant** answers. Before it does anything with your account it wants **the mobile number on the account**, then it checks it's you. It offers a **text confirmation** to that phone first. Ours expired, so it switched to the **Account PIN**, and the PIN worked. Have both ready. To reach a person, say **"An agent, please."** On our call, "Could I just speak with a representative, please?" didn't work, and "An agent, please" did.
+**Verizon's AI assistant** answers, not a person. Before it does anything with your account it wants **the mobile number on the account**, then it checks it's you. It offers a **text confirmation** to that phone first. Ours expired, so it switched to the **Account PIN**, and the PIN worked. Have both ready. To reach a person, say **"An agent, please."** On our call, "Could I just speak with a representative, please?" didn't work, and "An agent, please" did. **We reached a person 6 minutes 34 seconds into the call.**
 
-We reached a person 6 minutes 34 seconds into the call. They said switching our 3 lines from **5G Do More** to **Unlimited Welcome** would take the bill from **$219.08** to about **$170.58 a month**, including surcharges, government taxes and fees. That's about **$48 a month** less. These were this account's numbers on October 1, 2026. Yours will be different.
+The representative said switching our 3 lines from **5G Do More** to **Unlimited Welcome** would take the bill from **$219.08** to about **$170.58 a month**, including surcharges, government taxes and fees. That's about **$48 a month** less. These were this account's numbers on October 1, 2026. Yours will be different.
 
 Our call hit call4me's 25 minute limit mid-question, and about a minute later **the same representative called us back**. On that call they said the line we asked about had **no device payment balance or agreement**, only the plan, and that to keep the number **you start the port-out yourself**, and Verizon disconnects the line on its own once the number has moved. That call is [below](#verizon-called-us-back).
 

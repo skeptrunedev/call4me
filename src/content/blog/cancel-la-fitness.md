@@ -1,9 +1,10 @@
 ---
-title: LA Fitness membership cancellation with help from your AI agent
+title: "LA Fitness membership cancellation with your AI agent"
 seoTitle: LA Fitness cancel membership: AI agent help
 subtitle: Ask your AI assistant to check the published options, call about missing details and prepare your cancellation checklist. Our recorded club answer shows why conflicts need followup.
 description: Give your AI agent a plan for LA Fitness cancellation: check official options, call about missing details and return the next steps. Hear both recordings.
 date: 2026-10-06
+verified: 2026-10-06
 tags: la fitness, cancel subscription, gym membership, personal assistant, ai phone assistant
 authors: nick
 imageAlt: LA Fitness membership cancellation, let your AI agent check the options
@@ -11,7 +12,7 @@ imageAlt: LA Fitness membership cancellation, let your AI agent check the option
 
 **LA Fitness's official FAQ lists cancellation through your online account, in person at a club, or by written notice mailed to P.O. Box 54170, Irvine, CA 92619, for most monthly memberships.** Other options can depend on the agreement or enrollment state. Start with the [official membership FAQ](https://www.lafitness.com/Pages/MembershipQuestions.aspx/1000) and your own agreement.
 
-We used [call4me](/) to ask the Irvine Jamboree club about cancellation on October 6, 2026. The representative said **in person only**, with a sales counselor and confirmation by email. That conflicts with the published alternatives. A second call received no speech from the business, so we ended it without resolving the disagreement. Both recordings are below.
+We used [call4me](/) to ask the Irvine Jamboree club, **(714) 505 8958**, about cancellation on October 6, 2026. There was no menu: **a staff member answered about 45 seconds into the recording**. The representative said **in person only**, with a sales counselor and confirmation by email. That conflicts with the published alternatives. A second call received no speech from the business, so we ended it without resolving the disagreement. Both recordings are below.
 
 ## Give the cancellation task to your AI agent
 

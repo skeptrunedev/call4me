@@ -4,6 +4,7 @@ seoTitle: How to cancel SiriusXM with your AI agent
 subtitle: Give your assistant the job of finding the right cancellation route and preparing the next step. Hear what a SiriusXM representative confirmed on our call.
 description: Learn how to cancel SiriusXM based on who bills you. Use our AI agent prompt to prepare the task, check unanswered questions and track confirmation.
 date: 2026-10-07
+verified: 2026-10-07
 tags: siriusxm, cancel subscription, personal assistant, ai phone assistant
 authors: nick
 imageAlt: How to cancel SiriusXM, let your AI agent prepare the cancellation task
@@ -11,7 +12,7 @@ imageAlt: How to cancel SiriusXM, let your AI agent prepare the cancellation tas
 
 **To cancel SiriusXM, first identify who bills you.** If SiriusXM bills you directly, its [official cancellation guide](https://www.siriusxm.com/help/manage-or-cancel-service) lists the Subscriptions tab in the Online Account Center, online chat, and **(866) 635 8641**. If Apple, Google Play or Roku bills you, use that provider's subscription management process.
 
-We called SiriusXM with [call4me](/) on October 7, 2026. A human representative confirmed that direct subscribers can cancel through **phone or online chat** and receive an **email confirmation after processing**. Our call gathered general instructions. We did not cancel a subscription or access a subscriber account.
+We called that number with [call4me](/) on October 7, 2026. **A virtual assistant answered** and asked for the account holder's name and billing ZIP code. We said it was a general policy question and asked for a person twice, and it transferred us to **a human representative**. SiriusXM lists call center hours as **8 am to 8 pm Eastern, every day**. The representative confirmed that direct subscribers can cancel through **phone or online chat** and receive an **email confirmation after processing**. Our call gathered general instructions. We did not cancel a subscription or access a subscriber account.
 
 ## Give your AI agent the cancellation task
 

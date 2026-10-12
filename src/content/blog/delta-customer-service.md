@@ -1,17 +1,20 @@
 ---
-title: "Delta customer service: how to get past the AI assistant to a person"
+title: "Delta customer service: get past the AI to a person"
 seoTitle: "Delta customer service: 800-221-1212, get a human"
 subtitle: "We called Delta's reservations line with general questions and no confirmation number. Here is how the AI voice assistant handed us off, how long the hold took, what the representative said about change fees and eCredits, and the full 18 minute recording."
 description: "The Delta customer service phone number is 800-221-1212. An AI voice assistant answers; asking for a representative got us a live agent in about 16 minutes."
 date: 2026-10-08
+verified: 2026-10-08
 tags: delta, airlines, customer service, phone trees, phone numbers
 authors: nick
 imageAlt: "Delta 800-221-1212, how to get past the AI voice assistant to a person"
 ---
 
-**The short answer:** the Delta customer service phone number for reservations is **800-221-1212**. Delta's [Need Help page](https://www.delta.com/us/en/need-help/overview) says: "To speak with a representative about a new or existing reservation, call 800-221-1212," and "You may contact Reservation Sales 24 hours/day, 7 days/week."
+**The short answer:** the Delta customer service phone number for reservations is **800-221-1212**. It's open **24 hours a day, 7 days a week**. **An AI voice assistant answers, not a person.** Say you have a general question for reservations, say you don't have a confirmation number, and decline the chat and callback offers. **A live representative answered about 16 minutes 20 seconds after we dialed**, nearly all of it hold.
 
-**The first voice you hear is not a person.** It introduces itself as "Delta's AI-powered voice assistant." Here's what got us from it to a live representative, with no confirmation number:
+Delta's [Need Help page](https://www.delta.com/us/en/need-help/overview) says: "To speak with a representative about a new or existing reservation, call 800-221-1212," and "You may contact Reservation Sales 24 hours/day, 7 days/week."
+
+The first voice introduces itself as "Delta's AI-powered voice assistant." Here's what got us from it to a live representative, with no confirmation number:
 
 1. Call 800-221-1212. When the assistant asks why you're calling, **say you have a general question for reservations.**
 2. It asks what kind of help: "Find an existing reservation, change or cancel a trip, or book a new flight." We said "change or cancel a trip."

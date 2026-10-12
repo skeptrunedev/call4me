@@ -5,6 +5,7 @@ subtitle: Give your AI assistant the job of finding your home club’s cancellat
 description: Want help cancelling Crunch? Give your AI agent this prompt to check your club’s rules, call for missing details and prepare a cancellation request to review.
 date: 2026-10-06
 updated: 2026-10-07
+verified: 2026-10-06
 tags: crunch, cancel subscription, gym membership, personal assistant, ai phone assistant
 authors: nick
 imageAlt: How to cancel Crunch membership, let your AI agent prepare the next step
@@ -12,7 +13,7 @@ imageAlt: How to cancel Crunch membership, let your AI agent prepare the next st
 
 **To cancel a Crunch membership, check the cancellation options for your home club and agreement.** At Crunch Polk Street in San Francisco, a representative told us members can use the **app, an iPad at the club, or an email request to operations or a sales member**. They said a phone call provides instructions but does not itself complete cancellation.
 
-We obtained those answers with [call4me](/) on October 6, 2026. This was a general inquiry, not a member account cancellation. Crunch's [official FAQ](https://www.crunch.com/faq) says cancellation policies depend on the location and agreement. Do not assume the Polk Street answer applies to every franchise or membership.
+We called the Polk Street club at **(415) 292 5444** with [call4me](/) on Tuesday, October 6, 2026, at about 6:14 pm Pacific. A short "please hold" announcement played, then **a staff member answered within seconds**, with no menu. This was a general inquiry, not a member account cancellation. Crunch's [official FAQ](https://www.crunch.com/faq) says cancellation policies depend on the location and agreement. Do not assume the Polk Street answer applies to every franchise or membership.
 
 ## Give the cancellation task to your AI agent
 

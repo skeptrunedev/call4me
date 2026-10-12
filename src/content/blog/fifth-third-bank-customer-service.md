@@ -4,12 +4,15 @@ seoTitle: "Fifth Third Bank customer service: 800-972-3030"
 subtitle: We called Fifth Third's customer service line without an account number. Here is what the phone menu asked for, how we got to a live representative anyway, what they told us about fees and verification, and the full 4 minute recording.
 description: Fifth Third Bank customer service is 800-972-3030. The menu asks for an account or card number; with none entered, a live person answered in under 2 minutes.
 date: 2026-10-08
+verified: 2026-10-08
 tags: fifth third, banking, customer service, phone trees, phone numbers
 authors: nick
 imageAlt: Fifth Third Bank customer service 800-972-3030, how to reach a person without an account number
 ---
 
-**The short answer:** Fifth Third Bank customer service is **800-972-3030**. Fifth Third's [customer service page](https://www.53.com/content/fifth-third/en/customer-service.html) says "You can reach us at 800-972-3030, Monday through Friday", and its "Call Us" box lists the same number for Customer Service, plus:
+**The short answer:** Fifth Third Bank customer service is **800-972-3030**. An automated menu answers, not a person. Stay on the line past the first options, then don't enter an account number at "Please enter your full account or card number". After three prompts it transfers you, and **a live representative answered 1 minute 44 seconds into our call**. Hours listed for the line run Monday to Saturday, closed Sunday, with lost or stolen cards handled 24/7.
+
+Fifth Third's [customer service page](https://www.53.com/content/fifth-third/en/customer-service.html) says "You can reach us at 800-972-3030, Monday through Friday", and its "Call Us" box lists the same number for Customer Service, plus:
 
 - **Business:** 877-534-2264
 - **Commercial:** 866-475-0729

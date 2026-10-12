@@ -1,7 +1,7 @@
 import type { FC } from 'hono/jsx';
 import { raw } from 'hono/html';
 import { RECOMMENDATIONS } from '../../content/blog/recommendations';
-import { longDate, postDate, shortPostDate, type Post } from '../lib/blog';
+import { lastModified, longDate, postDate, shortPostDate, type Post } from '../lib/blog';
 import { blogIndexPath } from '../lib/blog-pagination';
 import { SITE } from '../lib/pages';
 import { useStaticRender } from '../lib/static-render';
@@ -320,7 +320,7 @@ export const BlogPost: FC<{
         image: `/og/blog/${post.slug}.png`,
         imageAlt: post.imageAlt,
         published: `${post.date}T00:00:00Z`,
-        modified: `${post.updated ?? post.date}T00:00:00Z`,
+        modified: `${lastModified(post)}T00:00:00Z`,
         jsonLd: {
           '@context': 'https://schema.org',
           '@type': 'BlogPosting',
@@ -330,7 +330,7 @@ export const BlogPost: FC<{
           url: `${SITE}${here}`,
           mainEntityOfPage: `${SITE}${here}`,
           datePublished: post.date,
-          dateModified: post.updated ?? post.date,
+          dateModified: lastModified(post),
           author: AUTHOR_LD(post),
           publisher: PUBLISHER,
           image: [`${SITE}/og/blog/${post.slug}.png`, `${SITE}${post.image}`],
@@ -369,6 +369,12 @@ export const BlogPost: FC<{
               <>
                 {' '}
                 / updated <time datetime={post.updated}>{postDate(post.updated)}</time>
+              </>
+            )}
+            {post.verified && (
+              <>
+                {' '}
+                / number verified <time datetime={post.verified}>{postDate(post.verified)}</time>
               </>
             )}{' '}
             / {post.readingMinutes} min read{post.paid && <span class="badge"> paid</span>}

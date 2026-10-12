@@ -1,16 +1,19 @@
 ---
-title: How to cancel a Planet Fitness membership: we called two clubs (recordings)
+title: "How to cancel Planet Fitness: we called two clubs"
 seoTitle: How to cancel a Planet Fitness membership
 subtitle: Two San Francisco clubs, the same evening, two different sets of rules. Here's what each one told us, the phone menu to reach a person, and both recordings.
 description: Planet Fitness clubs set their own cancellation terms. We called two in San Francisco: a $58 early cancel fee, and the annual fee rules. Recordings inside.
 date: 2026-09-30
 updated: 2026-10-06
+verified: 2026-09-30
 tags: planet fitness, cancel subscription, gyms, phone trees
 authors: nick
 imageAlt: How to cancel Planet Fitness, we called two clubs and got two different answers
 ---
 
 **The short answer:** you can cancel a Planet Fitness membership **online at planetfitness.com** or **in person at your home club**. The clubs we called did not offer cancelling over the phone. But the terms depend on the club, because each club is a franchise: on the same evening, one San Francisco club told us **Classic has a 12 month commitment and a $58 fee** to leave early, while the other described no commitment at all. Before you cancel, find out which one your club is.
+
+**To reach staff at a club, call the club, not a national line.** At Lakeshore (**628-303-3332**), a recorded menu answers. Press **1** if you're a member, then **5** for "any other inquiries", and **a staff member picked up about 6 seconds later**.
 
 We called both clubs on Wednesday, September 30, 2026, around 4 to 4:30 pm Pacific, with [call4me](/) asking the questions. Here's what they said.
 

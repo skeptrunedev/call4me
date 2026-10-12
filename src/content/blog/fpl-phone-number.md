@@ -1,15 +1,18 @@
 ---
-title: "FPL phone number: how we reached a person at Florida Power & Light to ask about starting service"
+title: "FPL phone number: how we reached a person at FPL"
 seoTitle: "FPL phone number: 1-888-988-8249, reach a person"
 subtitle: We called FPL customer service five times to ask how starting electric service works for someone new to FPL. Four calls stayed in the voice menu. On the fifth, one route got us to an agent, who told us what you need, how fast service is connected, and how the deposit is decided. All five recordings, the exact route, and the phone tree.
 description: FPL's phone number is 1-888-988-8249. "Representative" gets "That option is not available." The route that reached a person, and what the agent said.
 date: 2026-10-01
+verified: 2026-10-01
 tags: fpl, electric service, utilities, phone trees, customer service, phone numbers
 authors: nick
 imageAlt: FPL phone number 1-888-988-8249, how we reached a person at Florida Power & Light
 ---
 
-**The short answer:** the FPL phone number for customer service is **1-888-988-8249**. FPL lists its hours as "Mon. to Fri., 8 a.m. to 7 p.m. Sat., 9 a.m. to 5 p.m." To report an outage, call **1-800-468-8243**, "Anytime" ([fpl.com](https://www.fpl.com/support/contact.html)). In Northwest Florida the number is **1-888-326-4853**, Monday to Friday 7 am to 6 pm and Saturday 8 am to 4 pm ([fpl.com](https://www.fpl.com/northwest/support/contact-us.html)).
+**The short answer:** the FPL phone number for customer service is **1-888-988-8249**, open Monday to Friday 8 am to 7 pm and Saturday 9 am to 5 pm. A voice menu answers, not a person, and saying "representative" at most prompts gets "Sorry. That option is not available." The route that worked goes through new service signup: say "Residential", "Open a new account", "No", "Get started", then "Representative" and "Speak to a person". **An agent answered 3 minutes 7 seconds into the recording.** It took us five calls to find this route.
+
+FPL lists its hours as "Mon. to Fri., 8 a.m. to 7 p.m. Sat., 9 a.m. to 5 p.m." To report an outage, call **1-800-468-8243**, "Anytime" ([fpl.com](https://www.fpl.com/support/contact.html)). In Northwest Florida the number is **1-888-326-4853**, Monday to Friday 7 am to 6 pm and Saturday 8 am to 4 pm ([fpl.com](https://www.fpl.com/northwest/support/contact-us.html)).
 
 **To reach a person,** go through the new service signup. This is the route that worked on our fifth call:
 

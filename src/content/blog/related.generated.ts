@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "76fd4ceaf2e7136ecccc08ee0a348d56629e078face9c1df7e1ccf13c1db9006"
+  "sourceHash": "2f54183b7987aba013d72f41433f82f4f428f17be79483101e06d679e8aad48d"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -720,6 +720,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.662874
     },
     {
+      "slug": "spectrum-retention-department",
+      "similarity": 0.660702
+    },
+    {
       "slug": "cancel-fubo",
       "similarity": 0.646362
     },
@@ -730,10 +734,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "cancel-la-fitness",
       "similarity": 0.620714
-    },
-    {
-      "slug": "spectrum-retention-department",
-      "similarity": 0.611607
     },
     {
       "slug": "verizon-customer-service",
@@ -1721,11 +1721,15 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "spectrum-retention-department": [
     {
       "slug": "directv-customer-service",
-      "similarity": 0.611607
+      "similarity": 0.660702
     },
     {
       "slug": "windstream-customer-service",
-      "similarity": 0.603799
+      "similarity": 0.637297
+    },
+    {
+      "slug": "fabletics-customer-service",
+      "similarity": 0.627336
     }
   ],
   "t3-code-phone-calls": [
@@ -1958,12 +1962,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "windstream-customer-service": [
     {
-      "slug": "verizon-customer-service",
-      "similarity": 0.611062
+      "slug": "spectrum-retention-department",
+      "similarity": 0.637297
     },
     {
-      "slug": "spectrum-retention-department",
-      "similarity": 0.603799
+      "slug": "verizon-customer-service",
+      "similarity": 0.611062
     },
     {
       "slug": "directv-customer-service",
