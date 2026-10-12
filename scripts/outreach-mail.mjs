@@ -1,5 +1,10 @@
 // Fastmail session discovery: https://www.fastmail.com/dev/
 // Email creation and submission: https://www.rfc-editor.org/rfc/rfc8621.html
+import { execFileSync } from 'node:child_process';
+import { readFile, stat } from 'node:fs/promises';
+import { basename } from 'node:path';
+
+const MAX_ATTACHMENT_BYTES = 20_000_000;
 const CORE = 'urn:ietf:params:jmap:core';
 const MAIL = 'urn:ietf:params:jmap:mail';
 const SUBMISSION = 'urn:ietf:params:jmap:submission';
@@ -18,6 +23,29 @@ export function messageHtml(text) {
 }
 
 export const statusAfterDraft = (status) => ['new', 'drafted', 'no_contact'].includes(status) ? 'drafted' : status;
+
+export async function readPdfAttachments(paths = []) {
+  if (!Array.isArray(paths) || paths.some(path => typeof path !== 'string' || !path)) throw new Error('Attachment paths must be nonempty strings');
+  const attachments = [];
+  for (const path of paths) {
+    const name = basename(path);
+    if (!/\.pdf$/i.test(name) || /[\r\n\0]/.test(name)) throw new Error('Attachments must have PDF filenames without control characters');
+    if (attachments.some(attachment => attachment.name === name)) throw new Error(`Duplicate attachment filename: ${name}`);
+    const info = await stat(path);
+    if (!info.isFile() || info.size === 0 || info.size > MAX_ATTACHMENT_BYTES) throw new Error(`Attachment ${name} must be a regular PDF file of at most 20 MB`);
+    const bytes = await readFile(path);
+    if (bytes.length > MAX_ATTACHMENT_BYTES || !/^%PDF-\d\.\d/.test(bytes.subarray(0, 8).toString('ascii')) || !bytes.subarray(-1024).toString('ascii').includes('%%EOF')) throw new Error(`Attachment ${name} is not a complete PDF`);
+    try {
+      const metadata = execFileSync('pdfinfo', ['-'], { input: bytes, encoding: 'utf8', timeout: 30_000, stdio: ['pipe', 'pipe', 'pipe'] });
+      if (!/^Pages:\s+[1-9]\d*/m.test(metadata) || /^Encrypted:\s+yes/m.test(metadata)) throw new Error('invalid PDF');
+    } catch (error) {
+      if (error.code === 'ENOENT') throw new Error('PDF attachment validation needs pdfinfo (install Poppler)');
+      throw new Error(`Attachment ${name} must be a readable, unencrypted PDF with at least one page`);
+    }
+    attachments.push({ name, type: 'application/pdf', size: bytes.length, bytes });
+  }
+  return attachments;
+}
 
 export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = globalThis.fetch } = {}) {
   if (!token) throw new Error('FASTMAIL_JMAP_TOKEN is required');
@@ -60,7 +88,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     if (!session.capabilities?.[SUBMISSION] || !account.accountCapabilities?.[SUBMISSION]) throw new Error('Fastmail account lacks mail submission access');
     if (!session.capabilities?.[MAIL] || !account.accountCapabilities?.[MAIL]) throw new Error('Fastmail account lacks mail access');
     if (!session.apiUrl || new URL(session.apiUrl).protocol !== 'https:') throw new Error('Fastmail session has no valid HTTPS API URL');
-    const discovered = { apiUrl: session.apiUrl, accountId };
+    const discovered = { apiUrl: session.apiUrl, accountId, uploadUrl: session.uploadUrl, maxSizeUpload: session.capabilities?.[CORE]?.maxSizeUpload, maxSizeAttachmentsPerEmail: account.accountCapabilities[MAIL].maxSizeAttachmentsPerEmail };
     const identities = await call(discovered, 'Identity/get', {});
     const identity = identities.list?.find((item) => item.email === SENDER.email);
     if (!identity?.id) throw new Error(`Fastmail has no sender identity for ${SENDER.email}`);
@@ -72,7 +100,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     return context;
   }
 
-  async function createDraft({ to, subject, text, inReplyTo, references, expectedThreadId }) {
+  async function createDraft({ to, subject, text, inReplyTo, references, expectedThreadId, attachments = [] }) {
     if (!to || !subject || !text?.trim()) throw new Error('Email recipient, subject and body are required');
     const session = await discover();
     const result = await call(session, 'Email/set', {
@@ -83,6 +111,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
         ...(inReplyTo ? { inReplyTo, references } : {}),
         htmlBody: [{ partId: 'html', type: 'text/html' }],
         bodyValues: { html: { value: messageHtml(text) } },
+        ...(attachments.length ? { attachments } : {}),
       } },
     });
     const id = result.created?.draft?.id;
@@ -91,7 +120,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     return { provider: 'fastmail', id };
   }
 
-  async function verifiedDraft({ id, to, expectedText, expectedSubject, expectedReply }) {
+  async function verifiedDraft({ id, to, expectedText, expectedSubject, expectedReply, expectedAttachments = [] }) {
     if (!id || !to || !expectedText?.trim()) throw new Error('Original draft, recipient and expected body are required');
     const session = await discover();
     const originalResult = await call(session, 'Email/get', {
@@ -104,7 +133,11 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     const empty = (value) => value == null || (Array.isArray(value) && value.length === 0);
     if (!original || original.keywords?.$draft !== true || Object.keys(original.mailboxIds ?? {}).length !== 1 || original.mailboxIds[session.draftMailboxId] !== true) throw new Error('Original email is not an unsent draft in only the Drafts mailbox');
     if (!singleAddress(original.from, SENDER.email) || !singleAddress(original.to, to) || !empty(original.sender)) throw new Error('Original draft sender or recipient does not match');
-    if (['cc', 'bcc', 'replyTo', 'attachments'].some((property) => !empty(original[property])) || original.hasAttachment) throw new Error('Original draft has additional recipients or attachments');
+    if (['cc', 'bcc', 'replyTo'].some((property) => !empty(original[property]))) throw new Error('Original draft has additional recipients or attachments');
+    if (expectedAttachments.length) {
+      const actual = original.attachments;
+      if (!original.hasAttachment || !Array.isArray(actual) || actual.length !== expectedAttachments.length || expectedAttachments.some((expected, index) => ['blobId', 'name', 'type', 'size', 'disposition'].some(key => actual[index]?.[key] !== expected[key]))) throw new Error('Original draft attachments do not match the approved files');
+    } else if (!empty(original.attachments) || original.hasAttachment) throw new Error('Original draft has additional recipients or attachments');
     if (expectedReply) {
       if (original.threadId !== expectedReply.expectedThreadId || ['inReplyTo', 'references'].some((property) => JSON.stringify(original[property]) !== JSON.stringify(expectedReply[property]))) throw new Error('Original draft reply headers or thread do not match the source email');
     } else if (['inReplyTo', 'references'].some((property) => !empty(original[property]))) {
@@ -169,7 +202,35 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
 
   // Only explicit send commands submit mail. Draft creation and revision never submit it.
   async function send(message) {
-    return submitDraft(await createDraft(message));
+    if (message.attachments !== undefined) throw new Error('Supply local attachmentPaths, not provider attachment objects');
+    const files = await readPdfAttachments(message.attachmentPaths);
+    if (!files.length) return submitDraft(await createDraft(message));
+    if (!message.to || !message.subject || !message.text?.trim()) throw new Error('Email recipient, subject and body are required');
+    const session = await discover();
+    // RFC 8620 section 6.1: authenticated binary POST to the session template.
+    if (typeof session.uploadUrl !== 'string' || !session.uploadUrl.includes('{accountId}')) throw new Error('Fastmail session has no upload URL template');
+    const uploadUrl = session.uploadUrl.replaceAll('{accountId}', encodeURIComponent(session.accountId));
+    if (new URL(uploadUrl).protocol !== 'https:' || /[{}]/.test(uploadUrl)) throw new Error('Fastmail session has an invalid HTTPS upload URL');
+    if (Number.isFinite(session.maxSizeUpload) && files.some(file => file.size > session.maxSizeUpload)) throw new Error('Attachment exceeds the provider upload size limit');
+    if (Number.isFinite(session.maxSizeAttachmentsPerEmail) && files.reduce((sum, file) => sum + file.size, 0) > session.maxSizeAttachmentsPerEmail) throw new Error('Attachments exceed the provider email size limit');
+    const attachments = [];
+    for (const file of files) {
+      const response = await fetchImpl(uploadUrl, {
+        method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': file.type },
+        body: file.bytes, signal: AbortSignal.timeout(30_000), redirect: 'error',
+      });
+      if (!response.ok) throw new Error(`Fastmail attachment upload failed for ${file.name} (HTTP ${response.status}); no email submitted`);
+      const uploaded = await response.json();
+      if (uploaded.accountId !== session.accountId || typeof uploaded.blobId !== 'string' || !uploaded.blobId || uploaded.type !== file.type || uploaded.size !== file.size) throw new Error(`Fastmail attachment upload metadata mismatch for ${file.name}; no email submitted`);
+      attachments.push({ blobId: uploaded.blobId, type: file.type, name: file.name, size: file.size, disposition: 'attachment' });
+    }
+    const draft = await createDraft({ ...message, attachments });
+    try {
+      await verifiedDraft({ id: draft.id, to: message.to, expectedText: message.text, expectedSubject: message.subject, expectedAttachments: attachments });
+    } catch (error) {
+      throw new Error(`Fastmail attachment draft ${draft.id} was not submitted; inspect before retrying: ${error.message}`, { cause: error });
+    }
+    return submitDraft(draft);
   }
 
   async function sendDraft({ id, to, subject, text }) {
@@ -283,7 +344,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
       const session = await discover();
       return call(session, 'Email/get', {
         ids,
-        properties: ['id', 'threadId', 'mailboxIds', 'keywords', 'receivedAt', 'from', 'to', 'cc', 'subject', 'preview', 'inReplyTo', 'references', 'messageId', 'textBody', 'htmlBody', 'bodyValues'],
+        properties: ['id', 'threadId', 'mailboxIds', 'keywords', 'receivedAt', 'from', 'to', 'cc', 'subject', 'preview', 'inReplyTo', 'references', 'messageId', 'textBody', 'htmlBody', 'bodyValues', 'hasAttachment', 'attachments'],
         fetchTextBodyValues: true, fetchHTMLBodyValues: true,
       });
     },

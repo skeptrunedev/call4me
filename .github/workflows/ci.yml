@@ -30,6 +30,8 @@ jobs:
       - run: npm run build:site
       - run: npm run check
       - run: npm run lint
+      - name: Install PDF validation tools
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
       - run: npm test
       - run: npm run openapi:generate && git diff --exit-code -- openapi.json
       - run: npx wrangler deploy --dry-run

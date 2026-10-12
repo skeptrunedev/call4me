@@ -24,7 +24,7 @@
  *   npm run outreach -- mail-status                   verify Fastmail account and sender (read only)
  *   npm run outreach -- mail-search '<query JSON>'    read only JMAP Email/query arguments: filter, position, limit
  *   npm run outreach -- mail-read <id> [id ...]        fetch email bodies without changing read state
- *   npm run outreach -- mail-send <email> <message file> [--dry-run]
+ *   npm run outreach -- mail-send <email> <message file> [--attach <file.pdf> ...] [--dry-run]
  *                                                      send a file starting with Subject: and a blank line;
  *                                                      preserves Markdown HTTP links, no outreach tracker entry
  *   npm run outreach -- email-reply <person id> <email id> <body file> [--dry-run]
@@ -41,7 +41,7 @@
 import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
-import { fastmail, messageHtml, parseMessage, statusAfterDraft } from './outreach-mail.mjs';
+import { fastmail, messageHtml, parseMessage, readPdfAttachments, statusAfterDraft } from './outreach-mail.mjs';
 
 const STATUSES = ['new', 'drafted', 'sent', 'replied', 'won', 'declined', 'no_contact'];
 const CHANNELS = ['x', 'email', 'other'];
@@ -51,6 +51,7 @@ const where = args.includes('--local') ? '--local' : '--remote';
 const dryRun = args.includes('--dry-run');
 const json = args.includes('--json');
 const [command, ...rest] = args.filter((a) => !['--local', '--dry-run', '--json'].includes(a));
+if (command !== 'mail-send' && rest.includes('--attach')) fail('--attach is supported only for mail-send');
 
 const sql = (v) => (v === null || v === undefined || v === '' ? 'NULL' : typeof v === 'number' ? String(v) : `'${String(v).replace(/'/g, "''")}'`);
 function d1(statement) {
@@ -126,11 +127,15 @@ if (command === 'import') {
   d1(`UPDATE outreach SET ${field} = ${sql(value)}, updated_at = ${Date.now()} WHERE id = ${sql(id)}`);
   console.log(`${p.name}: ${field} = ${value}`);
 } else if (command === 'mail-send') {
-  const [to, file] = rest;
-  if (!to || !file || rest.length !== 2 || !/^[^@\s<>,;]+@[^@\s<>,;]+\.[^@\s<>,;]+$/.test(to)) fail('usage: mail-send <email> <message file> [--dry-run]');
-  const message = { to, ...parseMessage(readFileSync(file, 'utf8')) };
+  const [to, file, ...options] = rest;
+  if (!to || !file || options.length % 2 || options.some((value, index) => index % 2 === 0 ? value !== '--attach' : !value || value.startsWith('--')) || !/^[^@\s<>,;]+@[^@\s<>,;]+\.[^@\s<>,;]+$/.test(to)) fail('usage: mail-send <email> <message file> [--attach <file.pdf> ...] [--dry-run]');
+  const attachmentPaths = options.filter((_, index) => index % 2 === 1);
+  const message = { to, ...parseMessage(readFileSync(file, 'utf8')), ...(attachmentPaths.length ? { attachmentPaths } : {}) };
   if (dryRun) {
-    console.log(JSON.stringify({ ...message, html: messageHtml(message.text) }, null, 2));
+    try {
+      const attachments = (await readPdfAttachments(attachmentPaths)).map(({ name, type, size }) => ({ name, type, size }));
+      console.log(JSON.stringify({ ...message, html: messageHtml(message.text), ...(attachments.length ? { attachments } : {}) }, null, 2));
+    } catch (error) { fail(error.message); }
   } else {
     try {
       console.log(JSON.stringify(await fastmail().send(message), null, 2));
