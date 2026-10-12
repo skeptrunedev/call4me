@@ -23,6 +23,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'adderall-shortage': ['pharmacy'],
   'agent-web-research-phone-calls-sf-private-dining': ['agent-software', 'dining'],
   'ai-agent-that-makes-phone-calls': ['agent-software'],
+  'ai-agents-that-make-phone-calls': ['agent-software'],
   'ai-personal-assistant-appointment-booking': ['appointment-management', 'healthcare', 'dining'],
   'ai-phone-tree-navigation': ['agent-software', 'voice-technology'],
   'allstate-customer-service-number': ['insurance'],
