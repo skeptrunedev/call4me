@@ -2,13 +2,22 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.skeptrunedev/call4me",
   "title": "call4me",
-  "description": "An AI agent that makes phone calls for you: bookings, appointments, cancellations.",
-  "version": "1.0.0",
+  "description": "Your AI agent phones businesses for you: books, reschedules, cancels, asks, and waits on hold.",
+  "version": "1.1.0",
   "websiteUrl": "https://call4.me",
   "repository": {
     "url": "https://github.com/skeptrunedev/call4me",
     "source": "github"
   },
+  "icons": [
+    {
+      "src": "https://call4.me/favicon.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ]
+    }
+  ],
   "remotes": [
     {
       "type": "streamable-http",
