@@ -38,6 +38,7 @@ export function robotsTxt(site: string): string {
 export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: string }[] = [
   { page: 'home', changefreq: 'weekly', priority: '1.0' },
   { page: 'examples', changefreq: 'monthly', priority: '0.9' },
+  { page: 'aiCallAssistant', changefreq: 'monthly', priority: '0.9' },
   { page: 'mcp', changefreq: 'monthly', priority: '0.9' },
   { page: 'companies', changefreq: 'weekly', priority: '0.8' },
   { page: 'superintelligenceCalling', changefreq: 'weekly', priority: '0.8' },
@@ -103,6 +104,7 @@ export function llmsTxt(site: string, pricePerMinuteCents: number, posts: PostEn
     '## Site',
     '',
     `- [Home](${site}/): what call4me does, pricing, and the install prompt`,
+    `- [AI call assistant](${site}/ai-call-assistant): what the AI phone agent does on a call, listening in and taking over, voices, the free US number, pricing, and how to start`,
     `- [Examples](${site}/examples): real call recordings with edited excerpts, outcomes, and transcripts`,
     `- [Superintelligence Calling Index](${site}/superintelligence-calling-index): personal superintelligence phone calling tools, dated evidence and recordings. Download the evidence dataset as [CSV](${site}/static/data/superintelligence-calling-index.csv) or [JSON](${site}/static/data/superintelligence-calling-index.json).`,
     `- [Voices](${site}/voices): a phone-quality sample of each caller voice, and how to pick one`,

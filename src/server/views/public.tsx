@@ -35,7 +35,7 @@ export const BuyForm: FC<{ signedIn: boolean; error?: string; amount?: string }>
 const regionName = new Intl.DisplayNames(['en'], { type: 'region' });
 
 /** "the uae at $0.40/min": destinations billed above the standard rate (lib/rates.ts). */
-const pricierDestinations = () =>
+export const pricierDestinations = () =>
   Object.entries(DESTINATION_PRICE_CENTS)
     .map(([country, cents]) => `${country === 'AE' ? 'the uae' : (regionName.of(country) ?? country).toLowerCase()} at ${dollars(cents)}/min`)
     .join(', ');
@@ -196,6 +196,7 @@ export const HomeAbout: FC = () => (
       your personal AI assistant or coding agent gets one new ability: <b>make a phone call</b> through MCP.
       ask it to check cancellation rules, book an appointment or get an answer a website cannot give you.
       call4me calls the business, follows your brief, and brings the result back to the task your agent is already doing.
+      see what the <a href="/ai-call-assistant">AI call assistant</a> does on a call, from waiting on hold to patching you in.
     </p>
     <p class="small">
       setup and calling guides: <a href="/blog/claude-code-phone-calls">claude code</a>, <a href="/blog/codex-phone-calls">codex</a>,

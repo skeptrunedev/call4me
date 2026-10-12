@@ -5,6 +5,8 @@ import { renderPost } from '../src/server/lib/blog';
 import { BlogIndex, BlogPost } from '../src/server/views/blog';
 import { LoginPage } from '../src/server/views/account';
 import { HomePage, PrivacyPage, RulesPage, SupportPage } from '../src/server/views/public';
+import { AiCallAssistantPage } from '../src/server/views/ai-call-assistant';
+import { llmsTxt, sitemapEntries } from '../src/server/lib/discovery';
 
 const links = (html: string) => [...html.matchAll(/<a\b[^>]*\bhref="([^"]+)"/g)].map((m) => m[1]!.replace(/&amp;/g, '&'));
 
@@ -99,4 +101,17 @@ test('published Markdown does not turn protected account pages or example MCP ke
       assert.notEqual(target.pathname, '/mcp/YOUR-KEY', file);
     }
   }
+});
+
+test('the AI call assistant page stays within search limits and is listed for crawlers', () => {
+  const html = String(AiCallAssistantPage({ signedIn: false, pricePerMinuteCents: 25, agentPrompt: '' }));
+  const title = html.match(/<title>(.*?)<\/title>/)![1]!;
+  const description = html.match(/<meta name="description" content="([^"]*)"/)![1]!;
+  assert.ok(title.length < 60, title);
+  assert.ok(description.length >= 120 && description.length <= 160, description);
+  assert.equal(html.match(/<h1[\s>]/g)?.length, 1);
+  assert.match(html, /<link rel="canonical" href="https:\/\/call4.me\/ai-call-assistant"\/>/);
+  assert.ok(!html.includes('—'), 'no em dashes');
+  assert.ok(sitemapEntries('https://call4.me').some((e) => e.loc === 'https://call4.me/ai-call-assistant'));
+  assert.ok(llmsTxt('https://call4.me', 25).includes('https://call4.me/ai-call-assistant'));
 });

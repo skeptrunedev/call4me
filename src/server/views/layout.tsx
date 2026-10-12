@@ -256,6 +256,7 @@ export const Layout: FC<{
               <a href="/privacy">privacy</a>
               <a href="/terms">terms</a>
               <a href="/support">support</a>
+              <a href="/ai-call-assistant">ai call assistant</a>
               <a href="/blog">blog</a>
               <a href="/voices">voices</a>
               <a href="/superintelligence-calling-index">superintelligence calling index</a>
