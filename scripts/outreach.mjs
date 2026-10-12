@@ -24,6 +24,7 @@
  *   npm run outreach -- mail-status                   verify Fastmail account and sender (read only)
  *   npm run outreach -- mail-search '<query JSON>'    read only JMAP Email/query arguments: filter, position, limit
  *   npm run outreach -- mail-read <id> [id ...]        fetch email bodies without changing read state
+ *   npm run outreach -- mail-attachment <email id> <part id> <output path>  download to a new private file
  *   npm run outreach -- mail-send <email> <message file> [--attach <file.pdf> ...] [--dry-run]
  *                                                      send a file starting with Subject: and a blank line;
  *                                                      preserves Markdown HTTP links, no outreach tracker entry
@@ -143,6 +144,11 @@ if (command === 'import') {
       fail(error.message);
     }
   }
+} else if (command === 'mail-attachment') {
+  if (rest.length !== 3 || dryRun) fail('usage: mail-attachment <email id> <part id> <output path>');
+  try {
+    console.log(JSON.stringify(await fastmail().downloadAttachment({ id: rest[0], partId: rest[1], outputPath: rest[2] }), null, 2));
+  } catch (error) { fail(error.message); }
 } else if (['mail-status', 'mail-search', 'mail-read'].includes(command)) {
   try {
     const client = fastmail();
@@ -258,5 +264,5 @@ if (command === 'import') {
   console.log(`emailed ${p.name} <${p.email}>: ${delivery.id}`);
   if (delivery.warning) console.warn(delivery.warning);
 } else {
-  fail('usage: npm run outreach -- import|list|show|draft|sent|status|set|mail-status|mail-search|mail-read|mail-send|mail-reply|mail-send-reply-draft|email-draft|email-draft-update|email-send-draft|email-send-reply-draft|email-reply|email ... (see scripts/outreach.mjs)');
+  fail('usage: npm run outreach -- import|list|show|draft|sent|status|set|mail-status|mail-search|mail-read|mail-attachment|mail-send|mail-reply|mail-send-reply-draft|email-draft|email-draft-update|email-send-draft|email-send-reply-draft|email-reply|email ... (see scripts/outreach.mjs)');
 }

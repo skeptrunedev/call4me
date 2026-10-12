@@ -3,7 +3,8 @@
  * Record the /voices page samples directly from one GPT-Live session per voice
  * at 8 kHz mu law. These do not traverse a carrier or a receiving phone.
  *
- *   OPENAI_API_KEY=... node scripts/record-voice-samples.mjs [--lang es] [marin cedar]
+ *   OPENAI_API_KEY=... node scripts/record-voice-samples.mjs [--lang es] [--out DIR] [--instructions FILE] [marin cedar]
+ * Custom output also retains raw audio and a private configuration/transcript manifest.
  *
  * A TTS "thanks for calling" in the chosen language plays in as the business answering; the
  * caller's reply is kept, loudness-normalized like the example recordings (docs/examples.md),
@@ -41,14 +42,24 @@ if (!key) {
   process.exit(1);
 }
 const args = process.argv.slice(2);
-const langAt = args.indexOf('--lang');
-const lang = langAt >= 0 ? args.splice(langAt, 2)[1] : 'en';
+function option(name) {
+  const at = args.indexOf(name);
+  if (at < 0) return undefined;
+  if (!args[at + 1] || args[at + 1].startsWith('--')) throw new Error(`${name} requires a value`);
+  const value = args.splice(at, 2)[1];
+  if (args.includes(name)) throw new Error(`${name} may only be provided once`);
+  return value;
+}
+const lang = option('--lang') ?? 'en';
+const customOut = option('--out');
+const instructionsFile = option('--instructions');
 const language = LANGUAGES[lang];
 if (!language) {
   console.error(`unknown language: ${lang} (one of ${Object.keys(LANGUAGES).join(', ')})`);
   process.exit(1);
 }
-const instructions = `You're on a live phone call, calling a restaurant for Alex as Alex's assistant. Speak only ${language.name}. When they answer, say exactly this, warmly and naturally, then stop and wait: "${language.line}"`;
+const instructions = instructionsFile ? readFileSync(instructionsFile, 'utf8') : `You're on a live phone call, calling a restaurant for Alex as Alex's assistant. Speak only ${language.name}. When they answer, say exactly this, warmly and naturally, then stop and wait: "${language.line}"`;
+if (!instructions.trim()) throw new Error('instructions must not be empty');
 const voices = args.length ? args : VOICES;
 const unknown = voices.filter((v) => !VOICES.includes(v));
 if (unknown.length) {
@@ -57,9 +68,11 @@ if (unknown.length) {
 }
 
 const work = mkdtempSync(join(tmpdir(), 'voice-samples-'));
-const outDir = join(import.meta.dirname, '..', 'public', 'static', 'voices');
-mkdirSync(outDir, { recursive: true });
+const outDir = customOut ?? join(import.meta.dirname, '..', 'public', 'static', 'voices');
+mkdirSync(outDir, { recursive: true, ...(customOut ? { mode: 0o700 } : {}) });
 const ffmpeg = (...args) => execFileSync('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', ...args]);
+const sampleName = (voice) => lang === 'en' ? voice : `${voice}-${lang}`;
+const sessionConfig = (voice) => ({ model: 'gpt-live-1', instructions, audio: { format: { type: 'audio/pcmu', rate: 8000 }, output: { voice } } });
 
 /** The business picking up, as 8 kHz μ-law, the same as the phone side of a real call. */
 async function greeting() {
@@ -83,28 +96,65 @@ function record(voice, phone) {
     let transcript = '';
     let lastWordAt = 0;
     let feeder;
+    let finished = false;
+    let sessionStarted = null;
+    let verification = null;
+    const startedAt = new Date().toISOString();
     const timeout = setTimeout(() => finish(new Error(`${voice}: no finished sample after 40s`)), 40_000);
     const quiet = setInterval(() => {
       if (lastWordAt && Date.now() - lastWordAt > DONE_AFTER_MS) finish();
     }, 100);
     function finish(err) {
+      if (finished) return;
+      finished = true;
       clearTimeout(timeout);
       clearInterval(quiet);
       clearInterval(feeder);
       ws.close();
+      if (customOut) {
+        const stem = join(outDir, sampleName(voice));
+        writeFileSync(`${stem}.ulaw`, Buffer.concat(audio), { mode: 0o600 });
+        writeFileSync(`${stem}.json`, `${JSON.stringify({
+          startedAt, finishedAt: new Date().toISOString(), language: lang,
+          requestedSession: sessionConfig(voice), sessionStarted, verification,
+          greeting: { model: 'gpt-4o-mini-tts', voice: 'ash', text: language.greeting },
+          transcript: transcript.trim(), rawAudio: `${sampleName(voice)}.ulaw`,
+          rawAudioBytes: Buffer.concat(audio).length, error: err?.message ?? null,
+        }, null, 2)}\n`, { mode: 0o600 });
+      }
       if (err) reject(err);
       else resolve({ audio: Buffer.concat(audio), transcript: transcript.trim() });
     }
     ws.addEventListener('open', () => {
       ws.send(JSON.stringify({
         type: 'session.start',
-        session: { model: 'gpt-live-1', instructions, audio: { format: { type: 'audio/pcmu', rate: 8000 }, output: { voice } } },
+        session: sessionConfig(voice),
       }));
     });
     ws.addEventListener('error', () => finish(new Error(`${voice}: live socket error`)));
     ws.addEventListener('message', (ev) => {
       const msg = JSON.parse(String(ev.data));
+      if (finished) return;
       if (msg.type === 'session.started') {
+        // Documented resolved fields: https://developers.openai.com/api/reference/resources/live/primary-websocket
+        // Allowlist metadata so future provider fields cannot leak credentials into artifacts.
+        const session = msg.session ?? {};
+        sessionStarted = {
+          type: msg.type, event_id: msg.event_id, client_event_id: msg.client_event_id,
+          session: { id: session.id, model: session.model, status: session.status, expires_at: session.expires_at,
+            audio: { format: { type: session.audio?.format?.type, rate: session.audio?.format?.rate },
+              output: { voice: session.audio?.output?.voice } } },
+        };
+        const accepted = { model: session.model, voice: session.audio?.output?.voice,
+          format: session.audio?.format?.type, rate: session.audio?.format?.rate };
+        const expected = { model: 'gpt-live-1', voice, format: 'audio/pcmu', rate: 8000 };
+        verification = Object.fromEntries(Object.entries(expected).map(([field, value]) =>
+          [field, accepted[field] == null ? 'not returned' : accepted[field] === value ? 'matched' : 'mismatch']));
+        const mismatches = Object.keys(expected).filter((field) => verification[field] === 'mismatch');
+        if (mismatches.length) {
+          finish(new Error(`${voice}: resolved session differs: ${mismatches.map((field) => `${field}=${JSON.stringify(accepted[field])}`).join(', ')}`));
+          return;
+        }
         // The greeting, then silence, in 20 ms frames at real time, as Telnyx streams a call.
         const frames = [];
         for (let i = 0; i < phone.length; i += 160) frames.push(phone.subarray(i, i + 160));
@@ -129,7 +179,7 @@ for (const voice of voices) {
   const { audio, transcript } = await record(voice, phone);
   const raw = join(work, `${voice}.ulaw`);
   writeFileSync(raw, audio);
-  const out = join(outDir, lang === 'en' ? `${voice}.mp3` : `${voice}-${lang}.mp3`);
+  const out = join(outDir, `${sampleName(voice)}.mp3`);
   ffmpeg('-f', 'mulaw', '-ar', '8000', '-ac', '1', '-i', raw, '-af', 'silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse,loudnorm', '-ac', '1', '-ar', '22050', '-b:a', '96k', out);
   console.log(`${voice} -> ${out}\n  "${transcript}"`);
 }

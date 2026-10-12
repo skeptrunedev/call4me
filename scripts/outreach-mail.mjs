@@ -1,7 +1,7 @@
 // Fastmail session discovery: https://www.fastmail.com/dev/
 // Email creation and submission: https://www.rfc-editor.org/rfc/rfc8621.html
 import { execFileSync } from 'node:child_process';
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, stat, writeFile } from 'node:fs/promises';
 import { basename } from 'node:path';
 
 const MAX_ATTACHMENT_BYTES = 20_000_000;
@@ -88,7 +88,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     if (!session.capabilities?.[SUBMISSION] || !account.accountCapabilities?.[SUBMISSION]) throw new Error('Fastmail account lacks mail submission access');
     if (!session.capabilities?.[MAIL] || !account.accountCapabilities?.[MAIL]) throw new Error('Fastmail account lacks mail access');
     if (!session.apiUrl || new URL(session.apiUrl).protocol !== 'https:') throw new Error('Fastmail session has no valid HTTPS API URL');
-    const discovered = { apiUrl: session.apiUrl, accountId, uploadUrl: session.uploadUrl, maxSizeUpload: session.capabilities?.[CORE]?.maxSizeUpload, maxSizeAttachmentsPerEmail: account.accountCapabilities[MAIL].maxSizeAttachmentsPerEmail };
+    const discovered = { apiUrl: session.apiUrl, accountId, downloadUrl: session.downloadUrl, uploadUrl: session.uploadUrl, maxSizeUpload: session.capabilities?.[CORE]?.maxSizeUpload, maxSizeAttachmentsPerEmail: account.accountCapabilities[MAIL].maxSizeAttachmentsPerEmail };
     const identities = await call(discovered, 'Identity/get', {});
     const identity = identities.list?.find((item) => item.email === SENDER.email);
     if (!identity?.id) throw new Error(`Fastmail has no sender identity for ${SENDER.email}`);
@@ -310,6 +310,35 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     }
   }
 
+  async function downloadAttachment({ id, partId, outputPath }) {
+    if (![id, partId, outputPath].every(value => typeof value === 'string' && value)) throw new Error('Email id, attachment part id and output path are required');
+    const session = await discover();
+    const result = await call(session, 'Email/get', { ids: [id], properties: ['id', 'attachments'] });
+    const email = result.list?.find(item => item.id === id);
+    const matches = email?.attachments?.filter(item => item.partId === partId) ?? [];
+    if (matches.length !== 1) throw new Error('Attachment part was not found uniquely in the requested email');
+    const attachment = matches[0];
+    if (typeof attachment.blobId !== 'string' || !attachment.blobId || typeof attachment.name !== 'string' || !attachment.name || typeof attachment.type !== 'string' || !attachment.type || !Number.isSafeInteger(attachment.size) || attachment.size < 0 || attachment.size > MAX_ATTACHMENT_BYTES) throw new Error('Attachment has invalid metadata or exceeds 20 MB');
+    // RFC 8620 section 6.2: expand the authenticated session download template.
+    if (typeof session.downloadUrl !== 'string' || !session.downloadUrl.includes('{accountId}') || !session.downloadUrl.includes('{blobId}')) throw new Error('Fastmail session has no download URL template');
+    const values = { accountId: session.accountId, blobId: attachment.blobId, name: attachment.name, type: attachment.type };
+    const url = session.downloadUrl.replace(/\{(accountId|blobId|name|type)\}/g, (_, key) => encodeURIComponent(values[key]));
+    if (new URL(url).protocol !== 'https:' || /[{}]/.test(url)) throw new Error('Fastmail session has an invalid HTTPS download URL');
+    const response = await fetchImpl(url, { method: 'GET', headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(30_000), redirect: 'error' });
+    if (!response.ok) throw new Error(`Fastmail attachment download failed (HTTP ${response.status})`);
+    const chunks = [];
+    let size = 0;
+    for await (const chunk of response.body) {
+      size += chunk.length;
+      if (size > attachment.size) throw new Error('Downloaded attachment size does not match email metadata');
+      chunks.push(Buffer.from(chunk));
+    }
+    if (size !== attachment.size) throw new Error('Downloaded attachment size does not match email metadata');
+    // Exclusive creation also refuses existing symlinks. Never overwrite local files.
+    await writeFile(outputPath, Buffer.concat(chunks), { flag: 'wx', mode: 0o600 });
+    return { provider: 'fastmail', id, partId, name: attachment.name, type: attachment.type, size, outputPath };
+  }
+
   async function replyMessage({ id, to, text }) {
     if (!id || !to || !text?.trim()) throw new Error('Reply source, recipient and body are required');
     const session = await discover();
@@ -348,6 +377,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
         fetchTextBodyValues: true, fetchHTMLBodyValues: true,
       });
     },
+    downloadAttachment,
     createDraft,
     replaceDraft,
     send,
