@@ -5,6 +5,7 @@ subtitle: "Two recorded calls show what got us past the voice menu and what an a
 description: The UPS phone number is 1-800-742-5877. Saying "representative" twice at the tracking number prompt got us a person. Both calls recorded.
 date: 2026-10-01
 updated: 2026-10-04
+verified: 2026-10-01
 tags: ups, package delivery, phone trees, customer service, phone numbers
 authors: nick
 imageAlt: UPS phone number 1-800-742-5877, two calls to UPS customer service, recorded

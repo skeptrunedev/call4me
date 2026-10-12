@@ -1,16 +1,19 @@
 ---
-title: How to cancel Fubo: we reached a human after its AI assistant
+title: "How to cancel Fubo: we got past its AI to a human"
 seoTitle: "Cancel Fubo (FuboTV): free trial, plan and Roku"
 subtitle: We called Fubo twice to ask how cancellation works. Here are the website steps, the route past its automated assistant, and what a human told us about verification and billing.
 description: Cancel Fubo online, by phone or through Roku. Hear our real calls about free trials, paid plans, confirmation and reaching a human at (844) 441 3826.
 date: 2026-10-03
 updated: 2026-10-04
+verified: 2026-10-03
 tags: fubo, cancel subscription, streaming, phone trees
 authors: nick
 imageAlt: How to cancel Fubo online or by phone, from two recorded support calls
 ---
 
 **To cancel Fubo, first check who manages your subscription.** A human at Fubo told us direct subscribers can cancel on the Fubo website or call **(844) 441 3826**. If Roku manages the subscription, cancel through Roku. The representative said the Fubo mobile app has no cancellation control.
+
+**By phone, Fubo's AI assistant answers, not a person.** Press **1** for English, then ask the assistant for a human. It warned of a wait of "five minutes or more". We asked again, chose **customer service** from its list, and **a representative answered 1 minute 59 seconds after we dialed**. Fubo lists phone hours of 10 am to 10 pm Eastern, seven days a week.
 
 We called on Saturday, October 3, 2026, with [call4me](/) asking general questions. The first attempt ended with Fubo's automated assistant. The second reached a human after we explicitly asked for one twice and chose customer service. We did not have a subscription to cancel, and no account was changed.
 

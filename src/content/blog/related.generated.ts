@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "4e0c4c1446a6216489d912535d1de41c1744f3c99e6f7953047a973098970578"
+  "sourceHash": "180c8c240968d908f7e9a25517ca50895c3bf0ffb165ccf10a2c4b6b36d74fed"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -25,7 +25,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "unitedhealthcare-phone-number",
-      "similarity": 0.616224
+      "similarity": 0.62569
     }
   ],
   "adderall-shortage": [
@@ -211,7 +211,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "unitedhealthcare-phone-number",
-      "similarity": 0.62134
+      "similarity": 0.644701
     },
     {
       "slug": "usaa-phone-number",
@@ -754,6 +754,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.662874
     },
     {
+      "slug": "spectrum-retention-department",
+      "similarity": 0.660702
+    },
+    {
       "slug": "cancel-fubo",
       "similarity": 0.646362
     },
@@ -764,10 +768,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "cancel-la-fitness",
       "similarity": 0.620714
-    },
-    {
-      "slug": "spectrum-retention-department",
-      "similarity": 0.611607
     },
     {
       "slug": "verizon-customer-service",
@@ -930,7 +930,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "unitedhealthcare-phone-number",
-      "similarity": 0.649165
+      "similarity": 0.6329
     },
     {
       "slug": "usaa-phone-number",
@@ -1755,11 +1755,15 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "spectrum-retention-department": [
     {
       "slug": "directv-customer-service",
-      "similarity": 0.611607
+      "similarity": 0.660702
     },
     {
       "slug": "windstream-customer-service",
-      "similarity": 0.603799
+      "similarity": 0.637297
+    },
+    {
+      "slug": "fabletics-customer-service",
+      "similarity": 0.627336
     }
   ],
   "t3-code-phone-calls": [
@@ -1838,16 +1842,20 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "unitedhealthcare-phone-number": [
     {
-      "slug": "geico-customer-service",
-      "similarity": 0.649165
+      "slug": "allstate-customer-service-number",
+      "similarity": 0.644701
     },
     {
-      "slug": "allstate-customer-service-number",
-      "similarity": 0.62134
+      "slug": "geico-customer-service",
+      "similarity": 0.6329
     },
     {
       "slug": "aaa-insurance-customer-service",
-      "similarity": 0.616224
+      "similarity": 0.62569
+    },
+    {
+      "slug": "usaa-phone-number",
+      "similarity": 0.620231
     }
   ],
   "ups-contact-number": [
@@ -1860,6 +1868,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "aaa-insurance-customer-service",
       "similarity": 0.652481
+    },
+    {
+      "slug": "unitedhealthcare-phone-number",
+      "similarity": 0.620231
     },
     {
       "slug": "allstate-customer-service-number",
@@ -1992,12 +2004,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "windstream-customer-service": [
     {
-      "slug": "verizon-customer-service",
-      "similarity": 0.611062
+      "slug": "spectrum-retention-department",
+      "similarity": 0.637297
     },
     {
-      "slug": "spectrum-retention-department",
-      "similarity": 0.603799
+      "slug": "verizon-customer-service",
+      "similarity": 0.611062
     },
     {
       "slug": "directv-customer-service",

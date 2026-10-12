@@ -1,15 +1,16 @@
 ---
-title: Etihad customer service: the US number, the phone menu, and following up on a complaint
+title: "Etihad customer service: the US number and phone menu"
 seoTitle: "Etihad customer service US number: 914-303-8393"
 subtitle: A call4me user had their AI phone assistant call Etihad Airways in the US to chase a complaint about a business-class seat that wouldn't lie flat. Here's the number, every menu and key press, how long each step took, what the agent confirmed, and the whole recording.
 description: Etihad's US customer service number is +1 914-303-8393, open 24 hours. The menu path to a person, and what a complaint follow-up got, from a real call.
 date: 2026-10-01
+verified: 2026-10-01
 tags: etihad, etihad airways, customer service, complaints, phone trees, airlines
 authors: nick
 imageAlt: Etihad customer service, +1 914-303-8393, the phone menu and a complaint follow-up, recorded
 ---
 
-**The short answer:** Etihad customer service in the US is **+1 914-303-8393**, open **24 hours a day, every day** (that's what [etihad.com's help page](https://www.etihad.com/en-us/help) shows under Call us, then Contact us, with United States of America selected). Press **1** for English, then your **cabin class**, then **2** if you have an existing booking. On our call a person picked up **2 minutes 21 seconds** in.
+**The short answer:** Etihad customer service in the US is **+1 914-303-8393**, open **24 hours a day, every day** (that's what [etihad.com's help page](https://www.etihad.com/en-us/help) shows under Call us, then Contact us, with United States of America selected). A keypad menu answers, not a person. Press **1** for English, then your **cabin class**, then **2** if you have an existing booking. On our call **a person picked up 2 minutes 21 seconds** in.
 
 There's **no Guest Relations option** in the menu, and asking for it out loud at the menu does nothing. The first agent sent us back to a menu. The second agent, reached at **5:44**, found the complaint in a few minutes and told us:
 

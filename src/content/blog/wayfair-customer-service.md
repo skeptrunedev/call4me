@@ -1,16 +1,17 @@
 ---
-title: Wayfair customer service: phone number and return shipping rules
+title: "Wayfair customer service: number and return shipping"
 seoTitle: "Wayfair customer service number: 844-403-5086"
 subtitle: We called Wayfair twice in one evening to ask how returning a big item works and who pays to ship it back. Here's the phone path to a person, what the agents said, and both recordings.
 description: Call Wayfair at 844-403-5086. Two recorded calls cover reaching a person, return shipping rules and a sales agent’s hypothetical fee example.
 date: 2026-09-30
 updated: 2026-10-07
+verified: 2026-09-30
 tags: wayfair, customer service, returns, phone trees
 authors: nick
 imageAlt: Wayfair 844-403-5086, return shipping rules from two calls
 ---
 
-**The short answer:** Wayfair's customer service number is **844-403-5086** (from wayfair.com/help-and-contact). An **AI virtual assistant** asked why we were calling. Both calls reached sales agents in about a minute. We had no specific item; they gave return rules and hypothetical fees:
+**The short answer:** Wayfair's customer service number is **844-403-5086** (from wayfair.com/help-and-contact). An **AI virtual assistant** answers, not a person. Tell it in a sentence why you're calling, and it says "Let me connect you with a live agent." **A sales agent picked up 1 minute 12 seconds into our first call** and 56 seconds into the second. We had no specific item; they gave return rules and hypothetical fees:
 
 - **30 days** from delivery, for a refund or store credit. Not every item is eligible, and you need the original packaging.
 - You **call Wayfair to start** a return and get a label. It then goes back via **FedEx pickup, FedEx drop off, or a store** if one is nearby.

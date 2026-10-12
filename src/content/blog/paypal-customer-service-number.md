@@ -1,17 +1,20 @@
 ---
-title: "PayPal customer service number: how we got past the AI to a person"
+title: "PayPal customer service number: past the AI to a person"
 seoTitle: "PayPal customer service number: 1-888-221-1161"
 subtitle: "We called PayPal's customer service line without logging in. Here is how the AI assistant handled us, the menu that ended in a transfer, what the representative said about disputes, holds and verification, and the full 8 minute recording."
 description: The PayPal customer service number is 1-888-221-1161. An AI assistant answers first; here's how we reached a live representative, from a real recorded call.
 date: 2026-10-08
+verified: 2026-10-08
 tags: paypal, customer service, disputes, payment holds, phone trees, phone numbers
 authors: nick
 imageAlt: PayPal customer service number 1-888-221-1161, how we got past the AI assistant to a person
 ---
 
-**The short answer:** the PayPal customer service number is **1-888-221-1161**. PayPal's own [fake messages page](https://www.paypal.com/us/security/learn-about-fake-messages) says: "Only contact PayPal through the Contact page in our Help Center or call PayPal Customer Service at 1-888-221-1161." The [PayPal User Agreement](https://www.paypal.com/us/legalhub/paypal/useragreement-full) gives the hours: "(888) 221-1161 from Mon-Fri 5:00 AM to 10:00 PM PT and Sat-Sun 6:00 AM to 8:00 PM PT."
+**The short answer:** the PayPal customer service number is **1-888-221-1161**, open Monday to Friday 5 am to 10 pm Pacific and weekends 6 am to 8 pm Pacific. An AI assistant answers, not a person. Skip the account phone number, say "General question", then "Something else", then pick **3** for "information about PayPal products and services". **A live representative answered 4 minutes 30 seconds into the recording**, after about two and a half minutes of hold music.
 
-**An AI assistant answers first, not a person.** It says so itself: "I am powered by generative AI." We reached a **live human representative** 4 minutes 30 seconds into the recording, without logging in or giving any account details. Here's what happened on our call:
+PayPal's own [fake messages page](https://www.paypal.com/us/security/learn-about-fake-messages) says: "Only contact PayPal through the Contact page in our Help Center or call PayPal Customer Service at 1-888-221-1161." The [PayPal User Agreement](https://www.paypal.com/us/legalhub/paypal/useragreement-full) gives the hours: "(888) 221-1161 from Mon-Fri 5:00 AM to 10:00 PM PT and Sat-Sun 6:00 AM to 8:00 PM PT."
+
+**The AI assistant says so itself:** "I am powered by generative AI." We reached a person without logging in or giving any account details. Here's what happened on our call:
 
 1. It asked for "the phone number on your PayPal account." We said "Representative, I have a general question" three times and gave no number.
 2. It said "Sorry, I wasn't able to verify your identity with the information that was provided. But for now, let's continue." So not giving a number didn't end the call.

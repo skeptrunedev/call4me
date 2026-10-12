@@ -6,8 +6,8 @@ import { decodeEntities, htmlToReadableText } from './markdown';
 
 /**
  * The blog: markdown files in src/content/blog, one per post, with YAML-ish frontmatter
- * (title, seoTitle, subtitle, description, date, updated, tags, authors, image, imageAlt,
- * imageCaption, paid). Rendered at request time by marked; headings get stable ids so
+ * (title, seoTitle, subtitle, description, date, updated, verified, tags, authors, image,
+ * imageAlt, imageCaption, paid). Rendered at request time by marked; headings get stable ids so
  * sections can be linked and cited, images with a title become captioned figures, and
  * footnotes work the GitHub way. A `<!-- paywall -->` line splits a paid post into the
  * free preview and the rest.
@@ -30,6 +30,8 @@ export interface Post {
   /** ISO date (YYYY-MM-DD). */
   date: string;
   updated: string | null;
+  /** ISO date a real call last confirmed the number and phone tree; null when no call vouches for it. */
+  verified: string | null;
   tags: string[];
   authors: Author[];
   /** Headline image path (site-relative), its alt text, and an optional caption. */
@@ -119,6 +121,9 @@ export function renderPost(src: PostSource): Post {
   const { meta, body: full } = parseFrontmatter(src.markdown);
   if (!meta.title || !meta.date) throw new Error(`blog post ${src.slug}: frontmatter needs title and date`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(meta.date)) throw new Error(`blog post ${src.slug}: date must be YYYY-MM-DD`);
+  for (const key of ['updated', 'verified'] as const) {
+    if (meta[key] && !/^\d{4}-\d{2}-\d{2}$/.test(meta[key])) throw new Error(`blog post ${src.slug}: ${key} must be YYYY-MM-DD`);
+  }
   if (!meta.subtitle && !meta.description) throw new Error(`blog post ${src.slug}: frontmatter needs a subtitle or description`);
   const sections: { id: string; text: string }[] = [];
   const md = renderer(sections);
@@ -151,6 +156,7 @@ export function renderPost(src: PostSource): Post {
     description: meta.description ?? meta.subtitle!,
     date: meta.date,
     updated: meta.updated ?? null,
+    verified: meta.verified ?? null,
     tags: (meta.tags ?? '').split(',').map((t) => t.trim()).filter(Boolean),
     authors,
     image: meta.image ?? `/static/blog/${src.slug}.svg`,
@@ -222,6 +228,9 @@ export function archive(all: Post[]): { month: string; posts: Post[] }[] {
   return [...groups].map(([month, posts]) => ({ month, posts }));
 }
 
+/** The newest of published, updated and verified: re-confirming a number on a call refreshes the page. */
+export const lastModified = (p: Pick<Post, 'date' | 'updated' | 'verified'>) =>
+  [p.date, p.updated, p.verified].filter((d): d is string => Boolean(d)).sort().at(-1)!;
 export const postDate = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 export const shortPostDate = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }).toUpperCase();
 /** A timestamp (ms) as "2026-09-27 18:04 UTC", for comments. */

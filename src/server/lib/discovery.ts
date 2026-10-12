@@ -1,10 +1,10 @@
-import type { Post } from './blog';
+import { lastModified, type Post } from './blog';
 import { PAGES, type PageKey } from './pages';
 import { SI_UPDATED } from '../../content/superintelligence-calling';
 import { HOLD_DATA_PATH, HOLD_PATH, HOLD_UPDATED } from '../../content/hold-times';
 
 /** What the sitemap and llms.txt need from a blog post. */
-export type PostEntry = Pick<Post, 'slug' | 'title' | 'description' | 'date' | 'updated'>;
+export type PostEntry = Pick<Post, 'slug' | 'title' | 'description' | 'date' | 'updated' | 'verified'>;
 
 /**
  * The documents a crawler or an agent reads to find its way around call4me: robots.txt with
@@ -70,7 +70,7 @@ export interface SitemapEntry {
 export function sitemapEntries(site: string, posts: PostEntry[] = []): SitemapEntry[] {
   return [
     ...SITEMAP_PAGES.map((e) => ({ loc: `${site}${PAGES[e.page].path}`, changefreq: e.changefreq, priority: e.priority, ...(LASTMOD[e.page] ? { lastmod: LASTMOD[e.page] } : {}) })),
-    ...posts.map((p) => ({ loc: `${site}/blog/${p.slug}`, lastmod: `${p.updated ?? p.date}T00:00:00Z`, changefreq: 'monthly', priority: '0.7' })),
+    ...posts.map((p) => ({ loc: `${site}/blog/${p.slug}`, lastmod: `${lastModified(p)}T00:00:00Z`, changefreq: 'monthly', priority: '0.7' })),
   ];
 }
 

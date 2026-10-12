@@ -1,15 +1,16 @@
 ---
-title: "Hulu customer service number: reaching a person, and how to cancel Hulu"
+title: "Hulu customer service number: reach a person, cancel Hulu"
 seoTitle: "Hulu customer service number: 877-824-4858"
 subtitle: We called Hulu support to ask how cancelling works. Here is where Hulu lists its number, the phone menu, what a live representative said about cancelling, refunds and pausing, and the full 3 minute recording.
 description: The Hulu customer service number is 877-824-4858. We called, reached a live person in under 90 seconds, and asked how to cancel Hulu and about refunds.
 date: 2026-10-08
+verified: 2026-10-08
 tags: hulu, customer service, cancel subscription, streaming, phone trees
 authors: nick
 imageAlt: Hulu customer service number 877-824-4858, how we reached a person and asked how to cancel
 ---
 
-**The short answer:** the Hulu customer service number is **877-824-4858**. A live human representative answered our call 1 minute 28 seconds after Hulu picked up. We didn't press anything: after the menu we stayed on the line, as the recording invites you to.
+**The short answer:** the Hulu customer service number is **877-824-4858**. Hulu says live support is open "24 hours a day 7 days a week." A recorded keypad menu answers first. Don't press anything: stay on the line, as the recording invites you to. **A live human representative answered our call 1 minute 28 seconds after Hulu picked up.**
 
 Hulu doesn't print the number on the front of its [contact page](https://help.hulu.com/contact-us). It shows it only after you pick a topic. Choose **Account & Billing**, then **Billing**, then **Call Hulu**. That [phone page](https://help.hulu.com/contact-us/account-and-billing-billing?target=phone) showed us, while logged out: "Call Hulu / Talk to Hulu Support. Wait time 0 minutes / 877 824 4858". The same page also offers **Manage Account Info** and **Chat with Hulu**.
 

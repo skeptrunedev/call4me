@@ -4,14 +4,17 @@ seoTitle: "DIRECTV customer service: 800-531-5000"
 subtitle: 'We called DIRECTV customer service twice. The first time its AI agent answered and we never got past it. The second time we said "cancel service", said we had no account number, chose satellite, and a live representative picked up. The route, what each said, and both recordings.'
 description: 'DIRECTV customer service is 800-531-5000. We reached a live person by saying "cancel service", saying we had no account number and choosing satellite.'
 date: 2026-10-08
+verified: 2026-10-08
 tags: directv, customer service, cancel directv, phone trees, phone numbers
 authors: nick
 imageAlt: DIRECTV customer service 800-531-5000, how we reached a live representative
 ---
 
-**The short answer:** the DIRECTV customer service phone number is **800-531-5000**. DIRECTV's [contact page](https://www.directv.com/support/contact-us/) says "Call us at 800.531.5000," under "Prefer to talk?", with "Business hours: Mon-Sun, 8:00 AM to 9:00 PM CT". It's the only phone number on that page, and there's also a Chat Now option. DIRECTV's [cancel help page](https://www.directv.com/customer/cancel-help/) gives the same number for cancelling: "Call 800.531.5000."
+**The short answer:** the DIRECTV customer service phone number is **800-531-5000**, open **8 am to 9 pm Central, Monday to Sunday**. An AI agent answers, not a person. Say "cancel service", say you don't have the account number and ask for a live agent, then say "satellite". **A live representative answered about 2 minutes 47 seconds after we dialed.**
 
-**How we reached a live person.** An AI agent called "Eva, DIRECTV's AI agent" answers first. On our second call, this got us to a person in about 2 minutes 47 seconds:
+DIRECTV's [contact page](https://www.directv.com/support/contact-us/) says "Call us at 800.531.5000," under "Prefer to talk?", with "Business hours: Mon-Sun, 8:00 AM to 9:00 PM CT". It's the only phone number on that page, and there's also a Chat Now option. DIRECTV's [cancel help page](https://www.directv.com/customer/cancel-help/) gives the same number for cancelling: "Call 800.531.5000."
+
+**How we reached a live person.** The AI agent introduces itself as "Eva, DIRECTV's AI agent". On our second call, this got us to a person:
 
 1. When it asks how it can help, say **"cancel service"**.
 2. When it asks for the phone number or the account number on your service, say **you don't have it, and ask for a live agent**.

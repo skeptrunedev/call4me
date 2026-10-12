@@ -1,15 +1,16 @@
 ---
-title: "Hertz customer service number: how to get past the virtual assistant to a person"
+title: "Hertz customer service number: how to reach a person"
 seoTitle: "Hertz customer service number: 1-800-654-4173"
 subtitle: "We called Hertz three times. On the past rentals line, a virtual assistant named Haley answers first. One call reached a live representative after six requests. One call ended when Haley hung up on us. Here are all three recordings, the exact prompts, and what the person told us."
 description: "The Hertz customer service number for past rentals is 1-800-654-4173. A virtual assistant answers. How we got a live person, from real recorded calls."
 date: 2026-10-08
+verified: 2026-10-08
 tags: hertz, car rental, customer service, phone numbers, virtual assistants, phone trees
 authors: nick
 imageAlt: "Hertz customer service number 1-800-654-4173 for past rentals, and how we reached a live person"
 ---
 
-**The short answer:** the Hertz customer service number for a rental you already had is **1-800-654-4173**. A virtual assistant answers: "Hi, this is Haley, your virtual assistant." It's not a person. Say you don't have a confirmation number and ask for a representative. It will try to help you itself first, so keep asking. On our call it said "Let me connect you now" after our sixth request (2 minutes 44 seconds in), and **a live Hertz representative answered at 3:07**.
+**The short answer:** the Hertz customer service number for a rental you already had is **1-800-654-4173**, open 6 am to 7 pm Central, Monday to Friday. A virtual assistant answers: "Hi, this is Haley, your virtual assistant." It's not a person. Say you don't have a confirmation number and ask for a representative. It will try to help you itself first, so keep asking. On our call it said "Let me connect you now" after our sixth request (2 minutes 44 seconds in), and **a live Hertz representative answered at 3:07**.
 
 Don't go quiet once it says it's connecting you. On another call to the same number, Haley said "Let me connect you with a live agent", then nothing happened for 12 seconds, then it said "I haven't heard from you in a bit." Our caller stayed silent, and Haley ended the call at 2:43. If it comes back and talks, answer it.
 

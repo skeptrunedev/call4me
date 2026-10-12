@@ -1,15 +1,18 @@
 ---
-title: "AAA insurance customer service: the phone number and how to reach a person"
+title: "AAA insurance customer service: how to reach a person"
 seoTitle: "AAA insurance customer service: 877-323-4222"
 subtitle: "AAA is run by regional clubs, so the number depends on where you live. We called the AAA Mountain West Group insurance line, reached a person in under a minute and a half, and asked about quotes, membership and claims. Here is the phone tree and the full 3 minute recording."
 description: "AAA insurance customer service at AAA Mountain West Group: 877-323-4222 for quotes, 800-922-8228 for 24/7 claims. The phone tree and a real recorded call."
 date: 2026-10-08
+verified: 2026-10-08
 tags: aaa, insurance, customer service, phone trees, phone numbers
 authors: nick
 imageAlt: AAA insurance 877-323-4222, quotes, membership and the 24/7 claims line
 ---
 
-**The short answer:** there's no single AAA insurance phone number. AAA is a group of regional clubs, and aaa.com doesn't publish a number. Its [club finder](https://www.aaa.com/stop) says: "Enter your ZIP code to be directed to your local Club's website." Your club's site has its own phone numbers.
+**The short answer:** for AAA Mountain West Group, AAA insurance customer service for quotes is **877-323-4222**. Press **1** for English, **4** for "become a AAA member or obtain an insurance quote", then enter your ZIP code. A **live person**, not a voice assistant, answered **1 minute 24 seconds** after we dialed. Claims and policy changes go to **800-922-8228**, open 24/7. The quote line lists Monday to Friday 7 am to 9 pm and weekends 8 am to 6 pm.
+
+**There's no single AAA insurance phone number.** AAA is a group of regional clubs, and aaa.com doesn't publish a number. Its [club finder](https://www.aaa.com/stop) says: "Enter your ZIP code to be directed to your local Club's website." Your club's site has its own phone numbers.
 
 We called **AAA Mountain West Group** (formerly AAA Northern California, Nevada & Utah), which serves Alaska, Arizona, Northern California, Montana, Nevada, Utah and Wyoming. Its [contact page](https://mwg.aaa.com/contact-us) lists:
 
