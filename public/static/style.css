@@ -248,6 +248,7 @@ details[open] > summary::after { content: '−'; }
   .rows .n, .stats td.n { text-align: left; white-space: normal; }
   .rows td:first-child { font-weight: 600; }
   .rows td:empty { display: none; }
+  .rows td[data-label]::before { content: attr(data-label) ': '; color: var(--muted); }
   .rows .inline-form button { margin-top: 6px; }
   .example { margin: 22px 0; }
   .example h2 { font-size: 28px; }

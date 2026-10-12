@@ -1,0 +1,156 @@
+import { COMPANIES, type Company } from './companies';
+
+/**
+ * Customer service hold times by company, ranked. Every number comes from COMPANIES (itself
+ * tested against the time-to-a-human CSV); this file adds, per company, the line from the
+ * published transcript that shows the first live person and the route that got us there, in
+ * the words of the data post's table. test/hold-times.test.ts fails if either quote drifts.
+ */
+export const HOLD_UPDATED = '2026-10-12';
+export const HOLD_PATH = '/hold-times';
+export const HOLD_DATA_PATH = '/static/data/customer-service-hold-times';
+export const HOLD_LICENSE = 'https://creativecommons.org/licenses/by/4.0/';
+export const HOLD_SOURCE_POST = 'how-long-to-reach-a-human';
+export const HOLD_KEYWORDS = ['customer service hold times', 'customer service hold times by company', 'how long to reach a human', 'customer service wait times', 'customer service hold time dataset'];
+
+/**
+ * `evidence` is verbatim from the company's post (markdown emphasis removed): the transcript line
+ * where the first live person speaks, or the sentence saying no person was reached. `path` is
+ * verbatim from the "What got us through" column in the data post's table.
+ */
+export const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
+  'aaa-insurance-customer-service': { evidence: '1:24 Representative: Thank you for calling AAA Insurance. My name is [name removed]. How can I help you?', path: 'Press 4 (membership or insurance quote), then a ZIP code' },
+  'allstate-customer-service-number': { evidence: '2:08 Agent: Welcome to Allstate. My name is [name removed], a licensed insurance agent in your state. How can I help you today?', path: 'Answering every question, even with "I\'m not sure"' },
+  'amazon-pharmacy-phone-number': { evidence: '3:40 Representative: Clinical customer care. This is [name removed]. How can I help you?', path: 'Stating the request; the system transferred us' },
+  'american-airlines-flight-credit': { evidence: '1:40 Representative: Thank you for calling American Airlines. This is [name removed]. I can see that you\'re calling from the United States to book a new reservation. How can I help you?', path: 'Saying "book a held reservation"' },
+  'aquasana-return-exception': { evidence: '7:49 Representative: Good morning, customer service. [Name and adjacent words removed.]', path: 'Staying on hold instead of taking a callback' },
+  'cancel-audible': { evidence: '2:00 Associate: Hi, thank you for contacting Audible. You are speaking with [name removed]. With who do I have the pleasure to speak to at the moment?', path: 'Typing the digits it reads out, then 2' },
+  'delta-customer-service': { evidence: '16:15 Representative: Thank you for calling Delta. This is [name removed] speaking. How may I assist you today?', path: 'No confirmation number, "I need a representative", then hold' },
+  'directv-customer-service': { evidence: '2:47 DIRECTV rep: Good evening, thank you for calling DIRECTV. My name is [name removed], who do I have the pleasure of speaking with today?', path: '"Cancel service", no account number, then satellite' },
+  'doordash-customer-service-number': { evidence: '2:08 Representative: Thank you for calling DoorDash. This is [name removed]. How can I assist?', path: 'Naming the problem ("missing item", then "refund") instead of asking for a representative' },
+  'etihad-customer-service': { evidence: '2:21 Agent: Thank you for calling Etihad. My name is [name removed]. How may I assist you today? May I get your name, please?', path: 'Press 1, your cabin class, then 2' },
+  'experian-phone-number': { evidence: 'These routes did not reach a consumer support agent on September 30, 2026.', path: 'Nothing we tried' },
+  'fabletics-customer-service': { evidence: '1:08 Consultant: Thank you for calling Fabletics. My name is [name removed]. How may I assist you today?', path: 'Saying we didn\'t have the account phone number' },
+  'cancel-factor': { evidence: '2:00 Representative: Hello, thank you for calling Factor. This is [representative name removed]. How can I help?', path: 'Press 4 for account cancellation' },
+  'fedex-customer-service-number': { evidence: 'None of the three reached a person, and none got a callback offer.', path: 'A tracking number, then the callback offer' },
+  'fifth-third-bank-customer-service': { evidence: '1:44 Representative: Hello, good afternoon. We appreciate you for calling Fifth Third Bank. My name is [name removed]. Can you confirm with your account number or social security number?', path: 'Not entering an account number' },
+  'fpl-phone-number': { evidence: '3:07 FPL: Good afternoon, thank you for calling FPL. My name is [name removed]. May I have your name?', path: '"Open a new account", then asking for a representative' },
+  'cancel-fubo': { evidence: '1:59 Representative: Thank you for calling Fubo TV Support. My name is [representative name removed]. Who am I speaking with today, please?', path: 'Asking twice for a human, then "customer service"' },
+  'geico-customer-service': { evidence: '2:35 GEICO agent: Thank you for calling GEICO. This is [name removed], your licensed professional. How may I help you today?', path: '"Get a new policy", then "auto", and answering every question' },
+  'cancel-hellofresh': { evidence: '1:40 Representative: Hi, thank you so much for calling HelloFresh. This is [representative name removed]. How can I help?', path: 'The cancellation option' },
+  'hertz-customer-service-number': { evidence: '3:07 Hertz representative: Hello, thank you for calling Hertz. My name is [name removed]. May I know your rental record number or your reservation ID number, please?', path: 'Asking for a representative six times' },
+  'hulu-customer-service-number': { evidence: '1:28 Representative: Thank you for calling Hulu Support. My name is [name removed]. How can I help you?', path: 'Pressing nothing and staying on the line' },
+  'paypal-customer-service-number': { evidence: '4:30 Representative: Hi, this is [name removed], and welcome to PayPal. Can I have your first and last name?', path: '"General question", "something else", then the keypad menu' },
+  'pottery-barn-customer-service': { evidence: '0:49 Representative: Good afternoon, and thank you for calling Pottery Barn. This is [name removed]. How may I help you?', path: 'Saying "customer service"' },
+  'priceline-customer-service': { evidence: '25:09 Representative: Thank you for contacting Travel Services. You are through to [representative]. Can I start by getting your first and last name?', path: 'Saying we had no trip number, again and again, then about 22 minutes of hold' },
+  'how-to-cancel-siriusxm': { evidence: 'Our caller explained that this was a general policy inquiry and asked for a person twice. The system then transferred the call to a human.', path: 'Calling it a general policy question and asking twice for a person' },
+  'spectrum-retention-department': { evidence: '7:49 Rep: Thank you for calling Spectrum here in Austin, Texas. My name is [name removed]. Who do I have the pleasure of speaking with today?', path: '"Cancel my account", then "disconnect"' },
+  'united-change-flight': { evidence: '19:09 United agent: Hi, thank you for calling reservations desk. This is [name removed]. How may I help you?', path: '"Flight change fee", then hold' },
+  'unitedhealthcare-phone-number': { evidence: '1:04 UnitedHealthcare: Thank you for calling. My name is [name removed], and I\'m a licensed insurance agent. How may I help you today?', path: 'Press 1 (insurance for you or your family)' },
+  'ups-contact-number': { evidence: '5:57 UPS agent: Hello, this is [name removed]. May I have your name, please?', path: '"Representative", twice, at the tracking number prompt' },
+  'usaa-phone-number': { evidence: '3:28 Representative: Hi, thanks for calling USAA. My name is [name removed] with the eligibility department. How can I help you today?', path: 'Press 1 (not a member), press 2, say "membership" twice' },
+  'venmo-customer-service-number': { evidence: '4:57 Venmo representative: Thanks for calling Venmo. This is [name removed]. May I have your name, please?', path: 'Press 4, 2, 1, 2 (a dispute by phone), then stay on the line when no account is found' },
+  'verizon-customer-service': { evidence: '5:52 Verizon: Hi, you\'ve reached [one word muted: it sounds like "me", and may be the representative\'s name] at Verizon, and it\'s my pleasure to assist you.', path: 'Saying "an agent, please"' },
+  'wayfair-customer-service': { evidence: '1:12 Agent: This is your sales agent, [name removed]. How can I help you with your purchase?', path: 'Answering the assistant in one sentence' },
+  'windstream-customer-service': { evidence: '0:55 Rep: Hello, thank you so much for calling Kinetic. My name is [name removed]. Who do I have the pleasure to stay with today?', path: 'The sales line, press 1 (new residential deals)' },
+};
+
+export type HoldStatus = 'measured' | 'not measured' | 'never reached a person';
+export type FirstAnswer = 'AI or virtual assistant' | 'phone menu' | 'not stated';
+
+export interface HoldTime {
+  /** 1 is the longest measured hold; tied times share a rank. Null when there is no time to rank. */
+  rank: number | null;
+  slug: string;
+  company: string;
+  industry: Company['industry'];
+  number: string | null;
+  called: string;
+  /** m:ss from the start of the published recording to the first live person. */
+  timeToHuman: string | null;
+  seconds: number | null;
+  status: HoldStatus;
+  firstAnswer: FirstAnswer;
+  calls: number;
+  path: string;
+  evidence: string;
+  source: string;
+}
+
+const toSeconds = (time: string) => {
+  const [m, s] = time.split(':').map(Number);
+  return m! * 60 + s!;
+};
+export const formatSeconds = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.round(seconds % 60)).padStart(2, '0')}`;
+
+const STATUS_ORDER: HoldStatus[] = ['measured', 'not measured', 'never reached a person'];
+
+/** Longest measured hold first, then companies we reached without a stated time, then companies we never reached. */
+export const HOLD_TIMES: HoldTime[] = (() => {
+  const rows = COMPANIES.map((c): Omit<HoldTime, 'rank'> => {
+    const quoted = HOLD_EVIDENCE[c.slug];
+    if (!quoted) throw new Error(`hold-times: no evidence for ${c.slug}`);
+    return {
+      slug: c.slug, company: c.name, industry: c.industry, number: c.number, called: c.called,
+      timeToHuman: c.timeToHuman, seconds: c.timeToHuman ? toSeconds(c.timeToHuman) : null,
+      status: c.timeToHuman ? 'measured' : c.reached ? 'not measured' : 'never reached a person',
+      firstAnswer: c.aiFirst === null ? 'not stated' : c.aiFirst ? 'AI or virtual assistant' : 'phone menu',
+      calls: c.calls, ...quoted, source: `https://call4.me/blog/${c.slug}`,
+    };
+  });
+  const measured = rows.filter(r => r.seconds !== null).map(r => r.seconds!);
+  return rows
+    .map(r => ({ rank: r.seconds === null ? null : 1 + measured.filter(s => s > r.seconds!).length, ...r }))
+    .sort((a, b) => STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status) || (b.seconds ?? 0) - (a.seconds ?? 0) || a.company.localeCompare(b.company));
+})();
+
+const median = (values: number[]) => {
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]!) / 2;
+};
+
+/** The headline numbers, derived from HOLD_TIMES so the summary can never disagree with the table. */
+export function holdSummary() {
+  const measured = HOLD_TIMES.filter(r => r.seconds !== null);
+  const ai = measured.filter(r => r.firstAnswer === 'AI or virtual assistant');
+  const menu = measured.filter(r => r.firstAnswer === 'phone menu');
+  const dates = HOLD_TIMES.map(r => r.called).sort();
+  return {
+    companies: HOLD_TIMES.length,
+    measured: measured.length,
+    longest: measured[0]!,
+    shortest: measured[measured.length - 1]!,
+    median: formatSeconds(median(measured.map(r => r.seconds!))),
+    aiFirst: HOLD_TIMES.filter(r => r.firstAnswer === 'AI or virtual assistant').length,
+    aiMeasured: ai.length,
+    aiMedian: formatSeconds(median(ai.map(r => r.seconds!))),
+    menuMeasured: menu.length,
+    menuMedian: formatSeconds(median(menu.map(r => r.seconds!))),
+    overFive: measured.filter(r => r.seconds! > 300).length,
+    underTwo: measured.filter(r => r.seconds! < 120).length,
+    notMeasured: HOLD_TIMES.filter(r => r.status === 'not measured'),
+    neverReached: HOLD_TIMES.filter(r => r.status === 'never reached a person'),
+    firstCall: dates[0]!,
+    lastCall: dates[dates.length - 1]!,
+  };
+}
+
+export function holdDataset() {
+  return {
+    name: 'Customer service hold times by company', schemaVersion: '1.0', version: HOLD_UPDATED,
+    url: `https://call4.me${HOLD_PATH}`, creator: 'call4me', license: HOLD_LICENSE,
+    licenseScope: 'Measured times, rankings and annotations. Linked recordings and transcripts are published on call4.me with each source post.',
+    description: 'Time from the start of a recorded call to the first live person, for customer service lines call4me called and published. One call per company, or the call that reached a person. Not a ranking of service quality.',
+    measurement: 'm:ss from the start of the published recording to the first live person, read from the timestamped transcript. Includes the phone menu and the queue. Some recordings shorten silences, so on those the real wait was slightly longer.',
+    keywords: HOLD_KEYWORDS,
+    companies: HOLD_TIMES,
+  };
+}
+
+export function holdCsv() {
+  const columns = ['rank', 'company', 'industry', 'status', 'time_to_human', 'seconds', 'first_answer', 'number_called', 'call_date', 'calls_placed', 'what_got_through', 'evidence', 'source_url'];
+  const quote = (value: string | number | null) => `"${String(value ?? '').replaceAll('"', '""')}"`;
+  const rows = HOLD_TIMES.map(r => [r.rank, r.company, r.industry, r.status, r.timeToHuman, r.seconds, r.firstAnswer, r.number, r.called, r.calls, r.path, r.evidence, r.source]);
+  return [columns, ...rows].map(row => row.map(quote).join(',')).join('\r\n') + '\r\n';
+}

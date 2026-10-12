@@ -1,6 +1,7 @@
 import type { Post } from './blog';
 import { PAGES, type PageKey } from './pages';
 import { SI_UPDATED } from '../../content/superintelligence-calling';
+import { HOLD_DATA_PATH, HOLD_PATH, HOLD_UPDATED } from '../../content/hold-times';
 
 /** What the sitemap and llms.txt need from a blog post. */
 export type PostEntry = Pick<Post, 'slug' | 'title' | 'description' | 'date' | 'updated'>;
@@ -41,6 +42,7 @@ export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: stri
   { page: 'aiCallAssistant', changefreq: 'monthly', priority: '0.9' },
   { page: 'mcp', changefreq: 'monthly', priority: '0.9' },
   { page: 'companies', changefreq: 'weekly', priority: '0.8' },
+  { page: 'holdTimes', changefreq: 'weekly', priority: '0.8' },
   { page: 'superintelligenceCalling', changefreq: 'weekly', priority: '0.8' },
   { page: 'students', changefreq: 'monthly', priority: '0.7' },
   { page: 'voices', changefreq: 'monthly', priority: '0.6' },
@@ -51,6 +53,9 @@ export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: stri
   { page: 'support', changefreq: 'yearly' },
   { page: 'terms', changefreq: 'yearly' },
 ];
+
+/** Dataset pages carry their own version date as lastmod. */
+const LASTMOD: Partial<Record<PageKey, string>> = { superintelligenceCalling: SI_UPDATED, holdTimes: HOLD_UPDATED };
 
 const xml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -64,7 +69,7 @@ export interface SitemapEntry {
 /** The public pages, then every blog post with its last-modified date. The sitemap and IndexNow (services/indexnow.ts) both read this. */
 export function sitemapEntries(site: string, posts: PostEntry[] = []): SitemapEntry[] {
   return [
-    ...SITEMAP_PAGES.map((e) => ({ loc: `${site}${PAGES[e.page].path}`, changefreq: e.changefreq, priority: e.priority, ...(e.page === 'superintelligenceCalling' ? { lastmod: SI_UPDATED } : {}) })),
+    ...SITEMAP_PAGES.map((e) => ({ loc: `${site}${PAGES[e.page].path}`, changefreq: e.changefreq, priority: e.priority, ...(LASTMOD[e.page] ? { lastmod: LASTMOD[e.page] } : {}) })),
     ...posts.map((p) => ({ loc: `${site}/blog/${p.slug}`, lastmod: `${p.updated ?? p.date}T00:00:00Z`, changefreq: 'monthly', priority: '0.7' })),
   ];
 }
@@ -106,6 +111,7 @@ export function llmsTxt(site: string, pricePerMinuteCents: number, posts: PostEn
     `- [Home](${site}/): what call4me does, pricing, and the install prompt`,
     `- [AI call assistant](${site}/ai-call-assistant): what the AI phone agent does on a call, listening in and taking over, voices, the free US number, pricing, and how to start`,
     `- [Examples](${site}/examples): real call recordings with edited excerpts, outcomes, and transcripts`,
+    `- [Customer service hold times by company](${site}${HOLD_PATH}): time to a live person at 34 companies, measured on real recorded calls and ranked, with the transcript line behind each time. Download the dataset as [CSV](${site}${HOLD_DATA_PATH}.csv) or [JSON](${site}${HOLD_DATA_PATH}.json).`,
     `- [Superintelligence Calling Index](${site}/superintelligence-calling-index): personal superintelligence phone calling tools, dated evidence and recordings. Download the evidence dataset as [CSV](${site}/static/data/superintelligence-calling-index.csv) or [JSON](${site}/static/data/superintelligence-calling-index.json).`,
     `- [Voices](${site}/voices): a phone-quality sample of each caller voice, and how to pick one`,
     `- [Install MCP](${site}/mcp): one prompt for Claude Code, Codex, Claude Desktop, claude.ai, ChatGPT, Muse, and Grok Bot`,
