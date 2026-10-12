@@ -13,6 +13,7 @@ import everythingImprovedSinceLaunch from './everything-we-have-improved-since-l
 import vapiAlternatives from './vapi-alternatives.md';
 import blandAiAlternatives from './bland-ai-alternatives.md';
 import aiAgentPhoneCalls from './ai-agent-that-makes-phone-calls.md';
+import aiAgentsPhoneCallsComparison from './ai-apps-that-make-calls-for-you.md';
 import gymDayPass from './gym-day-pass.md';
 import gymsWithSauna from './gyms-with-sauna-near-me.md';
 import bloodWorkCost from './how-much-does-blood-work-cost.md';
@@ -127,6 +128,7 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'vapi-alternatives', markdown: vapiAlternatives },
   { slug: 'bland-ai-alternatives', markdown: blandAiAlternatives },
   { slug: 'ai-agent-that-makes-phone-calls', markdown: aiAgentPhoneCalls },
+  { slug: 'ai-apps-that-make-calls-for-you', markdown: aiAgentsPhoneCallsComparison },
   { slug: 'gym-day-pass', markdown: gymDayPass },
   { slug: 'gyms-with-sauna-near-me', markdown: gymsWithSauna },
   { slug: 'how-much-does-blood-work-cost', markdown: bloodWorkCost },

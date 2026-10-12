@@ -68,22 +68,22 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 1824
+    "tokens": 1802
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2172
+    "tokens": 2174
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 1872
+    "tokens": 1903
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 1780
+    "tokens": 1772
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
@@ -93,32 +93,37 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 1970
+    "tokens": 1977
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 1909
+    "tokens": 1904
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2085
+    "tokens": 2060
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 1811
+    "tokens": 1964
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 8981
+    "tokens": 9059
+  },
+  "/blog/ai-apps-that-make-calls-for-you": {
+    "html": "/__pages/427c0a40de2bba10.html",
+    "markdown": "/__pages/427c0a40de2bba10.md",
+    "tokens": 5601
   },
   "/blog/hijinx-hotel-irvine": {
     "html": "/__pages/acb492544467c9de.html",
     "markdown": "/__pages/acb492544467c9de.md",
-    "tokens": 2782
+    "tokens": 2812
   },
   "/blog/lai-wah-heen-private-dining": {
     "html": "/__pages/f2e99abd9b301d1a.html",
@@ -253,7 +258,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/bland-ai-alternatives": {
     "html": "/__pages/ae7d8f0f01361a52.html",
     "markdown": "/__pages/ae7d8f0f01361a52.md",
-    "tokens": 3244
+    "tokens": 3218
   },
   "/blog/ai-agent-that-makes-phone-calls": {
     "html": "/__pages/c6d4cf77fa9ecc89.html",
@@ -448,7 +453,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/instinct-ai-phone-calls": {
     "html": "/__pages/7d8b01a75a9d6b95.html",
     "markdown": "/__pages/7d8b01a75a9d6b95.md",
-    "tokens": 4005
+    "tokens": 3977
   },
   "/blog/claude-code-phone-calls": {
     "html": "/__pages/b4a4a35039232bdd.html",
@@ -473,7 +478,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/cascaded-voice-stack-vs-gpt-live": {
     "html": "/__pages/aeae359d4c5c3e33.html",
     "markdown": "/__pages/aeae359d4c5c3e33.md",
-    "tokens": 5496
+    "tokens": 5500
   },
   "/blog/cancel-factor": {
     "html": "/__pages/505eb83b629fa414.html",
@@ -643,6 +648,6 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/openai-realtime-voices-phone-calls": {
     "html": "/__pages/bfa7fe3d0cc5780a.html",
     "markdown": "/__pages/bfa7fe3d0cc5780a.md",
-    "tokens": 9245
+    "tokens": 9262
   }
 };
