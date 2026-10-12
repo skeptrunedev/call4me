@@ -50,6 +50,7 @@ export const PAGES = {
   mcp: { description: 'install call4me in claude code, codex, claude desktop, claude.ai, chatgpt, muse, or grok bot with one prompt. your agent gets a tool that makes phone calls.', card: 'mcp', path: '/mcp' },
   login: { description: 'sign in to call4me with google or x to load credits and connect your AI agent.', card: 'login', path: '/login', noindex: true },
   account: { description: 'your call4me balance, monthly reload, key, and every call with its transcript.', card: 'account', path: '/account', noindex: true },
+  sms: { description: 'Choose optional call4me text alerts for call questions and phone number renewals.', card: 'account', path: '/sms', noindex: true },
   call: { description: 'the outcome and transcript of a call call4me made for you.', card: 'call', path: '/account', noindex: true },
   welcome: { description: 'credits loaded. copy the prompt into your agent and it installs call4me itself.', card: 'welcome', path: '/welcome', noindex: true },
   key: { description: 'a new call4me key and the prompt that installs it in your agent.', card: 'key', path: '/account', noindex: true },

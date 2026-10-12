@@ -226,6 +226,8 @@ export const AccountPage: FC<{
       </select>{' '}
       <button type="submit">send code</button>
     </form>
+    <h2>text alerts</h2>
+    <p class="small"><a href="/sms">Manage optional text alerts</a> for call questions and phone number renewals.</p>
     <h2>calls</h2>
     <p class="small">calls are recorded by our phone carrier (Telnyx). open a call to play or save its recording.</p>
     {p.calls.length === 0 ? (

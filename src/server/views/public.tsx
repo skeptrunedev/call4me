@@ -446,7 +446,7 @@ export const RulesPage: FC<{ signedIn: boolean; pricePerMinuteCents: number; cou
 export const PrivacyPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ signedIn, agentPrompt }) => (
   <Layout title="privacy" page="privacy" signedIn={signedIn}>
     <h1>privacy policy</h1>
-    <p>updated October 8, 2026</p>
+    <p>updated October 11, 2026</p>
     <p>This policy covers call4me at call4.me, our phone-calling service, and our connected tools, including the call4me plugin in ChatGPT. Contact <a href="mailto:me@call4.me">me@call4.me</a> with privacy questions or requests.</p>
 
     <h2 id="data">What we collect and why</h2>
@@ -482,6 +482,11 @@ export const PrivacyPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ si
       <li><strong>Reddit</strong> receives click and campaign information, available browser information, hashed account and email identifiers, purchase amounts, and milestones such as a first completed call, returning use, or a resolved task. Our conversion payloads exclude phone numbers, destinations, call categories, briefs, transcripts, recordings, and detailed outcomes.</li>
     </ul>
     <p>Hashed identifiers are pseudonymous, not anonymous: a recipient may match them to information it already holds. We keep first-visit attribution and paid Reddit visit records so we can connect later purchases and usage to their source.</p>
+
+    <h2 id="sms">Text alerts</h2>
+    <p>call4me alerts is operated by Skeptrune LLC. If you choose optional SMS alerts, we store your verified phone number, the consent wording you accepted, the time of your choice, and any later withdrawal. We use these records to manage call attention and phone number renewal notifications and honor your preferences.</p>
+    <p>Mobile information, SMS consent, and SMS subscription records are not sold or shared with third parties or affiliates for marketing or promotional purposes. They are shared only with service providers, including Telnyx and mobile carriers, as necessary to operate the messaging service, honor your preferences, or comply with legal requirements. SMS consent does not authorize advertising use of your phone number.</p>
+    <p>You can withdraw consent at <a href="/sms">text alert preferences</a> or, once messages are available, by replying STOP. We retain consent and withdrawal records to document your choices and prevent unwanted messages. Contact <a href="mailto:me@call4.me">me@call4.me</a> for questions or deletion requests.</p>
 
     <h2 id="retention">How long information is kept</h2>
     <ul>
@@ -537,5 +542,10 @@ export const TermsPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ sign
       <li>you're responsible for the calls you ask for and must follow the <a href="/rules">rules</a>.</li>
       <li>the service is provided as is. a call can fail, get something wrong, or end without a result; check anything important.</li>
     </ul>
+    <h2 id="sms">call4me alerts SMS terms</h2>
+    <p>Skeptrune LLC operates call4me alerts, an optional SMS program for questions that need your attention during calls and warnings about purchased phone number renewals. Message frequency varies with your account activity. Message and data rates may apply. Consent is not a condition of purchase or use of call4me.</p>
+    <p>Sign up at <a href="/sms">text alert preferences</a> by selecting your verified personal number and explicitly agreeing to receive texts. Alerts are not sending yet; saved preferences apply when the service becomes available.</p>
+    <p>Once messages are available, reply STOP to unsubscribe. You will receive a confirmation, and no further program messages will be sent unless you sign up again. Reply HELP for help, or email <a href="mailto:me@call4.me">me@call4.me</a>. You may also withdraw consent on the preferences page at any time.</p>
+    <p>Carriers are not liable for delayed or undelivered messages. Texts may not arrive in time to resolve a live call or prevent a number release, so check your account and keep your contact details current. See our <a href="/privacy#sms">SMS privacy policy</a> for how we handle your mobile information and consent.</p>
   </Layout>
 );

@@ -43,12 +43,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/privacy": {
     "html": "/__pages/0ece7f7c306b4cf6.html",
     "markdown": "/__pages/0ece7f7c306b4cf6.md",
-    "tokens": 2869
+    "tokens": 3132
   },
   "/terms": {
     "html": "/__pages/2dda5c6b8eee51aa.html",
     "markdown": "/__pages/2dda5c6b8eee51aa.md",
-    "tokens": 188
+    "tokens": 484
   },
   "/support": {
     "html": "/__pages/0b9f34c92865bdd1.html",

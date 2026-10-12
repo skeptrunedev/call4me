@@ -5,6 +5,7 @@ import { contextStorage } from 'hono/context-storage';
 import { canonicalRedirect, visitor, type AppEnv } from './lib/context';
 import { directoryMcp, mcp } from './routes/mcp';
 import { pub } from './routes/public';
+import { sms } from './routes/sms';
 import { authRoutes } from './routes/auth';
 import { adminEmails, mountAuth, sessionAccount } from './lib/auth';
 import { approxTokens, htmlToMarkdown, prefersMarkdown } from './lib/markdown';
@@ -148,6 +149,7 @@ app.route('/api/site-data', siteData);
 app.route('/blog/site-data', siteData);
 app.route('/blog', blog);
 app.route('/admin', admin);
+app.route('/', sms);
 app.route('/', pub);
 
 app.notFound((c) => c.html(<MessagePage title="not found" message="that page does not exist." signedIn={Boolean(c.get('account'))} />, 404));
