@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "b0b91027dd5c95300a5aba16e1851b8896be7f8051514d00f65cc30e6adfa7aa"
+  "sourceHash": "4e0c4c1446a6216489d912535d1de41c1744f3c99e6f7953047a973098970578"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -56,23 +56,19 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.688874
     },
     {
-      "slug": "ai-agents-that-make-phone-calls",
-      "similarity": 0.681799
-    },
-    {
       "slug": "bland-ai-alternatives",
       "similarity": 0.660738
     },
     {
       "slug": "vercel-ai-sdk-phone-calls",
       "similarity": 0.65852
+    },
+    {
+      "slug": "lai-wah-heen-private-dining",
+      "similarity": 0.656858
     }
   ],
   "ai-agent-that-makes-phone-calls": [
-    {
-      "slug": "ai-agents-that-make-phone-calls",
-      "similarity": 0.84871
-    },
     {
       "slug": "vercel-ai-sdk-phone-calls",
       "similarity": 0.804191
@@ -84,6 +80,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "openai-realtime-voices-phone-calls",
       "similarity": 0.798544
+    },
+    {
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.795973
     },
     {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
@@ -102,38 +102,38 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.707018
     }
   ],
-  "ai-agents-that-make-phone-calls": [
+  "ai-apps-that-make-calls-for-you": [
     {
       "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.84871
-    },
-    {
-      "slug": "vercel-ai-sdk-phone-calls",
-      "similarity": 0.756211
-    },
-    {
-      "slug": "openai-realtime-voices-phone-calls",
-      "similarity": 0.749486
+      "similarity": 0.795973
     },
     {
       "slug": "cascaded-voice-stack-vs-gpt-live",
-      "similarity": 0.748062
+      "similarity": 0.789915
+    },
+    {
+      "slug": "openai-realtime-voices-phone-calls",
+      "similarity": 0.74909
     },
     {
       "slug": "instinct-ai-phone-calls",
-      "similarity": 0.720809
+      "similarity": 0.723685
     },
     {
       "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.695114
+      "similarity": 0.722064
     },
     {
-      "slug": "agent-web-research-phone-calls-sf-private-dining",
-      "similarity": 0.681799
+      "slug": "vercel-ai-sdk-phone-calls",
+      "similarity": 0.690598
     },
     {
       "slug": "bland-ai-alternatives",
-      "similarity": 0.660633
+      "similarity": 0.676312
+    },
+    {
+      "slug": "grok-bot-vs-meta-muse",
+      "similarity": 0.655618
     }
   ],
   "ai-personal-assistant-appointment-booking": [
@@ -249,16 +249,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.682061
     },
     {
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.676312
+    },
+    {
       "slug": "claude-code-phone-calls",
       "similarity": 0.674341
     },
     {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
       "similarity": 0.660738
-    },
-    {
-      "slug": "ai-agents-that-make-phone-calls",
-      "similarity": 0.660633
     },
     {
       "slug": "vapi-alternatives",
@@ -557,8 +557,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.793055
     },
     {
-      "slug": "ai-agents-that-make-phone-calls",
-      "similarity": 0.748062
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.789915
     },
     {
       "slug": "ai-agent-that-makes-phone-calls",
@@ -1035,8 +1035,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.634193
     },
     {
-      "slug": "ai-agents-that-make-phone-calls",
-      "similarity": 0.63326
+      "slug": "openai-realtime-voices-phone-calls",
+      "similarity": 0.632526
     }
   ],
   "grok-bot-vs-meta-muse": [
@@ -1258,8 +1258,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.746033
     },
     {
-      "slug": "ai-agents-that-make-phone-calls",
-      "similarity": 0.720809
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.723685
     },
     {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
@@ -1486,8 +1486,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.793055
     },
     {
-      "slug": "ai-agents-that-make-phone-calls",
-      "similarity": 0.749486
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.74909
     },
     {
       "slug": "codex-phone-calls",
@@ -1912,16 +1912,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.804191
     },
     {
-      "slug": "ai-agents-that-make-phone-calls",
-      "similarity": 0.756211
-    },
-    {
       "slug": "instinct-ai-phone-calls",
       "similarity": 0.746033
     },
     {
       "slug": "openai-realtime-voices-phone-calls",
       "similarity": 0.702023
+    },
+    {
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.690598
     },
     {
       "slug": "ai-phone-tree-navigation",

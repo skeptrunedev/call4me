@@ -58,7 +58,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 1800
+    "tokens": 1802
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
@@ -103,17 +103,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 9057
+    "tokens": 9059
   },
-  "/blog/ai-agents-that-make-phone-calls": {
-    "html": "/__pages/352ed4efc477b36f.html",
-    "markdown": "/__pages/352ed4efc477b36f.md",
-    "tokens": 5617
+  "/blog/ai-apps-that-make-calls-for-you": {
+    "html": "/__pages/427c0a40de2bba10.html",
+    "markdown": "/__pages/427c0a40de2bba10.md",
+    "tokens": 5601
   },
   "/blog/hijinx-hotel-irvine": {
     "html": "/__pages/acb492544467c9de.html",
     "markdown": "/__pages/acb492544467c9de.md",
-    "tokens": 2810
+    "tokens": 2812
   },
   "/blog/lai-wah-heen-private-dining": {
     "html": "/__pages/f2e99abd9b301d1a.html",
@@ -238,7 +238,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/vercel-ai-sdk-phone-calls": {
     "html": "/__pages/ff098db0a2035f3b.html",
     "markdown": "/__pages/ff098db0a2035f3b.md",
-    "tokens": 2918
+    "tokens": 2942
   },
   "/blog/vapi-alternatives": {
     "html": "/__pages/55c22a477aa2029e.html",
@@ -248,12 +248,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/bland-ai-alternatives": {
     "html": "/__pages/ae7d8f0f01361a52.html",
     "markdown": "/__pages/ae7d8f0f01361a52.md",
-    "tokens": 3244
+    "tokens": 3218
   },
   "/blog/ai-agent-that-makes-phone-calls": {
     "html": "/__pages/c6d4cf77fa9ecc89.html",
     "markdown": "/__pages/c6d4cf77fa9ecc89.md",
-    "tokens": 2886
+    "tokens": 2909
   },
   "/blog/gym-day-pass": {
     "html": "/__pages/58e8dd209383d03e.html",
@@ -443,7 +443,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/instinct-ai-phone-calls": {
     "html": "/__pages/7d8b01a75a9d6b95.html",
     "markdown": "/__pages/7d8b01a75a9d6b95.md",
-    "tokens": 3975
+    "tokens": 3977
   },
   "/blog/claude-code-phone-calls": {
     "html": "/__pages/b4a4a35039232bdd.html",
@@ -468,7 +468,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/cascaded-voice-stack-vs-gpt-live": {
     "html": "/__pages/aeae359d4c5c3e33.html",
     "markdown": "/__pages/aeae359d4c5c3e33.md",
-    "tokens": 5498
+    "tokens": 5500
   },
   "/blog/cancel-factor": {
     "html": "/__pages/505eb83b629fa414.html",
@@ -638,6 +638,6 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/openai-realtime-voices-phone-calls": {
     "html": "/__pages/bfa7fe3d0cc5780a.html",
     "markdown": "/__pages/bfa7fe3d0cc5780a.md",
-    "tokens": 9260
+    "tokens": 9262
   }
 };
