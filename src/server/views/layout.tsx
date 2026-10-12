@@ -258,6 +258,7 @@ export const Layout: FC<{
               <a href="/support">support</a>
               <a href="/blog">blog</a>
               <a href="/voices">voices</a>
+              <a href="/hold-times">customer service hold times</a>
               <a href="/superintelligence-calling-index">superintelligence calling index</a>
               <a class="rss-link" href="/blog/rss.xml" type="application/rss+xml" aria-label="Subscribe to the RSS feed" title="RSS feed">RSS</a>
             </nav>

@@ -15,6 +15,8 @@ import { VoicesPage } from '../src/server/views/voices';
 import { CompaniesPage } from '../src/server/views/companies';
 import { SuperintelligenceCallingPage } from '../src/server/views/superintelligence-calling';
 import { SI_DATA_PATH, SI_PATH, siCsv, siDataset } from '../src/content/superintelligence-calling';
+import { HoldTimesPage } from '../src/server/views/hold-times';
+import { HOLD_DATA_PATH, HOLD_PATH, holdCsv, holdDataset } from '../src/content/hold-times';
 import { StudentsPage } from '../src/server/views/students';
 import { McpPage } from '../src/server/views/account';
 import { BlogIndex, BlogArchive, BlogPost } from '../src/server/views/blog';
@@ -46,6 +48,8 @@ await cp('public', destination, { recursive: true });
 await mkdir(join(destination, 'static/data'), { recursive: true });
 await writeFile(join(destination, `${SI_DATA_PATH}.csv`), siCsv());
 await writeFile(join(destination, `${SI_DATA_PATH}.json`), JSON.stringify(siDataset(), null, 2) + '\n');
+await writeFile(join(destination, `${HOLD_DATA_PATH}.csv`), holdCsv());
+await writeFile(join(destination, `${HOLD_DATA_PATH}.json`), JSON.stringify(holdDataset(), null, 2) + '\n');
 
 async function files(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -86,6 +90,7 @@ await page('/examples', <ExamplesPage {...common} agentPrompt={prompts.examplesP
 await page('/voices', <VoicesPage {...common} agentPrompt={prompts.voicesPrompt(origin, null)} />);
 await page('/companies', <CompaniesPage {...common} agentPrompt={prompts.companiesPrompt(origin, null)} />);
 await page(SI_PATH, <SuperintelligenceCallingPage {...common} />);
+await page(HOLD_PATH, <HoldTimesPage {...common} />);
 await page('/students', <StudentsPage {...common} agentPrompt={prompts.studentsPrompt(origin, null)} />);
 await page('/mcp', <McpPage {...common} origin={origin} installPrompt={installPrompt} apiKey={null} />);
 await page('/rules', <RulesPage {...common} pricePerMinuteCents={price} countries={[]} agentPrompt={prompts.rulesPrompt(origin, null)} />);
