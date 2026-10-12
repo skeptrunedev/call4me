@@ -2,8 +2,52 @@
 
 https://call4.me
 
-Your coding agent (Claude Code, Codex, Claude Desktop, ChatGPT) gets one new tool: make a phone call.
-Prepaid credits from $10 via Stripe Checkout, reloading monthly by default; one MCP URL with the key in it.
+call4me lets your AI agent make real phone calls for you. Ask Claude, ChatGPT, Cursor, Codex or your
+own app to book a table, schedule a dentist appointment, cancel a subscription or ask a business a question,
+and it calls, waits on hold, gets through the phone menu, talks to the person who answers and reports back with the outcome
+and a transcript. It can also ring you to join the call. Calls are paid from prepaid credits, starting at $10.
+
+## Use it
+
+The hosted MCP server is `https://call4.me/mcp` (streamable HTTP). Your agent signs you in through the
+browser with Google or X. The easiest setup is to paste the prompt from [call4.me/mcp](https://call4.me/mcp)
+into your agent. To add it by hand:
+
+```
+claude code:     claude mcp add --scope user --transport http call4me https://call4.me/mcp   then /mcp, call4me, authenticate
+codex:           codex mcp add call4me --url https://call4.me/mcp   then   codex mcp login call4me
+claude desktop / claude.ai / chatgpt:  settings, connectors, add custom connector: https://call4.me/mcp
+can't sign in?   create a key at https://call4.me/account and use https://call4.me/mcp/<key>, or send "Authorization: Bearer <key>" to /mcp
+```
+
+Cursor: add it to `~/.cursor/mcp.json` and sign in when Cursor asks.
+
+```json
+{
+  "mcpServers": {
+    "call4me": { "url": "https://call4.me/mcp" }
+  }
+}
+```
+
+In your own code, the [Vercel AI SDK package](packages/ai-sdk) gives an agent the same tools:
+
+```bash
+npm install call4me-ai-sdk ai zod @ai-sdk/openai
+```
+
+```ts
+import { call4meTools } from 'call4me-ai-sdk';
+// with CALL4ME_API_KEY set (from https://call4.me/account):
+// generateText({ model, prompt: 'Call ... and ask ...', tools: call4meTools() })
+```
+
+- [Examples](https://call4.me/examples): real calls and the prompts that placed them.
+- [Blog](https://call4.me/blog): guides for [Claude Code](https://call4.me/blog/claude-code-phone-calls),
+  the [AI SDK](https://call4.me/blog/vercel-ai-sdk-phone-calls) and more.
+- [MCP Registry](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.skeptrunedev/call4me): `io.github.skeptrunedev/call4me`.
+
+The rest of this README is for working on call4me itself or hosting your own copy.
 
 ## How a call works
 
@@ -157,7 +201,7 @@ Worker secret with `npx wrangler secret put RAINDROP_WRITE_KEY`. Optional
 `RAINDROP_PROJECT_ID` selects a project slug; unset uses the write key's default project.
 Without a write key, monitoring is disabled. `.dev.vars.example` lists these optional settings.
 
-AI inputs and outputs use Raindrop's PII redaction, with Callbay's existing masking for
+AI inputs and outputs use Raindrop's PII redaction, with call4me's existing masking for
 per call secrets applied first. Tool arguments and results appear in redacted back office
 AI output. Tool spans contain names, timing, and generic failure status, keeping sensitive
 payloads out of unredacted trace attributes. Account names and emails are not sent as user traits.
