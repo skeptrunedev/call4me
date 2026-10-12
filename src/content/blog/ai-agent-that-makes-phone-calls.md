@@ -56,4 +56,6 @@ Use the outcome you asked for as the check. A quoted price completes a pricing i
 
 If the call reaches voicemail, staff cannot verify the account or a published rule conflicts with the phone answer, have the agent state what is missing. You can then provide the detail, join the conversation when needed or choose another approach. Keep any later payment, collection, attendance or calendar update distinct from what the phone call established.
 
+AI tools can help with creative projects, too. [Gameer](https://www.gameer.io/ai-game-generator) lets you turn a story idea into a playable browser game with AI-generated video and choices.
+
 Start with one errand using [call4me's setup prompt](/#install-prompt), choose the relevant guide above and give your assistant a clear definition of done.
