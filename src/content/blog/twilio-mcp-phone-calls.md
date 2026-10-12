@@ -17,7 +17,7 @@ On October 4, 2026, we connected to `https://mcp.twilio.com/docs` without a Twil
 
 We make [call4me](/), a hosted calling MCP. If you are deciding whether to build with Twilio or connect a calling service to the agent you already use, the useful question is which parts you want to own.
 
-For existing calling tools, start with our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison). It covers account setup and the results returned to the original agent, with actual Call4me, Vapi Agent Phone and Bland calls. The implementation details below help when you choose to build the voice application yourself.
+For existing calling tools, start with our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison). It covers account setup and the results returned to the original agent, with actual call4me, Vapi Agent Phone and Bland calls. The implementation details below help when you choose to build the voice application yourself.
 
 ## Which Twilio MCP do you mean?
 

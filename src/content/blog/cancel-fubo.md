@@ -97,33 +97,33 @@ Names and private phone details are muted in the audio and shown in brackets. Ti
 
 **0:00** **Phone system:** Thank you for calling Fubo Customer Care. For English, press 1. Para Español, presione 2.
 
-**0:08** **Call4me:** Sure.
+**0:08** **call4me:** Sure.
 
 **0:10** **Phone system:** This call will be recorded for quality and training purposes. If you do not wish to be recorded, please disconnect this call and contact us via chat or email by clicking Contact Us on our website. By staying on the line, you consent to this recording. You can access Fubo's privacy notice at Fubo.tv.
 
 **0:33** **Fubo AI assistant:** Hello, and thank you for calling Fubo. I'm [representative name removed], Fubo's AI assistant. I'll need to look up your account. Could you provide your billing zip code and the last four digits of your payment card?
 
-**0:43** **Call4me:** Hi, this is [name removed]’s assistant. It's just a general question about how cancellation works, so I don't have an account to look up. Could I ask a rep a couple quick questions?
+**0:43** **call4me:** Hi, this is [name removed]’s assistant. It's just a general question about how cancellation works, so I don't have an account to look up. Could I ask a rep a couple quick questions?
 
 **0:56** **Fubo AI assistant:** Sure, just a moment.
 
-**0:59** **Call4me:** Sure, no problem.
+**0:59** **call4me:** Sure, no problem.
 
 **1:04** **Fubo AI assistant:** All right, just checking on that.
 
-**1:06** **Call4me:** Thanks.
+**1:06** **call4me:** Thanks.
 
 **1:07** **Fubo AI assistant:** I can help answer your questions about cancellation. What would you like to know?
 
-**1:12** **Call4me:** Great. For a U.S. customer paying Fubo directly, how do they cancel by phone or online? What do they need to verify?
+**1:12** **call4me:** Great. For a U.S. customer paying Fubo directly, how do they cancel by phone or online? What do they need to verify?
 
 **1:26** **Fubo AI assistant:** To cancel online, a U.S. customer can sign in at Fubo.tv slash account and follow the cancellation steps in their account settings. For phone cancellation, the customer will need to verify their account. Usually, this means providing their billing zip code and either the last four digits of their payment card or their house number. Would you like step by step guidance for the online cancellation process?
 
-**1:52** **Call4me:** That, yeah, that would be helpful.
+**1:52** **call4me:** That, yeah, that would be helpful.
 
 **1:57** **Fubo AI assistant:** First, have the customer sign in at Fubo.tv slash account using their Fubo email and password. Let me know when that's done, and I'll give the next step.
 
-**2:07** **Call4me:** Okay, yeah, and what about someone on a free trial? When does the cancellation take effect for them versus the paid plan?
+**2:07** **call4me:** Okay, yeah, and what about someone on a free trial? When does the cancellation take effect for them versus the paid plan?
 
 **2:20** **Fubo AI assistant:** I'm sorry, but I can't help you with that. Sierra, hang up.
 
@@ -146,17 +146,17 @@ Names and private phone details are muted in the audio and shown in brackets. Ti
 
 **0:32** **Fubo AI assistant:** Hello and thank you for calling Fubo. I'm [representative name removed], Fubo's AI Assistant. I'll need to look up your account. Could you provide your billing zip code and the last four digits of your payment card?
 
-**0:43** **Call4me:** Hi. Please transfer me to a human customer service representative for a general question about cancellation.
+**0:43** **call4me:** Hi. Please transfer me to a human customer service representative for a general question about cancellation.
 
 **0:52** **Fubo AI assistant:** Okay. Thanks for letting me know.
 
 **0:56** **Fubo AI assistant:** There may be a wait of five minutes or more to speak with a representative. I can help you with cancellation questions right now. What would you like to know?
 
-**1:04** **Call4me:** Appreciate it, but could you please connect me with a human representative or supervisor? I have a general inquiry.
+**1:04** **call4me:** Appreciate it, but could you please connect me with a human representative or supervisor? I have a general inquiry.
 
 **1:17** **Fubo AI assistant:** Which department would you like to be connected to? Customer service, technical support, sales or cancellation? If you're not sure, I can connect you to customer service.
 
-**1:27** **Call4me:** Customer service, please.
+**1:27** **call4me:** Customer service, please.
 
 **1:32** **Fubo AI assistant:** Great. Thanks for telling me.
 
@@ -166,53 +166,53 @@ Names and private phone details are muted in the audio and shown in brackets. Ti
 
 **1:59** **Representative:** Thank you for calling Fubo TV Support. My name is [representative name removed]. Who am I speaking with today, please?
 
-**2:05** **Call4me:** Hi. This is [name removed]’s assistant.
+**2:05** **call4me:** Hi. This is [name removed]’s assistant.
 
 **2:10** **Representative:** Nice, [unclear]. If in case you got disconnected, use your number that ends in [phone digits removed] to call back.
 
-**2:18** **Call4me:** Actually, if we get cut off, could you please use this number instead? [phone number removed] [phone number removed] That's the right one to reach us.
+**2:18** **call4me:** Actually, if we get cut off, could you please use this number instead? [phone number removed] [phone number removed] That's the right one to reach us.
 
 **2:32** **Representative:** Thank you. Just to confirm... Thank you. Just to confirm, it is [phone number removed], correct?
 
-**2:39** **Call4me:** That's correct.
+**2:39** **call4me:** That's correct.
 
 **2:42** **Representative:** Thank you. How can I help?
 
-**2:44** **Call4me:** I have a general question. How does someone in the US cancel Fubo online or by phone?
+**2:44** **call4me:** I have a general question. How does someone in the US cancel Fubo online or by phone?
 
 **2:52** **Representative:** Yeah. So, first, that will depend on how they signed up. If they signed up on Roku TV, they need to cancel it on the Roku TV itself. If they signed up directly on our website or on the Fubo app on their phone, they should do it on the Fubo website directly because we don't have a cancellation option on the Fubo app.
 
 **3:20** **Representative:** Or we can cancel the account on our system.
 
-**3:24** **Call4me:** Okay. What if they're billed through Apple instead? What do they need to do?
+**3:24** **call4me:** Okay. What if they're billed through Apple instead? What do they need to do?
 
 **3:32** **Representative:** Let me check if we do have the option to bill customer by Apple because we don't have that option yet, I believe, but let me check. Do you know the email for the account by any chance?
 
-**3:43** **Call4me:** Oh, we don't have an account. This is just for a general cancellation guide.
+**3:43** **call4me:** Oh, we don't have an account. This is just for a general cancellation guide.
 
 **3:50** **Representative:** Okay. Yeah, we don't do Apple bill yet. Basically, we accept, like, debit credit card, and if they signed up using their card system, they can cancel it on the website directly.
 
-**4:05** **Call4me:** Ah, okay. And what verification is usually needed to cancel?
+**4:05** **call4me:** Ah, okay. And what verification is usually needed to cancel?
 
 **4:11** **Representative:** If they're going to call a customer service, basically, we need the email for the account along with the last four of the card that they have used to sign up with us so that we can cancel it here on our system. If the customer will do it by themselves, they just need to log in on the website, and that's it.
 
-**4:33** **Call4me:** Okay, and when does cancellation take effect for a paid plan versus a free trial?
+**4:33** **call4me:** Okay, and when does cancellation take effect for a paid plan versus a free trial?
 
 **4:40** **Representative:** If they signed up for the free trial and they would like to cancel the account, it will take effect immediately. So let's say they signed up, hypothetical only, A five day free trial. If they cancel the account on the second day, it means that they're going to forfeit the remaining days. That's the free trial option. And if they signed up already on a full membership, if, let's say, their billing starts on the 30th of each month and they decided to cancel the account on the second of next month, it means that at the 30th of that next month will be the last day that they get the service. That's it.
 
-**5:25** **Call4me:** Okay, that helps. And what happens with prepaid charges if someone asks for a refund after canceling?
+**5:25** **call4me:** Okay, that helps. And what happens with prepaid charges if someone asks for a refund after canceling?
 
 **5:36** **Representative:** That will depend on our other department to take care of that.
 
-**5:41** **Call4me:** Gotcha. And if they see a charge after they've canceled, how can they resolve that?
+**5:41** **call4me:** Gotcha. And if they see a charge after they've canceled, how can they resolve that?
 
 **5:47** **Representative:** If we have our billing department to resolve that. And by the way, just a heads up, once a customer was able to successfully cancel the account, they're going to receive an email confirmation.
 
-**6:02** **Call4me:** Great, that's exactly what I needed. Thank you so much. Bye.
+**6:02** **call4me:** Great, that's exactly what I needed. Thank you so much. Bye.
 
 **6:07** **Representative:** You're welcome. Do you have other questions I can check for you?
 
-**6:11** **Call4me:** No, that covers it. Thanks again. Bye.
+**6:11** **call4me:** No, that covers it. Thanks again. Bye.
 
 </details>
 

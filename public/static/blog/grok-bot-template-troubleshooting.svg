@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">Grok Bot calling workflow recipient setup checklist</title>
-  <desc id="desc">Check the recipient's Call4Me access and call brief before dialing.</desc>
+  <desc id="desc">Check the recipient's call4me access and call brief before dialing.</desc>
   <rect width="1200" height="630" fill="#f6f6f2"/>
   <text x="80" y="112" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="35">call4me guides · oct 5, 2026</text>
   <text x="80" y="210" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="66">Grok recipient checklist.</text>
-  <text x="80" y="278" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="42">Check the recipient's Call4Me setup.</text>
+  <text x="80" y="278" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="42">Check the recipient's call4me setup.</text>
   <g font-family="Arial, Helvetica, sans-serif" font-size="34">
     <rect x="80" y="340" width="470" height="190" rx="8" fill="#ffffff"/>
     <rect x="650" y="340" width="470" height="190" rx="8" fill="#ffffff"/>
     <text x="112" y="397" fill="#ffb000">calling method</text>
     <text x="112" y="453" fill="#64645f">brief and evidence checks</text>
     <text x="682" y="397" fill="#ffb000">recipient connection</text>
-    <text x="682" y="453" fill="#64645f">Call4Me tools and account</text>
+    <text x="682" y="453" fill="#64645f">call4me tools and account</text>
     <text x="575" y="439" fill="#ffb000" font-size="54">+</text>
   </g>
   <text x="80" y="582" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="28">Download the setup manifest and checklist.</text>

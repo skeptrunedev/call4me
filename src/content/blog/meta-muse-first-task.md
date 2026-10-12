@@ -1,8 +1,8 @@
 ---
 title: "How to use Meta Muse for your first informational phone call"
 seoTitle: "How to use Meta Muse for a first phone call"
-subtitle: Hear Muse use Call4me to ask a library about laptop seating, outlets and guest WiFi. Includes the actual recording, a bounded call brief and the limits of the answers.
-description: Hear our actual Meta Muse phone call to a library through Call4me. Includes saved connector reuse, the recording, transcript and a reusable call brief.
+subtitle: Hear Muse use call4me to ask a library about laptop seating, outlets and guest WiFi. Includes the actual recording, a bounded call brief and the limits of the answers.
+description: Hear our actual Meta Muse phone call to a library through call4me. Includes saved connector reuse, the recording, transcript and a reusable call brief.
 date: 2026-10-05
 updated: 2026-10-06
 tags: meta muse, ai agents, phone calls, muse use cases
@@ -12,7 +12,7 @@ imageAlt: A first Muse phone task moves from a verified branch number through on
 
 **Use Meta Muse for one small informational phone call: ask a library whether its general seating fits your laptop session.** Published hours establish when it opens. A conversation can clarify where adults can work, where to find outlets and how guests access WiFi. The result should identify who answered and what they could actually confirm.
 
-On October 6, 2026, we ran this task in consumer Muse through the saved Call4me connector. A fresh conversation returned a successful balance check, placed one Main Library call, followed its status and retrieved its transcript and recording metadata. A staff member answered the laptop, outlet and WiFi questions. You can hear the complete call below.
+On October 6, 2026, we ran this task in consumer Muse through the saved call4me connector. A fresh conversation returned a successful balance check, placed one Main Library call, followed its status and retrieved its transcript and recording metadata. A staff member answered the laptop, outlet and WiFi questions. You can hear the complete call below.
 
 This establishes the tested Muse conversation's calling workflow. It does not test Muse's native calling feature or establish reliability in every future conversation. The [connection guide](/blog/meta-muse-ai-agent-phone-calls) separates the original setup, an earlier delivery problem and this successful reuse.
 
@@ -22,7 +22,7 @@ Use the [one call brief](/static/blog/resources/meta-muse-first-task/call-brief.
 
 We checked the Main Library's [published number and Tuesday hours](https://sfpl.org/locations/main-library), then approved one informational call to (415) 557 4400 with a four minute limit. It began at 4:22 pm Pacific on October 6. No visit date, reservation, purchase, voicemail or callback was requested.
 
-Muse returned call ID `call_pk4x8psku92xtb48`. We independently matched that ID to the completed Call4me record and its exact provider recording. The saved request retained the four minute cap. Muse used `call4me_get_call` to follow the same call and `call4me_get_recordings` to retrieve the available recording metadata.
+Muse returned call ID `call_pk4x8psku92xtb48`. We independently matched that ID to the completed call4me record and its exact provider recording. The saved request retained the four minute cap. Muse used `call4me_get_call` to follow the same call and `call4me_get_recordings` to retrieve the available recording metadata.
 
 | Question | What the staff member said | What remains unverified |
 | :--- | :--- | :--- |
@@ -106,7 +106,7 @@ The Main page links to an [official WiFi FAQ](https://sfpl.libanswers.com/faq/88
 
 ## Check Muse's phone connection with a harmless read
 
-Meta [documents](https://www.meta.com/help/artificial-intelligence/1687253048996149/) supported connectors and asking Muse to create custom connections. Use the [consumer Muse setup guide](/blog/meta-muse-ai-agent-phone-calls) if Call4me is not connected. Enter credentials through its connection flow, then ask for `call4me_get_balance` without placing a call.
+Meta [documents](https://www.meta.com/help/artificial-intelligence/1687253048996149/) supported connectors and asking Muse to create custom connections. Use the [consumer Muse setup guide](/blog/meta-muse-ai-agent-phone-calls) if call4me is not connected. Enter credentials through its connection flow, then ask for `call4me_get_balance` without placing a call.
 
 Continue only when that request returns an authenticated result and Muse can discover the current calling tools. A connector card or a saved skill claim is insufficient. If the message itself is not delivered, solve that separately before asking for a call. The consumer Muse integration described here differs from [Muse Code's native MCP path](/blog/muse-code-mcp-phone-calls).
 
@@ -116,7 +116,7 @@ Use the [connection and result worksheet](/static/blog/resources/meta-muse-first
 
 This [complete prompt](/static/blog/resources/meta-muse-first-task/first-task-prompt.txt) includes preparation, access checks and the approval boundary. Replace the bracketed inputs before using it:
 
-> I want one informational library call through Call4me. My chosen branch is [branch], my visit date is [date], and my quiet laptop work window is [local start and end time with timezone]. Read that branch's official SFPL page to verify its number and hours, and read the study room policy. Check Call4me access with a balance request, without dialing. Prepare questions about adult general seating for a personal laptop, outlet locations and guest WiFi login. Do not ask for a guaranteed seat, a room reservation or permission to take a business call inside the library. Show me the selected branch, published number and source, exact questions, caller identity from my profile and a four minute call limit. Ask for approval of that single call and wait. After I approve, check the current general category requirements, use the live tool schema and call once with call4me_place_call.max_minutes set to 4. Do not reserve, buy, leave voicemail, arrange a callback or share contact details beyond the identity I approved. Follow the same returned call ID with call4me_get_call until the call ends, collect its transcript and retrieve available evidence with call4me_get_recordings, and return who answered, each answer, unresolved questions and the result links. If access or call delivery fails, report that failure without claiming an answer.
+> I want one informational library call through call4me. My chosen branch is [branch], my visit date is [date], and my quiet laptop work window is [local start and end time with timezone]. Read that branch's official SFPL page to verify its number and hours, and read the study room policy. Check call4me access with a balance request, without dialing. Prepare questions about adult general seating for a personal laptop, outlet locations and guest WiFi login. Do not ask for a guaranteed seat, a room reservation or permission to take a business call inside the library. Show me the selected branch, published number and source, exact questions, caller identity from my profile and a four minute call limit. Ask for approval of that single call and wait. After I approve, check the current general category requirements, use the live tool schema and call once with call4me_place_call.max_minutes set to 4. Do not reserve, buy, leave voicemail, arrange a callback or share contact details beyond the identity I approved. Follow the same returned call ID with call4me_get_call until the call ends, collect its transcript and retrieve available evidence with call4me_get_recordings, and return who answered, each answer, unresolved questions and the result links. If access or call delivery fails, report that failure without claiming an answer.
 
 The caller identity matters because an account may have a saved calling profile. Inspect it before approval. Our [recorded research calls](/blog/agent-web-research-phone-calls-sf-private-dining) showed callers introducing the profile owner's name even when a brief sought to avoid sharing it. A prompt alone should not be treated as a verified privacy control.
 
@@ -151,7 +151,7 @@ The [reference report](/static/blog/resources/meta-muse-first-task/reference-rep
 
 Use this result prompt after the attempt:
 
-> Inspect the same Call4me call ID we started. Separate call status from task outcome. For each library question, give the answer, who supplied it and the supporting transcript passage, or mark it unanswered. Link the available recording. Do not treat a menu, voicemail or completed status as a staff confirmation. If the call is still active, say so. If a tool timed out, check that ID again without placing another call.
+> Inspect the same call4me call ID we started. Separate call status from task outcome. For each library question, give the answer, who supplied it and the supporting transcript passage, or mark it unanswered. Link the available recording. Do not treat a menu, voicemail or completed status as a staff confirmation. If the call is still active, say so. If a tool timed out, check that ID again without placing another call.
 
 ## Move from an informational call to an authorized task
 

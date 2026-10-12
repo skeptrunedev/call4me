@@ -91,35 +91,35 @@ Timestamps are approximate. This transcript was compared with independent automa
 
 **0:20** **Representative:** Hi, thank you for calling Bayside Family Eye Care. [Representative name and adjacent introduction removed.] How can I help you today?
 
-**0:24** **Call4me:** Hey, yeah, just hoping to get a quick idea of your current self pay price for a routine adult glasses exam, including refraction.
+**0:24** **call4me:** Hey, yeah, just hoping to get a quick idea of your current self pay price for a routine adult glasses exam, including refraction.
 
 **0:37** **Representative:** Um, our, that would, for the glasses?
 
-**0:40** **Call4me:** Yes, just for the glasses exam.
+**0:40** **call4me:** Yes, just for the glasses exam.
 
 **0:45** **Representative:** Just for the glasses exam would be $99, but for the, um, the health check it's $138.
 
-**0:53** **Call4me:** Gotcha. So, is that health check optional or required with the exam?
+**0:53** **call4me:** Gotcha. So, is that health check optional or required with the exam?
 
 **0:59** **Representative:** It's optional.
 
-**1:02** **Call4me:** Perfect, thanks. And do you also have the pricing for a standard soft contact lens exam and fitting?
+**1:02** **call4me:** Perfect, thanks. And do you also have the pricing for a standard soft contact lens exam and fitting?
 
 **1:10** **Representative:** It would be $149 for the spherical, $169 astigmatism, $199, um, for multifocal and monovision.
 
-**1:22** **Call4me:** Thanks. And does that include the follow ups?
+**1:22** **call4me:** Thanks. And does that include the follow ups?
 
 **1:26** **Representative:** The follow up is complimentary within three months.
 
-**1:30** **Call4me:** Perfect. Is a Costco membership required for the exam?
+**1:30** **call4me:** Perfect. Is a Costco membership required for the exam?
 
 **1:35** **Representative:** No.
 
-**1:37** **Call4me:** Got it. And how does someone usually book an appointment, and how soon are they available?
+**1:37** **call4me:** Got it. And how does someone usually book an appointment, and how soon are they available?
 
 **1:42** **Representative:** [Can/Could, unclear] you repeat that question one more time?
 
-**1:44** **Call4me:** Sure. So, how does someone book an appointment, and how soon are they available?
+**1:44** **call4me:** Sure. So, how does someone book an appointment, and how soon are they available?
 
 **1:48** **Recording:** [No further answer before the recording ends at 1:51.]
 

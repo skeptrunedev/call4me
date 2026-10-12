@@ -78,15 +78,15 @@ The recording is approximately **3 minutes 14 seconds**. The employee name and a
 
 These excerpts were checked against two independent automatic transcriptions of the source recording. Timestamps are approximate. No human listening verification is claimed. The excerpts omit greetings, the transfer and closing acknowledgments.
 
-**0:41** **Call4me:** This is actually just a general policy question. Could I speak with the representative, please?
+**0:41** **call4me:** This is actually just a general policy question. Could I speak with the representative, please?
 
-**1:01** **Call4me:** It's kind of a general policy question for a consumer guide, not for a specific account. Could I talk with a live person about that?
+**1:01** **call4me:** It's kind of a general policy question for a consumer guide, not for a specific account. Could I talk with a live person about that?
 
 **1:16** **Virtual assistant:** Since you're looking for details on our policies for your consumer guide, I'll connect you to a live specialist who can help you out.
 
-**2:19** **Call4me:** No, this isn't about an account. It's just a general policy question.
+**2:19** **call4me:** No, this isn't about an account. It's just a general policy question.
 
-**2:31** **Call4me:** Sure. So for direct billed subscriptions, what cancellation routes are currently available? Phone, online, chat, and how do customers confirm it's actually canceled?
+**2:31** **call4me:** Sure. So for direct billed subscriptions, what cancellation routes are currently available? Phone, online, chat, and how do customers confirm it's actually canceled?
 
 **2:45** **Representative:** So we can cancel the service through online chat and call, and once this cancellation has been processed, the subscriber will be receiving a confirmation email.
 

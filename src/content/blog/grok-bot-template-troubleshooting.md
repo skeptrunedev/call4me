@@ -1,16 +1,16 @@
 ---
 title: "Grok Bot calling prompts: recipient setup checklist"
 seoTitle: "Grok Bot recipient setup checklist for calls"
-subtitle: Check the recipient's Call4Me tools, account and task inputs before sharing a calling workflow. Includes a setup manifest and acceptance checklist.
+subtitle: Check the recipient's call4me tools, account and task inputs before sharing a calling workflow. Includes a setup manifest and acceptance checklist.
 description: "A recipient checklist for Grok Bot calling workflows, based on xAI documentation. Download the manifest and check tools, account access and task inputs."
 date: 2026-10-05
 updated: 2026-10-07
 tags: grok, templates, mcp, ai agents, ai phone assistant
 authors: nick
-imageAlt: Recipient checklist for Call4Me access, calling instructions and current task inputs
+imageAlt: Recipient checklist for call4me access, calling instructions and current task inputs
 ---
 
-**Use this checklist to review the recipient's Call4Me setup before a call.** It covers tools, account ownership, task inputs and result checks for a shared Bot or instruction file.
+**Use this checklist to review the recipient's call4me setup before a call.** It covers tools, account ownership, task inputs and result checks for a shared Bot or instruction file.
 
 xAI's [template guide](https://x.ai/bot/guides/templates-for-grok-bot) says a copy needs its own setup and explicitly calls out custom MCP servers, scripts and code that are not included. A successful owner run therefore does not establish that a recipient can run the same workflow.
 
@@ -28,7 +28,7 @@ Three similar looking situations have different ownership and access rules:
 
 For a public template, the recipient owns and maintains their copy separately. A Team Bot is maintained centrally by its owner. Do not troubleshoot one as if it were the other. [Official Team Bot comparison](https://docs.x.ai/grok-bot/team-bots#team-bots-personal-bots-and-public-templates).
 
-If you shared our [five phone calling prompts](/blog/grok-bot-templates), those are instruction files. They do not install Call4Me or authorize calls.
+If you shared our [five phone calling prompts](/blog/grok-bot-templates), those are instruction files. They do not install call4me or authorize calls.
 
 <span id="trace-the-failure-from-instruction-to-evidence"></span>
 <span id="symptom-the-bot-knows-the-workflow-but-cannot-find-a-tool"></span>
@@ -37,7 +37,7 @@ If you shared our [five phone calling prompts](/blog/grok-bot-templates), those 
 
 Ask the Bot to check for `call4me_get_balance`, `call4me_get_requirements`, `call4me_place_call`, `call4me_get_call` and `call4me_get_recordings` in its actual available tools. Compare that with the setup manifest.
 
-For Call4Me, use our [Grok connector setup instructions](/blog/grok-connectors-mcp-phone-calls#how-to-add-an-mcp-server-to-grok-bot). After the recipient adds their own connection, ask for `call4me_get_balance`. This is an access check, not a phone call. Review the returned account data before any calling workflow proceeds.
+For call4me, use our [Grok connector setup instructions](/blog/grok-connectors-mcp-phone-calls#how-to-add-an-mcp-server-to-grok-bot). After the recipient adds their own connection, ask for `call4me_get_balance`. This is an access check, not a phone call. Review the returned account data before any calling workflow proceeds.
 
 Do not transfer the owner's key or personal MCP URL as a fix. A template should describe where recipients get their own access, not embed the owner's account.
 
@@ -85,7 +85,7 @@ Ask Grok for the actual id returned by `call4me_place_call`, then use `call4me_g
 
 For a check without dialing:
 
-> Check the Call4Me phone workflow without dialing. Check the actual available tools and run call4me_get_balance. Identify missing access or required inputs without showing credentials. If this task already returned a call id, inspect that same id with call4me_get_call and call4me_get_recordings. Return the observed state, confirmed answers, unanswered questions and the setup step needed next. Do not create a call, booking or callback.
+> Check the call4me phone workflow without dialing. Check the actual available tools and run call4me_get_balance. Identify missing access or required inputs without showing credentials. If this task already returned a call id, inspect that same id with call4me_get_call and call4me_get_recordings. Return the observed state, confirmed answers, unanswered questions and the setup step needed next. Do not create a call, booking or callback.
 
 ## Give recipients a setup manifest
 

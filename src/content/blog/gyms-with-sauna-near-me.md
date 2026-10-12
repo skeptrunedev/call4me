@@ -67,13 +67,13 @@ The recording lasts about **1 minute 34 seconds**. The price answer starts aroun
 
 These excerpts use approximate timestamps and were checked against the saved transcript and independent automatic transcriptions of the source and export. No human listening verification is claimed.
 
-**0:05** **Call4me:** Hey, yeah. I was wondering, do you guys currently have a dry sauna and steam room available right now?
+**0:05** **call4me:** Hey, yeah. I was wondering, do you guys currently have a dry sauna and steam room available right now?
 
 **0:13** **Representative:** Yes, yes we do.
 
 **0:27** **Representative:** It is $30 per person because we are close to D.C. and Reston Town Center, yeah.
 
-**0:51** **Call4me:** Are the sauna, steam room, and pool all included with that pass?
+**0:51** **call4me:** Are the sauna, steam room, and pool all included with that pass?
 
 **0:56** **Representative:** Yes, it's a full day pass.
 

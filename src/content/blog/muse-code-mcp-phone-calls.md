@@ -2,18 +2,18 @@
 title: "Muse Code MCP: connect phone calling tools"
 seoTitle: "Muse Code MCP: connect phone calling tools"
 subtitle: Keep a business phone inquiry in your terminal task. Connect the caller, supply the exact question and inspect the returned outcome, transcript and available recording.
-description: "Set up Muse Code MCP for phone calls with Call4me. Includes tested server configuration, authentication checks, a calling brief and troubleshooting."
+description: "Set up Muse Code MCP for phone calls with call4me. Includes tested server configuration, authentication checks, a calling brief and troubleshooting."
 date: 2026-10-05
 tags: meta muse, muse code, mcp, ai phone assistant
 authors: nick
-imageAlt: Muse Code connects to Call4me through MCP, checks account access and returns evidence from an authorized task
+imageAlt: Muse Code connects to call4me through MCP, checks account access and returns evidence from an authorized task
 ---
 
-**Use Muse Code MCP to connect a phone caller to your terminal task.** Call4me supplies the calling tools. Give Muse Code a specific business inquiry, then ask it to follow the approved call and report what the business actually answered.
+**Use Muse Code MCP to connect a phone caller to your terminal task.** call4me supplies the calling tools. Give Muse Code a specific business inquiry, then ask it to follow the approved call and report what the business actually answered.
 
 This is the terminal client, not the consumer Muse app. Our [consumer Muse guide](/blog/meta-muse-ai-agent-phone-calls) describes a different custom connector workflow. Configuring one client does not configure the other.
 
-We installed **Muse Code 1.4.3 (1.4.3-R5018.1)** on Linux on October 5, 2026 and checked its native commands and configuration behavior. A local MCP fixture successfully initialized and listed its tool through the native client. Production discovery identified Call4me's OAuth requirement. Meta sign in was approved, but the client then required a payment method and signed out. We have not completed a model driven account read or phone call in Muse Code.
+We installed **Muse Code 1.4.3 (1.4.3-R5018.1)** on Linux on October 5, 2026 and checked its native commands and configuration behavior. A local MCP fixture successfully initialized and listed its tool through the native client. Production discovery identified call4me's OAuth requirement. Meta sign in was approved, but the client then required a payment method and signed out. We have not completed a model driven account read or phone call in Muse Code.
 
 ## Start with the question the phone call must answer
 
@@ -34,11 +34,11 @@ muse mcp --help
 
 Meta's [configuration reference](https://dev.meta.ai/docs/muse-code/configuration) places user settings at `~/.config/muse/settings.json`. When `XDG_CONFIG_HOME` is set, our test confirmed the selected path is `$XDG_CONFIG_HOME/muse/settings.json`. If you already have settings, merge the server entry into the existing object. Replacing the whole file could discard other connections and preferences.
 
-The [MCP documentation](https://dev.meta.ai/docs/muse-code/extending#mcp-servers) describes remote HTTP servers, environment variable interpolation and the interactive `/mcp` inventory. Authentication to the model provider and authentication to an MCP service are separate. Completing `muse login` does not establish access to your Call4me account.
+The [MCP documentation](https://dev.meta.ai/docs/muse-code/extending#mcp-servers) describes remote HTTP servers, environment variable interpolation and the interactive `/mcp` inventory. Authentication to the model provider and authentication to an MCP service are separate. Completing `muse login` does not establish access to your call4me account.
 
 ## Add the remote calling server
 
-Sign in to your [Call4me account](/login?next=/account). The calling server URL is `https://call4.me/mcp`.
+Sign in to your [call4me account](/login?next=/account). The calling server URL is `https://call4.me/mcp`.
 
 Our tested client accepted this [settings fragment](/static/blog/resources/muse-code-mcp-phone-calls/settings-fragment.json):
 
@@ -78,7 +78,7 @@ For this tested version, do not assume an HTTP header placeholder carries your A
 
 The fixture was an HTTP MCP server on localhost, with one harmless tool and no account credentials or dialer. Muse Code used its deterministic `echo` provider to start the connection without a paid model session. We recorded actual `initialize`, `notifications/initialized` and `tools/list` requests.
 
-That establishes configuration loading and MCP discovery. It does not establish model reasoning, tool selection, access to your account or calling quality. The [configuration probe results](/static/blog/resources/muse-code-mcp-phone-calls/configuration-probes.json) publish the sanitized test cases and observations. No fixture result is presented as a live Call4me result.
+That establishes configuration loading and MCP discovery. It does not establish model reasoning, tool selection, access to your account or calling quality. The [configuration probe results](/static/blog/resources/muse-code-mcp-phone-calls/configuration-probes.json) publish the sanitized test cases and observations. No fixture result is presented as a live call4me result.
 
 ## Check access without dialing
 
@@ -122,7 +122,7 @@ A menu may establish policy without answering our specific question.
 Never fill in the missing answer.
 ```
 
-Call4me's calling interface separates placing a call from following it. The first response can return while dialing is still underway. Retrieve that same call's result before deciding that the task is complete.
+call4me's calling interface separates placing a call from following it. The first response can return while dialing is still underway. Retrieve that same call's result before deciding that the task is complete.
 
 Our [recorded private dining research](/blog/agent-web-research-phone-calls-sf-private-dining) shows this distinction in executed Codex and Claude Code tasks. Automated concierges and unanswered questions are part of those actual results. They are not Muse Code performance evidence.
 

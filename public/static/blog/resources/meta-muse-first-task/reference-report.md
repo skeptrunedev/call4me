@@ -24,7 +24,7 @@ Unknown: exceptional closures for the chosen date, seating, outlet availability,
 
 ## Phone task finish line
 
-Choose a branch, date, work window and approved caller identity. Verify its official number. Check Call4me access with a balance request without dialing. Show a four minute call plan and wait for specific approval. After approval, check general category requirements and the live tool schema, call once and follow status to completion.
+Choose a branch, date, work window and approved caller identity. Verify its official number. Check call4me access with a balance request without dialing. Show a four minute call plan and wait for specific approval. After approval, check general category requirements and the live tool schema, call once and follow status to completion.
 
 Ask about adult personal laptop use in general seating, outlet locations, guest WiFi login and current restrictions. Do not request room reservations, purchases, voicemail or callbacks. Collect the transcript and available recording. Report who answered, supported answers and open questions. A finished call does not guarantee a seat or an answer.
 

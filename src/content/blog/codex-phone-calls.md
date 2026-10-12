@@ -71,7 +71,7 @@ For your own task, name the intended businesses and phone numbers, and set any t
 
 This is a proposed brief you can adapt, separate from our recorded restaurant test:
 
-> For the subscription we selected, check the business's official cancellation instructions first. Use Call4me to call only about terms or steps we still cannot establish. Ask about the cancellation route for my plan, any deadline or fee, and how confirmation works. Do not cancel, change the plan or accept an offer. Return the answers and remaining steps to this task, including who answered and anything unresolved.
+> For the subscription we selected, check the business's official cancellation instructions first. Use call4me to call only about terms or steps we still cannot establish. Ask about the cancellation route for my plan, any deadline or fee, and how confirmation works. Do not cancel, change the plan or accept an offer. Return the answers and remaining steps to this task, including who answered and anything unresolved.
 
 Our recorded [Planet Fitness inquiries](/blog/cancel-planet-fitness) show why location and plan details matter. If the relevant department is closed, use the [scheduled calling workflow](/blog/schedule-phone-calls-claude-code-codex) with the complete questions and limits saved in the brief.
 

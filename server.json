@@ -3,13 +3,20 @@
   "name": "io.github.skeptrunedev/call4me",
   "title": "call4me",
   "description": "Your AI agent phones businesses for you: books, reschedules, cancels, asks, and waits on hold.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "websiteUrl": "https://call4.me",
   "repository": {
     "url": "https://github.com/skeptrunedev/call4me",
     "source": "github"
   },
   "icons": [
+    {
+      "src": "https://call4.me/static/logo.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ]
+    },
     {
       "src": "https://call4.me/favicon.svg",
       "mimeType": "image/svg+xml",

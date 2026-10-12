@@ -91,69 +91,69 @@ Names and private phone details are muted in the audio and shown in brackets. Ti
 
 **0:16** **Phone system:** To assist you, we need some information to locate your HelloFresh account. Please enter your phone number, starting with the area code, followed by the pound, hashtag, key.
 
-**0:31** **Call4me:** Okay, I'll try to get us to general cancellation information.
+**0:31** **call4me:** Okay, I'll try to get us to general cancellation information.
 
 **0:37** **Phone system:** Are you the account holder? Press 1 for yes, or 2 for no.
 
-**0:44** **Call4me:** Hmm, let me see.
+**0:44** **call4me:** Hmm, let me see.
 
 **0:50** **Phone system:** For delivery inquiries, press 1. For ingredient inquiries, press 2. For technical support, press 3. To cancel your account, press 4. For all other inquiries, press 5.
 
-**1:08** **Call4me:** Okay, trying that one.
+**1:08** **call4me:** Okay, trying that one.
 
 **1:13** **Phone system:** We'll transfer your call to the next available agent. After the call, please stay on the line to answer a couple of quick questions about your experience with our customer support team. We highly value your feedback.
 
 **1:40** **Representative:** Hi, thank you so much for calling HelloFresh. This is [representative name removed]. How can I help?
 
-**1:44** **Call4me:** Hi, this is [name removed]’s assistant. We're putting together a cancellation guide, and I'd love to ask a few quick questions about the proper steps for a U.S. customer.
+**1:44** **call4me:** Hi, this is [name removed]’s assistant. We're putting together a cancellation guide, and I'd love to ask a few quick questions about the proper steps for a U.S. customer.
 
 **1:58** **Representative:** And you wanted to , is this for U.S.?
 
-**2:02** **Call4me:** That's right.
+**2:02** **call4me:** That's right.
 
 **2:03** **Representative:** USA, right?
 
-**2:05** **Call4me:** Yep. Yeah.
+**2:05** **call4me:** Yep. Yeah.
 
 **2:09** **Representative:** Cancellation of the account, you just need to log into the account and cancel it, the subscription.
 
-**2:14** **Call4me:** Okay, and does it need to be done by a certain time to avoid the next box? And what's the time zone on that?
+**2:14** **call4me:** Okay, and does it need to be done by a certain time to avoid the next box? And what's the time zone on that?
 
 **2:20** **Representative:** It should be five days prior to the cancellation, so meaning to say if the delivery date will be on 1, 2, 3, 4, 5, like on the 8th of this month, October, you need to cancel now the box, I mean the account, so that there will be no prior delivery or final delivery of HelloFresh.
 
-**2:45** **Call4me:** Gotcha.
+**2:45** **call4me:** Gotcha.
 
 **2:46** **Representative:** At least five days before the cutoff date.
 
-**2:51** **Call4me:** Okay.
+**2:51** **call4me:** Okay.
 
 **2:52** **Representative:** Go ahead.
 
-**2:52** **Call4me:** And if a box is , sorry, if a box is already processed, can it be refunded or credited in any way?
+**2:52** **call4me:** And if a box is , sorry, if a box is already processed, can it be refunded or credited in any way?
 
 **3:01** **Representative:** It depends to the status of the account. If you'd like me to pull up the account, but that's just an expectation that I'll need to do a verification.
 
-**3:14** **Call4me:** We don't have an account. This is just a general inquiry.
+**3:14** **call4me:** We don't have an account. This is just a general inquiry.
 
 **3:17** **Representative:** You don't have an account, a general inquiry. Yep. Well, if the box has already been generated and it's already beyond cutoff date, I'm afraid we [unclear] process any credit or refund.
 
-**3:29** **Call4me:** I see.
+**3:29** **call4me:** I see.
 
 **3:30** **Representative:** So we might need to , we will still be delivering the final box, final delivery, and you need to cancel the account before the next delivery because it's a weekly subscription.
 
-**3:43** **Call4me:** Okay. And how would someone confirm that their cancellation went through? Is there an email?
+**3:43** **call4me:** Okay. And how would someone confirm that their cancellation went through? Is there an email?
 
 **3:50** **Representative:** They'll be getting a notification email within 24 hours for the confirmation of the cancellation of the account.
 
-**3:58** **Call4me:** Perfect. Thanks. And if the online , what should a customer do if they can't find the cancel option on the website or app?
+**3:58** **call4me:** Perfect. Thanks. And if the online , what should a customer do if they can't find the cancel option on the website or app?
 
 **4:10** **Representative:** They can just give us a call so that we can try to look for the account. We will try to look for the account using the information like the shipping address, email address, and the name of the account holder.
 
-**4:30** **Call4me:** Perfect. Thank you so much. That's super helpful.
+**4:30** **call4me:** Perfect. Thank you so much. That's super helpful.
 
 **4:35** **Representative:** Anything else you'd like to know?
 
-**4:38** **Call4me:** Nope. That's everything. Thanks again. Bye.
+**4:38** **call4me:** Nope. That's everything. Thanks again. Bye.
 
 **4:42** **Representative:** Great. Thank you so much. Bye.
 

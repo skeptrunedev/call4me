@@ -1,7 +1,7 @@
 # Consumer Muse library call, October 6, 2026
 
 This is an actual execution report, separate from the blank preparation templates.
-The client was consumer Meta Muse with the previously saved Call4me custom
+The client was consumer Meta Muse with the previously saved call4me custom
 connector. This did not test Muse Code or native Muse calling.
 
 ## Connection and approved call
@@ -62,5 +62,5 @@ no mute spans were applied. Two independent export transcriptions and decoded
 duration were checked. No human listening verification is claimed.
 
 This result demonstrates one successful consumer Muse calling workflow through
-Call4me. It is not a promise of future seat availability, a comparison of calling
+call4me. It is not a promise of future seat availability, a comparison of calling
 services or a guarantee that every later Muse conversation will work.

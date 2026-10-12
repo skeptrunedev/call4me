@@ -4,6 +4,7 @@ import { RECOMMENDATIONS } from '../../content/blog/recommendations';
 import { lastModified, longDate, postDate, shortPostDate, type Post } from '../lib/blog';
 import { blogIndexPath } from '../lib/blog-pagination';
 import { SITE } from '../lib/pages';
+import { ORG_LD, personLd } from '../lib/entity';
 import { useStaticRender } from '../lib/static-render';
 import type { CommentRow, Engagement } from '../services/blog';
 import { CopyBlock, Layout } from './layout';
@@ -16,8 +17,8 @@ import { CopyBlock, Layout } from './layout';
  * Ported from skillbay's views/blog.tsx.
  */
 
-const AUTHOR_LD = (p: Post) => p.authors.map((a) => ({ '@type': 'Person', name: a.name, alternateName: a.handle, url: a.url, image: `${SITE}${a.avatar}` }));
-const PUBLISHER = { '@type': 'Organization', name: 'call4me', url: SITE, logo: { '@type': 'ImageObject', url: `${SITE}/favicon.svg` } };
+const AUTHOR_LD = (p: Post) => p.authors.map(personLd);
+const PUBLISHER = ORG_LD;
 
 export type Tab = 'latest' | 'top';
 

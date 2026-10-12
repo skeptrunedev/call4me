@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "180c8c240968d908f7e9a25517ca50895c3bf0ffb165ccf10a2c4b6b36d74fed"
+  "sourceHash": "6faa9656e3954d7f254cb41e56add7580685e444497e915d2c53c5d6a7966f03"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -817,7 +817,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "everything-we-have-improved-since-launch": [
     {
       "slug": "meta-muse-first-task",
-      "similarity": 0.620394
+      "similarity": 0.620497
     }
   ],
   "experian-phone-number": [
