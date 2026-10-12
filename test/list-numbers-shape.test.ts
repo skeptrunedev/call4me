@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { registerHooks } from 'node:module';
 import test from 'node:test';
 import { createMcpHandler } from '@modelcontextprotocol/server';
+import { DESTINATION_PRICE_CENTS } from '../src/server/lib/rates';
+import type { Surface } from '../src/server/services/intake';
 import type { Account } from '../src/server/services/accounts';
 import { d1 } from './sqlite-d1';
 
@@ -27,11 +29,11 @@ const OLD_COUNTRY = ['available', 'country', 'monthly', 'monthly_cents', 'name',
 const db = d1();
 await db.prepare(`INSERT INTO numbers (id, account_id, phone_number, country, number_type, included, monthly_cents, status, created_at) VALUES ('n1', 'acct_alice', '+12025550111', 'US', 'local', 1, 0, 'active', 0)`).run();
 await db.prepare(`INSERT INTO number_offers (country, available, reason, upfront_cents, monthly_cents, checked_at) VALUES ('GB', 1, NULL, 100, 100, 0)`).run();
-const handler = (account: Account) =>
-  createMcpHandler(() => createCall4meServer({ env: { DB: db } as unknown as Env, origin: 'https://call4.me', account, stripe: () => { throw new Error('no stripe in tests'); } }), { legacy: 'stateless' });
+const handler = (account: Account, surface: Surface = 'agents') =>
+  createMcpHandler(() => createCall4meServer({ env: { DB: db, PRICE_PER_MINUTE_CENTS: '25' } as unknown as Env, surface, origin: 'https://call4.me', account, stripe: () => { throw new Error('no stripe in tests'); } }), { legacy: 'stateless' });
 
-async function rpc(account: Account, method: string, params: Record<string, unknown> = {}): Promise<Record<string, unknown>> {
-  const res = await handler(account).fetch(
+async function rpc(account: Account, method: string, params: Record<string, unknown> = {}, surface: Surface = 'agents'): Promise<Record<string, unknown>> {
+  const res = await handler(account, surface).fetch(
     new Request('https://call4.me/mcp', {
       method: 'POST',
       headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream' },
@@ -76,4 +78,39 @@ test('declared output schemas accept keys added later', async () => {
   assert.ok(declared.some((t) => t.name === 'call4me_list_numbers') && declared.some((t) => t.name === 'call4me_get_recordings'));
   for (const t of declared) walk(t.name, t.outputSchema);
   assert.deepEqual(strict, []);
+});
+
+for (const surface of ['agents', 'chatgpt', 'claude'] as const) {
+  test(`${surface} call tools describe the default limit and direct current rates to an available tool`, async () => {
+    const { tools } = await rpc({ id: 'acct_alice' } as Account, 'tools/list', {}, surface) as {
+      tools: { name: string; description: string; inputSchema: { properties: { max_minutes?: { description: string } } } }[];
+    };
+    const place = tools.find((t) => t.name === 'call4me_place_call')!;
+    const rateTool = surface === 'agents' ? 'call4me_list_numbers' : 'call4me_get_balance';
+    assert.ok(tools.some((t) => t.name === rateTool));
+    assert.ok(place.description.includes(rateTool));
+    assert.doesNotMatch(place.description, /\$\d/);
+    for (const name of ['call4me_place_call', 'call4me_schedule_call']) {
+      const cap = tools.find((t) => t.name === name)!.inputSchema.properties.max_minutes!.description;
+      assert.match(cap, /Defaults to 30 minutes/);
+      assert.match(cap, /up to 4 hours/);
+    }
+  });
+}
+
+test('list_numbers returns all current destination rates even without number availability', async () => {
+  const result = await rpc({ id: 'acct_alice', email: 'alice@example.com' } as Account, 'tools/call', { name: 'call4me_list_numbers', arguments: {} });
+  const text = (result.content as { text: string }[]).map((part) => part.text).join('\n');
+  assert.match(text, /calling rates: \$0.25\/min/);
+  for (const [country, cents] of Object.entries(DESTINATION_PRICE_CENTS)) {
+    assert.ok(text.includes(`${country} $${(cents / 100).toFixed(2)}/min`));
+  }
+});
+
+test('ChatGPT balance returns current destination rates without needing a purchase tool', async () => {
+  const result = await rpc({ id: 'acct_alice', email: 'alice@example.com' } as Account, 'tools/call', { name: 'call4me_get_balance', arguments: {} }, 'chatgpt');
+  assert.notEqual(result.isError, true);
+  const out = result.structuredContent as { price_per_minute: string; price_per_minute_by_country: Record<string, string> };
+  assert.equal(out.price_per_minute, '$0.25');
+  assert.deepEqual(out.price_per_minute_by_country, Object.fromEntries(Object.entries(DESTINATION_PRICE_CENTS).map(([country, cents]) => [country, `$${(cents / 100).toFixed(2)}`])));
 });

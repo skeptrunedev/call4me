@@ -110,8 +110,9 @@ export class CallError extends Error {
   }
 }
 
-/** A call runs as long as the balance covers, up to Telnyx's own ceiling on one call leg (time_limit_secs, 4 hours). */
+/** Calls default to 30 minutes; an explicit cap can reach Telnyx's 4 hour ceiling. */
 export const LIMITS = {
+  defaultMinutes: 30,
   maxMinutes: 240,
 };
 
@@ -209,7 +210,7 @@ export function calls(db: D1Database) {
       const balance = await accounts(db).balanceCents(account.id);
       if (balance < pricePerMinuteCents) throw new CallError(`balance is $${(balance / 100).toFixed(2)}; ${surface === 'agents' ? 'add credits with call4me_add_funds' : 'the user can add credits on the call4me website'}`, 402);
       const affordable = Math.floor(balance / pricePerMinuteCents);
-      const maxMinutes = Math.max(1, Math.min(input.max_minutes ?? LIMITS.maxMinutes, LIMITS.maxMinutes, affordable));
+      const maxMinutes = Math.max(1, Math.min(input.max_minutes ?? LIMITS.defaultMinutes, LIMITS.maxMinutes, affordable));
       const holdCents = maxMinutes * pricePerMinuteCents;
 
       const whenFields = intake.known.filter((k) => k.grants);
@@ -227,7 +228,7 @@ export function calls(db: D1Database) {
       };
       const id = `call_${newId()}`;
       if (!(await accounts(db).hold(account.id, holdCents, `hold:${id}`, `up to ${maxMinutes} min to ${input.business.trim()}`))) {
-        throw new CallError('another call is holding those credits (a call without max_minutes holds the whole balance); wait for it to finish, add credits, or pass max_minutes', 402);
+        throw new CallError('another call is holding those credits; wait for it to finish, add credits, or pass a smaller max_minutes', 402);
       }
       await db
         .prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, category, status, hold_cents, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?)`)

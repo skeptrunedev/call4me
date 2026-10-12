@@ -4,6 +4,8 @@ import { checkDialable, formatPhone, type PhoneCheck } from '../lib/phone';
 import { telnyx, TelnyxError, type AvailableNumber, type NumberOrderStatus } from '../lib/telnyx';
 import { accounts, dollars, type Account } from './accounts';
 import { CALLBACK_WINDOW_MS } from './calls';
+import { addCreditsPath } from './drip';
+import { isRecipientRejected, makeMessenger, type Messenger } from '../lib/messaging';
 
 /**
  * The phone numbers an account holds. Its first US number is free and bought on its first
@@ -93,6 +95,10 @@ export interface NumberRow {
   order_id: string | null;
   /** 1 when every account may call out from it (see sharedNumber). */
   shared: number;
+  renewal_notice_at?: number | null;
+  renewal_email_sent_at?: number | null;
+  renewal_email_rejected_at?: number | null;
+  renewal_email_claim_until?: number | null;
 }
 
 export interface NumberView {
@@ -192,6 +198,11 @@ export function pendingNumberView(r: NumberRow): PendingNumberView {
   };
 }
 
+/** Give a delivered warning a day to act; undeliverable warnings use the first attempt instead. */
+function releaseAfter(r: NumberRow): number {
+  return Math.max(r.paid_through! + GRACE_DAYS * DAY, (r.renewal_email_sent_at ?? r.renewal_notice_at ?? 0) + DAY);
+}
+
 export function numberView(r: NumberRow, at = now()): NumberView {
   const overdue = !r.included && r.paid_through !== null && r.paid_through <= at;
   return {
@@ -205,7 +216,7 @@ export function numberView(r: NumberRow, at = now()): NumberView {
     monthly_cents: r.monthly_cents,
     renews: r.included || r.paid_through === null ? null : day(r.paid_through),
     overdue,
-    release_after: overdue ? day(r.paid_through! + GRACE_DAYS * DAY) : null,
+    release_after: overdue ? day(releaseAfter(r)) : null,
   };
 }
 
@@ -294,9 +305,39 @@ export async function answeringAccountId(db: D1Database, to: string, from: strin
  */
 const refused = (err: unknown): err is TelnyxError => err instanceof TelnyxError && err.status >= 400 && err.status < 500 && ![401, 403, 429].includes(err.status);
 
-export function numbers(env: Env) {
+export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
   const db = env.DB;
   const provider = telnyx(env);
+
+  /** A claim prevents overlapping cron runs from sending the same warning. An interrupted send
+   * can be retried after its lease expires. SMTP has no idempotency key, so a crash after delivery
+   * but before recording it can still result in a duplicate, rather than silently losing notice. */
+  async function warnRenewal(n: NumberRow, at: number): Promise<NumberRow | null> {
+    const until = at + 5 * 60_000;
+    const claim = await db.prepare(`UPDATE numbers SET renewal_notice_at = COALESCE(renewal_notice_at, ?), renewal_email_claim_until = ?
+      WHERE id = ? AND status = 'active' AND paid_through = ? AND renewal_email_sent_at IS NULL
+      AND renewal_email_rejected_at IS NULL AND (renewal_email_claim_until IS NULL OR renewal_email_claim_until <= ?)`)
+      .bind(at, until, n.id, n.paid_through, at).run();
+    const current = () => db.prepare(`SELECT * FROM numbers WHERE id = ? AND status = 'active' AND paid_through = ?`).bind(n.id, n.paid_through).first<NumberRow>();
+    const row = await current();
+    if (!row || !claim.meta.changes) return row;
+    try {
+      const account = await accounts(db).byId(n.account_id);
+      if (!account) throw new Error('renewal account missing');
+      const link = `https://${env.CANONICAL_HOST}${await addCreditsPath(env.BETTER_AUTH_SECRET, n.account_id)}`;
+      const deadline = new Date(releaseAfter({ ...row, renewal_email_sent_at: at })).toISOString();
+      const text = `Your call4me number ${formatPhone(n.phone_number)} could not renew because your available credits do not cover its ${dollars(n.monthly_cents)} monthly fee.\n\nAdd credits before ${deadline} to keep this number: ${link}\n\nWe will retry renewal automatically. If there are still insufficient credits at that deadline, the number will be released and may become unavailable to buy again.`;
+      const esc = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      const html = text.split('\n\n').map(p => `<p>${esc(p).replace(esc(link), `<a href="${esc(link)}">add credits</a>`)}</p>`).join('\n');
+      await messenger.sendEmail(account.email, 'Add credits to keep your call4me number', text, html);
+      await db.prepare(`UPDATE numbers SET renewal_email_sent_at = ?, renewal_email_claim_until = NULL WHERE id = ? AND paid_through = ? AND renewal_email_claim_until = ?`).bind(at, n.id, n.paid_through, until).run();
+    } catch (err) {
+      console.error('number renewal email failed', n.id, String(err));
+      await db.prepare(`UPDATE numbers SET renewal_email_rejected_at = ?, renewal_email_claim_until = NULL WHERE id = ? AND paid_through = ? AND renewal_email_claim_until = ?`)
+        .bind(isRecipientRejected(err) ? at : null, n.id, n.paid_through, until).run();
+    }
+    return current();
+  }
 
   async function active(accountId: string): Promise<NumberRow[]> {
     const { results } = await db.prepare(`SELECT * FROM numbers WHERE account_id = ? AND status = 'active' ORDER BY included DESC, created_at`).bind(accountId).all<NumberRow>();
@@ -711,9 +752,15 @@ export function numbers(env: Env) {
         // The ref is per period: a run that charged but died before extending just extends.
         const paid = (await ledger.spend(n.account_id, n.monthly_cents, 'number', ref, note)) || Boolean(await db.prepare(`SELECT 1 FROM ledger WHERE ref = ?`).bind(ref).first());
         if (paid) {
-          await db.prepare(`UPDATE numbers SET paid_through = ? WHERE id = ? AND paid_through = ?`).bind(paidThrough + RENEWAL_DAYS * DAY, n.id, paidThrough).run();
+          await db.prepare(`UPDATE numbers SET paid_through = ?, renewal_notice_at = NULL, renewal_email_sent_at = NULL, renewal_email_rejected_at = NULL, renewal_email_claim_until = NULL WHERE id = ? AND paid_through = ?`).bind(paidThrough + RENEWAL_DAYS * DAY, n.id, paidThrough).run();
           out.renewed++;
-        } else if (at >= paidThrough + GRACE_DAYS * DAY) {
+        } else {
+          const warned = await warnRenewal(n, at);
+          if (!warned) continue;
+          if (at < releaseAfter(warned) || (warned.renewal_email_claim_until ?? 0) > at) {
+            out.overdue++;
+            continue;
+          }
           try {
             await provider.releaseNumber(n.phone_number);
             await db.prepare(`UPDATE numbers SET status = 'released', released_at = ? WHERE id = ?`).bind(at, n.id).run();
@@ -721,8 +768,6 @@ export function numbers(env: Env) {
           } catch (err) {
             console.error('number release failed', n.id, err);
           }
-        } else {
-          out.overdue++;
         }
       }
       return out;

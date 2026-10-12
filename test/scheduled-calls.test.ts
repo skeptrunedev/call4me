@@ -139,6 +139,9 @@ test('the cron carries unattended execution into stored voice setup and both pro
   await scheduledCalls(db).schedule(alice, canby, new Date(at + 60_000).toISOString(), 'agents', at);
   assert.deepEqual(await placeDueCalls(env, at + 60_000), { placed: 1, failed: 0, missed: 0 });
   assert.equal(dials, 1);
+  const call = await db.prepare(`SELECT brief, hold_cents FROM calls WHERE account_id = ?`).bind(alice.id).first<{ brief: string; hold_cents: number }>();
+  assert.equal(JSON.parse(call!.brief).max_minutes, 30);
+  assert.equal(call!.hold_cents, 750);
   assert.equal(setups.length, 1);
   assert.equal(setups[0].unattended, true);
   assert.match(setups[0].instructions, /Do not put the other person on hold for a user response/);
