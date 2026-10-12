@@ -63,6 +63,11 @@ input:not([type=checkbox]):not([type=radio]):not([type=hidden]), select, textare
   color: var(--ink);
   line-height: 1.5;
 }
+input:not([type=checkbox]):not([type=radio]):not([type=hidden]):focus-visible, select:focus-visible, textarea:focus-visible {
+  border-color: var(--ink);
+  outline: 1px solid var(--ink);
+  outline-offset: 0;
+}
 input[type=checkbox], input[type=radio] { accent-color: var(--ink); }
 textarea { width: 100%; resize: vertical; }
 label { display: block; margin: 18px 0 8px; font-size: 14px; font-weight: 600; }
@@ -123,6 +128,8 @@ footer .rss-link svg { vertical-align: -.125em; }
 .check input { margin: 0 6px 0 0; vertical-align: -.1em; }
 form.inline { margin: 18px 0; }
 .inline-form { display: inline; }
+.examples form[data-collection-search] { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; }
+.examples form[data-collection-search] input[type=search] { flex: 1 1 220px; min-width: 0; max-width: 380px; }
 .form { max-width: 680px; }
 .form .row { margin: 18px 0; }
 .form input[type=text], .form input[type=email] { width: 360px; }
