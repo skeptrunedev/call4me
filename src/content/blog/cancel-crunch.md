@@ -97,31 +97,31 @@ Timestamps are approximate. This transcript was compared with independent automa
 
 **0:04** **Representative:** Thank you for calling Crunch on [Polk, unclear]. This is [representative name removed].
 
-**0:07** **Call4me:** Hey, [representative name removed]. I was just wondering, for the Polk Street location, what's the current way members can cancel their membership? Online, by phone, in person, or mail?
+**0:07** **call4me:** Hey, [representative name removed]. I was just wondering, for the Polk Street location, what's the current way members can cancel their membership? Online, by phone, in person, or mail?
 
 **0:17** **Representative:** Yeah, so you can do it on the app, or you can do it in here on the iPad, or you can send an email to the operation manager or a sales member.
 
-**0:29** **Call4me:** Okay, perfect. Thanks. And can the cancellation be fully completed over the phone, or is that just to get instructions?
+**0:29** **call4me:** Okay, perfect. Thanks. And can the cancellation be fully completed over the phone, or is that just to get instructions?
 
 **0:37** **Representative:** Just to get instructions.
 
-**0:40** **Call4me:** Got it. And how much notice is needed before the next monthly charge or an annual fee?
+**0:40** **call4me:** Got it. And how much notice is needed before the next monthly charge or an annual fee?
 
 **0:46** **Representative:** [Brief hesitation.] Notice, we do give... You have to do it by the 30th of the month.
 
-**0:57** **Call4me:** Okay, by the 30th. And is that the same for monthly and fixed term agreements?
+**0:57** **call4me:** Okay, by the 30th. And is that the same for monthly and fixed term agreements?
 
 **1:04** **Representative:** I believe for monthly, and then I think for the [six term or fixed term, unclear] agreements as well.
 
-**1:12** **Call4me:** That's helpful. And if someone can't access the online cancellation, what's the right next step for them?
+**1:12** **call4me:** That's helpful. And if someone can't access the online cancellation, what's the right next step for them?
 
 **1:19** **Representative:** Yeah, I would give them one of our operations emails, and then that way they can send their email request in, and they would process it for them.
 
-**1:30** **Call4me:** Great, that makes sense. Thanks for walking me through it, [representative name removed]. That's all I needed.
+**1:30** **call4me:** Great, that makes sense. Thanks for walking me through it, [representative name removed]. That's all I needed.
 
 **1:34** **Representative:** Yeah, of course.
 
-**1:34** **Call4me:** Thanks so much. Have a good one. Bye.
+**1:34** **call4me:** Thanks so much. Have a good one. Bye.
 
 **1:36** **Representative:** Okay, [yep/yeah, unclear], have a good day. Bye.
 

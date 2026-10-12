@@ -237,6 +237,7 @@ export const Layout: FC<{
           <nav id="topnav" aria-label="main navigation">
             <a href="/" aria-current={page === 'home' ? 'page' : undefined}>home</a>
             <a href="/examples" aria-current={page === 'examples' ? 'page' : undefined}>examples</a>
+            <a href="/companies" aria-current={page === 'companies' ? 'page' : undefined}>customer service numbers</a>
             <a href="/mcp" aria-current={page === 'mcp' ? 'page' : undefined}>install mcp</a>
             <a href="/blog" aria-current={page === 'blog' || page === 'blogArchive' ? 'page' : undefined}>blog</a>
             <a href="/rules" aria-current={page === 'rules' ? 'page' : undefined}>rules</a>
@@ -256,7 +257,10 @@ export const Layout: FC<{
               <a href="/privacy">privacy</a>
               <a href="/terms">terms</a>
               <a href="/support">support</a>
+              <a href="/about">about</a>
               <a href="/blog">blog</a>
+              <a href="/companies">customer service numbers</a>
+              <a href="/students">students</a>
               <a href="/voices">voices</a>
               <a href="/superintelligence-calling-index">superintelligence calling index</a>
               <a class="rss-link" href="/blog/rss.xml" type="application/rss+xml" aria-label="Subscribe to the RSS feed" title="RSS feed">RSS</a>

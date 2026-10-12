@@ -374,7 +374,7 @@
   },
   "limitations": [
     "The echo provider returns a deterministic reply and does not demonstrate model reasoning or tool selection.",
-    "Local initialize and tools/list requests establish discovery of a synthetic fixture, not access to Call4me.",
+    "Local initialize and tools/list requests establish discovery of a synthetic fixture, not access to call4me.",
     "A successful process exit alone does not establish that MCP configuration was loaded. Some invalid combinations produced no server requests and no MCP warning.",
     "Production OAuth challenge detection is not a completed OAuth authorization or authenticated account read."
   ],

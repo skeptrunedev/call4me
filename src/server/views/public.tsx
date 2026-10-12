@@ -11,13 +11,15 @@ import { CallOnboarding } from './onboarding';
 import type { RedditPixelEvent } from '../lib/reddit';
 import { EXAMPLES } from '../../content/examples';
 import { useStaticRender } from '../lib/static-render';
+import { FOUNDER, ORG_ID, ORG_LD, ORG_SAME_AS, personLd } from '../lib/entity';
 
 /** Who runs the site and what it is, for search and answer engines (schema.org). */
 const HOME_LD = {
   '@context': 'https://schema.org',
   '@graph': [
-    { '@type': 'Organization', '@id': `${SITE}/#org`, name: 'call4me', url: SITE, logo: `${SITE}/favicon.svg`, email: 'me@call4.me', founder: { '@type': 'Person', name: 'Nick Khami', url: 'https://x.com/skeptrune' }, sameAs: ['https://x.com/skeptrune'] },
-    { '@type': 'WebSite', '@id': `${SITE}/#site`, name: 'call4me', url: SITE, description: SITE_DESCRIPTION, publisher: { '@id': `${SITE}/#org` } },
+    ORG_LD,
+    personLd(FOUNDER),
+    { '@type': 'WebSite', '@id': `${SITE}/#site`, name: 'call4me', url: SITE, description: SITE_DESCRIPTION, publisher: { '@id': ORG_ID } },
   ],
 };
 
@@ -510,6 +512,67 @@ export const PrivacyPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ si
     <p>Some records may need to be retained for applicable legal, payment, fraud-prevention, or dispute obligations; ask us about the reason and applicable period for your request. Deletion from call4me does not recall information already shared with a business, exported by you, or stored in your connected client's conversation. Those recipients have their own controls.</p>
     <p>We may update this policy as the service changes; the date above identifies this version. Privacy questions and requests always go to <a href="mailto:me@call4.me">me@call4.me</a>.</p>
     <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
+  </Layout>
+);
+
+/** Coverage of call4me. Each link was checked live and names call4me before it was listed. */
+const PRESS = [
+  { outlet: 'runtimewire', title: 'call4me lets Claude Code and Codex make phone calls', url: 'https://runtimewire.com/article/call4me-ai-phone-calls-claude-code-codex', date: 'October 1, 2026' },
+  { outlet: 'runtimewire', title: "call4me's customer service call test", url: 'https://runtimewire.com/article/call4me-customer-service-ai-call-test', date: 'October 8, 2026' },
+];
+
+const ABOUT_LD = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'AboutPage', '@id': `${SITE}/about#page`, url: `${SITE}/about`, name: 'about call4me', about: { '@id': ORG_ID }, mainEntity: { '@id': ORG_ID } },
+    ORG_LD,
+    personLd(FOUNDER),
+  ],
+};
+
+/** What call4me is and who builds it, so people and answer engines can tell it apart from similarly named apps. */
+export const AboutPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
+  <Layout title="about" page="about" signedIn={signedIn} meta={{ jsonLd: ABOUT_LD }}>
+    <h1>about call4me</h1>
+    <p>
+      call4me is the phone for your AI agent. connect it to Claude Code, Codex, Claude Desktop, ChatGPT or another agent over MCP, and your agent can
+      call businesses for you: book and reschedule appointments, make restaurant reservations, ask questions, wait on hold and get through phone
+      menus. when the caller needs something mid-call it asks your agent, and your agent gets back the outcome and a full transcript.{' '}
+      <a href="/examples">listen to real calls</a> or <a href="/mcp">install it in your agent</a>.
+    </p>
+    <p>call4me is one word with a 4, and it lives at call4.me. it is not affiliated with other apps that have similar names.</p>
+
+    <h2 id="founder">who builds it</h2>
+    <p>
+      call4me is built by <a href="https://x.com/skeptrune">{FOUNDER.name}</a>. in Nick's words:
+    </p>
+    <blockquote>i'm nicholas khami, a y combinator founder. i've raised $3.5M in venture capital personally and was head of engineering at a series b a16z startup.</blockquote>
+    <p>before call4me, Nick founded Trieve.</p>
+    <p class="small">
+      Nick is on <a href="https://x.com/skeptrune">x</a>, <a href="https://www.linkedin.com/in/nkhami/">linkedin</a> and{' '}
+      <a href="https://github.com/skeptrunedev">github</a>, and writes the <a href="/blog">call4me blog</a>.
+    </p>
+
+    <h2 id="open">source and directories</h2>
+    <ul>
+      <li>the source code is on <a href="https://github.com/skeptrunedev/call4me">github</a>.</li>
+      <li>call4me is listed in the <a href={ORG_SAME_AS[1]}>official MCP registry</a> as io.github.skeptrunedev/call4me.</li>
+    </ul>
+
+    <h2 id="press">press</h2>
+    <ul>
+      {PRESS.map((p) => (
+        <li>
+          <a href={p.url}>{p.title}</a>, {p.outlet}, {p.date}
+        </li>
+      ))}
+    </ul>
+
+    <h2 id="contact">contact</h2>
+    <p>
+      email <a href="mailto:me@call4.me">me@call4.me</a>. for help with an account or a call, see <a href="/support">support</a>. what call4me will
+      and will not call for is in the <a href="/rules">rules</a>.
+    </p>
   </Layout>
 );
 

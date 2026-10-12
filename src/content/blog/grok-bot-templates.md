@@ -1,7 +1,7 @@
 ---
 title: "5 Grok Bot prompts for phone inquiries"
 seoTitle: "5 Grok Bot phone inquiry prompts"
-subtitle: Download complete prompts for appointment, restaurant, service quote, cancellation and refund inquiries through Call4Me.
+subtitle: Download complete prompts for appointment, restaurant, service quote, cancellation and refund inquiries through call4me.
 description: "Five Grok Bot phone inquiry prompts with call briefs, duration caps and result checks. Download the complete text prompts and adapt them to your task."
 date: 2026-10-05
 updated: 2026-10-07
@@ -10,15 +10,15 @@ authors: nick
 imageAlt: Five Grok Bot phone inquiry prompts for appointments, restaurants, quotes, cancellation and refunds
 ---
 
-**These five Grok Bot prompts prepare phone inquiries through Call4Me.** Each asks for a call brief, permission for one call and a report of what it answered.
+**These five Grok Bot prompts prepare phone inquiries through call4me.** Each asks for a call brief, permission for one call and a report of what it answered.
 
 [Download all five complete prompts](/static/blog/resources/grok-bot-templates/errand-prompts.txt). The excerpts below show each inquiry's questions and limits; use the download for the complete instructions. These are text prompts, not installable Bot templates. We have not run these five complete workflows in Grok Bot.
 
 Our [October 4 Grok call](/blog/grok-connectors-mcp-phone-calls) documents a working connection and restaurant inquiry. That call returned a general walk in policy from a recorded menu, but did not confirm space for our party. The prompts preserve that distinction: a published policy, a live answer and an unanswered question should look different.
 
-## Connect Call4Me and define the call boundary
+## Connect call4me and define the call boundary
 
-Connect [Call4Me using our Grok Bot setup guide](/blog/grok-connectors-mcp-phone-calls#how-to-add-an-mcp-server-to-grok-bot), then ask the Bot to run `call4me_get_balance`. Check that the returned account data belongs to you. This checks access without placing a call. Public websites and your documents supply the background; the call asks the specific questions those sources leave open.
+Connect [call4me using our Grok Bot setup guide](/blog/grok-connectors-mcp-phone-calls#how-to-add-an-mcp-server-to-grok-bot), then ask the Bot to run `call4me_get_balance`. Check that the returned account data belongs to you. This checks access without placing a call. Public websites and your documents supply the background; the call asks the specific questions those sources leave open.
 
 Before a call, tell the Bot which businesses it may contact and your call duration limit. Agree separately on the cost of using the calling service and anything the business might charge. Permission to ask about a quote does not mean permission to accept it.
 

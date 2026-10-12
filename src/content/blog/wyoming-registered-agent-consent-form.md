@@ -13,7 +13,7 @@ To get a **Wyoming registered agent consent form**, ask your chosen registered a
 
 I needed that document for my Wyoming LLC. On October 5, 2026, I used [call4me](/) to call the provider and ask for it to be emailed to us. The assistant reached a representative, explained which document we needed, provided the account details, and confirmed the email destination. **The document arrived by email.** You can hear the call below.
 
-If you already use Claude Code or Codex to help with business paperwork, this is a useful task to hand it: get the missing document from the person who can supply it, then return to the work you were doing. The prompt below is a suggested workflow for those tools; the recording shows my Call4me call.
+If you already use Claude Code or Codex to help with business paperwork, this is a useful task to hand it: get the missing document from the person who can supply it, then return to the work you were doing. The prompt below is a suggested workflow for those tools; the recording shows my call4me call.
 
 ## What the Wyoming consent form is for
 

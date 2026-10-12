@@ -1,8 +1,8 @@
 ---
-title: "Can your AI assistant navigate phone trees? Vapi, Bland and Call4me evidence"
+title: "Can your AI assistant navigate phone trees? Vapi, Bland and call4me evidence"
 seoTitle: "Phone trees for Claude Code and Codex: real calls"
 subtitle: A phone menu, a successful keypad press, and a completed task are different results. Here is how to configure, diagnose, and test each step.
-description: "Get Claude Code or Codex through business phone menus. Hear real Call4me, Vapi and Bland recordings, with keypad evidence and voicemail limits."
+description: "Get Claude Code or Codex through business phone menus. Hear real call4me, Vapi and Bland recordings, with keypad evidence and voicemail limits."
 date: 2026-10-04
 tags: ai phone assistant, ivr, dtmf, vapi, bland, mcp, claude code, codex
 authors: nick
@@ -13,7 +13,7 @@ imageAlt: A phone menu routes through keypad input to either a person or voicema
 
 That distinction matters when your existing Claude Code, Codex or personal assistant session needs to cancel a subscription, change an appointment or confirm availability. Its calling service needs to choose the menu option, send a real keypad input, recognize the destination and follow the right instruction when nobody answers. Your original assistant needs the answer or confirmation back in its task.
 
-We make Call4me. This guide separates current configuration documentation from our recorded calls on **October 3 and 4, 2026**. The calls are individual cases with different briefs and dates, rather than a controlled provider benchmark. They establish particular routing outcomes, not success rates or a winner.
+We make call4me. This guide separates current configuration documentation from our recorded calls on **October 3 and 4, 2026**. The calls are individual cases with different briefs and dates, rather than a controlled provider benchmark. They establish particular routing outcomes, not success rates or a winner.
 
 For connection instructions and account requirements, use our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison). This guide focuses on what to inspect after a calling tool connects.
 
@@ -121,7 +121,7 @@ Foreign Cinema's [official private dining page](https://foreigncinema.com/privat
 |---|---|---|---|
 | Vapi Agent Phone, October 4 | Automatic DTMF requested; no native keypad event returned | Private dining voicemail in the recording | Caller waited through the greeting and spoke afterward; silent exit failed, mailbox message outcome unknown |
 | Bland, October 4 | Native log recorded `Pressed Button: 2` | Private dining voicemail in the recording | Codex explicitly invoked `stop_call`; final log recorded `call_ended_by: USER` |
-| Call4me from Claude Code, October 3 | No native keypad action established in this published case | Private dining voicemail in the recording | The earlier research task remained unresolved; this different brief did not test immediate autonomous silent exit |
+| call4me from Claude Code, October 3 | No native keypad action established in this published case | Private dining voicemail in the recording | The earlier research task remained unresolved; this different brief did not test immediate autonomous silent exit |
 
 **Routing worked on these attempts. Autonomous silent exit is a separate requirement.** The table does not establish nested menu performance, hold behavior, or comparative reliability.
 
@@ -169,18 +169,18 @@ The final log reports 68 seconds connected and `call_ended_by: USER`. That suppo
 
 This request also spent roughly ten minutes queued before its reported start. An earlier request was canceled while still queued because our runner mistakenly applied its three minute deadline before connection. It returned no start time or transcript and is excluded from the routing result. Queue time and connected duration require separate clocks.
 
-### Call4me: an earlier research call reached the same branch
+### call4me: an earlier research call reached the same branch
 
-<audio controls preload="metadata" src="/static/blog/sf-private-dining-foreign-cinema.mp3" style="width:100%"><a href="/static/blog/sf-private-dining-foreign-cinema.mp3">listen to the Call4me menu call from Claude Code</a></audio>
+<audio controls preload="metadata" src="/static/blog/sf-private-dining-foreign-cinema.mp3" style="width:100%"><a href="/static/blog/sf-private-dining-foreign-cinema.mp3">listen to the call4me menu call from Claude Code</a></audio>
 
 <details>
-<summary>Read the Call4me evidence timestamps</summary>
+<summary>Read the call4me evidence timestamps</summary>
 
 These are selected points from the reviewed October 3 recording, lasting 2:27. Names and private identifiers are muted, with original timing preserved. The [research walkthrough](/blog/agent-web-research-phone-calls-sf-private-dining) contains the full transcript and task context.
 
 **0:08** The main menu announces private dining as option two.
 
-**0:58** Call4me: Okay, I'm on it.
+**0:58** call4me: Okay, I'm on it.
 
 **1:30** The destination greeting identifies Foreign Cinema Private Dining.
 

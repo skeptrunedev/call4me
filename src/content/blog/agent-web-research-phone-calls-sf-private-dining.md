@@ -76,31 +76,31 @@ Names and private identifiers are shown in brackets. Original timing is preserve
 
 **0:05** Waterbar virtual concierge: Hello. Thank you for calling Waterbar. This is [name removed], the virtual concierge. I'm taking notes on this call and sharing with the team. How can I help you?
 
-**0:15** Call4me: Hi, I'm [names removed], assistant. We're just doing some general private dining research. No event details or booking in mind. I was wondering, are the Bridge Tower Room and Looking Glass actually fully enclosed or are they open to the main bar, and how private do they feel?
+**0:15** call4me: Hi, I'm [names removed], assistant. We're just doing some general private dining research. No event details or booking in mind. I was wondering, are the Bridge Tower Room and Looking Glass actually fully enclosed or are they open to the main bar, and how private do they feel?
 
 **0:34** Waterbar virtual concierge: The Bridge Tower Room is a private dining room with wall to wall windows and its own private terrace, so it feels the most enclosed and private. The Looking Glass is a more flexible indoor outdoor space overlooking the main bar, so it feels more open rather than fully closed off. If you'd like, I can also share the guest capacities for each space.
 
-**0:53** Call4me: Yeah, please. Are the published capacities, say 60 seated, 75 reception for Bridge Tower, firm limits or layout dependent? And same question for Looking Glass, 24 seated, 50 reception. Are those numbers fixed or do they flex a bit?
+**0:53** call4me: Yeah, please. Are the published capacities, say 60 seated, 75 reception for Bridge Tower, firm limits or layout dependent? And same question for Looking Glass, 24 seated, 50 reception. Are those numbers fixed or do they flex a bit?
 
 **1:11** Waterbar virtual concierge: The published capacities are 60 seated or 75 standing for the Bridge Tower Room and 24 seated or 50 standing for the Looking Glass. I only have those listed capacities, so I can't confirm whether they flex by layout, but I can pass your message to the host if you'd like.
 
-**1:29** Call4me: That's okay. Do you have any general info on how food and beverage minimums vary by room or like day of the week or lunch versus dinner? Even just a sense of the ranges, if that's possible.
+**1:29** call4me: That's okay. Do you have any general info on how food and beverage minimums vary by room or like day of the week or lunch versus dinner? Even just a sense of the ranges, if that's possible.
 
 **1:43** Waterbar virtual concierge: It looks like I don't have enough information to help with that, but I can pass your message to the host.
 
-**1:48** Call4me: No worries. Is there typically a separate room fee, and if so, is that applied toward the food and beverage minimum, or is it additional?
+**1:48** call4me: No worries. Is there typically a separate room fee, and if so, is that applied toward the food and beverage minimum, or is it additional?
 
 **1:59** Waterbar virtual concierge: It looks like I don't have enough information to help with that, but I can pass your message to the host.
 
-**2:05** Call4me: Okay, thanks. And beyond the published service charge and tax, are there any other mandatory fees or things that don't count toward the minimum besides what's already on your FAQ?
+**2:05** call4me: Okay, thanks. And beyond the published service charge and tax, are there any other mandatory fees or things that don't count toward the minimum besides what's already on your FAQ?
 
 **2:19** Waterbar virtual concierge: I only have that a 7% SF mandate is added to all checks, along with tax and any applicable gratuity. I don't have anything more specific about private dining minimums or event only fees, but I can pass your message to the host if you'd like.
 
-**2:33** Call4me: That's all right. Finally, if someone just has general questions like these, what's the best general route to ask without having event details yet?
+**2:33** call4me: That's all right. Finally, if someone just has general questions like these, what's the best general route to ask without having event details yet?
 
 **2:44** Waterbar virtual concierge: You can email the team with your general private dining questions, and they'll be able to help even if you don't have event details yet. If you'd like, I can text you the email address once we get off the phone.
 
-**2:57** Call4me: No need. That's helpful. Thanks. Bye.
+**2:57** call4me: No need. That's helpful. Thanks. Bye.
 
 **3:03** Waterbar virtual concierge: Thank you for the feedback. We look forward to helping you again soon. Goodbye.
 
@@ -121,31 +121,31 @@ Names and private identifiers are shown in brackets. Original timing is preserve
 
 **0:05** EPIC AI concierge: Hello, thanks for calling EPIC Steak. I am your AI concierge, [name removed]. We accept reservations one month in advance. To ensure a good experience, this call is recorded. How may I assist you today?
 
-**0:20** Call4me: Hi, hello.
+**0:20** call4me: Hi, hello.
 
 **0:23** EPIC AI concierge: Hello, how can I help?
 
-**0:25** Call4me: Hi, I'm [names removed] assistant. I'm helping with some general private dining research on...
+**0:25** call4me: Hi, I'm [names removed] assistant. I'm helping with some general private dining research on...
 
 **0:31** EPIC AI concierge: I'm sorry, I didn't understand you, but I can answer lots of questions about this business. So let's try again. How can I help?
 
-**0:37** Call4me: Sure, I'm just calling for a private dining researcher doing general comparison research. No event specifics yet.
+**0:37** call4me: Sure, I'm just calling for a private dining researcher doing general comparison research. No event specifics yet.
 
 **0:45** EPIC AI concierge: Happy to help. To get started, can you let me know about how many people will be in your party?
 
-**0:50** Call4me: We don't have any event details decided. This is just general info gathering.
+**0:50** call4me: We don't have any event details decided. This is just general info gathering.
 
 **0:55** EPIC AI concierge: Apologies, I'm hoping you can tell me the number of guests, even if it's just an estimate.
 
-**1:02** Call4me: Yeah, we really don't have that. It's just for general comparison.
+**1:02** call4me: Yeah, we really don't have that. It's just for general comparison.
 
 **1:04** EPIC AI concierge: I'm sorry, I didn't hear a number. I'm hoping you can tell me the number of guests, even if it's just an estimate.
 
-**1:11** Call4me: Hmm, okay, let me check.
+**1:11** call4me: Hmm, okay, let me check.
 
 **1:14** EPIC AI concierge: Apologies, I didn't catch a number that time either. One more time. How many people in your party?
 
-**1:21** Call4me: Yeah, let me check on that. There's no number set.
+**1:21** call4me: Yeah, let me check on that. There's no number set.
 
 **1:24** EPIC AI concierge: We usually take calls about speaking with a human by phone, but no one is available to take your call at this time. The best way to get a hold of us is by email at [email removed]. Is there anything else?
 
@@ -192,7 +192,7 @@ Names and private identifiers are shown in brackets. Original timing is preserve
 
 **0:48** Phone system: Street parking is available, as is the Mission Bartlett parking garage at [street location removed].
 
-**0:58** Call4me: Okay, I'm on it.
+**0:58** call4me: Okay, I'm on it.
 
 **1:12** Phone system: [ringing]
 

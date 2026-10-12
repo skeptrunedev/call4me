@@ -1,6 +1,6 @@
 Grok Bot phone calling workflows
 
-These are copyable Call4Me prompts, not a Grok template installer. Replace the bracketed inputs. Prepare a call brief first, then authorize one specific call. These five complete workflows have not been executed for this guide.
+These are copyable call4me prompts, not a Grok template installer. Replace the bracketed inputs. Prepare a call brief first, then authorize one specific call. These five complete workflows have not been executed for this guide.
 
 1. Call an office about an appointment
 
@@ -17,7 +17,7 @@ Ask that office about suitable openings, any required referral, insurance
 questions I specify and the steps needed to book. Do not book, agree to
 fees, share information outside my approved facts or leave a message.
 
-Check Call4Me access with call4me_get_balance and confirm it is my account.
+Check call4me access with call4me_get_balance and confirm it is my account.
 Use call4me_get_requirements for the appropriate category and collect any
 missing facts in one message. If tools or access are missing, stop with
 setup instructions. Do not fill private information from an old task.
@@ -53,7 +53,7 @@ request a callback or leave a voicemail without separate permission.
 Keep a menu's general walk in policy separate from a live availability
 answer. A visible online slot is also a different source from the call.
 
-Check Call4Me access with call4me_get_balance and confirm it is my account.
+Check call4me access with call4me_get_balance and confirm it is my account.
 Use call4me_get_requirements for the appropriate category and collect any
 missing facts in one message. If tools or access are missing, stop with
 setup instructions. Do not fill private information from an old task.
@@ -91,7 +91,7 @@ Use this same brief for separately approved calls to other providers.
 Keep an estimate separate from a confirmed quote. Do not rank a provider
 as cheapest while material charges remain unknown.
 
-Check Call4Me access with call4me_get_balance and confirm it is my account.
+Check call4me access with call4me_get_balance and confirm it is my account.
 Use call4me_get_requirements for the appropriate category and collect any
 missing facts in one message. If tools or access are missing, stop with
 setup instructions. Do not fill private information from an old task.
@@ -128,7 +128,7 @@ Do not ask for a callback or leave a message without separate approval.
 
 Return a cancellation plan, not a claim that the account was cancelled.
 
-Check Call4Me access with call4me_get_balance and confirm it is my account.
+Check call4me access with call4me_get_balance and confirm it is my account.
 Use call4me_get_requirements for the appropriate category and collect any
 missing facts in one message. If tools or access are missing, stop with
 setup instructions. Do not fill private information from an old task.
@@ -166,7 +166,7 @@ details, threaten legal action or leave a message.
 A merchant saying it issued the refund does not prove money arrived.
 Keep any mismatch with my payment record visible.
 
-Check Call4Me access with call4me_get_balance and confirm it is my account.
+Check call4me access with call4me_get_balance and confirm it is my account.
 Use call4me_get_requirements for the appropriate category and collect any
 missing facts in one message. If tools or access are missing, stop with
 setup instructions. Do not fill private information from an old task.

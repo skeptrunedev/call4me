@@ -2,7 +2,7 @@
 title: "Grok MCP and Grok Bot MCP: add phone calling tools"
 seoTitle: "Grok MCP and Grok Bot MCP: phone calling setup"
 subtitle: Set up custom tools on grok.com, in Grok Bot or through the xAI API. Then hear our actual Grok Bot restaurant call, including the partial answer and the menu problem.
-description: "Set up Grok MCP or Grok Bot MCP with Call4me to make phone calls. Follow the connector steps, check access and hear our recorded restaurant call."
+description: "Set up Grok MCP or Grok Bot MCP with call4me to make phone calls. Follow the connector steps, check access and hear our recorded restaurant call."
 date: 2026-10-01
 updated: 2026-10-05
 tags: grok, mcp, ai agents, ai phone assistant
@@ -10,7 +10,7 @@ authors: nick
 imageAlt: Grok connectors and MCP servers, with phone calls as the worked example
 ---
 
-**Grok MCP and Grok Bot MCP can connect your assistant to phone calling tools.** Call4me supplies the caller, so your assistant can ask a restaurant or a doctor's office a question and bring back the answer. Where you add the server depends on which Grok you use: on **grok.com** you add it yourself at grok.com/connectors, in **Grok Bot** you ask the Bot to add a custom MCP server, and with the **xAI API** you pass the server in the `tools` array of your request. This guide covers those setup paths, then lets you hear our actual Grok Bot restaurant call and inspect its partial result.
+**Grok MCP and Grok Bot MCP can connect your assistant to phone calling tools.** call4me supplies the caller, so your assistant can ask a restaurant or a doctor's office a question and bring back the answer. Where you add the server depends on which Grok you use: on **grok.com** you add it yourself at grok.com/connectors, in **Grok Bot** you ask the Bot to add a custom MCP server, and with the **xAI API** you pass the server in the `tools` array of your request. This guide covers those setup paths, then lets you hear our actual Grok Bot restaurant call and inspect its partial result.
 
 We support Grok as one of the agents call4me works with, and the first version of our setup instructions mixed up grok.com and Grok Bot. So this page sorts out the three, using xAI's own docs.
 
@@ -197,7 +197,7 @@ Use explicit permission and spending limits that fit your own task. If no messag
 | :--- | :--- |
 | The app opens to sign in instead of your Bots | Sign back into the account that owns the Bot. This happened on our October 4 run; our existing setup was available afterward |
 | Setup reports tools, but you have not tested access | Ask for `call4me_get_balance`. Our October 1 run verified live account data. A connector being listed is a weaker check |
-| Grok shows “Connecting to Call4me” | In this run the activity label stayed visible while a real call was in progress. It did not mean that the call had failed. Use the returned call id to check the call state |
+| Grok shows “Connecting to call4me” | In this run the activity label stayed visible while a real call was in progress. It did not mean that the call had failed. Use the returned call id to check the call state |
 | The answer says “completed,” but your question is unresolved | Inspect the outcome and recording. This call ended normally with a partial result, rather than a human answer |
 | A recording link stops working | Ask `call4me_get_recordings` for fresh metadata. Grok returned a temporary provider link; the reviewed player above uses a static export |
 

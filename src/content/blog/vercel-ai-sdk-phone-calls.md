@@ -84,9 +84,9 @@ Give the run enough steps for that loop. `isStepCount(8)` covers a call plus a q
 For a UI that shows the call as it happens, or a job queue, use `placeCall` and `getCall` instead of `makePhoneCall`:
 
 ```ts
-import { createCall4meClient } from 'call4me-ai-sdk';
+import { createcall4meClient } from 'call4me-ai-sdk';
 
-const call4me = createCall4meClient(); // reads CALL4ME_API_KEY
+const call4me = createcall4meClient(); // reads CALL4ME_API_KEY
 
 const placed = await call4me('call4me_place_call', {
   to: '+18887795176',

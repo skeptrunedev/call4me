@@ -10,11 +10,11 @@ authors: nick
 imageAlt: A draft Grok Bot calling method with saving and reuse checks
 ---
 
-**This is a draft restaurant inquiry method for a Grok Bot skill.** Its instructions request fresh inputs, a Call4Me access check and a report of unanswered questions.
+**This is a draft restaurant inquiry method for a Grok Bot skill.** Its instructions request fresh inputs, a call4me access check and a report of unanswered questions.
 
 [Download the complete draft method](/static/blog/resources/grok-bot-reusable-skills/restaurant-inquiry-method.md) and [the prompt to save it](/static/blog/resources/grok-bot-reusable-skills/save-skill.txt). The method is a Markdown file to review and attach to your Bot.
 
-The save and reuse steps below follow xAI documentation; we have not verified them for this draft in the app. Our [October 4 Grok call](/blog/grok-connectors-mcp-phone-calls#an-actual-grok-bot-call-october-4) separately verified a working Call4Me connection and restaurant inquiry.
+The save and reuse steps below follow xAI documentation; we have not verified them for this draft in the app. Our [October 4 Grok call](/blog/grok-connectors-mcp-phone-calls#an-actual-grok-bot-call-october-4) separately verified a working call4me connection and restaurant inquiry.
 
 ## Skill, routine or template?
 
@@ -52,9 +52,9 @@ The documentation says the desktop composer uses `/` to reference saved skills. 
 
 Open another Bot under your account and invoke the saved skill. Give it a different restaurant and ask for preparation only:
 
-> Use Restaurant availability inquiry for [new restaurant], [date], [party size] and [time with time zone]. Check Call4Me access and required inputs, then show the call brief with a proposed [minutes] talk time cap. Do not place any call, book, leave a message or contact anyone.
+> Use Restaurant availability inquiry for [new restaurant], [date], [party size] and [time with time zone]. Check call4me access and required inputs, then show the call brief with a proposed [minutes] talk time cap. Do not place any call, book, leave a message or contact anyone.
 
-Check that the output refers to the new request. If the Bot cannot access Call4Me, that is a connector setup issue; the method should explain the missing prerequisite rather than claim it made a call.
+Check that the output refers to the new request. If the Bot cannot access call4me, that is a connector setup issue; the method should explain the missing prerequisite rather than claim it made a call.
 
 This second Bot check establishes reuse in your account when you run it successfully. It does not establish distribution to someone else's account. Use the [recipient setup checklist](/blog/grok-bot-template-troubleshooting) for that.
 
@@ -69,7 +69,7 @@ This second Bot check establishes reuse in your account when you run it successf
 | A complete request with preparation only | Research and proposed questions, no call |
 | No date or time zone | Ask for those facts before contact |
 | A different restaurant in a second Bot | Use the new inputs and check that Bot's access |
-| Missing Call4Me connector | Explain the dependency and stop before a call |
+| Missing call4me connector | Explain the dependency and stop before a call |
 | A recording says walk ins are welcome | Report policy without asserting party availability |
 | A supplied transcript ends without the requested answer | Keep the question unresolved |
 | A reservation would require a deposit | Ask for the specific approval before commitment |

@@ -113,73 +113,73 @@ Names and private phone details are muted in the audio and shown in brackets. Ti
 
 **0:19** **Phone system:** Please listen carefully as our options have recently changed. Press 1 for Factor Ready to Eat Meals. Press 2 for Factor Form Supplements.
 
-**0:32** **Call4me:** Getting the cancellation option.
+**0:32** **call4me:** Getting the cancellation option.
 
 **0:38** **Phone system:** To assist you, we need some information to locate your Factor account. Please enter your phone number starting with the area code followed by the pound hashtag key.
 
-**0:51** **Call4me:** One sec, I'm entering the phone number.
+**0:51** **call4me:** One sec, I'm entering the phone number.
 
 **0:58** **Phone system:** Are you the account holder? Press 1 for Yes or 2 for No.
 
-**1:07** **Call4me:** Let's go to a rep.
+**1:07** **call4me:** Let's go to a rep.
 
 **1:12** **Phone system:** For Delivery Inquiries, press 1. For Ingredient Inquiries, press 2. For Technical Support, press 3. To cancel your account, press 4. For All Other Inquiries, press 5.
 
-**1:30** **Call4me:** Picking Account Cancellation.
+**1:30** **call4me:** Picking Account Cancellation.
 
 **1:36** **Phone system:** We'll transfer your call to the next available agent. After the call, please stay on the line to answer a couple of quick questions about your experience with our customer support team. We highly value your feedback.
 
 **2:00** **Representative:** Hello, thank you for calling Factor. This is [representative name removed]. How can I help?
 
-**2:05** **Call4me:** Hi, this [name and introduction removed]. We're putting together a general cancellation guide for customers. Can I ask a few quick questions about how someone in the U.S. would cancel their Factor meal subscription?
+**2:05** **call4me:** Hi, this [name and introduction removed]. We're putting together a general cancellation guide for customers. Can I ask a few quick questions about how someone in the U.S. would cancel their Factor meal subscription?
 
 **2:18** **Representative:** They can cancel it through the website, on their account, on a mobile browser using the desktop browser as well, or the application on their phone. Or they can contact us back here so we can also provide other options before cancelling the subscription.
 
-**2:41** **Call4me:** Okay, gotcha. So what verification do they need to provide when they call to cancel?
+**2:41** **call4me:** Okay, gotcha. So what verification do they need to provide when they call to cancel?
 
 **2:49** **Representative:** They'll just need to provide us the full name, the email, and then that's it. We'll be able to see the information here on their account.
 
-**3:00** **Call4me:** Awesome. And then what's the cutoff to cancel and not get charged for the next delivery?
+**3:00** **call4me:** Awesome. And then what's the cutoff to cancel and not get charged for the next delivery?
 
 **3:09** **Representative:** That cutoff is depending on the delivery. Yeah. For example, the delivery day, let me see.
 
 **3:19** **Representative:** Bear with me.
 
-**3:21** **Call4me:** Sure.
+**3:21** **call4me:** Sure.
 
 **3:26** **Representative:** All right. So, for example, the delivery day is Saturday. The cutoff for that is Monday. And then Sunday delivery cutoff is Tuesday. And then Monday and Tuesday, the cutoff is Wednesday. And then Wednesday delivery cutoff is Thursday. So that is at 9.59 p.m. Pacific Standard Time.
 
-**3:58** **Call4me:** Okay, thank you. And if they cancel after that, would the next box still come?
+**3:58** **call4me:** Okay, thank you. And if they cancel after that, would the next box still come?
 
 **4:07** **Representative:** Yes, that is correct. It will still progress because we cannot cancel the order anymore if that is already past the cutoff or deadline.
 
-**4:21** **Call4me:** Okay, that makes sense. And how do customers get the cancellation and confirmation? Email or something in their accounts?
+**4:21** **call4me:** Okay, that makes sense. And how do customers get the cancellation and confirmation? Email or something in their accounts?
 
 **4:31** **Representative:** Yes, we are sending the email confirmation within 24 hours once that we cancel the account.
 
-**4:39** **Call4me:** Great, thank you. One last thing. Is skipping a week the same as canceling or is that different? And does deleting their account automatically cancel the plan?
+**4:39** **call4me:** Great, thank you. One last thing. Is skipping a week the same as canceling or is that different? And does deleting their account automatically cancel the plan?
 
 **4:54** **Representative:** First, the skipping of a week is different from cancellation.
 
 **5:01** **Representative:** Skipping is that we just need to pause the order. Then canceling the order will be automatically or will not be automatically resumed if that is already canceled.
 
-**5:19** **Call4me:** Gotcha.
+**5:19** **call4me:** Gotcha.
 
 **5:20** **Representative:** And then for the deleting of the account, the subscription needs to be canceled first.
 
-**5:30** **Call4me:** Oh, okay. So they would cancel the subscription first and then delete the account if they want?
+**5:30** **call4me:** Oh, okay. So they would cancel the subscription first and then delete the account if they want?
 
 **5:37** **Representative:** That's correct. The deletion will take up to 45 business days. It will be forwarded to our relevant team. And then some of the cases may take up to 90 days.
 
-**5:54** **Call4me:** Okay, that's super helpful. That's all I needed. Thanks for your help.
+**5:54** **call4me:** Okay, that's super helpful. That's all I needed. Thanks for your help.
 
 **5:58** **Representative:** Yes, you're welcome. Anything else?
 
-**6:03** **Call4me:** No, that's all. I just needed the general stuff. Thanks again. Bye.
+**6:03** **call4me:** No, that's all. I just needed the general stuff. Thanks again. Bye.
 
 **6:08** **Representative:** Yes, you're welcome. Thank you also for your time. This is [representative name removed] and there will be a quick survey on how I assisted.
 
-**6:15** **Call4me:** Awesome. Thanks so much. Bye.
+**6:15** **call4me:** Awesome. Thanks so much. Bye.
 
 **6:17** **Representative:** You're welcome.
 
@@ -200,69 +200,69 @@ Names and private phone details are muted in the audio and shown in brackets. Ti
 
 **0:18** **Phone system:** Please listen carefully as our options have recently changed. Press 1 for Factor Ready to Eat Meals. Press 2 for Factor Form Supplements.
 
-**0:31** **Call4me:** Hmm, right. Ready to Eat Meals first.
+**0:31** **call4me:** Hmm, right. Ready to Eat Meals first.
 
 **0:37** **Phone system:** To assist you, we need some information to locate your Factor account. Please enter your phone number, starting with the area code, followed by the pound, hashtag, key.
 
-**0:50** **Call4me:** Hmm, let me see. We don't have an account, okay. Do they have a general route? Hmm.
+**0:50** **call4me:** Hmm, let me see. We don't have an account, okay. Do they have a general route? Hmm.
 
 **0:58** **Phone system:** Are you the account holder? Press 1 for Yes or 2 for No.
 
-**1:05** **Call4me:** Hmm, that would be No. Okay, let's see.
+**1:05** **call4me:** Hmm, that would be No. Okay, let's see.
 
 **1:11** **Phone system:** For Delivery Inquiries, press 1. For Ingredient Inquiries, press 2. For Technical Support, press 3. To cancel your account, press 4. For All Other Inquiries, press 5.
 
-**1:28** **Call4me:** Great, to cancel account number 4.
+**1:28** **call4me:** Great, to cancel account number 4.
 
 **1:34** **Phone system:** We'll transfer your call to the next available agent. After the call, please stay on the line to answer a couple of quick questions about your experience with our customer support team. We highly value your feedback.
 
 **1:56** **Representative:** Hi, thank you for contacting Factor. My name is [representative name removed]. How can I help you today?
 
-**2:01** **Call4me:** Hi, this is [name removed]’s assistant. We're writing a general cancellation guide and had a quick question. No account to change.
+**2:01** **call4me:** Hi, this is [name removed]’s assistant. We're writing a general cancellation guide and had a quick question. No account to change.
 
 **2:10** **Representative:** Alright, I understand you have a general question on the account, and of course I'm here to help. Please provide me your email address so I can pull up the account.
 
-**2:19** **Call4me:** Oh, we don't have an account. It's just a general question about the cancellation cutoff. A prior rep told us the cutoff is 9.59 p.m. Pacific, but your how to cancel page says 11.59 p.m. PST, five days before delivery. Could you help me reconcile that?
+**2:19** **call4me:** Oh, we don't have an account. It's just a general question about the cancellation cutoff. A prior rep told us the cutoff is 9.59 p.m. Pacific, but your how to cancel page says 11.59 p.m. PST, five days before delivery. Could you help me reconcile that?
 
 **2:36** **Representative:** Oh, sure. I may know because we have different cutoff for each day of delivery. So if you could provide me the delivery day schedule, I can confirm here when to cancel a subscription or like any cancellation.
 
-**2:55** **Call4me:** Gotcha. Right, yeah. So we don't have a specific delivery day. We're just trying to nail down whether the official cutoff is 9.59 or 11.59 PST.
+**2:55** **call4me:** Gotcha. Right, yeah. So we don't have a specific delivery day. We're just trying to nail down whether the official cutoff is 9.59 or 11.59 PST.
 
 **3:06** **Representative:** 9.59 p.m.
 
-**3:10** **Call4me:** Okay, 9:59 p.m.
+**3:10** **call4me:** Okay, 9:59 p.m.
 
 **3:12** **Representative:** PST. A week before.
 
-**3:14** **Call4me:** PST a week before. So does that same cutoff apply to both skipping a box and canceling the whole subscription?
+**3:14** **call4me:** PST a week before. So does that same cutoff apply to both skipping a box and canceling the whole subscription?
 
 **3:23** **Representative:** Yes. But I'd like to let you know, though, that the cancellation of account doesn't mean including the cancellation of an order. So if you wanted to cancel the account, then you will have first to cancel the upcoming order or skipping the upcoming order. And then after that, hit save and then cancel the subscription.
 
-**3:46** **Call4me:** Gotcha. So is that 9.59 p.m. Pacific always exactly a week before the delivery date? Or is it five days before, like the page says?
+**3:46** **call4me:** Gotcha. So is that 9.59 p.m. Pacific always exactly a week before the delivery date? Or is it five days before, like the page says?
 
 **3:57** **Representative:** A week. A week before the scheduled delivery date.
 
-**4:01** **Call4me:** Okay, a week before the scheduled delivery at 9.59 p.m. Pacific, correct?
+**4:01** **call4me:** Okay, a week before the scheduled delivery at 9.59 p.m. Pacific, correct?
 
 **4:07** **Representative:** Yes.
 
-**4:08** **Call4me:** Okay, got it. And for folks with, say, Saturday deliveries, is that cutoff on Monday? And for Monday or Tuesday deliveries, is it Wednesday?
+**4:08** **call4me:** Okay, got it. And for folks with, say, Saturday deliveries, is that cutoff on Monday? And for Monday or Tuesday deliveries, is it Wednesday?
 
 **4:20** **Representative:** Yes.
 
-**4:22** **Call4me:** Okay. And one more thing. In the iOS app, it says delete account, then continue to deactivate. Does that just cancel the plan, or does it actually delete user data right away?
+**4:22** **call4me:** Okay. And one more thing. In the iOS app, it says delete account, then continue to deactivate. Does that just cancel the plan, or does it actually delete user data right away?
 
 **4:37** **Representative:** Sorry. Are you requesting to delete a subscription or the account?
 
-**4:43** **Call4me:** Not requesting. Just clarifying the steps. So in iOS, when a user taps delete account, then continue. Does that simply cancel the subscription, or does it delete their data at that point?
+**4:43** **call4me:** Not requesting. Just clarifying the steps. So in iOS, when a user taps delete account, then continue. Does that simply cancel the subscription, or does it delete their data at that point?
 
 **4:58** **Representative:** Yeah, deleting the data at that point.
 
-**5:02** **Call4me:** Understood. Thanks for checking. That's all I needed. Thank you so much for your help.
+**5:02** **call4me:** Understood. Thanks for checking. That's all I needed. Thank you so much for your help.
 
 **5:07** **Representative:** Of course. You're welcome. Before I let you go, though, we would greatly appreciate if you could stay for just a quick survey after the call. And I hope I was able to resolve all of your concerns. That's it for me. Please take care. Bye for now.
 
-**5:20** **Call4me:** Thanks again. Bye.
+**5:20** **call4me:** Thanks again. Bye.
 
 </details>
 

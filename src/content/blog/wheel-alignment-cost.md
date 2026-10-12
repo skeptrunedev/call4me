@@ -74,11 +74,11 @@ These excerpts cover the answers after the hold, with approximate timestamps. Th
 
 **5:10** **Representative:** And then we offer a lifetime warranty for the alignment as well. It's about an $80 difference compared to the one year. And that one you can come as many times as needed for free for as long as you own the vehicle. And that's $210.
 
-**5:26** **Call4me:** Oh, great. That makes sense. And is the alignment just an adjustment or does it include things like checking suspension or any extra parts?
+**5:26** **call4me:** Oh, great. That makes sense. And is the alignment just an adjustment or does it include things like checking suspension or any extra parts?
 
 **5:36** **Representative:** When we do the alignment, we double check the suspension as well.
 
-**5:40** **Call4me:** Awesome, thanks. And do you need an appointment for that? And what's the usual time it takes?
+**5:40** **call4me:** Awesome, thanks. And do you need an appointment for that? And what's the usual time it takes?
 
 **5:48** **Representative:** No appointment needed necessary. We do schedule them if you do, if you did want to make them. I'm sorry, and it takes anywhere from maybe one to two hours. Just depends on how out the vehicle is. If it's not so out, then it would take a little less time.
 

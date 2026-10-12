@@ -10,7 +10,7 @@ authors: nick
 imageAlt: Claude Code or Codex saves a call schedule, call4me waits until the chosen time, and a later agent session retrieves the result
 ---
 
-**You can schedule a phone call from Claude Code or Codex through call4me's MCP server.** Your agent sends the destination, complete calling brief, and an absolute time. Call4me stores the schedule and its server handles the later dial. You can close the agent session and check the same schedule from another session connected to your call4me account.
+**You can schedule a phone call from Claude Code or Codex through call4me's MCP server.** Your agent sends the destination, complete calling brief, and an absolute time. call4me stores the schedule and its server handles the later dial. You can close the agent session and check the same schedule from another session connected to your call4me account.
 
 On October 4, 2026, we checked real production schedules for the next day through a fresh authenticated MCP client. We verified pending records, local time conversion, a canceled record, and a replacement schedule. **Those calls had not run when we checked.** These were scheduling snapshots, not call results or new tests inside either harness.
 
@@ -65,7 +65,7 @@ Use `call4me_get_requirements` for the category before scheduling. A `general` i
 
 ## The exact MCP scheduling input
 
-`call4me_schedule_call` takes the same calling brief as `call4me_place_call`, plus `call_at`. [Call4me's agent reference](https://call4.me/llms.txt) links its MCP endpoint and [published calling skill](https://call4.me/.well-known/agent-skills/call4me/SKILL.md), which describes scheduling, status checks, and cancellation. This example shows the shape using our real MyEyeDr. general pricing inquiry and its original scheduled time. **This date is historical. Choose your own authorized destination and a future time.**
+`call4me_schedule_call` takes the same calling brief as `call4me_place_call`, plus `call_at`. [call4me's agent reference](https://call4.me/llms.txt) links its MCP endpoint and [published calling skill](https://call4.me/.well-known/agent-skills/call4me/SKILL.md), which describes scheduling, status checks, and cancellation. This example shows the shape using our real MyEyeDr. general pricing inquiry and its original scheduled time. **This date is historical. Choose your own authorized destination and a future time.**
 
 ```json
 {
@@ -168,11 +168,11 @@ Use `wait_seconds: 30` when following a call that is actively running. Once it e
 
 **Credits are held when dialing, not when scheduling.** Another call can consume tomorrow's budget. Check the balance beforehand and inspect failures rather than assuming a successfully saved schedule guarantees placement.
 
-**A business may ask a question outside the brief.** Provide required facts and clear acceptable alternatives up front. Call4me can expose open questions while a call runs, but a closed Claude Code or Codex session cannot answer them. The documented scheduling behavior warns that an unanswered question can end with the caller saying the user will call back. Do not promise that statement as a future action you have already authorized.
+**A business may ask a question outside the brief.** Provide required facts and clear acceptable alternatives up front. call4me can expose open questions while a call runs, but a closed Claude Code or Codex session cannot answer them. The documented scheduling behavior warns that an unanswered question can end with the caller saying the user will call back. Do not promise that statement as a future action you have already authorized.
 
 **A stored schedule does not subscribe your original thread to a notification.** The workflow demonstrated here retrieves the record explicitly. We have not verified an automatic notification or a result appearing in a closed harness session.
 
-**Calls needing an account PIN cannot be scheduled.** Call4me rejects scheduled intake requiring a sensitive PIN because it does not retain one for later. Use a live workflow when that verification is necessary.
+**Calls needing an account PIN cannot be scheduled.** call4me rejects scheduled intake requiring a sensitive PIN because it does not retain one for later. Use a live workflow when that verification is necessary.
 
 **A tool timeout leaves the result uncertain.** Inspect `call4me_list_calls` before submitting the same schedule again. If you have the ID, retrieve that record. Creating another schedule can cause a duplicate call.
 

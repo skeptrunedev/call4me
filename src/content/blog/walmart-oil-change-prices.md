@@ -74,7 +74,7 @@ Timestamps are approximate. These excerpts were compared with two independent au
 
 **0:02** **Walmart AI:** Welcome to Walmart. I'm the AI customer care agent. I'm still learning and may make a mistake.
 
-**0:20** **Call4me:** Hi, just a quick one. I'm hoping to find out the current starting prices for basic and full synthetic oil changes at your Fremont, Ohio Auto Care Center.
+**0:20** **call4me:** Hi, just a quick one. I'm hoping to find out the current starting prices for basic and full synthetic oil changes at your Fremont, Ohio Auto Care Center.
 
 **0:39** **Walmart AI:** A basic conventional oil change starts at $28.88 and a full synthetic oil change starts at $58.88.
 

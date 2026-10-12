@@ -9,7 +9,7 @@ authors: nick
 imageAlt: A T3 Code thread uses its configured provider to access call4me and return phone evidence to the task
 ---
 
-**Give the provider behind your T3 Code thread a calling MCP connection.** T3 supplies the interface to your agent. Call4me supplies the phone calling tools. The useful result is a call and its evidence returning to the thread you were already using for research or planning.
+**Give the provider behind your T3 Code thread a calling MCP connection.** T3 supplies the interface to your agent. call4me supplies the phone calling tools. The useful result is a call and its evidence returning to the thread you were already using for research or planning.
 
 If that thread is your personal assistant, the phone part can be a question about a subscription, an appointment or a business you are comparing. Keep the task in the same thread and give the caller the facts and authority it needs.
 
@@ -19,7 +19,7 @@ We tested **T3 Code 0.0.45 with Codex CLI 0.160.0** on October 4, 2026. Actual T
 
 Open **Settings, then Providers** in T3 Code. Check the environment and provider instance selected by the thread's model picker. The MCP configuration belongs to that provider on the machine running the agent.
 
-This matters if you connect to a remote server, use more than one account, or have both Claude and Codex installed. Adding Call4me to Claude on your laptop does not configure a Codex instance on a remote machine.
+This matters if you connect to a remote server, use more than one account, or have both Claude and Codex installed. Adding call4me to Claude on your laptop does not configure a Codex instance on a remote machine.
 
 T3's [installation and provider guide](https://github.com/pingdotgg/t3code/blob/main/docs/user/install.md#providers) says provider installation, login and configuration belong to the selected environment. Its [Codex guide](https://github.com/pingdotgg/t3code/blob/main/docs/user/providers-codex.md) documents separate Codex homes and provider accounts. Its [Claude guide](https://github.com/pingdotgg/t3code/blob/main/docs/user/providers-claude.md) documents custom Claude configuration directories.
 
@@ -33,9 +33,9 @@ T3's [installation and provider guide](https://github.com/pingdotgg/t3code/blob/
 
 Check the actual instance before copying commands. The steps below cover Codex and Claude. We did not test calling through every provider T3 supports.
 
-## Add Call4me to the Codex provider
+## Add call4me to the Codex provider
 
-Sign in to your [Call4me account](/login?next=/account). On the machine and Codex configuration used by T3, run:
+Sign in to your [call4me account](/login?next=/account). On the machine and Codex configuration used by T3, run:
 
 ```bash
 codex mcp add call4me --url https://call4.me/mcp
@@ -43,7 +43,7 @@ codex mcp login call4me
 codex mcp list
 ```
 
-Complete the browser sign in. This authenticates Call4me separately from the account you use to run Codex. OpenAI's [MCP reference](https://learn.chatgpt.com/docs/extend/mcp) documents the remote HTTP connection, OAuth flow and server configuration.
+Complete the browser sign in. This authenticates call4me separately from the account you use to run Codex. OpenAI's [MCP reference](https://learn.chatgpt.com/docs/extend/mcp) documents the remote HTTP connection, OAuth flow and server configuration.
 
 If the T3 provider uses a custom Codex home, run these commands with that same `CODEX_HOME`, as described in [T3's Codex provider guide](https://github.com/pingdotgg/t3code/blob/main/docs/user/providers-codex.md). A successful list from a different home does not establish that your selected T3 instance can see the server.
 
@@ -55,7 +55,7 @@ Look for the tool invocation and its result. A model describing what a balance t
 
 ### Alternative: an API key available to the provider
 
-Our test used a Call4me account key through an environment variable. This configuration stores the variable's name, rather than the key itself:
+Our test used a call4me account key through an environment variable. This configuration stores the variable's name, rather than the key itself:
 
 ```toml
 [mcp_servers.call4me]
@@ -67,7 +67,7 @@ The process running the Codex provider must receive `CALL4ME_API_KEY`. Exporting
 
 T3 documents provider environment variables in its [provider setup](https://github.com/pingdotgg/t3code/blob/main/docs/user/install.md#providers). OpenAI documents `bearer_token_env_var` in its [MCP configuration reference](https://learn.chatgpt.com/docs/extend/mcp). These are setup paths; our test did not repeat fresh browser OAuth inside T3.
 
-## Add Call4me to the Claude provider
+## Add call4me to the Claude provider
 
 On the machine and Claude configuration used by T3:
 
@@ -75,7 +75,7 @@ On the machine and Claude configuration used by T3:
 claude mcp add --scope user --transport http call4me https://call4.me/mcp
 ```
 
-Open a Claude Code session using that configuration, run `/mcp`, choose Call4me and authenticate. Then start a fresh T3 thread with that Claude provider and request the same balance check.
+Open a Claude Code session using that configuration, run `/mcp`, choose call4me and authenticate. Then start a fresh T3 thread with that Claude provider and request the same balance check.
 
 The command follows [Claude Code's MCP documentation](https://code.claude.com/docs/en/mcp). T3's [Claude provider guide](https://github.com/pingdotgg/t3code/blob/main/docs/user/providers-claude.md) explains that Claude uses its login and configuration, including the selected `CLAUDE_CONFIG_DIR`. If you use a custom directory, apply it consistently during setup and in the provider instance.
 
@@ -127,9 +127,9 @@ The live transcript contained “At the tone”, without a complete UTC hour and
 
 The full decoded recording lasts **42.78 seconds**. The export normalizes loudness without trimming or changing the timing. The carrier metadata spans 43.24 seconds; that reported span is different from the decoded audio duration. Independent transcription of the source, export and ending supports these approximate timestamps. No private spoken identifiers were found.
 
-**0:09** Call4me: Hi, hello?
+**0:09** call4me: Hi, hello?
 
-**0:21** Call4me: Hello, are you still there?
+**0:21** call4me: Hello, are you still there?
 
 **0:41** Automated announcement: At the tone, two... [recording ends]
 
@@ -143,7 +143,7 @@ Start with a gap in the task you already gave your assistant. Our [Fubo cancella
 
 Once the connection works, give the thread a destination, questions and limits:
 
-> Continue our research using the business's official website first. Identify one important fact we still cannot establish online. Show me the number and the question before calling. Make one informational call using Call4me, check the category requirements, and follow the returned call ID until it ends. Do not book, pay, share personal details, request a callback or leave a message. Return the answer, who supplied it, the recording if available, and anything unresolved.
+> Continue our research using the business's official website first. Identify one important fact we still cannot establish online. Show me the number and the question before calling. Make one informational call using call4me, check the category requirements, and follow the returned call ID until it ends. Do not book, pay, share personal details, request a callback or leave a message. Return the answer, who supplied it, the recording if available, and anything unresolved.
 
 The task brief travels to the voice caller. Essential facts must be included in the call request, rather than left implicit in earlier chat messages. A calling MCP gives the thread a task and result interface; it does not make the entire coding session the voice on the line.
 
@@ -160,7 +160,7 @@ A status of completed means the call ended. Read the outcome and transcript befo
 
 ## If the connection works outside T3 but not inside it
 
-**Compare provider instances and configuration locations first.** Check the thread's selected environment, provider and account. Inspect a custom Codex home or Claude config directory before changing the Call4me credential.
+**Compare provider instances and configuration locations first.** Check the thread's selected environment, provider and account. Inspect a custom Codex home or Claude config directory before changing the call4me credential.
 
 **Check the launching environment.** A bearer variable available to your terminal can be absent from the provider process. T3's provider settings and the environment running the server are the relevant places to inspect.
 

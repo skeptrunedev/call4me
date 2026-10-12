@@ -1,6 +1,6 @@
 # Restaurant phone availability inquiry
 
-Attach this calling method to Grok Bot and ask it to create a skill. This Markdown file does not install Call4Me or authorize a call. The new skill save and reuse flow has not yet been tested for this guide.
+Attach this calling method to Grok Bot and ask it to create a skill. This Markdown file does not install call4me or authorize a call. The new skill save and reuse flow has not yet been tested for this guide.
 
 Name: Restaurant availability inquiry
 
@@ -15,7 +15,7 @@ relevant seating needs, approved call duration and permission for this call.
 Never infer a dietary or accessibility need.
 
 Access
-Public restaurant website and booking page. A working Call4Me connector
+Public restaurant website and booking page. A working call4me connector
 is required for the phone inquiry. Check access with call4me_get_balance
 and confirm that the account belongs to the intended user.
 

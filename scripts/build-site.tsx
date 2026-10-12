@@ -9,7 +9,7 @@ import { dirname, join, relative } from 'node:path';
 import { unstable_readConfig } from 'wrangler';
 import type { Child } from 'hono/jsx';
 import { StaticRenderContext } from '../src/server/lib/static-render';
-import { HomePage, RulesPage, PrivacyPage, TermsPage, SupportPage } from '../src/server/views/public';
+import { HomePage, RulesPage, PrivacyPage, TermsPage, SupportPage, AboutPage } from '../src/server/views/public';
 import { ExamplesPage } from '../src/server/views/examples';
 import { VoicesPage } from '../src/server/views/voices';
 import { CompaniesPage } from '../src/server/views/companies';
@@ -91,6 +91,7 @@ await page('/mcp', <McpPage {...common} origin={origin} installPrompt={installPr
 await page('/rules', <RulesPage {...common} pricePerMinuteCents={price} countries={[]} agentPrompt={prompts.rulesPrompt(origin, null)} />);
 await page('/privacy', <PrivacyPage {...common} agentPrompt={prompts.privacyPrompt(origin, null)} />);
 await page('/terms', <TermsPage {...common} agentPrompt={prompts.termsPrompt(origin, null)} />);
+await page('/about', <AboutPage {...common} />);
 await page('/support', <SupportPage {...common} agentPrompt={prompts.supportPrompt(origin, null)} />);
 const all = renderAll(POST_SOURCES);
 const engagement = new Map(all.map(p => [p.slug, { likes: 0, comments: 0 }]));

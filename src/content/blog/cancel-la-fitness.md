@@ -88,47 +88,47 @@ The complete recording is 2 minutes 41 seconds. Original voices, waiting and tim
 
 Timestamps are approximate. This transcript was compared with independent automatic transcriptions of the source and reviewed export. Unclear speech is marked. No human listening verification is claimed.
 
-**0:07** **Call4me:** Hi, hello?
+**0:07** **call4me:** Hi, hello?
 
 **0:09** **Recording:** [Waiting until the representative answers.]
 
 **0:45** **Representative:** Hi, this is Irvine Jamboree LA Fitness. [Representative name and adjacent introduction removed.] How may I help you?
 
-**0:50** **Call4me:** Hi, [representative name removed]. Just looking for some general info. What cancellation methods work for a regular gym membership at your location, like online, phone, in person, or mail?
+**0:50** **call4me:** Hi, [representative name removed]. Just looking for some general info. What cancellation methods work for a regular gym membership at your location, like online, phone, in person, or mail?
 
 **0:54** **Representative:** [Brief overlapping interjection is unclear.]
 
 **1:05** **Representative:** For cancellations, it would only be in person. We would have you come in and talk to one of our sales counselors, and they would take that [unclear restart], take care of that for you.
 
-**1:12** **Call4me:** Okay, thanks. Does a manager need to be present, or can any sales counselor handle it?
+**1:12** **call4me:** Okay, thanks. Does a manager need to be present, or can any sales counselor handle it?
 
 **1:20** **Representative:** Any sales counselor can handle that.
 
-**1:23** **Call4me:** Great. And how much notice is needed before the next charge hits?
+**1:23** **call4me:** Great. And how much notice is needed before the next charge hits?
 
 **1:32** **Representative:** Before the next charge hits, as in after you cancel?
 
-**1:36** **Call4me:** Right, like if someone cancels, how soon does it need to be to avoid another billing?
+**1:36** **call4me:** Right, like if someone cancels, how soon does it need to be to avoid another billing?
 
 **1:44** **Representative:** It should be, it should be, uh, around a month before, as we do a first and last month membership where you pay for your first and last month upon signup. So [unclear restart], we recommend that you cancel around a month earlier, or you come in and talk to one of our counselors and they would give you more information about that.
 
-**2:01** **Call4me:** Gotcha. And how is the cancellation confirmed, like do they get an email or something in writing?
+**2:01** **call4me:** Gotcha. And how is the cancellation confirmed, like do they get an email or something in writing?
 
 **2:09** **Representative:** Yep. You would get an email sent to the email of the account that is, uh, on file.
 
-**2:15** **Call4me:** Perfect. And just to check, can a phone call ever cancel it, or do you only give instructions over the phone?
+**2:15** **call4me:** Perfect. And just to check, can a phone call ever cancel it, or do you only give instructions over the phone?
 
 **2:24** **Representative:** No, uh, we can't really cancel any memberships over the phone. It would only be in person.
 
-**2:29** **Call4me:** Great, thanks for clearing that up. That's all I needed.
+**2:29** **call4me:** Great, thanks for clearing that up. That's all I needed.
 
 **2:32** **Representative:** Anytime.
 
-**2:33** **Call4me:** Awesome, thanks so much. Bye.
+**2:33** **call4me:** Awesome, thanks so much. Bye.
 
 **2:34** **Representative:** Okay, perfect. Feel free to call back at this number and ask for more information. Have a good one.
 
-**2:38** **Call4me:** You too. Bye.
+**2:38** **call4me:** You too. Bye.
 
 **2:39** **Recording:** [Brief final speech is unclear. Recording ends at 2:41.]
 
@@ -147,7 +147,7 @@ Timestamps are approximate. The brief speech was checked using focused source an
 
 **0:00** **Recording:** [Waiting.]
 
-**0:08** **Call4me:** Hi, hello?
+**0:08** **call4me:** Hi, hello?
 
 **0:09** **Recording:** [No further intelligible speech before the recording ends at 2:49. The agent ended the call.]
 

@@ -14,30 +14,30 @@ You already use Claude Code or Codex as your personal assistant or coding agent.
 
 Several services now provide this. **Vapi Agent Phone is a ready to use calling service**, separate from Vapi's developer dashboard. **Bland has an official operational MCP server and skills plugin** that can place calls as well as build voice agents. call4me, ClawCall, Cocall, and Patter also support outbound calling from an existing agent. The useful choice is how you connect, what the call can ask you, and what comes back.
 
-**Choose Call4me when you want your existing assistant to finish a personal task that needs a phone conversation.** It takes a goal, known facts and permitted alternatives, lets your assistant answer questions while the call is active, and gives you a way to listen or take over. The returned transcript and available recording let you check what the business actually confirmed.
+**Choose call4me when you want your existing assistant to finish a personal task that needs a phone conversation.** It takes a goal, known facts and permitted alternatives, lets your assistant answer questions while the call is active, and gives you a way to listen or take over. The returned transcript and available recording let you check what the business actually confirmed.
 
-We make Call4me. This comparison combines our October 3 and 4 provider calls with a documentation refresh on **October 7, 2026**. We have recorded calls through Call4me, Vapi Agent Phone and Bland, including calls to the same restaurant. The briefs, limits and dates differ, so those recordings show actual behavior without establishing a reliability ranking.
+We make call4me. This comparison combines our October 3 and 4 provider calls with a documentation refresh on **October 7, 2026**. We have recorded calls through call4me, Vapi Agent Phone and Bland, including calls to the same restaurant. The briefs, limits and dates differ, so those recordings show actual behavior without establishing a reliability ranking.
 
-## Why choose Call4me for your existing assistant?
+## Why choose call4me for your existing assistant?
 
-The useful distinction is how much of the task you can keep in the assistant you already use. These are the reasons we built Call4me this way, with evidence you can inspect:
+The useful distinction is how much of the task you can keep in the assistant you already use. These are the reasons we built call4me this way, with evidence you can inspect:
 
-| Reason to choose Call4me | What it lets you do | Evidence and limits |
+| Reason to choose call4me | What it lets you do | Evidence and limits |
 | :--- | :--- | :--- |
 | Give the caller a task and permitted choices | Ask it to take the earliest appointment within your windows, or compare the same service across businesses | A [recorded rescheduling call](/blog/reschedule-doctor-appointment) checked the old appointment, considered two offered times and received confirmation of the new booking. The customer's assistant client is unknown. |
 | Keep questions connected to the original assistant | Read an open question with `call4me_get_call` and send an answer with `call4me_answer_question` while the call continues | This is part of the [current calling interface](/llms.txt). Our [Codex research trial](/blog/agent-web-research-phone-calls-sf-private-dining) also records an answer submitted after the call had ended. Keep following the call. |
-| Listen, join and hand the call back | Have Call4me ring your phone, listen privately, press 1 to speak, then press star or hang up to let the caller continue | In our [Spectrum example](/blog/spectrum-retention-department), the user joined for account verification and completed the conversation. The published recording covers the AI portion. The [tool reference](/llms.txt) explains listening and handing control back. |
+| Listen, join and hand the call back | Have call4me ring your phone, listen privately, press 1 to speak, then press star or hang up to let the caller continue | In our [Spectrum example](/blog/spectrum-retention-department), the user joined for account verification and completed the conversation. The published recording covers the AI portion. The [tool reference](/llms.txt) explains listening and handing control back. |
 | Call several options at once | Ask several restaurants or offices the same questions without waiting for each conversation to finish before starting another | A customer [called five restaurants in under twelve minutes](/blog/private-dining-room-cost), with some calls overlapping. Set duration limits that leave enough available credits for each call. |
-| Save the call for when the office opens | Store the brief and intended time with Call4me, then retrieve the same schedule from another session | The [scheduling guide](/blog/schedule-phone-calls-claude-code-codex) verifies schedules, cancellation and later completed calls. Delivery into a closed agent session remains unverified. |
+| Save the call for when the office opens | Store the brief and intended time with call4me, then retrieve the same schedule from another session | The [scheduling guide](/blog/schedule-phone-calls-claude-code-codex) verifies schedules, cancellation and later completed calls. Delivery into a closed agent session remains unverified. |
 | Inspect a real outcome before depending on it | Hear what staff agreed to and distinguish a completed request from an unanswered inquiry | Hear a [confirmed dinner reservation](/blog/book-dinner-reservation-by-phone) and a [fresh Muse library inquiry](/blog/meta-muse-first-task) that returned staff answers to the same conversation. |
 
-For example, your assistant can compare offices online, call with your appointment windows, ask you about an unexpected offer, and return the agreed time to the original task. Calendar updates still depend on the assistant's separate calendar tools. Call4me does not automatically inherit the assistant's context; include the facts the caller needs in its brief.
+For example, your assistant can compare offices online, call with your appointment windows, ask you about an unexpected offer, and return the agreed time to the original task. Calendar updates still depend on the assistant's separate calendar tools. call4me does not automatically inherit the assistant's context; include the facts the caller needs in its brief.
 
 Our [voice architecture](/blog/cascaded-voice-stack-vs-gpt-live) separates the audio conversation from a task reasoner with call controls and a bridge back to your assistant. That explains how the workflow is implemented. The completed calls above are the evidence that it has handled actual errands. Neither is a measured claim that our voice is faster or more reliable than another service.
 
 These benefits form a reason to choose the complete workflow. They are not all exclusive features: Cocall also documents questions returned to Claude, and other products support transfers, scheduling or custom tools. For a specific switch, read [Vapi alternatives for Claude Code and Codex](/blog/vapi-alternatives) or [Bland AI alternatives for personal assistant calls](/blog/bland-ai-alternatives).
 
-One concrete difference today: [Vapi Agent Phone's published limits](https://phone.vapi.ai/discovery.json), checked October 7, allow one concurrent call per user. Its [call schema](https://phone.vapi.ai/openapi.json) does not expose a duration parameter. Call4me exposes concurrent calling and an enforced `max_minutes` cap directly to your assistant. Those are useful reasons to choose it for comparing several options. Bland supports concurrency and duration controls too, so this distinction applies to Agent Phone's current interface.
+One concrete difference today: [Vapi Agent Phone's published limits](https://phone.vapi.ai/discovery.json), checked October 7, allow one concurrent call per user. Its [call schema](https://phone.vapi.ai/openapi.json) does not expose a duration parameter. call4me exposes concurrent calling and an enforced `max_minutes` cap directly to your assistant. Those are useful reasons to choose it for comparing several options. Bland supports concurrency and duration controls too, so this distinction applies to Agent Phone's current interface.
 
 ## Which Claude Code MCP servers can make phone calls?
 
@@ -52,7 +52,7 @@ One concrete difference today: [Vapi Agent Phone's published limits](https://pho
 
 For a hosted service with a documented answer loop during a call, compare call4me and Cocall. For an existing Bland account, try its operational MCP before building a new integration. For a local Claude Code plugin that also supports notifications and inbound access, look at Patter. Vapi Agent Phone funds calls within a limited allowance. ClawCall focuses on English language US calls and offers REST and skill alternatives to MCP.
 
-The linked pages are the sources for this matrix. Choose Call4me for the task workflow above, Vapi Agent Phone for its hosted calling interface, or Bland when its wider account tools are part of the work you want your assistant to do. The recordings below help you inspect the calls behind this comparison.
+The linked pages are the sources for this matrix. Choose call4me for the task workflow above, Vapi Agent Phone for its hosted calling interface, or Bland when its wider account tools are part of the work you want your assistant to do. The recordings below help you inspect the calls behind this comparison.
 
 ## What comes back to the agent?
 
@@ -79,7 +79,7 @@ The task was general Waterbar private dining research. It allowed one informatio
 
 Waterbar's **virtual concierge** said Bridge Tower was fully enclosed and private, while Looking Glass was not fully enclosed and could share sound with the main dining area. It described the posted capacities as recommended maxima, with possible flexibility depending on layout. These are **concierge assertions, without staff confirmation**, rather than a capacity guarantee for an event. The concierge could not provide current minimums or mandatory fees. It offered to pass a message to the events team; the caller declined and ended. The concierge had also announced that it was taking notes to share with the team. Whether it relayed those notes is not established by our call log. The transcript shows a generic AI introduction and no invented date or guest count. It also contains brief conversational overlap and an interrupted fee question that the caller restated. We did not measure latency. Voicemail handling was configured but not exercised, because the concierge answered.
 
-Our [Call4me harness sessions](/blog/agent-web-research-phone-calls-sf-private-dining) used **six minute caps**; the Codex Waterbar recording lasts **3:12**. Those Call4me callers also used a saved profile name despite the brief asking them not to share it. The linked walkthrough discloses that failure, and the public audio mutes the name. The Bland run used a shorter cap and a different instruction payload. These examples show each workflow and its evidence. They do not establish matched timing, relative quality, or reliability rankings.
+Our [call4me harness sessions](/blog/agent-web-research-phone-calls-sf-private-dining) used **six minute caps**; the Codex Waterbar recording lasts **3:12**. Those call4me callers also used a saved profile name despite the brief asking them not to share it. The linked walkthrough discloses that failure, and the public audio mutes the name. The Bland run used a shorter cap and a different instruction payload. These examples show each workflow and its evidence. They do not establish matched timing, relative quality, or reliability rankings.
 
 ### Listen to the Bland Waterbar call
 
@@ -128,13 +128,13 @@ At **0:31**, the concierge describes room privacy. At **1:07**, it suggests poss
 
 We also reused browser OAuth for Agent Phone in a fresh **Codex CLI 0.160.0** session on October 3. The live connection exposed `phone` and `phone_status`. Codex submitted **one** request with a stable `requestKey`, the published Waterbar number, the general research goal, and separate context and instructions. It sent `voicemail: "off"` with no caller name or callback contact. The tool accepted that input.
 
-There was no account allowance read tool. The submission returned `remainingCalls: 9`; this was an observed remaining allowance after the attempt, rather than a balance checked beforehand. The live schema also had **no duration parameter**. We instructed the caller to finish within three minutes, so this run had an instructional limit, unlike Bland's enforced three minute cap and the Call4me runs' six minute caps.
+There was no account allowance read tool. The submission returned `remainingCalls: 9`; this was an observed remaining allowance after the attempt, rather than a balance checked beforehand. The live schema also had **no duration parameter**. We instructed the caller to finish within three minutes, so this run had an instructional limit, unlike Bland's enforced three minute cap and the call4me runs' six minute caps.
 
 Codex kept reading the same call ID at the returned `pollAfterSeconds` interval. Active reads had no transcript or recording. The final result returned `ended`, `assistant-ended-call`, a transcript, and a recording. It also returned `cost: 0`; we report that field without assigning an undocumented currency or treating it as a general pricing guarantee.
 
 Waterbar's virtual concierge described Bridge Tower as private and Looking Glass as less enclosed, overlooking the bar. It repeated the posted capacities but could not confirm layout flexibility. It could not supply minimums or fees. The caller used a generic AI introduction, did not invent event details, and declined offers to pass a message twice. The concierge independently announced that it was taking notes to share with the team; our artifacts do not establish whether those notes were relayed.
 
-**The same Waterbar automation gave different capacity answers across these calls.** Bland received possible flexibility language; Agent Phone and Call4me received an explicit limit on what the concierge could confirm. We leave layout flexibility unresolved and seek staff confirmation. The different responses and instructions do not support a provider ranking or a matched benchmark.
+**The same Waterbar automation gave different capacity answers across these calls.** Bland received possible flexibility language; Agent Phone and call4me received an explicit limit on what the concierge could confirm. We leave layout flexibility unresolved and seek staff confirmation. The different responses and instructions do not support a provider ranking or a matched benchmark.
 
 ### Listen to the Vapi Agent Phone Waterbar call
 
@@ -235,7 +235,7 @@ The native provider transcript and action log record button two. That is an acti
 
 ### What this establishes about phone menus
 
-Our [earlier Call4me Claude Code session](/blog/agent-web-research-phone-calls-sf-private-dining) also reached Foreign Cinema's private dining voicemail on **October 3**, in a recording lasting 2:27. It used a different day and brief. These calls do not provide a matched comparison of menu speed or reliability.
+Our [earlier call4me Claude Code session](/blog/agent-web-research-phone-calls-sf-private-dining) also reached Foreign Cinema's private dining voicemail on **October 3**, in a recording lasting 2:27. It used a different day and brief. These calls do not provide a matched comparison of menu speed or reliability.
 
 These are single branch menu tests. They do not establish performance on nested menus, long holds, repeated attempts or changing options.
 
