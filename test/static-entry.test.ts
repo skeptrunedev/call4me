@@ -118,6 +118,22 @@ test('first touch is recorded per response while returning visitors reuse the sh
   assert.equal(internal!.headers.get('set-cookie'), null);
 });
 
+test('crawlers and AI fetchers get the shared public page with no first touch cookie', async () => {
+  for (const ua of [
+    'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+    'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.1; +https://openai.com/gptbot)',
+    'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)',
+    'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; ChatGPT-User/1.0; +https://openai.com/bot',
+    'meta-externalagent/1.1 (+https://developers.facebook.com/docs/sharing/webmasters/crawler)',
+  ]) {
+    const response = await harness().respond('/examples', { headers: { 'user-agent': ua } });
+    assert.equal(response!.headers.get('set-cookie'), null, ua);
+    assert.equal(response!.headers.get('cache-control'), 'public, max-age=0, must-revalidate', ua);
+  }
+  const phone = await harness().respond('/examples', { headers: { 'user-agent': 'Mozilla/5.0 (Linux; Android 12; CUBOT_X30 Build/SP1A) Chrome/120.0 Mobile Safari/537.36' } });
+  assert.ok(firstTouchCookie(phone!.headers.get('set-cookie')), 'a phone named CUBOT is a person');
+});
+
 test('invalid first touch cookies are replaced without reading D1', async () => {
   const response = await harness().respond('/examples', { headers: { cookie: 'c4_ft=%not-json' } });
   assert.equal(firstTouchCookie(response!.headers.get('set-cookie'))?.landing, '/examples');

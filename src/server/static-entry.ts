@@ -1,6 +1,6 @@
 /** Small edge dispatcher. Public documents never initialize the application or read D1. */
 import { canonicalRedirect } from './lib/canonical';
-import { firstTouchCookie, firstTouchOf, firstTouchSetCookie } from './lib/first-touch';
+import { firstTouchCookie, firstTouchOf, firstTouchSetCookie, isCrawler } from './lib/first-touch';
 import { prefersMarkdown } from './lib/markdown';
 import { exampleAudio } from './lib/example-audio';
 import { hasCredentials } from './lib/session-credentials';
@@ -58,7 +58,7 @@ export async function staticResponse(request: Request, env: Env): Promise<Respon
   if (markdown) response.headers.set('x-markdown-tokens', String(page.tokens));
   if (key === '/') response.headers.set('link', '</.well-known/api-catalog>; rel="api-catalog"');
   if (request.method === 'GET' && !feed) {
-    if (!firstTouchCookie(request.headers.get('cookie'))) {
+    if (!isCrawler(request.headers.get('user-agent')) && !firstTouchCookie(request.headers.get('cookie'))) {
       const touch = firstTouchOf(url, request.headers.get('referer') ?? undefined);
       if (touch) response.headers.append('set-cookie', firstTouchSetCookie(touch));
     }

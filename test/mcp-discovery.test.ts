@@ -66,3 +66,14 @@ test('unauthenticated POST retains the resource specific OAuth challenge', async
     assert.ok(response.headers.get('www-authenticate')?.includes(`oauth-protected-resource${path}`));
   }
 });
+
+test('a key-in-URL MCP address is never indexable, whoever fetches it', async () => {
+  const url = 'https://call4.me/mcp/cb_live_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+  const browser = await app.request(url, { headers: { accept: 'text/html' } }, {});
+  assert.equal(browser.status, 302);
+  assert.equal(browser.headers.get('location'), '/mcp');
+  assert.equal(browser.headers.get('x-robots-tag'), 'noindex, nofollow');
+  const client = await app.request(url, { headers: { 'mcp-protocol-version': '2025-06-18' } }, {});
+  assert.equal(client.status, 405);
+  assert.equal(client.headers.get('x-robots-tag'), 'noindex, nofollow');
+});

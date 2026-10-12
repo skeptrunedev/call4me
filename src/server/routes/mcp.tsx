@@ -71,7 +71,14 @@ async function authorized(c: AppContext, path: McpPath, surface: Surface): Promi
 
 mcp.all('/', (c) => authorized(c, '/mcp', 'agents'));
 
-/** /mcp/<key>: the key rides in the URL for clients whose connector UI can't sign in or set headers. */
+/**
+ * /mcp/<key>: the key rides in the URL for clients whose connector UI can't sign in or set headers.
+ * Such a URL is a credential, so no search engine may index it wherever someone pastes it.
+ */
+mcp.use('/:key', async (c, next) => {
+  await next();
+  c.header('x-robots-tag', 'noindex, nofollow');
+});
 mcp.get('/:key', (c) => (wantsHtml(c) ? c.redirect('/mcp', 302) : c.text('POST MCP requests here', 405)));
 mcp.all('/:key', async (c) => {
   const raw = c.req.param('key');

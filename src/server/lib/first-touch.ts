@@ -88,6 +88,15 @@ function classify(host: string): { source: string; medium: string } {
 const clip = (s: string, max = 100) => s.trim().slice(0, max);
 
 /**
+ * Crawlers and AI fetchers are nobody's first touch, and a cookie on their response would turn
+ * the shared public page private and uncacheable for every search and answer engine.
+ * Matches "Googlebot/2.1", "GPTBot/1.1", "ClaudeBot", "Slackbot-LinkExpanding", "ChatGPT-User/1.0",
+ * "meta-externalagent", "facebookexternalhit"; "CUBOT_X30" (a phone) does not.
+ */
+const CRAWLER = /(?:bot|crawler|spider)(?:[/;) -]|$)|-user\/|externalagent|externalhit|slurp|google-|headlesschrome|lighthouse/i;
+export const isCrawler = (userAgent: string | null | undefined) => !!userAgent && CRAWLER.test(userAgent);
+
+/**
  * The first touch for a page request: its utm tags or ?ref=, else its referrer, else direct.
  * Null when the referrer is this site or a payment or sign-in page, which only happens to a
  * browser that is mid-flow (and so says nothing about where it came from).

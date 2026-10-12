@@ -33,7 +33,7 @@ import { admin } from './routes/admin';
 import { BlogError } from './services/blog';
 import { exampleAudio } from './lib/example-audio';
 import { analytics, emailHashOf } from './services/analytics';
-import { firstTouchCookie, firstTouchOf, firstTouchSetCookie } from './lib/first-touch';
+import { firstTouchCookie, firstTouchOf, firstTouchSetCookie, isCrawler } from './lib/first-touch';
 import { redditConversions, redditCookies, redditVisitCookie, redditVisitOf, saveRedditVisit } from './lib/reddit';
 import { metaConversions } from './lib/meta';
 import { siteData } from './routes/site-data';
@@ -69,7 +69,7 @@ app.use('*', async (c, next) => {
 app.use('*', async (c, next) => {
   await next();
   if (c.req.method !== 'GET' || c.res.status !== 200 || !(c.res.headers.get('content-type') ?? '').includes('text/html')) return;
-  if (firstTouchCookie(c.req.header('cookie'))) return;
+  if (isCrawler(c.req.header('user-agent')) || firstTouchCookie(c.req.header('cookie'))) return;
   const touch = firstTouchOf(new URL(c.req.url), c.req.header('referer'));
   if (touch) c.header('set-cookie', firstTouchSetCookie(touch), { append: true });
 });
