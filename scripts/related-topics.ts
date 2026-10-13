@@ -78,6 +78,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'how-to-transfer-a-prescription': ['pharmacy'],
   'hulu-customer-service-number': ['subscription-cancellation', 'media-subscriptions'],
   'instinct-ai-phone-calls': ['agent-software'],
+  'irs-phone-number': ['personal-finance'],
   'junk-removal-cost': ['furniture-home-services'],
   'lawyer-consultation-fee': ['legal-business-paperwork'],
   'les-schwab-oil-change': ['car-maintenance'],
