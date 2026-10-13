@@ -105,10 +105,10 @@ The same page says "it can take up to 30 days for us to receive and process your
 - **The fastest route to a person.** The representative didn't give one. The steps above are just what worked on our call.
 - **Whether a callback is available another way.** She said no on the phone. We didn't check the website.
 
-
 ## A second call the same day
 
 Later on October 13 we called the same number again, this time with [Goose](/blog/goose-mcp-phone-calls) placing the call through call4me. The assistant offered a text link once and verification twice; declining each time and saying "representative" reached a live person 2:10 after Amazon picked up. That representative said the fastest way to a person is the Amazon app's customer support option, answered "definitely" when asked whether Amazon offers a callback, said refunds take 5 to 7 business days after the item is returned, and said to have the order number and the issue ready. Two representatives gave opposite answers on callbacks, so we can't tell you which is right.
+
 ## Beware of fake Amazon calls
 
 Amazon's own [page on fake phone calls](https://www.amazon.com/gp/help/customer/display.html?nodeId=T3rnIphp327SSKYl8e) says: "We will never ask for your password, OTP, gift card details, bank card details or any other confidential information over the phone." It also says "legitimate Amazon representatives will never ask for OTP codes over the phone," and that if a call feels wrong, "it's ok to hang up" and contact customer service through the Amazon app or website. Its [page on identifying scams](https://www.amazon.com/gp/help/customer/display.html?nodeId=G4YFYCCNUSENA23B) lists "payment via gift cards" as a red flag.
