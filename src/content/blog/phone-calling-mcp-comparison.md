@@ -4,7 +4,7 @@ seoTitle: "Phone calling MCP: Claude Code and Codex compared"
 subtitle: Compare call4me, Vapi Agent Phone, Bland, ClawCall, Cocall, and Patter by account setup, calling workflow, and the evidence your agent gets back.
 description: "Compare phone calling MCP servers for Claude Code and Codex. Real call4me, Vapi and Bland calls, recordings, transcripts, setup and observed limits."
 date: 2026-10-03
-updated: 2026-10-07
+updated: 2026-10-13
 tags: mcp, claude code, codex, ai agents, ai phone assistant
 authors: nick
 imageAlt: Phone calling MCP services compared by setup and calling workflow
@@ -17,6 +17,21 @@ Several services now provide this. **Vapi Agent Phone is a ready to use calling 
 **Choose call4me when you want your existing assistant to finish a personal task that needs a phone conversation.** It takes a goal, known facts and permitted alternatives, lets your assistant answer questions while the call is active, and gives you a way to listen or take over. The returned transcript and available recording let you check what the business actually confirmed.
 
 We make call4me. This comparison combines our October 3 and 4 provider calls with a documentation refresh on **October 7, 2026**. We have recorded calls through call4me, Vapi Agent Phone and Bland, including calls to the same restaurant. The briefs, limits and dates differ, so those recordings show actual behavior without establishing a reliability ranking.
+
+## Setup guides for each AI app
+
+Each guide covers setup in that app and says what we actually tested, and when.
+
+| Where your agent runs | Guide |
+|---|---|
+| Claude Code | [Claude Code phone calls](/blog/claude-code-phone-calls), with a restaurant call from a real session |
+| Codex CLI | [Codex phone calls](/blog/codex-phone-calls), including OAuth and bearer key setup |
+| T3 Code | [T3 Code phone calls](/blog/t3-code-phone-calls), configured on the provider behind the thread |
+| Grok, Grok Bot and the xAI API | [Grok MCP setup](/blog/grok-connectors-mcp-phone-calls), with a recorded Grok Bot call |
+| Meta Muse | [Muse MCP setup](/blog/meta-muse-ai-agent-phone-calls) and the [Muse Code terminal client](/blog/muse-code-mcp-phone-calls) |
+| Instinct | [Instinct Concierge or your own agent](/blog/instinct-ai-phone-calls) |
+| Your own code | [Vercel AI SDK tools package](/blog/vercel-ai-sdk-phone-calls) |
+| Calls for later | [Scheduling a call from Claude Code or Codex](/blog/schedule-phone-calls-claude-code-codex) |
 
 ## Why choose call4me for your existing assistant?
 

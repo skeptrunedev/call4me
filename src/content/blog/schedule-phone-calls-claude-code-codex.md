@@ -177,3 +177,5 @@ Use `wait_seconds: 30` when following a call that is actively running. Once it e
 **A tool timeout leaves the result uncertain.** Inspect `call4me_list_calls` before submitting the same schedule again. If you have the ID, retrieve that record. Creating another schedule can cause a duplicate call.
 
 Scheduling is useful when the agent finishes its online research before a business opens. Give it a complete brief, verify the accepted time, save the ID, and bring the actual phone evidence into the next session.
+
+For setup in other AI apps and how calling services compare, see our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison).

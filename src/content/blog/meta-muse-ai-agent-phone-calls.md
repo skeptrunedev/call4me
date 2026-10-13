@@ -136,3 +136,5 @@ For a first phone task, use our [Muse library calling tutorial](/blog/meta-muse-
 Once call4me is connected, paste this into Muse:
 
 > Use call4me to prepare one call to [business] for [task]. Verify its published phone number, run a fresh balance check and read the current requirements. Ask me for missing information in one message, then show the destination, caller identity, permitted actions and a four minute limit for approval. After approval, make one call using the live schema and max_minutes set to 4. Follow the returned call ID until it ends. If a status request fails, check that same ID before considering another call. Return who answered, what was confirmed, unresolved questions and the available transcript and recording. Ask me before expanding the task or agreeing to a cost.
+
+For other AI apps and how calling services compare, see our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison).

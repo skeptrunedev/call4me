@@ -199,3 +199,5 @@ Once call4me is connected, start with:
 That keeps the phone call inside your existing Claude Code workflow, with evidence you can inspect before acting on the answer.
 
 If the business is closed now, use our [scheduled calling workflow](/blog/schedule-phone-calls-claude-code-codex). If you use Claude through T3, check the selected provider configuration in our [T3 Code guide](/blog/t3-code-phone-calls). For a destination with a menu, read the [phone tree troubleshooting guide](/blog/ai-phone-tree-navigation).
+
+To compare calling services and see the setup for other AI apps, read our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison).

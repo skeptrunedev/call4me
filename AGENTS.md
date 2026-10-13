@@ -13,3 +13,11 @@ Other outreach rules:
 - Log every send and reply in the outreach tracker (`npm run outreach`).
 - Lowercase casual voice, no em dashes, signed "nick".
 - Only state numbers Nick gave or that our published posts and data support.
+
+## Blog content
+
+Search Console on October 13, 2026 (data through October 11) showed where the blog ranks. Pick new posts accordingly:
+
+- Write: "[AI app] + phone calls" setup guides tested in that app, and "[company] customer service number" guides built on a recorded call that reached a person. These are the only non-brand pages averaging a top 10 position.
+- Don't start new cost posts ("how much does X cost") or "cancel X" posts. Cost posts average positions 85 to 100 and cancel posts 50 to 70 against established sites. Put subscription cancellation details in that company's customer service guide instead.
+- Link every new AI app guide from the table in `phone-calling-mcp-comparison.md`, and link back to it.

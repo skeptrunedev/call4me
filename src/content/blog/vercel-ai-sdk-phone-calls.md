@@ -122,3 +122,5 @@ We ran the package on October 8, 2026 with `ai` 7.0.135, `@ai-sdk/openai` 4.0.91
 The same calls work from coding agents without any code: see [Claude Code phone calls](/blog/claude-code-phone-calls) and [Codex phone calls](/blog/codex-phone-calls), or the [MCP setup page](/mcp).
 
 The package source is MIT licensed, in the [call4me repository](https://github.com/skeptrunedev/call4me/tree/main/packages/ai-sdk).
+
+To compare calling services and setups for other AI apps, see our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison).
