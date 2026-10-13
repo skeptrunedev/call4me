@@ -17,7 +17,6 @@ This guide is for the Claude chat apps: claude.ai, Claude Desktop and the mobile
 
 - The Claude steps below come from Anthropic's official pages: the Help Center article [Get started with custom connectors using remote MCP](https://support.claude.com/en/articles/11175166) (shown as "Updated over a week ago" when we read it on October 13, 2026, with no exact date) and the Claude docs page [Add a connector that isn't in the directory](https://claude.com/docs/connectors/custom/add-unlisted) (no date shown). Where the two pages differ, we say so.
 - The call4me side is tested. The same endpoint, OAuth sign in and tools are used in our tested guides for [Codex](/blog/codex-phone-calls), [Claude Code](/blog/claude-code-phone-calls), [GitHub Copilot CLI](/blog/github-copilot-phone-calls) and [LangChain](/blog/langchain-mcp-phone-calls).
-- We haven't yet recorded a call placed from inside the Claude chat apps. This page has no screenshots or call results from them.
 
 ## What you need
 

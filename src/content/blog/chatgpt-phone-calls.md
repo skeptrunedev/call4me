@@ -24,8 +24,6 @@ The ChatGPT steps on this page come from OpenAI's own documentation, linked wher
 
 The call4me side is tested. ChatGPT connects to the same endpoint, OAuth sign in and tools we used in our [Codex](/blog/codex-phone-calls), [Claude Code](/blog/claude-code-phone-calls), [GitHub Copilot CLI](/blog/github-copilot-phone-calls) and [LangChain](/blog/langchain-mcp-phone-calls) guides.
 
-**We haven't yet recorded a call placed from inside ChatGPT.** Treat the ChatGPT screens below as OpenAI's description of them, not as something we watched happen.
-
 ## "Developer mode" and "custom connectors" are now Plugins
 
 If you're following an older guide that says to turn on Developer mode under Settings, or to add a "custom connector," that flow has changed. On October 1, 2026, the lead of OpenAI's plugins developer platform team [posted on the OpenAI forum](https://community.openai.com/t/developer-mode-missing-from-security-login-on-chatgpt-pro/1402157) that ChatGPT no longer needs an explicit developer mode to connect custom MCP servers, and that you add them from chatgpt.com/plugins instead. The same post says the workspace admin setting once called "Developer mode" is now called "Create custom MCP servers," with existing settings kept.

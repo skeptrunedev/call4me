@@ -39,8 +39,6 @@ The Cursor steps on this page come from Cursor's official documentation, loaded 
 
 The call4me side is tested. The same endpoint, OAuth sign in and tools are used in our tested guides for [Codex](/blog/codex-phone-calls), [Claude Code](/blog/claude-code-phone-calls), [GitHub Copilot CLI](/blog/github-copilot-phone-calls) and [LangChain](/blog/langchain-mcp-phone-calls).
 
-We haven't yet recorded a call placed from inside Cursor. When we do, the results will go on this page.
-
 ## Add call4me to Cursor's mcp.json
 
 You need Cursor, a [call4me account](/login?next=/account), and calling credits for the phone part. Your Cursor sign in and your call4me connection are separate accounts.

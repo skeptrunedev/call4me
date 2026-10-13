@@ -29,8 +29,6 @@ The Perplexity steps on this page come from Perplexity's own pages, loaded on Oc
 
 The call4me side is tested. The same endpoint, OAuth sign in and tools are used in our tested guides for [Codex](/blog/codex-phone-calls), [Claude Code](/blog/claude-code-phone-calls), [GitHub Copilot CLI](/blog/github-copilot-phone-calls) and [LangChain](/blog/langchain-mcp-phone-calls).
 
-We haven't yet recorded a call placed from inside Perplexity. When we do, the results will go on this page.
-
 ## Which Perplexity plans can add a custom connector
 
 Perplexity's changelog says "Pro, Max, and Enterprise subscribers can now connect Perplexity to any external tool or data source" through MCP, by adding "a custom remote connector by providing an MCP server URL." The troubleshooting page repeats that custom MCP servers are limited to Pro, Max or Enterprise, and that some connectors work only on certain surfaces (web, desktop, mobile).

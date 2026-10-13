@@ -24,7 +24,6 @@ A custom app is for everything else. It works in the Gemini web app and, once co
 - The Gemini steps come from Google's help pages: [Connect & manage custom apps for Gemini Apps](https://support.google.com/gemini/answer/17209137) and [Manage your tasks & workflows in Gemini Apps](https://support.google.com/gemini/answer/17094507). Neither shows a date beyond the copyright year. We read both on October 13, 2026.
 - The CLI steps come from the [Gemini CLI MCP documentation](https://geminicli.com/docs/tools/mcp-server) and the [Antigravity MCP documentation](https://antigravity.google/docs/mcp), read the same day.
 - The call4me side is tested. The same endpoint, OAuth sign in and tools are used in our tested guides for [Codex](/blog/codex-phone-calls), [Claude Code](/blog/claude-code-phone-calls), [GitHub Copilot CLI](/blog/github-copilot-phone-calls) and [LangChain](/blog/langchain-mcp-phone-calls).
-- **We haven't yet recorded a call placed from inside Gemini**, the Gemini app, Gemini CLI or Antigravity CLI.
 
 ## What you need for a Gemini custom app
 

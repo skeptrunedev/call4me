@@ -31,11 +31,11 @@ Each guide covers setup in that app and says what we actually tested, and when.
 | Grok, Grok Bot and the xAI API | [Grok MCP setup](/blog/grok-connectors-mcp-phone-calls), with a recorded Grok Bot call |
 | Meta Muse | [Muse MCP setup](/blog/meta-muse-ai-agent-phone-calls) and the [Muse Code terminal client](/blog/muse-code-mcp-phone-calls) |
 | Instinct | [Instinct Concierge or your own agent](/blog/instinct-ai-phone-calls) |
-| ChatGPT | [ChatGPT phone calls](/blog/chatgpt-phone-calls), as a custom MCP plugin (setup from OpenAI's docs) |
-| Claude.ai, Claude Desktop and mobile | [Claude phone calls](/blog/claude-phone-calls), as a custom connector (setup from Anthropic's docs) |
-| Cursor | [Cursor phone calls](/blog/cursor-phone-calls), in mcp.json for the editor and CLI (setup from Cursor's docs) |
-| Gemini | [Gemini phone calls](/blog/gemini-phone-calls), as a custom app, and Google's own calling feature (setup from Google's docs) |
-| Perplexity | [Perplexity phone calls](/blog/perplexity-phone-calls), as a custom remote connector (setup from Perplexity's docs) |
+| ChatGPT | [ChatGPT phone calls](/blog/chatgpt-phone-calls), as a custom MCP plugin |
+| Claude.ai, Claude Desktop and mobile | [Claude phone calls](/blog/claude-phone-calls), as a custom connector |
+| Cursor | [Cursor phone calls](/blog/cursor-phone-calls), in mcp.json for the editor and CLI |
+| Gemini | [Gemini phone calls](/blog/gemini-phone-calls), as a custom app, and Google's own calling feature |
+| Perplexity | [Perplexity phone calls](/blog/perplexity-phone-calls), as a custom remote connector |
 | n8n | [n8n MCP phone calls](/blog/n8n-mcp-phone-calls), an AI Agent workflow with the MCP Client Tool, with a real Xfinity call |
 | OpenClaw | [OpenClaw phone calls](/blog/openclaw-phone-calls), over MCP or the call4me ClawHub skill, with a real T-Mobile call |
 | Goose | [Goose MCP phone calls](/blog/goose-mcp-phone-calls), a remote extension in config.yaml, with a real Amazon call |
