@@ -119,6 +119,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'unitedhealthcare-phone-number': ['healthcare', 'insurance'],
   'ups-contact-number': ['shipping'],
   'usaa-phone-number': ['insurance', 'personal-finance'],
+  'usps-phone-number': ['shipping'],
   'vapi-alternatives': ['agent-software'],
   'venmo-customer-service-number': ['personal-finance'],
   'vercel-ai-sdk-phone-calls': ['agent-software'],

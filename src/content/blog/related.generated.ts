@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "f48d9623ad12b407f4ea01d8a4fb632cf3ce8edc92b28bb37804495730ede679"
+  "sourceHash": "c6cbff126d0f2c04e91fa76e0b21280a35bb0fbeecaf5bb69dd963a694f00389"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -215,7 +215,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "usaa-phone-number",
-      "similarity": 0.612889
+      "similarity": 0.612888
     }
   ],
   "amazon-customer-service-number": [
@@ -994,6 +994,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "ups-contact-number",
       "similarity": 0.707105
+    },
+    {
+      "slug": "usps-phone-number",
+      "similarity": 0.647783
     }
   ],
   "fifth-third-bank-customer-service": [
@@ -2122,7 +2126,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "xfinity-customer-service-number",
-      "similarity": 0.611541
+      "similarity": 0.611542
     }
   ],
   "t-mobile-customer-service-number": [
@@ -2241,6 +2245,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "ups-contact-number": [
     {
+      "slug": "usps-phone-number",
+      "similarity": 0.779629
+    },
+    {
       "slug": "fedex-customer-service-number",
       "similarity": 0.707105
     }
@@ -2256,7 +2264,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "allstate-customer-service-number",
-      "similarity": 0.612889
+      "similarity": 0.612888
     },
     {
       "slug": "geico-customer-service",
@@ -2265,6 +2273,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "experian-phone-number",
       "similarity": 0.602155
+    }
+  ],
+  "usps-phone-number": [
+    {
+      "slug": "ups-contact-number",
+      "similarity": 0.779629
+    },
+    {
+      "slug": "fedex-customer-service-number",
+      "similarity": 0.647783
     }
   ],
   "vapi-alternatives": [
@@ -2445,7 +2463,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "spectrum-retention-department",
-      "similarity": 0.611541
+      "similarity": 0.611542
     }
   ]
 };
