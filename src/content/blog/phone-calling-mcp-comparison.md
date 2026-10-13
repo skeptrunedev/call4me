@@ -36,6 +36,8 @@ Each guide covers setup in that app and says what we actually tested, and when.
 | Cursor | [Cursor phone calls](/blog/cursor-phone-calls), in mcp.json for the editor and CLI (setup from Cursor's docs) |
 | Gemini | [Gemini phone calls](/blog/gemini-phone-calls), as a custom app, and Google's own calling feature (setup from Google's docs) |
 | Perplexity | [Perplexity phone calls](/blog/perplexity-phone-calls), as a custom remote connector (setup from Perplexity's docs) |
+| n8n | [n8n MCP phone calls](/blog/n8n-mcp-phone-calls), an AI Agent workflow with the MCP Client Tool, with a real Xfinity call |
+| OpenClaw | [OpenClaw phone calls](/blog/openclaw-phone-calls), over MCP or the call4me ClawHub skill, with a real T-Mobile call |
 | Your own code | [Vercel AI SDK tools package](/blog/vercel-ai-sdk-phone-calls) or a [LangChain agent over MCP](/blog/langchain-mcp-phone-calls) |
 | Calls for later | [Scheduling a call from Claude Code or Codex](/blog/schedule-phone-calls-claude-code-codex) |
 

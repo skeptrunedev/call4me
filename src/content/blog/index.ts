@@ -117,6 +117,8 @@ import claudePhoneCalls from './claude-phone-calls.md';
 import cursorPhoneCalls from './cursor-phone-calls.md';
 import geminiPhoneCalls from './gemini-phone-calls.md';
 import perplexityPhoneCalls from './perplexity-phone-calls.md';
+import n8nMcpPhoneCalls from './n8n-mcp-phone-calls.md';
+import openclawPhoneCalls from './openclaw-phone-calls.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -243,4 +245,6 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'cursor-phone-calls', markdown: cursorPhoneCalls },
   { slug: 'gemini-phone-calls', markdown: geminiPhoneCalls },
   { slug: 'perplexity-phone-calls', markdown: perplexityPhoneCalls },
+  { slug: 'n8n-mcp-phone-calls', markdown: n8nMcpPhoneCalls },
+  { slug: 'openclaw-phone-calls', markdown: openclawPhoneCalls },
 ];
