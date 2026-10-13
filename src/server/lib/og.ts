@@ -1,10 +1,10 @@
 import { initWasm, Resvg } from '@resvg/resvg-wasm';
 import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm';
-import bold from '../../assets/DejaVuSans-Bold.ttf';
-import regular from '../../assets/DejaVuSans.ttf';
+import bold from '../../assets/LiberationSans-Bold.ttf';
+import regular from '../../assets/LiberationSans-Regular.ttf';
 import { OG_WIDTH } from './og-card';
 
-/** Renders card SVGs to 1200x630 PNG in the worker with bundled fonts. Worker-only: imports WASM. */
+/** Renders card SVGs to 1200x630 PNG in the worker with bundled Liberation Sans (Arial's metrics), so the cards and the blog headline SVGs set in Arial look like the site. Worker-only: imports WASM. */
 
 let ready: Promise<void> | null = null;
 function ensureWasm() {
@@ -19,7 +19,7 @@ export async function renderPng(svg: string): Promise<Uint8Array> {
   await ensureWasm();
   const resvg = new Resvg(svg, {
     fitTo: { mode: 'width', value: OG_WIDTH },
-    font: { fontBuffers: [new Uint8Array(bold), new Uint8Array(regular)], defaultFontFamily: 'DejaVu Sans', loadSystemFonts: false },
+    font: { fontBuffers: [new Uint8Array(bold), new Uint8Array(regular)], defaultFontFamily: 'Liberation Sans', sansSerifFamily: 'Liberation Sans', loadSystemFonts: false },
   });
   return resvg.render().asPng();
 }
