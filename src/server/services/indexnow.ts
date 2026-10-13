@@ -9,11 +9,12 @@ import type { SitemapEntry } from '../lib/discovery';
 import { now } from '../lib/ids';
 
 /**
- * Yandex's endpoint, not api.indexnow.org: that one and Bing's answer 429 to every request from
- * Workers' shared egress IPs, so nothing was ever accepted. Participating engines share each
- * submission with one another, so Bing still gets it.
+ * Participating engines share each submission with one another, so one acceptance is enough.
+ * Tried in order until one accepts: api.indexnow.org and Bing answer 429 to Workers' shared
+ * egress IPs, and Yandex started answering 520 on October 9, 2026, so a single endpoint
+ * silently stops every ping.
  */
-const ENDPOINT = 'https://yandex.com/indexnow';
+export const ENDPOINTS = ['https://yandex.com/indexnow', 'https://search.seznam.cz/indexnow', 'https://searchadvisor.naver.com/indexnow', 'https://indexnow.yep.com/indexnow'];
 /** The protocol's limit per request. */
 const MAX_URLS = 10_000;
 
@@ -23,19 +24,19 @@ export async function submitIndexNow(opts: { db: D1Database; site: string; key: 
   const due = opts.entries.filter((e) => sent.get(e.loc) !== (e.lastmod ?? '')).slice(0, MAX_URLS);
   if (due.length === 0) return { sent: 0 };
 
-  const res = await fetch(ENDPOINT, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json; charset=utf-8' },
-    body: JSON.stringify({ host: new URL(opts.site).host, key: opts.key, keyLocation: `${opts.site}/${opts.key}.txt`, urlList: due.map((e) => e.loc) }),
-  });
-  // 200 and 202 both mean accepted (202: key validation pending).
-  if (res.status !== 200 && res.status !== 202) {
-    console.error('indexnow rejected', res.status, (await res.text()).slice(0, 500));
-    return { sent: 0, status: res.status };
+  const body = JSON.stringify({ host: new URL(opts.site).host, key: opts.key, keyLocation: `${opts.site}/${opts.key}.txt`, urlList: due.map((e) => e.loc) });
+  let status = 0;
+  for (const endpoint of ENDPOINTS) {
+    const res = await fetch(endpoint, { method: 'POST', headers: { 'content-type': 'application/json; charset=utf-8' }, body }).catch(() => null);
+    status = res?.status ?? 0;
+    // 200 and 202 both mean accepted (202: key validation pending).
+    if (status === 200 || status === 202) break;
+    console.error('indexnow rejected', endpoint, status, res ? (await res.text()).slice(0, 200) : 'fetch failed');
   }
+  if (status !== 200 && status !== 202) return { sent: 0, status };
   const at = now();
   await opts.db.batch(
     due.map((e) => opts.db.prepare(`INSERT INTO indexnow_sent (url, lastmod, sent_at) VALUES (?, ?, ?) ON CONFLICT (url) DO UPDATE SET lastmod = excluded.lastmod, sent_at = excluded.sent_at`).bind(e.loc, e.lastmod ?? '', at)),
   );
-  return { sent: due.length, status: res.status };
+  return { sent: due.length, status };
 }
