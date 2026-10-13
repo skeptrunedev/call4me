@@ -10,6 +10,7 @@
 export const RELATED_TOPICS: Record<string, string[]> = {
   'chatgpt-phone-calls': ['agent-software'],
   'claude-phone-calls': ['agent-software'],
+  'costco-customer-service': ['retail-shopping'],
   'cursor-phone-calls': ['agent-software'],
   'gemini-phone-calls': ['agent-software'],
   'github-copilot-phone-calls': ['agent-software'],

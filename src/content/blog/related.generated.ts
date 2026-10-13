@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "3f2ffbadd13368cf40fdfd18264802ddc31ac34b77c561351603c7870a809b98"
+  "sourceHash": "f8720c4120b5cb0c4e57336fab0004a9ca22c4365284b041d537c634eac7dcf2"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -215,7 +215,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "usaa-phone-number",
-      "similarity": 0.612888
+      "similarity": 0.612889
     }
   ],
   "amazon-customer-service-number": [
@@ -727,6 +727,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.76436
     }
   ],
+  "costco-customer-service": [
+    {
+      "slug": "pottery-barn-customer-service",
+      "similarity": 0.644421
+    },
+    {
+      "slug": "fabletics-customer-service",
+      "similarity": 0.610432
+    }
+  ],
   "costco-eye-exam-cost": [
     {
       "slug": "eye-exam-cost-without-insurance",
@@ -1058,7 +1068,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "usaa-phone-number",
-      "similarity": 0.603076
+      "similarity": 0.603077
     }
   ],
   "gemini-phone-calls": [
@@ -1548,7 +1558,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.763565
+      "similarity": 0.763564
     },
     {
       "slug": "github-copilot-phone-calls",
@@ -1941,6 +1951,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.657206
     },
     {
+      "slug": "costco-customer-service",
+      "similarity": 0.644421
+    },
+    {
       "slug": "fabletics-customer-service",
       "similarity": 0.603007
     }
@@ -2127,7 +2141,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "xfinity-customer-service-number",
-      "similarity": 0.611541
+      "similarity": 0.611542
     }
   ],
   "t-mobile-customer-service-number": [
@@ -2265,11 +2279,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "allstate-customer-service-number",
-      "similarity": 0.612888
+      "similarity": 0.612889
     },
     {
       "slug": "geico-customer-service",
-      "similarity": 0.603076
+      "similarity": 0.603077
     },
     {
       "slug": "experian-phone-number",
@@ -2464,7 +2478,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "spectrum-retention-department",
-      "similarity": 0.611541
+      "similarity": 0.611542
     }
   ]
 };
