@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "f8720c4120b5cb0c4e57336fab0004a9ca22c4365284b041d537c634eac7dcf2"
+  "sourceHash": "c3d9264c523c1f0abadae95320aa3bdbc6859be7948cf3ca27e8ad13799eb9e7"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -245,6 +245,32 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "aquasana-return-exception": [],
+  "att-customer-service-number": [
+    {
+      "slug": "t-mobile-customer-service-number",
+      "similarity": 0.712689
+    },
+    {
+      "slug": "verizon-customer-service",
+      "similarity": 0.631471
+    },
+    {
+      "slug": "directv-customer-service",
+      "similarity": 0.627728
+    },
+    {
+      "slug": "windstream-customer-service",
+      "similarity": 0.622429
+    },
+    {
+      "slug": "spectrum-retention-department",
+      "similarity": 0.621692
+    },
+    {
+      "slug": "xfinity-customer-service-number",
+      "similarity": 0.607503
+    }
+  ],
   "bland-ai-alternatives": [
     {
       "slug": "vapi-alternatives",
@@ -860,6 +886,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "etihad-customer-service",
       "similarity": 0.647401
+    },
+    {
+      "slug": "southwest-airlines-phone-number",
+      "similarity": 0.631655
     }
   ],
   "directv-customer-service": [
@@ -888,12 +918,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.639926
     },
     {
-      "slug": "cancel-la-fitness",
-      "similarity": 0.620714
+      "slug": "att-customer-service-number",
+      "similarity": 0.627728
     },
     {
-      "slug": "verizon-customer-service",
-      "similarity": 0.609813
+      "slug": "cancel-la-fitness",
+      "similarity": 0.620714
     }
   ],
   "dog-teeth-cleaning-cost": [
@@ -926,6 +956,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "united-change-flight",
       "similarity": 0.727277
+    },
+    {
+      "slug": "southwest-airlines-phone-number",
+      "similarity": 0.652166
     },
     {
       "slug": "delta-customer-service",
@@ -1068,7 +1102,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "usaa-phone-number",
-      "similarity": 0.603077
+      "similarity": 0.603076
     }
   ],
   "gemini-phone-calls": [
@@ -1558,7 +1592,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.763564
+      "similarity": 0.763565
     },
     {
       "slug": "github-copilot-phone-calls",
@@ -2126,6 +2160,20 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "social-security-phone-number": [],
+  "southwest-airlines-phone-number": [
+    {
+      "slug": "etihad-customer-service",
+      "similarity": 0.652166
+    },
+    {
+      "slug": "delta-customer-service",
+      "similarity": 0.631655
+    },
+    {
+      "slug": "united-change-flight",
+      "similarity": 0.617141
+    }
+  ],
   "spectrum-retention-department": [
     {
       "slug": "directv-customer-service",
@@ -2140,11 +2188,19 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.627336
     },
     {
+      "slug": "att-customer-service-number",
+      "similarity": 0.621692
+    },
+    {
       "slug": "xfinity-customer-service-number",
       "similarity": 0.611542
     }
   ],
   "t-mobile-customer-service-number": [
+    {
+      "slug": "att-customer-service-number",
+      "similarity": 0.712689
+    },
     {
       "slug": "xfinity-customer-service-number",
       "similarity": 0.697509
@@ -2238,6 +2294,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "priceline-customer-service",
       "similarity": 0.618199
+    },
+    {
+      "slug": "southwest-airlines-phone-number",
+      "similarity": 0.617141
     }
   ],
   "unitedhealthcare-phone-number": [
@@ -2283,7 +2343,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "geico-customer-service",
-      "similarity": 0.603077
+      "similarity": 0.603076
     },
     {
       "slug": "experian-phone-number",
@@ -2384,6 +2444,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.661182
     },
     {
+      "slug": "att-customer-service-number",
+      "similarity": 0.631471
+    },
+    {
       "slug": "xfinity-customer-service-number",
       "similarity": 0.613902
     },
@@ -2454,6 +2518,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.635618
     },
     {
+      "slug": "att-customer-service-number",
+      "similarity": 0.622429
+    },
+    {
       "slug": "verizon-customer-service",
       "similarity": 0.611062
     },
@@ -2479,6 +2547,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "spectrum-retention-department",
       "similarity": 0.611542
+    },
+    {
+      "slug": "att-customer-service-number",
+      "similarity": 0.607503
     }
   ]
 };

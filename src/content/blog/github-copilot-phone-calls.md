@@ -123,8 +123,8 @@ A call ID means the call was submitted. `completed` means the call ended, not th
 
 | Call | What happened |
 |---|---|
-| Walmart, 1-800-925-6278 | A recording said "I'm sorry. We cannot take your call at this time" and pointed to walmart.com or the Walmart app, then the line hung up. About 1 minute, billed $0.25. |
-| Walmart, 1-800-966-6546 | The same recording and hang up. About 1 minute, billed $0.25. |
+| Walmart, 1-800-925-6278 | A recording said "I'm sorry. We cannot take your call at this time" and pointed to walmart.com or the Walmart app, then the line hung up. About 13 seconds from answer to hang up, billed the one minute minimum, $0.25. |
+| Walmart, 1-800-966-6546 | The same recording and hang up. About 13 seconds from answer to hang up, billed the one minute minimum, $0.25. |
 | T-Mobile, 1-800-937-8997 | Reached a live representative. Billed 4 minutes, $1.00. |
 
 **Copilot reported the Walmart failures accurately.** It said no person was reached, quoted the recording, marked all four questions unknown, and placed no second call, as the brief instructed. The second Walmart number was a separate run with its own brief, not Copilot retrying on its own.
