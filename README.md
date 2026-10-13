@@ -1,5 +1,7 @@
 # call4me
 
+[![AllMCPs Verified](https://allmcps.com/api/badge/call4me)](https://allmcps.com/mcp/call4me?verify=e7873d62-b4c4-4ca2-a61e-e8df3f1b7446)
+
 https://call4.me
 
 call4me lets your AI agent make real phone calls for you. Ask Claude, ChatGPT, Cursor, Codex or your
