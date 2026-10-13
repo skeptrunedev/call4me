@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 import test from 'node:test';
 import { initWasm, Resvg } from '@resvg/resvg-wasm';
 import { cardSvg, OG_WIDTH, OG_HEIGHT, type OgCard } from '../src/server/lib/og-card';
-import { CARDS } from '../src/server/lib/pages';
+import { CARDS, PAGES } from '../src/server/lib/pages';
 
 const require = createRequire(import.meta.url);
 const ready = initWasm(readFileSync(require.resolve('@resvg/resvg-wasm/index_bg.wasm')));
@@ -63,5 +63,13 @@ test('every card title stays inside the card padding', async () => {
         }
       }
     });
+  }
+});
+
+test('every page points at a card the /og route serves', () => {
+  for (const [page, meta] of Object.entries(PAGES)) {
+    // routes/og.ts only matches /og/[a-z]+.png, so a camelCase card name 404s.
+    assert.match(meta.card, /^[a-z]+$/, `${page} card name`);
+    assert.ok(CARDS[meta.card], `${page} card exists`);
   }
 });
