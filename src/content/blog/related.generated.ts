@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "c3d9264c523c1f0abadae95320aa3bdbc6859be7948cf3ca27e8ad13799eb9e7"
+  "sourceHash": "a543a2c232d0f4c318843e56763da8c4ae69662f659a0f570ef117917b2ca9c3"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -215,10 +215,14 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "usaa-phone-number",
-      "similarity": 0.612889
+      "similarity": 0.612888
     }
   ],
   "amazon-customer-service-number": [
+    {
+      "slug": "home-depot-customer-service",
+      "similarity": 0.722385
+    },
     {
       "slug": "wayfair-customer-service",
       "similarity": 0.699208
@@ -704,7 +708,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.717715
+      "similarity": 0.717714
     },
     {
       "slug": "twilio-mcp-phone-calls",
@@ -757,6 +761,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "pottery-barn-customer-service",
       "similarity": 0.644421
+    },
+    {
+      "slug": "home-depot-customer-service",
+      "similarity": 0.641562
     },
     {
       "slug": "fabletics-customer-service",
@@ -881,7 +889,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "delta-customer-service": [
     {
       "slug": "united-change-flight",
-      "similarity": 0.669955
+      "similarity": 0.669954
     },
     {
       "slug": "etihad-customer-service",
@@ -1417,6 +1425,24 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.659572
     }
   ],
+  "home-depot-customer-service": [
+    {
+      "slug": "amazon-customer-service-number",
+      "similarity": 0.722385
+    },
+    {
+      "slug": "pottery-barn-customer-service",
+      "similarity": 0.710361
+    },
+    {
+      "slug": "wayfair-customer-service",
+      "similarity": 0.694693
+    },
+    {
+      "slug": "costco-customer-service",
+      "similarity": 0.641562
+    }
+  ],
   "how-long-to-reach-a-human": [],
   "how-much-does-blood-work-cost": [
     {
@@ -1592,7 +1618,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.763565
+      "similarity": 0.763564
     },
     {
       "slug": "github-copilot-phone-calls",
@@ -1977,6 +2003,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "pottery-barn-customer-service": [
     {
+      "slug": "home-depot-customer-service",
+      "similarity": 0.710361
+    },
+    {
       "slug": "wayfair-customer-service",
       "similarity": 0.696719
     },
@@ -2193,7 +2223,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "xfinity-customer-service-number",
-      "similarity": 0.611542
+      "similarity": 0.611541
     }
   ],
   "t-mobile-customer-service-number": [
@@ -2289,7 +2319,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "delta-customer-service",
-      "similarity": 0.669955
+      "similarity": 0.669954
     },
     {
       "slug": "priceline-customer-service",
@@ -2339,7 +2369,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "allstate-customer-service-number",
-      "similarity": 0.612889
+      "similarity": 0.612888
     },
     {
       "slug": "geico-customer-service",
@@ -2490,6 +2520,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.696719
     },
     {
+      "slug": "home-depot-customer-service",
+      "similarity": 0.694693
+    },
+    {
       "slug": "fabletics-customer-service",
       "similarity": 0.653133
     }
@@ -2546,7 +2580,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "spectrum-retention-department",
-      "similarity": 0.611542
+      "similarity": 0.611541
     },
     {
       "slug": "att-customer-service-number",

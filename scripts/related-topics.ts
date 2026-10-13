@@ -17,6 +17,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'github-copilot-phone-calls': ['agent-software'],
   'goose-mcp-phone-calls': ['agent-software'],
   'hijinx-hotel-irvine': ['venue-activities'],
+  'home-depot-customer-service': ['retail-shopping', 'furniture-home-services'],
   'lai-wah-heen-private-dining': ['dining'],
   'langchain-mcp-phone-calls': ['agent-software'],
   'n8n-mcp-phone-calls': ['agent-software'],
