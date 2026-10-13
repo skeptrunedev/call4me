@@ -41,7 +41,9 @@ test('the shared footer resolves live counts before sending HTML and reports dat
   app.use('*', contextStorage());
   app.get('/', (c) => c.html(jsx(Layout, { children: 'page content' })));
   const page = () => app.request('/', {}, { DB: db } as Env).then((response) => response.text());
-  assert.match(await page(), /1,234 calls placed/);
+  const initial = await page();
+  assert.match(initial, /operated by Skeptrune LLC/);
+  assert.match(initial, /1,234 calls placed/);
   total = 1235;
   assert.match(await page(), /1,235 calls placed/);
   fail = true;

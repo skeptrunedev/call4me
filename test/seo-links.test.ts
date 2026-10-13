@@ -66,6 +66,12 @@ test('the header keeps a stable account link while contextual links preserve sig
   }
 });
 
+test('the homepage exposes the legal business name visibly and in organization metadata', () => {
+  const html = String(HomePage({ signedIn: false, agentPrompt: '', countries: [], pricePerMinuteCents: 25, origin: 'https://call4.me', installPrompt: '' }));
+  assert.match(html, /operated by Skeptrune LLC/);
+  assert.match(html, /"legalName":"Skeptrune LLC"/);
+});
+
 test('supporter links preserve checkout and the return page through sign-in, including paid posts', () => {
   const post = renderPost({ slug: 'paid-example', markdown: '---\ntitle: Example\ndate: 2026-10-04\nsubtitle: Example article\npaid: true\n---\nPreview\n<!-- paywall -->\nPaid text' });
   for (const signedIn of [false, true]) {

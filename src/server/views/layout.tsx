@@ -268,7 +268,7 @@ export const Layout: FC<{
               <a class="rss-link" href="/blog/rss.xml" type="application/rss+xml" aria-label="Subscribe to the RSS feed" title="RSS feed">RSS</a>
             </nav>
             <div class="footer-meta">
-              <span>© call4me</span><CallCount separator=" / " />
+              <span>© call4me / operated by Skeptrune LLC</span><CallCount separator=" / " />
               <nav class="footer-socials" aria-label="follow Nick Khami">
                 <a href="https://x.com/skeptrune" aria-label="Nick Khami on X" title="Nick Khami on X">
                   <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="m4 3 12 18h4L8 3H4Zm1 18L19 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /></svg>

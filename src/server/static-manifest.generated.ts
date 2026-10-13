@@ -268,7 +268,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/ai-agent-that-makes-phone-calls": {
     "html": "/__pages/c6d4cf77fa9ecc89.html",
     "markdown": "/__pages/c6d4cf77fa9ecc89.md",
-    "tokens": 2935
+    "tokens": 2983
   },
   "/blog/gym-day-pass": {
     "html": "/__pages/58e8dd209383d03e.html",

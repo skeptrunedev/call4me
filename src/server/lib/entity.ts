@@ -37,6 +37,7 @@ export const ORG_LD = {
   '@type': 'Organization',
   '@id': ORG_ID,
   name: 'call4me',
+  legalName: 'Skeptrune LLC',
   url: SITE,
   logo: { '@type': 'ImageObject', url: LOGO_URL, width: 512, height: 512 },
   email: 'me@call4.me',
