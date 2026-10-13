@@ -1,8 +1,8 @@
 ---
-title: "United change flight rules: what a United agent told us, and how to reach one"
-seoTitle: "United change flight fees: our recorded call"
+title: "United Airlines customer service: how to reach a person, and the change flight rules"
+seoTitle: "United Airlines customer service: 1-800-864-8331"
 subtitle: We called United reservations to ask how changing a flight works and what it costs. Here is the phone tree, the three words that got us to a person, what the agent said about Economy, Basic Economy and same-day changes, where united.com says something different, and the recording.
-description: United change flight rules from a recorded call. Economy pays only the fare difference, Basic Economy is stricter. Call 1-800-864-8331, say "flight change fee".
+description: "United Airlines customer service is 1-800-864-8331. Say \"flight change fee\" to reach an agent. What they told us about change fees, from a recorded call."
 date: 2026-10-01
 updated: 2026-10-04
 tags: united, airlines, flight changes, customer service, phone trees
@@ -10,7 +10,9 @@ authors: nick
 imageAlt: United 1-800-864-8331, how to change a flight and what it costs
 ---
 
-**The short answer:** United change flight rules depend on your ticket. A United reservations agent told us that on a **Standard Economy** ticket, and on United First, you can change "anytime" and pay **the fare difference only**. **Basic Economy** "is the most restrictive ticket": she said a **flexibility fee plus the fare difference** applies, with the fee depending on the route. united.com says something different about Basic Economy (more [below](#what-united-com-says)), so check your own ticket before you rely on either.
+**United Airlines customer service is 1-800-864-8331.** Its voice assistant answers first; saying "flight change fee" got us into the reservations queue, and an agent picked up 19:09 into the call. Every prompt and the full recording are below.
+
+**The short answer on changes:** United change flight rules depend on your ticket. A United reservations agent told us that on a **Standard Economy** ticket, and on United First, you can change "anytime" and pay **the fare difference only**. **Basic Economy** "is the most restrictive ticket": she said a **flexibility fee plus the fare difference** applies, with the fee depending on the route. united.com says something different about Basic Economy (more [below](#what-united-com-says)), so check your own ticket before you rely on either.
 
 The United customer service number for reservations and changes is **1-800-864-8331**, open "24 hours daily" ([united.com](https://www.united.com/en/us/fly/help/contact-reservations.html)). In Spanish it's 1-800-426-5561. This got us to a person:
 

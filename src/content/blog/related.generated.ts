@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "828ce33ca4e52294eef3873195cd320b232810e628fee2144a9b4c817737de9e"
+  "sourceHash": "f48d9623ad12b407f4ea01d8a4fb632cf3ce8edc92b28bb37804495730ede679"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -215,7 +215,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "usaa-phone-number",
-      "similarity": 0.612888
+      "similarity": 0.612889
     }
   ],
   "amazon-customer-service-number": [
@@ -235,10 +235,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "american-airlines-flight-credit": [
-    {
-      "slug": "united-change-flight",
-      "similarity": 0.656043
-    },
     {
       "slug": "customer-story-flight-credit",
       "similarity": 0.637164
@@ -848,6 +844,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "delta-customer-service": [
     {
+      "slug": "united-change-flight",
+      "similarity": 0.669955
+    },
+    {
       "slug": "etihad-customer-service",
       "similarity": 0.647401
     }
@@ -913,6 +913,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "etihad-customer-service": [
+    {
+      "slug": "united-change-flight",
+      "similarity": 0.727277
+    },
     {
       "slug": "delta-customer-service",
       "similarity": 0.647401
@@ -1943,6 +1947,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.646238
     },
     {
+      "slug": "united-change-flight",
+      "similarity": 0.618199
+    },
+    {
       "slug": "hertz-customer-service-number",
       "similarity": 0.604421
     }
@@ -2201,8 +2209,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "united-change-flight": [
     {
-      "slug": "american-airlines-flight-credit",
-      "similarity": 0.656043
+      "slug": "etihad-customer-service",
+      "similarity": 0.727277
+    },
+    {
+      "slug": "delta-customer-service",
+      "similarity": 0.669955
+    },
+    {
+      "slug": "priceline-customer-service",
+      "similarity": 0.618199
     }
   ],
   "unitedhealthcare-phone-number": [
@@ -2240,7 +2256,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "allstate-customer-service-number",
-      "similarity": 0.612888
+      "similarity": 0.612889
     },
     {
       "slug": "geico-customer-service",
