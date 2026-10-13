@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "956a070a07f25329e0dcd21457941ea16285056063294c7dcb3f888d6c6c2791"
+  "sourceHash": "ef241e804ff6ac1ccdfe50bccc9b5d14be03e52b1b6ee754f6808cc3509271ed"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -221,7 +221,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "amazon-customer-service-number": [
     {
       "slug": "wayfair-customer-service",
-      "similarity": 0.699208
+      "similarity": 0.699207
     },
     {
       "slug": "pottery-barn-customer-service",
@@ -1770,7 +1770,21 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "xfinity-customer-service-number",
-      "similarity": 0.611541
+      "similarity": 0.611542
+    }
+  ],
+  "t-mobile-customer-service-number": [
+    {
+      "slug": "xfinity-customer-service-number",
+      "similarity": 0.697509
+    },
+    {
+      "slug": "verizon-customer-service",
+      "similarity": 0.661182
+    },
+    {
+      "slug": "windstream-customer-service",
+      "similarity": 0.635618
     }
   ],
   "t3-code-phone-calls": [
@@ -1973,6 +1987,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "verizon-customer-service": [
     {
+      "slug": "t-mobile-customer-service-number",
+      "similarity": 0.661182
+    },
+    {
       "slug": "xfinity-customer-service-number",
       "similarity": 0.613902
     },
@@ -2008,7 +2026,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "wayfair-customer-service": [
     {
       "slug": "amazon-customer-service-number",
-      "similarity": 0.699208
+      "similarity": 0.699207
     },
     {
       "slug": "pottery-barn-customer-service",
@@ -2039,6 +2057,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.637297
     },
     {
+      "slug": "t-mobile-customer-service-number",
+      "similarity": 0.635618
+    },
+    {
       "slug": "verizon-customer-service",
       "similarity": 0.611062
     },
@@ -2050,6 +2072,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "wyoming-registered-agent-consent-form": [],
   "xfinity-customer-service-number": [
     {
+      "slug": "t-mobile-customer-service-number",
+      "similarity": 0.697509
+    },
+    {
       "slug": "windstream-customer-service",
       "similarity": 0.663183
     },
@@ -2059,7 +2085,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "spectrum-retention-department",
-      "similarity": 0.611541
+      "similarity": 0.611542
     }
   ]
 };
