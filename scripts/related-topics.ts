@@ -8,6 +8,7 @@
  * Add subjects for every new article without selecting individual related links.
  */
 export const RELATED_TOPICS: Record<string, string[]> = {
+  'github-copilot-phone-calls': ['agent-software'],
   'hijinx-hotel-irvine': ['venue-activities'],
   'lai-wah-heen-private-dining': ['dining'],
   'langchain-mcp-phone-calls': ['agent-software'],

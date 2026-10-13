@@ -27,6 +27,7 @@ Each guide covers setup in that app and says what we actually tested, and when.
 | Claude Code | [Claude Code phone calls](/blog/claude-code-phone-calls), with a restaurant call from a real session |
 | Codex CLI | [Codex phone calls](/blog/codex-phone-calls), including OAuth and bearer key setup |
 | T3 Code | [T3 Code phone calls](/blog/t3-code-phone-calls), configured on the provider behind the thread |
+| GitHub Copilot CLI | [GitHub Copilot phone calls](/blog/github-copilot-phone-calls), with a real T-Mobile call placed from the CLI |
 | Grok, Grok Bot and the xAI API | [Grok MCP setup](/blog/grok-connectors-mcp-phone-calls), with a recorded Grok Bot call |
 | Meta Muse | [Muse MCP setup](/blog/meta-muse-ai-agent-phone-calls) and the [Muse Code terminal client](/blog/muse-code-mcp-phone-calls) |
 | Instinct | [Instinct Concierge or your own agent](/blog/instinct-ai-phone-calls) |

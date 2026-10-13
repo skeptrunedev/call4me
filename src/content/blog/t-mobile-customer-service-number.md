@@ -33,7 +33,7 @@ The first words from a live person, at **1:49** in the recording:
 - **Billing credits and disputes:** asked how long they typically take to resolve, the rep said "around 7 to 10 business days."
 - **Calling when you're not a customer yet:** "the automated system will ask them. There's a prompt, and they just have to follow it." That's the whole answer. The rep didn't say where the prompt sends you.
 
-We called on Tuesday, October 13, 2026, at about 11:50 am Pacific, with [call4me](/) placing the call. GitHub Copilot CLI placed it through the call4me MCP server. It was a general question for this guide, not about any account, and we didn't say we were a T-Mobile customer. This page is what we heard.
+We called on Tuesday, October 13, 2026, at about 11:50 am Pacific, with [call4me](/) placing the call. [GitHub Copilot CLI](/blog/github-copilot-phone-calls) placed it through the call4me MCP server. It was a general question for this guide, not about any account, and we didn't say we were a T-Mobile customer. This page is what we heard.
 
 ## Listen to the call
 

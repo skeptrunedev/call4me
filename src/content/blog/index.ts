@@ -111,6 +111,7 @@ import xfinityCustomerServiceNumber from './xfinity-customer-service-number.md';
 import irsPhoneNumber from './irs-phone-number.md';
 import tMobileCustomerServiceNumber from './t-mobile-customer-service-number.md';
 import langchainMcpPhoneCalls from './langchain-mcp-phone-calls.md';
+import githubCopilotPhoneCalls from './github-copilot-phone-calls.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -231,4 +232,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'irs-phone-number', markdown: irsPhoneNumber },
   { slug: 't-mobile-customer-service-number', markdown: tMobileCustomerServiceNumber },
   { slug: 'langchain-mcp-phone-calls', markdown: langchainMcpPhoneCalls },
+  { slug: 'github-copilot-phone-calls', markdown: githubCopilotPhoneCalls },
 ];
