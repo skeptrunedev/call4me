@@ -121,6 +121,7 @@ import n8nMcpPhoneCalls from './n8n-mcp-phone-calls.md';
 import openclawPhoneCalls from './openclaw-phone-calls.md';
 import gooseMcpPhoneCalls from './goose-mcp-phone-calls.md';
 import uspsPhoneNumber from './usps-phone-number.md';
+import socialSecurityPhoneNumber from './social-security-phone-number.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -251,4 +252,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'openclaw-phone-calls', markdown: openclawPhoneCalls },
   { slug: 'goose-mcp-phone-calls', markdown: gooseMcpPhoneCalls },
   { slug: 'usps-phone-number', markdown: uspsPhoneNumber },
+  { slug: 'social-security-phone-number', markdown: socialSecurityPhoneNumber },
 ];

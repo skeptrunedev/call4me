@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "c6cbff126d0f2c04e91fa76e0b21280a35bb0fbeecaf5bb69dd963a694f00389"
+  "sourceHash": "3f2ffbadd13368cf40fdfd18264802ddc31ac34b77c561351603c7870a809b98"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -2111,6 +2111,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.737514
     }
   ],
+  "social-security-phone-number": [],
   "spectrum-retention-department": [
     {
       "slug": "directv-customer-service",
@@ -2126,7 +2127,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "xfinity-customer-service-number",
-      "similarity": 0.611542
+      "similarity": 0.611541
     }
   ],
   "t-mobile-customer-service-number": [
@@ -2463,7 +2464,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "spectrum-retention-department",
-      "similarity": 0.611542
+      "similarity": 0.611541
     }
   ]
 };

@@ -111,6 +111,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'running-late-to-appointment': ['healthcare'],
   'running-late-to-barber': ['hair-care'],
   'schedule-phone-calls-claude-code-codex': ['agent-software'],
+  'social-security-phone-number': ['personal-finance'],
   'spectrum-retention-department': ['telecom', 'subscription-cancellation'],
   't-mobile-customer-service-number': ['telecom'],
   't3-code-phone-calls': ['agent-software'],
