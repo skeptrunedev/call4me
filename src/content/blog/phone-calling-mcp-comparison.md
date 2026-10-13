@@ -31,6 +31,11 @@ Each guide covers setup in that app and says what we actually tested, and when.
 | Grok, Grok Bot and the xAI API | [Grok MCP setup](/blog/grok-connectors-mcp-phone-calls), with a recorded Grok Bot call |
 | Meta Muse | [Muse MCP setup](/blog/meta-muse-ai-agent-phone-calls) and the [Muse Code terminal client](/blog/muse-code-mcp-phone-calls) |
 | Instinct | [Instinct Concierge or your own agent](/blog/instinct-ai-phone-calls) |
+| ChatGPT | [ChatGPT phone calls](/blog/chatgpt-phone-calls), as a custom MCP plugin (setup from OpenAI's docs) |
+| Claude.ai, Claude Desktop and mobile | [Claude phone calls](/blog/claude-phone-calls), as a custom connector (setup from Anthropic's docs) |
+| Cursor | [Cursor phone calls](/blog/cursor-phone-calls), in mcp.json for the editor and CLI (setup from Cursor's docs) |
+| Gemini | [Gemini phone calls](/blog/gemini-phone-calls), as a custom app, and Google's own calling feature (setup from Google's docs) |
+| Perplexity | [Perplexity phone calls](/blog/perplexity-phone-calls), as a custom remote connector (setup from Perplexity's docs) |
 | Your own code | [Vercel AI SDK tools package](/blog/vercel-ai-sdk-phone-calls) or a [LangChain agent over MCP](/blog/langchain-mcp-phone-calls) |
 | Calls for later | [Scheduling a call from Claude Code or Codex](/blog/schedule-phone-calls-claude-code-codex) |
 

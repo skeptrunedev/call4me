@@ -8,10 +8,15 @@
  * Add subjects for every new article without selecting individual related links.
  */
 export const RELATED_TOPICS: Record<string, string[]> = {
+  'chatgpt-phone-calls': ['agent-software'],
+  'claude-phone-calls': ['agent-software'],
+  'cursor-phone-calls': ['agent-software'],
+  'gemini-phone-calls': ['agent-software'],
   'github-copilot-phone-calls': ['agent-software'],
   'hijinx-hotel-irvine': ['venue-activities'],
   'lai-wah-heen-private-dining': ['dining'],
   'langchain-mcp-phone-calls': ['agent-software'],
+  'perplexity-phone-calls': ['agent-software'],
   'pin-on-grand-reservations': ['dining'],
   'salon-per-se-bellaire': ['hair-care'],
   'sabai-eugene-reservations': ['dining'],

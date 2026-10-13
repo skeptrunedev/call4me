@@ -112,6 +112,11 @@ import irsPhoneNumber from './irs-phone-number.md';
 import tMobileCustomerServiceNumber from './t-mobile-customer-service-number.md';
 import langchainMcpPhoneCalls from './langchain-mcp-phone-calls.md';
 import githubCopilotPhoneCalls from './github-copilot-phone-calls.md';
+import chatgptPhoneCalls from './chatgpt-phone-calls.md';
+import claudePhoneCalls from './claude-phone-calls.md';
+import cursorPhoneCalls from './cursor-phone-calls.md';
+import geminiPhoneCalls from './gemini-phone-calls.md';
+import perplexityPhoneCalls from './perplexity-phone-calls.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -233,4 +238,9 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 't-mobile-customer-service-number', markdown: tMobileCustomerServiceNumber },
   { slug: 'langchain-mcp-phone-calls', markdown: langchainMcpPhoneCalls },
   { slug: 'github-copilot-phone-calls', markdown: githubCopilotPhoneCalls },
+  { slug: 'chatgpt-phone-calls', markdown: chatgptPhoneCalls },
+  { slug: 'claude-phone-calls', markdown: claudePhoneCalls },
+  { slug: 'cursor-phone-calls', markdown: cursorPhoneCalls },
+  { slug: 'gemini-phone-calls', markdown: geminiPhoneCalls },
+  { slug: 'perplexity-phone-calls', markdown: perplexityPhoneCalls },
 ];
