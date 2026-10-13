@@ -27,6 +27,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'ai-personal-assistant-appointment-booking': ['appointment-management', 'healthcare', 'dining'],
   'ai-phone-tree-navigation': ['agent-software', 'voice-technology'],
   'allstate-customer-service-number': ['insurance'],
+  'amazon-customer-service-number': ['retail-shopping'],
   'amazon-pharmacy-phone-number': ['pharmacy'],
   'american-airlines-flight-credit': ['airlines'],
   'aquasana-return-exception': ['retail-shopping'],
@@ -116,4 +117,5 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'wheel-alignment-cost': ['car-maintenance'],
   'windstream-customer-service': ['telecom'],
   'wyoming-registered-agent-consent-form': ['legal-business-paperwork'],
+  'xfinity-customer-service-number': ['telecom'],
 };

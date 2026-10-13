@@ -106,6 +106,8 @@ import metaMuseFirstTask from './meta-muse-first-task.md';
 import museCodeMcpPhoneCalls from './muse-code-mcp-phone-calls.md';
 import grokBotVsMetaMuse from './grok-bot-vs-meta-muse.md';
 import metaMuseSupplierQuotes from './meta-muse-supplier-quotes.md';
+import amazonCustomerServiceNumber from './amazon-customer-service-number.md';
+import xfinityCustomerServiceNumber from './xfinity-customer-service-number.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -221,4 +223,6 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'doordash-customer-service-number', markdown: doordashCustomerServiceNumber },
   { slug: 'priceline-customer-service', markdown: pricelineCustomerService },
   { slug: 'venmo-customer-service-number', markdown: venmoCustomerServiceNumber },
+  { slug: 'amazon-customer-service-number', markdown: amazonCustomerServiceNumber },
+  { slug: 'xfinity-customer-service-number', markdown: xfinityCustomerServiceNumber },
 ];

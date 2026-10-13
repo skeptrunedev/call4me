@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "6faa9656e3954d7f254cb41e56add7580685e444497e915d2c53c5d6a7966f03"
+  "sourceHash": "6c011a73c9a90ed20981bafcc952cd34e5337726fe923bf29ef47865f95d164e"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -159,7 +159,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "follow-up-appointment-telehealth",
-      "similarity": 0.670663
+      "similarity": 0.670662
     },
     {
       "slug": "customer-story-dental-appointments",
@@ -216,6 +216,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "usaa-phone-number",
       "similarity": 0.612889
+    }
+  ],
+  "amazon-customer-service-number": [
+    {
+      "slug": "wayfair-customer-service",
+      "similarity": 0.699207
+    },
+    {
+      "slug": "pottery-barn-customer-service",
+      "similarity": 0.657206
     }
   ],
   "amazon-pharmacy-phone-number": [
@@ -634,7 +644,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-connectors-mcp-phone-calls",
-      "similarity": 0.75509
+      "similarity": 0.755091
     },
     {
       "slug": "ai-phone-tree-navigation",
@@ -889,7 +899,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ai-personal-assistant-appointment-booking",
-      "similarity": 0.670663
+      "similarity": 0.670662
     },
     {
       "slug": "customer-story-dental-appointments",
@@ -1096,7 +1106,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.75509
+      "similarity": 0.755091
     },
     {
       "slug": "grok-bot-templates",
@@ -1578,6 +1588,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.696719
     },
     {
+      "slug": "amazon-customer-service-number",
+      "similarity": 0.657206
+    },
+    {
       "slug": "fabletics-customer-service",
       "similarity": 0.603007
     }
@@ -1764,6 +1778,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "fabletics-customer-service",
       "similarity": 0.627336
+    },
+    {
+      "slug": "xfinity-customer-service-number",
+      "similarity": 0.611541
     }
   ],
   "t3-code-phone-calls": [
@@ -1954,6 +1972,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "verizon-customer-service": [
     {
+      "slug": "xfinity-customer-service-number",
+      "similarity": 0.613902
+    },
+    {
       "slug": "windstream-customer-service",
       "similarity": 0.611062
     },
@@ -1984,6 +2006,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "wayfair-customer-service": [
     {
+      "slug": "amazon-customer-service-number",
+      "similarity": 0.699207
+    },
+    {
       "slug": "pottery-barn-customer-service",
       "similarity": 0.696719
     },
@@ -2004,6 +2030,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "windstream-customer-service": [
     {
+      "slug": "xfinity-customer-service-number",
+      "similarity": 0.663183
+    },
+    {
       "slug": "spectrum-retention-department",
       "similarity": 0.637297
     },
@@ -2016,5 +2046,19 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.601894
     }
   ],
-  "wyoming-registered-agent-consent-form": []
+  "wyoming-registered-agent-consent-form": [],
+  "xfinity-customer-service-number": [
+    {
+      "slug": "windstream-customer-service",
+      "similarity": 0.663183
+    },
+    {
+      "slug": "verizon-customer-service",
+      "similarity": 0.613902
+    },
+    {
+      "slug": "spectrum-retention-department",
+      "similarity": 0.611541
+    }
+  ]
 };
