@@ -10,6 +10,7 @@
 export const RELATED_TOPICS: Record<string, string[]> = {
   'hijinx-hotel-irvine': ['venue-activities'],
   'lai-wah-heen-private-dining': ['dining'],
+  'langchain-mcp-phone-calls': ['agent-software'],
   'pin-on-grand-reservations': ['dining'],
   'salon-per-se-bellaire': ['hair-care'],
   'sabai-eugene-reservations': ['dining'],

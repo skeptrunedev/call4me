@@ -30,7 +30,7 @@ Each guide covers setup in that app and says what we actually tested, and when.
 | Grok, Grok Bot and the xAI API | [Grok MCP setup](/blog/grok-connectors-mcp-phone-calls), with a recorded Grok Bot call |
 | Meta Muse | [Muse MCP setup](/blog/meta-muse-ai-agent-phone-calls) and the [Muse Code terminal client](/blog/muse-code-mcp-phone-calls) |
 | Instinct | [Instinct Concierge or your own agent](/blog/instinct-ai-phone-calls) |
-| Your own code | [Vercel AI SDK tools package](/blog/vercel-ai-sdk-phone-calls) |
+| Your own code | [Vercel AI SDK tools package](/blog/vercel-ai-sdk-phone-calls) or a [LangChain agent over MCP](/blog/langchain-mcp-phone-calls) |
 | Calls for later | [Scheduling a call from Claude Code or Codex](/blog/schedule-phone-calls-claude-code-codex) |
 
 ## Why choose call4me for your existing assistant?
