@@ -13,6 +13,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'cursor-phone-calls': ['agent-software'],
   'gemini-phone-calls': ['agent-software'],
   'github-copilot-phone-calls': ['agent-software'],
+  'goose-mcp-phone-calls': ['agent-software'],
   'hijinx-hotel-irvine': ['venue-activities'],
   'lai-wah-heen-private-dining': ['dining'],
   'langchain-mcp-phone-calls': ['agent-software'],

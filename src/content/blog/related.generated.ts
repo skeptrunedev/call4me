@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "aceab10b02fec81242a448cff6276028330bdabeef7a881219696b1822204c2c"
+  "sourceHash": "828ce33ca4e52294eef3873195cd320b232810e628fee2144a9b4c817737de9e"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -727,8 +727,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.764987
     },
     {
-      "slug": "langchain-mcp-phone-calls",
-      "similarity": 0.763564
+      "slug": "goose-mcp-phone-calls",
+      "similarity": 0.76436
     }
   ],
   "costco-eye-exam-cost": [
@@ -1117,8 +1117,42 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.761301
     },
     {
-      "slug": "chatgpt-phone-calls",
-      "similarity": 0.729623
+      "slug": "goose-mcp-phone-calls",
+      "similarity": 0.734887
+    }
+  ],
+  "goose-mcp-phone-calls": [
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.766224
+    },
+    {
+      "slug": "codex-phone-calls",
+      "similarity": 0.76436
+    },
+    {
+      "slug": "langchain-mcp-phone-calls",
+      "similarity": 0.760153
+    },
+    {
+      "slug": "t3-code-phone-calls",
+      "similarity": 0.751085
+    },
+    {
+      "slug": "grok-connectors-mcp-phone-calls",
+      "similarity": 0.749634
+    },
+    {
+      "slug": "github-copilot-phone-calls",
+      "similarity": 0.734887
+    },
+    {
+      "slug": "meta-muse-ai-agent-phone-calls",
+      "similarity": 0.711007
+    },
+    {
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.710441
     }
   ],
   "grok-bot-reusable-skills": [
@@ -1506,11 +1540,15 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.763564
+      "similarity": 0.763565
     },
     {
       "slug": "github-copilot-phone-calls",
       "similarity": 0.761301
+    },
+    {
+      "slug": "goose-mcp-phone-calls",
+      "similarity": 0.760153
     },
     {
       "slug": "openclaw-phone-calls",
@@ -1527,10 +1565,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "vercel-ai-sdk-phone-calls",
       "similarity": 0.738969
-    },
-    {
-      "slug": "instinct-ai-phone-calls",
-      "similarity": 0.730372
     }
   ],
   "lawyer-consultation-fee": [],
@@ -1575,7 +1609,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.748738
+      "similarity": 0.748737
     },
     {
       "slug": "cursor-phone-calls",
@@ -2080,7 +2114,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "xfinity-customer-service-number",
-      "similarity": 0.611542
+      "similarity": 0.611541
     }
   ],
   "t-mobile-customer-service-number": [
@@ -2395,7 +2429,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "spectrum-retention-department",
-      "similarity": 0.611542
+      "similarity": 0.611541
     }
   ]
 };

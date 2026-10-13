@@ -38,6 +38,7 @@ Each guide covers setup in that app and says what we actually tested, and when.
 | Perplexity | [Perplexity phone calls](/blog/perplexity-phone-calls), as a custom remote connector (setup from Perplexity's docs) |
 | n8n | [n8n MCP phone calls](/blog/n8n-mcp-phone-calls), an AI Agent workflow with the MCP Client Tool, with a real Xfinity call |
 | OpenClaw | [OpenClaw phone calls](/blog/openclaw-phone-calls), over MCP or the call4me ClawHub skill, with a real T-Mobile call |
+| Goose | [Goose MCP phone calls](/blog/goose-mcp-phone-calls), a remote extension in config.yaml, with a real Amazon call |
 | Your own code | [Vercel AI SDK tools package](/blog/vercel-ai-sdk-phone-calls) or a [LangChain agent over MCP](/blog/langchain-mcp-phone-calls) |
 | Calls for later | [Scheduling a call from Claude Code or Codex](/blog/schedule-phone-calls-claude-code-codex) |
 
