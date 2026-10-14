@@ -26,8 +26,6 @@ These calls were made by a call4me user's AI phone assistant on Wednesday, Septe
 
 ## All 15 calls, side by side
 
-If your clinician orders lab tests after the visit, our [blood work cost guide](/blog/how-much-does-blood-work-cost) shows published prices and an AI prompt for comparing the exact tests, collection fees and order requirements.
-
 For a new adult patient establishing primary care, with a Blue Cross Blue Shield of Alabama PPO, living in Baltimore:
 
 | Practice | When (Eastern) | Taking new patients? | Out-of-state BCBS PPO? | First opening offered | What happened |

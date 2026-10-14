@@ -48,6 +48,6 @@ The [source report](/static/blog/resources/meta-muse-supplier-quotes/published-o
 
 For the product context, see Meta's [Muse for Small Business announcement](https://about.fb.com/news/2026/09/introducing-muse-small-business/) and [custom connector instructions](https://www.meta.com/help/artificial-intelligence/1687253048996149/). Our [consumer Muse connection guide](/blog/meta-muse-ai-agent-phone-calls) explains connecting [call4me](/). The separate [October 6 library task](/blog/meta-muse-first-task) demonstrates a real Muse call and result retrieval; it does not establish supplier calls or quotes.
 
-Our [general calling workflow](/blog/ai-agent-that-makes-phone-calls) and [recorded private dining research](/blog/agent-web-research-phone-calls-sf-private-dining) explain how to inspect outcomes. For furniture, the [refinishing guide](/blog/furniture-refinishing-cost) compares published shop prices.
+Our [general calling workflow](/blog/ai-agent-that-makes-phone-calls) and [recorded private dining research](/blog/agent-web-research-phone-calls-sf-private-dining) explain how to inspect outcomes.
 
 Other clients: [Muse Code](/blog/muse-code-mcp-phone-calls), [Grok Bot versus Muse](/blog/grok-bot-vs-meta-muse), and Grok Bot's [draft skills](/blog/grok-bot-reusable-skills), [phone inquiry prompts](/blog/grok-bot-templates) and [recipient checklist](/blog/grok-bot-template-troubleshooting).

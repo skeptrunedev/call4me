@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "d3f3c3d0a3eb1cdf86520fc7b3dca2a72d9469438210ffe286a2b9a526679f0c"
+  "sourceHash": "0c4ddc534b45c7fae0097e9b43dfc6225a2643293417c6d285c2f7a385163d39"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -219,7 +219,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "usaa-phone-number",
-      "similarity": 0.612889
+      "similarity": 0.612888
     }
   ],
   "amazon-customer-service-number": [
@@ -789,10 +789,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.709457
     },
     {
-      "slug": "how-much-does-blood-work-cost",
-      "similarity": 0.668936
-    },
-    {
       "slug": "running-late-to-appointment",
       "similarity": 0.60358
     }
@@ -1002,10 +998,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "eye-exam-cost-without-insurance": [
     {
-      "slug": "how-much-does-blood-work-cost",
-      "similarity": 0.736028
-    },
-    {
       "slug": "costco-eye-exam-cost",
       "similarity": 0.709457
     }
@@ -1087,12 +1079,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "fpl-phone-number": [],
-  "furniture-refinishing-cost": [
-    {
-      "slug": "junk-removal-cost",
-      "similarity": 0.673814
-    }
-  ],
   "geico-customer-service": [
     {
       "slug": "allstate-customer-service-number",
@@ -1108,7 +1094,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "usaa-phone-number",
-      "similarity": 0.603077
+      "similarity": 0.603076
     }
   ],
   "gemini-phone-calls": [
@@ -1446,16 +1432,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "how-long-to-reach-a-human": [],
-  "how-much-does-blood-work-cost": [
-    {
-      "slug": "eye-exam-cost-without-insurance",
-      "similarity": 0.736028
-    },
-    {
-      "slug": "costco-eye-exam-cost",
-      "similarity": 0.668936
-    }
-  ],
   "how-to-cancel-siriusxm": [
     {
       "slug": "cancel-crunch",
@@ -1581,12 +1557,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "irs-phone-number": [],
-  "junk-removal-cost": [
-    {
-      "slug": "furniture-refinishing-cost",
-      "similarity": 0.673814
-    }
-  ],
+  "junk-removal-cost": [],
   "lai-wah-heen-private-dining": [
     {
       "slug": "private-dining-room-cost",
@@ -2379,11 +2350,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "allstate-customer-service-number",
-      "similarity": 0.612889
+      "similarity": 0.612888
     },
     {
       "slug": "geico-customer-service",
-      "similarity": 0.603077
+      "similarity": 0.603076
     },
     {
       "slug": "experian-phone-number",

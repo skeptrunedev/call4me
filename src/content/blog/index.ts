@@ -16,8 +16,6 @@ import aiAgentPhoneCalls from './ai-agent-that-makes-phone-calls.md';
 import aiAgentsPhoneCallsComparison from './ai-apps-that-make-calls-for-you.md';
 import gymDayPass from './gym-day-pass.md';
 import gymsWithSauna from './gyms-with-sauna-near-me.md';
-import bloodWorkCost from './how-much-does-blood-work-cost.md';
-import furnitureRefinishingCost from './furniture-refinishing-cost.md';
 import dogTeethCleaningCost from './dog-teeth-cleaning-cost.md';
 import wheelAlignmentCost from './wheel-alignment-cost.md';
 import walmartOilChangePrices from './walmart-oil-change-prices.md';
@@ -151,8 +149,6 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'ai-apps-that-make-calls-for-you', markdown: aiAgentsPhoneCallsComparison },
   { slug: 'gym-day-pass', markdown: gymDayPass },
   { slug: 'gyms-with-sauna-near-me', markdown: gymsWithSauna },
-  { slug: 'how-much-does-blood-work-cost', markdown: bloodWorkCost },
-  { slug: 'furniture-refinishing-cost', markdown: furnitureRefinishingCost },
   { slug: 'dog-teeth-cleaning-cost', markdown: dogTeethCleaningCost },
   { slug: 'wheel-alignment-cost', markdown: wheelAlignmentCost },
   { slug: 'walmart-oil-change-prices', markdown: walmartOilChangePrices },
