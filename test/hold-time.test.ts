@@ -30,7 +30,8 @@ test('a person who speaks without a greeting ends the hold once our caller answe
   m.them('Let me check on that, one moment.', s(10));
   assert.equal(m.them('Okay, I see the booking here.', s(200)), null);
   assert.ok(m.holding(), 'still on hold until our caller answers');
-  assert.deepEqual(m.caller('Great, thanks.'), { type: 'end', at: s(200), seconds: 190 });
+  assert.equal(m.caller('Great, thanks.'), null, 'a bare acknowledgment is not an answer');
+  assert.deepEqual(m.caller(' So is there a deposit?'), { type: 'end', at: s(200), seconds: 190 });
 });
 
 test('recordings that thank us for holding do not end the hold', () => {
@@ -115,4 +116,21 @@ test('an extension the balance cannot cover is refused and holds nothing', async
   const c = calls(db);
   assert.equal(await c.extend((await c.byId('call_1'))!, 15, 25, 1), false);
   assert.equal((await c.byId('call_1'))!.hold_cents, 5 * 25);
+});
+
+test('a hold request heard in fragments around our caller saying "sure" stays a hold (call_9xwa7me14baj5e8m)', () => {
+  const m = new HoldMeter();
+  m.them('Oh Keep me one second, I\'ll be right', s(155));
+  assert.ok(m.holding());
+  assert.equal(m.caller('Sure.'), null);
+  assert.equal(m.them('back I have to check with the', s(165)), null);
+  assert.equal(m.caller('Sure.'), null);
+  assert.equal(m.them('manager', s(167)), null);
+  assert.ok(m.holding(), 'still waiting on the manager');
+});
+
+test('"let me check with the kitchen" and "I\'ll be right back" are holds', () => {
+  assert.ok(isHoldLine('let me check with the kitchen'));
+  assert.ok(isHoldLine("I'll be right back"));
+  assert.ok(isHoldLine('I have to ask my manager'));
 });

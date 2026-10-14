@@ -1171,6 +1171,13 @@ export class VoiceSession extends DurableObject<Env> {
     }
     const [wrapAt, stopAt] = await Promise.all([this.ctx.storage.get<number>('wrapAt'), this.ctx.storage.get<number>('stopAt')]);
     if (stopAt && now >= stopAt) {
+      // Put on hold during the wrap-up: keep waiting instead of hanging up on the queue.
+      if (this.hold.holding() && (await this.extendOnHold(s, now))) {
+        await this.ctx.storage.delete('stopAt');
+        if (!this.personOn) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'Ignore the earlier time warning: there is more time now. Stay on the line, stay silent while they have you waiting, and carry on when they come back.' });
+        await this.scheduleAlarm();
+        return;
+      }
       await this.hangup('the call reached its time limit');
       return;
     }
@@ -1198,9 +1205,10 @@ export class VoiceSession extends DurableObject<Env> {
   }
 
   /**
-   * The time limit came up during a hold: hold up to LIMITS.holdExtensionMinutes more of the
-   * account's credits and push the limit back, never past Telnyx's ceiling. False when the
-   * balance or the ceiling leaves no room, and the call wraps up as usual.
+   * The time limit came up during a hold (at the wrap-up point, or at the hard stop when the hold
+   * began during the wrap-up): hold up to LIMITS.holdExtensionMinutes more of the account's
+   * credits and move the wrap-up point that far past `wrapAt`, never past Telnyx's ceiling. False
+   * when the balance or the ceiling leaves no room, and the call wraps up as usual.
    */
   private async extendOnHold(s: Stored, wrapAt: number): Promise<boolean> {
     const row = await calls(this.env.DB).byId(s.callId);

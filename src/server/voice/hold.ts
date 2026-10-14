@@ -10,7 +10,9 @@
  */
 import { asksUsToWait } from './handoff';
 
-const QUEUE_RECORDING = /\b(?:please hold|on hold|stay on the line|remain on the line|(?:all )?(?:of )?our (?:agents|representatives|operators|associates|team members)(?: are)? (?:currently )?(?:busy|assisting|helping)|all (?:agents|representatives|operators|associates|lines) are (?:currently )?(?:busy|in use)|your call is (?:very )?important|(?:answered|taken) in the order (?:it was|they were) received|(?:estimated|expected|approximate) wait time|next available|in (?:the )?queue|being transferred|transferring (?:you|your call))\b/i;
+const QUEUE_RECORDING = /\b(?:please hold|on hold|stay on the line|remain on the line|(?:all )?(?:of )?our (?:agents|representatives|operators|associates|team members)(?: are)? (?:currently )?(?:busy|assisting|helping)|all (?:agents|representatives|operators|associates|lines) are (?:currently )?(?:busy|in use)|your call is (?:very )?important|(?:answered|taken) in the order (?:it was|they were) received|(?:estimated|expected|approximate) wait time|next available|in (?:the )?queue|being transferred|transferring (?:you|your call)|(?:i'?ll )?be right back|be right with you|(?:have|need|got) to (?:check|ask)|check with (?:the|my|our) (?:manager|supervisor|team|kitchen|doctor)|(?:keep|hold) me (?:one|a) (?:sec(?:ond)?|moment|minute))\b/i;
+/** Our caller only acknowledging ("sure", "okay, no problem"): not an answer to someone back from a hold. */
+const ACKNOWLEDGMENT = /^(?:(?:sure|okay|ok|alright|all right|no problem|of course|take your time|thanks?|thank you|got it|perfect|great|sounds good|yes|yeah)[\s,.!]*)+$/i;
 // "Thank you for holding" and "this is a recorded line" are common in queue recordings, so they don't count.
 const PERSON_BACK = /\b(?:my name is|how (?:can|may) i (?:help|assist)|(?:are you )?still there|sorry (?:about|for) the wait)\b/i;
 
@@ -23,8 +25,10 @@ export type HoldChange = { type: 'start'; at: number } | { type: 'end'; at: numb
 
 export class HoldMeter {
   private since: number | null = null;
-  /** The other side's words since the last turn change. */
+  /** The other side's words since our caller last answered them. */
   private theirs = '';
+  /** Our caller's words since the other side last spoke. */
+  private mine = '';
   /** When they started saying something that is not a hold recording, while on hold. */
   private speechAt: number | null = null;
 
@@ -41,6 +45,7 @@ export class HoldMeter {
   them(delta: string, at: number): HoldChange | null {
     if (!delta) return null;
     this.theirs += delta;
+    this.mine = '';
     const sentence = lastSentence(this.theirs);
     if (this.since === null) return isHoldLine(sentence) ? this.start(at) : null;
     if (isHoldLine(sentence)) {
@@ -52,9 +57,15 @@ export class HoldMeter {
     return null;
   }
 
-  /** Our caller spoke. A person who spoke just before and got an answer is back from the hold. */
+  /**
+   * Our caller spoke. A person who spoke just before and got an answer is back from the hold. A
+   * bare "sure" or "okay" is not an answer, and keeps their half-heard sentence together: speech
+   * comes in fragments, and "I'll be right" / "Sure." / "back" is still one hold request.
+   */
   caller(delta: string): HoldChange | null {
     if (!delta.trim()) return null;
+    this.mine += delta;
+    if (ACKNOWLEDGMENT.test(this.mine.trim())) return null;
     this.theirs = '';
     if (this.since !== null && this.speechAt !== null) return this.end(this.speechAt);
     this.speechAt = null;
@@ -65,6 +76,7 @@ export class HoldMeter {
     this.since = at;
     this.speechAt = null;
     this.theirs = '';
+    this.mine = '';
     return { type: 'start', at };
   }
 
