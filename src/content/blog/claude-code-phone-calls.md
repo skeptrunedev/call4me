@@ -188,6 +188,8 @@ Ask Claude to finish with these four fields:
 
 Applied to the dinner example, that means a confirmed table with cancellation terms unknown. Applied to Aquasana, it means an approved exception with instructions and payment still pending. Neither a finished call nor a confident summary closes those remaining steps.
 
+If the errand belongs to a team, put those four fields where the team will see them. In a shared workspace for people and agents like [sfora](https://sfora.ai/), Claude can post the result to a room or task board, so whoever owns the next action picks it up without rereading the transcript.
+
 ## Use the result in the task you started
 
 A useful calling brief gives Claude the destination, what you need to learn, the facts it can share, and what it can agree to. If you are researching, say so. If a date or budget is undecided, say that too. Claude should keep those unknowns visible when it reports back.
