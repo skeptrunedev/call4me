@@ -1,61 +1,61 @@
 ---
-title: An AI agent that makes phone calls and gets tasks done for you
-seoTitle: AI agent that makes phone calls for you
-subtitle: Give your assistant the outcome you want, let it call the business, and check what was actually confirmed. Start with a practical task guide and a reusable prompt.
-description: Use an AI agent that makes phone calls for you. Compare quotes, check stock, arrange appointments and follow up on errands with call4me and your assistant.
+title: "Can AI make phone calls for you? Yes, here's how to set it up"
+seoTitle: "Can AI make phone calls for you? How to set it up"
+subtitle: Your AI assistant can call a business, talk to whoever answers and bring the result back to you. Here's how to connect it, what to ask for, and how to tell when the job is actually done.
+description: Yes, AI can make phone calls for you. Connect a calling tool to ChatGPT, Claude, Codex or Gemini, then have it compare quotes, book appointments and run errands by phone.
 date: 2026-10-07
-updated: 2026-10-08
+updated: 2026-10-13
 tags: ai agent, ai phone assistant, personal assistant, phone calls
 authors: nick
-imageAlt: An AI agent that calls for you, from a clear task to a confirmed result
+imageAlt: An AI assistant calls a business for you and brings back the result
 ---
 
-**An AI agent that makes phone calls can help you get an errand done while keeping the planning in the assistant you already use.** With [call4me](/), your assistant can call a business to ask about prices, check availability, request an appointment or follow up on an order. You provide the goal and the choices it can make. It brings the conversation's result back to your task.
+**Yes, AI can make phone calls for you.** Most assistants can't dial on their own, but once you connect a calling tool like [call4me](/), you can ask ChatGPT, Claude, Codex or Gemini to call a business, and it will. A voice caller handles the conversation while your assistant follows along, answers questions that come up mid-call, and reports back what the business said.
 
-For example, “find a pool I can visit after work” needs more than a list of nearby gyms. Your assistant needs to check guest access, the price and whether the pool is open during your visit. “Get my car aligned” might start with comparing quotes, then become a booking after you choose a shop and authorize a time.
+The calls worth handing off are the ones you keep putting off: checking a price, asking whether something's in stock, booking or moving an appointment, chasing an order. Say you want a pool you can swim at after work. A list of nearby gyms doesn't answer that. Someone has to ask about guest passes, the price, and whether the pool is open at 7pm. Or you need your car aligned: your assistant can call three shops for quotes, then book the one you pick.
 
-## How to have an AI assistant call for you
+## How to have AI make a phone call for you
 
-1. **Connect your assistant.** Use the [call4me installation page](/mcp), or follow the dedicated [Claude Code calling guide](/blog/claude-code-phone-calls) or [Codex calling guide](/blog/codex-phone-calls).
-2. **Describe the result you need.** Include the business or search area, relevant dates, budget and details needed to answer the question. For an existing order or appointment, supply the reference privately.
-3. **Set its decision limits.** Say whether it should gather options or may commit to a particular booking, hold or change. Include acceptable alternatives and any fees you authorize.
-4. **Have it research and call.** Ask it to use official information first, verify the branch number, then call for missing details. It should bring a question back to you if the business needs a decision outside your instructions.
-5. **Check the result and next step.** Ask for what staff confirmed, what remains unresolved and the transcript or available recording. If you only authorized research, choose what to do next before asking it to act.
+1. **Connect your assistant.** Pick the guide for the app you use: [ChatGPT](/blog/chatgpt-phone-calls), [Claude](/blog/claude-phone-calls), [Claude Code](/blog/claude-code-phone-calls), [Codex](/blog/codex-phone-calls) or [Gemini](/blog/gemini-phone-calls). The [install page](/mcp) covers the rest.
+2. **Say what you want to end up with.** Include the business or area, your dates, your budget and anything the business will need to answer. For an existing order or appointment, give the reference number privately.
+3. **Say what it's allowed to decide.** Should it just gather options, or can it book, hold or change something? Tell it which alternatives are fine and which fees you'll accept.
+4. **Let it research, then call.** Ask it to check the business's own website first, confirm it has the right branch's number, then call about whatever's still missing. If the business needs a decision you didn't cover, it should come back and ask you.
+5. **Check what was actually confirmed.** Ask for what staff said, what's still open, and the transcript or recording. If you only asked for research, decide on the next step yourself before telling it to act.
 
-Your assistant needs web access for web research. call4me supplies the phone conversation; separate actions such as updating a calendar depend on your assistant's other tools and your instructions.
+Your assistant needs web access for the research part. call4me handles the phone call; things like adding the appointment to your calendar depend on what other tools your assistant has.
 
-## Choose a task for your AI phone agent
+## Things AI can call about for you
 
-Each guide below gives the details to supply, questions to ask and a way to check the outcome. Recorded calls in the task guides show both useful answers and incomplete attempts. A previous result is evidence of that conversation, not a guarantee for your business or visit.
+Each guide below has the details to give your assistant, the questions to ask and how to check the result. Most include recorded calls, including ones that didn't fully work out. A past answer tells you how that conversation went, not what your business will say.
 
-| What you need done | Start with these task guides |
+| What you need done | Start with these guides |
 | --- | --- |
-| Compare car service options | Check [wheel alignment quotes](/blog/wheel-alignment-cost). For oil changes, use the [Walmart price workflow](/blog/walmart-oil-change-prices) or [Les Schwab service availability guide](/blog/les-schwab-oil-change). |
-| Prepare for a medical visit | Use the [blood work cost comparison](/blog/how-much-does-blood-work-cost) for administrative pricing questions, or the [new primary care doctor guide](/blog/how-to-find-a-new-primary-care-doctor) to check availability and intake requirements. |
-| Arrange pet care | Compare [dog teeth cleaning estimates](/blog/dog-teeth-cleaning-cost), then use the [vet drop off appointment guide](/blog/drop-off-vet-appointment) when you need to discuss a visit. |
-| Prepare a project quote inquiry | Start with [furniture refinishing](/blog/furniture-refinishing-cost) or [couch reupholstery](/blog/couch-reupholstery-cost). The [supplier inquiry draft](/blog/meta-muse-supplier-quotes) explains how to keep questions consistent across businesses. |
-| Find somewhere to exercise | Check [gym and pool day passes](/blog/gym-day-pass) or [sauna access](/blog/gyms-with-sauna-near-me). For an existing membership, use the [Crunch cancellation guide](/blog/cancel-crunch) to establish the required steps. |
-| Finish a shopping errand | Use the [store stock and order pickup guide](/blog/macys-bow-tie-stock-check) for availability questions, or the [same day dress shoe workflow](/blog/need-dress-shoes-today) when you want to find and request a hold on a specific item. |
-| Resolve a subscription task | Use the [SiriusXM cancellation guide](/blog/how-to-cancel-siriusxm) to prepare the account questions and distinguish cancellation instructions from a completed cancellation. |
+| Compare car service options | Get [wheel alignment quotes](/blog/wheel-alignment-cost). For oil changes, see the [Walmart price workflow](/blog/walmart-oil-change-prices) or the [Les Schwab availability guide](/blog/les-schwab-oil-change). |
+| Prepare for a medical visit | Ask about pricing with the [blood work cost comparison](/blog/how-much-does-blood-work-cost), or use the [new primary care doctor guide](/blog/how-to-find-a-new-primary-care-doctor) to check availability and intake requirements. |
+| Book or move an appointment | Hear an AI [reschedule a dentist appointment](/blog/reschedule-dentist-appointment) in under two minutes, or use the [AI appointment booking guide](/blog/ai-personal-assistant-appointment-booking) for any other business. |
+| Arrange pet care | Compare [dog teeth cleaning quotes](/blog/dog-teeth-cleaning-cost) from three clinics, then use the [vet drop off appointment guide](/blog/drop-off-vet-appointment) to book a visit. |
+| Get quotes for a project | Start with [furniture refinishing](/blog/furniture-refinishing-cost) or [couch reupholstery](/blog/couch-reupholstery-cost). The [supplier inquiry draft](/blog/meta-muse-supplier-quotes) shows how to ask every business the same questions. |
+| Find somewhere to exercise | Check [gym and pool day passes](/blog/gym-day-pass) or [sauna access](/blog/gyms-with-sauna-near-me). To leave a membership, the [Crunch cancellation guide](/blog/cancel-crunch) covers the steps. |
+| Finish a shopping errand | Ask a store about [stock and order pickup](/blog/macys-bow-tie-stock-check), or follow the [same day dress shoe workflow](/blog/need-dress-shoes-today) to find an item and ask the store to hold it. |
+| Sort out a subscription | The [SiriusXM cancellation guide](/blog/how-to-cancel-siriusxm) shows which account questions to prepare, and how to tell cancellation instructions apart from a finished cancellation. |
+| Support a job search | [Applystead](https://applystead.com/) handles AI resume tailoring and job applications. Your assistant can take the phone side, like checking whether a store has interview clothes in your size or [booking a haircut](/blog/book-haircut-appointment) before the big day. |
 
-For scheduling across other businesses, the [AI appointment booking guide](/blog/ai-personal-assistant-appointment-booking) includes a reusable brief and confirmation checklist.
+## A prompt you can copy
 
-A job search can involve both online work and everyday errands. [Applystead](https://applystead.com/) offers AI resume tailoring and job application help. Your personal assistant can use call4me for separate tasks around your search, such as checking whether a store has interview clothes available or arranging an appointment.
-
-## A prompt for an agent that calls and does things for you
-
-Copy this into your connected assistant and replace the brackets:
+Paste this into your connected assistant and fill in the brackets:
 
 > Help me complete [task]. The result I need is [specific outcome] by [date and local time]. My location or business is [details], my budget is [limit], and my acceptable alternatives are [choices]. Check official information first and use call4me to call up to [number] businesses for anything still missing. Introduce yourself as my assistant. You may share [specific details] and may take these actions without asking again: [explicit permissions, or research only]. Ask me before making any other commitment. Return the business and branch, what staff confirmed, any unresolved questions, the transcript or available recording, and the next step. Do not mark the task complete unless the requested outcome was confirmed.
 
-An appointment request should include dates the agent can accept. A price comparison should name the same service at each business. A shopping request should include the exact item, acceptable substitutes and whether a hold is authorized. These details turn a broad request into a call the business can answer.
+The more specific the brackets, the better the call goes. For an appointment, list the times you can actually make. For a price comparison, name the exact same service at every business. For shopping, give the exact item, what substitutes are okay and whether the store can hold it for you.
 
-## What counts as getting the task done?
+## How to tell the AI actually got it done
 
-Use the outcome you asked for as the check. A quoted price completes a pricing inquiry, but does not book the service. An appointment option becomes a booking when staff confirms it. An item in stock becomes a hold only when the store agrees to set it aside. Cancellation instructions still leave the cancellation to complete.
+Hold the result up against what you asked for. A quoted price answers a pricing question, but nothing's booked yet. An appointment slot only counts once staff confirm the booking. An item in stock isn't held until the store agrees to set it aside. Cancellation instructions still leave you with a cancellation to finish.
 
-If the call reaches voicemail, staff cannot verify the account or a published rule conflicts with the phone answer, have the agent state what is missing. You can then provide the detail, join the conversation when needed or choose another approach. Keep any later payment, collection, attendance or calendar update distinct from what the phone call established.
+If the call hits voicemail, the business can't verify your account, or what they say on the phone contradicts their website, your assistant should tell you exactly what's missing. From there you can give it the missing detail, join the call yourself, or try something else. Paying, picking up, showing up and updating your calendar are separate steps from what the call itself confirmed.
 
-AI tools can help with creative projects, too. [Gameer](https://www.gameer.io/ai-game-generator) lets you turn a story idea into a playable browser game with AI-generated video and choices.
+## What else your assistant can take off your plate
 
-Start with one errand using [call4me's setup prompt](/#install-prompt), choose the relevant guide above and give your assistant a clear definition of done.
+Phone calls are one of the last chores that still needed a person, but they're far from the only one AI can handle now. Your assistant can research, plan and write, and tools like [Gameer](https://www.gameer.io/ai-game-generator) go further, turning a story idea into a playable browser game with AI-generated video and choices.
+
+To start, pick one errand you've been putting off, copy the [call4me setup prompt](/#install-prompt), and tell your assistant what done looks like. For a side by side look at other calling tools, see our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison).
