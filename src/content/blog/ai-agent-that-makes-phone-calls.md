@@ -54,6 +54,8 @@ Hold the result up against what you asked for. A quoted price answers a pricing 
 
 If the call hits voicemail, the business can't verify your account, or what they say on the phone contradicts their website, your assistant should tell you exactly what's missing. From there you can give it the missing detail, join the call yourself, or try something else. Paying, picking up, showing up and updating your calendar are separate steps from what the call itself confirmed.
 
+The same check matters when a business builds its own AI agents. Teams like [Transfrm Labs](https://transfrm.in/) design the evals and quality gates that test whether an agent actually finished the job before it reaches real users.
+
 ## What else your assistant can take off your plate
 
 Phone calls are one of the last chores that still needed a person, but they're far from the only one AI can handle now. Your assistant can research, plan and write, and tools like [Gameer](https://www.gameer.io/ai-game-generator) go further, turning a story idea into a playable browser game with AI-generated video and choices.
