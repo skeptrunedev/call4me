@@ -40,7 +40,7 @@ node --env-file=/private/.dev.vars --import tsx scripts/review-call-audio.ts ver
 ```
 
 Export preserves the complete source timeline and original voices, with manual
-mute spans, mono MP3 at 96 kbps, loudness normalization at negative 16 LUFS,
+mute spans, mono MP3 at 96 kbps (lower for recordings too long to fit a 24 MiB site asset at 96, down to 32 kbps), loudness normalization at negative 16 LUFS,
 true peak limit at negative 1.5 dB, and stripped source metadata. Verify checks
 decoded duration and mute interiors and runs two fresh independent export
 transcriptions. MP3 boundary ringing is excluded from the numerical silence

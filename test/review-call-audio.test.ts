@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { createHash } from 'node:crypto';
-import { asrWindows, downloadRecording, muteFilter, privatePath, silenceChecks, validateMutes } from '../scripts/review-call-audio';
+import { asrWindows, downloadRecording, exportBitrate, MAX_ASSET_BYTES, muteFilter, privatePath, silenceChecks, validateMutes } from '../scripts/review-call-audio';
 
 test('ranged acquisition preserves exact bytes and rejects changed provider objects', async t => {
   const source = Buffer.alloc(3 * 1024 * 1024 + 37);
@@ -80,4 +80,18 @@ test('long recordings split into contiguous gpt-4o-transcribe windows under its 
     if (index) assert.equal(window.start, windows[index - 1].end);
   }
   assert.equal(asrWindows(5000).length, 4);
+});
+
+test('exports pick the highest bitrate that keeps a recording under the site asset limit', () => {
+  assert.equal(exportBitrate(23 * 60), 96);
+  assert.equal(exportBitrate(48 * 60), 64);
+  assert.ok((48 * 60 * exportBitrate(48 * 60) * 1000) / 8 <= MAX_ASSET_BYTES);
+  assert.throws(() => exportBitrate(3 * 60 * 60));
+});
+
+test('every published recording fits Cloudflare\'s 25 MiB static asset limit', () => {
+  const dir = new URL('../public/static/blog/', import.meta.url);
+  for (const name of readdirSync(dir).filter((f) => f.endsWith('.mp3'))) {
+    assert.ok(statSync(new URL(name, dir)).size <= 25 * 1024 * 1024, `${name} is over 25 MiB and would fail the deploy`);
+  }
 });

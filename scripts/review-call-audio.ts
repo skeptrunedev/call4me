@@ -190,16 +190,27 @@ function loadManifest(file: string, binary: string) {
   return { manifest, duration };
 }
 function exportAudio(manifestFile: string, out: string, binary: string) {
-  const { manifest } = loadManifest(manifestFile, binary);
+  const { manifest, duration } = loadManifest(manifestFile, binary);
   assert.ok(out.endsWith('.mp3'), 'export must use .mp3');
   assert.notEqual(resolve(out), manifest.source, 'cannot overwrite source');
   mkdirSync(dirname(resolve(out)), { recursive: true });
   // Mono first, sample accurate muting, normal speed and complete timing. Mute
   // again after normalization/resampling to prevent filters smearing private audio.
   const mute = muteFilter(manifest.mutes);
-  ffmpeg(binary, ['-y', '-i', manifest.source, '-map', '0:a:0', '-vn', '-af', `aformat=channel_layouts=mono,${mute},loudnorm=I=-16:TP=-1.5:LRA=11,aresample=24000,${mute}`, '-ac', '1', '-ar', '24000', '-c:a', 'libmp3lame', '-b:a', '96k', '-map_metadata', '-1', '-id3v2_version', '0', out]);
-  console.log(JSON.stringify({ file: out, sha256: hash(out) }));
+  ffmpeg(binary, ['-y', '-i', manifest.source, '-map', '0:a:0', '-vn', '-af', `aformat=channel_layouts=mono,${mute},loudnorm=I=-16:TP=-1.5:LRA=11,aresample=24000,${mute}`, '-ac', '1', '-ar', '24000', '-c:a', 'libmp3lame', '-b:a', `${exportBitrate(duration)}k`, '-map_metadata', '-1', '-id3v2_version', '0', out]);
+  console.log(JSON.stringify({ file: out, sha256: hash(out), kbps: exportBitrate(duration) }));
 }
+/** Cloudflare Workers serves static assets of at most 25 MiB; leave headroom for MP3 framing. */
+export const MAX_ASSET_BYTES = 24 * 1024 * 1024;
+const BITRATES = [96, 80, 64, 56, 48, 40, 32];
+
+/** The highest standard MP3 bitrate (kbps) at which a recording of this length still fits as a site asset. */
+export function exportBitrate(seconds: number): number {
+  const fits = BITRATES.find((kbps) => (seconds * kbps * 1000) / 8 <= MAX_ASSET_BYTES);
+  assert.ok(fits, `a ${Math.round(seconds / 60)} minute recording does not fit in a site asset even at 32 kbps`);
+  return fits;
+}
+
 export function silenceChecks(samples: Float32Array, mutes: Mute[]) {
   return mutes.map(mute => {
     // MP3 uses overlapping transform windows; inspect the interior beyond its
