@@ -4,7 +4,7 @@ seoTitle: "Can AI make phone calls for you? Here's how"
 subtitle: Your AI assistant can call a business, talk to whoever answers and bring the result back to you. Here's how to connect it, what to ask for, and how to tell when the job is actually done.
 description: Yes, AI can make phone calls for you. Connect a calling tool to ChatGPT, Claude, Codex or Gemini, then have it get quotes and book appointments by phone.
 date: 2026-10-07
-updated: 2026-10-13
+updated: 2026-10-14
 tags: ai agent, ai phone assistant, personal assistant, phone calls
 authors: nick
 imageAlt: An AI assistant calls a business for you and brings back the result
@@ -58,6 +58,6 @@ The same check matters when a business builds its own AI agents. Teams like [Tra
 
 ## What else your assistant can take off your plate
 
-Phone calls are one of the last chores that still needed a person, but they're far from the only one AI can handle now. Your assistant can research, plan and write, and tools like [Gameer](https://www.gameer.io/ai-game-generator) go further, turning a story idea into a playable browser game with AI-generated video and choices.
+Phone calls are one of the last chores that still needed a person, but they're far from the only one AI can handle now. Your assistant can research, plan and write, and tools like [Gameer](https://www.gameer.io/ai-game-generator) go further, turning a story idea into a playable browser game with AI-generated video and choices. If you run more than one agent, [Bezalel](https://bezalel.sh/) gives all of them shared memory, an email inbox, texting from your own number and a cloud computer through one MCP connection.
 
 To start, pick one errand you've been putting off, copy the [call4me setup prompt](/#install-prompt), and tell your assistant what done looks like. For a side by side look at other calling tools, see our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison).
