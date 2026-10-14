@@ -55,7 +55,7 @@ export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: n
         </p>
         <p>
           it's for anyone who already asks an AI assistant like ChatGPT, Claude or Codex for help and wants it to handle the phone part too.
-          calls cost <b>{perMinute}</b> from pickup, including hold time, with prepaid credits from {dollars(MIN_TOPUP_CENTS)}. unanswered calls are free.
+          calls cost <b>{perMinute}</b> from pickup, half that on hold, with prepaid credits from {dollars(MIN_TOPUP_CENTS)}. unanswered calls are free.
           to start, <a href="/#buy">load credits</a>, paste one setup prompt into your assistant, and ask it to make the call.
         </p>
 
@@ -72,7 +72,7 @@ export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: n
         <h2>you can listen in or take over the call</h2>
         <p>
           call4me can ring your own phone. ask your assistant to connect you "as soon as a person picks up" and you skip the hold music; hold time is
-          still billed at the normal rate. answer and press 1 to join, so your voicemail never ends up on the call. the AI caller goes quiet while you
+          still billed, at half the normal rate. answer and press 1 to join, so your voicemail never ends up on the call. the AI caller goes quiet while you
           talk, and when you press * or hang up, it takes the call back and carries on with the task. if you'd rather just hear how it's going, ask to
           listen in: nobody on the call hears you, the caller keeps working, and you can press 1 anytime to take over.
         </p>
@@ -111,7 +111,7 @@ export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: n
             <tr><th scope="col">what</th><th scope="col">price</th></tr>
           </thead>
           <tbody>
-            <tr><td>a call, from pickup by a person or automated system</td><td>{perMinute}, rounded up to the minute. phone menus and hold time cost the same.</td></tr>
+            <tr><td>a call, from pickup by a person or automated system</td><td>{perMinute}, rounded up to the minute. phone menus cost the same; hold time is half price.</td></tr>
             <tr><td>higher-rate destinations</td><td>{pricierDestinations()}</td></tr>
             <tr><td>unanswered, busy and failed calls</td><td>free</td></tr>
             <tr><td>your call4me US number</td><td>free</td></tr>

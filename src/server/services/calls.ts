@@ -57,6 +57,9 @@ export interface CallRow {
   ended_at: number | null;
   billed_seconds: number | null;
   cost_cents: number | null;
+  /** Seconds on hold already over (billed at half price), and when a hold still going started. */
+  hold_seconds: number;
+  hold_since: number | null;
   hold_cents: number | null;
   outcome: string | null;
   transcript: string | null;
@@ -110,10 +113,15 @@ export class CallError extends Error {
   }
 }
 
-/** Calls default to 30 minutes; an explicit cap can reach Telnyx's 4 hour ceiling. */
+/**
+ * Calls default to 30 minutes; an explicit cap can reach Telnyx's 4 hour ceiling. A call still on
+ * hold when its cap comes up holds `holdExtensionMinutes` more credits and keeps waiting, as long
+ * as the balance covers it, up to that ceiling.
+ */
 export const LIMITS = {
   defaultMinutes: 30,
   maxMinutes: 240,
+  holdExtensionMinutes: 15,
 };
 
 export interface PlaceCallInput {
@@ -150,7 +158,19 @@ export function redact(text: string, secrets: string[]): string {
   return secrets.reduce((t, s) => (s.length >= 3 ? t.split(s).join('••••') : t), text);
 }
 
-export const billedCents = (talkSeconds: number, pricePerMinuteCents: number) => Math.ceil(talkSeconds / 60) * pricePerMinuteCents;
+/**
+ * What a call costs: every started minute at the call's price, except whole minutes spent on hold,
+ * which are half price. `holdSeconds` beyond the call's length are ignored.
+ */
+export function billedCents(talkSeconds: number, pricePerMinuteCents: number, holdSeconds = 0): number {
+  const minutes = Math.ceil(talkSeconds / 60);
+  const holdMinutes = Math.min(minutes, Math.floor(Math.min(holdSeconds, talkSeconds) / 60));
+  return (minutes - holdMinutes) * pricePerMinuteCents + Math.ceil((holdMinutes * pricePerMinuteCents) / 2);
+}
+
+/** Seconds on hold by `at`: the holds already over plus one still going. */
+export const holdSecondsAt = (row: Pick<CallRow, 'hold_seconds' | 'hold_since'>, at: number) =>
+  (row.hold_seconds ?? 0) + (row.hold_since ? Math.max(0, Math.round((at - row.hold_since) / 1000)) : 0);
 
 export function calls(db: D1Database) {
   return {
@@ -313,8 +333,10 @@ export function calls(db: D1Database) {
       if (!row || !ACTIVE.includes(row.status)) return row;
       const talkSeconds = row.answered_at ? Math.max(0, Math.round((endedAt - row.answered_at) / 1000)) : 0;
       const status: CallStatus = opts.status === 'completed' && !row.answered_at ? 'no_answer' : opts.status;
-      // Only calls that connected and ran normally are billed; our own failures are free.
-      const cost = status === 'completed' && talkSeconds > 0 ? billedCents(talkSeconds, opts.pricePerMinuteCents) : 0;
+      // Only calls that connected and ran normally are billed; our own failures are free. A call
+      // never costs more than the credits held for it, even if it ran past its limit.
+      const billed = status === 'completed' && talkSeconds > 0 ? billedCents(talkSeconds, opts.pricePerMinuteCents, holdSecondsAt(row, endedAt)) : 0;
+      const cost = row.hold_cents ? Math.min(billed, row.hold_cents) : billed;
       const r = await db
         .prepare(
           `UPDATE calls SET status = ?, ended_at = ?, billed_seconds = ?, cost_cents = ?, hangup_cause = COALESCE(?, hangup_cause), hangup_source = COALESCE(?, hangup_source), error = COALESCE(?, error)
@@ -325,9 +347,34 @@ export function calls(db: D1Database) {
       if ((r.meta.changes ?? 0) > 0) {
         const ledger = accounts(db);
         if (row.hold_cents) await ledger.post(row.account_id, row.hold_cents, 'release', `release:${id}`, 'hold released');
-        if (cost > 0) await ledger.post(row.account_id, -cost, 'call', `call:${id}`, `${Math.ceil(talkSeconds / 60)} min to ${row.business}`);
+        const holdMinutes = Math.min(Math.ceil(talkSeconds / 60), Math.floor(Math.min(holdSecondsAt(row, endedAt), talkSeconds) / 60));
+        if (cost > 0) await ledger.post(row.account_id, -cost, 'call', `call:${id}`, `${Math.ceil(talkSeconds / 60)} min to ${row.business}${holdMinutes ? `, ${holdMinutes} on hold at half price` : ''}`);
       }
       return this.byId(id);
+    },
+
+    /** The business put the call on hold at `at`. */
+    async holdStarted(id: string, at: number): Promise<void> {
+      await db.prepare(`UPDATE calls SET hold_since = ? WHERE id = ? AND hold_since IS NULL`).bind(at, id).run();
+    },
+
+    /** The hold that started at hold_since ended at `at`. */
+    async holdEnded(id: string, at: number): Promise<void> {
+      await db
+        .prepare(`UPDATE calls SET hold_seconds = hold_seconds + MAX(0, CAST(ROUND((? - hold_since) / 1000.0) AS INTEGER)), hold_since = NULL WHERE id = ? AND hold_since IS NOT NULL`)
+        .bind(at, id)
+        .run();
+    },
+
+    /**
+     * Hold `minutes` more of the account's credits for a call still running, the n-th time it has
+     * been extended. False when the balance can't cover them.
+     */
+    async extend(row: Pick<CallRow, 'id' | 'account_id' | 'business'>, minutes: number, pricePerMinuteCents: number, n: number): Promise<boolean> {
+      const cents = minutes * pricePerMinuteCents;
+      const held = await accounts(db).hold(row.account_id, cents, `hold:${row.id}:${n}`, `${minutes} more min on hold with ${row.business}`);
+      if (held) await db.prepare(`UPDATE calls SET hold_cents = COALESCE(hold_cents, 0) + ? WHERE id = ?`).bind(cents, row.id).run();
+      return held;
     },
 
     async block(number: string, reason: string): Promise<void> {

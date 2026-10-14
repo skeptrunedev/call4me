@@ -1,10 +1,12 @@
 import { DurableObject } from 'cloudflare:workers';
 import { Raindrop, type Interaction } from 'raindrop-ai';
-import { ACTIVE, calls, redact, type CallRow, type TranscriptLine } from '../services/calls';
+import { accounts } from '../services/accounts';
+import { ACTIVE, calls, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
 import { dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
 import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, missedHandoff } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
+import { HoldMeter, type HoldChange } from './hold';
 import { BACK_OFFICE_TOOLS } from './prompt';
 import { INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, type MachineEvent, type MachineGuidance, type MachineState } from './voicemail';
 
@@ -166,6 +168,8 @@ export class VoiceSession extends DurableObject<Env> {
   /** The person's own phone leg while it rings or is on the call; the caller stays silent while they talk. */
   private personLeg: string | null = null;
   private personOn = false;
+  /** Whether the business has us waiting; hold time is half price and extends the time limit. */
+  private hold = new HoldMeter();
   /** Why their leg was rung: to join (press 1 or it's hung up) or to listen in for as long as they like. */
   private personMode: PersonMode = 'join';
   /** Keys relayed from the person's phone to the business, one after another. */
@@ -304,6 +308,7 @@ export class VoiceSession extends DurableObject<Env> {
     if (!row?.answered_at || !ACTIVE.includes(row.status)) return;
     this.answered = true;
     this.answeredAt = row.answered_at;
+    this.hold = new HoldMeter(row.hold_since);
     this.resumed = true;
     this.heardThem = true;
     this.mark('resuming after the session restarted');
@@ -529,6 +534,7 @@ export class VoiceSession extends DurableObject<Env> {
         const delta = (ev as { delta: string }).delta;
         this.appendTranscript('them', delta);
         if (delta) this.menuRecovery.observe(delta, Date.now());
+        this.trackHold(this.hold.them(delta, Date.now()));
         this.scheduleHandoffCheck();
         this.scheduleHoldingLine();
         // Barge-in: GPT-Live stops generating when talked over, but audio already queued at
@@ -546,6 +552,7 @@ export class VoiceSession extends DurableObject<Env> {
           const delta = (ev as { delta: string }).delta;
           this.appendTranscript('caller', delta);
           if (delta) this.menuRecovery.observeCaller(delta, Date.now());
+          this.trackHold(this.hold.caller(delta));
           this.scheduleHandoffCheck();
           this.scheduleHoldingLine();
         }
@@ -752,7 +759,8 @@ export class VoiceSession extends DurableObject<Env> {
     }
     const phone = phoneOverride || s.person.phone;
     if (!phone) return `no phone number for ${s.person.name}; save one with call4me_save_profile or pass phone`;
-    const remaining = Math.max(60, s.maxSeconds - Math.round((Date.now() - (this.answeredAt || Date.now())) / 1000));
+    // Their leg can last as long as the call can: holds extend its limit up to Telnyx's ceiling.
+    const remaining = Math.max(60, LIMITS.maxMinutes * 60 - Math.round((Date.now() - (this.answeredAt || Date.now())) / 1000));
     try {
       this.personLeg = await telnyx(this.env).dialPerson({ to: phone, from: s.person.from, webhookUrl: s.person.webhookUrl, callId: s.callId, superviseControlId: s.controlId, timeLimitSecs: remaining });
     } catch (err) {
@@ -1167,11 +1175,45 @@ export class VoiceSession extends DurableObject<Env> {
       return;
     }
     if (!stopAt && wrapAt && now >= wrapAt) {
+      // Still on hold: hold more credits and keep waiting rather than hang up on the queue.
+      if (this.hold.holding() && (await this.extendOnHold(s, wrapAt))) {
+        await this.scheduleAlarm();
+        return;
+      }
       await this.ctx.storage.put('stopAt', now + WRAP_UP_MS);
       // While the person is talking the caller stays quiet; the hard stop still comes.
       if (!this.personOn) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'Time is almost up. Wrap up now: get the one thing you still need, say a quick goodbye, and hand off to hang up (end_call).' });
     }
     await this.scheduleAlarm();
+  }
+
+  /** Record a hold starting or ending on the call, where the bill at hangup reads it. */
+  private trackHold(change: HoldChange | null): void {
+    const callId = this.setup?.callId;
+    if (!change || !callId) return;
+    const db = calls(this.env.DB);
+    const write = change.type === 'start' ? db.holdStarted(callId, change.at) : db.holdEnded(callId, change.at);
+    write.catch((err) => console.warn('hold write failed', callId, String(err)));
+    this.mark(change.type === 'start' ? 'on hold' : `off hold after ${change.seconds}s`);
+  }
+
+  /**
+   * The time limit came up during a hold: hold up to LIMITS.holdExtensionMinutes more of the
+   * account's credits and push the limit back, never past Telnyx's ceiling. False when the
+   * balance or the ceiling leaves no room, and the call wraps up as usual.
+   */
+  private async extendOnHold(s: Stored, wrapAt: number): Promise<boolean> {
+    const row = await calls(this.env.DB).byId(s.callId);
+    if (!row?.answered_at) return false;
+    const ceilingAt = row.answered_at + (LIMITS.maxMinutes * 60 - 45) * 1000;
+    const balance = await accounts(this.env.DB).balanceCents(row.account_id);
+    const minutes = Math.min(LIMITS.holdExtensionMinutes, Math.floor((ceilingAt - wrapAt) / 60_000), Math.floor(balance / s.pricePerMinuteCents));
+    if (minutes < 1) return false;
+    const n = ((await this.ctx.storage.get<number>('holdExtensions')) ?? 0) + 1;
+    if (!(await calls(this.env.DB).extend(row, minutes, s.pricePerMinuteCents, n))) return false;
+    await this.ctx.storage.put({ holdExtensions: n, wrapAt: wrapAt + minutes * 60_000 });
+    this.mark(`still on hold at the time limit: held ${minutes} more min (extension ${n})`);
+    return true;
   }
 
   // ---- teardown

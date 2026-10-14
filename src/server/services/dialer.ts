@@ -179,7 +179,8 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       webhookUrl: `${origin}/webhooks/telnyx`,
       streamUrl: stream,
       callId: call.id,
-      timeLimitSecs: setup.maxSeconds,
+      // The session enforces the call's own limit, which a hold can extend; Telnyx's is the ceiling.
+      timeLimitSecs: LIMITS.maxMinutes * 60,
     });
     await db.dialing(call.id, controlId);
     await session.fetch('https://session/control', { method: 'POST', body: JSON.stringify({ controlId }) });
@@ -314,7 +315,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
   };
   try {
     await sessionFor(env, id).fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
-    await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: setup.streamUrl!, callId: id, timeLimitSecs: setup.maxSeconds });
+    await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: setup.streamUrl!, callId: id, timeLimitSecs: LIMITS.maxMinutes * 60 });
   } catch (err) {
     // Most often the caller hung up while this was setting up: answering fails, and their hangup
     // may have come before the call row existed, so nothing else would end it or release its hold.
