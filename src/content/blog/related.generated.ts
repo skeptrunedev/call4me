@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "da48ce2edcb8872a7ab3bc8607022afe0b218956d6f592568e77c8194ae24025"
+  "sourceHash": "d3f3c3d0a3eb1cdf86520fc7b3dca2a72d9469438210ffe286a2b9a526679f0c"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -219,7 +219,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "usaa-phone-number",
-      "similarity": 0.612888
+      "similarity": 0.612889
     }
   ],
   "amazon-customer-service-number": [
@@ -229,7 +229,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "wayfair-customer-service",
-      "similarity": 0.699208
+      "similarity": 0.699207
     },
     {
       "slug": "walmart-customer-service-number",
@@ -776,7 +776,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "home-depot-customer-service",
-      "similarity": 0.641562
+      "similarity": 0.641561
     },
     {
       "slug": "fabletics-customer-service",
@@ -798,16 +798,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "costco-tire-appointment-cancel-refund": [],
-  "couch-reupholstery-cost": [
-    {
-      "slug": "furniture-refinishing-cost",
-      "similarity": 0.803598
-    },
-    {
-      "slug": "junk-removal-cost",
-      "similarity": 0.670826
-    }
-  ],
   "cursor-phone-calls": [
     {
       "slug": "github-copilot-phone-calls",
@@ -901,7 +891,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "delta-customer-service": [
     {
       "slug": "united-change-flight",
-      "similarity": 0.669954
+      "similarity": 0.669955
     },
     {
       "slug": "etihad-customer-service",
@@ -1099,10 +1089,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "fpl-phone-number": [],
   "furniture-refinishing-cost": [
     {
-      "slug": "couch-reupholstery-cost",
-      "similarity": 0.803598
-    },
-    {
       "slug": "junk-removal-cost",
       "similarity": 0.673814
     }
@@ -1122,7 +1108,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "usaa-phone-number",
-      "similarity": 0.603076
+      "similarity": 0.603077
     }
   ],
   "gemini-phone-calls": [
@@ -1448,7 +1434,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "wayfair-customer-service",
-      "similarity": 0.694694
+      "similarity": 0.694693
     },
     {
       "slug": "walmart-customer-service-number",
@@ -1456,7 +1442,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "costco-customer-service",
-      "similarity": 0.641562
+      "similarity": 0.641561
     }
   ],
   "how-long-to-reach-a-human": [],
@@ -1599,10 +1585,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "furniture-refinishing-cost",
       "similarity": 0.673814
-    },
-    {
-      "slug": "couch-reupholstery-cost",
-      "similarity": 0.670826
     }
   ],
   "lai-wah-heen-private-dining": [
@@ -1634,7 +1616,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.763564
+      "similarity": 0.763565
     },
     {
       "slug": "github-copilot-phone-calls",
@@ -2347,7 +2329,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "delta-customer-service",
-      "similarity": 0.669954
+      "similarity": 0.669955
     },
     {
       "slug": "priceline-customer-service",
@@ -2397,11 +2379,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "allstate-customer-service-number",
-      "similarity": 0.612888
+      "similarity": 0.612889
     },
     {
       "slug": "geico-customer-service",
-      "similarity": 0.603076
+      "similarity": 0.603077
     },
     {
       "slug": "experian-phone-number",
@@ -2559,7 +2541,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "wayfair-customer-service": [
     {
       "slug": "amazon-customer-service-number",
-      "similarity": 0.699208
+      "similarity": 0.699207
     },
     {
       "slug": "pottery-barn-customer-service",
@@ -2567,7 +2549,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "home-depot-customer-service",
-      "similarity": 0.694694
+      "similarity": 0.694693
     },
     {
       "slug": "walmart-customer-service-number",

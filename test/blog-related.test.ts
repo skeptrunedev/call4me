@@ -16,7 +16,6 @@ test('recommendations keep cost, healthcare and developer articles on subject', 
   assert.ok(!top('costco-eye-exam-cost').includes('wheel-alignment-cost'));
   assert.ok(top('private-dining-room-cost').includes('lai-wah-heen-private-dining'));
   assert.ok(RELATED_INDEX['private-dining-room-cost']!.some((match) => match.slug === 'book-dinner-reservation-by-phone'));
-  assert.ok(!top('private-dining-room-cost').includes('couch-reupholstery-cost'));
   assert.ok(!top('private-dining-room-cost').includes('furniture-refinishing-cost'));
   assert.ok(top('how-to-find-a-new-primary-care-doctor').includes('follow-up-appointment-telehealth'));
   assert.ok(top('grok-bot-template-troubleshooting').includes('grok-bot-templates'));
@@ -28,7 +27,7 @@ test('recommendations keep cost, healthcare and developer articles on subject', 
 test('related cards omit unavailable posts and do not fill empty results with unrelated articles', () => {
   const source = post('private-dining-room-cost');
   const first = post(RELATED_INDEX[source.slug]![0]!.slug);
-  const unrelated = post('couch-reupholstery-cost');
+  const unrelated = post('furniture-refinishing-cost');
   assert.deepEqual(related(source, [source, unrelated, first]).map((p) => p.slug), [first.slug]);
   assert.deepEqual(related(source, [source, unrelated]), []);
   assert.deepEqual(related(source, [first], 0), []);

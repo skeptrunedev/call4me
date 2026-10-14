@@ -59,7 +59,6 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'codex-phone-calls': ['agent-software'],
   'costco-eye-exam-cost': ['healthcare'],
   'costco-tire-appointment-cancel-refund': ['car-maintenance'],
-  'couch-reupholstery-cost': ['furniture-home-services'],
   'delta-customer-service': ['airlines'],
   'directv-customer-service': ['telecom', 'subscription-cancellation'],
   'dog-teeth-cleaning-cost': ['veterinary'],

@@ -18,7 +18,6 @@ import gymDayPass from './gym-day-pass.md';
 import gymsWithSauna from './gyms-with-sauna-near-me.md';
 import bloodWorkCost from './how-much-does-blood-work-cost.md';
 import furnitureRefinishingCost from './furniture-refinishing-cost.md';
-import couchReupholsteryCost from './couch-reupholstery-cost.md';
 import dogTeethCleaningCost from './dog-teeth-cleaning-cost.md';
 import wheelAlignmentCost from './wheel-alignment-cost.md';
 import walmartOilChangePrices from './walmart-oil-change-prices.md';
@@ -154,7 +153,6 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'gyms-with-sauna-near-me', markdown: gymsWithSauna },
   { slug: 'how-much-does-blood-work-cost', markdown: bloodWorkCost },
   { slug: 'furniture-refinishing-cost', markdown: furnitureRefinishingCost },
-  { slug: 'couch-reupholstery-cost', markdown: couchReupholsteryCost },
   { slug: 'dog-teeth-cleaning-cost', markdown: dogTeethCleaningCost },
   { slug: 'wheel-alignment-cost', markdown: wheelAlignmentCost },
   { slug: 'walmart-oil-change-prices', markdown: walmartOilChangePrices },

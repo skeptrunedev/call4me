@@ -51,4 +51,4 @@ Supply real measurements and describe uncertain materials as uncertain. After th
 
 Material identification matters. Weathersby says it works with solid wood and suitable veneer, while laminate and particle board generally need a different approach. Ask the shop to assess your piece rather than treating a photograph as conclusive. [Weathersby material guidance](https://weathersbyguildsa-aus.com/services/furniture-refinishing)
 
-Wood finishing and replacing fabric are separate requests. If a couch needs new upholstery as well as attention to its wooden legs, collect those charges separately. Our [couch reupholstery cost guide](/blog/couch-reupholstery-cost) covers the fabric and upholstery side of the comparison.
+Wood finishing and replacing fabric are separate requests. If a couch needs new upholstery as well as attention to its wooden legs, collect those charges separately.
