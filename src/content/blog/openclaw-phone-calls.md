@@ -32,6 +32,8 @@ Each step is explained below, including why `--no-probe` is there.
 
 OpenClaw is the open-source personal AI assistant at [github.com/openclaw/openclaw](https://github.com/openclaw/openclaw), published on npm as `openclaw`. It runs a local Gateway and talks to you through a dashboard, a terminal UI, or chat apps like WhatsApp, Telegram, Slack and Discord. Older articles call it Clawdbot.
 
+If you're still choosing a self-hosted agent, the [OpenTeam blog](https://openteam.so/blog) compares OpenClaw, Hermes Agent and other options, and covers OpenTeam's own approach of giving each agent its own Linux desktop and browser. call4me works with any agent that can connect to a remote MCP server.
+
 The project [README](https://github.com/openclaw/openclaw) gives two install paths. The installer script provisions Node for you and starts onboarding:
 
 ```bash
