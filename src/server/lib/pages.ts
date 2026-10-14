@@ -9,8 +9,8 @@ export const SITE = 'https://call4.me';
 
 /** Go straight to the page an anonymous visitor can open, keeping the destination after sign-in. */
 export const accountPath = (signedIn: boolean) => signedIn ? '/account' : '/login?next=/account';
-export const SITE_TITLE = 'call4me: Phone calls for your personal AI assistant';
-export const SITE_DESCRIPTION = 'Give your AI assistant phone calls through MCP. Connect Claude Code, Codex or another agent to call businesses, book appointments and get answers.';
+export const SITE_TITLE = 'Call for me: an AI that makes phone calls for you | call4me';
+export const SITE_DESCRIPTION = 'Let AI call for you: call4me phones businesses, books appointments and waits on hold, then patches you in. Works in ChatGPT, Claude Code and Codex.';
 
 export interface PageMeta {
   /** Sentence shown under the link on Slack, Discord, X, Signal, iMessage, LinkedIn. */
