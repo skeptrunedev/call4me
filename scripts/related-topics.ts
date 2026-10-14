@@ -130,6 +130,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'vercel-ai-sdk-phone-calls': ['agent-software'],
   'verizon-customer-service': ['telecom'],
   'veterinary-behavior-consultation-call': ['veterinary'],
+  'walmart-customer-service-number': ['retail-shopping'],
   'walmart-oil-change-prices': ['car-maintenance'],
   'wayfair-customer-service': ['retail-shopping', 'furniture-home-services'],
   'wheel-alignment-cost': ['car-maintenance'],

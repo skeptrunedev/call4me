@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "a543a2c232d0f4c318843e56763da8c4ae69662f659a0f570ef117917b2ca9c3"
+  "sourceHash": "7e92bf93602121ec461e23be0cee7218ed782617ed9ab480aa30cfdd9a5df828"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -226,6 +226,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "wayfair-customer-service",
       "similarity": 0.699208
+    },
+    {
+      "slug": "walmart-customer-service-number",
+      "similarity": 0.696704
     },
     {
       "slug": "pottery-barn-customer-service",
@@ -758,6 +762,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "costco-customer-service": [
+    {
+      "slug": "walmart-customer-service-number",
+      "similarity": 0.655079
+    },
     {
       "slug": "pottery-barn-customer-service",
       "similarity": 0.644421
@@ -1436,7 +1444,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "wayfair-customer-service",
-      "similarity": 0.694693
+      "similarity": 0.694694
+    },
+    {
+      "slug": "walmart-customer-service-number",
+      "similarity": 0.67472
     },
     {
       "slug": "costco-customer-service",
@@ -2223,7 +2235,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "xfinity-customer-service-number",
-      "similarity": 0.611541
+      "similarity": 0.611542
     }
   ],
   "t-mobile-customer-service-number": [
@@ -2500,6 +2512,24 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.704433
     }
   ],
+  "walmart-customer-service-number": [
+    {
+      "slug": "amazon-customer-service-number",
+      "similarity": 0.696704
+    },
+    {
+      "slug": "home-depot-customer-service",
+      "similarity": 0.67472
+    },
+    {
+      "slug": "wayfair-customer-service",
+      "similarity": 0.662603
+    },
+    {
+      "slug": "costco-customer-service",
+      "similarity": 0.655079
+    }
+  ],
   "walmart-oil-change-prices": [
     {
       "slug": "wheel-alignment-cost",
@@ -2521,7 +2551,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "home-depot-customer-service",
-      "similarity": 0.694693
+      "similarity": 0.694694
+    },
+    {
+      "slug": "walmart-customer-service-number",
+      "similarity": 0.662603
     },
     {
       "slug": "fabletics-customer-service",
@@ -2580,7 +2614,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "spectrum-retention-department",
-      "similarity": 0.611541
+      "similarity": 0.611542
     },
     {
       "slug": "att-customer-service-number",

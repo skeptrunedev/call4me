@@ -126,6 +126,7 @@ import costcoCustomerService from './costco-customer-service.md';
 import attCustomerServiceNumber from './att-customer-service-number.md';
 import southwestAirlinesPhoneNumber from './southwest-airlines-phone-number.md';
 import homeDepotCustomerService from './home-depot-customer-service.md';
+import walmartCustomerServiceNumber from './walmart-customer-service-number.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -261,4 +262,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'att-customer-service-number', markdown: attCustomerServiceNumber },
   { slug: 'southwest-airlines-phone-number', markdown: southwestAirlinesPhoneNumber },
   { slug: 'home-depot-customer-service', markdown: homeDepotCustomerService },
+  { slug: 'walmart-customer-service-number', markdown: walmartCustomerServiceNumber },
 ];
