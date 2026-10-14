@@ -1,17 +1,28 @@
 ---
-title: How to reschedule a dentist appointment (and the 2 minute call an AI made to do it)
-seoTitle: How to reschedule a dentist appointment
-subtitle: A call4me user had his AI phone assistant call his dentist and move an appointment. Here's the full recording, the exact words that worked, and what to have ready when you reschedule or cancel.
-description: Call with the patient's name, the appointment, and two or three times that work. A real 2 minute call shows how it goes, with the recording and script.
+title: Have your AI assistant reschedule a dentist appointment (a real 2 minute call)
+seoTitle: Reschedule a dentist appointment with AI
+subtitle: A call4me user had his AI assistant call his dentist and move an appointment. Hear the full recording, copy a prompt for your own appointment, and see what the office needed.
+description: An AI assistant called a dentist and rescheduled an appointment in under two minutes. Hear the recording, copy the prompt, and see what to have ready.
 date: 2026-09-30
+updated: 2026-10-13
 tags: dentist, appointments, reschedule, ai phone assistant
 authors: nick
-imageAlt: Reschedule a dentist appointment, the 2 minute call, recorded
+imageAlt: An AI assistant reschedules a dentist appointment in a 2 minute call
 ---
 
-**The short answer:** to reschedule a dentist appointment, call the office and have four things ready: **the patient's name**, **the appointment you're moving** (day and time), **two or three windows that work** ("Friday after 3, or any time Monday"), and **whether you want to stay with the same dentist**. In the call below that was enough to move an appointment in under two minutes, with the office confirming the new time on the spot.
+**An AI assistant can reschedule your dentist appointment by phone.** On September 30, 2026, a call4me user's assistant called his dental office, asked to move a Thursday 3:30 appointment to "Friday after three or anytime Monday", and got it moved to **Monday, October 5 at noon** with the same dentist. The call took under two minutes, and the office confirmed the new time before hanging up.
 
-The call was made on September 30, 2026 by a call4me user's AI phone assistant. He wrote to us afterwards: "It works great! Got my first dentist appointment rescheduled :)". He's okay with us sharing it; his name, the practice, the staff names, and what the appointment was for are muted.
+He wrote to us afterwards: "It works great! Got my first dentist appointment rescheduled :)". He's okay with us sharing it; his name, the practice, the staff names, and what the appointment was for are muted.
+
+The assistant needed four things, and so do you if you call yourself: **the patient's name**, **the appointment you're moving** (day and time), **two or three windows that work**, and **whether staying with the same dentist matters more than the day**.
+
+## Have your AI assistant make the call
+
+The caller was [call4me](/), which gives the agent you already use (Claude Code, Codex, ChatGPT, Claude) a phone. Connect it with the [Claude Code guide](/blog/claude-code-phone-calls), [Codex guide](/blog/codex-phone-calls) or [ChatGPT guide](/blog/chatgpt-phone-calls), then paste this:
+
+> Call [dental office] at [phone number] and reschedule [patient name]'s [day] appointment at [time]. Times that work: [windows]. Keep the same dentist if possible; if they can only offer a different provider, ask me first. Confirm the new date and time before hanging up.
+
+Your assistant calls, talks to the front desk, asks you mid-call if something comes up that your instructions don't cover, and reports back with the outcome and transcript. For other errands it can handle the same way, see [an AI agent that makes phone calls for you](/blog/ai-agent-that-makes-phone-calls).
 
 ## Listen to the call (1 minute 58 seconds)
 
@@ -25,7 +36,7 @@ The call was made on September 30, 2026 by a call4me user's AI phone assistant. 
 - **1:19** "Would noon work for Monday, October 5th?"
 - **1:35** "I went ahead and rescheduled for Monday, October 5th at noon... we have him all rescheduled"
 
-## How to reschedule a dentist appointment, step by step
+## How to reschedule a dentist appointment yourself, step by step
 
 1. **Call during office hours.** Front desks handle scheduling; you rarely need anyone else.
 2. **Say what you're moving first:** "I'm calling to move [patient]'s Thursday 3:30 appointment."
@@ -47,14 +58,6 @@ Same call, different ask: give the name and the appointment, and say you'd like 
 
 - **Is there a cancellation fee or a notice period?** Policies vary by office, so ask rather than assume.
 - **Can you put me on a cancellation list** if you'd rather move the appointment than drop it?
-
-## Let an AI phone assistant make the call
-
-This call was made by [call4me](/), an AI phone assistant that works inside the agent you already use (Claude Code, Codex, ChatGPT). You tell your agent what to get done; it calls, talks to the office like a person would, asks you mid-call if something comes up, and reports back with the outcome and transcript.
-
-If you use call4me, paste this into your agent:
-
-> Call [dental office] at [phone number] and reschedule [patient name]'s [day] appointment at [time]. Times that work: [windows]. Keep the same dentist if possible; if they can only offer a different provider, ask me first. Confirm the new date and time before hanging up.
 
 <details>
 <summary>Read the transcript</summary>

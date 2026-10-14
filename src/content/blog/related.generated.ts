@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "7e92bf93602121ec461e23be0cee7218ed782617ed9ab480aa30cfdd9a5df828"
+  "sourceHash": "c1aec272172ed3b634df85f1e7a7c429ae88e67193337edab2284b4f09cb20ad"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -148,6 +148,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "reschedule-doctor-appointment",
       "similarity": 0.745613
+    },
+    {
+      "slug": "reschedule-dentist-appointment",
+      "similarity": 0.70331
     },
     {
       "slug": "book-dinner-reservation-by-phone",
@@ -712,7 +716,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.717714
+      "similarity": 0.717715
     },
     {
       "slug": "twilio-mcp-phone-calls",
@@ -797,11 +801,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "couch-reupholstery-cost": [
     {
       "slug": "furniture-refinishing-cost",
-      "similarity": 0.906678
+      "similarity": 0.795787
     },
     {
       "slug": "junk-removal-cost",
-      "similarity": 0.650278
+      "similarity": 0.675385
     }
   ],
   "cursor-phone-calls": [
@@ -845,7 +849,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "reschedule-dentist-appointment",
-      "similarity": 0.636452
+      "similarity": 0.634867
     },
     {
       "slug": "ai-personal-assistant-appointment-booking",
@@ -945,11 +949,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "dog-teeth-cleaning-cost": [
     {
       "slug": "veterinary-behavior-consultation-call",
-      "similarity": 0.704433
+      "similarity": 0.71695
     },
     {
       "slug": "drop-off-vet-appointment",
-      "similarity": 0.629749
+      "similarity": 0.636932
     }
   ],
   "doordash-customer-service-number": [
@@ -965,7 +969,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "dog-teeth-cleaning-cost",
-      "similarity": 0.629749
+      "similarity": 0.636932
     }
   ],
   "etihad-customer-service": [
@@ -1072,16 +1076,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.784507
     },
     {
+      "slug": "reschedule-dentist-appointment",
+      "similarity": 0.697641
+    },
+    {
       "slug": "ai-personal-assistant-appointment-booking",
       "similarity": 0.670662
     },
     {
       "slug": "customer-story-dental-appointments",
       "similarity": 0.663111
-    },
-    {
-      "slug": "reschedule-dentist-appointment",
-      "similarity": 0.659237
     },
     {
       "slug": "how-to-find-a-new-primary-care-doctor",
@@ -1096,7 +1100,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "furniture-refinishing-cost": [
     {
       "slug": "couch-reupholstery-cost",
-      "similarity": 0.906678
+      "similarity": 0.795787
     },
     {
       "slug": "junk-removal-cost",
@@ -1593,12 +1597,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "irs-phone-number": [],
   "junk-removal-cost": [
     {
-      "slug": "furniture-refinishing-cost",
-      "similarity": 0.673814
+      "slug": "couch-reupholstery-cost",
+      "similarity": 0.675385
     },
     {
-      "slug": "couch-reupholstery-cost",
-      "similarity": 0.650278
+      "slug": "furniture-refinishing-cost",
+      "similarity": 0.673814
     }
   ],
   "lai-wah-heen-private-dining": [
@@ -2074,18 +2078,30 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "reschedule-dentist-appointment": [
     {
       "slug": "reschedule-doctor-appointment",
-      "similarity": 0.718744
+      "similarity": 0.88101
+    },
+    {
+      "slug": "ai-personal-assistant-appointment-booking",
+      "similarity": 0.70331
     },
     {
       "slug": "follow-up-appointment-telehealth",
-      "similarity": 0.659237
+      "similarity": 0.697641
+    },
+    {
+      "slug": "running-late-to-appointment",
+      "similarity": 0.659007
     },
     {
       "slug": "customer-story-dental-appointments",
-      "similarity": 0.636452
+      "similarity": 0.634867
     }
   ],
   "reschedule-doctor-appointment": [
+    {
+      "slug": "reschedule-dentist-appointment",
+      "similarity": 0.88101
+    },
     {
       "slug": "follow-up-appointment-telehealth",
       "similarity": 0.784507
@@ -2093,10 +2109,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "ai-personal-assistant-appointment-booking",
       "similarity": 0.745613
-    },
-    {
-      "slug": "reschedule-dentist-appointment",
-      "similarity": 0.718744
     },
     {
       "slug": "running-late-to-appointment",
@@ -2115,6 +2127,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "ai-personal-assistant-appointment-booking",
       "similarity": 0.690496
+    },
+    {
+      "slug": "reschedule-dentist-appointment",
+      "similarity": 0.659007
     },
     {
       "slug": "follow-up-appointment-telehealth",
@@ -2509,7 +2525,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "dog-teeth-cleaning-cost",
-      "similarity": 0.704433
+      "similarity": 0.71695
     }
   ],
   "walmart-customer-service-number": [

@@ -1,18 +1,29 @@
 ---
-title: Couch reupholstery cost: published sofa and chair prices
-seoTitle: Couch reupholstery cost: published shop prices
-subtitle: Compare published sofa and chair prices, separating labor from fabric, with one brief for requesting a local estimate.
-description: Published couch and chair reupholstery prices, fabric allowances and exclusions. Compare what shops include and adapt a local estimate brief.
+title: "Couch reupholstery cost: published prices and an AI agent that calls shops for quotes"
+seoTitle: "Couch reupholstery cost: have AI call shops for quotes"
+subtitle: Published sofa and chair prices separate labor from fabric. Use them as a baseline, then have your AI assistant call local upholsterers for comparable estimates.
+description: Published couch and chair reupholstery prices, plus a prompt that has your AI assistant call local upholstery shops and compare their quotes line by line.
 date: 2026-10-07
-updated: 2026-10-07
+updated: 2026-10-13
 tags: couch reupholstery cost, chair reupholstery cost, upholstery, furniture, ai phone assistant
 authors: nick
-imageAlt: Published couch and chair reupholstery prices, separating fabric and labor
+imageAlt: An AI assistant compares couch reupholstery quotes from local shops
 ---
 
 **Couch reupholstery cost needs a definition of what is included.** Modern Memory Design in New Jersey publishes **$1,000 to $2,500 including labor and standard fabric**. Threadful Things in Austin lists **labor from $1,658 for a sofa with three seats**, with fabric separate. Those figures describe different scopes, so they are not directly comparable. Sources: [Modern Memory Design](https://www.modernmemorydesign.com/pages/upholstery-cost-calculator) and [Threadful Things](https://threadfulthings.com/services/pricing/).
 
-We checked these official price pages on October 7, 2026. They are individual shops' published guides, not national averages or phone quotes obtained by call4me. Use them to structure your budget, then ask for an estimate for your actual piece.
+We checked these official price pages on October 7, 2026. They are individual shops' published guides, not national averages or phone quotes obtained by call4me. Use them to structure your budget, then have your AI assistant call local shops for an estimate on your actual piece. Every shop scopes the job differently, so the useful part of those calls is asking each one the same itemized questions.
+
+<span id="what-should-the-written-estimate-include"></span>
+<span id="use-the-same-process-to-find-an-upholstery-subcontractor"></span>
+
+## Have your AI agent call upholstery shops for quotes
+
+To request estimates with [call4me](/), [connect your agent](/mcp) through the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). Our [calling workflow guide](/blog/ai-agent-that-makes-phone-calls) explains the result checks. Adapt this brief:
+
+> Compare upholstery shops near [city or ZIP code] for my [couch, sectional or chair]. The piece measures [width, depth and height], has [number] cushions, and needs [known work]. My fabric preference is [description], and I [can deliver it / need pickup]. Check official shop websites, then use call4me to call up to [number] shops for missing details. Confirm they handle this furniture type and ask where I should send photos and measurements for an estimate. Ask for labor, fabric type and yardage, foam, spring or frame repairs, trim, tax, pickup, delivery, deposit terms and expected completion time as separate items. Return a comparison with the source, date, estimate status and unanswered questions. Do not book work, pay a deposit or send my photos without approval.
+
+A phone call can establish whether a shop is suitable and how to request its estimate. It does not guarantee a price without photos or inspection. Keep “awaiting photos” separate from “written estimate received” in the assistant's results.
 
 ## Published couch reupholstery prices
 
@@ -27,17 +38,6 @@ All figures below are in US dollars. The source links lead to each shop's price 
 | Threadful Things, sectional | From $2,555 | Labor only |
 
 Modern Memory Design excludes sales tax and adds fabric upgrades, repairs and delivery to its base estimates. Its calculator is not a binding quote. Threadful Things describes starting labor charges, with the final quote dependent on fabric, dimensions, style and project details. Check those inclusions before comparing either with another shop's total.
-
-<span id="what-should-the-written-estimate-include"></span>
-<span id="use-the-same-process-to-find-an-upholstery-subcontractor"></span>
-
-## Have your AI agent compare local upholstery quotes
-
-To request estimates with [call4me](/), [connect your agent](/mcp) through the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). Our [calling workflow guide](/blog/ai-agent-that-makes-phone-calls) explains the result checks. Adapt this brief:
-
-> Compare upholstery shops near [city or ZIP code] for my [couch, sectional or chair]. The piece measures [width, depth and height], has [number] cushions, and needs [known work]. My fabric preference is [description], and I [can deliver it / need pickup]. Check official shop websites, then use call4me to call up to [number] shops for missing details. Confirm they handle this furniture type and ask where I should send photos and measurements for an estimate. Ask for labor, fabric type and yardage, foam, spring or frame repairs, trim, tax, pickup, delivery, deposit terms and expected completion time as separate items. Return a comparison with the source, date, estimate status and unanswered questions. Do not book work, pay a deposit or send my photos without approval.
-
-A phone call can establish whether a shop is suitable and how to request its estimate. It does not guarantee a price without photos or inspection. Keep “awaiting photos” separate from “written estimate received” in the assistant's results.
 
 ## Chair reupholstery cost: dining seats versus armchairs
 
