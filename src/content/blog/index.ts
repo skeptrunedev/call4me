@@ -111,6 +111,7 @@ import langchainMcpPhoneCalls from './langchain-mcp-phone-calls.md';
 import githubCopilotPhoneCalls from './github-copilot-phone-calls.md';
 import chatgptPhoneCalls from './chatgpt-phone-calls.md';
 import claudePhoneCalls from './claude-phone-calls.md';
+import amazonSellerDistributorCalls from './amazon-seller-distributor-calls.md';
 import cursorPhoneCalls from './cursor-phone-calls.md';
 import geminiPhoneCalls from './gemini-phone-calls.md';
 import perplexityPhoneCalls from './perplexity-phone-calls.md';
@@ -244,6 +245,7 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'github-copilot-phone-calls', markdown: githubCopilotPhoneCalls },
   { slug: 'chatgpt-phone-calls', markdown: chatgptPhoneCalls },
   { slug: 'claude-phone-calls', markdown: claudePhoneCalls },
+  { slug: 'amazon-seller-distributor-calls', markdown: amazonSellerDistributorCalls },
   { slug: 'cursor-phone-calls', markdown: cursorPhoneCalls },
   { slug: 'gemini-phone-calls', markdown: geminiPhoneCalls },
   { slug: 'perplexity-phone-calls', markdown: perplexityPhoneCalls },

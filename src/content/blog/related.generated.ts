@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "0c4ddc534b45c7fae0097e9b43dfc6225a2643293417c6d285c2f7a385163d39"
+  "sourceHash": "fe78662048c800923c4465249ea6c72ab7e1b444c76d3f64b5acbfb1cf6a98e2"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -229,7 +229,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "wayfair-customer-service",
-      "similarity": 0.699207
+      "similarity": 0.699208
     },
     {
       "slug": "walmart-customer-service-number",
@@ -244,6 +244,36 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "how-to-transfer-a-prescription",
       "similarity": 0.670086
+    }
+  ],
+  "amazon-seller-distributor-calls": [
+    {
+      "slug": "claude-phone-calls",
+      "similarity": 0.70753
+    },
+    {
+      "slug": "claude-code-phone-calls",
+      "similarity": 0.686341
+    },
+    {
+      "slug": "schedule-phone-calls-claude-code-codex",
+      "similarity": 0.67782
+    },
+    {
+      "slug": "ai-phone-tree-navigation",
+      "similarity": 0.658418
+    },
+    {
+      "slug": "twilio-mcp-phone-calls",
+      "similarity": 0.652255
+    },
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.636823
+    },
+    {
+      "slug": "phone-calling-mcp-comparison",
+      "similarity": 0.627997
     }
   ],
   "american-airlines-flight-credit": [
@@ -727,8 +757,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.709421
     },
     {
-      "slug": "gemini-phone-calls",
-      "similarity": 0.707044
+      "slug": "amazon-seller-distributor-calls",
+      "similarity": 0.70753
     }
   ],
   "codex-phone-calls": [
@@ -776,7 +806,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "home-depot-customer-service",
-      "similarity": 0.641561
+      "similarity": 0.641562
     },
     {
       "slug": "fabletics-customer-service",
@@ -887,7 +917,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "delta-customer-service": [
     {
       "slug": "united-change-flight",
-      "similarity": 0.669955
+      "similarity": 0.669954
     },
     {
       "slug": "etihad-customer-service",
@@ -1428,7 +1458,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "costco-customer-service",
-      "similarity": 0.641561
+      "similarity": 0.641562
     }
   ],
   "how-long-to-reach-a-human": [],
@@ -1587,7 +1617,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.763565
+      "similarity": 0.763564
     },
     {
       "slug": "github-copilot-phone-calls",
@@ -2204,7 +2234,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "xfinity-customer-service-number",
-      "similarity": 0.611542
+      "similarity": 0.611541
     }
   ],
   "t-mobile-customer-service-number": [
@@ -2300,7 +2330,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "delta-customer-service",
-      "similarity": 0.669955
+      "similarity": 0.669954
     },
     {
       "slug": "priceline-customer-service",
@@ -2512,7 +2542,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "wayfair-customer-service": [
     {
       "slug": "amazon-customer-service-number",
-      "similarity": 0.699207
+      "similarity": 0.699208
     },
     {
       "slug": "pottery-barn-customer-service",
@@ -2583,7 +2613,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "spectrum-retention-department",
-      "similarity": 0.611542
+      "similarity": 0.611541
     },
     {
       "slug": "att-customer-service-number",

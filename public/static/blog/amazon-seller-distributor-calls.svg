@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Claude calls your distributor</title>
+  <desc id="desc">Claude reads Amazon stock with Marketplace Ad Pros, calls the distributor with call4me, and reports the ship date in the chat.</desc>
+  <rect width="1200" height="630" fill="#f6f6f2"/>
+  <text x="80" y="130" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="40">call4me guide for amazon sellers · oct 14, 2026</text>
+  <text x="80" y="235" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="64">Claude calls your distributor</text>
+  <text x="80" y="315" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="44">Amazon stock in, ship date out, same chat</text>
+  <g fill="none" stroke="#ffb000" stroke-width="3">
+    <rect x="80" y="390" width="290" height="85"/>
+    <rect x="465" y="390" width="275" height="85"/>
+    <rect x="835" y="390" width="285" height="85"/>
+    <path d="M 385 432 H 447 M 436 421 L 447 432 L 436 443"/>
+    <path d="M 755 432 H 817 M 806 421 L 817 432 L 806 443"/>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="34" fill="#151515" text-anchor="middle">
+    <text x="225" y="445">low-stock SKUs</text>
+    <text x="602" y="445">distributor call</text>
+    <text x="977" y="445">new ship date</text>
+  </g>
+  <text x="80" y="555" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="32">Marketplace Ad Pros · call4me · Claude custom connectors</text>
+</svg>
