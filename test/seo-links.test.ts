@@ -36,6 +36,7 @@ test('blog section labels display punctuation once and keep encoded markup as te
   assert.deepEqual(post.sections.map((s) => s.text), [
     "What Aquasana's policy says", 'Returns & refunds', 'Literal <img src=x onerror=alert(1)>',
   ]);
+  assert.equal(post.sections[0]!.id, 'what-aquasanas-policy-says');
   const page = String(BlogPost({ signedIn: false, supporter: false, post, older: null, newer: null, related: [], engagement: { likes: 0, comments: 0 }, liked: false, comments: [], subscribers: 0, unlocked: false, agentPrompt: '' }));
   const toc = page.match(/<nav class="toc small"[^>]*>([\s\S]*?)<\/nav>/)![1]!;
   assert.ok(!toc.includes('&amp;#39;'));
