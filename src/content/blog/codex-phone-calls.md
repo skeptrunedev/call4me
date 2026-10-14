@@ -2,9 +2,9 @@
 title: "How to make phone calls from Codex with MCP"
 seoTitle: "Codex MCP phone calls: OAuth setup and real test"
 subtitle: Give Codex a calling tool, keep your credentials out of the prompt, and bring phone answers back into the research it is already doing.
-description: "Connect Codex to call4me through MCP. Inspect real call outcomes and follow our verified CLI setup."
+description: "Connect Codex to call4me through MCP, follow our verified CLI setup, and fix 'MCP tool call requires approval, but approval policy is never' in codex exec."
 date: 2026-10-03
-updated: 2026-10-07
+updated: 2026-10-14
 tags: codex, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: Codex researching online, calling a business through MCP, and returning the answer to the task
@@ -17,6 +17,8 @@ If Codex is your personal assistant, that task might be reviewing subscriptions,
 For business paperwork, see our [Wyoming registered agent consent example](/blog/wyoming-registered-agent-consent-form). It includes a real call that got the document emailed and a suggested Codex brief for requesting your own missing document.
 
 We verified this with **Codex CLI 0.160.0 on October 3, 2026**. The practical test was private dining research: read the restaurants' official websites, identify missing or contradictory information, and call to clarify it. It was research only, with no invented event, reservation, or payment.
+
+If `codex exec` stopped with `MCP tool call requires approval, but approval policy is never`, jump to [the fix](#fix-mcp-tool-call-requires-approval-but-approval-policy-is-never).
 
 ## Codex MCP setup for a phone calling server
 
@@ -91,7 +93,7 @@ The final answer should distinguish what a website says, what the phone conversa
 
 ## What the CLI test established
 
-We used a fresh session and kept the MCP connection separate from our normal configuration. A first run successfully checked the account but stopped before dialing because the call required approval and that run could not obtain it. The next run used the CLI's automatic approval review for the two explicitly authorized research calls.
+We used a fresh session and kept the MCP connection separate from our normal configuration. A first run successfully checked the account but stopped before dialing because the call required approval and that run could not obtain it ([why, and the fix](#fix-mcp-tool-call-requires-approval-but-approval-policy-is-never)). The next run used the CLI's automatic approval review for the two explicitly authorized research calls.
 
 The current endpoint at `https://call4.me/mcp` passed separate authenticated balance checks with both an existing account API key and fresh browser OAuth. The research calls ran through an existing connection on our older hostname. That establishes CLI calling through that connection and current endpoint authentication checks separately. We have not tested these steps in the Codex desktop app or IDE extension.
 
@@ -108,17 +110,64 @@ The complete website findings, call outcomes, and recordings belong in our [web 
 
 Listen to the two calls: [Waterbar recording](/static/blog/sf-private-dining-waterbar.mp3) and [EPIC Steak recording](/static/blog/sf-private-dining-epic-steak.mp3). Both reached automated concierges, so their answers are not human staff confirmations.
 
-## If the balance works but dialing does not
-
-**Check approval settings before changing credentials.** In our first run, account access succeeded and dialing was blocked by the session's approval policy. A successful read does not mean a call has permission to execute.
-
-The error was specific:
+## Fix "MCP tool call requires approval, but approval policy is never"
 
 ```text
 MCP tool call requires approval, but approval policy is never
 ```
 
-OpenAI's [configuration reference](https://learn.chatgpt.com/docs/config-file/config-reference) documents separate approval policy and MCP tool controls. In an interactive session, review the proposed recipient and task when Codex asks. If you automate a task, explicitly authorize its destinations and limits, and choose an approval mode that can review the call. The CLI we used exposes `--approve-for-me` for automatic review; that is an observation about this test, not a requirement to enable it for every call.
+Codex rejected the tool call itself, before anything reached the MCP server. If the tool was `call4me_place_call`, nothing was dialed. Your credentials are fine, so don't reconnect.
+
+**Why it happens.** Two Codex settings collide:
+
+1. **`codex exec` turns approvals off.** Headless runs use the approval policy `never` by default, because nobody is there to answer a prompt. An interactive session started with `-a never`, or with `approval_policy = "never"` in your config, behaves the same way.
+2. **Most MCP tools need approval.** Each MCP tool has an approval mode. The default, `auto`, requires approval for any tool the server does not mark read-only.
+
+When a tool needs approval and approvals are off, Codex refuses the call with this message. call4me marks lookups like `call4me_get_balance` read-only, so they run. Placing a call dials a real phone, so it is not read-only. That is why the balance check works and the call does not.
+
+We traced the message to Codex's source (`codex-rs/core/src/mcp_tool_call.rs`) and reproduced it with Codex CLI 0.162.1 on October 14, 2026. Under `codex exec`, a read-only call4me tool completed and a non-read-only one failed with exactly this text.
+
+### Fix 1: approve only the tool you need
+
+This is the right fix for scripts and scheduled jobs. Add this to `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.call4me.tools.call4me_place_call]
+approval_mode = "approve"
+
+[mcp_servers.call4me.tools.call4me_answer_question]
+approval_mode = "approve"
+```
+
+The second entry matters too. If the business asks something during the call, Codex answers through `call4me_answer_question`, which is not read-only either. Without it, the call starts and then Codex hits the same error halfway through. Add `call4me_schedule_call` the same way if your job schedules calls for later.
+
+Or set it for a single run (repeat `-c` for each tool):
+
+```bash
+codex exec -c 'mcp_servers.call4me.tools.call4me_place_call.approval_mode="approve"' "your task"
+```
+
+The modes are `auto` (the default), `prompt` (always ask), `writes` (ask unless the tool is read-only) and `approve` (never ask). `default_tools_approval_mode` under `[mcp_servers.call4me]` changes the mode for every tool on the server. Prefer the per-tool setting: approving `call4me_place_call` does not also let an unattended run buy a phone number or add funds.
+
+In our test, approving one tool this way got the request through to call4me while approvals stayed off for everything else. The tool still dials only what your task tells it to, so keep the recipients and limits in the brief.
+
+### Fix 2: let Codex's automatic reviewer decide
+
+```bash
+codex exec --approve-for-me "your task"
+```
+
+`--approve-for-me` switches the approval policy to `on-request` and sends each approval to Codex's automatic reviewer instead of a person. It also runs shell commands in the `workspace-write` sandbox. The reviewer let our explicitly authorized test request through. It judges each request, so a call your prompt did not authorize can still be refused.
+
+### Fix 3: run Codex interactively
+
+Start `codex` without `-a never`. When the model wants to dial, Codex shows the tool call and asks you. Check the business and the task before you approve.
+
+### What not to do
+
+`--dangerously-bypass-approvals-and-sandbox` also makes the error go away, because Codex auto-approves every MCP tool when approvals are off and the sandbox is disabled. It also turns off the sandbox for every shell command in the session. Use Fix 1 instead.
+
+## Other setup problems
 
 **If tools do not appear**, check `codex mcp list`, start a fresh session, and inspect `/mcp`. Verify that you configured the provider environment you actually use. A connection on another machine is not this session's connection.
 
