@@ -1,6 +1,6 @@
 ---
 title: "Dog teeth cleaning cost: we had an AI call three vet clinics for quotes"
-seoTitle: "Dog teeth cleaning cost: an AI called 3 vets for quotes"
+seoTitle: "Dog teeth cleaning cost: an AI called 3 vets"
 subtitle: An AI assistant called three Houston area clinics about dental cleaning prices, included services and extra charges. Hear the calls, then have your own assistant compare clinics near you.
 description: An AI assistant called three vet clinics for dog teeth cleaning quotes ($250 to $755). Hear the recordings, see what costs extra, and copy the prompt.
 date: 2026-10-07

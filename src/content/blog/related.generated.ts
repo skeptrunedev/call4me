@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "3f3a1901cc166d416ba3e1368d06f9baf38beb4068a4dea69bd576e4c346fb6a"
+  "sourceHash": "da48ce2edcb8872a7ab3bc8607022afe0b218956d6f592568e77c8194ae24025"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -70,42 +70,42 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "ai-agent-that-makes-phone-calls": [
     {
-      "slug": "chatgpt-phone-calls",
-      "similarity": 0.797649
-    },
-    {
       "slug": "ai-apps-that-make-calls-for-you",
-      "similarity": 0.763493
+      "similarity": 0.774302
     },
     {
       "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.758696
+      "similarity": 0.76579
     },
     {
-      "slug": "claude-phone-calls",
-      "similarity": 0.739644
+      "slug": "chatgpt-phone-calls",
+      "similarity": 0.759424
     },
     {
       "slug": "openai-realtime-voices-phone-calls",
-      "similarity": 0.717386
+      "similarity": 0.72774
     },
     {
       "slug": "vercel-ai-sdk-phone-calls",
-      "similarity": 0.716156
+      "similarity": 0.718831
+    },
+    {
+      "slug": "claude-phone-calls",
+      "similarity": 0.709421
+    },
+    {
+      "slug": "langchain-mcp-phone-calls",
+      "similarity": 0.697699
     },
     {
       "slug": "instinct-ai-phone-calls",
-      "similarity": 0.696154
-    },
-    {
-      "slug": "claude-code-phone-calls",
-      "similarity": 0.691737
+      "similarity": 0.689583
     }
   ],
   "ai-apps-that-make-calls-for-you": [
     {
       "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.763493
+      "similarity": 0.774302
     },
     {
       "slug": "openai-realtime-voices-phone-calls",
@@ -163,7 +163,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "follow-up-appointment-telehealth",
-      "similarity": 0.670663
+      "similarity": 0.670662
     },
     {
       "slug": "customer-story-dental-appointments",
@@ -632,7 +632,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "chatgpt-phone-calls": [
     {
       "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.797649
+      "similarity": 0.759424
     },
     {
       "slug": "claude-phone-calls",
@@ -707,10 +707,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.765727
     },
     {
-      "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.739644
-    },
-    {
       "slug": "chatgpt-phone-calls",
       "similarity": 0.739605
     },
@@ -725,6 +721,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "twilio-mcp-phone-calls",
       "similarity": 0.711255
+    },
+    {
+      "slug": "ai-agent-that-makes-phone-calls",
+      "similarity": 0.709421
     },
     {
       "slug": "gemini-phone-calls",
@@ -801,11 +801,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "couch-reupholstery-cost": [
     {
       "slug": "furniture-refinishing-cost",
-      "similarity": 0.795787
+      "similarity": 0.803598
     },
     {
       "slug": "junk-removal-cost",
-      "similarity": 0.675385
+      "similarity": 0.670826
     }
   ],
   "cursor-phone-calls": [
@@ -949,11 +949,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "dog-teeth-cleaning-cost": [
     {
       "slug": "veterinary-behavior-consultation-call",
-      "similarity": 0.71695
+      "similarity": 0.698975
     },
     {
       "slug": "drop-off-vet-appointment",
-      "similarity": 0.636932
+      "similarity": 0.625724
     }
   ],
   "doordash-customer-service-number": [
@@ -969,7 +969,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "dog-teeth-cleaning-cost",
-      "similarity": 0.636932
+      "similarity": 0.625724
     }
   ],
   "etihad-customer-service": [
@@ -1081,7 +1081,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ai-personal-assistant-appointment-booking",
-      "similarity": 0.670663
+      "similarity": 0.670662
     },
     {
       "slug": "customer-story-dental-appointments",
@@ -1100,7 +1100,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "furniture-refinishing-cost": [
     {
       "slug": "couch-reupholstery-cost",
-      "similarity": 0.795787
+      "similarity": 0.803598
     },
     {
       "slug": "junk-removal-cost",
@@ -1313,12 +1313,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.736964
     },
     {
-      "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.665217
-    },
-    {
       "slug": "instinct-ai-phone-calls",
       "similarity": 0.662191
+    },
+    {
+      "slug": "ai-agent-that-makes-phone-calls",
+      "similarity": 0.652554
     },
     {
       "slug": "n8n-mcp-phone-calls",
@@ -1597,12 +1597,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "irs-phone-number": [],
   "junk-removal-cost": [
     {
-      "slug": "couch-reupholstery-cost",
-      "similarity": 0.675385
-    },
-    {
       "slug": "furniture-refinishing-cost",
       "similarity": 0.673814
+    },
+    {
+      "slug": "couch-reupholstery-cost",
+      "similarity": 0.670826
     }
   ],
   "lai-wah-heen-private-dining": [
@@ -1740,12 +1740,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.694612
     },
     {
-      "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.687501
-    },
-    {
       "slug": "cursor-phone-calls",
       "similarity": 0.685245
+    },
+    {
+      "slug": "ai-agent-that-makes-phone-calls",
+      "similarity": 0.683214
     },
     {
       "slug": "langchain-mcp-phone-calls",
@@ -1822,12 +1822,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.770115
     },
     {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.761226
+      "slug": "ai-agent-that-makes-phone-calls",
+      "similarity": 0.76579
     },
     {
-      "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.758696
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.761226
     },
     {
       "slug": "openai-realtime-voices-phone-calls",
@@ -1872,7 +1872,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.717386
+      "similarity": 0.72774
     },
     {
       "slug": "ai-phone-tree-navigation",
@@ -2477,7 +2477,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.716156
+      "similarity": 0.718831
     },
     {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
@@ -2525,7 +2525,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "dog-teeth-cleaning-cost",
-      "similarity": 0.71695
+      "similarity": 0.698975
     }
   ],
   "walmart-customer-service-number": [

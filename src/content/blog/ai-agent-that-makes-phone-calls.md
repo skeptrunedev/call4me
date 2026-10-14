@@ -1,8 +1,8 @@
 ---
 title: "Can AI make phone calls for you? Yes, here's how to set it up"
-seoTitle: "Can AI make phone calls for you? How to set it up"
+seoTitle: "Can AI make phone calls for you? Here's how"
 subtitle: Your AI assistant can call a business, talk to whoever answers and bring the result back to you. Here's how to connect it, what to ask for, and how to tell when the job is actually done.
-description: Yes, AI can make phone calls for you. Connect a calling tool to ChatGPT, Claude, Codex or Gemini, then have it compare quotes, book appointments and run errands by phone.
+description: Yes, AI can make phone calls for you. Connect a calling tool to ChatGPT, Claude, Codex or Gemini, then have it get quotes and book appointments by phone.
 date: 2026-10-07
 updated: 2026-10-13
 tags: ai agent, ai phone assistant, personal assistant, phone calls

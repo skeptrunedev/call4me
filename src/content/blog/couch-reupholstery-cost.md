@@ -1,6 +1,6 @@
 ---
 title: "Couch reupholstery cost: published prices and an AI agent that calls shops for quotes"
-seoTitle: "Couch reupholstery cost: have AI call shops for quotes"
+seoTitle: "Couch reupholstery cost: AI calls shops for quotes"
 subtitle: Published sofa and chair prices separate labor from fabric. Use them as a baseline, then have your AI assistant call local upholsterers for comparable estimates.
 description: Published couch and chair reupholstery prices, plus a prompt that has your AI assistant call local upholstery shops and compare their quotes line by line.
 date: 2026-10-07
