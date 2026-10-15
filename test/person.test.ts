@@ -31,6 +31,16 @@ test('pressing 1 switches the person to barge', async (t) => {
   assert.deepEqual(sent[0], { method: 'POST', path: '/v2/calls/v3%3Aperson/actions/switch_supervisor_role', body: { role: 'barge' } });
 });
 
+test('the join prompt plays to the person leg only, never to the business', async (t) => {
+  const sent = captureTelnyx(t);
+  await telnyx(env).playAudio('v3:person', 'https://call4.me/static/audio/join-prompt.mp3');
+  assert.deepEqual(sent[0], {
+    method: 'POST',
+    path: '/v2/calls/v3%3Aperson/actions/playback_start',
+    body: { audio_url: 'https://call4.me/static/audio/join-prompt.mp3', target_legs: 'self' },
+  });
+});
+
 test('an unreachable person is not rung again by the caller', () => {
   assert.match(unreachableMessage('Kristoph'), /Don't try to connect them again/);
   assert.match(alreadyUnreachable('Kristoph'), /don't ring again/);

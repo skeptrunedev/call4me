@@ -15,6 +15,9 @@ import { analytics } from '../services/analytics';
 import { decodeFirstTouch } from '../lib/first-touch';
 import { redditConversions } from '../lib/reddit';
 
+/** Played to the user's own phone when it picks up to join a call (public/static/audio). */
+const JOIN_PROMPT_PATH = '/static/audio/join-prompt.mp3';
+
 export const webhooks = new Hono<AppEnv>();
 
 /** The written outcome of an answered call, from its final transcript. */
@@ -189,7 +192,11 @@ webhooks.post('/telnyx', async (c) => {
   // (a supervisor leg carries their voice but not their keypad).
   if (state?.personLeg) {
     const session = sessionFor(c.env, callId);
-    if (type === 'call.answered') await session.fetch('https://session/person-answered', { method: 'POST' });
+    if (type === 'call.answered') {
+      // Only they hear it, over the call they're listening to: how to join and how to leave.
+      if (p.call_control_id) await telnyx(c.env).playAudio(p.call_control_id, `${origin}${JOIN_PROMPT_PATH}`).catch((err) => console.warn('join prompt', callId, String(err)));
+      await session.fetch('https://session/person-answered', { method: 'POST' });
+    }
     else if (type === 'call.hangup') await session.fetch('https://session/person-left', { method: 'POST', body: JSON.stringify({ cause: p.hangup_cause ?? null }) });
     else if (type === 'call.dtmf.received' && p.digit === '*' && p.call_control_id) await telnyx(c.env).hangup(p.call_control_id);
     else if (type === 'call.dtmf.received' && p.digit) await session.fetch('https://session/person-key', { method: 'POST', body: JSON.stringify({ digit: p.digit }) });

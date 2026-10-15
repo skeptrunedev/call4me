@@ -215,6 +215,11 @@ export function telnyx(env: TelnyxEnv) {
       await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/switch_supervisor_role`, { role });
     },
 
+    /** Play an mp3 to this leg only (target_legs self): on a supervisor leg, the call never hears it. */
+    async playAudio(callControlId: string, audioUrl: string): Promise<void> {
+      await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/playback_start`, { audio_url: audioUrl, target_legs: 'self' });
+    },
+
     async sendDtmf(callControlId: string, digits: string): Promise<void> {
       await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/send_dtmf`, { digits, duration_millis: 250 });
     },
