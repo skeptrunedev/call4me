@@ -6,6 +6,7 @@ import { canonicalRedirect, visitor, type AppEnv } from './lib/context';
 import { directoryMcp, mcp } from './routes/mcp';
 import { pub } from './routes/public';
 import { sms } from './routes/sms';
+import { ivrProbe } from './routes/ivr-probe';
 import { authRoutes } from './routes/auth';
 import { adminEmails, mountAuth, sessionAccount } from './lib/auth';
 import { approxTokens, htmlToMarkdown, prefersMarkdown } from './lib/markdown';
@@ -90,6 +91,7 @@ app.get('/favicon.svg', (c) => c.env.ASSETS.fetch(c.req.raw));
 app.route('/og', og);
 
 app.route('/webhooks', webhooks);
+app.route('/', ivrProbe);
 // robots.txt, sitemap, llms.txt, auth.md, agent cards, and the root-level OAuth discovery
 // documents; ahead of mountAuth so the root documents are ours, not the auth plugin's.
 app.route('/', agent);
