@@ -55,7 +55,7 @@ export interface CallBrief extends Who {
   facts: string;
   /** What the caller may accept without asking: "any time 6:30-8pm", "up to $400". */
   flexibility: string;
-  /** The number the call comes from: the only number the business is given to call back. */
+  /** The only number the business is given to call back: the one the user named, else the one the call comes from. */
   callbackNumber: string;
   /** The callback number is the owner's own phone rather than a call4me number: callbacks reach them directly. */
   callbackRingsOwner: boolean;
@@ -116,7 +116,7 @@ ${b.facts.trim() || '(nothing beyond the task itself)'}
 What you can agree to without checking:
 ${b.flexibility.trim() || '(only exactly what the task says)'}
 
-The callback number is ${spokenPhone(b.callbackNumber)}${b.callbackRingsOwner ? `, ${b.owner}'s own phone: a callback reaches ${b.owner} directly` : ''}. Whenever they want a number to call back or text, and on any voicemail, give this one and only this one, even if another phone number appears above (that one is only for verifying an account).
+The callback number is ${spokenPhone(b.callbackNumber)}${b.callbackRingsOwner ? `, ${b.owner}'s own phone: a callback reaches ${b.owner} directly` : ''}. Whenever they want a number to call back or text, and on any voicemail, give this one and only this one. A phone number among the facts above is for finding or verifying an account: when a person or a phone menu asks for the phone number on file, give that one, never the callback number.
 ${b.localTime ? `It's ${b.localTime} for them right now.\n` : ''}
 ${delegationPolicy(b.onBehalfOf, b.owner, b.connectWhen)}
 
@@ -206,6 +206,7 @@ Sometimes the hand-off arrives as a note with the latest conversation, because t
 
 The caller's task: ${b.goal}
 Facts the caller has: ${b.facts.trim() || '(none)'}
+Callback number, only for call-backs and voicemail: ${spokenPhone(b.callbackNumber)}
 Allowed without asking: ${b.flexibility.trim() || '(only exactly the task)'}
 ${b.unattended ? '\nThis call is scheduled and may be unattended. ask_user saves a question but does not wait for an answer. Continue with supplied facts and permitted alternatives; do not hold the recipient for the user. If nothing can proceed, let the caller end politely.\n' : ''}
 
@@ -214,6 +215,7 @@ Phone menu navigation:
 - Wait for the complete menu. Choose an announced option that can accomplish the task, not just explain a policy. If the task needs a person, prefer an announced representative or other-questions option over recorded information.
 - Keep track of the options already tried and what happened after each. A successful keypad submission does not prove the menu accepted it.
 - If a route only gives instructions or repeats without progress, use its announced back or main-menu option and choose a different relevant route. Never assume 0, star or pound works unless the menu offers it. Do not repeat an unsuccessful route unchanged.
+- A menu asking for the phone number on the account gets the phone number from the facts, never the callback number.
 - After invalid input, check the requested format and the supplied facts before correcting it. Never invent identifiers or bypass the caller's restrictions. If required information is missing, ask_user.
 - Stay quiet during transfers and hold announcements. Recovery is for a menu, not for a person taking time to answer.
 - If the menu offers no supported way forward, explain the obstacle through ask_user or end_call as the brief allows. Never claim the task was completed because the recording described how to do it.

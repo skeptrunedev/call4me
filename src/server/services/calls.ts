@@ -25,6 +25,8 @@ export interface Brief {
   caller_name?: string | null;
   /** The company the caller calls as ("Acme"); callbacks to the number it called from answer the same way. */
   calling_as?: string | null;
+  /** The number the business is given to call back, when the user named one; else the number the call came from. */
+  callback_number?: string | null;
 }
 
 export interface TranscriptLine {
@@ -148,6 +150,8 @@ export interface PlaceCallInput {
   caller_name?: string;
   /** The company the caller calls from: "Jordan from Acme" rather than "Alex's assistant". */
   calling_as?: string;
+  /** Where callbacks go instead of the number the call comes from, e.g. the user's mobile. */
+  callback_number?: string;
 }
 
 /** What a per-call secret looks like wherever the call is stored. */
@@ -211,6 +215,12 @@ export function calls(db: D1Database) {
       const nameProblem = callerName && PROFILE_FIELDS.assistant_name.check?.(callerName);
       if (nameProblem) throw new CallError(`caller_name: ${nameProblem}`);
       const callingAs = input.calling_as?.trim() || null;
+      let callbackNumber: string | null = null;
+      if (input.callback_number?.trim()) {
+        const cb = checkDialable(input.callback_number);
+        if (!cb.ok) throw new CallError(`callback_number: ${cb.reason}`);
+        callbackNumber = cb.e164;
+      }
       if (input.timezone && !validTimeZone(input.timezone)) throw new CallError(`timezone: "${input.timezone}" is not an IANA time zone like America/New_York`);
 
       const blocked = await db.prepare(`SELECT reason FROM blocked_numbers WHERE number = ?`).bind(to.e164).first<{ reason: string }>();
@@ -227,7 +237,7 @@ export function calls(db: D1Database) {
           422,
         );
       }
-      return { category, intake, onBehalfOf, to, callerName, callingAs, ownerPhone };
+      return { category, intake, onBehalfOf, to, callerName, callingAs, callbackNumber, ownerPhone };
     },
 
     /** Validate, check money and limits, and record the call as queued. Dialing is the caller's next step. */
@@ -236,7 +246,7 @@ export function calls(db: D1Database) {
      * instructions but are never written to the database.
      */
     async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number, surface: Surface = 'agents'): Promise<{ call: CallRow; secrets: { label: string; value: string }[]; to: Dialable; ownerPhone: string | null }> {
-      const { category, intake, onBehalfOf, to, callerName, callingAs, ownerPhone } = await this.validate(account, input, surface);
+      const { category, intake, onBehalfOf, to, callerName, callingAs, callbackNumber, ownerPhone } = await this.validate(account, input, surface);
 
       // Credits up front: the call holds its maximum cost now and settles when it ends.
       const balance = await accounts(db).balanceCents(account.id);
@@ -257,6 +267,7 @@ export function calls(db: D1Database) {
         ...(input.listen_in ? { listen_in: true } : {}),
         ...(callerName ? { caller_name: callerName } : {}),
         ...(callingAs ? { calling_as: callingAs } : {}),
+        ...(callbackNumber ? { callback_number: callbackNumber } : {}),
       };
       const id = `call_${newId()}`;
       if (!(await accounts(db).hold(account.id, holdCents, `hold:${id}`, `up to ${maxMinutes} min to ${input.business.trim()}`))) {

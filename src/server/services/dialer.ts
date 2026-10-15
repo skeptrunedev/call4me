@@ -142,10 +142,10 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       // Secrets were masked in the stored brief; the caller gets the real values.
       facts: secrets.reduce((f, sec) => f.replace(`${sec.label}: ${SECRET_MASK}`, `${sec.label}: ${sec.value} (share only when they ask to verify the account)`), brief.facts),
       flexibility: brief.flexibility,
-      // Callbacks come to the number the business saw: a call4me number answers and takes a
-      // message, the user's own number rings the user.
-      callbackNumber: from,
-      callbackRingsOwner: caller.own,
+      // Callbacks come to the number the user named, else to the number the business saw: a
+      // call4me number answers and takes a message, the user's own number rings the user.
+      callbackNumber: brief.callback_number ?? from,
+      callbackRingsOwner: !brief.callback_number && caller.own,
       localTime: localTimeIn(brief.timezone),
       owner: person.name,
       assistantName: brief.caller_name || assistantNameOf(profile),
