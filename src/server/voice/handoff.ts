@@ -9,6 +9,8 @@ import type { TranscriptLine } from '../services/calls';
  */
 
 const KEY = String.raw`(?:\d+|one|two|three|four|five|six|seven|eight|nine|zero|pound|star|hash|asterisk|[*#])`;
+const KEY_ES = String.raw`(?:\d+|cero|uno|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|asterisco|estrella|numeral|almohadilla|[*#])`;
+// JavaScript's \b only knows ASCII letters, so Spanish patterns never put \b next to an accented one.
 const KEYPAD_MENU = [
   new RegExp(String.raw`\bpress(?:ing)?\s+(?:the\s+)?${KEY}(?!\w)`, 'i'),
   new RegExp(String.raw`\bdial\s+(?:the\s+)?${KEY}(?!\w)`, 'i'),
@@ -17,17 +19,23 @@ const KEYPAD_MENU = [
   /\bmenu options\b/i,
   /\bappuyez\b[^.?!]{0,30}\b(?:sur|le)\b/i,
   /\bcomposez\b[^.?!]{0,40}\b(?:zéro|zero|un|deux|trois|quatre|cinq|six|sept|huit|neuf|\d)\b/i,
+  new RegExp(String.raw`\b(?:oprima|presione|pulse|marque|digite|teclee)\b[^.?!]{0,30}?\b${KEY_ES}(?!\w)`, 'i'),
 ];
-const ENTER_NUMBER = /\b(?:please )?enter\b[^.?!]{0,60}\b(?:order|account|extension|pin|code|number)\b/i;
-const WEB_ENTRY = /\b(?:website|web site|browser|online|form)\b/i;
-const MENU = [...KEYPAD_MENU, ENTER_NUMBER];
+const ENTER_NUMBER = [
+  /\b(?:please )?enter\b[^.?!]{0,60}\b(?:order|account|extension|pin|code|number)\b/i,
+  /\b(?:marque|m[aá]rquel[ao]|digite|ingrese|introduzca)\b[^.?!]{0,60}\b(?:extensi[oó]n|n[uú]mero|c[oó]digo|cuenta|pin)/i,
+  // "Si conoce el número de extensión, márquela en este momento."
+  /\bextensi[oó]n\b[^.?!]{0,40}\bm[aá]rquel[ao]\b/i,
+];
+const WEB_ENTRY = /\b(?:website|web site|browser|online|form|internet|sitio web|p[aá]gina web)\b/i;
+const MENU = [...KEYPAD_MENU, ...ENTER_NUMBER];
 
 /** A recording offering keypad choices, or asking for keypad input. */
 export function isPhoneMenu(text: string): boolean {
   return MENU.some((re) => re.test(text));
 }
 
-const HOLD_REQUEST = /\b(?:please hold|on hold|hold on|hold time|wait time|next available|in (?:the )?queue|caller number|hang on|bear with me|stay on the line|remain on the line|(?:one|just a|give me a) (?:sec(?:ond)?|moment|minute)|let me (?:check|see|look|pull)|(?:being )?transferr?(?:ed|ing))\b/i;
+const HOLD_REQUEST = /\b(?:please hold|on hold|hold on|hold time|wait time|next available|in (?:the )?queue|caller number|hang on|bear with me|stay on the line|remain on the line|(?:one|just a|give me a) (?:sec(?:ond)?|moment|minute)|let me (?:check|see|look|pull)|(?:being )?transferr?(?:ed|ing)|un moment(?:o|ito)|espere|perm[ií]tame|d[eé]jeme (?:verificar|ver|revisar|buscar)|en espera|permanezca en (?:la )?l[ií]nea|le (?:transfiero|comunico|estamos transfiriendo))\b/i;
 
 /**
  * The other side's latest sentence asked us to wait (a hold, a transfer, "let me check"), so any
@@ -59,12 +67,19 @@ const MENU_FAILURE = [
   /\b(?:don't|do not|didn't|did not) (?:recognize|recognise) (?:that|your) (?:entry|selection|input)\b/i,
   /\b(?:exceeded|maximum number of) (?:the )?(?:maximum number of )?attempts\b/i,
   /\bif this (?:has )?answered your question\b/i,
+  /\bno (?:hemos|he|se ha) recibido (?:su |ninguna )?(?:selecci[oó]n|respuesta|opci[oó]n|entrada)/i,
+  /\b(?:selecci[oó]n|opci[oó]n|entrada)\b[^.?!]{0,20}\b(?:no es v[aá]lida|inv[aá]lida|incorrecta)/i,
+  /\bexcedido el (?:n[uú]mero )?(?:m[aá]ximo )?(?:de )?intentos/i,
   /\b(?:return|visit|go to|click on)\b[^.?!]{0,100}\b(?:warehouse|website|web site|customer service page|return or replace)\b/i,
 ];
-const HUMAN_GREETING = /(?:^|[.!?\n])\s*(?:my name is\b|how (?:can|may) i (?:help|assist)\b|thank you for (?:holding|waiting)\b)/i;
+const HUMAN_GREETING_ES = /\b(?:mi nombre es|le habla|en qu[eé] (?:le|lo|la|les) (?:puedo|podemos) (?:ayudar|servir))\b/i;
+const HUMAN_GREETING = [/(?:^|[.!?\n])\s*(?:my name is\b|how (?:can|may) i (?:help|assist)\b|thank you for (?:holding|waiting)\b)/i, HUMAN_GREETING_ES];
 const WAIT_OR_PERSON = [
   /\b(?:please (?:hold|stay on the line|remain on the line)|on hold|all (?:our )?representatives are busy|call (?:is )?being transferred)\b/i,
   /(?:^|[.!?\n])\s*(?:hello\b|hi\b|my name is\b|how (?:can|may) i (?:help|assist)\b|thank you for (?:holding|waiting)\b)/i,
+  /\b(?:por favor (?:espere|permanezca en (?:la )?l[ií]nea)|todos nuestros (?:representantes|agentes|operadores) (?:est[aá]n )?ocupados|(?:est[aá] )?siendo transferida|le (?:estamos )?transfiriendo)\b/i,
+  /(?:^|[.!?\n¿¡])\s*hola\b/i,
+  HUMAN_GREETING_ES,
 ];
 
 function lastMatch(text: string, patterns: RegExp[]): number {
@@ -111,7 +126,7 @@ export class MenuRecovery {
     this.at = at;
     // A person can give website instructions too. Those are not a new phone menu.
     const fresh = this.input.slice(this.boundary);
-    if (HUMAN_GREETING.test(fresh) || lastMatch(fresh, WAIT_OR_PERSON) > lastMatch(fresh, MENU)) {
+    if (HUMAN_GREETING.some((re) => re.test(fresh)) || lastMatch(fresh, WAIT_OR_PERSON) > lastMatch(fresh, MENU)) {
       this.personSpeaking = true;
       this.menuContext = '';
       this.boundary = this.input.length;
