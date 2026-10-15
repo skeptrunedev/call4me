@@ -112,7 +112,7 @@ ${b.goal}
 
 What you can share if it comes up (share only what's needed, when it's needed):
 ${b.facts.trim() || '(nothing beyond the task itself)'}
-
+${spellingRule(`${b.goal}\n${b.facts}`)}
 What you can agree to without checking:
 ${b.flexibility.trim() || '(only exactly what the task says)'}
 
@@ -179,6 +179,34 @@ Never say these names out loud and never mention a back office, tools, or anythi
 function spokenPhone(e164: string): string {
   const m = /^\+1(\d{3})(\d{3})(\d{4})$/.exec(e164);
   return m ? `${m[1]}-${m[2]}-${m[3]}` : e164;
+}
+
+/** Domains people say as words ("gmail dot com"); any other domain is spelled out. */
+const SPOKEN_DOMAINS = new Set(['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'icloud.com', 'aol.com', 'proton.me']);
+const SPOKEN_TLDS = new Set(['com', 'net', 'org', 'edu', 'gov']);
+
+/** An email address the way you read it to someone writing it down: every letter, with "at" and "dot" between the parts. */
+export function spokenEmail(email: string): string {
+  const spell = (part: string) =>
+    part
+      .split(/([._-])/)
+      .filter(Boolean)
+      .map((p) => ({ '.': 'dot', _: 'underscore', '-': 'dash' })[p] ?? p.toUpperCase().split('').join('-'))
+      .join(', ');
+  const [local, domain] = email.toLowerCase().split('@');
+  const labels = domain.split('.');
+  const host = SPOKEN_DOMAINS.has(domain) ? labels.join(' dot ') : labels.map((l, i) => (i === labels.length - 1 && SPOKEN_TLDS.has(l) ? l : spell(l))).join(', dot, ');
+  return `${spell(local)}, at, ${host}`;
+}
+
+/**
+ * The voice model spells an address from the sound of it and gets letters wrong ("Bhairav" came out
+ * "B-A-H-R-A-V", "characterquilt" lost its H), so every address in the task comes pre-spelled.
+ */
+function spellingRule(text: string): string {
+  const emails = [...new Set(text.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g) ?? [])];
+  if (!emails.length) return '';
+  return `\nWhen you spell an email address, read exactly these letters in this order. Never spell one from memory or from how it sounds:\n${emails.map((e) => `- ${e}: ${spokenEmail(e)}`).join('\n')}\n`;
 }
 
 /**
