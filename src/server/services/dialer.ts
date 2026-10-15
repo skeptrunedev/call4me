@@ -8,7 +8,7 @@ import type { SessionSetup } from '../voice/session';
 import { sessionFor } from '../voice/stub';
 import type { Voice } from '../voice/voices';
 import { accounts, type Account } from './accounts';
-import { answeringAccountId, mayCall, numbers } from './numbers';
+import { answeringAccountId, numbers, ringablePhone } from './numbers';
 import { profiles } from './profiles';
 import { assistantNameOf, type Profile, type Surface } from './intake';
 import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
@@ -113,18 +113,15 @@ export async function settleLost(env: Env, at = Date.now()): Promise<number> {
   return settled;
 }
 
-/** The account's owner, who can be patched into any of its calls: their name and their own phone. */
-async function personFor(env: Env, origin: string, account: Account, profile: Profile, from: string, connectWhen: string | null = null, listenIn = false): Promise<NonNullable<SessionSetup['person']>> {
-  // Profiles hold numbers as people type them; Telnyx dials E.164 only.
-  const phone = profile.phone ? checkDialable(profile.phone) : null;
-  const reachable = phone?.ok && (await mayCall(env.DB, account.id, phone)) ? phone.e164 : null;
-  return { name: profile.full_name || account.display_name || 'the account owner', phone: reachable, from, webhookUrl: `${origin}/webhooks/telnyx`, connectWhen, listenIn };
+/** The account's owner, who can be patched into any of its calls: their name and their own phone (E.164, or null when there's none to ring). */
+function personFor(origin: string, account: Account, profile: Profile, phone: string | null, from: string, connectWhen: string | null = null, listenIn = false): NonNullable<SessionSetup['person']> {
+  return { name: profile.full_name || account.display_name || 'the account owner', phone, from, webhookUrl: `${origin}/webhooks/telnyx`, connectWhen, listenIn };
 }
 
 export async function placeCall(env: Env, origin: string, account: Account, input: PlaceCallInput & { voice?: Voice }, surface: Surface = 'agents', execution: { unattended?: boolean } = {}): Promise<CallRow> {
   const price = pricePerMinuteTo(env, input.to);
   const db = calls(env.DB);
-  const { call, secrets, to } = await db.create(account, input, price, surface);
+  const { call, secrets, to, ownerPhone } = await db.create(account, input, price, surface);
   const brief = JSON.parse(call.brief) as Brief;
   if (!account.display_name) await accounts(env.DB).setDisplayName(account.id, brief.on_behalf_of);
 
@@ -137,7 +134,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
     const ring = caller.own ? (await n.callerId(account, to)).number : from;
     await env.DB.prepare(`UPDATE calls SET from_number = ?, ring_number = ? WHERE id = ?`).bind(from, caller.own ? ring : null, call.id).run();
     const profile = await profiles(env.DB).get(account.id);
-    const person = await personFor(env, origin, account, profile, ring, brief.connect_when ?? null, brief.listen_in ?? false);
+    const person = personFor(origin, account, profile, ownerPhone, ring, brief.connect_when ?? null, brief.listen_in ?? false);
     const cb = {
       onBehalfOf: brief.on_behalf_of,
       business: call.business,
@@ -306,7 +303,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     }),
     backOffice: inboundBackOfficeInstructions(owner, ordered.map(openTask)),
     inbandKeys: inbandKeysFor(opts.from),
-    person: await personFor(env, origin, account, profile, opts.to),
+    person: personFor(origin, account, profile, await ringablePhone(env.DB, account.id, profile.phone), opts.to),
     voice: 'marin',
     maxSeconds: maxMinutes * 60,
     pricePerMinuteCents: price,

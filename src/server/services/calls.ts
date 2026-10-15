@@ -2,7 +2,7 @@ import { newId, now } from '../lib/ids';
 import { checkDialable, type PhoneCheck } from '../lib/phone';
 import { accounts, type Account } from './accounts';
 import { catalog, missingMessage, PROFILE_FIELDS, resolveIntake, type Surface } from './intake';
-import { mayCall, ownNumberRefusal } from './numbers';
+import { mayCall, ownNumberRefusal, ringablePhone } from './numbers';
 import { profiles } from './profiles';
 
 type Dialable = Extract<PhoneCheck, { ok: true }>;
@@ -215,7 +215,19 @@ export function calls(db: D1Database) {
 
       const blocked = await db.prepare(`SELECT reason FROM blocked_numbers WHERE number = ?`).bind(to.e164).first<{ reason: string }>();
       if (blocked) throw new CallError('this number asked not to be called by call4me', 403);
-      return { category, intake, onBehalfOf, to, callerName, callingAs };
+
+      // connect_when and listen_in ring the account owner: the phone they gave for this call (when
+      // it's their own call), else the one saved in their profile. Refuse now when there's none we
+      // can ring, rather than reach the connect after a long hold and have nobody to patch in.
+      const ownerPhone = await ringablePhone(db, account.id, (!forSomeoneElse && input.details?.phone?.trim()) || profile.phone);
+      if ((input.connect_when?.trim() || input.listen_in) && !ownerPhone) {
+        const option = input.listen_in ? 'listen_in' : 'connect_when';
+        throw new CallError(
+          `${option} rings the user's own phone, and there's no phone number for them we can ring. Ask for it and pass it as details.phone (or save it with call4me_save_profile if they want it reused), or place the call without ${option}.`,
+          422,
+        );
+      }
+      return { category, intake, onBehalfOf, to, callerName, callingAs, ownerPhone };
     },
 
     /** Validate, check money and limits, and record the call as queued. Dialing is the caller's next step. */
@@ -223,8 +235,8 @@ export function calls(db: D1Database) {
      * Returns the call plus its per-call secrets (account PINs): those reach the caller's
      * instructions but are never written to the database.
      */
-    async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number, surface: Surface = 'agents'): Promise<{ call: CallRow; secrets: { label: string; value: string }[]; to: Dialable }> {
-      const { category, intake, onBehalfOf, to, callerName, callingAs } = await this.validate(account, input, surface);
+    async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number, surface: Surface = 'agents'): Promise<{ call: CallRow; secrets: { label: string; value: string }[]; to: Dialable; ownerPhone: string | null }> {
+      const { category, intake, onBehalfOf, to, callerName, callingAs, ownerPhone } = await this.validate(account, input, surface);
 
       // Credits up front: the call holds its maximum cost now and settles when it ends.
       const balance = await accounts(db).balanceCents(account.id);
@@ -255,7 +267,7 @@ export function calls(db: D1Database) {
         .bind(id, account.id, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(brief), category.slug, holdCents, now())
         .run();
       const secrets = intake.known.filter((k) => k.sensitive).map((k) => ({ label: k.label, value: k.value }));
-      return { call: (await this.byId(id))!, secrets, to };
+      return { call: (await this.byId(id))!, secrets, to, ownerPhone };
     },
 
     byId(id: string): Promise<CallRow | null> {

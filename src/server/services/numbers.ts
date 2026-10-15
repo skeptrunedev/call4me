@@ -276,6 +276,13 @@ export async function mayCall(db: D1Database, accountId: string, to: Extract<Pho
   return Boolean(await sharedNumber(db, to.country));
 }
 
+/** A phone the user typed (in their profile or for one call), as E.164, when call4me may ring it. */
+export async function ringablePhone(db: D1Database, accountId: string, phone: string | null | undefined): Promise<string | null> {
+  // People type numbers however they like; Telnyx dials E.164 only.
+  const p = phone?.trim() ? checkDialable(phone) : null;
+  return p?.ok && (await mayCall(db, accountId, p)) ? p.e164 : null;
+}
+
 /** The number call4me shares with every account in `country`, if it holds one there. */
 export async function sharedNumber(db: D1Database, country: string): Promise<string | null> {
   const row = await db.prepare(`SELECT phone_number FROM numbers WHERE shared = 1 AND country = ? AND status = 'active' ORDER BY created_at LIMIT 1`).bind(country).first<{ phone_number: string }>();
