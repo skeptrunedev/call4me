@@ -47,6 +47,23 @@ test('a hold resumes after the session object was reset', () => {
   assert.deepEqual(m.them('Hello, how can I help you?', s(400)), { type: 'end', at: s(400), seconds: 300 });
 });
 
+test('a rep putting us on a "brief hold" to connect someone starts a hold, even run into "thank you for holding"', () => {
+  // Fleming's, Oct 15: never counted as a hold, so the time limit cut the call off mid-transfer.
+  const m = new HoldMeter();
+  assert.equal(m.them('Yeah, that was a diff- North Scottsdale. Yes, of course. ', s(0)), null);
+  assert.deepEqual(m.them('Let me put you on brief hold while I connect you', s(4)), { type: 'start', at: s(4) });
+  assert.equal(m.them(' Thank you so much for holding', s(6)), null);
+  assert.equal(m.caller('Sure.'), null);
+  assert.ok(m.holding());
+});
+
+test('the usual ways of saying "I am putting you on hold" all start one', () => {
+  for (const line of ['Let me put you on a quick hold', 'I am going to place you on a short hold', 'One sec, let me transfer you to events', "I'm connecting you with our coordinator now", 'Bear with me on a brief hold'])
+    assert.ok(isHoldLine(line), line);
+  for (const line of ['We can hold the room for you until Friday', 'Would you like a table on the patio?', 'I can connect you by email later'])
+    assert.ok(!isHoldLine(line), line);
+});
+
 test('isHoldLine knows queue language from conversation', () => {
   assert.ok(isHoldLine('All agents are currently busy'));
   assert.ok(isHoldLine('The estimated wait time is 10 minutes'));
