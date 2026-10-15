@@ -52,7 +52,7 @@ const MENUS: Record<Step, { lines: string[]; digits: number; plays: number; afte
   },
 };
 
-const say = (text: string) => `<Say voice="Polly.Lupe-Neural">${text}</Say>`;
+const say = (text: string) => `<Say voice="Polly.Mia-Neural">${text}</Say>`;
 const texml = (body: string) => `<?xml version="1.0" encoding="UTF-8"?><Response>${body}</Response>`;
 
 ivrProbe.all('/probe/ivr/auxilio', async (c) => {
