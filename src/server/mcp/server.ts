@@ -515,7 +515,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     'call4me_save_profile',
     titled({
       title: 'Save caller profile',
-      description: 'Save facts that are the same on every call, so they never have to be asked again. Merges into what is saved; an empty string removes a field. Only save details the user agreed to keep for future calls; use place_call details for information supplied for one call.',
+      description: 'Save facts that are the same on every call, so they never have to be asked again. Merges into what is saved; an empty string removes a field. Only save details the user agreed to keep for future calls; use place_call details for information supplied for one call. The user can see, edit and delete everything saved on their call4me account page.',
       inputSchema: z.object(Object.fromEntries(intake.profileKeys.map((k) => [k, z.string().max(500).optional().describe(PROFILE_FIELDS[k].label)]))),
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
     }),

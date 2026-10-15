@@ -6,6 +6,7 @@ import type { callView } from '../mcp/server';
 import { dollars, type Account } from '../services/accounts';
 import type { CountryOffer, NumberView, OwnNumberView, PendingNumberView } from '../services/numbers';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
+import { PROFILE_FIELDS, type Profile, type ProfileKey } from '../services/intake';
 import { MIN_TOPUP_CENTS, type Reload } from '../services/topups';
 import { CopyBlock, Layout } from './layout';
 import { CallOnboarding } from './onboarding';
@@ -94,6 +95,8 @@ export const AccountPage: FC<{
   error?: string;
   numberError?: string;
   ownNumberError?: string;
+  profile: Profile;
+  profileError?: string;
 }> = (p) => (
   <Layout title="my account" page="account" signedIn>
     <h1>
@@ -226,6 +229,29 @@ export const AccountPage: FC<{
       </select>{' '}
       <button type="submit">send code</button>
     </form>
+    <h2 id="profile">calling profile</h2>
+    <p class="small">
+      details you or your agent chose to save, so calls don't have to ask for them again. they're stored with your call4me account, and the caller shares a detail
+      only when a call for you needs it (a clinic asking for your date of birth, say). nothing is saved unless you or your agent save it, and details given for one call
+      aren't kept. your connected agent can read and change these too. edit anything below; an emptied field is deleted.
+    </p>
+    <form method="post" action="/account/profile" class="buy form" autocomplete="off">
+      {p.profileError && <p class="err">{p.profileError}</p>}
+      {(Object.keys(PROFILE_FIELDS) as ProfileKey[]).map((k) => (
+        <div class="row">
+          <label for={`profile-${k}`}>{PROFILE_FIELDS[k].label}</label>
+          <input type="text" id={`profile-${k}`} name={k} value={p.profile[k] ?? ''} maxlength={500} />
+        </div>
+      ))}
+      <div class="actions">
+        <button type="submit">save profile</button>
+      </div>
+    </form>
+    {Object.keys(p.profile).length > 0 && (
+      <form method="post" action="/account/profile/clear" class="inline">
+        <button type="submit" class="linkbutton">delete my whole calling profile</button>
+      </form>
+    )}
     <h2>text alerts</h2>
     <p class="small"><a href="/sms">Manage optional text alerts</a> for call questions and phone number renewals.</p>
     <h2>calls</h2>

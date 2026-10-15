@@ -31,5 +31,10 @@ export function profiles(db: D1Database) {
         .run();
       return current;
     },
+
+    /** Delete every saved field. */
+    async clear(accountId: string): Promise<void> {
+      await db.prepare(`DELETE FROM profiles WHERE account_id = ?`).bind(accountId).run();
+    },
   };
 }

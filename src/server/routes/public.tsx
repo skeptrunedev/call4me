@@ -6,7 +6,9 @@ import { callView } from '../mcp/server';
 import { accounts, type Account } from '../services/accounts';
 import { ACTIVE, calls, CallError } from '../services/calls';
 import { pricePerMinute } from '../services/dialer';
+import { PROFILE_FIELDS, type ProfileKey } from '../services/intake';
 import { NumberError, numbers } from '../services/numbers';
+import { ProfileError, profiles } from '../services/profiles';
 import { MIN_TOPUP_CENTS, parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
 import { addCreditsAccount, addCreditsPath, validUnsubscribe } from '../services/drip';
 import { validCampaignUnsubscribe } from '../services/campaign-unsubscribe';
@@ -105,9 +107,9 @@ pub.get('/welcome', async (c) => {
 
 // ---- account
 
-async function accountPage(c: AppContext, account: Account, errors: { error?: string; numberError?: string; ownNumberError?: string } = {}) {
+async function accountPage(c: AppContext, account: Account, errors: { error?: string; numberError?: string; ownNumberError?: string; profileError?: string } = {}) {
   const n = numbers(c.env);
-  const [balance, rows, owned, pending, own, offers, reload, key] = await Promise.all([
+  const [balance, rows, owned, pending, own, offers, reload, key, profile] = await Promise.all([
     accounts(c.env.DB).balanceCents(account.id),
     calls(c.env.DB).list(account.id, 50),
     n.views(account.id),
@@ -116,6 +118,7 @@ async function accountPage(c: AppContext, account: Account, errors: { error?: st
     n.offers(),
     reloadOf(c.env.DB, account.id),
     ownerKey(c, account),
+    profiles(c.env.DB).get(account.id),
   ]);
   return c.html(
     <AccountPage
@@ -130,9 +133,10 @@ async function accountPage(c: AppContext, account: Account, errors: { error?: st
       calls={rows.map((r) => callView(r, []))}
       apiKey={key}
       agentPrompt={accountPrompt(origin(c), key)}
+      profile={profile}
       {...errors}
     />,
-    errors.error || errors.numberError || errors.ownNumberError ? 400 : 200,
+    errors.error || errors.numberError || errors.ownNumberError || errors.profileError ? 400 : 200,
   );
 }
 
@@ -219,6 +223,33 @@ pub.post('/account/numbers/own/remove', async (c) => {
     if (err instanceof NumberError) return accountPage(c, account, { ownNumberError: err.message });
     throw err;
   }
+});
+
+// The calling profile holds personal details, so its forms also refuse cross-site posts (as /sms does).
+const sameOrigin = (c: AppContext) => c.req.header('origin') === origin(c) && c.req.header('sec-fetch-site') !== 'cross-site';
+
+/** Every field is in the form, so an emptied field is removed, as in call4me_save_profile. */
+pub.post('/account/profile', async (c) => {
+  if (!sameOrigin(c)) return c.text('request origin is not allowed', 403);
+  const account = c.get('account');
+  if (!account) return c.redirect('/login?next=/account', 303);
+  const form = await c.req.formData();
+  const changes = Object.fromEntries((Object.keys(PROFILE_FIELDS) as ProfileKey[]).filter((k) => form.has(k)).map((k) => [k, field(form, k, 500)]));
+  try {
+    await profiles(c.env.DB).update(account.id, changes);
+    return c.redirect('/account#profile', 303);
+  } catch (err) {
+    if (err instanceof ProfileError) return accountPage(c, account, { profileError: err.message });
+    throw err;
+  }
+});
+
+pub.post('/account/profile/clear', async (c) => {
+  if (!sameOrigin(c)) return c.text('request origin is not allowed', 403);
+  const account = c.get('account');
+  if (!account) return c.redirect('/login?next=/account', 303);
+  await profiles(c.env.DB).clear(account.id);
+  return c.redirect('/account#profile', 303);
 });
 
 pub.post('/account/reload/stop', async (c) => {
