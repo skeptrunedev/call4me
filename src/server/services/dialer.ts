@@ -286,6 +286,10 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
   }
   const ordered = likely ? [likely, ...tasks.filter((t) => t !== likely)] : tasks;
   const profile = await profiles(env.DB).get(account.id);
+  // Asked for a number, the line gives the one the returned call named, else the owner's own phone
+  // (a company line keeps its own number), else the number they rang.
+  const ownPhone = profile.phone?.trim() && !identity.calling_as ? checkDialable(profile.phone) : null;
+  const callbackNumber = likelyBrief?.callback_number ?? (ownPhone?.ok ? ownPhone.e164 : opts.to);
   const setup: SessionSetup = {
     callId: id,
     instructions: inboundInstructions({
@@ -293,6 +297,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
       assistantName: identity.caller_name || assistantNameOf(profile),
       ownerPronunciation: namePronunciationOf(profile),
       callingAs: identity.calling_as ?? null,
+      callbackNumber,
       tasks: ordered.map(openTask),
       likely: Boolean(likely),
       localTime: localTimeIn(likelyBrief?.timezone ?? null),

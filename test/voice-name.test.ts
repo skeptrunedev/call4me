@@ -11,7 +11,7 @@ const rule = /Every time you say Amir Tarighat's name, pronounce it exactly like
 test("the owner's saved pronunciation goes into every call, made or answered", () => {
   assert.match(callInstructions({ ...brief, ownerPronunciation: 'ah-MEER tah-ree-GAHT' }), rule);
   assert.match(callInstructions({ ...brief, assistantName: 'Sam', ownerPronunciation: 'ah-MEER tah-ree-GAHT' }), rule);
-  assert.match(inboundInstructions({ owner: 'Amir Tarighat', assistantName: null, callingAs: null, ownerPronunciation: 'ah-MEER tah-ree-GAHT', tasks: [], likely: false, recent: [], localTime: null }), rule);
+  assert.match(inboundInstructions({ owner: 'Amir Tarighat', assistantName: null, callingAs: null, ownerPronunciation: 'ah-MEER tah-ree-GAHT', callbackNumber: '+14155550100', tasks: [], likely: false, recent: [], localTime: null }), rule);
 });
 
 test('without a saved pronunciation the name is said as written', () => {

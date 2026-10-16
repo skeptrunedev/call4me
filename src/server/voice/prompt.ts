@@ -6,9 +6,10 @@ import { VOICE_ACCENTS, type Voice } from './voices';
  *
  * Deliberately absent: any opening disclosure line, any "this call may be recorded"
  * notice (call4me does not record audio), and any end-of-call read-back.
- * Deliberately present: the caller is the owner's personal assistant and says so when asked (or, when the
- * user names one, a person at a company: "Jordan from Acme"), never the person it calls for;
- * and an honest answer when someone sincerely asks if they are
+ * Deliberately present: on calls it places, the caller is the owner's personal assistant and says so when
+ * asked (or, when the user names one, a person at a company: "Jordan from Acme"), never the person it calls
+ * for; on calls to the owner's own number, once the profile names it, it answers by that name in the first
+ * person (as the owner when it's their first name); and an honest answer when someone sincerely asks if they are
  * talking to an AI. Not volunteering it is how a person would talk; lying when asked
  * is a line call4me does not cross (and several states require the honest answer).
  */
@@ -270,6 +271,8 @@ export interface OpenTask {
 }
 
 export interface InboundBrief extends Who {
+  /** The number to give for call-backs: the one the returned call named, else the owner's own phone, else the number they rang. */
+  callbackNumber: string;
   /** Unfinished tasks, the one this caller is most likely about first. */
   tasks: OpenTask[];
   /** True when the first task is known to be this call's (the caller's number matches, or it's the only one). */
@@ -287,8 +290,37 @@ What you can agree to without checking:
 ${t.flexibility.trim() || '(only exactly what the task says)'}`;
 }
 
+/** The name an answered call goes by, from the profile (opt-in); it's the owner speaking when it's their first name. */
+function answeringName(o: Who): { name: string; isOwner: boolean } | null {
+  const name = o.assistantName?.trim();
+  if (!name) return null;
+  return { name, isOwner: name.toLowerCase() === o.owner.trim().split(/\s+/)[0].toLowerCase() };
+}
+
+/** Who picks up the owner's phone, and how they say who they are. */
+function answererRules(o: InboundBrief): string {
+  if (o.callingAs) {
+    return `You're ${o.assistantName ? `${o.assistantName} at` : 'answering for'} ${o.callingAs}, picking up ${o.callingAs}'s phone. You are never ${o.owner}: if they ask for ${o.owner}, say they're not available and you can help or take a message. Never call yourself an assistant or anyone's assistant.
+${nameRule(o)}`;
+  }
+  const answering = answeringName(o);
+  if (!answering) {
+    return `You're ${whoIAm(o)}, answering the phone for them. This is ${o.owner}'s number; they can't come to the phone, so you're picking up for them. You are never ${o.owner}: if they ask for ${o.owner}, say you're their assistant and can help or take a message.
+${nameRule(o)}`;
+  }
+  const { name, isOwner } = answering;
+  const said = o.ownerPronunciation ? `\n- Every time you say ${o.owner}'s name, pronounce it exactly like this: ${o.ownerPronunciation}. Never guess at it.` : '';
+  return isOwner
+    ? `You're ${o.owner}, picking up your own phone. Talk in the first person as ${o.owner}: "I called earlier", "my appointment", "I'll call you back". Never call yourself anyone's assistant and never talk about ${o.owner} as someone else.
+- If they ask who this is or your name: "I'm ${name}." If they ask for ${o.owner} or whether this is ${name}: "Yep, this is ${name}."${said}`
+    : `You're ${name}, picking up ${o.owner}'s phone for them. Talk in the first person as ${name}. Never call yourself an assistant or anyone's assistant.
+- If they ask who this is or your name: "I'm ${name}." Give just the first name. If they ask for ${o.owner}, say they can't come to the phone right now and you can help or take a message.${said}`;
+}
+
 /** Callbacks: someone rings the account's own number, usually a business we called earlier. */
 export function inboundInstructions(o: InboundBrief): string {
+  // Who follows up when the call can't settle something: the owner speaking says "I", anyone else names them.
+  const followUp = !o.callingAs && answeringName(o)?.isOwner ? `you'll call back` : `${o.owner} will call back`;
   const recent = o.recent.length
     ? o.recent.map((r) => `- ${r.when}: called ${r.business} to ${r.goal}${r.summary ? `. Result: ${r.summary}` : ''}`).join('\n')
     : '(no recent calls)';
@@ -301,17 +333,13 @@ ${o.tasks.map(taskBlock).join('\n\n')}
 # Finish the task on this call
 - When they say who they are, pick it up right away: "Oh great, thanks for calling back! Yeah, I called about ${o.tasks.length === 1 ? `${o.tasks[0].goal.replace(/\.$/, '')}` : 'getting that set up'}."
 - Then do the task exactly as you would have on the first call: answer their questions from the facts, and accept anything within what you can agree to.
-- If they need something you don't have, or offer something outside what you can agree to, hand off a question (ask_user) and say "Let me check on that real quick." If no answer comes back, say ${o.owner} will call back to confirm.
+- If they need something you don't have, or offer something outside what you can agree to, hand off a question (ask_user) and say "Let me check on that real quick." If no answer comes back, say ${followUp} to confirm.
 - A fact marked as not stored (an account PIN) is not available: ask_user for it.
 - Once it's settled (booked, answered, or clearly not possible), say a quick thanks and bye and hand off to hang up (end_call). Don't read the details back; the recap is written from the call afterwards.
 `
     : '';
-  return `${
-    o.callingAs
-      ? `You're ${o.assistantName ? `${o.assistantName} at` : 'answering for'} ${o.callingAs}, picking up ${o.callingAs}'s phone. You are never ${o.owner}: if they ask for ${o.owner}, say they're not available and you can help or take a message. Never call yourself an assistant or anyone's assistant.`
-      : `You're ${whoIAm(o)}, answering the phone for them. This is ${o.owner}'s number; they can't come to the phone, so you're picking up for them. You are never ${o.owner}: if they ask for ${o.owner}, say you're their assistant and can help or take a message.`
-  }
-${nameRule(o)}
+  return `${answererRules(o)}
+- If they ask for a number to call back or text, read out the digits: ${spokenPhone(o.callbackNumber)}. Never just say "this number".
 ${o.localTime ? `\nIt's ${o.localTime} right now.\n` : ''}
 ${delegationPolicy(o.owner, o.owner)}
 
@@ -321,7 +349,7 @@ ${recent}
 
 # What to do
 - Answer with ${o.callingAs ? `"Hi, this is ${o.assistantName ? whoIAm(o) : o.callingAs}."` : 'a simple "Hello?"'} and let them say why they're calling.
-${o.tasks.length ? '- If it\'s about one of the unfinished tasks, finish it (see above).\n' : ''}- If it's about one of the recent calls, note any new time or detail and answer only with what those calls say; if they need a decision, hand off a question (ask_user) or say ${o.owner} will call them back.
+${o.tasks.length ? '- If it\'s about one of the unfinished tasks, finish it (see above).\n' : ''}- If it's about one of the recent calls, note any new time or detail and answer only with what those calls say; if they need a decision, hand off a question (ask_user) or say ${followUp}.
 - Otherwise take a message: who's calling, what it's about, and a good number to reach them.
 - Never agree to anything beyond what a task allows or what the recent calls already agreed to.
 
