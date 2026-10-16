@@ -10,7 +10,7 @@ import type { Voice } from '../voice/voices';
 import { accounts, type Account } from './accounts';
 import { answeringAccountId, numbers, ringablePhone } from './numbers';
 import { profiles } from './profiles';
-import { assistantNameOf, type Profile, type Surface } from './intake';
+import { assistantNameOf, namePronunciationOf, type Profile, type Surface } from './intake';
 import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 import { analytics } from './analytics';
 
@@ -149,6 +149,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
       localTime: localTimeIn(brief.timezone),
       owner: person.name,
       assistantName: brief.caller_name || assistantNameOf(profile),
+      ownerPronunciation: namePronunciationOf(profile),
       callingAs: brief.calling_as ?? null,
       connectWhen: brief.connect_when ?? null,
       unattended: execution.unattended,
@@ -290,6 +291,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     instructions: inboundInstructions({
       owner,
       assistantName: identity.caller_name || assistantNameOf(profile),
+      ownerPronunciation: namePronunciationOf(profile),
       callingAs: identity.calling_as ?? null,
       tasks: ordered.map(openTask),
       likely: Boolean(likely),

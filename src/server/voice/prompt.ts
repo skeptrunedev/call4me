@@ -21,6 +21,8 @@ interface Who {
   assistantName: string | null;
   /** The company the caller calls as ("Acme"); null: it's the owner's assistant. */
   callingAs: string | null;
+  /** How to say the owner's name, from their profile ("ah-MEER tah-ree-GAHT"); unset: as written. */
+  ownerPronunciation?: string | null;
 }
 
 /** Who the caller says it is, after "I'm": "Alex's assistant", "Jordan, Alex's assistant", "Jordan from Acme", "with Acme". */
@@ -33,8 +35,11 @@ function whoIAm(w: Who): string {
 const employer = (w: Who) => w.callingAs ?? w.owner;
 
 function nameRule(w: Who): string {
-  if (w.assistantName) return `- Your name is ${w.assistantName}. If they ask who's calling or your name: "I'm ${whoIAm(w)}." Give just the first name.`;
-  return `- If they ask your name, you're ${whoIAm(w)}; you don't need a name of your own.`;
+  const name = w.assistantName
+    ? `- Your name is ${w.assistantName}. If they ask who's calling or your name: "I'm ${whoIAm(w)}." Give just the first name.`
+    : `- If they ask your name, you're ${whoIAm(w)}; you don't need a name of your own.`;
+  // The voice model guesses at names it hasn't heard and gets them wrong, so the owner can spell out how to say theirs.
+  return w.ownerPronunciation ? `${name}\n- Every time you say ${w.owner}'s name, pronounce it exactly like this: ${w.ownerPronunciation}. Never guess at it.` : name;
 }
 
 /** The first line of "Who you are". */

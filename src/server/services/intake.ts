@@ -9,6 +9,7 @@
 
 export type ProfileKey =
   | 'full_name'
+  | 'name_pronunciation'
   | 'assistant_name'
   | 'date_of_birth'
   | 'phone'
@@ -37,6 +38,7 @@ export interface ProfileField {
 
 export const PROFILE_FIELDS: Record<ProfileKey, ProfileField> = {
   full_name: { label: 'full name', ask: "What's your full legal name (as it appears on your ID/insurance card)?" },
+  name_pronunciation: { label: 'name pronunciation', ask: 'Only if the user asks for it, or their name is easy to say wrong: how to say their name, written the way it sounds, stressed syllable in capitals (e.g. "ah-MEER tah-ree-GAHT"). The caller says it exactly this way.', optional: true },
   assistant_name: { label: 'assistant name', ask: 'Only if the user asks for it: a first name the caller introduces itself with ("Hi, I\'m Sam, Alex\'s assistant"). Unset, it is just "Alex\'s assistant".', check: (v) => (/^[\p{L}][\p{L}' -]{0,29}$/u.test(v) ? null : 'use a first name, letters only'), optional: true },
   date_of_birth: { label: 'date of birth', ask: "What's your date of birth?", check: (v) => (parseDate(v) ? null : 'use a full date like 1990-03-14') },
   phone: { label: 'phone number', ask: "What's the best phone number for them to reach you?", check: (v) => (v.replace(/\D/g, '').length >= 10 ? null : 'use a 10-digit phone number') },
@@ -320,6 +322,9 @@ export type Profile = Partial<Record<ProfileKey, string>>;
 
 /** The first name the caller introduces itself with ("Hi, I'm Sam, Alex's assistant"), or null: by default it has none. */
 export const assistantNameOf = (profile: Profile) => profile.assistant_name || null;
+
+/** How to say the owner's name ("ah-MEER tah-ree-GAHT"), or null to say it as written. */
+export const namePronunciationOf = (profile: Profile) => profile.name_pronunciation?.trim() || null;
 
 export interface Resolved {
   /** Every known field, labelled, in intake order: what the caller may share. */
