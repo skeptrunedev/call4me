@@ -19,8 +19,31 @@ const brief: CallBrief = {
   callbackNumber: '+12025550100', callbackRingsOwner: false, localTime: null, connectWhen: null, assistantName: null, callingAs: null,
 };
 
+// `expected: []` means the right move is to wait: no tool call at all.
 type Scenario = { name: string; before?: { prompt: string; digits: string }[]; prompt: string; caller?: string; goal?: string; expected: { tool: string; digits?: string }[] };
+const cdwSales = 'Ask sales whether an in-stock transceiver can be delivered by Monday.';
+const cdwOptions = "If you know your account manager's phone number, press one. For customer relations, order status, or post-sale support, such as a copy of an invoice, press two. For government, educational, or health care provider sales, press three. For all other sales, press four.";
+const cdwMenu = `${cdwOptions} For technical support, press five. For all other calls, press nine.`;
 const scenarios: Scenario[] = [
+  {
+    name: 'CDW: choose all other sales from the full menu',
+    goal: cdwSales,
+    prompt: `Thank you for calling CDW. Please stop and listen to the following menu. The options have been changed. ${cdwMenu}`,
+    expected: [{ tool: 'press_digits', digits: '4' }],
+  },
+  {
+    name: 'CDW: wait while no announced option fits yet',
+    goal: cdwSales,
+    prompt: "Thank you for calling CDW. Please stop and listen to the following menu. The options have been changed. If you know your account manager's phone number, press one. For customer relations, order status, or post-sale support, such as a copy of an invoice, press two.",
+    expected: [],
+  },
+  {
+    name: 'CDW: press sales again when the menu replays after a missed key',
+    goal: cdwSales,
+    before: [{ prompt: `Thank you for calling CDW. ${cdwMenu}`, digits: '4' }],
+    prompt: `Please listen closely to the following menu options. ${cdwOptions}`,
+    expected: [{ tool: 'press_digits', digits: '4' }],
+  },
   {
     name: 'choose a person instead of the recorded refund policy',
     prompt: 'To process a return, press one. For information about returns, press two. For assistance replacing an item, press three. For technical support, press four. For all other questions, press five.',
@@ -85,7 +108,9 @@ const scenarios: Scenario[] = [
   },
 ];
 
-for (const scenario of scenarios) {
+// EVAL_ONLY=<text> runs just the scenarios whose name contains it.
+const selected = scenarios.filter((scenario) => scenario.name.includes(process.env.EVAL_ONLY ?? ''));
+for (const scenario of selected) {
   const recovery = new MenuRecovery();
   for (const step of scenario.before ?? []) {
     recovery.observe(step.prompt, Date.now());
@@ -109,9 +134,14 @@ for (const scenario of scenarios) {
   assert.ok(response.ok, `${scenario.name}: OpenAI returned ${response.status}`);
   const body = await response.json() as { output?: { type: string; name?: string; arguments?: string }[] };
   const tool = body.output?.find((item) => item.type === 'function_call');
+  if (!scenario.expected.length) {
+    assert.ok(!tool, `${scenario.name}: should wait, but called ${tool?.name} ${tool?.arguments ?? ''}`);
+    console.log(`PASS: ${scenario.name} (waited)`);
+    continue;
+  }
   assert.ok(tool, `${scenario.name}: model must take a supported next step`);
   const args = JSON.parse(tool.arguments || '{}') as { digits?: string };
   assert.ok(scenario.expected.some((expected) => tool.name === expected.tool && (!expected.digits || args.digits === expected.digits)), `${scenario.name}: unexpected ${tool.name} ${args.digits || ''}`);
   console.log(`PASS: ${scenario.name} (${tool.name}${args.digits ? ` ${args.digits}` : ''})`);
 }
-console.log(`Passed ${scenarios.length} live backend evaluations with ${model}. No tools were executed.`);
+console.log(`Passed ${selected.length} live backend evaluations with ${model}. No tools were executed.`);

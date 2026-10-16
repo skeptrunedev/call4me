@@ -50,11 +50,21 @@ const FIRST_AUDIO_LIMIT_MS = 4_000;
 const HANGUP_GRACE_MS = 700;
 /** Quiet time after the last words before checking for a hand-off the voice model skipped. */
 const HANDOFF_QUIET_MS = 1_500;
-/** A recording may pause between options; allow more quiet before choosing a menu route. */
-const MENU_QUIET_MS = 3_000;
+/**
+ * A menu gets its keypad choice once the recording has paused: its audio quiet this long, and its
+ * transcript (which trails the audio by about a second) settled too. Menus take keys while they
+ * are still talking but give only 2-3s after the last option before replaying or hanging up (CDW
+ * replays after 2s, then disconnects), so a choice made seconds after the menu ends never lands.
+ */
+const MENU_AUDIO_QUIET_MS = 700;
+const MENU_TRANSCRIPT_QUIET_MS = 600;
+/** Music under a menu never goes quiet: a settled transcript alone is enough after this long. */
+const MENU_TRANSCRIPT_ONLY_MS = 3_000;
 /** A back-office run that never reports back stops blocking new ones after this long. */
 const BACK_OFFICE_STALE_MS = QUESTION_WAIT_MS + 15_000;
 const MAX_FORCED_HANDOFFS = 12;
+/** Menu checks run at every pause in a recording, so they get their own, larger budget. */
+const MAX_MENU_CHECKS = 40;
 /** One brief acknowledgment while an attended question is pending. */
 const HOLDING_LINE_QUIET_MS = 8_000;
 const MAX_HOLDING_LINES = 1;
@@ -130,6 +140,8 @@ export class VoiceSession extends DurableObject<Env> {
   private answeredAt = 0;
   private liveStartedAt = 0;
   private framesIn = 0;
+  /** When the phone last carried audible sound (their speech, a recording, hold music). */
+  private themAudibleAt = 0;
   private framesOut = 0;
   private ended = false;
   private pendingAudio: string[] = [];
@@ -354,6 +366,7 @@ export class VoiceSession extends DurableObject<Env> {
       if (this.framesIn++ === 0) this.mark('first audio from phone');
       if (this.liveReady) this.sendLive({ type: 'session.input_audio.append', audio: payload });
       else if (this.pendingAudio.length < 250) this.pendingAudio.push(payload); // ~5s at 20ms frames
+      if (pcmuAudible(payload)) this.themAudibleAt = Date.now();
     } else if (frame.event === 'stop') {
       void this.shutdown('the phone audio stream stopped');
     }
@@ -699,20 +712,27 @@ export class VoiceSession extends DurableObject<Env> {
     if (this.ended || this.endingCall) return;
     if (this.handoffTimer) clearTimeout(this.handoffTimer);
     const menu = this.menuRecovery.pending();
-    const quiet = menu ? MENU_QUIET_MS : HANDOFF_QUIET_MS;
     // Only new menu input extends its deadline. Caller filler must not delay keypad recovery.
-    const quietSince = menu ? menu.snapshot.at : this.lastTranscriptAt;
-    const remaining = Math.max(0, quietSince + quiet - Date.now());
-    this.handoffTimer = setTimeout(() => this.checkMissedHandoff(), remaining);
+    const due = menu ? this.menuQuietAt(menu.snapshot.at) : this.lastTranscriptAt + HANDOFF_QUIET_MS;
+    this.handoffTimer = setTimeout(() => this.checkMissedHandoff(), Math.max(0, due - Date.now()));
+  }
+
+  /** When the menu has paused: its transcript settled and the phone's audio quiet, or its transcript long settled. */
+  private menuQuietAt(menuInputAt: number): number {
+    const paused = Math.max(menuInputAt + MENU_TRANSCRIPT_QUIET_MS, this.themAudibleAt + MENU_AUDIO_QUIET_MS);
+    return Math.min(paused, menuInputAt + MENU_TRANSCRIPT_ONLY_MS);
   }
 
   private checkMissedHandoff(): void {
     this.handoffTimer = null;
-    if (this.ended || this.endingCall || this.personHolds() || this.forcedHandoffs.size + this.forcedMenus >= MAX_FORCED_HANDOFFS) return;
+    if (this.ended || this.endingCall || this.personHolds()) return;
     // A running function still owes the back office its output; GPT-Live rejects a new response until then.
     if (this.toolsRunning || (this.backOfficeBusy && Date.now() - this.lastHandoffAt < BACK_OFFICE_STALE_MS)) return;
-    const menu = this.menuRecovery.pending();
-    const miss = menu ?? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs);
+    let menu = this.menuRecovery.pending();
+    // The recording kept playing after this check was scheduled: wait for its next pause.
+    if (menu && this.menuQuietAt(menu.snapshot.at) > Date.now()) return this.scheduleHandoffCheck();
+    if (menu && this.forcedMenus >= MAX_MENU_CHECKS) menu = null;
+    const miss = menu ?? (this.forcedHandoffs.size < MAX_FORCED_HANDOFFS ? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs) : null);
     if (!miss) {
       this.checkConnectCondition();
       return;

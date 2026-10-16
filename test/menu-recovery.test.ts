@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { registerHooks } from 'node:module';
 import test, { type TestContext } from 'node:test';
 import { MenuRecovery } from '../src/server/voice/handoff';
+import { dtmfFrames } from '../src/server/voice/dtmf';
 
 const workerModule = `export class DurableObject {
   constructor(ctx, env) { this.ctx = ctx; this.env = env; }
@@ -159,13 +160,17 @@ for (const response of ['Hello, this is Jane speaking.', 'Please hold while I ch
 
 test('a repeated menu on the same transcript line is a fresh recovery opportunity', async (t) => {
   const h = harness(t);
+  h.session.answered = true;
+  const tone = JSON.stringify({ event: 'media', media: { payload: dtmfFrames('4')[0] } });
   await h.input('For returns press one.');
-  t.mock.timers.tick(2_000);
+  t.mock.timers.tick(500);
   await h.input(' For all other questions press five.');
-  t.mock.timers.tick(2_999);
-  assert.equal(h.forced().length, 0, 'continuing audio extends the quiet deadline');
+  t.mock.timers.tick(500);
+  h.session.onPhoneFrame(tone);
+  t.mock.timers.tick(699);
+  assert.equal(h.forced().length, 0, 'the recording still playing extends the quiet deadline');
   t.mock.timers.tick(1);
-  assert.equal(h.forced().length, 1);
+  assert.equal(h.forced().length, 1, 'a pause in the recording gets its keypad choice at once');
   assert.match(h.forced()[0].item.content[0].text, /For all other questions press five/);
   await h.keypress('1');
   await h.response('response.completed');
@@ -184,6 +189,21 @@ test('a repeated menu on the same transcript line is a fresh recovery opportunit
   await h.input(' No input was received.');
   t.mock.timers.tick(3_000);
   assert.equal(h.forced().length, 3);
+});
+
+test('music under a menu cannot hold its keypad choice past the transcript deadline', async (t) => {
+  const h = harness(t);
+  h.session.answered = true;
+  const tone = JSON.stringify({ event: 'media', media: { payload: dtmfFrames('4')[0] } });
+  await h.input('For returns press one.');
+  for (let ms = 0; ms < 2_900; ms += 100) {
+    h.session.onPhoneFrame(tone);
+    t.mock.timers.tick(100);
+  }
+  assert.equal(h.forced().length, 0);
+  h.session.onPhoneFrame(tone);
+  t.mock.timers.tick(100);
+  assert.equal(h.forced().length, 1);
 });
 
 test('normal delegation without a keypress does not mark the menu handled', async (t) => {
