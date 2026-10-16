@@ -8,10 +8,9 @@
  * not a hold recording and our caller answers it, back-dated to when they started talking. Our
  * caller's own "sure, no problem" to "please hold" does not end it.
  */
-import { asksUsToWait } from "./handoff";
+import { asksUsToWait } from './handoff';
 
-const QUEUE_RECORDING =
-  /\b(?:please hold|on (?:a )?(?:(?:brief|short|quick|little|small) )?hold|(?:put|putting|place|placing) you on (?:a )?(?:\w+ )?hold|(?:let me|i'?ll|i will|i'?m going to|i'?m gonna|while i|as i|i'?m|i am) (?:connect|transfer)(?:ing)? you|stay on the line|remain on the line|(?:all )?(?:of )?our (?:agents|representatives|operators|associates|team members)(?: are)? (?:currently )?(?:busy|assisting|helping)|all (?:agents|representatives|operators|associates|lines) are (?:currently )?(?:busy|in use)|your call is (?:very )?important|(?:answered|taken) in the order (?:it was|they were) received|(?:estimated|expected|approximate) wait time|next available|in (?:the )?queue|being transferred|transferring (?:you|your call)|(?:i'?ll )?be right back|be right with you|(?:have|need|got) to (?:check|ask)|check with (?:the|my|our) (?:manager|supervisor|team|kitchen|doctor)|(?:keep|hold) me (?:one|a) (?:sec(?:ond)?|moment|minute)|por favor espere|permanezca en (?:la )?l[ií]nea|todos nuestros (?:representantes|agentes|operadores|asociados) (?:est[aá]n )?(?:ocupados|atendiendo)|su llamada es (?:muy )?importante|en el orden (?:en )?(?:que|en que) (?:fue|fueron) recibidas?|tiempo (?:estimado |aproximado )?de espera|siendo transferida|le (?:estamos )?transfiriendo)\b/i;
+const QUEUE_RECORDING = /\b(?:please hold|on (?:a )?(?:(?:brief|short|quick|little|small) )?hold|(?:put|putting|place|placing) you on (?:a )?(?:\w+ )?hold|(?:let me|i'?ll|i will|i'?m going to|i'?m gonna|while i|as i|i'?m|i am) (?:connect|transfer)(?:ing)? you|stay on the line|remain on the line|(?:all )?(?:of )?our (?:agents|representatives|operators|associates|team members)(?: are)? (?:currently )?(?:busy|assisting|helping)|all (?:agents|representatives|operators|associates|lines) are (?:currently )?(?:busy|in use)|your call is (?:very )?important|(?:answered|taken) in the order (?:it was|they were) received|(?:estimated|expected|approximate) wait time|next available|in (?:the )?queue|being transferred|transferring (?:you|your call)|(?:i'?ll )?be right back|be right with you|(?:have|need|got) to (?:check|ask)|check with (?:the|my|our) (?:manager|supervisor|team|kitchen|doctor)|(?:keep|hold) me (?:one|a) (?:sec(?:ond)?|moment|minute)|por favor espere|permanezca en (?:la )?l[ií]nea|todos nuestros (?:representantes|agentes|operadores|asociados) (?:est[aá]n )?(?:ocupados|atendiendo)|su llamada es (?:muy )?importante|en el orden (?:en )?(?:que|en que) (?:fue|fueron) recibidas?|tiempo (?:estimado |aproximado )?de espera|siendo transferida|le (?:estamos )?transfiriendo)\b/i;
 /**
  * Someone asking us to wait, said any of the ways real reps say it on our calls ("allow me a minute
  * to pull this up", "lemme see what I can find real quick", "do you mind holding for a second",
@@ -35,34 +34,29 @@ const WAIT_REQUEST = new RegExp(
       String.raw`take a (?:quick |little )?look|(?:^|[\s,]+)(?:moment|hold|sec|second|minute)[\s.!]*$`,
     ]
       .map((p) => `(?:${p})`)
-      .join("|") +
+      .join('|') +
     String.raw`)\b`,
-  "i",
+  'i',
 );
 
 /** Our caller only acknowledging ("sure", "okay, no problem"): not an answer to someone back from a hold. */
-const ACKNOWLEDGMENT =
-  /^(?:(?:sure|okay|ok|alright|all right|no problem|of course|take your time|thanks?|thank you|got it|perfect|great|sounds good|yes|yeah)[\s,.!]*)+$/i;
+const ACKNOWLEDGMENT = /^(?:(?:sure|okay|ok|alright|all right|no problem|of course|take your time|thanks?|thank you|got it|perfect|great|sounds good|yes|yeah)[\s,.!]*)+$/i;
 // "Thank you for holding" and "this is a recorded line" are common in queue recordings, so they don't count.
-const PERSON_BACK =
-  /\b(?:my name is|how (?:can|may) i (?:help|assist)|(?:are you )?still there|sorry (?:about|for) the wait|mi nombre es|le habla|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir)|disculpe la espera)\b/i;
+const PERSON_BACK = /\b(?:my name is|how (?:can|may) i (?:help|assist)|(?:are you )?still there|sorry (?:about|for) the wait|mi nombre es|le habla|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir)|disculpe la espera)\b/i;
 
 /** A line from the other side that is part of the wait: a hold request or a queue recording. */
 export function isHoldLine(text: string): boolean {
-  return (
-    QUEUE_RECORDING.test(text) || WAIT_REQUEST.test(text) || asksUsToWait(text)
-  );
+  return QUEUE_RECORDING.test(text) || WAIT_REQUEST.test(text) || asksUsToWait(text);
 }
 
-export type HoldChange =
-  { type: "start"; at: number } | { type: "end"; at: number; seconds: number };
+export type HoldChange = { type: 'start'; at: number } | { type: 'end'; at: number; seconds: number };
 
 export class HoldMeter {
   private since: number | null = null;
   /** The other side's words since our caller last answered them. */
-  private theirs = "";
+  private theirs = '';
   /** Our caller's words since the other side last spoke. */
-  private mine = "";
+  private mine = '';
   /** When they started saying something that is not a hold recording, while on hold. */
   private speechAt: number | null = null;
 
@@ -79,10 +73,9 @@ export class HoldMeter {
   them(delta: string, at: number): HoldChange | null {
     if (!delta) return null;
     this.theirs += delta;
-    this.mine = "";
+    this.mine = '';
     const sentence = lastSentence(this.theirs);
-    if (this.since === null)
-      return isHoldLine(sentence) ? this.start(at) : null;
+    if (this.since === null) return isHoldLine(sentence) ? this.start(at) : null;
     if (isHoldLine(sentence)) {
       this.speechAt = null;
       return null;
@@ -101,9 +94,8 @@ export class HoldMeter {
     if (!delta.trim()) return null;
     this.mine += delta;
     if (ACKNOWLEDGMENT.test(this.mine.trim())) return null;
-    this.theirs = "";
-    if (this.since !== null && this.speechAt !== null)
-      return this.end(this.speechAt);
+    this.theirs = '';
+    if (this.since !== null && this.speechAt !== null) return this.end(this.speechAt);
     this.speechAt = null;
     return null;
   }
@@ -111,21 +103,21 @@ export class HoldMeter {
   private start(at: number): HoldChange {
     this.since = at;
     this.speechAt = null;
-    this.theirs = "";
-    this.mine = "";
-    return { type: "start", at };
+    this.theirs = '';
+    this.mine = '';
+    return { type: 'start', at };
   }
 
   private end(at: number): HoldChange {
     const seconds = Math.max(0, Math.round((at - this.since!) / 1000));
     this.since = null;
     this.speechAt = null;
-    this.theirs = "";
-    return { type: "end", at, seconds };
+    this.theirs = '';
+    return { type: 'end', at, seconds };
   }
 }
 
 function lastSentence(text: string): string {
   const sentences = text.trim().split(/[.?!]+\s+/);
-  return sentences[sentences.length - 1] ?? "";
+  return sentences[sentences.length - 1] ?? '';
 }
