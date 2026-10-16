@@ -122,6 +122,10 @@ These come from Anthropic's two pages linked above.
 
 **Authentication fails.** Remove the connector, add it again with `https://call4.me/mcp`, and sign in again. Don't paste a key into the chat as a fix.
 
+## Pairs well with
+
+[Transit MCP](https://transitmcp.com): real-time DC Metro and NYC Subway arrivals, service alerts, and station details, right inside your AI.
+
 ## Related guides
 
 Terminal users: [Claude Code phone calls](/blog/claude-code-phone-calls), plus [scheduling a call and getting the result later](/blog/schedule-phone-calls-claude-code-codex). For other agents, see [Codex phone calls](/blog/codex-phone-calls) and [GitHub Copilot phone calls](/blog/github-copilot-phone-calls). To compare calling services and assistants, read our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison). Connection details for every client are on the [call4me MCP page](/mcp).
