@@ -114,7 +114,6 @@ We ran the package on October 8, 2026 with `ai` 7.0.135, `@ai-sdk/openai` 4.0.91
 ## Pricing and limits
 
 - $0.25 per minute of talk time in the US and Canada; some destinations cost more (see [the FAQ](/#faq)).
-- Two calls can run at once per account.
 - Set `max_minutes` in a call's input to cap its talk time and leave credits free for other calls.
 
 ## Use it from Claude Code or Codex instead

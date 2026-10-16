@@ -6,7 +6,7 @@ import { COMPANIES, type Company } from './companies';
  * published transcript that shows the first live person and the route that got us there, in
  * the words of the data post's table. test/hold-times.test.ts fails if either quote drifts.
  */
-export const HOLD_UPDATED = '2026-10-12';
+export const HOLD_UPDATED = '2026-10-16';
 export const HOLD_PATH = '/hold-times';
 export const HOLD_DATA_PATH = '/static/data/customer-service-hold-times';
 export const HOLD_LICENSE = 'https://creativecommons.org/licenses/by/4.0/';
@@ -20,15 +20,20 @@ export const HOLD_KEYWORDS = ['customer service hold times', 'customer service h
  */
 export const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
   'aaa-insurance-customer-service': { evidence: '1:24 Representative: Thank you for calling AAA Insurance. My name is [name removed]. How can I help you?', path: 'Press 4 (membership or insurance quote), then a ZIP code' },
+  'airbnb-customer-service-number': { evidence: '2:27 Representative: Thank you for calling Airbnb. [Name removed] is speaking. How may I help you today?', path: 'Press 2, say "agent", then press 0' },
   'allstate-customer-service-number': { evidence: '2:08 Agent: Welcome to Allstate. My name is [name removed], a licensed insurance agent in your state. How can I help you today?', path: 'Answering every question, even with "I\'m not sure"' },
   'amazon-pharmacy-phone-number': { evidence: '3:40 Representative: Clinical customer care. This is [name removed]. How can I help you?', path: 'Stating the request; the system transferred us' },
   'american-airlines-flight-credit': { evidence: '1:40 Representative: Thank you for calling American Airlines. This is [name removed]. I can see that you\'re calling from the United States to book a new reservation. How can I help you?', path: 'Saying "book a held reservation"' },
   'aquasana-return-exception': { evidence: '7:49 Representative: Good morning, customer service. [Name and adjacent words removed.]', path: 'Staying on hold instead of taking a callback' },
   'cancel-audible': { evidence: '2:00 Associate: Hi, thank you for contacting Audible. You are speaking with [name removed]. With who do I have the pleasure to speak to at the moment?', path: 'Typing the digits it reads out, then 2' },
+  'bank-of-america-customer-service': { evidence: '2:05 Representative: Hello, thank you for calling Bank of America. This is [name removed] in Scranton, Pennsylvania. This call may be monitored and recorded. May I have your first and last name, please?', path: '"Agent" three times, then "open a new checking account"' },
+  'capital-one-customer-service': { evidence: '1:22 Representative: Hi, thank you for calling Capital One. This is [name removed]. May I have your first and last name, please?', path: '"Credit cards", then saying we had no card' },
+  'cash-app-customer-service-number': { evidence: '1:35 Representative: Hi, thank you for calling Cash App support. This is [name removed]. How may I help you today?', path: 'Asking the virtual agent three times for a live representative' },
   'delta-customer-service': { evidence: '16:15 Representative: Thank you for calling Delta. This is [name removed] speaking. How may I assist you today?', path: 'No confirmation number, "I need a representative", then hold' },
   'directv-customer-service': { evidence: '2:47 DIRECTV rep: Good evening, thank you for calling DIRECTV. My name is [name removed], who do I have the pleasure of speaking with today?', path: '"Cancel service", no account number, then satellite' },
   'doordash-customer-service-number': { evidence: '2:08 Representative: Thank you for calling DoorDash. This is [name removed]. How can I assist?', path: 'Naming the problem ("missing item", then "refund") instead of asking for a representative' },
   'etihad-customer-service': { evidence: '2:21 Agent: Thank you for calling Etihad. My name is [name removed]. How may I assist you today? May I get your name, please?', path: 'Press 1, your cabin class, then 2' },
+  'expedia-customer-service-number': { evidence: '3:24 Agent: Hi, thank you for calling. This is [name removed]. How can I help you today?', path: 'Press 1, 6, 2, then 0 at the itinerary prompt' },
   'experian-phone-number': { evidence: 'These routes did not reach a consumer support agent on September 30, 2026.', path: 'Nothing we tried' },
   'fabletics-customer-service': { evidence: '1:08 Consultant: Thank you for calling Fabletics. My name is [name removed]. How may I assist you today?', path: 'Saying we didn\'t have the account phone number' },
   'cancel-factor': { evidence: '2:00 Representative: Hello, thank you for calling Factor. This is [representative name removed]. How can I help?', path: 'Press 4 for account cancellation' },
@@ -40,9 +45,11 @@ export const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> =
   'cancel-hellofresh': { evidence: '1:40 Representative: Hi, thank you so much for calling HelloFresh. This is [representative name removed]. How can I help?', path: 'The cancellation option' },
   'hertz-customer-service-number': { evidence: '3:07 Hertz representative: Hello, thank you for calling Hertz. My name is [name removed]. May I know your rental record number or your reservation ID number, please?', path: 'Asking for a representative six times' },
   'hulu-customer-service-number': { evidence: '1:28 Representative: Thank you for calling Hulu Support. My name is [name removed]. How can I help you?', path: 'Pressing nothing and staying on the line' },
+  'jetblue-customer-service': { evidence: '1:27 Crew member: Thank you for calling JetBlue. This is [name removed] speaking. Please note that all calls are recorded for quality and training purposes. How can I help?', path: 'Skipping the birthday prompt, then "booking a flight"' },
   'paypal-customer-service-number': { evidence: '4:30 Representative: Hi, this is [name removed], and welcome to PayPal. Can I have your first and last name?', path: '"General question", "something else", then the keypad menu' },
   'pottery-barn-customer-service': { evidence: '0:49 Representative: Good afternoon, and thank you for calling Pottery Barn. This is [name removed]. How may I help you?', path: 'Saying "customer service"' },
   'priceline-customer-service': { evidence: '25:09 Representative: Thank you for contacting Travel Services. You are through to [representative]. Can I start by getting your first and last name?', path: 'Saying we had no trip number, again and again, then about 22 minutes of hold' },
+  'progressive-customer-service': { evidence: '1:30 Agent: Thank you for calling Progressive. My name is [name removed]. How can I help today?', path: 'Asking for a quote on a new policy, then saying the state' },
   'how-to-cancel-siriusxm': { evidence: 'Our caller explained that this was a general policy inquiry and asked for a person twice. The system then transferred the call to a human.', path: 'Calling it a general policy question and asking twice for a person' },
   'spectrum-retention-department': { evidence: '7:49 Rep: Thank you for calling Spectrum here in Austin, Texas. My name is [name removed]. Who do I have the pleasure of speaking with today?', path: '"Cancel my account", then "disconnect"' },
   'united-change-flight': { evidence: '19:09 United agent: Hi, thank you for calling reservations desk. This is [name removed]. How may I help you?', path: '"Flight change fee", then hold' },
@@ -52,6 +59,7 @@ export const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> =
   'venmo-customer-service-number': { evidence: '4:57 Venmo representative: Thanks for calling Venmo. This is [name removed]. May I have your name, please?', path: 'Press 4, 2, 1, 2 (a dispute by phone), then stay on the line when no account is found' },
   'verizon-customer-service': { evidence: '5:52 Verizon: Hi, you\'ve reached [one word muted: it sounds like "me", and may be the representative\'s name] at Verizon, and it\'s my pleasure to assist you.', path: 'Saying "an agent, please"' },
   'wayfair-customer-service': { evidence: '1:12 Agent: This is your sales agent, [name removed]. How can I help you with your purchase?', path: 'Answering the assistant in one sentence' },
+  'wells-fargo-customer-service': { evidence: '2:14 Representative: Thank you for calling Wells Fargo. This is [name removed]. May I have your bank account number or debit card number, please?', path: '"I don\'t have it", "agent", then "checking account question"' },
   'windstream-customer-service': { evidence: '0:55 Rep: Hello, thank you so much for calling Kinetic. My name is [name removed]. Who do I have the pleasure to stay with today?', path: 'The sales line, press 1 (new residential deals)' },
 };
 

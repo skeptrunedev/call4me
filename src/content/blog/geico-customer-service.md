@@ -1,18 +1,21 @@
 ---
 title: "GEICO customer service: the words that reach a person"
-seoTitle: "GEICO customer service: (800) 207-7847"
+seoTitle: "GEICO customer service: 800-207-7847"
 subtitle: "We called GEICO twice. An AI-assisted voice menu answers first. Asking for a representative got us looped and dropped. Saying \"get a new policy\", then \"auto\", got a licensed agent on the line 2 minutes 35 seconds in. Here are both recordings, the exact prompts, and what the agent told us."
-description: "The GEICO customer service number is (800) 207-7847. Say \"get a new policy\", then \"auto\", to reach a person. Both recorded calls, and what the agent said."
+description: "The GEICO customer service number is 800-207-7847. Say \"get a new policy\", then \"auto\", to reach a person. Both recorded calls, and what the agent said."
 date: 2026-10-09
+updated: 2026-10-16
 verified: 2026-10-09
 tags: geico, insurance, car insurance, customer service, phone numbers, phone trees
 authors: nick
 imageAlt: "GEICO customer service number (800) 207-7847, and the words that reached a live agent in 2 minutes 35 seconds"
 ---
 
-**The short answer:** the GEICO customer service number is **(800) 207-7847**. A voice menu with AI answers, not a person. Say "get a new policy", then "auto", say you don't have a policy yet, answer "no" twice, stay on the line, and say your state. **A licensed sales agent answered 2 minutes 35 seconds after the call connected**, after about 44 seconds of hold. GEICO says it's there "24 hours a day, 7 days a week".
+**The short answer:** the GEICO customer service number is **800-207-7847**. A voice menu with AI answers, not a person. Say "get a new policy", then "auto", say you don't have a policy yet, answer "no" twice, stay on the line, and say your state. **A licensed sales agent answered 2 minutes 35 seconds after the call connected**, after about 44 seconds of hold. GEICO says it's there "24 hours a day, 7 days a week".
 
 GEICO's [phone contact page](https://www.geico.com/contact-us/phone/) lists it as **"Sales & Service"**, and it's the only general GEICO phone number on that page. The page doesn't list hours. GEICO's [information page](https://www.geico.com/information/) says "We're here for you 24 hours a day, 7 days a week. The quickest way to contact us is through our app or online."
+
+**Is this the real GEICO number?** Yes: we called it twice on October 9, 2026, and on the second call reached a licensed GEICO sales agent. Also written (800) 207-7847, 800 207 7847 or 1-800-207-7847.
 
 The first thing you hear is "Thank you for calling GEICO. During your call, you may interact with AI." It's a voice menu, not a person. This got us to a live agent:
 

@@ -4,6 +4,7 @@ seoTitle: "Venmo customer service number: (855) 812-4430"
 subtitle: "We called Venmo twice. The first call got stuck at a prompt for the phone number on your Venmo account. The second took the dispute branch, said yes to the calling number check, and reached a live representative 4 minutes 57 seconds in. Here are both recordings, every key we pressed, and what the representative told us."
 description: "The Venmo customer service number is (855) 812-4430, 8 am to 8 pm Central daily. The keys that reached a live person in 4:57, from two recorded calls."
 date: 2026-10-09
+updated: 2026-10-16
 verified: 2026-10-09
 tags: venmo, customer service, disputes, bank transfers, phone trees, phone numbers
 authors: nick
@@ -13,6 +14,8 @@ imageAlt: "Venmo customer service number (855) 812-4430, and the menu path that 
 **The short answer:** the Venmo customer service number is **(855) 812-4430**, open **8 am to 8 pm Central, every day**. A keypad menu answers, not a person and not an AI assistant, and there's no "press 0" option. Press **4**, **2**, **1**, then **2** to open a dispute by phone, confirm the number you're calling from, and stay on the line. **A live representative answered 4 minutes 57 seconds into the call**, about 26 seconds after the transfer message.
 
 Venmo's help article ["Phone or Email Already Registered"](https://help.venmo.com/cs/articles/contact-us-vhel259) says: "Help is available every day from 8 AM to 8 PM CT at (855) 812-4430." The same article says the in-app route is "Me > Settings > Get Help > Chat With Us in your Venmo app and ask for an agent."
+
+**Is this the real Venmo number?** Yes: we called it on October 9, 2026 and reached a live Venmo representative, who told us "I am a live representative." Also written 855-812-4430 or 1-855-812-4430.
 
 This path got us to a live representative:
 

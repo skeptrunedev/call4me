@@ -4,6 +4,7 @@ seoTitle: "Hertz customer service number: 1-800-654-4173"
 subtitle: "We called Hertz three times. On the past rentals line, a virtual assistant named Haley answers first. One call reached a live representative after six requests. One call ended when Haley hung up on us. Here are all three recordings, the exact prompts, and what the person told us."
 description: "The Hertz customer service number for past rentals is 1-800-654-4173. A virtual assistant answers. How we got a live person, from real recorded calls."
 date: 2026-10-08
+updated: 2026-10-16
 verified: 2026-10-08
 tags: hertz, car rental, customer service, phone numbers, virtual assistants, phone trees
 authors: nick
@@ -11,6 +12,8 @@ imageAlt: "Hertz customer service number 1-800-654-4173 for past rentals, and ho
 ---
 
 **The short answer:** the Hertz customer service number for a rental you already had is **1-800-654-4173**, open 6 am to 7 pm Central, Monday to Friday. A virtual assistant answers: "Hi, this is Haley, your virtual assistant." It's not a person. Say you don't have a confirmation number and ask for a representative. It will try to help you itself first, so keep asking. On our call it said "Let me connect you now" after our sixth request (2 minutes 44 seconds in), and **a live Hertz representative answered at 3:07**.
+
+**Is this the real Hertz number?** Yes: we called it twice on October 8, 2026, and on the second call a live Hertz representative answered after the virtual assistant transferred us. Also written 800-654-4173 or (800) 654-4173.
 
 Don't go quiet once it says it's connecting you. On another call to the same number, Haley said "Let me connect you with a live agent", then nothing happened for 12 seconds, then it said "I haven't heard from you in a bit." Our caller stayed silent, and Haley ended the call at 2:43. If it comes back and talks, answer it.
 
@@ -20,6 +23,8 @@ Hertz has different numbers for different jobs. Its help center page ["Phone Num
 - **Reservations: 1-800-654-3131.** "Book Leisure/Business Reservations 1-800-654-3131 (US, Puerto Rico and Canada)". International reservations: **1-800-654-3001**.
 - **Extending a rental: 1-800-654-4174,** open 24/7.
 - **Roadside assistance: 800-654-5060.**
+
+That list is from our October 8 visit. When we checked the same page on October 16, 2026, the past rentals and extension entries were links to Hertz's online pages and no longer printed 1-800-654-4173 or 1-800-654-4174. We only called the past rentals and reservations numbers, not the extension line.
 
 What the live representative told us about charges on a finished rental:
 

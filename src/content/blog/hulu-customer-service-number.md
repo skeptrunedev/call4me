@@ -4,6 +4,7 @@ seoTitle: "Hulu customer service number: 877-824-4858"
 subtitle: We called Hulu support to ask how cancelling works. Here is where Hulu lists its number, the phone menu, what a live representative said about cancelling, refunds and pausing, and the full 3 minute recording.
 description: The Hulu customer service number is 877-824-4858. We called, reached a live person in under 90 seconds, and asked how to cancel Hulu and about refunds.
 date: 2026-10-08
+updated: 2026-10-16
 verified: 2026-10-08
 tags: hulu, customer service, cancel subscription, streaming, phone trees
 authors: nick
@@ -16,7 +17,9 @@ Hulu doesn't print the number on the front of its [contact page](https://help.hu
 
 Hulu's [how to contact Hulu](https://help.hulu.com/article/hulu-how-to-contact-hulu) article says: "We are available for live support 24 hours a day 7 days a week." We only tested one time, a Thursday afternoon.
 
-Directory sites list other numbers for Hulu. 877-824-4858 is the only one we found on help.hulu.com, and it's the one we called.
+Directory sites list other numbers for Hulu. 877-824-4858 is the only one we found on help.hulu.com, and it's the one we called. The one other number on Hulu's own site, 855-738-6978, is a [privacy line](#hulus-privacy-line-855-738-6978).
+
+**Is this the real Hulu number?** Yes: we called it on October 8, 2026 and reached a live Hulu Support representative 1 minute 28 seconds after Hulu picked up. Also written 877 824 4858 or 1-877-824-4858.
 
 **What the representative told us about cancelling:**
 
@@ -59,6 +62,10 @@ Jump to a moment:
 5. **A person answers.** On our call, a Hulu Support representative picked up about 17 seconds after the menu finished. She asked whether we were calling to cancel and whether we had an existing account.
 
 We didn't test the numbered options, so we can't say whether press 2 reaches the same people.
+
+## Hulu's privacy line: 855-738-6978
+
+855-738-6978 is not a general support line. Hulu's [US State Privacy Rights page](https://www.hulu.com/your-us-state-privacy-rights) lists it for privacy requests, such as asking Hulu to access, correct or delete your personal information: "You can also call our toll-free number at 855-738-6978 to speak with one of our representatives." We didn't call it. For billing, cancelling or account help, use 877-824-4858.
 
 ## What to have ready
 

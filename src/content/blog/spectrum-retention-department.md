@@ -1,17 +1,19 @@
 ---
 title: "Spectrum retention: what to say, and $85 cut to $55"
-seoTitle: "Spectrum retention department: (833) 267-6094"
+seoTitle: "Spectrum retention department: 833-267-6094"
 subtitle: A call4me user's Spectrum internet bill had climbed to $85 a month. Their AI phone assistant called Spectrum, said "cancel" to get routed to retention, sat through the hold, and got the user patched in. Spectrum offered $55 a month for a year. Here's the phone tree, the recording, both offers, and the free technician tip the rep gave.
-description: How to reach the Spectrum retention department: call (833) 267-6094 and say "cancel," then "disconnect." Our call got $85/mo internet cut to $55 for a year.
+description: Spectrum retention: call 833-267-6094 and say "cancel," then "disconnect." Spectrum lists 888-369-2408 for Internet support. Our call cut $85/mo to $55.
 date: 2026-10-01
-updated: 2026-10-04
+updated: 2026-10-16
 verified: 2026-10-01
 tags: spectrum retention, spectrum customer service, lower spectrum bill, cancel spectrum, ai phone assistant
 authors: nick
 imageAlt: Spectrum retention department, $85 a month down to $55
 ---
 
-**The short answer:** Spectrum doesn't publish a separate retention phone number. Call **(833) 267-6094**, the number Spectrum lists for TV, Internet and Home Phone. An automated voice system answers, not a person. Say **"cancel my account"**, then **"disconnect"**, and answer its questions about which service and why you're leaving. It puts you in line for a **"customer solutions specialist,"** which is Spectrum's retention team. **A rep answered 7 minutes 49 seconds into our recording**, after about 5 minutes on hold. The rep later called it "the retention department or customer solutions department, either way."
+**The short answer:** Spectrum doesn't publish a separate retention phone number. Call **833-267-6094**, the number Spectrum lists for TV, Internet and Home Phone. An automated voice system answers, not a person. Say **"cancel my account"**, then **"disconnect"**, and answer its questions about which service and why you're leaving. It puts you in line for a **"customer solutions specialist,"** which is Spectrum's retention team. **A rep answered 7 minutes 49 seconds into our recording**, after about 5 minutes on hold. The rep later called it "the retention department or customer solutions department, either way." Spectrum also lists **888-369-2408** for Spectrum Internet customer service ([more below](#the-spectrum-retention-phone-number)).
+
+**Is this the real Spectrum number?** Yes: we called 833-267-6094 on October 1, 2026, said "cancel my account," and reached a customer solutions specialist on Spectrum's retention team. Also written (833) 267-6094 or 833 267 6094.
 
 On Thursday, October 1, 2026, a call4me user's AI phone assistant did exactly that. The user's Spectrum internet, the 1 Gig plan, had gone from about $62 a month to $85. After a phone menu, about 5 minutes on hold and an identity check, the user joined the call, and the rep offered two deals:
 
@@ -26,7 +28,7 @@ The AI handled the menu, the hold, and the start of verification. Spectrum then 
 
 ## The Spectrum retention phone number
 
-There isn't a separate public one. Spectrum's [contact page on spectrum.net](https://www.spectrum.net/contact-us) lists **(833) 267-6094** for TV, Internet and Home Phone questions. That's the number our caller dialed, and saying "cancel" there is what reaches retention. (Spectrum's newer contact page at spectrum.com lists 833-949-0036 for support. We didn't call that one.)
+There isn't a separate public one. Spectrum's [contact page on spectrum.net](https://www.spectrum.net/contact-us) lists **(833) 267-6094** for TV, Internet and Home Phone questions. That's the number our caller dialed, and saying "cancel" there is what reaches retention. Spectrum's newer [contact page at spectrum.com](https://www.spectrum.com/contact-us) lists two other numbers. **888-369-2408** is Spectrum Internet customer service: "Spectrum Internet Customer Service is available 24/7 by calling 888.369.2408." **833-949-0036** is for account and billing questions, also 24/7. We didn't call either one, so we can't say whether saying "cancel" there reaches retention the same way.
 
 ## The Spectrum phone tree, step by step
 

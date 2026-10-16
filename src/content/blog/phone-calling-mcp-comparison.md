@@ -39,7 +39,9 @@ Each guide covers setup in that app and says what we actually tested, and when.
 | n8n | [n8n MCP phone calls](/blog/n8n-mcp-phone-calls), an AI Agent workflow with the MCP Client Tool, with a real Xfinity call |
 | OpenClaw | [OpenClaw phone calls](/blog/openclaw-phone-calls), over MCP or the call4me ClawHub skill, with a real T-Mobile call |
 | Goose | [Goose MCP phone calls](/blog/goose-mcp-phone-calls), a remote extension in config.yaml, with a real Amazon call |
-| Your own code | [Vercel AI SDK tools package](/blog/vercel-ai-sdk-phone-calls) or a [LangChain agent over MCP](/blog/langchain-mcp-phone-calls) |
+| OpenCode | [OpenCode phone calls](/blog/opencode-phone-calls), a remote MCP server in opencode.json, with a real Pottery Barn call |
+| Cline | [Cline phone calls](/blog/cline-phone-calls), a headless Cline CLI run with a remote MCP server, with a real UPS call |
+| Your own code | [Vercel AI SDK tools package](/blog/vercel-ai-sdk-phone-calls), a [LangChain agent over MCP](/blog/langchain-mcp-phone-calls), the [OpenAI Agents SDK](/blog/openai-agents-sdk-phone-calls) (real USPS call), the [Claude Agent SDK](/blog/claude-agent-sdk-phone-calls) (real Social Security call) or a [Mastra agent](/blog/mastra-mcp-phone-calls) (real Fabletics call) |
 | Calls for later | [Scheduling a call from Claude Code or Codex](/blog/schedule-phone-calls-claude-code-codex) |
 
 ## Why choose call4me for your existing assistant?

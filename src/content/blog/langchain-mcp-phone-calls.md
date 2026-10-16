@@ -133,8 +133,7 @@ The test also tells you something about Southwest: its reservations line will no
 
 ## Pricing and limits
 
-- $0.25 per minute of talk time in the US and Canada, including hold; some destinations cost more (see [the FAQ](/#faq)). Unanswered calls are free.
-- Two calls can run at once per account.
+- $0.25 per minute of talk time in the US and Canada, and half that for whole minutes on hold; some destinations cost more (see [the FAQ](/#faq)). Unanswered calls are free.
 - `max_minutes` defaults to 30 and goes up to 240 for a long hold.
 
 ## Other ways to use the same calls

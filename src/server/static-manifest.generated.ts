@@ -3,7 +3,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/": {
     "html": "/__pages/8a5edab282632443.html",
     "markdown": "/__pages/8a5edab282632443.md",
-    "tokens": 2983
+    "tokens": 3017
   },
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
@@ -18,7 +18,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/companies": {
     "html": "/__pages/965e43e2b9e71740.html",
     "markdown": "/__pages/965e43e2b9e71740.md",
-    "tokens": 1459
+    "tokens": 1694
   },
   "/superintelligence-calling-index": {
     "html": "/__pages/7fec148cf54c375f.html",
@@ -28,12 +28,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/ai-call-assistant": {
     "html": "/__pages/9c2cf5350f943d84.html",
     "markdown": "/__pages/9c2cf5350f943d84.md",
-    "tokens": 2789
+    "tokens": 2793
   },
   "/hold-times": {
     "html": "/__pages/0adb6fe5d87ff479.html",
     "markdown": "/__pages/0adb6fe5d87ff479.md",
-    "tokens": 4785
+    "tokens": 5710
   },
   "/students": {
     "html": "/__pages/9a3f77bd97426a79.html",
@@ -48,12 +48,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/rules": {
     "html": "/__pages/933053fc294245bb.html",
     "markdown": "/__pages/933053fc294245bb.md",
-    "tokens": 1190
+    "tokens": 1221
   },
   "/privacy": {
     "html": "/__pages/0ece7f7c306b4cf6.html",
     "markdown": "/__pages/0ece7f7c306b4cf6.md",
-    "tokens": 3132
+    "tokens": 3157
   },
   "/terms": {
     "html": "/__pages/2dda5c6b8eee51aa.html",
@@ -68,62 +68,252 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/support": {
     "html": "/__pages/0b9f34c92865bdd1.html",
     "markdown": "/__pages/0b9f34c92865bdd1.md",
-    "tokens": 274
+    "tokens": 278
   },
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 1797
+    "tokens": 2264
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2133
+    "tokens": 2075
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 1901
+    "tokens": 2214
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 1770
+    "tokens": 1811
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 1813
+    "tokens": 2138
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 1977
+    "tokens": 1874
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 1878
+    "tokens": 1768
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2039
+    "tokens": 1839
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 1928
+    "tokens": 1962
+  },
+  "/blog?page=10": {
+    "html": "/__pages/5f1205fb34b8d1b0.html",
+    "markdown": "/__pages/5f1205fb34b8d1b0.md",
+    "tokens": 1966
+  },
+  "/blog?page=11": {
+    "html": "/__pages/87f5326c1f6fb37d.html",
+    "markdown": "/__pages/87f5326c1f6fb37d.md",
+    "tokens": 2117
+  },
+  "/blog?page=12": {
+    "html": "/__pages/bc2a4f64b3070cee.html",
+    "markdown": "/__pages/bc2a4f64b3070cee.md",
+    "tokens": 1278
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 8928
+    "tokens": 12305
+  },
+  "/blog/capital-one-customer-service": {
+    "html": "/__pages/a385bedc31555638.html",
+    "markdown": "/__pages/a385bedc31555638.md",
+    "tokens": 5135
+  },
+  "/blog/cash-app-customer-service-number": {
+    "html": "/__pages/ebdd37505eadb5a2.html",
+    "markdown": "/__pages/ebdd37505eadb5a2.md",
+    "tokens": 5657
+  },
+  "/blog/bank-of-america-customer-service": {
+    "html": "/__pages/ff778a2b612c7fe2.html",
+    "markdown": "/__pages/ff778a2b612c7fe2.md",
+    "tokens": 4751
+  },
+  "/blog/wells-fargo-customer-service": {
+    "html": "/__pages/1909ea4bb7a7f83e.html",
+    "markdown": "/__pages/1909ea4bb7a7f83e.md",
+    "tokens": 4389
+  },
+  "/blog/jetblue-customer-service": {
+    "html": "/__pages/61f270608419650f.html",
+    "markdown": "/__pages/61f270608419650f.md",
+    "tokens": 4993
+  },
+  "/blog/progressive-customer-service": {
+    "html": "/__pages/7ef6426a09eb45df.html",
+    "markdown": "/__pages/7ef6426a09eb45df.md",
+    "tokens": 4705
+  },
+  "/blog/airbnb-customer-service-number": {
+    "html": "/__pages/e392dafb7481d910.html",
+    "markdown": "/__pages/e392dafb7481d910.md",
+    "tokens": 5510
+  },
+  "/blog/expedia-customer-service-number": {
+    "html": "/__pages/adc39c755249459c.html",
+    "markdown": "/__pages/adc39c755249459c.md",
+    "tokens": 4255
+  },
+  "/blog/opencode-phone-calls": {
+    "html": "/__pages/f643b874d5d5cfd4.html",
+    "markdown": "/__pages/f643b874d5d5cfd4.md",
+    "tokens": 6594
+  },
+  "/blog/openai-agents-sdk-phone-calls": {
+    "html": "/__pages/207258c629ec45f8.html",
+    "markdown": "/__pages/207258c629ec45f8.md",
+    "tokens": 6631
+  },
+  "/blog/mastra-mcp-phone-calls": {
+    "html": "/__pages/f1165665c23ae822.html",
+    "markdown": "/__pages/f1165665c23ae822.md",
+    "tokens": 7006
+  },
+  "/blog/claude-agent-sdk-phone-calls": {
+    "html": "/__pages/f3175b6690b5fb79.html",
+    "markdown": "/__pages/f3175b6690b5fb79.md",
+    "tokens": 7365
+  },
+  "/blog/cline-phone-calls": {
+    "html": "/__pages/00ca1c130b2e95bb.html",
+    "markdown": "/__pages/00ca1c130b2e95bb.md",
+    "tokens": 6114
+  },
+  "/blog/amazon-seller-distributor-calls": {
+    "html": "/__pages/e4e04e4c0c1687ac.html",
+    "markdown": "/__pages/e4e04e4c0c1687ac.md",
+    "tokens": 3330
+  },
+  "/blog/amazon-customer-service-number": {
+    "html": "/__pages/206c85c5adbd82b1.html",
+    "markdown": "/__pages/206c85c5adbd82b1.md",
+    "tokens": 6416
+  },
+  "/blog/xfinity-customer-service-number": {
+    "html": "/__pages/71ceb939dffe328c.html",
+    "markdown": "/__pages/71ceb939dffe328c.md",
+    "tokens": 5504
+  },
+  "/blog/irs-phone-number": {
+    "html": "/__pages/5c3dbf05923aa44a.html",
+    "markdown": "/__pages/5c3dbf05923aa44a.md",
+    "tokens": 6624
+  },
+  "/blog/t-mobile-customer-service-number": {
+    "html": "/__pages/016e6c0731298402.html",
+    "markdown": "/__pages/016e6c0731298402.md",
+    "tokens": 4913
+  },
+  "/blog/langchain-mcp-phone-calls": {
+    "html": "/__pages/3a28e046b9bdfb2d.html",
+    "markdown": "/__pages/3a28e046b9bdfb2d.md",
+    "tokens": 4022
+  },
+  "/blog/github-copilot-phone-calls": {
+    "html": "/__pages/1537745cd96caf99.html",
+    "markdown": "/__pages/1537745cd96caf99.md",
+    "tokens": 4687
+  },
+  "/blog/chatgpt-phone-calls": {
+    "html": "/__pages/82112ee792a1287d.html",
+    "markdown": "/__pages/82112ee792a1287d.md",
+    "tokens": 4582
+  },
+  "/blog/claude-phone-calls": {
+    "html": "/__pages/2bca3a76156714dc.html",
+    "markdown": "/__pages/2bca3a76156714dc.md",
+    "tokens": 4163
+  },
+  "/blog/cursor-phone-calls": {
+    "html": "/__pages/78808eaa7cd9eba5.html",
+    "markdown": "/__pages/78808eaa7cd9eba5.md",
+    "tokens": 4212
+  },
+  "/blog/gemini-phone-calls": {
+    "html": "/__pages/eca716a029901025.html",
+    "markdown": "/__pages/eca716a029901025.md",
+    "tokens": 4361
+  },
+  "/blog/perplexity-phone-calls": {
+    "html": "/__pages/3044b20822582107.html",
+    "markdown": "/__pages/3044b20822582107.md",
+    "tokens": 4377
+  },
+  "/blog/n8n-mcp-phone-calls": {
+    "html": "/__pages/1852857ce33fa137.html",
+    "markdown": "/__pages/1852857ce33fa137.md",
+    "tokens": 5243
+  },
+  "/blog/openclaw-phone-calls": {
+    "html": "/__pages/8048334d63e47f95.html",
+    "markdown": "/__pages/8048334d63e47f95.md",
+    "tokens": 5587
+  },
+  "/blog/goose-mcp-phone-calls": {
+    "html": "/__pages/f249d712c020846d.html",
+    "markdown": "/__pages/f249d712c020846d.md",
+    "tokens": 5251
+  },
+  "/blog/usps-phone-number": {
+    "html": "/__pages/b4a83613fd308409.html",
+    "markdown": "/__pages/b4a83613fd308409.md",
+    "tokens": 8533
+  },
+  "/blog/social-security-phone-number": {
+    "html": "/__pages/ae8a052052c9f693.html",
+    "markdown": "/__pages/ae8a052052c9f693.md",
+    "tokens": 7036
+  },
+  "/blog/costco-customer-service": {
+    "html": "/__pages/77f87a42aa5bef1c.html",
+    "markdown": "/__pages/77f87a42aa5bef1c.md",
+    "tokens": 7592
+  },
+  "/blog/att-customer-service-number": {
+    "html": "/__pages/4fc865890ec1135b.html",
+    "markdown": "/__pages/4fc865890ec1135b.md",
+    "tokens": 8247
+  },
+  "/blog/southwest-airlines-phone-number": {
+    "html": "/__pages/a044a0c777c5b7fe.html",
+    "markdown": "/__pages/a044a0c777c5b7fe.md",
+    "tokens": 5307
+  },
+  "/blog/home-depot-customer-service": {
+    "html": "/__pages/386ebcbd12bbbc61.html",
+    "markdown": "/__pages/386ebcbd12bbbc61.md",
+    "tokens": 8458
+  },
+  "/blog/walmart-customer-service-number": {
+    "html": "/__pages/cb58e77742fc6c4a.html",
+    "markdown": "/__pages/cb58e77742fc6c4a.md",
+    "tokens": 7183
   },
   "/blog/ai-apps-that-make-calls-for-you": {
     "html": "/__pages/427c0a40de2bba10.html",
     "markdown": "/__pages/427c0a40de2bba10.md",
-    "tokens": 5627
+    "tokens": 5664
   },
   "/blog/hijinx-hotel-irvine": {
     "html": "/__pages/acb492544467c9de.html",
@@ -168,7 +358,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/customer-story-dental-appointments": {
     "html": "/__pages/aa1cb4c062716d89.html",
     "markdown": "/__pages/aa1cb4c062716d89.md",
-    "tokens": 1684
+    "tokens": 1680
   },
   "/blog/customer-story-joe-dress-shoes": {
     "html": "/__pages/29e60f3afffaf911.html",
@@ -178,47 +368,47 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/geico-customer-service": {
     "html": "/__pages/41d589203042a30a.html",
     "markdown": "/__pages/41d589203042a30a.md",
-    "tokens": 6449
+    "tokens": 6502
   },
   "/blog/doordash-customer-service-number": {
     "html": "/__pages/ff70cf03e5b76586.html",
     "markdown": "/__pages/ff70cf03e5b76586.md",
-    "tokens": 4458
+    "tokens": 4520
   },
   "/blog/priceline-customer-service": {
     "html": "/__pages/2a91c0a6d3a54c7c.html",
     "markdown": "/__pages/2a91c0a6d3a54c7c.md",
-    "tokens": 5343
+    "tokens": 5487
   },
   "/blog/venmo-customer-service-number": {
     "html": "/__pages/8ddc0d8e5d387de7.html",
     "markdown": "/__pages/8ddc0d8e5d387de7.md",
-    "tokens": 9065
+    "tokens": 9293
   },
   "/blog/everything-we-have-improved-since-launch": {
     "html": "/__pages/ee53e230a99841c0.html",
     "markdown": "/__pages/ee53e230a99841c0.md",
-    "tokens": 2505
+    "tokens": 2658
   },
   "/blog/delta-customer-service": {
     "html": "/__pages/61e1d8ba2e5289ea.html",
     "markdown": "/__pages/61e1d8ba2e5289ea.md",
-    "tokens": 5219
+    "tokens": 5599
   },
   "/blog/paypal-customer-service-number": {
     "html": "/__pages/14df76f086347bc7.html",
     "markdown": "/__pages/14df76f086347bc7.md",
-    "tokens": 6103
+    "tokens": 6505
   },
   "/blog/fifth-third-bank-customer-service": {
     "html": "/__pages/84b4a369f5053ffa.html",
     "markdown": "/__pages/84b4a369f5053ffa.md",
-    "tokens": 4199
+    "tokens": 4502
   },
   "/blog/aaa-insurance-customer-service": {
     "html": "/__pages/40f19e9468e5378f.html",
     "markdown": "/__pages/40f19e9468e5378f.md",
-    "tokens": 4187
+    "tokens": 4229
   },
   "/blog/directv-customer-service": {
     "html": "/__pages/3ae0ffa568610e73.html",
@@ -228,47 +418,47 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/pottery-barn-customer-service": {
     "html": "/__pages/7d519b6ada502c05.html",
     "markdown": "/__pages/7d519b6ada502c05.md",
-    "tokens": 3486
+    "tokens": 3757
   },
   "/blog/hertz-customer-service-number": {
     "html": "/__pages/e3ebefa55d525ccc.html",
     "markdown": "/__pages/e3ebefa55d525ccc.md",
-    "tokens": 9295
+    "tokens": 9435
   },
   "/blog/hulu-customer-service-number": {
     "html": "/__pages/4f5cdd1adcfe8559.html",
     "markdown": "/__pages/4f5cdd1adcfe8559.md",
-    "tokens": 3969
+    "tokens": 4181
   },
   "/blog/windstream-customer-service": {
     "html": "/__pages/1b78d55294739307.html",
     "markdown": "/__pages/1b78d55294739307.md",
-    "tokens": 7894
+    "tokens": 7926
   },
   "/blog/how-long-to-reach-a-human": {
     "html": "/__pages/1624f2222bb89bf3.html",
     "markdown": "/__pages/1624f2222bb89bf3.md",
-    "tokens": 6749
+    "tokens": 8048
   },
   "/blog/vercel-ai-sdk-phone-calls": {
     "html": "/__pages/ff098db0a2035f3b.html",
     "markdown": "/__pages/ff098db0a2035f3b.md",
-    "tokens": 2968
+    "tokens": 3039
   },
   "/blog/vapi-alternatives": {
     "html": "/__pages/55c22a477aa2029e.html",
     "markdown": "/__pages/55c22a477aa2029e.md",
-    "tokens": 3393
+    "tokens": 3369
   },
   "/blog/bland-ai-alternatives": {
     "html": "/__pages/ae7d8f0f01361a52.html",
     "markdown": "/__pages/ae7d8f0f01361a52.md",
-    "tokens": 3244
+    "tokens": 3266
   },
   "/blog/ai-agent-that-makes-phone-calls": {
     "html": "/__pages/c6d4cf77fa9ecc89.html",
     "markdown": "/__pages/c6d4cf77fa9ecc89.md",
-    "tokens": 2983
+    "tokens": 3185
   },
   "/blog/gym-day-pass": {
     "html": "/__pages/58e8dd209383d03e.html",
@@ -278,27 +468,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/gyms-with-sauna-near-me": {
     "html": "/__pages/7629097141d8947d.html",
     "markdown": "/__pages/7629097141d8947d.md",
-    "tokens": 2993
-  },
-  "/blog/how-much-does-blood-work-cost": {
-    "html": "/__pages/a3d5d75459d562a5.html",
-    "markdown": "/__pages/a3d5d75459d562a5.md",
-    "tokens": 3098
-  },
-  "/blog/furniture-refinishing-cost": {
-    "html": "/__pages/a940f850f4bf1e16.html",
-    "markdown": "/__pages/a940f850f4bf1e16.md",
-    "tokens": 2142
-  },
-  "/blog/couch-reupholstery-cost": {
-    "html": "/__pages/cd4e7e91e42f43bd.html",
-    "markdown": "/__pages/cd4e7e91e42f43bd.md",
-    "tokens": 2151
+    "tokens": 2992
   },
   "/blog/dog-teeth-cleaning-cost": {
     "html": "/__pages/381f0e4e9598e31b.html",
     "markdown": "/__pages/381f0e4e9598e31b.md",
-    "tokens": 4382
+    "tokens": 4426
   },
   "/blog/wheel-alignment-cost": {
     "html": "/__pages/5fff2e02afdd1065.html",
@@ -318,7 +493,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/costco-eye-exam-cost": {
     "html": "/__pages/87eb50534995e24f.html",
     "markdown": "/__pages/87eb50534995e24f.md",
-    "tokens": 4122
+    "tokens": 3996
   },
   "/blog/cancel-crunch": {
     "html": "/__pages/70722b023a3a2b09.html",
@@ -348,7 +523,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/reschedule-doctor-appointment": {
     "html": "/__pages/58950964777a3366.html",
     "markdown": "/__pages/58950964777a3366.md",
-    "tokens": 5194
+    "tokens": 5190
   },
   "/blog/running-late-to-barber": {
     "html": "/__pages/3df0f1db1eb5aeb6.html",
@@ -363,7 +538,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/veterinary-behavior-consultation-call": {
     "html": "/__pages/041c2f0b9be1ffa4.html",
     "markdown": "/__pages/041c2f0b9be1ffa4.md",
-    "tokens": 3864
+    "tokens": 3863
   },
   "/blog/aquasana-return-exception": {
     "html": "/__pages/0cdf5c587fc9e991.html",
@@ -373,7 +548,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/running-late-to-appointment": {
     "html": "/__pages/46652be8ed2e540e.html",
     "markdown": "/__pages/46652be8ed2e540e.md",
-    "tokens": 2781
+    "tokens": 2770
   },
   "/blog/grok-bot-templates": {
     "html": "/__pages/f035c9b173e027ef.html",
@@ -383,7 +558,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/grok-bot-reusable-skills": {
     "html": "/__pages/aec25293ba23aad5.html",
     "markdown": "/__pages/aec25293ba23aad5.md",
-    "tokens": 2550
+    "tokens": 2538
   },
   "/blog/grok-bot-template-troubleshooting": {
     "html": "/__pages/53f7d63e40fb6e84.html",
@@ -408,7 +583,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/meta-muse-supplier-quotes": {
     "html": "/__pages/c4ae492a3b9565cc.html",
     "markdown": "/__pages/c4ae492a3b9565cc.md",
-    "tokens": 2312
+    "tokens": 2265
   },
   "/blog/wyoming-registered-agent-consent-form": {
     "html": "/__pages/0bf23a868439d3a1.html",
@@ -423,7 +598,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/drop-off-vet-appointment": {
     "html": "/__pages/19b297077f9d1c0a.html",
     "markdown": "/__pages/19b297077f9d1c0a.md",
-    "tokens": 4402
+    "tokens": 4401
   },
   "/blog/book-haircut-appointment": {
     "html": "/__pages/9eaed74ec63d7553.html",
@@ -438,12 +613,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/t3-code-phone-calls": {
     "html": "/__pages/c4487b0143fe433f.html",
     "markdown": "/__pages/c4487b0143fe433f.md",
-    "tokens": 4522
+    "tokens": 4560
   },
   "/blog/schedule-phone-calls-claude-code-codex": {
     "html": "/__pages/ed6525f569adc849.html",
     "markdown": "/__pages/ed6525f569adc849.md",
-    "tokens": 4765
+    "tokens": 4804
   },
   "/blog/ai-phone-tree-navigation": {
     "html": "/__pages/2aec3a158421265c.html",
@@ -453,37 +628,37 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/twilio-mcp-phone-calls": {
     "html": "/__pages/08398e894029722b.html",
     "markdown": "/__pages/08398e894029722b.md",
-    "tokens": 4202
+    "tokens": 4186
   },
   "/blog/instinct-ai-phone-calls": {
     "html": "/__pages/7d8b01a75a9d6b95.html",
     "markdown": "/__pages/7d8b01a75a9d6b95.md",
-    "tokens": 4003
+    "tokens": 4062
   },
   "/blog/claude-code-phone-calls": {
     "html": "/__pages/b4a4a35039232bdd.html",
     "markdown": "/__pages/b4a4a35039232bdd.md",
-    "tokens": 5786
+    "tokens": 5914
   },
   "/blog/codex-phone-calls": {
     "html": "/__pages/3348257799ac3891.html",
     "markdown": "/__pages/3348257799ac3891.md",
-    "tokens": 3933
+    "tokens": 4757
   },
   "/blog/agent-web-research-phone-calls-sf-private-dining": {
     "html": "/__pages/5d9174de815b6805.html",
     "markdown": "/__pages/5d9174de815b6805.md",
-    "tokens": 8286
+    "tokens": 8311
   },
   "/blog/phone-calling-mcp-comparison": {
     "html": "/__pages/59a59e92f1223e3d.html",
     "markdown": "/__pages/59a59e92f1223e3d.md",
-    "tokens": 9627
+    "tokens": 10367
   },
   "/blog/cascaded-voice-stack-vs-gpt-live": {
     "html": "/__pages/aeae359d4c5c3e33.html",
     "markdown": "/__pages/aeae359d4c5c3e33.md",
-    "tokens": 5520
+    "tokens": 5512
   },
   "/blog/cancel-factor": {
     "html": "/__pages/505eb83b629fa414.html",
@@ -503,7 +678,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/allstate-customer-service-number": {
     "html": "/__pages/9ac645ac6d4e4820.html",
     "markdown": "/__pages/9ac645ac6d4e4820.md",
-    "tokens": 4528
+    "tokens": 4575
   },
   "/blog/cancel-audible": {
     "html": "/__pages/5aba5afde50e26d0.html",
@@ -513,17 +688,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/fabletics-customer-service": {
     "html": "/__pages/5b5c1e7011303734.html",
     "markdown": "/__pages/5b5c1e7011303734.md",
-    "tokens": 5601
+    "tokens": 5706
   },
   "/blog/eye-exam-cost-without-insurance": {
     "html": "/__pages/759663bac5eb4427.html",
     "markdown": "/__pages/759663bac5eb4427.md",
-    "tokens": 5872
+    "tokens": 5747
   },
   "/blog/follow-up-appointment-telehealth": {
     "html": "/__pages/630731ffc3be9c50.html",
     "markdown": "/__pages/630731ffc3be9c50.md",
-    "tokens": 3904
+    "tokens": 3908
   },
   "/blog/private-dining-room-cost": {
     "html": "/__pages/071eeba541fc558a.html",
@@ -543,17 +718,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/grok-connectors-mcp-phone-calls": {
     "html": "/__pages/dd53a82fc808756f.html",
     "markdown": "/__pages/dd53a82fc808756f.md",
-    "tokens": 5949
+    "tokens": 6106
   },
   "/blog/meta-muse-ai-agent-phone-calls": {
     "html": "/__pages/6b5da232c9e22e22.html",
     "markdown": "/__pages/6b5da232c9e22e22.md",
-    "tokens": 4571
+    "tokens": 4627
   },
   "/blog/etihad-customer-service": {
     "html": "/__pages/a609f08f0c294628.html",
     "markdown": "/__pages/a609f08f0c294628.md",
-    "tokens": 6846
+    "tokens": 6836
   },
   "/blog/lawyer-consultation-fee": {
     "html": "/__pages/ee87b1a08149cfbd.html",
@@ -563,7 +738,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/american-airlines-flight-credit": {
     "html": "/__pages/54dd6bcdbea387c1.html",
     "markdown": "/__pages/54dd6bcdbea387c1.md",
-    "tokens": 11038
+    "tokens": 10885
   },
   "/blog/adderall-shortage": {
     "html": "/__pages/0fe25dd718aaf032.html",
@@ -573,22 +748,22 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-to-find-a-new-primary-care-doctor": {
     "html": "/__pages/035614e93447d90b.html",
     "markdown": "/__pages/035614e93447d90b.md",
-    "tokens": 22383
+    "tokens": 22321
   },
   "/blog/usaa-phone-number": {
     "html": "/__pages/a70b41d595149573.html",
     "markdown": "/__pages/a70b41d595149573.md",
-    "tokens": 5027
+    "tokens": 5073
   },
   "/blog/ups-contact-number": {
     "html": "/__pages/e368946ff169194f.html",
     "markdown": "/__pages/e368946ff169194f.md",
-    "tokens": 6355
+    "tokens": 6505
   },
   "/blog/verizon-customer-service": {
     "html": "/__pages/6cfd54b00e65d985.html",
     "markdown": "/__pages/6cfd54b00e65d985.md",
-    "tokens": 11009
+    "tokens": 11175
   },
   "/blog/fpl-phone-number": {
     "html": "/__pages/f5806291e5d3e637.html",
@@ -598,17 +773,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/fedex-customer-service-number": {
     "html": "/__pages/d15a265e3315048f.html",
     "markdown": "/__pages/d15a265e3315048f.md",
-    "tokens": 10955
+    "tokens": 11106
   },
   "/blog/united-change-flight": {
     "html": "/__pages/a3ec4a65792b971c.html",
     "markdown": "/__pages/a3ec4a65792b971c.md",
-    "tokens": 6186
+    "tokens": 6545
   },
   "/blog/unitedhealthcare-phone-number": {
     "html": "/__pages/8f9029f0cf73d4f9.html",
     "markdown": "/__pages/8f9029f0cf73d4f9.md",
-    "tokens": 5109
+    "tokens": 5121
   },
   "/blog/need-dress-shoes-today": {
     "html": "/__pages/18c64c271fefb021.html",
@@ -618,12 +793,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/spectrum-retention-department": {
     "html": "/__pages/cad6a590d97a2bfd.html",
     "markdown": "/__pages/cad6a590d97a2bfd.md",
-    "tokens": 6541
+    "tokens": 6722
   },
   "/blog/experian-phone-number": {
     "html": "/__pages/a1897270700e714d.html",
     "markdown": "/__pages/a1897270700e714d.md",
-    "tokens": 4214
+    "tokens": 4384
   },
   "/blog/cancel-planet-fitness": {
     "html": "/__pages/a9a59bfd1e8c3da5.html",
@@ -633,26 +808,26 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/wayfair-customer-service": {
     "html": "/__pages/3ce73872b4d7c2b7.html",
     "markdown": "/__pages/3ce73872b4d7c2b7.md",
-    "tokens": 4293
+    "tokens": 4503
   },
   "/blog/costco-tire-appointment-cancel-refund": {
     "html": "/__pages/ca5f5983d7127c65.html",
     "markdown": "/__pages/ca5f5983d7127c65.md",
-    "tokens": 4420
+    "tokens": 4419
   },
   "/blog/reschedule-dentist-appointment": {
     "html": "/__pages/1b1129e38f43b43f.html",
     "markdown": "/__pages/1b1129e38f43b43f.md",
-    "tokens": 2693
+    "tokens": 2799
   },
   "/blog/junk-removal-cost": {
     "html": "/__pages/3f44cdf8260b9b11.html",
     "markdown": "/__pages/3f44cdf8260b9b11.md",
-    "tokens": 4387
+    "tokens": 4156
   },
   "/blog/openai-realtime-voices-phone-calls": {
     "html": "/__pages/bfa7fe3d0cc5780a.html",
     "markdown": "/__pages/bfa7fe3d0cc5780a.md",
-    "tokens": 9288
+    "tokens": 9351
   }
 };

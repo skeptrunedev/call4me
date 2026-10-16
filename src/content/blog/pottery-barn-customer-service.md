@@ -4,6 +4,7 @@ seoTitle: "Pottery Barn customer service: 1-888-779-5176"
 subtitle: "We called Pottery Barn's customer service line to ask about order status, returns and furniture delivery. Here is the phone menu, the one phrase that got us to a person, what she said, and the full 2 minute recording."
 description: "The Pottery Barn customer service number is 1-888-779-5176. Say \"customer service\" at the menu to reach a person. Returns and delivery, from a real call."
 date: 2026-10-08
+updated: 2026-10-16
 verified: 2026-10-08
 tags: pottery barn, customer service, returns, furniture delivery, phone trees
 authors: nick
@@ -13,6 +14,8 @@ imageAlt: Pottery Barn 1-888-779-5176, how to reach a person at Pottery Barn cus
 **The short answer:** the Pottery Barn customer service phone number is **1-888-779-5176**. A short voice prompt answers, not a person. **Say "customer service"**, and **a live representative picked up 49 seconds after the call connected.** Neither page we checked lists phone hours.
 
 Pottery Barn's [contact page](https://www.potterybarn.com/customer-service/contact-us/) lists it as "U.S. Customer Service 1.888.779.5176", and the site header says "Call Us 1.888.779.5176". The site also offers Chat Now.
+
+**Is this the real Pottery Barn number?** Yes: we called it on October 8, 2026, said "customer service", and reached a live representative 49 seconds after the call connected. Also written 888-779-5176 or (888) 779-5176.
 
 **A live person answered.** Here's how we got to her:
 

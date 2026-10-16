@@ -125,6 +125,19 @@ import attCustomerServiceNumber from './att-customer-service-number.md';
 import southwestAirlinesPhoneNumber from './southwest-airlines-phone-number.md';
 import homeDepotCustomerService from './home-depot-customer-service.md';
 import walmartCustomerServiceNumber from './walmart-customer-service-number.md';
+import capitalOneCustomerService from './capital-one-customer-service.md';
+import cashAppCustomerServiceNumber from './cash-app-customer-service-number.md';
+import bankOfAmericaCustomerService from './bank-of-america-customer-service.md';
+import wellsFargoCustomerService from './wells-fargo-customer-service.md';
+import jetblueCustomerService from './jetblue-customer-service.md';
+import progressiveCustomerService from './progressive-customer-service.md';
+import airbnbCustomerServiceNumber from './airbnb-customer-service-number.md';
+import expediaCustomerServiceNumber from './expedia-customer-service-number.md';
+import opencodePhoneCalls from './opencode-phone-calls.md';
+import openaiAgentsSdkPhoneCalls from './openai-agents-sdk-phone-calls.md';
+import mastraMcpPhoneCalls from './mastra-mcp-phone-calls.md';
+import claudeAgentSdkPhoneCalls from './claude-agent-sdk-phone-calls.md';
+import clinePhoneCalls from './cline-phone-calls.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -259,4 +272,17 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'southwest-airlines-phone-number', markdown: southwestAirlinesPhoneNumber },
   { slug: 'home-depot-customer-service', markdown: homeDepotCustomerService },
   { slug: 'walmart-customer-service-number', markdown: walmartCustomerServiceNumber },
+  { slug: 'capital-one-customer-service', markdown: capitalOneCustomerService },
+  { slug: 'cash-app-customer-service-number', markdown: cashAppCustomerServiceNumber },
+  { slug: 'bank-of-america-customer-service', markdown: bankOfAmericaCustomerService },
+  { slug: 'wells-fargo-customer-service', markdown: wellsFargoCustomerService },
+  { slug: 'jetblue-customer-service', markdown: jetblueCustomerService },
+  { slug: 'progressive-customer-service', markdown: progressiveCustomerService },
+  { slug: 'airbnb-customer-service-number', markdown: airbnbCustomerServiceNumber },
+  { slug: 'expedia-customer-service-number', markdown: expediaCustomerServiceNumber },
+  { slug: 'opencode-phone-calls', markdown: opencodePhoneCalls },
+  { slug: 'openai-agents-sdk-phone-calls', markdown: openaiAgentsSdkPhoneCalls },
+  { slug: 'mastra-mcp-phone-calls', markdown: mastraMcpPhoneCalls },
+  { slug: 'claude-agent-sdk-phone-calls', markdown: claudeAgentSdkPhoneCalls },
+  { slug: 'cline-phone-calls', markdown: clinePhoneCalls },
 ];
