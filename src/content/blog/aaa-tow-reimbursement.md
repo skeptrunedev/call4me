@@ -1,9 +1,10 @@
 ---
-title: "AAA tow reimbursement: what AAA Northeast asks for, from a real call"
+title: How to get an AAA tow reimbursement from AAA Northeast, from a real call
 seoTitle: "AAA tow reimbursement: 1-844-765-6428 (Northeast)"
 subtitle: "A call4me customer paid for a tow out of pocket and wanted AAA to pay it back. Their assistant called AAA Northeast's reimbursement line, reached a person in 1 minute 8 seconds. Two days earlier it had called the tow company twice to get the receipt in the right name. Here is what each call settled, what it didn't, and all three recordings."
 description: "AAA Northeast tow reimbursement: mail the form and an itemized paid receipt to Providence, RI within 30 days. From a real call to 1-844-765-6428."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-15
 tags: aaa, aaa northeast, tow reimbursement, roadside assistance, customer service, phone numbers
 authors: nick

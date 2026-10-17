@@ -1,9 +1,10 @@
 ---
-title: "ServiceOntario phone number: reaching a person about a suspended licence"
+title: "Reach a ServiceOntario representative by phone about a suspended licence"
 seoTitle: "ServiceOntario phone number: 416-235-2999"
 subtitle: "A call4me customer's assistant called ServiceOntario twice about a suspended driver's licence and a licence plate that didn't renew, plus Toronto Court Services once in between. Here is the voice menu, what got through to a person, what the representatives would and wouldn't say, and all three recordings."
 description: "The ServiceOntario phone number is 416-235-2999 or 1-800-387-3445. Say \"representative\" to reach a person. Suspended licence answers from real calls."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-13
 tags: serviceontario, serviceontario contact, ontario driver's licence, licence suspension, reinstatement fee, licence plate renewal, government phone numbers, phone trees
 authors: nick

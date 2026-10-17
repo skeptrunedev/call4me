@@ -1,16 +1,17 @@
 ---
-title: "Screening colonoscopy in San Juan: how Dra. Cruz-Correa's office schedules it"
+title: "How to schedule a screening colonoscopy with Dra. Cruz-Correa in San Juan"
 seoTitle: "Screening colonoscopy in San Juan, PR: how to book"
 subtitle: A real call in Spanish to a GI oncology office at the Hospital Oncológico in San Juan asked who books colonoscopies, when November dates open up, and what a first visit costs.
-description: "How a screening colonoscopy gets scheduled at Dra. Marcia Cruz-Correa's GI office in San Juan, PR: the number, a $150 first consult, telemedicine."
+description: "To schedule a screening colonoscopy with Dra. Marcia Cruz-Correa in San Juan, PR, call (787) 925-4003. A first consult is $150 and can be by telemedicine."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-15
 tags: colonoscopy, screening colonoscopy, San Juan, Puerto Rico, gastroenterology, Spanish phone call, ai phone assistant
 authors: nick
 imageAlt: "Screening colonoscopy in San Juan, Puerto Rico: Dra. Cruz-Correa's office, 787-925-4003"
 ---
 
-**Dra. Marcia Cruz-Correa's gastroenterology office is on the first floor of the Hospital Oncológico Dr. Isaac González Martínez in San Juan, Puerto Rico, and its number is (787) 925-4003.** That is the location and phone her practice lists in the federal [NPI Registry](https://npiregistry.cms.hhs.gov/api/?version=2.1&number=1396205506) ("Hospital Oncologico Isaac Gonzalez Martinez, First Floor Gastroenterology"). Her profile at the [UPR Comprehensive Cancer Center](https://www.cccupr.org/programas/marcia-cruz-correa/), which names her Director of the Gastrointestinal Oncology Division at that hospital, does not list this office number. It gives **(787) 936-1477** and citas@cccupr.org for general hospital appointments instead.
+**To schedule a screening colonoscopy with Dra. Marcia Cruz-Correa, call her gastroenterology office at (787) 925-4003.** The office is on the first floor of the Hospital Oncológico Dr. Isaac González Martínez in San Juan, Puerto Rico. That is the location and phone her practice lists in the federal [NPI Registry](https://npiregistry.cms.hhs.gov/api/?version=2.1&number=1396205506) ("Hospital Oncologico Isaac Gonzalez Martinez, First Floor Gastroenterology"). Her profile at the [UPR Comprehensive Cancer Center](https://www.cccupr.org/programas/marcia-cruz-correa/), which names her Director of the Gastrointestinal Oncology Division at that hospital, does not list this office number. It gives **(787) 936-1477** and citas@cccupr.org for general hospital appointments instead.
 
 On the call, a person answered right away, with no phone menu: "Oficina Doctora Marcia Cruz Correa, buen día." The appointment coordinator confirmed that **(787) 925-4003 is the number for scheduling with the doctor**, and that she coordinates the appointments herself.
 

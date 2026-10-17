@@ -1,9 +1,10 @@
 ---
-title: "Sassafraz private dining in Toronto: a real call about the Bellair room"
+title: "Sassafraz private dining in Toronto: pricing the Bellair room for 12 to 14"
 seoTitle: "Sassafraz Toronto private dining"
 subtitle: "A real call asked Sassafraz in Yorkville about a private dinner for 12 to 14. The date was taken, but staff named the room, the minimum and an all in per person estimate. Four other Toronto venues were called for the same night."
-description: "A call to Sassafraz in Toronto about private dining for 12 to 14: the Bellair room, a C$2,200 minimum, C$169.50 per person all in. Plus Ki, La Plume, Volos."
+description: "Book Sassafraz private dining in Toronto at 416-964-2222, press 2. For 12 to 14: the Bellair room, a C$2,200 minimum, C$169.50 per person all in."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Sassafraz, Sassafraz Toronto, private dining Toronto, Yorkville restaurants, group dinner, ai phone assistant
 authors: nick
 imageAlt: "Sassafraz in Toronto, the Bellair private room, a C$2,200 minimum and five recorded venue calls"

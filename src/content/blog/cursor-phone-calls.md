@@ -1,9 +1,10 @@
 ---
 title: "How to make phone calls from Cursor with MCP"
-seoTitle: "Cursor MCP phone calls: setup for editor and CLI"
+seoTitle: "Add an MCP server to Cursor for phone calls"
 subtitle: Add one remote MCP server to Cursor's mcp.json, sign in once, and the agent in the editor or the Cursor CLI can place a real call, follow it to the end and bring back the answer.
 description: "Add call4me to Cursor's mcp.json so the agent in the editor or the Cursor CLI can place phone calls. Setup, OAuth sign in, tool approval and a first prompt."
 date: 2026-10-13
+updated: 2026-10-17
 tags: cursor, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: Cursor's agent connects to call4me over MCP, places a phone call, and reports the outcome

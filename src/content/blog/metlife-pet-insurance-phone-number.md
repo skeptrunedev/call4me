@@ -1,9 +1,10 @@
 ---
-title: "MetLife Pet Insurance phone number: email, sign in and address changes"
+title: "MetLife Pet Insurance phone number: how to change your email or address"
 seoTitle: "MetLife Pet Insurance phone number: (855) 270-7387"
 subtitle: "A call4me customer's assistant called MetLife Pet Insurance to get back into a locked out online account and move a policy to a new address. Press 4, wait about 80 seconds, and a person answers. Here is the phone tree, what customer service and a licensed agent changed, the new premium, and the full 14 minute recording."
 description: "The MetLife Pet Insurance phone number is (855) 270-7387. Press 4 for an existing policy. A real call fixed the account email and moved the policy to a new ZIP."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-13
 tags: metlife pet insurance, pet insurance, customer service, phone numbers, phone trees, account access
 authors: nick

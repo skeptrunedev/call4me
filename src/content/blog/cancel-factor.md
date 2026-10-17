@@ -1,9 +1,10 @@
 ---
 title: "How to cancel Factor meals online or by phone"
-seoTitle: How to cancel Factor meals and stop the next box
+seoTitle: "Cancel a Factor subscription and stop the next box"
 subtitle: We reached two Factor representatives to ask how cancellation works. Here are the online steps, the phone menu, what to have ready, and the conflicting answers about the order deadline.
-description: Cancel Factor meals online or call (888) 573 5727. Check the next order separately. Two recorded calls explain verification, confirmation and cutoff conflicts.
+description: "Cancel a Factor subscription in Plan Settings or call (888) 573 5727. Skip or cancel the next order first. Two recorded calls on verification and cutoffs."
 date: 2026-10-03
+updated: 2026-10-17
 verified: 2026-10-03
 tags: factor, cancel subscription, meal delivery, customer service, phone trees
 authors: nick

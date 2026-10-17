@@ -1,9 +1,10 @@
 ---
 title: How to transfer a prescription from Amazon Pharmacy to Walgreens (3 recorded calls)
-seoTitle: How to transfer a prescription: 3 recorded calls
+seoTitle: "Transfer prescription to Walgreens: 3 real calls"
 subtitle: My AI phone assistant moved one of my prescriptions from Amazon Pharmacy to a Walgreens in San Francisco. Here are all three calls, what each pharmacy asked for, and the step Amazon's phone menu said it couldn't do.
-description: To transfer a prescription, check stock, register at the new pharmacy, then have the old one send it. 3 recorded calls, Amazon Pharmacy to Walgreens.
+description: "How to transfer a prescription to Walgreens: check stock, register, then have the old pharmacy send it. Amazon Pharmacy sent ours in under five minutes."
 date: 2026-10-01
+updated: 2026-10-17
 tags: prescription transfer, pharmacy, walgreens, amazon pharmacy, ai phone assistant
 authors: nick
 imageAlt: How to transfer a prescription from Amazon Pharmacy to Walgreens, three recorded calls

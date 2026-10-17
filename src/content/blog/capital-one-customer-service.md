@@ -1,9 +1,10 @@
 ---
-title: "Capital One customer service: the number, and the path to a person"
+title: "How to reach a person at Capital One customer service"
 seoTitle: "Capital One customer service: 1-877-383-4802"
 subtitle: "We called Capital One's general customer service number with questions for this guide. Two spoken answers got us to a live representative 1 minute 22 seconds in. Here's the phone tree, what the representative said about hours, callbacks and disputes, and the full 6 minute recording."
 description: "Capital One's customer service number is 1-877-383-4802. Say \"credit cards\", then say you don't have a card, and a person answers. From a real recorded call."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-16
 tags: capital one, customer service, credit cards, disputes, phone trees, phone numbers
 authors: nick

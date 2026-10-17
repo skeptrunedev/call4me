@@ -1,10 +1,10 @@
 ---
-title: Have your AI assistant reschedule a dentist appointment (a real 2 minute call)
+title: "How to reschedule a dentist appointment by phone, or have your AI assistant do it"
 seoTitle: Reschedule a dentist appointment with AI
 subtitle: A call4me user had his AI assistant call his dentist and move an appointment. Hear the full recording, copy a prompt for your own appointment, and see what the office needed.
-description: An AI assistant called a dentist and rescheduled an appointment in under two minutes. Hear the recording, copy the prompt, and see what to have ready.
+description: "To reschedule a dentist appointment, have the patient name, current time and two or three open windows ready. Hear an AI assistant do it in 2 minutes."
 date: 2026-09-30
-updated: 2026-10-13
+updated: 2026-10-17
 tags: dentist, appointments, reschedule, ai phone assistant
 authors: nick
 imageAlt: An AI assistant reschedules a dentist appointment in a 2 minute call

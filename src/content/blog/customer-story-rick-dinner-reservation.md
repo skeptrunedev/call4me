@@ -1,13 +1,16 @@
 ---
-title: Rick booked dinner with one prompt
-seoTitle: Rick's dinner reservation with call4me
+title: "Book a dinner reservation with one prompt: how Rick did it"
+seoTitle: "Book a dinner reservation with one prompt"
 subtitle: A table for two at Farmer's Grain, confirmed by phone for Saturday at 5 pm. The call cost 25 cents.
-description: Rick Manelius asked his assistant to book dinner. Read how call4me called Farmer's Grain and confirmed a table for two for October 3, 2026.
+description: "Book a dinner reservation with one prompt: Rick Manelius's assistant used call4me to call Farmer's Grain and confirm a table for two, for 25 cents."
 date: 2026-10-09
+updated: 2026-10-17
 tags: customer stories, restaurant reservations, dinner, ai phone assistant
 authors: nick
 imageAlt: Rick's dinner reservation, two guests at Farmer's Grain on October 3 at 5 pm
 ---
+
+To book a dinner reservation with one prompt, give your assistant the date, time, party size and reservation name, and let call4me phone the restaurant. That is how Rick Manelius got a table for two at Farmer's Grain, confirmed for Saturday, October 3, 2026 at 5 pm, for 25 cents.
 
 > “Booked a dinner reservation in one prompt. Only cost me 25 cents.”
 

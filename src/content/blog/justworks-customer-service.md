@@ -1,9 +1,10 @@
 ---
-title: "Justworks customer service: the number, the menu, and what benefits support said about COBRA"
+title: "Justworks customer service: how admins reach benefits support about COBRA"
 seoTitle: "Justworks customer service number: 888-534-1711"
 subtitle: "A call4me customer's assistant called Justworks benefits support with COBRA questions for a company that is closing its account. Press 2, then 1, and a person answered 1 minute 3 seconds in. Without the account admin on the line to read a verification code, the representative gave general answers only. Here they are, with the full 17 minute recording."
 description: "The Justworks customer service number is (888) 534-1711. Press 2, then 1 for benefits. What benefits support said about COBRA, from a real call."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-12
 tags: justworks, customer service, benefits, cobra, peo, phone trees, phone numbers
 authors: nick

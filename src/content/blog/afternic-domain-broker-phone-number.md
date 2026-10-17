@@ -1,9 +1,10 @@
 ---
-title: "Afternic phone number: making an offer through a GoDaddy domain broker"
+title: "Afternic phone number: how to make an offer through a GoDaddy domain broker"
 seoTitle: "Afternic phone number: GoDaddy domain broker call"
 subtitle: "A call4me customer's assistant called Afternic's UK line to make an offer on a domain listed for sale. A GoDaddy broker answered 44 seconds in, turned down the opening offer, and said how close to the list price sellers usually expect. Here's the menu, what the broker said, and the full 6 minute recording."
 description: "Afternic's sales line is 866-829-9361. A real call to its UK line reached a GoDaddy domain broker in 44 seconds and heard how far sellers negotiate."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-13
 tags: afternic, godaddy, domain broker, domain marketplace, buying a domain, phone numbers
 authors: nick

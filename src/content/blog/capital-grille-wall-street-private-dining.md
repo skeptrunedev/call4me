@@ -1,16 +1,17 @@
 ---
-title: "Capital Grille Wall Street private dining: the Astor Room quote for 8"
+title: "Get a Capital Grille Wall Street private dining quote: the Astor Room for 8"
 seoTitle: "Capital Grille Wall Street private dining"
 subtitle: "A real call asked The Capital Grille Wall Street about a private business dinner for 8. The manager offered the Astor Room in the antique banking vault with a $1,500 required spend. Here is the recording, plus what Patsy's and Shun Lee Palace said for the same search."
-description: "Capital Grille private dining at Wall Street: (212) 374-1811. A recorded call: Astor Room for 8, $1,500 required spend before tax and gratuity."
+description: "To get a Capital Grille Wall Street private dining quote, call (212) 374-1811. Our call got the Astor Room for 8 at a $1,500 spend before tax and gratuity."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-12
 tags: Capital Grille, Capital Grille Wall Street, Capital Grille Wall Street NYC, private dining NYC, business dinner, Patsy's, Shun Lee Palace, ai phone assistant
 authors: nick
 imageAlt: "The Capital Grille Wall Street private dining, (212) 374-1811, the Astor Room offered for 8 with a $1,500 required spend"
 ---
 
-**The Capital Grille Wall Street is at 120 Broadway, New York, NY 10271, and its number is (212) 374-1811.** That is the number on the restaurant's own [Wall Street private dining info kit](https://media.thecapitalgrille.com/en_us/images/marketing/tcg-8039-new-york-city-wall-street-infokit.pdf), and it is the number this call dialed. Ask whoever answers for the person who handles private events; on this call that was the manager.
+**To get a private dining quote at The Capital Grille Wall Street, call (212) 374-1811 and ask whoever answers for the person who handles private events; on this call that was the manager.** The restaurant is at 120 Broadway, New York, NY 10271. That number is on the restaurant's own [Wall Street private dining info kit](https://media.thecapitalgrille.com/en_us/images/marketing/tcg-8039-new-york-city-wall-street-infokit.pdf), and it is the number this call dialed.
 
 On Monday, October 12, 2026, a call4me customer's assistant called about a private business dinner: Thursday, November 19, 6:00 to 9:00 PM, 8 guests at one table, in an enclosed room. The manager said:
 

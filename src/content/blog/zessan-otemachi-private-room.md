@@ -1,15 +1,16 @@
 ---
-title: "Zessan Otemachi: a same-day private room booked by phone in Japanese"
+title: "Book a private room at Zessan Otemachi by phone in Japanese"
 seoTitle: "Zessan Otemachi private room, booked in Japanese"
 subtitle: "A real call in Japanese booked a private room at Zessan's Otemachi restaurant in Tokyo for that evening at 6 PM, for three adults and an 11-month-old, with a ¥10,000 per adult minimum spend."
-description: "Hear a Japanese call to Zessan Otemachi in Tokyo that booked a same-day private room at 6 PM for three adults and a baby, with a ¥10,000 per adult minimum."
+description: "Book a Zessan Otemachi private room on 050-5448-3378. A Japanese call booked one same-day at 6 PM for three adults and a baby, ¥10,000 per adult minimum."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Zessan, Zessan Otemachi, Otemachi restaurant, Tokyo private room, Japanese phone call, restaurant reservation, ai phone assistant
 authors: nick
 imageAlt: "Zessan Otemachi in Tokyo: a private room for three adults and a baby, booked for 6 PM the same day"
 ---
 
-**Zessan (舌賛 ZESSAN), a Kobe beef yakiniku and beef tongue restaurant, is on the 2nd floor of Otemachi Place West Tower, 2-3-1 Otemachi, Chiyoda-ku, Tokyo.** Its [official website](https://zessan-kobe.com/) lists **050-5448-3378** (from outside Japan, +81 50-5448-3378), weekday hours of 11:30 to 14:00 and 17:00 to 22:30, Saturday 17:00 to 22:00, and closed Sundays and public holidays. The site says "個室のお席も多数ご用意しております" (there are many private room seats) and links an online booking page.
+**To book a private room at Zessan Otemachi, call 050-5448-3378, the number on its official website.** Zessan (舌賛 ZESSAN), a Kobe beef yakiniku and beef tongue restaurant, is on the 2nd floor of Otemachi Place West Tower, 2-3-1 Otemachi, Chiyoda-ku, Tokyo. Its [official website](https://zessan-kobe.com/) lists **050-5448-3378** (from outside Japan, +81 50-5448-3378), weekday hours of 11:30 to 14:00 and 17:00 to 22:30, Saturday 17:00 to 22:00, and closed Sundays and public holidays. The site says "個室のお席も多数ご用意しております" (there are many private room seats) and links an online booking page.
 
 **The number dialed on this call was different: +81 50-5596-6076.** It isn't the number on the restaurant's own site, which we checked on October 16, 2026. The staff member who answered did take the private room booking, but the greeting is hard to make out in the recording, so if you call, use 050-5448-3378 from the official site.
 

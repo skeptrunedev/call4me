@@ -2,9 +2,9 @@
 title: "Delta customer service: get past the AI to a person"
 seoTitle: "Delta customer service: 800-221-1212, get a human"
 subtitle: "We called Delta's reservations line with general questions and no confirmation number. Here is how the AI voice assistant handed us off, how long the hold took, what the representative said about change fees and eCredits, and the full 18 minute recording."
-description: "The Delta customer service phone number is 800-221-1212. An AI voice assistant answers; asking for a representative got us a live agent in about 16 minutes."
+description: "The Delta reservations phone number is 800-221-1212. An AI voice assistant answers; asking for a representative got us a live agent in about 16 minutes."
 date: 2026-10-08
-updated: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-08
 tags: delta, airlines, customer service, phone trees, phone numbers
 authors: nick

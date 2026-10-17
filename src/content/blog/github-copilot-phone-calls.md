@@ -1,9 +1,10 @@
 ---
 title: "How to make phone calls from GitHub Copilot CLI with MCP"
-seoTitle: "GitHub Copilot MCP phone calls: CLI setup and test"
+seoTitle: Add an MCP server to Copilot CLI for phone calls
 subtitle: We connected GitHub Copilot CLI to a phone calling MCP server, gave it written briefs, and let it place three real calls. Here is the setup, the permission flag non-interactive runs need, the tool sequence, and what each call actually got.
-description: "Connect GitHub Copilot CLI to the call4me MCP server and let it place phone calls. Tested setup, tool permissions and three real call results."
+description: "How to add an MCP server to Copilot CLI so GitHub Copilot can place phone calls: tested call4me setup, tool permissions and three real call results."
 date: 2026-10-13
+updated: 2026-10-17
 tags: github copilot, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: GitHub Copilot CLI connects to call4me over MCP, places a phone call, and reports the outcome

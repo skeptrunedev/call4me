@@ -1,15 +1,16 @@
 ---
-title: "Boss Frog's Maalaea: checking a same-day Molokini snorkel trip"
-seoTitle: "Boss Frog's Maui: same-day Molokini snorkel calls"
+title: "Check a same-day Molokini snorkel trip with Boss Frog's Maalaea"
+seoTitle: "Boss Frog's Maui: is the Molokini snorkel running?"
 subtitle: Three real Saturday morning calls checked the Malolo afternoon snorkel trip, the daily snorkel report and a second Molokini operator for two adults.
-description: "Hear real calls to Boss Frog's Maui in Maalaea about a same-day Molokini snorkel trip: running, 12:30 check-in, booked solid, plus the snorkel report."
+description: "To check a same-day Molokini snorkel trip, call Boss Frog's Maui in Maalaea at (808) 242-0088. Our real calls: running, 12:30 check-in, booked solid."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Boss Frog's, Maalaea Harbor, Molokini snorkel, Maui snorkeling, ai phone assistant
 authors: nick
 imageAlt: "Boss Frog's Maalaea, a same-day Molokini snorkel trip checked by phone"
 ---
 
-**Boss Frog's Maalaea Harbor store is at 300 Ma'alaea Road, Building 2, Shop 2N, Wailuku, Hawaii.** Its [official store page](https://bossfrog.com/store-locations/maalaea-harbor-snorkel-rentals/) lists **(808) 242-0088** for the shop and store hours of 7:00 AM to 3:00 PM daily. The same page gives 1-888-700-3764 for general questions and (808) 661-3333 once you are in Hawaii. The calls below dialed (808) 242-0088, the number on that page.
+**To check whether a same-day Molokini snorkel trip is running and has seats, call Boss Frog's Maalaea Harbor store at (808) 242-0088.** The store is at 300 Ma'alaea Road, Building 2, Shop 2N, Wailuku, Hawaii. Its [official store page](https://bossfrog.com/store-locations/maalaea-harbor-snorkel-rentals/) lists **(808) 242-0088** for the shop and store hours of 7:00 AM to 3:00 PM daily. The same page gives 1-888-700-3764 for general questions and (808) 661-3333 once you are in Hawaii. The calls below dialed (808) 242-0088, the number on that page.
 
 On Saturday, October 10, 2026, a call4me customer's assistant called Boss Frog's Maui to find out whether two adults could still snorkel Molokini that day. Staff answered right away on both Boss Frog's calls; there was no phone menu.
 

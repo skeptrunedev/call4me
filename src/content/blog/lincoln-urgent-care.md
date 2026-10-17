@@ -1,15 +1,16 @@
 ---
-title: "Lincoln Urgent Care, Lincoln CA: the self-pay price for a visit"
-seoTitle: "Lincoln Urgent Care, Lincoln CA: $180 cash visit"
+title: "Lincoln Urgent Care, Lincoln CA: what a visit costs without insurance"
+seoTitle: "Lincoln Urgent Care cost without insurance: $180"
 subtitle: A real call asked the front desk what an uninsured existing patient pays out of pocket for a standard visit, and what that price covers.
-description: Lincoln Urgent Care in Lincoln, CA quoted $180 cash for an existing patient's office visit. Hear the real call, the phone menu and what the price covers.
+description: "How much is urgent care without insurance at Lincoln Urgent Care in Lincoln, CA? $180 cash for an existing patient's office visit, per a real call."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Lincoln Urgent Care, urgent care Lincoln CA, self-pay urgent care, cash price, walk-in clinic, ai phone assistant
 authors: nick
 imageAlt: Lincoln Urgent Care in Lincoln, California, a $180 self-pay office visit quoted on a recorded call
 ---
 
-**Lincoln Urgent Care in Lincoln, CA is at 77 Lincoln Boulevard, Suite 1, Lincoln, California 95648.** Its [official website](https://www.lincolnurgentcare.com/) lists **(916) 258-2751**, the number this call dialed. On October 7, 2026, the front desk quoted **$180** as the cash pay price for an office visit for an existing patient paying out of pocket.
+**Without insurance, an office visit at Lincoln Urgent Care in Lincoln, CA is $180 cash for an existing patient**, the front desk quoted on October 7, 2026. The clinic is at 77 Lincoln Boulevard, Suite 1, Lincoln, California 95648, and its [official website](https://www.lincolnurgentcare.com/) lists **(916) 258-2751**, the number this call dialed.
 
 A call4me customer's assistant made the call. The goal was narrow: ask the self-pay price for a standard sick visit for an uninsured existing patient, without booking anything or giving payment details. It reached a person about 1 minute 7 seconds after the call connected, asked one question, and hung up with the answer.
 

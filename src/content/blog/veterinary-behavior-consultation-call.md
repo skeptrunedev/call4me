@@ -1,9 +1,10 @@
 ---
-title: Veterinary behavior consultation: questions your assistant can ask
+title: "What to ask before booking a veterinary behavior consultation"
 seoTitle: Veterinary behavior consultation: questions to ask
 subtitle: A real callback gathered availability, a $600 consultation quote and attendance requirements. No appointment was booked or paid for.
-description: Ask your existing AI assistant about a veterinary behavior consultation. Read one practice's fee and availability answers, then use a suggested call prompt.
+description: "Before booking a veterinary behavior consultation, ask about the fee, availability and whether you must attend. One practice quoted $600 for the first visit."
 date: 2026-10-06
+updated: 2026-10-17
 tags: veterinary appointments, consultation questions, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Veterinary consultation information, $600 initial fee and no booking made

@@ -2,8 +2,9 @@
 title: How much does junk removal cost? A real $140 quote, recorded
 seoTitle: How much does junk removal cost? A real quote
 subtitle: A call4me user had their AI phone assistant call a San Francisco junk hauler about a small load of office boxes. Here's the price, the four things the hauler asked before naming it, both recordings, and the mistake to catch before you hang up.
-description: Junk removal is priced by load size and access. A San Francisco hauler quoted about $140 for a small load of office boxes on a real, recorded call.
+description: "To get a junk removal quote, call and describe the load size and access. A San Francisco hauler quoted about $140 for a small load of office boxes."
 date: 2026-09-30
+updated: 2026-10-17
 tags: junk removal, junk removal cost, hauling, home services, ai phone assistant
 authors: nick
 imageAlt: How much does junk removal cost, a real $140 quote, recorded

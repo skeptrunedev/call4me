@@ -1,16 +1,17 @@
 ---
-title: "SpringHill Suites Phoenix Gilbert: a sold out night and the hotel waitlist"
+title: "SpringHill Suites Phoenix Gilbert sold out? Call the front desk for the waitlist"
 seoTitle: "SpringHill Suites Gilbert: getting on the waitlist"
 subtitle: "A real call to the Gilbert, Arizona hotel asked the front desk to fit a frequent guest in for three nights after Tuesday showed sold out online. The desk was full, so it put him on the waitlist for that night."
-description: "SpringHill Suites by Marriott Phoenix Gilbert is at 480-996-0800. A real call found the hotel sold out for October 19 to 21 and put the guest on a waitlist."
+description: "SpringHill Suites Phoenix Gilbert sold out? Call the front desk at 480-996-0800 and ask for the waitlist. A real call got a guest on it for October 20."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-16
 tags: SpringHill Suites Gilbert, Gilbert AZ hotels, Marriott Bonvoy, hotel waitlist, sold out hotel, ai phone assistant
 authors: nick
 imageAlt: "SpringHill Suites Phoenix Gilbert 480-996-0800, a sold out night and a waitlist"
 ---
 
-**SpringHill Suites by Marriott Phoenix Gilbert is at 1801 South San Tan Village Parkway, Gilbert, Arizona 85295, and its phone number is +1 480-996-0800.** That is the number Marriott lists on the hotel's [official Marriott page](https://www.marriott.com/en-us/hotels/phxgh-springhill-suites-phoenix-gilbert/overview/), and it is the number this call dialed. The hotel's own menu answers first: **press 1** for Marriott central reservations, **press 2 or stay on the line** for the front desk, **press 3** for the director of sales.
+**If SpringHill Suites by Marriott Phoenix Gilbert shows sold out, call the front desk at +1 480-996-0800 and ask for the waitlist.** The hotel is at 1801 South San Tan Village Parkway, Gilbert, Arizona 85295. That is the number Marriott lists on the hotel's [official Marriott page](https://www.marriott.com/en-us/hotels/phxgh-springhill-suites-phoenix-gilbert/overview/), and it is the number this call dialed. The hotel's own menu answers first: **press 1** for Marriott central reservations, **press 2 or stay on the line** for the front desk, **press 3** for the director of sales.
 
 On October 16, 2026, a call4me customer's assistant called the SpringHill Suites Gilbert front desk for a guest who stays there often. He wanted three nights, Monday October 19 through Wednesday October 21, checking out Thursday the 22nd. Marriott.com showed Tuesday night sold out, and the brief was to ask whether the hotel could still fit him in.
 

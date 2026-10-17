@@ -1,15 +1,16 @@
 ---
-title: "Brooklyn Eye Center Williamsburg: a same day visit for a painful red eye"
+title: "Get a same day eye exam in Williamsburg for a painful red eye"
 seoTitle: "Brooklyn Eye Center: same day eye exam"
 subtitle: "Three parallel calls to Williamsburg and Greenpoint eye practices on one Friday morning. Brooklyn Eye Center on Grand Street offered 10:00 or 11:30 AM, Greenpoint Eye Care offered 10:00 or 10:30, and Greenpoint Vision Care was full until Monday."
-description: "Brooklyn Eye Center Williamsburg, 597 Grand Street (718-388-5200), offered a new patient 10:00 or 11:30 AM same day for a painful red eye. Hear the calls."
+description: "For a same day eye exam in Williamsburg, call Brooklyn Eye Center, 597 Grand Street (718-388-5200). A new patient got 10:00 or 11:30 AM for a red eye."
 date: 2026-10-16
+updated: 2026-10-17
 tags: brooklyn eye center, williamsburg eye doctor, greenpoint eye doctor, same day eye exam, red eye, aetna, ai phone assistant
 authors: nick
 imageAlt: "Brooklyn Eye Center Williamsburg, 718-388-5200, a same day slot at 10:00 or 11:30 AM for a painful red eye"
 ---
 
-**Brooklyn Eye Center's Williamsburg office is at 597 Grand Street, Brooklyn, NY 11211.** The practice's [official website](https://www.brooklyneyecenter.com/) lists **718-388-5200** for that office, open Monday to Friday 8:30 AM to 4:30 PM, and a central appointment line at 718-221-3333. The same site's appointment form names the Williamsburg office as 719 Grand Street, so confirm the address when you book. The phone greeting we heard said 597 Grand Street.
+**For a same day eye exam in Williamsburg, call Brooklyn Eye Center at 718-388-5200: it offered a new patient 10:00 or 11:30 AM the same morning for a painful red eye.** Its Williamsburg office is at 597 Grand Street, Brooklyn, NY 11211. The practice's [official website](https://www.brooklyneyecenter.com/) lists **718-388-5200** for that office, open Monday to Friday 8:30 AM to 4:30 PM, and a central appointment line at 718-221-3333. The same site's appointment form names the Williamsburg office as 719 Grand Street, so confirm the address when you book. The phone greeting we heard said 597 Grand Street.
 
 On Friday, October 9, 2026, a little after 9:00 AM Eastern, a call4me customer's assistant called three eye practices in Williamsburg and Greenpoint at the same time. The patient was new to all three, had a painful red eye since the day before, and had Aetna medical insurance. The brief was strict: ask about availability only, and book nothing.
 

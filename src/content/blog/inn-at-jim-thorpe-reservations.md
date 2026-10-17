@@ -1,16 +1,17 @@
 ---
-title: "Inn at Jim Thorpe reservations: the phone number, and a sold out October weekend"
+title: "How to check rooms and rates at the Inn at Jim Thorpe by phone"
 seoTitle: "Inn at Jim Thorpe phone number: 800-329-2599"
 subtitle: A real call to the Inn at Jim Thorpe asked for a two night room in late October. The front desk said it was sold out, and the only option on two nearby weekends was a queen room in its 44 West Broadway building for $649.64.
 description: "The Inn at Jim Thorpe phone number is 800-329-2599. Press 2 for the front desk. Hear a real call on October weekend availability and prices in Jim Thorpe, PA."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-01
 tags: Inn at Jim Thorpe, Jim Thorpe PA hotels, hotel reservations, room availability, ai phone assistant
 authors: nick
 imageAlt: "Inn at Jim Thorpe 800-329-2599, sold out for October 23 to 25, one queen room at 44 West Broadway for $649.64"
 ---
 
-**The Inn at Jim Thorpe phone number is 800-329-2599.** The inn's [official contact page](https://www.innjt.com/contact) lists **1-800-329-2599** and the email reservations@innjt.com, and gives the address as **24 Broadway, Jim Thorpe, Pennsylvania 18229**. That is the number dialed on this call. The contact page doesn't list hours.
+**To check rooms or make a reservation at the Inn at Jim Thorpe, call 800-329-2599 and press 2 for the front desk.** The inn's [official contact page](https://www.innjt.com/contact) lists **1-800-329-2599** and the email reservations@innjt.com, and gives the address as **24 Broadway, Jim Thorpe, Pennsylvania 18229**. That is the number dialed on this call. The contact page doesn't list hours.
 
 A recorded menu answers first. **For the front desk and reservations, press 2.** On this call a person at the front desk picked up 41 seconds after the line connected, with no hold.
 

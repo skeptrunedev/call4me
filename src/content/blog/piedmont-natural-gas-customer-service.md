@@ -1,9 +1,10 @@
 ---
-title: "Piedmont Natural Gas customer service: getting your account number for login"
+title: "Get your Piedmont Natural Gas account number by phone for online login"
 seoTitle: "Piedmont Natural Gas customer service number"
 subtitle: "A call4me customer's assistant called Piedmont Natural Gas to recover an account number for online registration. A representative answered 2 minutes 6 seconds in, the account holder joined, and a team lead read the number out after one more security question. The phone tree, what they asked for, and the full 15 minute recording."
-description: "Piedmont Natural Gas customer service is 800-752-7504, weekdays 7:30 am to 7 pm Eastern. A real call shows how to get your account number to set up your login."
+description: "Call Piedmont Natural Gas customer service at 800-752-7504, weekdays 7:30 am to 7 pm Eastern, to get your account number for online login. Real call inside."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-12
 tags: piedmont natural gas, customer service, utilities, online account, account number, phone trees, phone numbers
 authors: nick

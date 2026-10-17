@@ -1,16 +1,16 @@
 ---
-title: Drop off vet appointment: have your AI assistant call the clinic
-seoTitle: Drop off vet appointment: book with your assistant
+title: "How to book a drop off vet appointment by phone"
+seoTitle: "Book a drop off vet appointment by phone"
 subtitle: Give the assistant you already use the booking details and questions for the clinic. A real customer call confirmed Tuesday at 8:30 AM, with the branch still needing verification.
-description: Book a drop off vet appointment through your existing AI assistant. Hear a real call and use a suggested Claude Code or Codex booking prompt.
+description: "To book a drop off vet appointment, confirm arrival time, location, reason and cost. Hear a real call that got Tuesday at 8:30 AM, plus an assistant prompt."
 date: 2026-10-05
-updated: 2026-10-07
+updated: 2026-10-17
 tags: vet appointments, pets, bookings, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Drop off vet appointment, Tuesday at 8:30 AM confirmed on a real call
 ---
 
-A **drop off vet appointment** means you bring your pet to the clinic, leave them with the veterinary team and return for pickup. Confirm the arrival time, exact location, reason for the visit, expected cost and how the clinic will reach you. The dropoff time alone does not tell you when the examination will happen or when your pet will be ready.
+To book a **drop off vet appointment**, call the clinic and confirm the arrival time, exact location, reason for the visit, expected cost and how the clinic will reach you. A drop off visit means you bring your pet to the clinic, leave them with the veterinary team and return for pickup. The dropoff time alone does not tell you when the examination will happen or when your pet will be ready.
 
 On October 4, 2026, a call4me customer had an AI assistant phone a veterinary clinic for the earliest available visit for a senior dog. The front desk confirmed **Tuesday at 8:30 AM as a dropoff**. The automated greeting and the person who answered used different branch names, so the destination still needed verification. The call did not establish an exam price, pickup time or whether the dog's symptoms required faster care.
 

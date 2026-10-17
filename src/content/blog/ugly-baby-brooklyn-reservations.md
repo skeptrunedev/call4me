@@ -1,15 +1,16 @@
 ---
-title: "Ugly Baby Brooklyn reservations: a birthday table for 12"
-seoTitle: "Ugly Baby Brooklyn: booking a table for 12"
+title: "Book a table for 12 at Ugly Baby in Williamsburg, Brooklyn"
+seoTitle: "Ugly Baby Williamsburg: book a table for 12"
 subtitle: A real call asked the Williamsburg Thai restaurant about a birthday dinner for 12. Staff offered 8 PM, then went to check with a manager about a deposit.
-description: Ugly Baby in Williamsburg, Brooklyn takes large party bookings by phone. Hear a real call that was offered 8 PM for a birthday dinner for 12.
+description: "To book a large party at Ugly Baby in Williamsburg, Brooklyn, call (347) 599 1750. A real call for a birthday dinner for 12 was offered 8 PM."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Ugly Baby Brooklyn, Ugly Baby Williamsburg, Thai restaurant, NYC restaurants, large party reservations, ai phone assistant
 authors: nick
 imageAlt: Ugly Baby in Williamsburg, Brooklyn, a birthday dinner for 12 offered at 8 PM
 ---
 
-**Ugly Baby is at 364 Grand Street, Brooklyn, NY 11211, and its phone number is (347) 599 1750.** The restaurant's [official website](https://www.uglybabynyc.com) lists that number with the address and says reservations are taken through Resy. The call below went to the same number, and a staff member answered and took a party of 12 by phone.
+**To book a large party table at Ugly Baby, call (347) 599 1750.** The restaurant is at 364 Grand Street, Brooklyn, NY 11211. The restaurant's [official website](https://www.uglybabynyc.com) lists that number with the address and says reservations are taken through Resy. The call below went to the same number, and a staff member answered and took a party of 12 by phone.
 
 The site lists dinner hours of Tuesday to Thursday 5 PM to 10 PM, Friday and Saturday 5 PM to 10:30 PM, and Sunday 5 PM to 9:30 PM. It lists no Monday hours. Local press reported that the original Carroll Gardens restaurant on Smith Street closed in 2024, and the official site now lists only the Williamsburg address on Grand Street.
 

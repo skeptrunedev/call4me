@@ -1,9 +1,10 @@
 ---
-title: "The Base Glamping Yugawara: sending luggage ahead by takkyubin"
+title: "How to send luggage ahead to The Base Glamping Yugawara by takkyubin"
 seoTitle: "The Base Glamping Yugawara: luggage forwarding"
 subtitle: "A call4me customer's assistant called in Japanese to ask whether it could ship luggage to the property before check-in and back out at check-out. Both answers were yes. A second call checked the same thing with a hotel in Osaka."
 description: "The Base Glamping Yugawara accepts luggage sent ahead by takkyubin. Write your check-in date and name on it. From a real call in Japanese, with translation."
 date: 2026-10-16
+updated: 2026-10-17
 tags: The Base Glamping Yugawara, Yugawara hotels, luggage forwarding, takkyubin, Japanese phone calls, ai phone assistant
 authors: nick
 imageAlt: "The Base Glamping Yugawara 0465-20-8112, luggage sent ahead by takkyubin is accepted"

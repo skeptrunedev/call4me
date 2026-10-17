@@ -1,15 +1,16 @@
 ---
-title: "San Francisco oral surgeon for dental implants: a real consult call at 450 Sutter"
+title: "Book a dental implant consult with a San Francisco oral surgeon at 450 Sutter"
 seoTitle: "San Francisco oral surgeon for dental implants"
 subtitle: "A call4me customer's assistant called Dr. Peter Lyu's oral surgery office to request an implant consultation. The office offered October 20 at 9 AM and a $165 exam fee, but could not check the exact insurance plan, so nothing was booked."
-description: "A real call to Dr. Peter Lyu's San Francisco oral surgery office at 450 Sutter: an implant consult offered for October 20 at 9 AM, a $165 exam fee."
+description: "To book an implant consult with Dr. Peter Lyu at 450 Sutter, call 415-391-9230. A real call was offered October 20 at 9 AM with a $165 exam fee."
 date: 2026-10-16
+updated: 2026-10-17
 tags: San Francisco oral surgeon, dental implants, bone grafting, oral and maxillofacial surgery, new patient consultation, dental insurance, ai phone assistant
 authors: nick
 imageAlt: "San Francisco oral surgeon at 450 Sutter, an implant consult offered for October 20 at 9 AM"
 ---
 
-**Dr. Peter E. Lyu's oral and maxillofacial surgery office is at 450 Sutter Street, Suite 1023, San Francisco, CA 94108.** The practice's [official website](https://www.sanfranciscooms.com/) lists **415-391-9230** as its San Francisco office phone number (and 415-391-3020 as its fax), and lists dental implant surgery, tooth extractions and bone grafting among its services. The live site sat behind a browser check when we looked, so we read the number from an [archived copy of the same homepage](https://web.archive.org/web/20250614145653/https://www.sanfranciscooms.com/) captured June 14, 2025. It matches the number the assistant dialed.
+**To book a dental implant consultation with Dr. Peter E. Lyu, call his oral and maxillofacial surgery office at 415-391-9230.** It's at 450 Sutter Street, Suite 1023, San Francisco, CA 94108. The practice's [official website](https://www.sanfranciscooms.com/) lists **415-391-9230** as its San Francisco office phone number (and 415-391-3020 as its fax), and lists dental implant surgery, tooth extractions and bone grafting among its services. The live site sat behind a browser check when we looked, so we read the number from an [archived copy of the same homepage](https://web.archive.org/web/20250614145653/https://www.sanfranciscooms.com/) captured June 14, 2025. It matches the number the assistant dialed.
 
 On Monday, October 5, 2026, a call4me customer's assistant called that number to follow up on an online request for a new patient consultation. The patient wanted a surgeon's opinion on removing a tooth, grafting the socket and eventually placing an implant. He had two conditions for booking: a weekday morning start before 9:30 AM, and confirmation that the office was in network for his exact Guardian dental plan.
 

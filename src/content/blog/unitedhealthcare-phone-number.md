@@ -1,9 +1,10 @@
 ---
-title: "UnitedHealthcare phone number: which one to call"
-seoTitle: "UnitedHealthcare phone number: 1-888-585-0631"
+title: "How to find the right UnitedHealthcare phone number and reach an agent"
+seoTitle: "UnitedHealthcare customer service: 1-888-585-0631"
 subtitle: Most people searching for a UnitedHealthcare phone number are members, and for members the right number is on the ID card. Here are UnitedHealthcare's other numbers by plan type, all from uhc.com, and a recorded call to the individual and family line, where pressing 1 got a licensed agent on the line about 25 seconds later.
-description: "The UnitedHealthcare phone number for members is on your ID card. Not a member? Call 1-888-585-0631 and press 1 for a licensed agent. From a recorded call."
+description: "UnitedHealthcare members: call the member services phone number on your ID card. Not a member? Call 1-888-585-0631, press 1 for a licensed agent."
 date: 2026-10-01
+updated: 2026-10-17
 verified: 2026-10-01
 tags: unitedhealthcare, health insurance, customer service, phone trees, phone numbers
 authors: nick

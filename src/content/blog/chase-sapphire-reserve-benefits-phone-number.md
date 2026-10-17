@@ -1,9 +1,10 @@
 ---
-title: "Chase Sapphire Reserve benefits phone number: what an assistant can and can't get"
+title: "Chase Sapphire Reserve benefits phone number: reach a person about a claim"
 seoTitle: "Chase Sapphire Reserve benefits phone number"
 subtitle: "A call4me customer's assistant called Chase Sapphire Reserve Card Benefit Services to check on a trip delay claim. It reached a person 3 minutes 12 seconds in, and learned the line won't discuss a claim without the primary cardholder. Here's the phone tree, what the representative said, and the full recording."
 description: "The Chase Sapphire Reserve benefits phone number is 1-800-350-1697. Say you don't have the full card number to reach a person. From a real recorded claim call."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-13
 tags: chase sapphire reserve, chase card benefits, benefit claims, trip delay, customer service, phone trees, phone numbers
 authors: nick

@@ -1,10 +1,10 @@
 ---
-title: "Grok Bot vs Meta Muse: tested calling setups and results"
+title: "Grok Bot vs Meta Muse: set up each to make phone calls, with tested results"
 seoTitle: "Grok Bot vs Meta Muse: calling setup and results"
 subtitle: How our Grok restaurant call and Muse library call connected, returned results and left questions unanswered.
-description: "Compare tested Grok Bot and Meta Muse calling setups, a restaurant menu result and a library staff answer. Different tasks, with linked recordings."
+description: "Can Grok Bot make phone calls? Yes, and so can Meta Muse, through call4me. Compare the tested setups, a restaurant result and a library answer, with recordings."
 date: 2026-10-05
-updated: 2026-10-07
+updated: 2026-10-17
 tags: grok, meta muse, ai agents, mcp, ai phone assistant
 authors: nick
 imageAlt: Grok Bot and Meta Muse phone workflows compared by calling setup, call evidence and unanswered questions

@@ -1,10 +1,10 @@
 ---
-title: Web research and phone calls in your AI agent: comparing SF private dining
+title: "Have your AI agent research and call SF private dining rooms"
 seoTitle: AI agent web research and phone calls: a real task
 subtitle: We used Codex to research and call Waterbar and EPIC Steak, plus a separate Claude Code call to Foreign Cinema. Here is what the websites answered, what the calls added, and what stayed unknown.
-description: A real Codex web research and phone workflow, plus customer stock and reservation examples. Reusable briefs, recordings and clear limits on each result.
+description: "Have Codex or Claude Code research SF private dining sites, call Waterbar, EPIC Steak and Foreign Cinema, and return a sourced comparison with recordings."
 date: 2026-10-03
-updated: 2026-10-06
+updated: 2026-10-17
 tags: claude code, codex, mcp, ai agents, private dining, ai phone assistant
 authors: nick
 imageAlt: Official websites, phone calls and a sourced private dining comparison in an existing AI agent

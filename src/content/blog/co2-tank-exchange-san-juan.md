@@ -1,9 +1,10 @@
 ---
-title: "CO2 tank exchange in San Juan: Hydro Warehouse PR swaps a 20 lb tank for $50.18"
+title: "Exchange a 20 lb CO2 tank in San Juan: Hydro Warehouse PR swaps it for $50.18"
 seoTitle: "CO2 tank exchange in San Juan: Hydro Warehouse PR"
 subtitle: "A call4me customer's assistant called Hydro Warehouse PR in Spanish about a 20 lb CO2 tank, then called two local drivers to run the swap. Here is what staff said, what the drivers quoted, and all five recordings."
 description: "Hydro Warehouse PR in San Juan swaps a 20 lb CO2 tank on the spot for $50.18 if its hydro test is under 3 years old. Hear the real recorded calls."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-16
 tags: co2 tank exchange, 20 lb co2 tank exchange, Hydro Warehouse PR, San Juan Puerto Rico, Spanish phone call, ai phone assistant
 authors: nick

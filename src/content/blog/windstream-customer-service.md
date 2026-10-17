@@ -1,16 +1,17 @@
 ---
-title: "Windstream customer service: the line a person answers"
-seoTitle: "Windstream customer service: call 866-703-8175"
+title: How to reach a person at Windstream customer service (now Kinetic)
+seoTitle: "Windstream customer service number: 866-703-8175"
 subtitle: "Windstream is now Kinetic. We called three times. Two calls stopped at an account number prompt. The third, on the sales line with option 1, reached a live rep in under a minute. Here are all three recordings, the menus, and what the rep said."
-description: "Windstream customer service is now Kinetic. Calling sales at (866) 703-8175 and pressing 1 got us a live person; the support line stopped at an account prompt."
+description: To reach a person at Windstream customer service, now Kinetic, call sales at (866) 703-8175 and press 1. The support line stopped at an account prompt.
 date: 2026-10-08
+updated: 2026-10-17
 verified: 2026-10-08
 tags: windstream, kinetic, internet, customer service, phone trees, phone numbers
 authors: nick
 imageAlt: Windstream customer service, Kinetic sales (866) 703-8175, press 1 to reach a live person
 ---
 
-**The short answer:** Windstream customer service is now Kinetic. windstream.com's contact page redirects to [gokinetic.com/support](https://www.gokinetic.com/support). **To reach a person, call Kinetic Sales at (866) 703-8175 and press 1** ("new residential deals and offers"). On our call a live sales representative answered 55 seconds in, not a recording and not an AI assistant. They didn't ask for an account number. Kinetic lists Sales hours as 7 am to 10 pm Eastern on weekdays and 8 am to 9 pm Eastern on weekends.
+**The short answer:** to reach a person at Windstream customer service, now Kinetic, **call Kinetic Sales at (866) 703-8175 and press 1** ("new residential deals and offers"). windstream.com's contact page redirects to [gokinetic.com/support](https://www.gokinetic.com/support). On our call a live sales representative answered 55 seconds in, not a recording and not an AI assistant. They didn't ask for an account number. Kinetic lists Sales hours as 7 am to 10 pm Eastern on weekdays and 8 am to 9 pm Eastern on weekends.
 
 **What the rep told us:**
 

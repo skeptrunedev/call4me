@@ -1,9 +1,10 @@
 ---
-title: "DIRECTV customer service: how we reached a live person"
-seoTitle: "DIRECTV customer service: 800-531-5000"
+title: "DIRECTV customer service: how to reach a live person"
+seoTitle: "DIRECTV customer service hours: 800-531-5000"
 subtitle: 'We called DIRECTV customer service twice. The first time its AI agent answered and we never got past it. The second time we said "cancel service", said we had no account number, chose satellite, and a live representative picked up. The route, what each said, and both recordings.'
-description: 'DIRECTV customer service is 800-531-5000. We reached a live person by saying "cancel service", saying we had no account number and choosing satellite.'
+description: "DIRECTV customer service is 800-531-5000, 8 am to 9 pm CT daily. Say \"cancel service\", say you have no account number, then \"satellite\" to reach a person."
 date: 2026-10-08
+updated: 2026-10-17
 verified: 2026-10-08
 tags: directv, customer service, cancel directv, phone trees, phone numbers
 authors: nick

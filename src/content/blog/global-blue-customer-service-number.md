@@ -1,16 +1,17 @@
 ---
-title: "Global Blue customer service: a call about unstamped tax free forms"
+title: "What to do when Global Blue tax free forms were never stamped in Sweden"
 seoTitle: "Global Blue customer service: Sweden refund help"
 subtitle: "A call4me customer's assistant called Global Blue in Stockholm about Swedish tax free forms that customs never stamped. A person answered 24 seconds in and gave one instruction: email the details so the refund manager can review them."
-description: "Global Blue Sweden lists +46 8 797 6242 and sweden@globalblue.com. A real call about unstamped tax free forms: email the details to the refund team."
+description: "Unstamped tax free forms? Global Blue says email the details for refund review. Sweden lists +46 8 797 6242 and sweden@globalblue.com."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-16
 tags: global blue, customer service, tax free refund, vat refund, sweden, phone numbers
 authors: nick
 imageAlt: "Global Blue Sweden customer service, a call about tax free forms that were never stamped at export"
 ---
 
-**The short answer:** Global Blue's own Sweden help article lists **+46 8 797 6242** and **sweden@globalblue.com** under "Need Assistance in Sweden?" ([Global Blue, How to validate your Tax Free Form in Sweden](https://cs.globalblue.com/s/article/How-to-validate-your-Tax-Free-Form-in-Sweden?language=en_US)). Its [customer service hours page](https://cs.globalblue.com/s/article/Customer-Service-Operating-Hour1?language=en_US) gives 9:00 to 18:00 Central European Time, Monday to Friday, excluding public holidays.
+**The short answer:** if customs never stamped your Swedish tax free forms, email Global Blue the traveler's name, the form number and a scan of the form so the refund manager can review them; that is what a person at Global Blue told us on the call below. Global Blue's own Sweden help article lists **+46 8 797 6242** and **sweden@globalblue.com** under "Need Assistance in Sweden?" ([Global Blue, How to validate your Tax Free Form in Sweden](https://cs.globalblue.com/s/article/How-to-validate-your-Tax-Free-Form-in-Sweden?language=en_US)). Its [customer service hours page](https://cs.globalblue.com/s/article/Customer-Service-Operating-Hour1?language=en_US) gives 9:00 to 18:00 Central European Time, Monday to Friday, excluding public holidays.
 
 The call on this page went to a different Stockholm number, **+46 8 545 284 40**. We could not find that number on globalblue.com, so treat **+46 8 797 6242** as the official one. A person did answer it as Global Blue, 24 seconds in, with no phone menu.
 

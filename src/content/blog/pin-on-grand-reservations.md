@@ -1,9 +1,10 @@
 ---
-title: Pin On Grand reservations: a table for seven on a busy Saturday
+title: "Book a group table at Pin On Grand in St. Petersburg"
 seoTitle: Pin On Grand reservations in St. Petersburg
 subtitle: A real call booked seven people for 7:00 PM at Pin On Grand, with indoor or outdoor seating depending on availability.
-description: Hear an AI assistant book a table for seven at Pin On Grand in St. Petersburg. See the confirmed time, seating limitation and a prompt for your own reservation.
+description: "Pin On Grand takes reservations at (727) 329 8031. Hear a real call book a table for seven in St. Petersburg, with the confirmed time and seating limits."
 date: 2026-10-11
+updated: 2026-10-17
 tags: Pin On Grand, St Petersburg restaurants, group dinner, restaurant reservations, ai phone assistant
 authors: nick
 imageAlt: Pin On Grand in St. Petersburg, seven guests booked for seven PM

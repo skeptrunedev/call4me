@@ -1,16 +1,16 @@
 ---
-title: "Can AI make phone calls for you? Yes, here's how to set it up"
-seoTitle: "Can AI make phone calls for you? Here's how"
+title: How to set up an AI that makes phone calls for you
+seoTitle: "AI that makes phone calls for you: setup guide"
 subtitle: Your AI assistant can call a business, talk to whoever answers and bring the result back to you. Here's how to connect it, what to ask for, and how to tell when the job is actually done.
-description: Yes, AI can make phone calls for you. Connect a calling tool to ChatGPT, Claude, Codex or Gemini, then have it get quotes and book appointments by phone.
+description: "Set up an AI that makes phone calls for you: connect a calling tool to ChatGPT, Claude, Codex or Gemini, then have it get quotes and book appointments."
 date: 2026-10-07
-updated: 2026-10-14
+updated: 2026-10-17
 tags: ai agent, ai phone assistant, personal assistant, phone calls
 authors: nick
 imageAlt: An AI assistant calls a business for you and brings back the result
 ---
 
-**Yes, AI can make phone calls for you.** Most assistants can't dial on their own, but once you connect a calling tool like [call4me](/), you can ask ChatGPT, Claude, Codex or Gemini to call a business, and it will. A voice caller handles the conversation while your assistant follows along, answers questions that come up mid-call, and reports back what the business said.
+**Yes, AI can make phone calls for you once you connect a calling tool to the assistant you already use.** Most assistants can't dial on their own, but once you connect a calling tool like [call4me](/), you can ask ChatGPT, Claude, Codex or Gemini to call a business, and it will. A voice caller handles the conversation while your assistant follows along, answers questions that come up mid-call, and reports back what the business said.
 
 The calls worth handing off are the ones you keep putting off: checking a price, asking whether something's in stock, booking or moving an appointment, chasing an order. Say you want a pool you can swim at after work. A list of nearby gyms doesn't answer that. Someone has to ask about guest passes, the price, and whether the pool is open at 7pm. Or you need your car aligned: your assistant can call three shops for quotes, then book the one you pick.
 

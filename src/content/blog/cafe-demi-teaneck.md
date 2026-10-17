@@ -1,16 +1,17 @@
 ---
-title: "Café Demi Teaneck: holding and paying for a dairy-free cake by phone"
+title: "Order a dairy-free cake from Café Demi Teaneck by phone"
 seoTitle: "Café Demi Teaneck: cake pickup by phone"
 subtitle: Two real calls to Café Demi in Teaneck held a dairy-free Pecan Maple cake, then paid for two by card and set up a same day Uber courier pickup.
-description: "Café Demi Teaneck's number is (551) 501-2865; press 2 for the café. Two real calls held a dairy-free cake, paid by card and set up a courier pickup."
+description: "To order a cake from Café Demi Teaneck, call (551) 501-2865 and press 2. Two real calls held a dairy-free cake, paid by card and set up a courier pickup."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-16
 tags: cafe demi teaneck, cafe demi, kosher cafe, dairy-free cake, phone order, courier pickup, ai phone assistant
 authors: nick
 imageAlt: "Café Demi Teaneck (551) 501-2865, a dairy-free cake held, paid by phone and picked up by courier"
 ---
 
-**Café Demi is at 1400 Palisade Ave., Teaneck, NJ 07666, and its number is (551) 501-2865.** That is the number on [the Café Demi's official website](https://www.thecafedemi.com), and it is the number both calls below dialed. At the recorded menu, **press 2 for the café.** On both calls a staff member picked up about 34 seconds after the call connected.
+**To order a cake from Café Demi in Teaneck, call (551) 501-2865 and press 2 for the café at the recorded menu.** Café Demi is at 1400 Palisade Ave., Teaneck, NJ 07666. That is the number on [the Café Demi's official website](https://www.thecafedemi.com), and it is the number both calls below dialed. On both calls a staff member picked up about 34 seconds after the call connected.
 
 On Friday, October 16, 2026, a call4me customer's assistant called Café Demi twice. The customer wanted a whole Pecan Maple dairy-free cake in New Milford, the next town over, that same day. The first call checked the price, asked about delivery and put a cake on hold. The second call, about an hour later, paid for two cakes by card and reconfirmed a courier pickup.
 

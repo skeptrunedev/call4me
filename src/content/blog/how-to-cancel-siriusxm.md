@@ -1,9 +1,10 @@
 ---
-title: How to cancel SiriusXM with help from your AI agent
-seoTitle: How to cancel SiriusXM with your AI agent
-subtitle: Give your assistant the job of finding the right cancellation route and preparing the next step. Hear what a SiriusXM representative confirmed on our call.
-description: Learn how to cancel SiriusXM based on who bills you. Use our AI agent prompt to prepare the task, check unanswered questions and track confirmation.
+title: "How to cancel SiriusXM: online, by phone or through Apple, Google Play or Roku"
+seoTitle: "How to cancel SiriusXM online or by phone"
+subtitle: "Cancel through whoever bills you. Here are SiriusXM's official routes, what a representative confirmed on our call, and a prompt for your AI agent."
+description: "Cancel SiriusXM through whoever bills you: online in the Account Center or at (866) 635 8641 if SiriusXM does, or via Apple, Google Play or Roku."
 date: 2026-10-07
+updated: 2026-10-17
 verified: 2026-10-07
 tags: siriusxm, cancel subscription, personal assistant, ai phone assistant
 authors: nick

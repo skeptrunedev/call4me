@@ -1,9 +1,10 @@
 ---
-title: "Cash App customer service number: get past the virtual agent to a person"
+title: "How to reach a live person at Cash App customer service"
 seoTitle: "Cash App customer service number: 1-800-969-1940"
 subtitle: "We called Cash App's support line twice. A virtual agent answers first. On the first call we let it answer our questions; on the second, asking three times for a live representative got us a person 1 minute 35 seconds in. Here's what each said about hours, callbacks and scams, and both recordings."
 description: "Cash App's customer service number is 1-800-969-1940, 8 am to 9:30 pm Eastern daily. Ask the virtual agent for a live representative; a person answered in 1:35."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-16
 tags: cash app, customer service, scams, phone trees, phone numbers
 authors: nick

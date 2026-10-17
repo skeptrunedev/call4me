@@ -2,8 +2,9 @@
 title: "SEV Skin Sacramento: who qualifies for the free first lip flip"
 seoTitle: "SEV Skin Sacramento free lip flip: who qualifies"
 subtitle: "A real call asked whether two past laser facial clients could still get the free first lip flip. Staff said yes, as long as they had never had injections at SEV Skin."
-description: "Hear a real call to SEV Skin Sacramento. Staff said the free first lip flip covers anyone new to injections, even after a laser facial there."
+description: "Call SEV Skin Sacramento at (916) 384-4944 to ask. Staff said the free first lip flip covers anyone new to injections, even after a laser facial."
 date: 2026-10-16
+updated: 2026-10-17
 tags: SEV Skin, SEV Skin Sacramento, lip flip, Botox, Xeomin, cosmetic injections, ai phone assistant
 authors: nick
 imageAlt: "SEV Skin Sacramento, the free first lip flip covers clients new to injections"

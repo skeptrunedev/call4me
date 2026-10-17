@@ -1,18 +1,18 @@
 ---
-title: "Make phone calls from Claude Code with MCP: setup and a real test"
+title: "How to make phone calls from Claude Code with MCP"
 seoTitle: "Claude Code phone calls: personal assistant setup"
 subtitle: Give the Claude Code session you already use a phone. We connected a real account, checked its balance, and asked Claude to call a restaurant during private dining research. Here is the setup, the actual tool sequence, and what the voicemail did and did not answer.
-description: "Add phone calls to your Claude Code personal assistant with MCP. Use booking, shopping and return briefs with real outcomes and a verified setup walkthrough."
+description: "Yes, Claude can make phone calls: add a calling MCP server to your Claude Code personal assistant and ask it to call. Setup, tool sequence and a real test."
 date: 2026-10-03
-updated: 2026-10-06
+updated: 2026-10-17
 tags: claude code, mcp, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Claude Code connects to call4me, makes a phone call, and returns the evidence to the research task
 ---
 
-If you use Claude Code as a personal assistant, a task can reach a point where it needs to call a business. A subscription has unclear cancellation terms. An appointment needs a conversation. A restaurant's website leaves a question unanswered.
+Claude Code can make phone calls through an MCP server. Add [call4me](/) to the session you already use, ask it to call a business, and it gets the status, transcript and outcome back through tools. The conversation stays part of the research or planning task Claude was already doing.
 
-Claude Code can make those phone calls through an MCP server. Add [call4me](/) to the session you already use, ask it to call a business, and it gets the status, transcript and outcome back through tools. The conversation stays part of the research or planning task Claude was already doing.
+If you use Claude Code as a personal assistant, a task can reach a point where it needs to call a business. A subscription has unclear cancellation terms. An appointment needs a conversation. A restaurant's website leaves a question unanswered.
 
 We tested this on October 3, 2026 with **Claude Code 2.1.288** and our own account. Claude connected, read a live balance, called Foreign Cinema in San Francisco, followed the call, and hung up when it reached the private dining voicemail. **It did not reach a person or get a quote.** The recording and the unanswered questions are below.
 

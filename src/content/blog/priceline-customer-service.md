@@ -1,9 +1,10 @@
 ---
 title: "Priceline customer service: reach a person at 1-877-477-5807"
-seoTitle: "Priceline customer service: 1-877-477-5807"
+seoTitle: "Priceline customer service number: 1-877-477-5807"
 subtitle: "We called Priceline's customer service number with no booking. An automated assistant, then a trip number menu, then a 22 minute hold. Here is every prompt, what the representative said about changes, cancellations and non-refundable refunds, and the full 26 minute recording."
-description: "1-877-477-5807 is the Priceline customer service number. No trip number? Here's how we got past the menu to a person, and what they said about refunds."
+description: Call 1-877-477-5807, the Priceline customer service number, and say you have no trip number to reach a live agent. What they said about refunds, recorded.
 date: 2026-10-09
+updated: 2026-10-17
 verified: 2026-10-09
 tags: priceline, travel, hotels, customer service, phone numbers, phone trees
 authors: nick

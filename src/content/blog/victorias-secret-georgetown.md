@@ -1,15 +1,16 @@
 ---
-title: "Victoria's Secret Georgetown: holding items for same day pickup"
+title: Get items held for same day pickup at Victoria's Secret Georgetown
 seoTitle: "Victoria's Secret Georgetown: hold for pickup"
 subtitle: A real call to the Georgetown DC store checked two items on the shelf, found the closest substitutes and got them held for pickup that day.
-description: "Hear a call to Victoria's Secret Georgetown in DC. Staff checked shelf stock, quoted $27.50 and $24.95, and held both items for pickup that day."
+description: To check stock and hold items at Victoria's Secret Georgetown in DC, call (202) 229-1677. Staff checked the shelf and held two items for pickup that day.
 date: 2026-10-16
+updated: 2026-10-17
 tags: Victoria's Secret Georgetown, Georgetown DC shopping, in store pickup, hold an item, stock check, ai phone assistant
 authors: nick
 imageAlt: "Victoria's Secret Georgetown, two items checked on the shelf and held for same day pickup"
 ---
 
-**Victoria's Secret Georgetown is at 1220 Wisconsin Ave NW, Washington, DC 20007.** The [official store page](https://stores.victoriassecret.com/us/dc/washington/1220-wisconsin-ave-nw) calls it Wisconsin Ave Victoria's Secret & PINK and lists **(202) 229-1677**, the same number dialed on this call. The page also lists free in-store pickup. It says nothing about phone holds, so this call is the evidence for those.
+**To have items checked and held at Victoria's Secret Georgetown, call the store at (202) 229-1677.** It is at 1220 Wisconsin Ave NW, Washington, DC 20007. The [official store page](https://stores.victoriassecret.com/us/dc/washington/1220-wisconsin-ave-nw) calls it Wisconsin Ave Victoria's Secret & PINK and lists **(202) 229-1677**, the same number dialed on this call. The page also lists free in-store pickup. It says nothing about phone holds, so this call is the evidence for those.
 
 On October 1, 2026, at about 12:55 PM Eastern, a call4me customer's assistant called the Victoria's Secret in Washington DC's Georgetown neighborhood for someone who wanted to pick up two things that day: breast lift tape and a sparkly silver thong in a particular style and color. Online pickup was not available for those items, so the point of the call was to have someone check the shelf instead of trusting the website.
 

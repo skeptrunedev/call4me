@@ -1,15 +1,16 @@
 ---
-title: "Fresh Blades Barbershop on Divisadero: a same night haircut and beard trim"
+title: "Get a same night haircut and beard trim at Fresh Blades on Divisadero"
 seoTitle: "Fresh Blades Barbershop SF: haircut and beard trim"
 subtitle: A real call asked Fresh Blades in San Francisco for a haircut and beard trim after 6:20 PM on a Monday. Staff said yes, quoted $65 and about an hour, and offered to stay late.
-description: "Hear a real call to Fresh Blades Barbershop SF at 847 Divisadero. Staff fit a haircut and beard trim after 6:20 PM on a Monday for $65, about an hour."
+description: "Call Fresh Blades Barbershop SF at (415) 757-0281 for a same night haircut and beard trim. A real call got one after 6:20 PM on a Monday for $65."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Fresh Blades Barbershop, San Francisco barbershop, haircut and beard trim, same day haircut, ai phone assistant
 authors: nick
 imageAlt: "Fresh Blades Barbershop on Divisadero in San Francisco, a haircut and beard trim the same night for $65"
 ---
 
-**Fresh Blades Barbershop is at 847 Divisadero Street, San Francisco, CA 94117.** The shop's [official website](https://www.freshbladessf.com/) lists **(415) 757-0281**, the number this call dialed, and the Divisadero address. The same site's footer still carries an older line, "© 2018 Fresh Blades Barbershop 1346 Polk St", so go by the Divisadero address the site lists as its main one. This is the San Francisco shop, not the Fresh Blades in Rock Hill, South Carolina.
+**To get a same night haircut and beard trim at Fresh Blades Barbershop, call (415) 757-0281 and ask whether they can fit you in.** The shop is at 847 Divisadero Street, San Francisco, CA 94117. Its [official website](https://www.freshbladessf.com/) lists **(415) 757-0281**, the number this call dialed, and the Divisadero address. The same site's footer still carries an older line, "© 2018 Fresh Blades Barbershop 1346 Polk St", so go by the Divisadero address the site lists as its main one. This is the San Francisco shop, not the Fresh Blades in Rock Hill, South Carolina.
 
 On Monday, October 5, 2026, at about 5:55 PM Pacific, a call4me customer's assistant called Fresh Blades to ask whether a **haircut and beard trim** could fit in **after 6:20 PM that night**, and what it would cost in total. The customer's budget was $85.
 

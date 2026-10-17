@@ -1,9 +1,10 @@
 ---
-title: "Mount Sinai Doctors phone number at 104 Delancey Street: the menu, the hold, and what three calls found"
+title: "Confirm a physical at Mount Sinai Doctors 104 Delancey Street by phone"
 seoTitle: "Mount Sinai Doctors Delancey Street: 212-677-2157"
 subtitle: "A call4me customer's assistant called the Mount Sinai Doctors practice at 104 Delancey Street three times to confirm two annual physicals. Here is the phone menu, how long each call took to reach a person, what staff said about fasting and check-in, and all three recordings."
 description: "Mount Sinai Doctors at 104 Delancey Street is 212-677-2157. Press 1, then 2, for a person. Three recorded calls on fasting, check-in and what to bring."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-12
 tags: mount sinai doctors, mount sinai doctors delancey street, primary care, annual physical, fasting, phone numbers, phone trees
 authors: nick

@@ -1,10 +1,10 @@
 ---
 title: "How to make phone calls from Codex with MCP"
-seoTitle: "Codex MCP phone calls: OAuth setup and real test"
+seoTitle: "Codex MCP server setup for phone calls"
 subtitle: Give Codex a calling tool, keep your credentials out of the prompt, and bring phone answers back into the research it is already doing.
 description: "Connect Codex to call4me through MCP, follow our verified CLI setup, and fix 'MCP tool call requires approval, but approval policy is never' in codex exec."
 date: 2026-10-03
-updated: 2026-10-14
+updated: 2026-10-17
 tags: codex, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: Codex researching online, calling a business through MCP, and returning the answer to the task

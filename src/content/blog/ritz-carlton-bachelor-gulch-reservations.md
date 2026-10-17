@@ -1,15 +1,16 @@
 ---
-title: "Ritz-Carlton Bachelor Gulch reservations: confirming three rooms and a crib by phone"
+title: "Confirm a Ritz-Carlton Bachelor Gulch reservation by phone: three rooms and a crib"
 seoTitle: "Ritz-Carlton Bachelor Gulch reservations by phone"
 subtitle: A real call to the hotel checked three rooms booked for December. Staff would not search by name alone, then found all three rooms once they had a confirmation number, and added a crib note to the king room.
 description: "Calling The Ritz-Carlton, Bachelor Gulch about a booking? Have a confirmation number ready. Hear a real call that confirmed three rooms and a crib request."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Ritz-Carlton Bachelor Gulch, Beaver Creek hotels, hotel reservations, confirm a reservation, ai phone assistant
 authors: nick
 imageAlt: "The Ritz-Carlton, Bachelor Gulch, three rooms confirmed by phone for December 4 to 8"
 ---
 
-**The Ritz-Carlton, Bachelor Gulch is at 0130 Daybreak Ridge, Avon, Colorado 81620, in the Bachelor Gulch area of Beaver Creek.** The hotel's [official page](https://www.ritzcarlton.com/en/hotels/whrrz-the-ritz-carlton-bachelor-gulch/overview/) lists **+1 970-748-6200** as the hotel phone and **+1 800-576-5582** as the toll free number. The 970 number is the one dialed on this call. A staff member answered it directly, with no phone menu.
+**To confirm a booking at The Ritz-Carlton, Bachelor Gulch, call the hotel at +1 970-748-6200.** It is at 0130 Daybreak Ridge, Avon, Colorado 81620, in the Bachelor Gulch area of Beaver Creek. The hotel's [official page](https://www.ritzcarlton.com/en/hotels/whrrz-the-ritz-carlton-bachelor-gulch/overview/) lists **+1 970-748-6200** as the hotel phone and **+1 800-576-5582** as the toll free number. The 970 number is the one dialed on this call. A staff member answered it directly, with no phone menu.
 
 **If you call to check a booking, have the confirmation number ready.** On this call, staff said the hotel would not look up a reservation by guest name and dates: "Ritz Carlton has a strong policy for privacy and security, and what we must have is the confirmation number." Once they had one number, they found all three rooms.
 

@@ -1,10 +1,10 @@
 ---
-title: USAA phone number: how to reach a person, and who can join
-seoTitle: "USAA phone number: 800-531-8722, reach a person"
+title: "USAA phone number: how to reach a person and find out if you can join"
+seoTitle: "USAA customer service number: reach a person"
 subtitle: We called USAA's main number to ask who can join and what it takes. Here is the phone tree, the one word that got us through it, what the eligibility team said, and the full 8 minute recording.
-description: The USAA phone number is 800-531-8722. Press 1, then 2, then say "membership" to reach the eligibility team. Who can join, from a real recorded call.
+description: "Call the USAA customer service number, 800-531-8722. Press 1, then 2, then say \"membership\" to reach the eligibility team. Who can join, from a real call."
 date: 2026-10-01
-updated: 2026-10-04
+updated: 2026-10-17
 verified: 2026-10-01
 tags: usaa, customer service, membership, eligibility, phone trees
 authors: nick

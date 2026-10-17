@@ -1,10 +1,10 @@
 ---
 title: How to find a new primary care doctor with an out-of-state plan (15 recorded calls)
-seoTitle: "Find a new primary care doctor: 15 real calls"
+seoTitle: Find a primary care doctor accepting new patients
 subtitle: A call4me user in Baltimore needed a new primary care doctor and had an out-of-state Blue Cross Blue Shield PPO. Their AI phone assistant called 10 practices. Here's who was taking new patients, who took the plan, how far out the first opening was, a $2,121 surprise, and all 15 recordings.
-description: Hear an AI agent call 10 practices to find a new primary care doctor. Compare insurance answers, openings and two bookings, then reuse the prompt.
+description: To find a new primary care doctor, call several practices with the same four questions. 15 recorded calls booked two new-patient visits, 5 and 6 weeks out.
 date: 2026-10-01
-updated: 2026-10-07
+updated: 2026-10-17
 tags: primary care doctor, new patient, bluecard, blue cross blue shield, insurance, ai phone assistant
 authors: nick
 imageAlt: Finding a new primary care doctor, 15 calls to 10 practices, 2 new-patient visits booked, recorded

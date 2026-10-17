@@ -1,9 +1,10 @@
 ---
-title: "Peloton customer service number, and the privacy line that reached a person in 22 seconds"
+title: "How to reach Peloton member support by phone, and stop its marketing mail"
 seoTitle: "Peloton customer service number: 1-866-679-9129"
 subtitle: "A call4me customer's assistant called Peloton's privacy request line to stop catalogs and marketing mail. There was no menu, a member support representative answered 22 seconds in, and she offered to escalate the request. Here are both official numbers, what the call established, what it didn't, and the full recording."
 description: "Peloton's customer service number is 1-866-679-9129. Its privacy line, 1-844-559-0051, reached member support in 22 seconds on a real recorded call."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-01
 tags: peloton, customer service, member support, privacy requests, marketing mail, phone numbers
 authors: nick

@@ -1,9 +1,10 @@
 ---
 title: "How to make phone calls from Cline with an MCP server"
-seoTitle: "Cline MCP phone calls: tested headless CLI setup"
+seoTitle: Cline MCP server setup for phone calls, tested
 subtitle: We gave the Cline CLI call4me as a remote MCP server, ran it headless, and had it call UPS customer service. Here is the setup that keeps the API key out of Cline's settings, the two things that stop a headless run partway through a call, and what the call actually got.
-description: "Add call4me to the Cline CLI as a remote MCP server so headless Cline can place phone calls. Tested settings, auto-approve, the loop guard and a real UPS call."
+description: "Cline MCP server setup for phone calls: add call4me to the Cline CLI as a remote server, auto-approve it, mind the loop guard. Tested on a real UPS call."
 date: 2026-10-16
+updated: 2026-10-17
 tags: cline, cline cli, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: The Cline CLI loads the call4me MCP server, places a phone call, and reports the outcome

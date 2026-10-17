@@ -1,9 +1,10 @@
 ---
-title: "Skip hire Abingdon: seven firms quoted for a rubble skip"
+title: "Skip hire Abingdon: compare seven firms' prices for a rubble skip"
 seoTitle: "Skip hire Abingdon: 7 rubble skip quotes"
 subtitle: "A call4me customer's assistant phoned seven Oxfordshire skip firms in one morning for a 4 or 6 yard skip of clean bricks and concrete on an Abingdon driveway. Here are the prices, hire periods, weight answers and delivery days, with all eight recordings."
 description: "Skip hire Abingdon prices from 8 recorded calls: seven Oxfordshire firms quoted 2 to 6 yard skips for bricks and concrete, with hire periods and delivery days."
 date: 2026-10-16
+updated: 2026-10-17
 tags: skip hire abingdon, skip hire oxford, skip hire oxford prices, mini skip hire oxford, 4 yard skip hire, rubble skip, ai phone assistant
 authors: nick
 imageAlt: "Skip hire Abingdon, seven Oxfordshire firms quoted for a 4 or 6 yard rubble skip, eight recorded calls"

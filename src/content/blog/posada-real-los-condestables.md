@@ -1,16 +1,17 @@
 ---
-title: "Posada Real Los Condestables: checking the spa and lunch by phone, in Spanish"
+title: "Check the spa and lunch at Posada Real Los Condestables by phone, in Spanish"
 seoTitle: "Posada Real Los Condestables: spa and lunch call"
 subtitle: A real call in Spanish asked the hotel in Villalpando about a Saturday spa circuit with massage and lunch for two. Staff named what to bring and floated lunch plus a 4:00 PM spa, but nothing was booked.
-description: "Posada Real Los Condestables in Villalpando: +34 980 660 939. Hear a Spanish call about a Saturday spa, massage and lunch for two, with English translation."
+description: "To check the spa or lunch at Posada Real Los Condestables in Villalpando, call +34 980 660 939. Hear a real Spanish call, with English translation."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-15
 tags: Posada Real Los Condestables, Villalpando, Zamora, hotel spa, Spanish phone calls, ai phone assistant
 authors: nick
 imageAlt: "Posada Real Los Condestables, +34 980 660 939, spa and lunch checked by phone in Spanish"
 ---
 
-**Posada Real Los Condestables is at Calle Real Nº 24, 49630 Villalpando, Zamora, Spain.** Its [official website](https://www.posadaloscondestables.com/servicios/) lists **+34 980 660 939** (980 660 939 from inside Spain) and info@posadaloscondestables.com. That is the number the call dialed. A person answered with the hotel's name; there was no phone menu.
+**To check the spa or lunch at Posada Real Los Condestables, call +34 980 660 939** (980 660 939 from inside Spain). That is the number its [official website](https://www.posadaloscondestables.com/servicios/) lists, and the number the call dialed. A person answered with the hotel's name; there was no phone menu. The hotel is at Calle Real Nº 24, 49630 Villalpando, Zamora, Spain, and the site also lists info@posadaloscondestables.com.
 
 The site describes a small spa with a sauna and relax area, massages by reservation, and a restaurant serving traditional Castilian food, where it recommends booking ahead.
 

@@ -1,9 +1,10 @@
 ---
-title: "Etihad customer service: the US number and phone menu"
-seoTitle: "Etihad customer service US number: 914-303-8393"
+title: "Etihad customer service: how to reach an agent from the US"
+seoTitle: "Etihad Airways phone number USA: 914-303-8393"
 subtitle: A call4me user had their AI phone assistant call Etihad Airways in the US to chase a complaint about a business-class seat that wouldn't lie flat. Here's the number, every menu and key press, how long each step took, what the agent confirmed, and the whole recording.
-description: Etihad's US customer service number is +1 914-303-8393, open 24 hours. The menu path to a person, and what a complaint follow-up got, from a real call.
+description: "The Etihad Airways phone number in the USA is +1 914-303-8393, open 24 hours. The menu path to an agent, and what a complaint follow-up got."
 date: 2026-10-01
+updated: 2026-10-17
 verified: 2026-10-01
 tags: etihad, etihad airways, customer service, complaints, phone trees, airlines
 authors: nick

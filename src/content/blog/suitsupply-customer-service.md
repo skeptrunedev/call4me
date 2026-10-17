@@ -1,9 +1,10 @@
 ---
-title: "Suitsupply customer service: the numbers, and what two stores said by phone"
+title: "Suitsupply customer service: how to reach a person about a return, hemming or pickup"
 seoTitle: "Suitsupply customer service: 1-844-328-9234"
 subtitle: "Two real calls from a call4me customer's assistant: Suitsupply Chicago on Rush Street on returns and hemming, and Suitsupply Washington in Georgetown on an order pickup. A person answered both store lines in about half a minute."
-description: "Suitsupply customer service is 1-844-328-9234. Store lines reach a person fast: real calls to Chicago and DC on returns, hemming and pickup."
+description: "Suitsupply customer service is 1-844-328-9234. For a return, hemming or pickup, call the store: real calls to Chicago and DC reached a person in half a minute."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-08
 tags: suitsupply, customer service, return policy, alterations, store pickup, phone numbers
 authors: nick

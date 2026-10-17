@@ -1,9 +1,10 @@
 ---
-title: "Town Fair Tire Manchester CT: a Blizzak WS90 snow tire quote, compared"
+title: "Town Fair Tire Manchester CT: get a Blizzak WS90 snow tire quote and compare it"
 seoTitle: "Town Fair Tire Manchester CT: Blizzak WS90 quote"
 subtitle: "A call4me customer's assistant priced the same set of four Bridgestone Blizzak WS90 snow tires at Town Fair Tire and four other shops around Manchester, Connecticut. Town Fair quoted $853.98 out the door. Here is every quote, what each one included, and all five recordings."
 description: "Town Fair Tire quoted $853.98 out the door for four Blizzak WS90s (205/55R16) near Manchester CT. Firestone said about $655. Hear all five recorded calls."
 date: 2026-10-16
+updated: 2026-10-17
 tags: town fair tire, town fair tire manchester ct, snow tires, bridgestone blizzak ws90, tire quote, car maintenance
 authors: nick
 imageAlt: "Town Fair Tire Manchester CT, four Blizzak WS90 snow tires quoted at $853.98 out the door, compared with four other shops"

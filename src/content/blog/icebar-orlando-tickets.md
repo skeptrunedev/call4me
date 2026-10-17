@@ -1,15 +1,16 @@
 ---
-title: ICEBAR Orlando tickets: a group walk in call and the prices quoted
+title: "ICEBAR Orlando tickets: walk in with a group or buy online first"
 seoTitle: ICEBAR Orlando tickets: prices and walk ins
 subtitle: A real Friday night call checked entry for seven people, online versus door prices and whether the group needed a guest list.
-description: Hear a real ICEBAR Orlando call about tickets and walk in entry for seven. Staff quoted online and door prices; no tickets were bought or reservation made.
+description: "ICEBAR Orlando let a group of seven walk in with no guest list and quoted $15 online versus $21 at the door for ice room admission, on a real call."
 date: 2026-10-11
+updated: 2026-10-17
 tags: ICEBAR Orlando, Orlando nightlife, admission tickets, group plans, ai phone assistant
 authors: nick
 imageAlt: ICEBAR Orlando, a group of seven checks admission before heading over
 ---
 
-**ICEBAR Orlando is at 8967 International Drive, Orlando, Florida.** Use the [official venue website](https://icebarorlando.com/) for current tickets and event information. If a group is about to head over, a call can check whether walk in entry is possible that night and which admission option applies.
+**On our call, ICEBAR Orlando said a group of seven could walk in, and quoted ice room admission cheaper online than at the door.** The venue is at 8967 International Drive, Orlando, Florida. Use the [official venue website](https://icebarorlando.com/) for current tickets and event information. If a group is about to head over, a call can check whether walk in entry is possible that night and which admission option applies.
 
 On Friday, October 9, 2026, a call4me customer's assistant called for a group of seven hoping to arrive soon. Staff said they could walk in, did not need names placed on a guest list, and could visit before the venue closed at 2:00 AM.
 

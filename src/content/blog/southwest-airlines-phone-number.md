@@ -1,5 +1,5 @@
 ---
-title: "Southwest Airlines phone number: what happens when you call"
+title: "Southwest Airlines phone number: how to reach a live agent"
 seoTitle: "Southwest Airlines phone number: 1-800-435-9792"
 subtitle: "We called Southwest's general questions line, 1-800-I-FLY-SWA, for this guide. Saying \"representative\" put us on hold, and a live reservations agent answered 4 minutes 10 seconds in. She wouldn't take general questions. Here is the route, the full recording, and where Southwest answers them in writing."
 description: "Southwest's number is 1-800-435-9792. Saying \"representative\" reached an agent in 4:10, but reservations agents won't take general questions. Full recording."

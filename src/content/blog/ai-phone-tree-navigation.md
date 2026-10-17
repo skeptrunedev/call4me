@@ -1,9 +1,10 @@
 ---
-title: "Can your AI assistant navigate phone trees? Vapi, Bland and call4me evidence"
+title: "How to get your AI assistant through a phone tree: Vapi, Bland and call4me calls"
 seoTitle: "Phone trees for Claude Code and Codex: real calls"
 subtitle: A phone menu, a successful keypad press, and a completed task are different results. Here is how to configure, diagnose, and test each step.
 description: "Get Claude Code or Codex through business phone menus. Hear real call4me, Vapi and Bland recordings, with keypad evidence and voicemail limits."
 date: 2026-10-04
+updated: 2026-10-17
 tags: ai phone assistant, ivr, dtmf, vapi, bland, mcp, claude code, codex
 authors: nick
 imageAlt: A phone menu routes through keypad input to either a person or voicemail, with separate checks for routing and task completion

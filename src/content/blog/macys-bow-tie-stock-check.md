@@ -1,10 +1,10 @@
 ---
-title: Check store availability with your AI assistant: a Macy's call
+title: "Check store availability by phone: a real Macy's stock call"
 seoTitle: Check store availability: an AI call to Macy's
 subtitle: Hear a real Macy's stock check, then use the same AI workflow to confirm store inventory, order readiness and pickup details before you go.
 description: Check store availability and order pickup with an AI assistant. Hear a real Macy's call, check Suitsupply order status and copy the shopping prompts.
 date: 2026-10-06
-updated: 2026-10-07
+updated: 2026-10-17
 tags: store stock, order pickup, Suitsupply order status, shopping, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Macy's bow tie stock check, 88 reported in stock at $33

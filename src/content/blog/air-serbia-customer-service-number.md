@@ -1,9 +1,10 @@
 ---
-title: "Air Serbia customer service number: the US line, the hold, and changing a seat"
+title: "Air Serbia customer service number: reaching an agent from the US to change a seat"
 seoTitle: "Air Serbia phone number USA: +1 718-725-8642"
 subtitle: "A call4me customer's assistant called Air Serbia's US number four times about one seat on a Belgrade to New York flight. A person answered every time, after 13 to 25 minutes on hold. Here's the phone tree, what the agents said about seats, check-in and verification, and all four recordings."
-description: "The Air Serbia phone number for the USA is +1 (718) 725-8642. Press 9 for English, then 1, or 3 and 1. Four real recorded calls about seats and check-in."
+description: "Call Air Serbia from the USA at +1 (718) 725-8642: press 9 for English, then 1, or 3 and 1. Four recorded calls on changing a seat, even after check-in."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-15
 tags: air serbia, customer service, airlines, seat selection, check in, phone trees, phone numbers
 authors: nick

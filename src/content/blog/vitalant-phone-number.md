@@ -1,16 +1,17 @@
 ---
-title: "Vitalant phone number: how to get off the Vitalant call list"
-seoTitle: "Vitalant phone number: 877-258-4825"
+title: "How to get off the Vitalant donor call list"
+seoTitle: "How to get off the Vitalant call list"
 subtitle: "A call4me customer's assistant called Vitalant's donor line to stop blood donation recruitment calls. A person took the number off the call list and said it takes 10 to 12 days to fully clear. Here is the path, what was said, and the full 7 minute recording."
 description: "The Vitalant phone number is 877-258-4825. How to get off the Vitalant call list, from a real call: a person removed the number, allow 10 to 12 days."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-13
 tags: vitalant, vitalant blood donation, blood services, donor calls, opt out, phone numbers, phone trees
 authors: nick
 imageAlt: "Vitalant 877-258-4825, a call that got a number off the donor recruitment call list"
 ---
 
-**The short answer:** the Vitalant phone number is **877-258-4825** (877-25-VITAL). Vitalant's [contact page](https://www.vitalant.org/contact-us) lists it "For Appointments", open **Mon. to Fri. 7 AM to 8 PM MT** and **Sat. to Sun. 9 AM to 7 PM MT**. The same page lists a separate **Emergency Hotline, 800-821-6277**, for donors who gave blood today and worry it "may not be suitable for transfusion".
+**The short answer:** to get off the Vitalant call list, call the Vitalant phone number, **877-258-4825** (877-25-VITAL), and ask a person to remove your number; allow 10 to 12 days. Vitalant's [contact page](https://www.vitalant.org/contact-us) lists it "For Appointments", open **Mon. to Fri. 7 AM to 8 PM MT** and **Sat. to Sun. 9 AM to 7 PM MT**. The same page lists a separate **Emergency Hotline, 800-821-6277**, for donors who gave blood today and worry it "may not be suitable for transfusion".
 
 **How to get off the Vitalant call list:** call 877-258-4825 and ask a person to remove your phone number from donor recruitment calls. Vitalant's [communication preferences page](https://www.vitalant.org/resources/help/communication-preferences) offers the same thing: "You also may call our Customer Contact Center at 877-258-4825 and they will be happy to help." You can also do it yourself online: log in to your donor account, open the "PREFERENCES" tab, uncheck phone calls, and click "Submit now" for that channel. The [privacy policy](https://www.vitalant.org/privacy-policy) adds donorsupport@vitalant.org for opt-out requests.
 

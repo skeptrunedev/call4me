@@ -1,9 +1,10 @@
 ---
-title: Reschedule a doctor appointment with your AI assistant
+title: "How to reschedule a doctor appointment, or have your AI assistant call"
 seoTitle: Reschedule a doctor appointment by phone with AI
 subtitle: A real call checked that the old appointment was canceled, then booked Thursday at 1:30 PM within the patient's available hours.
-description: Reschedule a doctor appointment through your existing Claude Code or Codex assistant. Hear a real call and learn what to include in the request.
+description: "To reschedule a doctor appointment, confirm the old visit is canceled, then give exact times you can attend. Hear a real call, or let Claude Code or Codex call."
 date: 2026-10-06
+updated: 2026-10-17
 tags: doctor appointments, rescheduling, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Doctor appointment rescheduled, Thursday at 1:30 PM

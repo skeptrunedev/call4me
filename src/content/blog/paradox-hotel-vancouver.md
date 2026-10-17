@@ -1,9 +1,10 @@
 ---
-title: "Paradox Hotel Vancouver phone number: asking about a room upgrade fee and a romantic setup"
+title: Call Paradox Hotel Vancouver about a room upgrade fee and a romantic setup
 seoTitle: "Paradox Hotel Vancouver phone: (236) 900-6001"
 subtitle: A real call to the Paradox Hotel Vancouver front desk asked whether there was any flexibility on a room upgrade fee and whether a romantic room setup would follow the guest to the new room.
 description: "The Paradox Hotel Vancouver phone number is (236) 900-6001. A real call on the $30 per night upgrade fee and moving a romantic setup to a Signature King."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Paradox Hotel Vancouver, Vancouver hotels, room upgrade, romantic room setup, ai phone assistant
 authors: nick
 imageAlt: "Paradox Hotel Vancouver (236) 900-6001, a room upgrade fee and a romantic setup"

@@ -1,9 +1,10 @@
 ---
-title: How to make a restaurant reservation with your AI assistant
+title: "How to make a restaurant reservation by phone, or have your AI assistant call"
 seoTitle: How to make a restaurant reservation with AI
 subtitle: A real restaurant call confirmed a table for four on Thursday, October 8 at 7:30 PM. Cancellation terms were not discussed.
-description: Make a restaurant reservation from your existing Claude Code or Codex assistant. Hear a real booking call and use a suggested prompt for your own table.
+description: "To make a restaurant reservation, give the date, time, party size and name, then have staff repeat it. Hear a real AI booking call and copy the prompt."
 date: 2026-10-06
+updated: 2026-10-17
 tags: restaurant reservations, dinner, bookings, personal assistant, ai phone assistant
 authors: nick
 imageAlt: A dinner reservation for four, Thursday at 7:30 PM

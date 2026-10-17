@@ -1,16 +1,17 @@
 ---
-title: "Farmacia Luma Viejo San Juan: checking a prescription by phone"
+title: "Farmacia Luma Viejo San Juan: check if a prescription is ready by phone"
 seoTitle: "Farmacia Luma Viejo San Juan: recetario hours"
 subtitle: "A call4me customer's assistant called the pharmacy counter at Farmacia Luma in Old San Juan, in Spanish. In under two minutes staff confirmed the prescription had arrived, said it was ready, quoted $1 without insurance and gave the recetario hours."
-description: "Farmacia Luma in Viejo San Juan answers (787) 722-0335. A real Spanish call confirmed a ready prescription, a $1 cash price and recetario hours."
+description: "Check a prescription at Farmacia Luma in Viejo San Juan: call (787) 722-0335. A real Spanish call confirmed it ready, $1 cash, and recetario hours."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-15
 tags: Farmacia Luma, Viejo San Juan, Old San Juan pharmacy, prescription pickup, Spanish phone call, ai phone assistant
 authors: nick
 imageAlt: "Farmacia Luma in Viejo San Juan, a prescription confirmed ready for pickup at $1"
 ---
 
-**Farmacia Luma is at Calle San Francisco 255 in Viejo San Juan, Puerto Rico, and its pharmacy counter answers (787) 722-0335.** Staff picked up with "Buenos días, recetario Luma" on October 15, 2026. **The recetario (prescription counter) is open Monday to Friday, 8:00 AM to 4:45 PM,** according to the pharmacist who answered.
+**To check whether a prescription is ready at Farmacia Luma in Viejo San Juan, call its pharmacy counter at (787) 722-0335.** The pharmacy is at Calle San Francisco 255 in Viejo San Juan, Puerto Rico. Staff picked up with "Buenos días, recetario Luma" on October 15, 2026. **The recetario (prescription counter) is open Monday to Friday, 8:00 AM to 4:45 PM,** according to the pharmacist who answered.
 
 Where that number comes from: the pharmacy's [Facebook page](https://www.facebook.com/farmacialuma/) gives the address as Calle San Francisco 255, and the federal [NPI registry record](https://npiregistry.cms.hhs.gov/provider-view/1689701443) for Farmacia Luma lists 787-722-0335 at 255 Calle de San Francisco. The pharmacy's own domain, farmacialuma.com, redirected to a page that did not load when we checked on October 17, 2026, so we could not confirm the number on a Farmacia Luma website. The call itself reached the Luma recetario.
 

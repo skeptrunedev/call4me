@@ -1,9 +1,10 @@
 ---
-title: "Vanguard customer service number: reaching a retirement specialist about an IRA recharacterization"
-seoTitle: "Vanguard customer service number: 800-205-6189"
+title: "How to reach a Vanguard retirement specialist about an IRA recharacterization"
+seoTitle: "Vanguard IRA recharacterization: call 800-205-6189"
 subtitle: "A call4me customer's assistant called Vanguard's retirement specialists line the day before the October 15 recharacterization deadline. Here is the phone tree, the transfer to Retirement Services, what the specialist said about a pending recharacterization, and the full 14 minute recording."
-description: "Vanguard's retirement specialists line is 800-205-6189 and its main number is 877-662-7447. A real call about an IRA recharacterization deadline."
+description: "For a Vanguard IRA recharacterization, call retirement specialists at 800-205-6189. The main customer service number is 877-662-7447. Hear a real call."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-14
 tags: vanguard, customer service, ira recharacterization, roth ira, retirement, phone trees, phone numbers
 authors: nick

@@ -1,9 +1,10 @@
 ---
-title: "Zan Atelier Chicago: alteration prices, turnaround and appointments"
+title: "Zan Atelier Chicago: alteration prices and how to book an appointment"
 seoTitle: "Zan Atelier Chicago: alteration prices, booking"
 subtitle: "A real call asked a Lawrence Avenue tailor about fitting a short white coat. Staff gave sample prices, a 14 business day turnaround and said walk-ins weren't possible."
 description: "Zan Atelier in Chicago quoted $80 to shorten a jacket and $30 to hem trousers, about 14 business days, by appointment only. Hear the real call."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Zan Atelier, Chicago tailor, alterations, white coat alterations, tailoring appointment, ai phone assistant
 authors: nick
 imageAlt: "Zan Atelier Chicago at 1756 West Lawrence Avenue, alterations by appointment, about 14 business days"

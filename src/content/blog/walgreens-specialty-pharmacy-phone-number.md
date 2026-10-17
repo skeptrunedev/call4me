@@ -1,9 +1,10 @@
 ---
-title: "Walgreens Specialty Pharmacy phone number: the main line, and a real store call"
+title: "How to reach Walgreens Specialty Pharmacy: the main line or your store"
 seoTitle: "Walgreens Specialty Pharmacy: 888-782-8443"
 subtitle: "Walgreens lists one support number for specialty pharmacy questions, and each specialty store has its own line. A call4me customer's assistant called the Sacramento store to cancel a flu shot. Here is the phone tree, what staff confirmed, and the full 3 minute recording."
 description: "The Walgreens Specialty Pharmacy number is 888-782-8443. Store lines differ: Sacramento is 916-738-3300. Hear a real call that canceled a flu shot."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-08
 tags: walgreens, specialty pharmacy, pharmacy, flu shot, cancel appointment, phone trees, phone numbers
 authors: nick

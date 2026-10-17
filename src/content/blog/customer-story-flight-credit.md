@@ -1,15 +1,16 @@
 ---
-title: "A $100 flight credit for a call Jem would never have made"
-seoTitle: "Customer story: a $100 JSX flight credit"
+title: "Asking JSX for a delayed flight credit: a $100 voucher by phone"
+seoTitle: "JSX delayed flight credit: a $100 voucher by phone"
 subtitle: Jem asked Grok Bot and call4me to follow up on a delayed flight. JSX offered a $100 courtesy travel voucher.
-description: A real customer story: Grok Bot and call4me called JSX about a delayed flight, and the representative offered a $100 travel voucher.
+description: "Call JSX Reservations after a delay and ask for a goodwill credit: a real call got a $100 courtesy travel voucher, valid for one year. A customer story."
 date: 2026-10-09
+updated: 2026-10-17
 tags: customer stories, flight credit, grok bot, personal assistant
 authors: nick
 imageAlt: A $100 flight credit, from a delayed flight to a confirmed courtesy voucher
 ---
 
-Jem had a delayed flight and a task that was easy to put off: call the airline and ask whether it could offer anything for the inconvenience.
+Calling JSX Reservations about a delayed flight and asking for a goodwill credit got Jem a $100 courtesy travel voucher. It was a task that was easy to put off: call the airline and ask whether it could offer anything for the inconvenience.
 
 Grok Bot and call4me handled the phone call. Afterwards, [Jem wrote on X](https://x.com/sheherenow_/status/2105785991839850786):
 

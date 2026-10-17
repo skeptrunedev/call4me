@@ -1,15 +1,16 @@
 ---
 title: "Samsung oven door glass repair in Sacramento: a real $295 labor quote"
-seoTitle: "Samsung appliance repair Sacramento: oven glass"
+seoTitle: "Samsung oven door glass replacement, Sacramento"
 subtitle: "A call to True Appliance Repair's line was routed to a local company, which quoted labor from $295 for a shattered outer oven door glass, if the customer buys the glass."
-description: "A real call about Samsung oven door glass repair in Sacramento. Labor was quoted from $295, but the shop asks you to order the glass panel yourself."
+description: "Samsung appliance repair in Sacramento for shattered oven door glass: a real call got labor quoted from $295, but you order the glass panel yourself."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Samsung appliance repair Sacramento, oven door glass, appliance repair in Sacramento CA, home services, ai phone assistant
 authors: nick
 imageAlt: "Samsung oven door glass repair in Sacramento, labor quoted from $295 when the customer supplies the glass"
 ---
 
-**True Appliance Repair's number is 1-888-298-3714,** the number its [Sacramento oven and stove repair page](https://www.trueappliancerepair.com/california/sacramento-ca/oven-stove-repair) and its other city pages list. It is not a single local shop. The site describes itself as a service that connects homeowners with local repair professionals, and on this call the line transferred to a company called **Appliance EMT LLC**.
+**For a Samsung oven door glass repair quote in Sacramento, call True Appliance Repair at 1-888-298-3714;** on our call, the local shop it routed to quoted labor from about $295 if you buy the glass yourself. That is the number its [Sacramento oven and stove repair page](https://www.trueappliancerepair.com/california/sacramento-ca/oven-stove-repair) and its other city pages list. It is not a single local shop. The site describes itself as a service that connects homeowners with local repair professionals, and on this call the line transferred to a company called **Appliance EMT LLC**.
 
 On Monday, October 12, 2026, around 2:17 PM Pacific, a call4me customer's assistant called that number about a Samsung gas range, model NX60A6111SS/AA, whose outer oven door glass had shattered. The home is in Midtown Sacramento. The brief was a quote only: no booking and no payment.
 

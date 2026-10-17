@@ -1,10 +1,10 @@
 ---
-title: "Need dress shoes today? Our AI called 3 DC stores and got a pair on hold by 11 am"
+title: "Need dress shoes today? How to find your size and get a pair held"
 seoTitle: "Need dress shoes today? 3 DC stores (Oct 2026)"
 subtitle: A call4me user's dress shoe broke on the morning of a 5 pm gala. Their AI phone assistant called two Nordstrom Racks and a Men's Wearhouse, found Stacy Adams loafers in a 10.5 for $119, and got them set aside for pickup. Here's what each store said, all 6 recordings, and how to do it yourself.
-description: A shoe broke the morning of a gala. We called 2 Nordstrom Racks and a Men's Wearhouse in DC, found a $119 pair, and got it held for pickup. All 6 calls.
+description: "Need dress shoes today? Call stores, have staff check your size and hold the pair. Our AI called 3 DC stores and got $119 loafers held. All 6 calls."
 date: 2026-10-01
-updated: 2026-10-07
+updated: 2026-10-17
 tags: dress shoes, men's wearhouse, nordstrom rack, same day pickup, ai phone assistant
 authors: nick
 imageAlt: Need dress shoes today, 3 DC stores called, 1 pair on hold by 11 am

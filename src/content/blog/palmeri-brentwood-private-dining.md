@@ -1,15 +1,16 @@
 ---
-title: "Palmeri Brentwood private dining: a wine room quote for 8"
+title: "How to get a private dining quote at Palmeri in Brentwood"
 seoTitle: "Palmeri Brentwood private dining: wine room quote"
 subtitle: "Two real calls to Palmeri Ristorante in Brentwood, one in English and one in Italian, priced a private dinner for 8 in the wine room. The quotes differed, and nothing was booked."
-description: "Palmeri Ristorante in Brentwood quoted its wine room for 8: $135 a person, a $250 room fee, 20% gratuity and 10% tax. Hear both calls, one in Italian."
+description: "To get a private dining quote at Palmeri in Brentwood, call 310.442.8446. Our quote for 8: $135 a person, a $250 room fee, 20% gratuity and 10% tax."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Palmeri, Palmeri Ristorante, Brentwood, Los Angeles private dining, wine room, group dinner, Italian phone call, ai phone assistant
 authors: nick
 imageAlt: "Palmeri in Brentwood, Los Angeles: wine room for 8 at $135 a person plus a $250 room fee"
 ---
 
-**Palmeri Ristorante is at 11650 San Vicente Blvd, Los Angeles, CA 90049, in Brentwood.** Its [official About page](http://www.palmeriristorantespa.com/about/) lists that address and **310.442.8446**, the number our customer's assistant dialed. The [reservations page](http://www.palmeriristorantespa.com/reservations/) says "Reservations are made by phone only", and the [private events page](http://www.palmeriristorantespa.com/privateEvents/) says the restaurant offers "seating for over 80 guests as well as a private room that seats 12." The site calls the restaurant Palmeri S.p.A. Ristorante. It doesn't use the word Brentwood, but 11650 San Vicente is in Brentwood.
+**To book private dining at Palmeri Ristorante in Brentwood, call 310.442.8446; reservations are made by phone only.** Palmeri is at 11650 San Vicente Blvd, Los Angeles, CA 90049, in Brentwood. Its [official About page](http://www.palmeriristorantespa.com/about/) lists that address and **310.442.8446**, the number our customer's assistant dialed. The [reservations page](http://www.palmeriristorantespa.com/reservations/) says "Reservations are made by phone only", and the [private events page](http://www.palmeriristorantespa.com/privateEvents/) says the restaurant offers "seating for over 80 guests as well as a private room that seats 12." The site calls the restaurant Palmeri S.p.A. Ristorante. It doesn't use the word Brentwood, but 11650 San Vicente is in Brentwood.
 
 On October 12 and 13, 2026, a call4me customer's assistant called Palmeri twice about a private dinner for 8 at one table on Thursday, November 5, 2026, from 6:00 to 9:00 PM. It was a quote request only. The assistant was told not to hold, book or agree to any charge.
 

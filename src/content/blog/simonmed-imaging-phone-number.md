@@ -1,9 +1,10 @@
 ---
-title: "SimonMed scheduling phone number: the cardiac CT line, and what six calls about a CCTA with Cleerly found"
-seoTitle: "SimonMed scheduling number: 1-844-615-2957"
+title: "SimonMed scheduling phone number: how to book a self-pay CCTA with Cleerly"
+seoTitle: "SimonMed scheduling phone number: 1-844-615-2957"
 subtitle: "A call4me customer's assistant called SimonMed Imaging six times to price, book and prepare for a self-pay coronary CT angiogram with Cleerly plaque analysis at Van Ness in San Francisco. Here are the two numbers, how fast each reached a person, what staff said about price, orders and prep, and all six recordings."
-description: "The SimonMed scheduling phone number for cardiac CT is 1-844-615-2957; the main line is 1-866-614-8555. Self-pay CCTA with Cleerly at Van Ness: $1,855."
+description: "Call 1-844-615-2957 to schedule a SimonMed cardiac CT; the main line is 1-866-614-8555. A self-pay CCTA with Cleerly at Van Ness was quoted $1,855."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-15
 tags: simonmed imaging, simonmed phone number, scheduling, coronary ct angiogram, cleerly, self-pay, medical imaging, phone trees
 authors: nick

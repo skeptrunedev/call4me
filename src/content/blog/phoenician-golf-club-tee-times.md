@@ -1,15 +1,16 @@
 ---
-title: "The Phoenician Golf Club: group tee times and rates in Scottsdale"
+title: "How to book group tee times at The Phoenician Golf Club"
 seoTitle: "Phoenician Golf Club tee times and group rates"
 subtitle: "A call4me customer's assistant asked The Phoenician for four morning tee times on a November Friday. The morning was sold out, and the golf rate was $247 plus tax. Calls to Stonecreek and Camelback Golf Club came back with different answers."
-description: "The Phoenician Golf Club quoted $247 plus tax per golfer for a November group, with mornings sold out. Hear the call, plus Stonecreek and Camelback quotes."
+description: "To book group tee times at The Phoenician Golf Club, call (480) 423-2450 for the tournament coordinator. Our quote: $247 plus tax, mornings sold out."
 date: 2026-10-16
+updated: 2026-10-17
 tags: The Phoenician Golf Club, Scottsdale golf, tee times, group golf outing, Stonecreek Golf Club, Camelback Golf Club, ai phone assistant
 authors: nick
 imageAlt: "The Phoenician Golf Club in Scottsdale, a group tee time request for a November Friday morning"
 ---
 
-**The Phoenician Golf Club is at 6000 East Camelback Road, Scottsdale, Arizona.** For Phoenician golf tee times, The Phoenician's [official golf page](https://www.thephoenician.com/golf/) says "To make a reservation, please click the button below or call" **(480) 423-2450**. That is the number dialed in the call below. For a group, the golf shop transferred the call to the tournament coordinator.
+**To book tee times at The Phoenician Golf Club, call (480) 423-2450; for a group, the golf shop transfers you to the tournament coordinator.** The club is at 6000 East Camelback Road, Scottsdale, Arizona. For Phoenician golf tee times, The Phoenician's [official golf page](https://www.thephoenician.com/golf/) says "To make a reservation, please click the button below or call" **(480) 423-2450**. That is the number dialed in the call below. For a group, the golf shop transferred the call to the tournament coordinator.
 
 On October 9, 2026, a call4me customer's assistant called The Phoenician about a small company golf morning: 12 to 16 golfers, three or four consecutive tee times around 8:00 to 8:30 AM on **Friday, November 20, 2026**, with carts, range balls and something to eat. The budget was about $165 per golfer, all in.
 

@@ -1,10 +1,10 @@
 ---
-title: "5 Grok Bot prompts for phone inquiries"
-seoTitle: "5 Grok Bot phone inquiry prompts"
+title: "Have Grok Bot phone businesses for you: 5 ready made prompts"
+seoTitle: "Grok Bot templates: 5 phone call prompts"
 subtitle: Download complete prompts for appointment, restaurant, service quote, cancellation and refund inquiries through call4me.
-description: "Five Grok Bot phone inquiry prompts with call briefs, duration caps and result checks. Download the complete text prompts and adapt them to your task."
+description: Copy five Grok Bot prompt templates that have Grok prepare calls about appointments, reservations, quotes, cancellations and refunds through call4me.
 date: 2026-10-05
-updated: 2026-10-07
+updated: 2026-10-17
 tags: grok, prompts, ai agents, ai phone assistant
 authors: nick
 imageAlt: Five Grok Bot phone inquiry prompts for appointments, restaurants, quotes, cancellation and refunds

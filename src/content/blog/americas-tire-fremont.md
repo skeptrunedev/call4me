@@ -1,15 +1,16 @@
 ---
-title: "America's Tire Fremont: a walk-in check for a slow leak"
+title: "Get a slow leak checked as a walk-in at America's Tire Fremont"
 seoTitle: "America's Tire Fremont: walk-ins and hours"
 subtitle: A real call asked the Beacon Avenue store whether a car with a slowly leaking tire could come in the same day. Staff said yes, and that they take walk-ins all day.
-description: America's Tire Fremont on Beacon Ave takes walk-ins all day, staff said on a recorded call about a slow tire leak. Store hours, number and the full audio.
+description: "Yes, America's Tire Fremont on Beacon Ave takes walk-ins all day, staff said on a recorded call about a slow leak. Store hours, number and the full audio."
 date: 2026-10-16
+updated: 2026-10-17
 tags: americas tire fremont, americas tire hours, tire shop, slow leak, walk-in, car maintenance
 authors: nick
 imageAlt: America's Tire Fremont on Beacon Avenue, walk-ins all day for a tire that keeps losing air
 ---
 
-**America's Tire Fremont is at 3850 Beacon Ave, Fremont, California 94538.** The [official store page](https://www.americastire.com/store/ca/fremont/s/1052) lists **(510) 792-3867**, the same number this call dialed. The store data behind that page lists America's Tire hours for this location as **Monday to Friday 8:00 AM to 6:00 PM, Saturday 8:00 AM to 5:00 PM, closed Sunday**, as of October 17, 2026. Holiday hours can differ, so check the page before you go.
+**You can bring a slowly leaking tire to America's Tire Fremont the same day: staff said on a recorded call that the store takes walk-ins all day.** It is at 3850 Beacon Ave, Fremont, California 94538. The [official store page](https://www.americastire.com/store/ca/fremont/s/1052) lists **(510) 792-3867**, the same number this call dialed. The store data behind that page lists America's Tire hours for this location as **Monday to Friday 8:00 AM to 6:00 PM, Saturday 8:00 AM to 5:00 PM, closed Sunday**, as of October 17, 2026. Holiday hours can differ, so check the page before you go.
 
 On Thursday, October 1, 2026, around 12:28 PM Pacific, a call4me customer's assistant called this America's Tire store. The customer's 2017 Mercedes C300 had a rear right tire that kept slowly losing air, though it wasn't flat. The question was simple: can the car come in today for a quick check?
 

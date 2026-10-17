@@ -1,9 +1,10 @@
 ---
-title: "Adobe Animal Hospital Los Altos: booking a vet exam by phone"
+title: "Book a vet exam at Adobe Animal Hospital Los Altos by phone"
 seoTitle: "Adobe Animal Hospital Los Altos: phone, booking"
 subtitle: "A real call booked a regular exam for a dog at the Los Altos hospital on El Camino. Here is the phone menu, the hold, and what staff confirmed."
 description: "Adobe Animal Hospital Los Altos is at (650) 948-9661. Press 5 for a team member. A recorded call booked a dog's exam for Thursday at 10 AM."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-06
 tags: Adobe Animal Hospital, Los Altos vet, veterinary appointment, phone trees, ai phone assistant
 authors: nick

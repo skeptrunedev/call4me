@@ -1,15 +1,16 @@
 ---
-title: "M Hansik Durham private dining: the room, the $350 fee and the $1,000 deposit"
+title: "Book the M Hansik Durham private dining room: the $350 fee and $1,000 deposit"
 seoTitle: "M Hansik Durham private dining: $350 room fee"
 subtitle: "Three recorded calls for a Durham company dinner of 12 to 14: M Hansik's enclosed private room and how to book it, plus Vin Rouge's covered, heated garden. What each restaurant said, and what still has to come in writing."
-description: "M Hansik Durham's private room: enclosed, up to 35, a $350 room fee, about $65 a head and a $1,000 deposit. Real recorded calls, with Vin Rouge compared."
+description: "To book M Hansik Durham's private room, email the events team. It's enclosed, seats up to 35, with a $350 room fee, about $65 a head and a $1,000 deposit."
 date: 2026-10-16
+updated: 2026-10-17
 tags: M Hansik, M Hansik Durham, private dining Durham, company dinner, Vin Rouge, ai phone assistant
 authors: nick
 imageAlt: "M Hansik Durham private dining, a $350 room fee for a company dinner of 12 to 14, with Vin Rouge compared"
 ---
 
-**M Hansik is at 501 Washington Street, Suite C, Durham, North Carolina.** Its [official locations page](https://mhansik.m-restaurants.com/locations) lists **(919) 813-2338**, the number our calls dialed, and dinner hours of 5:00 to 9:30 pm Wednesday and Thursday, 5:00 to 10:00 pm Friday and Saturday, and 4:00 to 9:00 pm Sunday. It is closed Monday and Tuesday. The site's [private parties page](https://mhansik.m-restaurants.com/party) is an inquiry form; it does not publish a room fee or deposit.
+**To book M Hansik's private dining room in Durham, email the events team at mhansikdurham@gmail.com; staff quoted a $350 room fee and a $1,000 deposit at booking.** M Hansik is at 501 Washington Street, Suite C, Durham, North Carolina. Its [official locations page](https://mhansik.m-restaurants.com/locations) lists **(919) 813-2338**, the number our calls dialed, and dinner hours of 5:00 to 9:30 pm Wednesday and Thursday, 5:00 to 10:00 pm Friday and Saturday, and 4:00 to 9:00 pm Sunday. It is closed Monday and Tuesday. The site's [private parties page](https://mhansik.m-restaurants.com/party) is an inquiry form; it does not publish a room fee or deposit.
 
 The phone line opens with a menu. **Press 3 to speak to a team member.** On our call, a person answered about 43 seconds after the call connected.
 

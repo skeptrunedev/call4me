@@ -1,10 +1,10 @@
 ---
-title: "UPS phone number: how we reached a person"
+title: "UPS phone number: how to reach a person to change a delivery"
 seoTitle: "UPS phone number: 1-800-742-5877, reach a person"
 subtitle: "Two recorded calls show what got us past the voice menu and what an agent quoted for delivery changes."
 description: The UPS phone number is 1-800-742-5877. Saying "representative" twice at the tracking number prompt got us a person. Both calls recorded.
 date: 2026-10-01
-updated: 2026-10-04
+updated: 2026-10-17
 verified: 2026-10-01
 tags: ups, package delivery, phone trees, customer service, phone numbers
 authors: nick

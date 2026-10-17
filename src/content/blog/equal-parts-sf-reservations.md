@@ -1,9 +1,10 @@
 ---
-title: "Equal Parts SF reservations: a same night table by phone"
+title: "Book a same night table at Equal Parts SF by phone"
 seoTitle: "Equal Parts SF reservations: book by phone"
 subtitle: "Staff said they were fully committed from 5:45 to 8:15 PM, then offered a lounge table. A real call booked two people for 7:00 PM the same night."
 description: "Equal Parts SF, the North Beach cocktail bar and restaurant, takes reservations at (415) 875 9600. Hear a real call that booked a 7 PM lounge table for two."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Equal Parts SF, Equal Parts San Francisco, North Beach restaurants, cocktail bar, restaurant reservations, ai phone assistant
 authors: nick
 imageAlt: "Equal Parts SF in North Beach, a same night lounge table for two booked by phone for 7 PM"

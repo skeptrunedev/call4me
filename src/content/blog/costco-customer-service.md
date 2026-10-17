@@ -1,9 +1,10 @@
 ---
-title: "Costco customer service number: how to talk to a real person"
+title: "How to talk to a real person at Costco customer service"
 seoTitle: "Costco customer service number: 1-800-774-2678"
 subtitle: "We called Costco's membership and warehouse line with general questions and no member number. Here is the touch-tone menu, how long it took to reach a person, what the representative said about prices, refunds, non-members and scams, where Costco's own website says something different, and the full 19 minute recording."
 description: "Costco customer service is 1-800-774-2678. With no member number and no keys pressed, a live person answered in 14:09. What they said vs. costco.com."
 date: 2026-10-13
+updated: 2026-10-17
 verified: 2026-10-13
 tags: costco, customer service, membership, phone trees, phone numbers
 authors: nick

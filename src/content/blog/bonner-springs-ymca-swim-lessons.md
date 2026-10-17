@@ -1,15 +1,16 @@
 ---
-title: "Bonner Springs YMCA swim lessons: Saturday times, cost and how to register"
+title: "How to sign up for swim lessons at the Bonner Springs YMCA"
 seoTitle: "Bonner Springs YMCA swim lessons: times and cost"
 subtitle: A real call to the Bonner Springs Family YMCA asked about Saturday morning preschool swim lessons for a non-member child. Here is what staff said, and the full recording.
-description: "Bonner Springs YMCA swim lessons, from a real call: Saturday preschool classes at 9:00 or 9:45 AM, $60 for non-members, and how to register."
+description: "Sign up for Bonner Springs YMCA swim lessons online, by phone at 913-422-9348 or in person. Saturday preschool classes: 9:00 or 9:45 AM, $60 for non-members."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Bonner Springs YMCA, Bonner Springs Family YMCA, swim lessons, YMCA of Greater Kansas City, ai phone assistant
 authors: nick
 imageAlt: Bonner Springs Family YMCA swim lessons, Saturday 9:00 or 9:45 AM, $60 for non-members
 ---
 
-**The Bonner Springs Family YMCA is at 2251 South 138th Street, Bonner Springs, Kansas 66012, and its phone number is 913-422-9348.** That is the number listed on the YMCA of Greater Kansas City's [official Bonner Springs page](https://kansascityymca.org/locations/bonner-springs), and it is the number our call dialed. A staff member answered the call directly, with no phone menu.
+**To sign up for swim lessons at the Bonner Springs Family YMCA, register online, in person or by phone at 913-422-9348.** The YMCA is at 2251 South 138th Street, Bonner Springs, Kansas 66012. That is the number listed on the YMCA of Greater Kansas City's [official Bonner Springs page](https://kansascityymca.org/locations/bonner-springs), and it is the number our call dialed. A staff member answered the call directly, with no phone menu.
 
 On October 15, 2026, a call4me customer's assistant called the Bonner Springs YMCA to ask about Saturday morning swim lessons for a young child who is not a YMCA member. Staff said:
 

@@ -1,9 +1,10 @@
 ---
-title: "FPL phone number: how we reached a person at FPL"
+title: "FPL phone number: how to reach a live person at FPL"
 seoTitle: "FPL phone number: 1-888-988-8249, reach a person"
 subtitle: We called FPL customer service five times to ask how starting electric service works for someone new to FPL. Four calls stayed in the voice menu. On the fifth, one route got us to an agent, who told us what you need, how fast service is connected, and how the deposit is decided. All five recordings, the exact route, and the phone tree.
-description: FPL's phone number is 1-888-988-8249. "Representative" gets "That option is not available." The route that reached a person, and what the agent said.
+description: "FPL's phone number is 1-888-988-8249. \"Representative\" fails, so go through new service signup to reach a live person. The route and what the agent said."
 date: 2026-10-01
+updated: 2026-10-17
 verified: 2026-10-01
 tags: fpl, electric service, utilities, phone trees, customer service, phone numbers
 authors: nick

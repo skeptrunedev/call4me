@@ -1,10 +1,10 @@
 ---
-title: "How to cancel Audible: 888-283-5051 and a real call"
+title: "How to cancel or pause your Audible membership without losing credits"
 seoTitle: How to cancel an Audible membership, or pause it
 subtitle: We called Audible's customer service line to ask exactly how cancelling works. Here is the phone tree with its keypad check, what happens to your credits and books, the 90 day pause, and the full 7 minute recording.
-description: Cancel Audible online or by phone at 888-283-5051. Unused credits expire when it ends; pause for 90 days instead. From a real recorded call to Audible.
+description: "To unsubscribe from Audible, cancel online or call 888-283-5051. Spend unused credits first, as they expire, or pause your membership for 90 days instead."
 date: 2026-10-02
-updated: 2026-10-04
+updated: 2026-10-17
 verified: 2026-10-02
 tags: audible, cancel subscription, streaming, phone trees
 authors: nick

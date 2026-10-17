@@ -1,15 +1,16 @@
 ---
-title: "Sabates Eye Center Leawood: booking a kids eye exam with TRICARE"
-seoTitle: "Sabates Eye Center Leawood: a TRICARE kids exam"
+title: "Book a kids eye exam at Sabates Eye Center Leawood with TRICARE"
+seoTitle: "Book a kids eye exam at Sabates Eye Center Leawood"
 subtitle: "Four recorded calls show what it took: the scheduling menu, a referral that has to name the doctor, the self-pay price without one, and the January appointment that finally got booked."
-description: "Sabates Eye Center Leawood is (913) 261-2020. Four real calls show how a TRICARE kids eye exam got booked: referral first, then January 12 at 8:30 AM."
+description: "Book a TRICARE kids eye exam at Sabates Eye Center Leawood: call (913) 261-2020, press 1, get the referral first. Four real calls, booked January 12."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Sabates Eye Center, Leawood eye doctor, pediatric eye exam, TRICARE, referral, appointment booking, ai phone assistant
 authors: nick
 imageAlt: "Sabates Eye Center Leawood, a TRICARE pediatric eye exam booked for January 12 at 8:30 AM"
 ---
 
-**Sabates Eye Centers' Leawood office is at 11261 Nall Avenue, Leawood, Kansas 66211.** Its [official Leawood page](https://www.sabateseye.com/locations/leawood/) lists **(913) 261-2020** and hours of Monday to Friday, 8:00 AM to 5:00 PM. That is also the only number on the [Sabates Eye Centers contact page](https://www.sabateseye.com/contact-us/). Press **1** to schedule, then answer a second menu about insurance. On these calls a scheduler answered about **1 minute 15 seconds** after the line picked up.
+**To book a kids eye exam at Sabates Eye Centers' Leawood office, 11261 Nall Avenue, Leawood, Kansas 66211, call (913) 261-2020 and press 1 to schedule.** Its [official Leawood page](https://www.sabateseye.com/locations/leawood/) lists **(913) 261-2020** and hours of Monday to Friday, 8:00 AM to 5:00 PM. That is also the only number on the [Sabates Eye Centers contact page](https://www.sabateseye.com/contact-us/). Press **1** to schedule, then answer a second menu about insurance. On these calls a scheduler answered about **1 minute 15 seconds** after the line picked up.
 
 If your child is on **TRICARE**, the short version from the calls is: **get the referral first, and make sure it names the Sabates doctor.** A scheduler said that without one the visit is self-pay, "starts around three fifteen," and needs a signed TRICARE waiver.
 

@@ -1,16 +1,17 @@
 ---
-title: "Ventura Superior Court: setting a judgment debtor exam date by phone"
+title: "Set a judgment debtor exam date at Ventura Superior Court by phone"
 seoTitle: "Ventura Superior Court: judgment debtor exam dates"
 subtitle: "A call4me customer's assistant called the Ventura Superior Court civil clerk to ask how to get a hearing date for an EJ-125 debtor's exam. The clerk said no reservation is needed. Here is the phone menu, what the clerk said, and the full recording."
 description: "Ventura Superior Court's civil clerk (805-289-8525, press 3) said an EJ-125 judgment debtor exam needs no reservation: pick a Monday to Thursday at 8:30."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-13
 tags: ventura superior court, judgment debtor exam, EJ-125, civil clerk, court phone numbers, phone trees
 authors: nick
 imageAlt: "Ventura Superior Court civil clerk 805-289-8525, judgment debtor exam dates without a reservation"
 ---
 
-**The short answer:** the Ventura Superior Court civil clerk's line is **805-289-8525**. The court's [phone directory](https://ventura.courts.ca.gov/general-information/phone-directory) lists that number as "Civil" under the Ventura Courthouse, next to the main number, **805-289-8900**. The recorded greeting gives the Civil Department's location as **800 South Victoria Avenue, Room 210, Ventura**, and its office and telephone hours as **8 a.m. to 4 p.m., Monday through Friday, except holidays**. The court's [civil page](https://www.ventura.courts.ca.gov/civil.html) lists the same clerk's office hours.
+**The short answer:** to set an EJ-125 judgment debtor exam date at Ventura Superior Court, no reservation is needed: the civil clerk said to pick any Monday through Thursday at 8:30. The civil clerk's line is **805-289-8525**. The court's [phone directory](https://ventura.courts.ca.gov/general-information/phone-directory) lists that number as "Civil" under the Ventura Courthouse, next to the main number, **805-289-8900**. The recorded greeting gives the Civil Department's location as **800 South Victoria Avenue, Room 210, Ventura**, and its office and telephone hours as **8 a.m. to 4 p.m., Monday through Friday, except holidays**. The court's [civil page](https://www.ventura.courts.ca.gov/civil.html) lists the same clerk's office hours.
 
 **Press 3 to speak with a clerk.** On this call a live clerk answered **1 minute 16 seconds** into the recording, with no hold message.
 

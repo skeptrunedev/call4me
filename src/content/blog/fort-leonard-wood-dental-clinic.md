@@ -1,9 +1,10 @@
 ---
-title: "Fort Leonard Wood dental clinic: the oral surgery number, and how a referral gets there"
+title: "Fort Leonard Wood dental clinic: how to reach oral surgery and check on a referral"
 seoTitle: "Fort Leonard Wood dental clinic and oral surgery"
 subtitle: "A call4me customer's assistant called two Fort Leonard Wood dental lines about a surgery referral from Fort Leavenworth. Roll Dental Clinic sent it to the hospital, and the hospital clinic explained how referrals arrive and why this one wasn't there."
 description: "Fort Leonard Wood oral surgery is the hospital dental clinic, 573-596-0198. Roll Dental Clinic is 573-596-0364. Two recorded calls about a surgery referral."
 date: 2026-10-16
+updated: 2026-10-17
 verified: 2026-10-08
 tags: fort leonard wood, dental clinic, oral surgery, military dental care, referrals, phone numbers
 authors: nick

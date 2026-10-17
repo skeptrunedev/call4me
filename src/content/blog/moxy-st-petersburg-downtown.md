@@ -1,15 +1,16 @@
 ---
-title: "Moxy St. Petersburg Downtown: asking for connecting rooms"
+title: "Can you get connecting rooms at Moxy St. Petersburg Downtown?"
 seoTitle: "Moxy St. Petersburg Downtown: connecting rooms"
 subtitle: "A real call asked the Moxy St. Pete front desk to make two booked queen rooms connecting. Staff said the hotel doesn't offer connecting rooms, and agreed to keep the two rooms close."
-description: "Moxy St. Petersburg Downtown: 1234 Central Avenue, (727) 677 2000. A real call: no connecting rooms, but staff noted a request to keep two rooms close."
+description: "Moxy St. Petersburg Downtown doesn't offer connecting rooms, but staff will note to keep rooms close. Call (727) 677 2000 or visit 1234 Central Avenue."
 date: 2026-10-16
+updated: 2026-10-17
 tags: Moxy St. Petersburg Downtown, Moxy hotel St Petersburg FL, connecting rooms, hotel room requests, ai phone assistant
 authors: nick
 imageAlt: "Moxy St. Petersburg Downtown, no connecting rooms, two rooms noted to be close"
 ---
 
-**The Moxy St. Petersburg Downtown location is 1234 Central Avenue, St. Petersburg, Florida 33705.** Marriott's [official hotel page](https://www.marriott.com/en-us/hotels/tpasx-moxy-st-petersburg-downtown/overview/) lists **+1 727 677 2000**. That is the number the call below dialed, and a person at the front desk picked up right away, with no phone menu.
+**To ask for connecting rooms at Moxy St. Petersburg Downtown, call the front desk; the hotel doesn't offer them, but staff will try to keep your rooms close.** The hotel is at 1234 Central Avenue, St. Petersburg, Florida 33705. Marriott's [official hotel page](https://www.marriott.com/en-us/hotels/tpasx-moxy-st-petersburg-downtown/overview/) lists **+1 727 677 2000**. That is the number the call below dialed, and a person at the front desk picked up right away, with no phone menu.
 
 **The short answer on connecting rooms:** the employee said **"we don't offer connecting rooms, but we do try to get rooms as close to each other as possible."** She then said she would make sure the two rooms were close, and agreed it was a note on the reservation with no change in price.
 

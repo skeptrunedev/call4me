@@ -1,15 +1,16 @@
 ---
-title: "La Mar San Francisco reservations: a same night table by phone"
+title: Book a same night table at La Mar San Francisco by phone
 seoTitle: "La Mar SF reservations: booking a table by phone"
 subtitle: "An automated greeter transferred the call to staff, who booked two people for 7 PM that night and said a text confirmation would follow."
 description: "La Mar San Francisco, the Peruvian cebichería at Pier 1 1/2 on the Embarcadero, takes reservations at 415 397 8880. Hear a real call that booked 7 PM for two."
 date: 2026-10-16
+updated: 2026-10-17
 tags: La Mar San Francisco, La Mar SF, La Mar Cocina Peruana, Peruvian restaurant, Embarcadero restaurants, restaurant reservations, ai phone assistant
 authors: nick
 imageAlt: "La Mar San Francisco on the Embarcadero, a same night table for two booked by phone for 7 PM"
 ---
 
-**La Mar San Francisco is at Pier 1 1/2, The Embarcadero N, San Francisco, CA 94111, and its phone number is 415 397 8880.** That is the number on La Mar's [official San Francisco page](https://lamarcebicheria.com/san-francisco/) (lamarsf.com redirects there), and it is the number the call below dialed. The same page links to OpenTable for online booking. You may see the restaurant called La Mar Cocina Peruana San Francisco or La Mar Cebichería; on this call the automated greeting said "La Mar Cocina Peruana", and the staff member's greeting sounds like "La Mar Cebichería".
+**To book a table at La Mar San Francisco by phone, call 415 397 8880; the restaurant is at Pier 1 1/2, The Embarcadero N, San Francisco, CA 94111.** That is the number on La Mar's [official San Francisco page](https://lamarcebicheria.com/san-francisco/) (lamarsf.com redirects there), and it is the number the call below dialed. The same page links to OpenTable for online booking. You may see the restaurant called La Mar Cocina Peruana San Francisco or La Mar Cebichería; on this call the automated greeting said "La Mar Cocina Peruana", and the staff member's greeting sounds like "La Mar Cebichería".
 
 On Friday, October 2, 2026, at about 6:30 PM Pacific, a call4me customer's assistant called La Mar SF to book a table for two that night. The customer preferred 7:00 PM and would accept anything from 6:45 to 7:30 PM, including bar, patio or ceviche bar seating.
 

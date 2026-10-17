@@ -1,10 +1,10 @@
 ---
-title: "Verizon customer service number: how we reached a person"
+title: "Verizon customer service number: how to reach a live agent"
 seoTitle: "Verizon customer service number: 800-922-0204"
 subtitle: "Three recordings cover account verification, a cheaper plan quote and the representative's callback. Nothing on the account was changed."
-description: Verizon customer service is 800-922-0204. An AI assistant answers; "An agent, please" reached a person, who said a plan switch saves about $48 a month.
+description: "Verizon customer service is 800-922-0204. Say \"An agent, please\" to reach a live agent, who said a plan switch saves about $48 a month."
 date: 2026-10-01
-updated: 2026-10-07
+updated: 2026-10-17
 verified: 2026-10-01
 tags: verizon, customer service, phone plans, phone trees
 authors: nick
