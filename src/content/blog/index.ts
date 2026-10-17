@@ -1,3 +1,12 @@
+import mHansikDurhamPrivateDining from './m-hansik-durham-private-dining.md';
+import co2TankExchangeSanJuan from './co2-tank-exchange-san-juan.md';
+import bonnerSpringsYmcaSwimLessons from './bonner-springs-ymca-swim-lessons.md';
+import palmeriBrentwoodPrivateDining from './palmeri-brentwood-private-dining.md';
+import cafeDemiTeaneck from './cafe-demi-teaneck.md';
+import aaaTowReimbursement from './aaa-tow-reimbursement.md';
+import marinaTrafficCourtPhoneNumber from './marina-traffic-court-phone-number.md';
+import venturaSuperiorCourtJudgmentDebtorExam from './ventura-superior-court-judgment-debtor-exam.md';
+import innAtJimThorpeReservations from './inn-at-jim-thorpe-reservations.md';
 import airSerbiaCustomerServiceNumber from './air-serbia-customer-service-number.md';
 import virginHotelsNewYorkParking from './virgin-hotels-new-york-parking.md';
 import moxyStPetersburgDowntown from './moxy-st-petersburg-downtown.md';
@@ -165,6 +174,15 @@ import clinePhoneCalls from './cline-phone-calls.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'm-hansik-durham-private-dining', markdown: mHansikDurhamPrivateDining },
+  { slug: 'co2-tank-exchange-san-juan', markdown: co2TankExchangeSanJuan },
+  { slug: 'bonner-springs-ymca-swim-lessons', markdown: bonnerSpringsYmcaSwimLessons },
+  { slug: 'palmeri-brentwood-private-dining', markdown: palmeriBrentwoodPrivateDining },
+  { slug: 'cafe-demi-teaneck', markdown: cafeDemiTeaneck },
+  { slug: 'aaa-tow-reimbursement', markdown: aaaTowReimbursement },
+  { slug: 'marina-traffic-court-phone-number', markdown: marinaTrafficCourtPhoneNumber },
+  { slug: 'ventura-superior-court-judgment-debtor-exam', markdown: venturaSuperiorCourtJudgmentDebtorExam },
+  { slug: 'inn-at-jim-thorpe-reservations', markdown: innAtJimThorpeReservations },
   { slug: 'air-serbia-customer-service-number', markdown: airSerbiaCustomerServiceNumber },
   { slug: 'virgin-hotels-new-york-parking', markdown: virginHotelsNewYorkParking },
   { slug: 'moxy-st-petersburg-downtown', markdown: moxyStPetersburgDowntown },

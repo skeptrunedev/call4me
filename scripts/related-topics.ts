@@ -168,4 +168,13 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'moxy-st-petersburg-downtown': ['travel-lodging'],
   'virgin-hotels-new-york-parking': ['travel-lodging'],
   'air-serbia-customer-service-number': ['airlines'],
+  'inn-at-jim-thorpe-reservations': ['travel-lodging'],
+  'ventura-superior-court-judgment-debtor-exam': ['legal-business-paperwork'],
+  'marina-traffic-court-phone-number': ['legal-business-paperwork'],
+  'aaa-tow-reimbursement': ['insurance'],
+  'cafe-demi-teaneck': ['dining'],
+  'palmeri-brentwood-private-dining': ['dining'],
+  'bonner-springs-ymca-swim-lessons': ['fitness'],
+  'co2-tank-exchange-san-juan': ['retail-shopping'],
+  'm-hansik-durham-private-dining': ['dining'],
 };
