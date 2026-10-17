@@ -122,7 +122,7 @@ export function termsPrompt(origin: string, key: string | null): string {
 
 ${connect(origin, key)}
 
-Call call4me_get_balance and tell me my balance, the price per minute, about how many minutes that is, and my monthly reload if I have one. Then explain in a few lines: a call holds its maximum cost before it dials and settles when it ends; billing starts when a person or automated system answers and includes phone menus and conversation at the full rate, rounded up to the minute; whole minutes on hold cost half, and a call still on hold at its time limit keeps waiting while the balance covers it; unanswered, busy and failed calls are free; credits don't expire; the monthly reload can be stopped anytime at ${origin}/account and the credits already loaded stay.`;
+Call call4me_get_balance and tell me my balance, the price per minute, about how many minutes that is, and my monthly reload if I have one. Then explain in a few lines: a call holds its maximum cost before it dials and settles when it ends; billing starts when a person or automated system answers and includes phone menus and conversation at the full rate, rounded up to the minute; whole minutes on hold cost half, and a call still on hold or mid-conversation at its time limit keeps going while the balance covers it; unanswered, busy and failed calls are free; credits don't expire; the monthly reload can be stopped anytime at ${origin}/account and the credits already loaded stay.`;
 }
 
 /** Support: work out what went wrong, then hand off to a person with the details. */

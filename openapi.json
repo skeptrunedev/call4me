@@ -941,7 +941,7 @@
                     "type": "boolean"
                   },
                   "max_minutes": {
-                    "description": "optional cap on the answered call, including phone menus. Defaults to 30 minutes, or less if the available balance cannot cover it. Only credits for that cap are held. A call still on hold when it reaches the cap keeps waiting: call4me holds 15 more minutes of credits at a time while the balance covers them, up to 4 hours. Set a shorter cap to leave more credits free for other calls",
+                    "description": "optional cap on the answered call, including phone menus. Defaults to 30 minutes, or less if the available balance cannot cover it. Only credits for that cap are held. A call still on hold when it reaches the cap keeps waiting: call4me holds 15 more minutes of credits at a time while the balance covers them, up to 4 hours. One still mid-conversation at the cap gets 2 more minutes at a time to finish instead of hanging up. Set a shorter cap to leave more credits free for other calls",
                     "type": "integer",
                     "minimum": 1,
                     "maximum": 240
@@ -2030,7 +2030,7 @@
                     "type": "boolean"
                   },
                   "max_minutes": {
-                    "description": "optional cap on the answered call, including phone menus. Defaults to 30 minutes, or less if the available balance cannot cover it. Only credits for that cap are held. A call still on hold when it reaches the cap keeps waiting: call4me holds 15 more minutes of credits at a time while the balance covers them, up to 4 hours. Set a shorter cap to leave more credits free for other calls",
+                    "description": "optional cap on the answered call, including phone menus. Defaults to 30 minutes, or less if the available balance cannot cover it. Only credits for that cap are held. A call still on hold when it reaches the cap keeps waiting: call4me holds 15 more minutes of credits at a time while the balance covers them, up to 4 hours. One still mid-conversation at the cap gets 2 more minutes at a time to finish instead of hanging up. Set a shorter cap to leave more credits free for other calls",
                     "type": "integer",
                     "minimum": 1,
                     "maximum": 240

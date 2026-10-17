@@ -117,13 +117,15 @@ export class CallError extends Error {
 
 /**
  * Calls default to 30 minutes; an explicit cap can reach Telnyx's 4 hour ceiling. A call still on
- * hold when its cap comes up holds `holdExtensionMinutes` more credits and keeps waiting, as long
- * as the balance covers it, up to that ceiling.
+ * hold when its cap comes up holds `holdExtensionMinutes` more credits and keeps waiting, and one
+ * still mid-conversation holds `talkExtensionMinutes` more to finish it, as long as the balance
+ * covers it, up to that ceiling.
  */
 export const LIMITS = {
   defaultMinutes: 30,
   maxMinutes: 240,
   holdExtensionMinutes: 15,
+  talkExtensionMinutes: 2,
 };
 
 export interface PlaceCallInput {

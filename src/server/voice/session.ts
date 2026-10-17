@@ -7,6 +7,7 @@ import { dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
 import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, missedHandoff } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { HoldMeter, type HoldChange } from './hold';
+import { midConversation } from './time-limit';
 import { BACK_OFFICE_TOOLS } from './prompt';
 import { INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, type MachineEvent, type MachineGuidance, type MachineState } from './voicemail';
 
@@ -163,6 +164,8 @@ export class VoiceSession extends DurableObject<Env> {
   private menuRecovery = new MenuRecovery();
   private forcedMenus = 0;
   private lastTranscriptAt = 0;
+  /** When each side last said something: the hard stop gives a live conversation time to finish. */
+  private lastSpokeAt = { them: 0, caller: 0 };
   private handoffTimer: ReturnType<typeof setTimeout> | null = null;
   /** Back-office functions still running (an ask_user waits on the person). Its response already reported completed. */
   private toolsRunning = 0;
@@ -1132,6 +1135,7 @@ export class VoiceSession extends DurableObject<Env> {
   private appendTranscript(role: TranscriptLine['role'], delta: string): void {
     if (!delta) return;
     this.lastTranscriptAt = Date.now();
+    if (role === 'them' || role === 'caller') this.lastSpokeAt[role] = this.lastTranscriptAt;
     const last = this.transcript[this.transcript.length - 1];
     if (last && last.role === role) last.text += delta;
     else this.transcript.push({ role, text: delta.trimStart(), at: Date.now() });
@@ -1198,6 +1202,11 @@ export class VoiceSession extends DurableObject<Env> {
         await this.scheduleAlarm();
         return;
       }
+      // Still talking with them: a couple more minutes to finish rather than hang up mid-sentence.
+      if (midConversation({ theirsAt: this.lastSpokeAt.them, oursAt: this.lastSpokeAt.caller, personOn: this.personOn, now }) && (await this.extendTalk(s, now))) {
+        await this.scheduleAlarm();
+        return;
+      }
       await this.hangup('the call reached its time limit');
       return;
     }
@@ -1227,21 +1236,47 @@ export class VoiceSession extends DurableObject<Env> {
   /**
    * The time limit came up during a hold (at the wrap-up point, or at the hard stop when the hold
    * began during the wrap-up): hold up to LIMITS.holdExtensionMinutes more of the account's
-   * credits and move the wrap-up point that far past `wrapAt`, never past Telnyx's ceiling. False
-   * when the balance or the ceiling leaves no room, and the call wraps up as usual.
+   * credits and move the wrap-up point that far past `wrapAt`. False when the balance or the
+   * ceiling leaves no room, and the call wraps up as usual.
    */
   private async extendOnHold(s: Stored, wrapAt: number): Promise<boolean> {
+    const minutes = await this.extendLimit(s, wrapAt, LIMITS.holdExtensionMinutes);
+    if (!minutes) return false;
+    await this.ctx.storage.put('wrapAt', wrapAt + minutes * 60_000);
+    this.mark(`still on hold at the time limit: held ${minutes} more min`);
+    return true;
+  }
+
+  /**
+   * The hard stop came up mid-conversation: hold up to LIMITS.talkExtensionMinutes more credits,
+   * move the stop that far out, and tell the caller to finish. Checked again at the new stop, so a
+   * conversation that keeps going keeps getting time, up to the balance and the ceiling.
+   */
+  private async extendTalk(s: Stored, now: number): Promise<boolean> {
+    const minutes = await this.extendLimit(s, now, LIMITS.talkExtensionMinutes);
+    if (!minutes) return false;
+    await this.ctx.storage.put('stopAt', now + minutes * 60_000);
+    this.mark(`still talking at the time limit: ${minutes} more min to finish`);
+    if (!this.personOn) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: `They're still talking with you, so you have ${minutes} more minutes. Finish this conversation: get what you still need, then say a quick goodbye and hand off to hang up (end_call).` });
+    return true;
+  }
+
+  /**
+   * Hold up to `want` more minutes of credits past `from`, never past Telnyx's ceiling. Returns the
+   * minutes held, 0 when the balance or the ceiling leaves no room.
+   */
+  private async extendLimit(s: Stored, from: number, want: number): Promise<number> {
     const row = await calls(this.env.DB).byId(s.callId);
-    if (!row?.answered_at) return false;
+    if (!row?.answered_at) return 0;
     const ceilingAt = row.answered_at + (LIMITS.maxMinutes * 60 - 45) * 1000;
     const balance = await accounts(this.env.DB).balanceCents(row.account_id);
-    const minutes = Math.min(LIMITS.holdExtensionMinutes, Math.floor((ceilingAt - wrapAt) / 60_000), Math.floor(balance / s.pricePerMinuteCents));
-    if (minutes < 1) return false;
+    const minutes = Math.min(want, Math.floor((ceilingAt - from) / 60_000), Math.floor(balance / s.pricePerMinuteCents));
+    if (minutes < 1) return 0;
+    // Hold and talk extensions share one count: each is its own ledger hold (hold:<call>:<n>).
     const n = ((await this.ctx.storage.get<number>('holdExtensions')) ?? 0) + 1;
-    if (!(await calls(this.env.DB).extend(row, minutes, s.pricePerMinuteCents, n))) return false;
-    await this.ctx.storage.put({ holdExtensions: n, wrapAt: wrapAt + minutes * 60_000 });
-    this.mark(`still on hold at the time limit: held ${minutes} more min (extension ${n})`);
-    return true;
+    if (!(await calls(this.env.DB).extend(row, minutes, s.pricePerMinuteCents, n))) return 0;
+    await this.ctx.storage.put('holdExtensions', n);
+    return minutes;
   }
 
   // ---- teardown
