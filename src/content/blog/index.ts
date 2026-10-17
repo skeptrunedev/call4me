@@ -1,3 +1,13 @@
+import chaseSapphireReserveBenefitsPhoneNumber from './chase-sapphire-reserve-benefits-phone-number.md';
+import freshBladesBarbershopDivisadero from './fresh-blades-barbershop-divisadero.md';
+import springhillSuitesPhoenixGilbert from './springhill-suites-phoenix-gilbert.md';
+import blueShieldOfCaliforniaDentalPhoneNumber from './blue-shield-of-california-dental-phone-number.md';
+import skipHireAbingdon from './skip-hire-abingdon.md';
+import farmaciaLumaViejoSanJuan from './farmacia-luma-viejo-san-juan.md';
+import colonoscopyScreeningSanJuan from './colonoscopy-screening-san-juan.md';
+import fortLeonardWoodDentalClinic from './fort-leonard-wood-dental-clinic.md';
+import sanFranciscoOralSurgeonConsultation from './san-francisco-oral-surgeon-consultation.md';
+import globalBlueCustomerServiceNumber from './global-blue-customer-service-number.md';
 import mountSinaiDoctorsPhoneNumber from './mount-sinai-doctors-phone-number.md';
 import piedmontNaturalGasCustomerService from './piedmont-natural-gas-customer-service.md';
 import nyTollsByMailPhoneNumber from './ny-tolls-by-mail-phone-number.md';
@@ -193,6 +203,16 @@ import clinePhoneCalls from './cline-phone-calls.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'chase-sapphire-reserve-benefits-phone-number', markdown: chaseSapphireReserveBenefitsPhoneNumber },
+  { slug: 'fresh-blades-barbershop-divisadero', markdown: freshBladesBarbershopDivisadero },
+  { slug: 'springhill-suites-phoenix-gilbert', markdown: springhillSuitesPhoenixGilbert },
+  { slug: 'blue-shield-of-california-dental-phone-number', markdown: blueShieldOfCaliforniaDentalPhoneNumber },
+  { slug: 'skip-hire-abingdon', markdown: skipHireAbingdon },
+  { slug: 'farmacia-luma-viejo-san-juan', markdown: farmaciaLumaViejoSanJuan },
+  { slug: 'colonoscopy-screening-san-juan', markdown: colonoscopyScreeningSanJuan },
+  { slug: 'fort-leonard-wood-dental-clinic', markdown: fortLeonardWoodDentalClinic },
+  { slug: 'san-francisco-oral-surgeon-consultation', markdown: sanFranciscoOralSurgeonConsultation },
+  { slug: 'global-blue-customer-service-number', markdown: globalBlueCustomerServiceNumber },
   { slug: 'mount-sinai-doctors-phone-number', markdown: mountSinaiDoctorsPhoneNumber },
   { slug: 'piedmont-natural-gas-customer-service', markdown: piedmontNaturalGasCustomerService },
   { slug: 'ny-tolls-by-mail-phone-number', markdown: nyTollsByMailPhoneNumber },
