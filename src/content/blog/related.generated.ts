@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "50a0a8e560b158bbf1172f660df9d7e67edcc4fb6dcb4ab21a70087662737e0e"
+  "sourceHash": "aaf36687937c1a4f67bc339d6e946ec24af042e77746c1c0f541c12bf65345d5"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -17,7 +17,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "allstate-customer-service-number",
-      "similarity": 0.699861
+      "similarity": 0.699862
     },
     {
       "slug": "geico-customer-service",
@@ -68,6 +68,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "dog-teeth-cleaning-cost",
       "similarity": 0.631066
+    }
+  ],
+  "afternic-domain-broker-phone-number": [
+    {
+      "slug": "amazon-seller-distributor-calls",
+      "similarity": 0.629391
     }
   ],
   "agent-web-research-phone-calls-sf-private-dining": [
@@ -199,7 +205,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "follow-up-appointment-telehealth",
-      "similarity": 0.670662
+      "similarity": 0.670663
     },
     {
       "slug": "customer-story-dental-appointments",
@@ -255,7 +261,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "etihad-customer-service",
-      "similarity": 0.611935
+      "similarity": 0.611936
     },
     {
       "slug": "american-airlines-flight-credit",
@@ -279,7 +285,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "allstate-customer-service-number": [
     {
       "slug": "aaa-insurance-customer-service",
-      "similarity": 0.699861
+      "similarity": 0.699862
     },
     {
       "slug": "geico-customer-service",
@@ -364,8 +370,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.636823
     },
     {
-      "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.627997
+      "slug": "afternic-domain-broker-phone-number",
+      "similarity": 0.629391
     }
   ],
   "american-airlines-flight-credit": [
@@ -893,6 +899,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.618791
     },
     {
+      "slug": "vanguard-customer-service-number",
+      "similarity": 0.613746
+    },
+    {
       "slug": "paypal-customer-service-number",
       "similarity": 0.603805
     }
@@ -942,7 +952,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.828317
+      "similarity": 0.828316
     },
     {
       "slug": "langchain-mcp-phone-calls",
@@ -1128,6 +1138,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "running-late-to-appointment",
       "similarity": 0.60358
+    },
+    {
+      "slug": "sabates-eye-centers-pediatric-eye-exam",
+      "similarity": 0.600441
     }
   ],
   "costco-tire-appointment-cancel-refund": [
@@ -1343,11 +1357,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "zessan-otemachi-private-room",
-      "similarity": 0.695845
+      "similarity": 0.695846
     },
     {
       "slug": "pin-on-grand-reservations",
-      "similarity": 0.690525
+      "similarity": 0.690524
     },
     {
       "slug": "book-dinner-reservation-by-phone",
@@ -1397,7 +1411,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "air-serbia-customer-service-number",
-      "similarity": 0.611935
+      "similarity": 0.611936
     }
   ],
   "everything-we-have-improved-since-launch": [
@@ -1458,6 +1472,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "lincoln-urgent-care",
       "similarity": 0.629337
+    },
+    {
+      "slug": "sabates-eye-centers-pediatric-eye-exam",
+      "similarity": 0.62296
     }
   ],
   "fabletics-customer-service": [
@@ -1529,7 +1547,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ai-personal-assistant-appointment-booking",
-      "similarity": 0.670662
+      "similarity": 0.670663
     },
     {
       "slug": "customer-story-dental-appointments",
@@ -1544,7 +1562,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.624917
     }
   ],
-  "fpl-phone-number": [],
+  "fpl-phone-number": [
+    {
+      "slug": "piedmont-natural-gas-customer-service",
+      "similarity": 0.669415
+    }
+  ],
   "geico-customer-service": [
     {
       "slug": "progressive-customer-service",
@@ -1744,7 +1767,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-connectors-mcp-phone-calls",
-      "similarity": 0.763619
+      "similarity": 0.76362
     },
     {
       "slug": "grok-bot-template-troubleshooting",
@@ -1828,7 +1851,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-bot-templates",
-      "similarity": 0.763619
+      "similarity": 0.76362
     },
     {
       "slug": "gemini-phone-calls",
@@ -1945,6 +1968,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "how-to-find-a-new-primary-care-doctor": [
+    {
+      "slug": "mount-sinai-doctors-phone-number",
+      "similarity": 0.646874
+    },
     {
       "slug": "follow-up-appointment-telehealth",
       "similarity": 0.628693
@@ -2087,7 +2114,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.630579
     }
   ],
-  "junk-removal-cost": [],
+  "junk-removal-cost": [
+    {
+      "slug": "maggy-maid-sacramento",
+      "similarity": 0.723777
+    }
+  ],
   "justworks-customer-service": [
     {
       "slug": "progressive-customer-service",
@@ -2189,7 +2221,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.763565
+      "similarity": 0.763564
     },
     {
       "slug": "github-copilot-phone-calls",
@@ -2256,7 +2288,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "pin-on-grand-reservations",
-      "similarity": 0.614578
+      "similarity": 0.614577
     }
   ],
   "macys-bow-tie-stock-check": [
@@ -2273,6 +2305,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.640336
     }
   ],
+  "maggy-maid-sacramento": [
+    {
+      "slug": "junk-removal-cost",
+      "similarity": 0.723777
+    },
+    {
+      "slug": "samsung-oven-door-glass-repair-sacramento",
+      "similarity": 0.656296
+    }
+  ],
   "mandarin-phone-call-scheduling": [
     {
       "slug": "ai-personal-assistant-appointment-booking",
@@ -2283,6 +2325,14 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "ventura-superior-court-judgment-debtor-exam",
       "similarity": 0.660813
+    },
+    {
+      "slug": "serviceontario-phone-number",
+      "similarity": 0.64042
+    },
+    {
+      "slug": "ny-tolls-by-mail-phone-number",
+      "similarity": 0.634317
     }
   ],
   "mastra-mcp-phone-calls": [
@@ -2292,7 +2342,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.828317
+      "similarity": 0.828316
     },
     {
       "slug": "t3-code-phone-calls",
@@ -2419,6 +2469,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.615136
     }
   ],
+  "mount-sinai-doctors-phone-number": [
+    {
+      "slug": "how-to-find-a-new-primary-care-doctor",
+      "similarity": 0.646874
+    },
+    {
+      "slug": "same-day-eye-exam-brooklyn",
+      "similarity": 0.613155
+    }
+  ],
   "moxy-st-petersburg-downtown": [
     {
       "slug": "paradox-hotel-vancouver",
@@ -2517,6 +2577,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "macys-bow-tie-stock-check",
       "similarity": 0.640336
+    }
+  ],
+  "ny-tolls-by-mail-phone-number": [
+    {
+      "slug": "marina-traffic-court-phone-number",
+      "similarity": 0.634317
     }
   ],
   "ohio-workers-compensation-insurance": [],
@@ -2761,6 +2827,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.73195
     }
   ],
+  "phoenician-golf-club-tee-times": [],
   "phone-calling-mcp-comparison": [
     {
       "slug": "twilio-mcp-phone-calls",
@@ -2768,7 +2835,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "t3-code-phone-calls",
-      "similarity": 0.810589
+      "similarity": 0.81059
     },
     {
       "slug": "schedule-phone-calls-claude-code-codex",
@@ -2793,6 +2860,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "muse-code-mcp-phone-calls",
       "similarity": 0.760176
+    }
+  ],
+  "piedmont-natural-gas-customer-service": [
+    {
+      "slug": "fpl-phone-number",
+      "similarity": 0.669415
     }
   ],
   "pin-on-grand-reservations": [
@@ -2826,7 +2899,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "equal-parts-sf-reservations",
-      "similarity": 0.690525
+      "similarity": 0.690524
     }
   ],
   "posada-real-los-condestables": [
@@ -3111,6 +3184,20 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.647034
     }
   ],
+  "sabates-eye-centers-pediatric-eye-exam": [
+    {
+      "slug": "same-day-eye-exam-brooklyn",
+      "similarity": 0.703448
+    },
+    {
+      "slug": "eye-exam-cost-without-insurance",
+      "similarity": 0.62296
+    },
+    {
+      "slug": "costco-eye-exam-cost",
+      "similarity": 0.600441
+    }
+  ],
   "salon-per-se-bellaire": [
     {
       "slug": "book-haircut-appointment",
@@ -3125,9 +3212,22 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "eye-exam-cost-without-insurance",
       "similarity": 0.709694
+    },
+    {
+      "slug": "sabates-eye-centers-pediatric-eye-exam",
+      "similarity": 0.703448
+    },
+    {
+      "slug": "mount-sinai-doctors-phone-number",
+      "similarity": 0.613155
     }
   ],
-  "samsung-oven-door-glass-repair-sacramento": [],
+  "samsung-oven-door-glass-repair-sacramento": [
+    {
+      "slug": "maggy-maid-sacramento",
+      "similarity": 0.656296
+    }
+  ],
   "sassafraz-private-dining": [
     {
       "slug": "lai-wah-heen-private-dining",
@@ -3196,6 +3296,13 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.741059
     }
   ],
+  "serviceontario-phone-number": [
+    {
+      "slug": "marina-traffic-court-phone-number",
+      "similarity": 0.64042
+    }
+  ],
+  "sev-skin-sacramento": [],
   "simonmed-imaging-phone-number": [],
   "social-security-phone-number": [
     {
@@ -3318,7 +3425,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.810589
+      "similarity": 0.81059
     },
     {
       "slug": "mastra-mcp-phone-calls",
@@ -3541,6 +3648,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "fedex-customer-service-number",
       "similarity": 0.647783
+    }
+  ],
+  "vanguard-customer-service-number": [
+    {
+      "slug": "wells-fargo-customer-service",
+      "similarity": 0.632748
+    },
+    {
+      "slug": "cash-app-customer-service-number",
+      "similarity": 0.613746
     }
   ],
   "vapi-alternatives": [
@@ -3786,6 +3903,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.638507
     },
     {
+      "slug": "vanguard-customer-service-number",
+      "similarity": 0.632748
+    },
+    {
       "slug": "cash-app-customer-service-number",
       "similarity": 0.623809
     },
@@ -3898,7 +4019,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "equal-parts-sf-reservations",
-      "similarity": 0.695845
+      "similarity": 0.695846
     }
   ]
 };
