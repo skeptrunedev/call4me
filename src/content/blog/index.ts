@@ -1,3 +1,13 @@
+import airSerbiaCustomerServiceNumber from './air-serbia-customer-service-number.md';
+import virginHotelsNewYorkParking from './virgin-hotels-new-york-parking.md';
+import moxyStPetersburgDowntown from './moxy-st-petersburg-downtown.md';
+import walgreensSpecialtyPharmacyPhoneNumber from './walgreens-specialty-pharmacy-phone-number.md';
+import sameDayEyeExamBrooklyn from './same-day-eye-exam-brooklyn.md';
+import adobeAnimalHospitalLosAltos from './adobe-animal-hospital-los-altos.md';
+import capitalGrilleWallStreetPrivateDining from './capital-grille-wall-street-private-dining.md';
+import justworksCustomerService from './justworks-customer-service.md';
+import townFairTireManchesterCt from './town-fair-tire-manchester-ct.md';
+import sassafrazPrivateDining from './sassafraz-private-dining.md';
 import vitalantPhoneNumber from './vitalant-phone-number.md';
 import suitsupplyCustomerService from './suitsupply-customer-service.md';
 import paradoxHotelVancouver from './paradox-hotel-vancouver.md';
@@ -155,6 +165,16 @@ import clinePhoneCalls from './cline-phone-calls.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'air-serbia-customer-service-number', markdown: airSerbiaCustomerServiceNumber },
+  { slug: 'virgin-hotels-new-york-parking', markdown: virginHotelsNewYorkParking },
+  { slug: 'moxy-st-petersburg-downtown', markdown: moxyStPetersburgDowntown },
+  { slug: 'walgreens-specialty-pharmacy-phone-number', markdown: walgreensSpecialtyPharmacyPhoneNumber },
+  { slug: 'same-day-eye-exam-brooklyn', markdown: sameDayEyeExamBrooklyn },
+  { slug: 'adobe-animal-hospital-los-altos', markdown: adobeAnimalHospitalLosAltos },
+  { slug: 'capital-grille-wall-street-private-dining', markdown: capitalGrilleWallStreetPrivateDining },
+  { slug: 'justworks-customer-service', markdown: justworksCustomerService },
+  { slug: 'town-fair-tire-manchester-ct', markdown: townFairTireManchesterCt },
+  { slug: 'sassafraz-private-dining', markdown: sassafrazPrivateDining },
   { slug: 'vitalant-phone-number', markdown: vitalantPhoneNumber },
   { slug: 'suitsupply-customer-service', markdown: suitsupplyCustomerService },
   { slug: 'paradox-hotel-vancouver', markdown: paradoxHotelVancouver },
