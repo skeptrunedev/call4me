@@ -20,7 +20,7 @@ The path to a person on these calls:
 4. An automated system asks for the **patient's date of birth**, then the **phone number on the medical record**, and sometimes the **five-digit ZIP code**.
 5. If it can't find a single record, it sends you to a person: "Please let me connect you with a patient access coordinator", or "We found multiple records with the given identifiers. Let me route you to an agent."
 
-**How long it took to reach a person:** 4 minutes 14 seconds, 3 minutes 59 seconds and 2 minutes 6 seconds. The two longer calls held for about 2 minutes after an announced "estimated wait time" of "one, two, five minutes" and "one, two, four minutes". The quickest call skipped the hold after the "multiple records" message.
+**How long it took to reach a person:** 4 minutes 14 seconds, 3 minutes 59 seconds and 2 minutes 6 seconds. The two longer calls held for about 66 and 47 seconds after an announced "estimated wait time" of "one, two, five minutes" and "one, two, four minutes". The quickest call skipped the hold after the "multiple records" message.
 
 On Monday, October 12, 2026, between 9:10 and 9:38 am Eastern, a call4me customer's assistant used [call4me](/) to confirm two annual physicals booked for the next day at this practice: one for the customer's fiancée, and one for the customer. The calls were confirm only. Nothing was booked, canceled or changed. What staff said:
 
@@ -52,7 +52,7 @@ On Monday, October 12, 2026, between 9:10 and 9:38 am Eastern, a call4me custome
 - **The phone menu is as heard on October 12, 2026.** Key presses aren't audible in the recordings. On the second call the assistant said "option one" and "two" aloud as well.
 - **We don't know which options lead elsewhere.** No call tried prescription refills (2), referrals (3), records (4), billing (5) or directions and hours (6).
 - **Attendance isn't shown.** The calls confirmed appointments the day before. They don't show that either visit happened.
-- **The hold estimates are unclear.** "One, two, five minutes" is what the system said. The actual holds were about 2 minutes each.
+- **The hold estimates are unclear.** "One, two, five minutes" is what the system said. The actual holds were about 66 and 47 seconds.
 
 ## Listen to the calls
 

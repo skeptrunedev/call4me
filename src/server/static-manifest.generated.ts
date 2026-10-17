@@ -18,7 +18,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/companies": {
     "html": "/__pages/965e43e2b9e71740.html",
     "markdown": "/__pages/965e43e2b9e71740.md",
-    "tokens": 1898
+    "tokens": 2220
   },
   "/superintelligence-calling-index": {
     "html": "/__pages/7fec148cf54c375f.html",
@@ -33,7 +33,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/hold-times": {
     "html": "/__pages/0adb6fe5d87ff479.html",
     "markdown": "/__pages/0adb6fe5d87ff479.md",
-    "tokens": 6510
+    "tokens": 7760
   },
   "/students": {
     "html": "/__pages/9a3f77bd97426a79.html",
@@ -118,7 +118,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2137
+    "tokens": 2134
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
@@ -158,7 +158,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 18181
+    "tokens": 18178
   },
   "/blog/victorias-secret-georgetown": {
     "html": "/__pages/d529bbf9b8194852.html",
@@ -218,7 +218,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/mount-sinai-doctors-phone-number": {
     "html": "/__pages/98ecb1a0ba10cff1.html",
     "markdown": "/__pages/98ecb1a0ba10cff1.md",
-    "tokens": 8059
+    "tokens": 8062
   },
   "/blog/piedmont-natural-gas-customer-service": {
     "html": "/__pages/588950046a3fe657.html",
@@ -758,7 +758,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-long-to-reach-a-human": {
     "html": "/__pages/1624f2222bb89bf3.html",
     "markdown": "/__pages/1624f2222bb89bf3.md",
-    "tokens": 8647
+    "tokens": 9629
   },
   "/blog/vercel-ai-sdk-phone-calls": {
     "html": "/__pages/ff098db0a2035f3b.html",
