@@ -1,3 +1,13 @@
+import vitalantPhoneNumber from './vitalant-phone-number.md';
+import suitsupplyCustomerService from './suitsupply-customer-service.md';
+import paradoxHotelVancouver from './paradox-hotel-vancouver.md';
+import ritzCarltonBachelorGulchReservations from './ritz-carlton-bachelor-gulch-reservations.md';
+import laMarSanFranciscoReservations from './la-mar-san-francisco-reservations.md';
+import equalPartsSfReservations from './equal-parts-sf-reservations.md';
+import metlifePetInsurancePhoneNumber from './metlife-pet-insurance-phone-number.md';
+import pelotonCustomerServiceNumber from './peloton-customer-service-number.md';
+import vivintCustomerServiceNumber from './vivint-customer-service-number.md';
+import simonmedImagingPhoneNumber from './simonmed-imaging-phone-number.md';
 import hijinxHotelIrvine from './hijinx-hotel-irvine.md';
 import laiWahHeenPrivateDining from './lai-wah-heen-private-dining.md';
 import pinOnGrandReservations from './pin-on-grand-reservations.md';
@@ -145,6 +155,16 @@ import clinePhoneCalls from './cline-phone-calls.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'vitalant-phone-number', markdown: vitalantPhoneNumber },
+  { slug: 'suitsupply-customer-service', markdown: suitsupplyCustomerService },
+  { slug: 'paradox-hotel-vancouver', markdown: paradoxHotelVancouver },
+  { slug: 'ritz-carlton-bachelor-gulch-reservations', markdown: ritzCarltonBachelorGulchReservations },
+  { slug: 'la-mar-san-francisco-reservations', markdown: laMarSanFranciscoReservations },
+  { slug: 'equal-parts-sf-reservations', markdown: equalPartsSfReservations },
+  { slug: 'metlife-pet-insurance-phone-number', markdown: metlifePetInsurancePhoneNumber },
+  { slug: 'peloton-customer-service-number', markdown: pelotonCustomerServiceNumber },
+  { slug: 'vivint-customer-service-number', markdown: vivintCustomerServiceNumber },
+  { slug: 'simonmed-imaging-phone-number', markdown: simonmedImagingPhoneNumber },
   { slug: 'hijinx-hotel-irvine', markdown: hijinxHotelIrvine },
   { slug: 'lai-wah-heen-private-dining', markdown: laiWahHeenPrivateDining },
   { slug: 'pin-on-grand-reservations', markdown: pinOnGrandReservations },
