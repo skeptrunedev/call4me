@@ -8,7 +8,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
     "markdown": "/__pages/1a130cabaa8a47b0.md",
-    "tokens": 117670
+    "tokens": 129356
   },
   "/voices": {
     "html": "/__pages/3c1d9b7cb97eed20.html",
@@ -73,92 +73,147 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2281
+    "tokens": 2307
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 1988
+    "tokens": 2154
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2276
+    "tokens": 2067
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2259
+    "tokens": 2268
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2264
+    "tokens": 2284
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2075
+    "tokens": 2217
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2214
+    "tokens": 2080
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 1811
+    "tokens": 2149
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2138
+    "tokens": 1909
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 1874
+    "tokens": 2108
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 1768
+    "tokens": 1809
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 1839
+    "tokens": 1766
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 1962
+    "tokens": 1890
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 1966
+    "tokens": 1911
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 2117
+    "tokens": 2052
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 1278
+    "tokens": 2029
+  },
+  "/blog?page=17": {
+    "html": "/__pages/bb19693a4c4cba66.html",
+    "markdown": "/__pages/bb19693a4c4cba66.md",
+    "tokens": 1043
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 17054
+    "tokens": 18075
+  },
+  "/blog/chase-sapphire-reserve-benefits-phone-number": {
+    "html": "/__pages/5279a473dd6999c8.html",
+    "markdown": "/__pages/5279a473dd6999c8.md",
+    "tokens": 5158
+  },
+  "/blog/fresh-blades-barbershop-divisadero": {
+    "html": "/__pages/c4fbb24653a521ec.html",
+    "markdown": "/__pages/c4fbb24653a521ec.md",
+    "tokens": 2933
+  },
+  "/blog/springhill-suites-phoenix-gilbert": {
+    "html": "/__pages/fe34eb384046f4e2.html",
+    "markdown": "/__pages/fe34eb384046f4e2.md",
+    "tokens": 3419
+  },
+  "/blog/blue-shield-of-california-dental-phone-number": {
+    "html": "/__pages/b2f0afd4b2393e26.html",
+    "markdown": "/__pages/b2f0afd4b2393e26.md",
+    "tokens": 6121
+  },
+  "/blog/skip-hire-abingdon": {
+    "html": "/__pages/8acc4df725e4b7bc.html",
+    "markdown": "/__pages/8acc4df725e4b7bc.md",
+    "tokens": 8850
+  },
+  "/blog/farmacia-luma-viejo-san-juan": {
+    "html": "/__pages/90df2a140a62879c.html",
+    "markdown": "/__pages/90df2a140a62879c.md",
+    "tokens": 3743
+  },
+  "/blog/colonoscopy-screening-san-juan": {
+    "html": "/__pages/7ee18e2ddb9bfc62.html",
+    "markdown": "/__pages/7ee18e2ddb9bfc62.md",
+    "tokens": 4906
+  },
+  "/blog/fort-leonard-wood-dental-clinic": {
+    "html": "/__pages/194c19a5cbceb064.html",
+    "markdown": "/__pages/194c19a5cbceb064.md",
+    "tokens": 4834
+  },
+  "/blog/san-francisco-oral-surgeon-consultation": {
+    "html": "/__pages/2d8cd4e1f08c5cb5.html",
+    "markdown": "/__pages/2d8cd4e1f08c5cb5.md",
+    "tokens": 4182
+  },
+  "/blog/global-blue-customer-service-number": {
+    "html": "/__pages/467e523e914349f5.html",
+    "markdown": "/__pages/467e523e914349f5.md",
+    "tokens": 3205
   },
   "/blog/mount-sinai-doctors-phone-number": {
     "html": "/__pages/98ecb1a0ba10cff1.html",
     "markdown": "/__pages/98ecb1a0ba10cff1.md",
-    "tokens": 7885
+    "tokens": 8059
   },
   "/blog/piedmont-natural-gas-customer-service": {
     "html": "/__pages/588950046a3fe657.html",
@@ -173,7 +228,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/sabates-eye-centers-pediatric-eye-exam": {
     "html": "/__pages/3b0f0669bd87d41e.html",
     "markdown": "/__pages/3b0f0669bd87d41e.md",
-    "tokens": 7889
+    "tokens": 7938
   },
   "/blog/afternic-domain-broker-phone-number": {
     "html": "/__pages/c2e8c3bc3d67843c.html",
@@ -183,12 +238,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/maggy-maid-sacramento": {
     "html": "/__pages/881bff9e1e56ccbf.html",
     "markdown": "/__pages/881bff9e1e56ccbf.md",
-    "tokens": 6132
+    "tokens": 6281
   },
   "/blog/sev-skin-sacramento": {
     "html": "/__pages/51a4bd71d15b8409.html",
     "markdown": "/__pages/51a4bd71d15b8409.md",
-    "tokens": 3195
+    "tokens": 3363
   },
   "/blog/phoenician-golf-club-tee-times": {
     "html": "/__pages/c6e3cafe94b23c80.html",
@@ -308,12 +363,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/moxy-st-petersburg-downtown": {
     "html": "/__pages/6a400c20fc16bbf9.html",
     "markdown": "/__pages/6a400c20fc16bbf9.md",
-    "tokens": 3070
+    "tokens": 3073
   },
   "/blog/walgreens-specialty-pharmacy-phone-number": {
     "html": "/__pages/040847ce95113c08.html",
     "markdown": "/__pages/040847ce95113c08.md",
-    "tokens": 3767
+    "tokens": 3918
   },
   "/blog/same-day-eye-exam-brooklyn": {
     "html": "/__pages/1d567a0c8e351b3b.html",
@@ -393,7 +448,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/simonmed-imaging-phone-number": {
     "html": "/__pages/910c15dfc7d19508.html",
     "markdown": "/__pages/910c15dfc7d19508.md",
-    "tokens": 12359
+    "tokens": 12503
   },
   "/blog/capital-one-customer-service": {
     "html": "/__pages/a385bedc31555638.html",
@@ -593,7 +648,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/salon-per-se-bellaire": {
     "html": "/__pages/6c137945835b700a.html",
     "markdown": "/__pages/6c137945835b700a.md",
-    "tokens": 2275
+    "tokens": 2422
   },
   "/blog/sabai-eugene-reservations": {
     "html": "/__pages/6310300d393da7e6.html",
@@ -788,7 +843,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/running-late-to-barber": {
     "html": "/__pages/3df0f1db1eb5aeb6.html",
     "markdown": "/__pages/3df0f1db1eb5aeb6.md",
-    "tokens": 2343
+    "tokens": 2489
   },
   "/blog/mandarin-phone-call-scheduling": {
     "html": "/__pages/573dcb48f1d75341.html",
@@ -853,7 +908,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/ohio-workers-compensation-insurance": {
     "html": "/__pages/e79ce27a7744bfd3.html",
     "markdown": "/__pages/e79ce27a7744bfd3.md",
-    "tokens": 4281
+    "tokens": 4473
   },
   "/blog/drop-off-vet-appointment": {
     "html": "/__pages/19b297077f9d1c0a.html",
@@ -863,7 +918,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/book-haircut-appointment": {
     "html": "/__pages/9eaed74ec63d7553.html",
     "markdown": "/__pages/9eaed74ec63d7553.md",
-    "tokens": 3514
+    "tokens": 3660
   },
   "/blog/les-schwab-oil-change": {
     "html": "/__pages/ba48431d0e7bdb1b.html",
@@ -968,12 +1023,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-to-transfer-a-prescription": {
     "html": "/__pages/a4b0bfb79d180b15.html",
     "markdown": "/__pages/a4b0bfb79d180b15.md",
-    "tokens": 7338
+    "tokens": 7311
   },
   "/blog/amazon-pharmacy-phone-number": {
     "html": "/__pages/f7a8acf08130706e.html",
     "markdown": "/__pages/f7a8acf08130706e.md",
-    "tokens": 4603
+    "tokens": 4755
   },
   "/blog/grok-connectors-mcp-phone-calls": {
     "html": "/__pages/dd53a82fc808756f.html",
@@ -1008,7 +1063,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-to-find-a-new-primary-care-doctor": {
     "html": "/__pages/035614e93447d90b.html",
     "markdown": "/__pages/035614e93447d90b.md",
-    "tokens": 22500
+    "tokens": 22575
   },
   "/blog/usaa-phone-number": {
     "html": "/__pages/a70b41d595149573.html",
@@ -1043,7 +1098,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/unitedhealthcare-phone-number": {
     "html": "/__pages/8f9029f0cf73d4f9.html",
     "markdown": "/__pages/8f9029f0cf73d4f9.md",
-    "tokens": 5121
+    "tokens": 5145
   },
   "/blog/need-dress-shoes-today": {
     "html": "/__pages/18c64c271fefb021.html",
@@ -1083,7 +1138,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/junk-removal-cost": {
     "html": "/__pages/3f44cdf8260b9b11.html",
     "markdown": "/__pages/3f44cdf8260b9b11.md",
-    "tokens": 4313
+    "tokens": 4462
   },
   "/blog/openai-realtime-voices-phone-calls": {
     "html": "/__pages/bfa7fe3d0cc5780a.html",
