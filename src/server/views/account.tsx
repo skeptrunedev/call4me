@@ -2,7 +2,7 @@ import type { FC } from 'hono/jsx';
 import type { z } from 'zod';
 import { mcpUrl } from '../lib/prompts';
 import type { recordingOutput } from '../lib/recording-schema';
-import type { callView } from '../mcp/server';
+import type { callView } from '../services/call-ops';
 import { dollars, type Account } from '../services/accounts';
 import type { CountryOffer, NumberView, OwnNumberView, PendingNumberView } from '../services/numbers';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';

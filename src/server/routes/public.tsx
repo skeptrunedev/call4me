@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { field, origin, ownerKey, stripeFor, viewerKey, visitor, type AppContext, type AppEnv } from '../lib/context';
 import { accountPrompt, aiCallAssistantPrompt, callPrompt, companiesPrompt, studentsPrompt, examplesPrompt, voicesPrompt, installPrompt, privacyPrompt, rulesPrompt, supportPrompt, termsPrompt } from '../lib/prompts';
 import { confirmVerificationInput } from '../lib/number-schema';
-import { callView } from '../mcp/server';
+import { callView } from '../services/call-ops';
 import { accounts, type Account } from '../services/accounts';
 import { ACTIVE, calls, CallError } from '../services/calls';
 import { pricePerMinute } from '../services/dialer';

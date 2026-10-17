@@ -21,19 +21,152 @@ import {
   sendVerificationDescription,
   sendVerificationInput,
 } from './number-schema';
+import {
+  answerInput,
+  balanceOutput,
+  balancePath,
+  callActionOutput,
+  callAnswerPath,
+  callConnectPath,
+  callHangUpPath,
+  callOutput,
+  callPath,
+  callsPath,
+  categoriesOutput,
+  categoryRequirementsPath,
+  connectInput,
+  placeCallInput,
+  profileInput,
+  profileOutput,
+  profilePath,
+  requirementsOutput,
+  requirementsPath,
+  scheduleCallInput,
+  scheduledCallPath,
+  scheduledCallsPath,
+  scheduledOutput,
+} from './call-schema';
 import { recordingDescription, recordingInput, recordingOutput, recordingPath } from './recording-schema';
 
 /** Generated from the same schemas used by the HTTP route and MCP tool. */
 export function openApiDocument(site: string) {
   const schema = (s: z.ZodType) => z.toJSONSchema(s, { target: 'draft-2020-12' });
   const json = (description: string, s: z.ZodType) => ({ description, content: { 'application/json': { schema: schema(s) } } });
+  const bearer = [{ bearerAuth: [] }];
+  const path = (name: string, description: string, s: z.ZodType) => ({ name, in: 'path', required: true, description, schema: schema(s) });
+  const query = (name: string, description: string, s: z.ZodType) => ({ name, in: 'query', required: false, description, schema: schema(s) });
+  const body = (s: z.ZodType) => ({ required: true, content: { 'application/json': { schema: schema(s) } } });
+  const callId = path('call_id', 'the call id from placing or listing calls ("call_...")', z.string());
   const error = { description: 'Request failed', content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string' } }, required: ['error'] } } } };
   return {
     openapi: '3.1.0',
-    info: { title: 'call4me API', version: '1.2.0', description: 'Manage the account\'s phone numbers (including the user\'s own, verified to call from) and retrieve existing call recordings. Phone calls and other account tools are available through MCP.' },
+    info: {
+      title: 'call4me API',
+      version: '1.3.0',
+      description:
+        'Phone calls an AI agent places for its user: call a business, follow the call to its outcome, answer the caller\'s questions mid-call, and patch the user in. Also the prepaid balance, the caller profile, scheduled calls, the account\'s phone numbers and call recordings. The same operations as the MCP server at /mcp. Calls are billed per minute from pickup (phone menus and conversation; hold time at half price) from the prepaid balance; unanswered calls are free. Refusals name MCP tools (call4me_place_call is POST /api/calls, call4me_save_profile is PATCH /api/profile).',
+    },
     servers: [{ url: site }],
     components: { securitySchemes: { bearerAuth: { type: 'http', scheme: 'bearer', description: 'A call4me API key or OAuth access token for the site or MCP resource.' } } },
     paths: {
+      [balancePath]: {
+        get: { operationId: 'getBalance', description: 'The prepaid balance, the per-minute price (and the destinations priced differently), and the account\'s call4me numbers. Free.', security: bearer, responses: { '200': json('The balance and numbers', balanceOutput), '401': error } },
+      },
+      [requirementsPath]: {
+        get: { operationId: 'listCallCategories', description: 'The kinds of call (category slugs) call4me places. Each decides what must be known before dialing. Free.', security: bearer, responses: { '200': json('The categories', categoriesOutput), '401': error } },
+      },
+      [categoryRequirementsPath]: {
+        get: {
+          operationId: 'getCallRequirements',
+          description: 'The information a kind of call needs before dialing, and which of it the saved profile already has. Ask the user for every required field not known, in one message, then pass the answers in details when placing the call. Free.',
+          security: bearer,
+          parameters: [path('category', 'a category slug from /api/requirements, e.g. "restaurant"', z.string())],
+          responses: { '200': json('What the call needs', requirementsOutput), '401': error, '404': error },
+        },
+      },
+      [profilePath]: {
+        get: { operationId: 'getProfile', description: 'Saved details reused on relevant calls (name, DOB, phone, address, insurance, car). An incomplete profile is fine. Free.', security: bearer, responses: { '200': json('The saved profile', profileOutput), '401': error } },
+        patch: {
+          operationId: 'saveProfile',
+          description: 'Save facts that are the same on every call. Merges into what is saved; an empty string removes a field. Save only what the user agreed to keep.',
+          security: bearer,
+          requestBody: body(profileInput('agents')),
+          responses: { '200': json('The profile now saved', profileOutput), '400': error, '401': error },
+        },
+      },
+      [callsPath]: {
+        get: {
+          operationId: 'listCalls',
+          description: 'Recent calls, newest first (without transcripts), and scheduled calls that have not dialed yet. Free.',
+          security: bearer,
+          parameters: [query('limit', '1 to 50, default 10', z.number().int().min(1).max(50))],
+          responses: { '200': json('The calls', z.looseObject({ calls: z.array(callOutput), scheduled: z.array(scheduledOutput) })), '401': error },
+        },
+        post: {
+          operationId: 'placeCall',
+          description:
+            'Call a business for the user and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses with 422 "Not calling yet" until the category\'s required information is known, listing exactly what to ask the user. Returns at once with the call; follow it with GET /api/calls/{call_id}?wait_seconds=30 until finished, answering any open question right away. Credits for the maximum length are held up front; billed per minute from pickup (phone menus and conversation; hold time at half price), rounded up; unanswered calls are free.',
+          security: bearer,
+          requestBody: body(placeCallInput('agents')),
+          responses: { '201': json('The call, dialing', callOutput), '400': error, '401': error, '402': error, '403': error, '422': error },
+        },
+      },
+      [callPath]: {
+        get: {
+          operationId: 'getCall',
+          description: 'Status, open questions, live transcript and, once finished, the outcome and cost of a call. With wait_seconds it waits for something to change (a new question, the call finishing) before answering. Takes a scheduled id (sched_...) too. Free.',
+          security: bearer,
+          parameters: [path('call_id', 'a call id ("call_...") or a scheduled id ("sched_...")', z.string()), query('wait_seconds', '0 to 50, default 0', z.number().int().min(0).max(50))],
+          responses: { '200': json('The call (with scheduled when it came from a schedule), or a schedule not dialed yet', callOutput), '400': error, '401': error, '404': error },
+        },
+      },
+      [callAnswerPath]: {
+        post: {
+          operationId: 'answerQuestion',
+          description: 'Answer a question the caller asked mid-call (open_questions). The caller relays it on the line within a second or two. Answer in a few plain words.',
+          security: bearer,
+          parameters: [callId],
+          requestBody: body(answerInput),
+          responses: { '200': json('Sent to the caller', z.looseObject({ id: z.string(), question: z.string(), answer: z.string() })), '400': error, '401': error, '404': error },
+        },
+      },
+      [callConnectPath]: {
+        post: {
+          operationId: 'connectUser',
+          description: 'Ring the user now and patch them into a live call. They join by pressing 1; the caller goes quiet and takes back over when they press * or hang up. Mode "listen" lets them listen in without being heard. Tell the user before calling this.',
+          security: bearer,
+          parameters: [callId],
+          requestBody: { required: false, content: { 'application/json': { schema: schema(connectInput) } } },
+          responses: { '200': json('Ringing the user', callActionOutput), '400': error, '401': error, '404': error, '409': error },
+        },
+      },
+      [callHangUpPath]: {
+        post: {
+          operationId: 'hangUp',
+          description: 'End a call in progress now. Talk time so far is billed as usual.',
+          security: bearer,
+          parameters: [callId],
+          responses: { '200': json('Hanging up', callActionOutput), '401': error, '404': error, '409': error },
+        },
+      },
+      [scheduledCallsPath]: {
+        post: {
+          operationId: 'scheduleCall',
+          description: 'Place a call later (the business is closed, or the user wants it at a set time). Takes everything POST /api/calls takes, plus call_at, and checks it now. Nobody may be following the call when it runs, so give every fact and all the flexibility it needs up front. Credits are held when it dials.',
+          security: bearer,
+          requestBody: body(scheduleCallInput('agents')),
+          responses: { '201': json('The scheduled call', scheduledOutput), '400': error, '401': error, '422': error },
+        },
+      },
+      [scheduledCallPath]: {
+        delete: {
+          operationId: 'cancelScheduledCall',
+          description: 'Cancel a scheduled call before it dials.',
+          security: bearer,
+          parameters: [path('scheduled_id', 'the id from POST /api/scheduled-calls ("sched_...")', z.string())],
+          responses: { '200': json('The canceled schedule', scheduledOutput), '400': error, '401': error, '404': error },
+        },
+      },
       [numbersPath]: {
         get: {
           operationId: 'listNumbers',

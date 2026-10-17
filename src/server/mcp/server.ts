@@ -2,21 +2,20 @@ import { McpServer, type CallToolResult, type ToolAnnotations } from '@modelcont
 import { CfWorkerJsonSchemaValidator } from '@modelcontextprotocol/server/validators/cf-worker';
 import type Stripe from 'stripe';
 import { z } from 'zod';
-import { formatPhone } from '../lib/phone';
 import { accounts, dollars, type Account } from '../services/accounts';
-import { ACTIVE, CallError, calls, LIMITS, type CallRow, type Outcome, type Question, type TranscriptLine } from '../services/calls';
-import { placeCall, pricePerMinute, pricePerMinuteTo, VOICES } from '../services/dialer';
+import { CallError } from '../services/calls';
+import { answerQuestion, balanceView, categoriesView, connectPerson, followCall, followedView, hangUp, listCalls, profileView, requirementsView, saveProfile, callView, type CallView } from '../services/call-ops';
+import { placeCall, pricePerMinute, pricePerMinuteTo } from '../services/dialer';
 import { DESTINATION_PRICE_CENTS, ABROAD_CALLING } from '../lib/rates';
-import { parseAmountCents, reloadOf, topups, TopupError } from '../services/topups';
-import { checkDialable } from '../lib/phone';
-import { sessionFor } from '../voice/stub';
-import { catalog, PROFILE_FIELDS, type Surface } from '../services/intake';
-import { ProfileError, profiles } from '../services/profiles';
+import { parseAmountCents, topups, TopupError } from '../services/topups';
+import { catalog, type Surface } from '../services/intake';
+import { ProfileError } from '../services/profiles';
+import { answerInput, callAtInput, callIdArg, connectInput, followedIdArg, listLimitInput, placeCallInput, profileInput, scheduledIdArg, waitSecondsInput } from '../lib/call-schema';
 import { recordingDescription, recordingInput, recordingOutput } from '../lib/recording-schema';
 import { buyNumberDescription, buyNumberInput, listNumbersDescription, numbersOutput, ownNumberInput, releaseNumberDescription, releaseNumberInput, removeOwnNumberDescription, verifyNumberDescription, verifyNumberInput } from '../lib/number-schema';
-import { mayCall, NumberError, numbers, type NumberView, type OwnNumberView, type PendingNumberView } from '../services/numbers';
+import { NumberError, numbers, type NumberView, type OwnNumberView, type PendingNumberView } from '../services/numbers';
 import { getCallRecordings } from '../services/recordings';
-import { isScheduledId, scheduledCalls, scheduledText, scheduledView, type ScheduledInput, type ScheduledView } from '../services/scheduled';
+import { scheduledCalls, scheduledText, scheduledView, type ScheduledInput } from '../services/scheduled';
 
 /**
  * The call4me MCP server: the handful of tools a coding agent needs to make a phone call
@@ -132,64 +131,7 @@ function fail(message: string): CallToolResult {
   return { content: [{ type: 'text', text: message }], isError: true };
 }
 
-const callingNumber = (row: CallRow) => row.ring_number ?? row.from_number;
-
-/** The shape every call tool returns: what an agent needs to decide its next step. */
-/**
- * Who ended a finished call and why, in words: a drop on the phone network reads differently from
- * the business hanging up or call4me hanging up its side. Telnyx's hangup_source says which leg
- * ended it ('caller' is us on an outbound call); end_reason says why when it was us.
- */
-export function howItEnded(row: CallRow, transcript: TranscriptLine[]): string | null {
-  if (ACTIVE.includes(row.status) || !row.answered_at) return row.hangup_cause;
-  const them = row.direction === 'outbound' ? 'the business' : 'the caller';
-  const ourLeg = row.direction === 'outbound' ? 'caller' : 'callee';
-  let ended: string;
-  if (row.error) ended = `call4me ended the call after a failure: ${row.error}`;
-  else if (row.hangup_cause && row.hangup_cause !== 'normal_clearing') ended = `the call dropped on the phone network (${row.hangup_cause}), not a hang-up`;
-  else if (row.hangup_source === ourLeg) ended = `call4me hung up: ${row.end_reason ?? 'no reason recorded'}`;
-  else if (row.hangup_source && row.hangup_source !== 'unknown') ended = `${them} hung up`;
-  else ended = row.end_reason ? `call4me hung up: ${row.end_reason}` : `${them} hung up, or the line dropped (the carrier did not say which side)`;
-  // An answered line that never carried a word from them is worth knowing before redialing.
-  if (!transcript.some((l) => l.role === 'them')) ended += `. No speech ever came through from ${them}'s side of the line`;
-  return ended;
-}
-
-export function callView(row: CallRow, questions: Question[], callbacks: CallRow[] = []) {
-  const outcome = row.outcome ? (JSON.parse(row.outcome) as Outcome) : null;
-  const transcript = row.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [];
-  // An answered call is finished once its recap is written (seconds after hangup), or if that failed.
-  const ended = !ACTIVE.includes(row.status);
-  const recapPending = ended && Boolean(row.answered_at) && !outcome && !row.error && Date.now() - (row.ended_at ?? 0) < 60_000;
-  return {
-    id: row.id,
-    status: row.status,
-    finished: ended && !recapPending,
-    direction: row.direction,
-    business: row.business,
-    number: formatPhone(row.to_number),
-    // The call4me number the call is tied to, which rings the user to join. A call placed from the
-    // user's own number (own_number, what the business saw) still rings them from a call4me number.
-    calling_number: callingNumber(row) ? formatPhone(callingNumber(row)!) : null,
-    calling_number_e164: callingNumber(row),
-    own_number: row.ring_number && row.from_number ? formatPhone(row.from_number) : null,
-    goal: row.goal,
-    outcome,
-    callback_for: row.callback_for,
-    callbacks: callbacks.map((c) => ({ id: c.id, created_at: new Date(c.created_at).toISOString(), outcome: c.outcome ? (JSON.parse(c.outcome) as Outcome) : null })),
-    open_questions: questions.filter((q) => !q.answer).map((q) => ({ id: q.id, question: q.question })),
-    answered_questions: questions.filter((q) => q.answer).map((q) => ({ question: q.question, answer: q.answer })),
-    talk_minutes: row.billed_seconds ? Math.ceil(row.billed_seconds / 60) : 0,
-    cost: dollars(row.cost_cents ?? 0),
-    hangup_cause: row.hangup_cause,
-    ended: howItEnded(row, transcript),
-    error: row.error,
-    created_at: new Date(row.created_at).toISOString(),
-    transcript: transcript.map((l) => `${l.role}: ${l.text}`),
-  };
-}
-
-function callText(v: ReturnType<typeof callView>): string {
+function callText(v: CallView): string {
   const lines = [`${v.id} · ${v.status}${v.finished ? '' : v.status === 'completed' ? ' (writing the recap)' : ' (in progress)'} · ${v.business} ${v.number}`];
   if (v.own_number) lines.push(`called from the user's own number ${v.own_number}: the business saw it, and callbacks go to their phone`);
   if (v.calling_number) lines.push(`call4me number: ${v.calling_number} (the number that rings the user when they join)`);
@@ -206,8 +148,6 @@ function callText(v: ReturnType<typeof callView>): string {
   return lines.join('\n').trim();
 }
 
-const callIdArg = z.string().min(1).max(40).describe('the call id from call4me_place_call, e.g. "call_ab12..."');
-
 export function createCall4meServer(deps: McpDeps): McpServer {
   const { env, account } = deps;
   const surface = deps.surface ?? 'agents';
@@ -215,7 +155,6 @@ export function createCall4meServer(deps: McpDeps): McpServer {
   const health = surface !== 'chatgpt';
   const intake = catalog(surface);
   const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION, title: 'call4me', websiteUrl: deps.origin }, { instructions: instructions(surface), jsonSchemaValidator: new CfWorkerJsonSchemaValidator() });
-  const db = calls(env.DB);
   const sched = scheduledCalls(env.DB);
 
   const guard = (fn: () => Promise<CallToolResult>) => async (): Promise<CallToolResult> => {
@@ -228,26 +167,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     }
   };
 
-  // What a call needs, shared by call4me_place_call and call4me_schedule_call.
-  const placeInput = z.object({
-    to: z.string().min(3).max(40).describe('the number to call, e.g. "+14155550123", "(415) 555-0123", or abroad with its country code, e.g. "+31 20 123 4567"'),
-    business: z.string().min(1).max(120).describe('who you are calling, as a person would say it: "Nopa", "Dr. Chen\'s office", "Toyota of Berkeley service"'),
-    goal: z.string().min(5).max(1500).describe('what the call should achieve, in plain words: "Book a table for 4 tomorrow (Sat Oct 3) around 7pm under Khami."'),
-    category: z.enum(intake.slugs).describe('the kind of call; decides what must be known first (see call4me_get_requirements)'),
-    details: z.record(z.string(), z.string().max(1000)).optional().describe(`answers to the category's fields by key, e.g. ${health ? '{"reason":"annual physical","patient_status":"existing","availability":"weekday mornings next week"}' : '{"party_size":"4","date":"Sat Oct 3","time_window":"7pm, anything 6:30-8"}'}. Profile fields (${health ? 'name, DOB, phone, insurance' : 'name, phone, address'}...) are filled from the saved profile only when the call is for the profile's owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner's are never used.`),
-    on_behalf_of: z.string().min(1).max(80).optional().describe('who the call is for, as the caller should say it (default: the profile\'s full_name). The caller calls FOR this person; it never claims to be them.'),
-    facts: z.string().max(3000).optional().describe('anything else the caller may share beyond the category\'s fields, one per line'),
-    flexibility: z.string().max(1500).optional().describe('what the caller may accept without asking: "any time 6:30-8pm", "a different day this week is fine", "up to $300". Anything outside this becomes a question to you.'),
-    timezone: z.string().max(60).optional().describe('IANA time zone of the business, e.g. "America/Los_Angeles", so "tomorrow" is unambiguous'),
-    connect_when: z.string().max(300).optional().describe('when to ring the user and patch them into the call without being asked, e.g. "as soon as a person picks up" (skip the hold) or "if they need to speak to me". Rings their own phone: details.phone when given, else the one in their profile; a call with neither is refused. They hand the call back to the caller by pressing * or hanging up.'),
-    listen_in: z.boolean().optional().describe('ring the user as soon as the business answers so they can listen in: nobody on the call hears them and the caller keeps working. They press 1 anytime to take over, or hang up to stop listening. Rings their own phone: details.phone when given, else the one in their profile; a call with neither is refused.'),
-    max_minutes: z.number().int().min(1).max(LIMITS.maxMinutes).optional().describe(`optional cap on the answered call, including phone menus. Defaults to ${LIMITS.defaultMinutes} minutes, or less if the available balance cannot cover it. Only credits for that cap are held. A call still on hold when it reaches the cap keeps waiting: call4me holds ${LIMITS.holdExtensionMinutes} more minutes of credits at a time while the balance covers them, up to ${LIMITS.maxMinutes / 60} hours. Set a shorter cap to leave more credits free for other calls`),
-    voice: z.enum(VOICES).optional().describe('caller voice (default marin); hear each at https://call4.me/voices'),
-    caller_name: z.string().max(30).optional().describe('a first name the caller introduces itself with, e.g. "Jordan", for this call only (default: the profile\'s assistant_name, else none: just "<user>\'s assistant"). Put the caller\'s name and company here, never in the goal: the caller\'s identity comes only from these fields.'),
-    calling_as: z.string().min(1).max(80).optional().describe('a company the caller calls from, e.g. "Acme": it introduces itself as "Jordan from Acme" (or "calling from Acme" without caller_name) instead of "<user>\'s assistant", and callbacks to the number it called from answer as that company. Calling for several companies: pass the company on every call and give each one its own number (from), so callbacks reach the right identity.'),
-    callback_number: z.string().max(40).optional().describe('the number the caller gives for call-backs and on voicemail, when the user wants callbacks to ring a phone of theirs (e.g. "(415) 555-0123"). Default: the number the call comes from, so a call4me number answers the callback and finishes the task. A callback to callback_number goes straight to that phone instead, and call4me never hears it. Phone numbers in details or facts are only for finding or verifying an account, never given as the callback.'),
-    from: z.string().max(40).optional().describe(`which of the account's numbers to call from (default: a call4me number in the callee's country)${agents ? '. May be one of the user\'s own verified numbers (call4me_verify_number), for businesses in its country: they see it and call back the user directly' : ''}`),
-  });
+  const placeInput = placeCallInput(surface);
 
   server.registerTool(
     'call4me_get_recordings',
@@ -282,9 +202,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       title: 'Schedule a phone call',
       description:
         'Place a call later instead of now: when the business is closed, or the user wants it made at a set time ("call Canby Utility Monday morning to register the meters"). Takes everything call4me_place_call takes, plus call_at, and checks it the same way now, so "Not calling yet" comes back while the user is here. At call_at, call4me places it exactly as call4me_place_call would: credits are held then, not now. Nobody may be following the call when it runs, so give the caller every fact (details, facts) and everything it may accept (flexibility) up front; a question nobody answers ends with the caller saying the user will call back. Returns a scheduled id (sched_...): call4me_get_call with it shows whether it dialed and then the call itself, and call4me_cancel_scheduled_call cancels it before it dials. A call that needs an account PIN can\'t be scheduled, since call4me never stores one.',
-      inputSchema: placeInput.extend({
-        call_at: z.string().min(10).max(40).describe('when to dial: the business\'s local time like "2026-10-05T09:15" together with timezone, or an ISO time with its offset like "2026-10-05T09:15:00-07:00". Pick a time the business is open and answering (a little after opening beats right at it). Up to 60 days ahead; dials within a minute of it.'),
-      }),
+      inputSchema: placeInput.extend({ call_at: callAtInput }),
       annotations: DIALS,
     }),
     (async (args: ScheduledInput & { call_at: string }) =>
@@ -300,7 +218,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     titled({
       title: 'Cancel a scheduled call',
       description: 'Cancel a call made with call4me_schedule_call before it dials. Once it has dialed, it is a live call: end it with call4me_hang_up.',
-      inputSchema: z.object({ scheduled_id: z.string().min(1).max(40).describe('the id from call4me_schedule_call, e.g. "sched_ab12..."') }),
+      inputSchema: z.object({ scheduled_id: scheduledIdArg }),
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
     }),
     (async (args: { scheduled_id: string }) =>
@@ -316,29 +234,15 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       title: 'Check on a call',
       description:
         'Status, open questions, live transcript, and (when finished) the outcome of a call. With wait_seconds it waits for something to change (a new question, the call ending) before returning, so poll with wait_seconds: 30. Takes a scheduled id (sched_...) too: before it dials, when it will; after, the call it became.',
-      inputSchema: z.object({ call_id: z.string().min(1).max(40).describe('the call id from call4me_place_call ("call_ab12..."), or the scheduled id from call4me_schedule_call ("sched_ab12...")'), wait_seconds: z.number().int().min(0).max(50).default(0).describe('wait up to this long for the call to finish or ask a question') }),
+      inputSchema: z.object({ call_id: followedIdArg, wait_seconds: waitSecondsInput }),
       annotations: RO,
     }),
     (async (args: { call_id: string; wait_seconds: number }) =>
       guard(async () => {
-        let callId = args.call_id;
-        let scheduled: ScheduledView | null = null;
-        if (isScheduledId(callId)) {
-          scheduled = scheduledView(await sched.forAccount(account.id, callId));
-          if (!scheduled.call_id) return ok(scheduledText(scheduled), { scheduled, finished: ['failed', 'canceled'].includes(scheduled.status) });
-          callId = scheduled.call_id;
-        }
-        const deadline = Date.now() + args.wait_seconds * 1000;
-        let row = await db.forAccount(account.id, callId);
-        let qs = await db.questions(row.id);
-        const openAtStart = qs.filter((q) => !q.answer).length;
-        while (Date.now() < deadline && !callView(row, qs).finished && qs.filter((q) => !q.answer).length <= openAtStart) {
-          await new Promise((r) => setTimeout(r, 1500));
-          row = await db.forAccount(account.id, callId);
-          qs = await db.questions(row.id);
-        }
-        const v = callView(row, qs, await db.callbacksFor(row.id));
-        return scheduled ? ok(`${scheduledText(scheduled)}\n\n${callText(v)}`, { ...v, scheduled }) : ok(callText(v), v);
+        const followed = await followCall(env, account.id, args.call_id, args.wait_seconds);
+        const { scheduled, call } = followed;
+        const text = call ? (scheduled ? `${scheduledText(scheduled)}\n\n${callText(call)}` : callText(call)) : scheduledText(scheduled!);
+        return ok(text, followedView(followed));
       })()) as never,
   );
 
@@ -348,27 +252,13 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       title: 'Patch the user into a live call',
       description:
         'Ring the user now and patch them into a call in progress, so they talk to the business directly while the caller goes quiet. Before calling this tool, give the user a heads up with the reason and calling_number from call4me_get_call. Rings their own phone (details.phone from placing the call, else the one in their profile) unless phone is given; they join by pressing 1 when they pick up (a voicemail never gets patched in). When they press * or hang up, the caller takes the call back and carries on with the task. With mode "listen" they only listen in: nobody on the call hears them, the caller keeps working, and they press 1 anytime to take over or hang up to stop listening.',
-      inputSchema: z.object({
-        call_id: callIdArg,
-        phone: z.string().max(40).optional().describe('a different number to ring, e.g. "(415) 555-0123"'),
-        mode: z.enum(['join', 'listen']).default('join').describe('"join" (default): they take the call over by pressing 1. "listen": they listen in while the caller keeps working, and can press 1 anytime to take over'),
-      }),
+      inputSchema: connectInput.extend({ call_id: callIdArg }),
       annotations: OPEN,
     }),
     (async (args: { call_id: string; phone?: string; mode: 'join' | 'listen' }) =>
       guard(async () => {
-        const row = await db.forAccount(account.id, args.call_id);
-        if (!ACTIVE.includes(row.status) || !row.answered_at) throw new CallError('the call is not live');
-        let phone: string | undefined;
-        if (args.phone) {
-          const p = checkDialable(args.phone);
-          if (!p.ok) throw new CallError(`phone: ${p.reason}`);
-          if (!(await mayCall(env.DB, account.id, p))) throw new CallError(`phone: calling ${p.country} needs a number there (call4me_buy_number)`);
-          phone = p.e164;
-        }
-        const res = await sessionFor(env, row.id).fetch('https://session/connect-person', { method: 'POST', body: JSON.stringify({ phone, mode: args.mode }) });
-        const { message } = (await res.json()) as { message: string };
-        return ok(message, { call_id: row.id, message });
+        const connected = await connectPerson(env, account.id, args.call_id, args);
+        return ok(connected.message, connected);
       })()) as never,
   );
 
@@ -382,11 +272,8 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     }),
     (async (args: { call_id: string }) =>
       guard(async () => {
-        const row = await db.forAccount(account.id, args.call_id);
-        if (!ACTIVE.includes(row.status)) throw new CallError('the call is not live');
-        const res = await sessionFor(env, row.id).fetch('https://session/hang-up', { method: 'POST' });
-        const { message } = (await res.json()) as { message: string };
-        return ok(message, { call_id: row.id, message });
+        const ended = await hangUp(env, account.id, args.call_id);
+        return ok(ended.message, ended);
       })()) as never,
   );
 
@@ -395,14 +282,13 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     titled({
       title: 'Answer the caller\'s question',
       description: 'Answer a question the caller asked mid-call (listed in open_questions). The caller relays it on the line within a second or two. Answer in a few plain words.',
-      inputSchema: z.object({ call_id: callIdArg, question_id: z.string().min(1).max(40), answer: z.string().min(1).max(1000).describe('e.g. "Yes, 8:15 works." or "The reservation is under Khami."') }),
+      inputSchema: answerInput.extend({ call_id: callIdArg }),
       annotations: OPEN,
     }),
     (async (args: { call_id: string; question_id: string; answer: string }) =>
       guard(async () => {
-        const q = await db.answer(account.id, args.call_id, args.question_id, args.answer.trim());
-        await sessionFor(env, args.call_id).fetch('https://session/answer', { method: 'POST', body: JSON.stringify({ id: q.id, question: q.question, answer: q.answer }) });
-        return ok(`sent to the caller: "${q.answer}"`, { id: q.id, question: q.question, answer: q.answer });
+        const q = await answerQuestion(env, account.id, args.call_id, args.question_id, args.answer);
+        return ok(`sent to the caller: "${q.answer}"`, q);
       })()) as never,
   );
 
@@ -411,14 +297,12 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     titled({
       title: 'List recent calls',
       description: 'Recent calls on this account, newest first, including callbacks the account\'s number answered (direction "inbound"): a callback about an unfinished task (callback_for) tried to finish it, anything else took a message. Calls scheduled for later (call4me_schedule_call) that have not dialed yet come first.',
-      inputSchema: z.object({ limit: z.number().int().min(1).max(50).default(10) }),
+      inputSchema: z.object({ limit: listLimitInput }),
       annotations: RO,
     }),
     (async (args: { limit: number }) =>
       guard(async () => {
-        const [rows, upcoming] = await Promise.all([db.list(account.id, args.limit), sched.upcoming(account.id)]);
-        const views = rows.map((r) => callView(r, []));
-        const scheduled = upcoming.map(scheduledView);
+        const { calls: views, scheduled } = await listCalls(env, account.id, args.limit);
         const lines = [
           ...scheduled.map(scheduledText),
           ...views.map((v) => `${v.id} · ${v.created_at.slice(0, 16).replace('T', ' ')} · ${v.direction} · ${v.status} · ${v.business} ${v.number}${v.callback_for ? ` · callback for ${v.callback_for}` : ''}${v.outcome ? ` · ${v.outcome.summary}` : ''}`),
@@ -437,22 +321,8 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     }),
     (async () =>
       guard(async () => {
-        const balance = await accounts(env.DB).balanceCents(account.id);
-        const price = pricePerMinute(env);
-        const reload = await reloadOf(env.DB, account.id);
-        const owned = await numbers(env).views(account.id);
-        const out = {
-          balance: dollars(balance),
-          balance_cents: balance,
-          price_per_minute: dollars(price),
-          // Destinations billed at their own price instead (the UAE, Japan).
-          price_per_minute_by_country: Object.fromEntries(Object.entries(DESTINATION_PRICE_CENTS).map(([c, cents]) => [c, dollars(cents)])),
-          minutes_left: Math.floor(balance / price),
-          phone_number: owned[0]?.number ?? null,
-          numbers: owned,
-          email: account.email,
-          monthly_reload: reload ? { amount: dollars(reload.cents), status: reload.status, next: reload.renewsAt ? new Date(reload.renewsAt).toISOString().slice(0, 10) : null } : null,
-        };
+        const out = await balanceView(env, account);
+        const owned = out.numbers;
         const reloadText = out.monthly_reload ? `reloads ${out.monthly_reload.amount} monthly${out.monthly_reload.next ? ` (next ${out.monthly_reload.next})` : ''}` : 'no monthly reload';
         return ok(`balance ${out.balance} (~${out.minutes_left} min at ${out.price_per_minute}/min; UAE calls ${out.price_per_minute_by_country.AE}/min, Japan ${out.price_per_minute_by_country.JP}/min), ${reloadText}. ${owned.length ? `numbers: ${owned.map(numberText).join('; ')}. Show these to the user and suggest saving them as a contact named call4me` : 'number: assigned on the first call. Explain this during setup, then show calling_number from the first call result'}. Call4me may ring the personal phone in the user's profile if a business needs account verification or the user asks to join. Answer and press 1 to join; press * or hang up to hand the call back. They can also just listen in (listen_in on call4me_place_call, or mode "listen" on call4me_connect_me) and press 1 to take over. Give a heads up before a call that may ring them and before connecting them.`, out);
       })()) as never,
@@ -469,25 +339,16 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     (async (args: { category?: string }) =>
       guard(async () => {
         if (!args.category) {
-          const text = intake.categories.map((c) => `${c.slug}: ${c.name} (${c.examples})`).join('\n');
-          return ok(text, { categories: intake.categories.map((c) => ({ slug: c.slug, name: c.name, examples: c.examples })) });
+          const listed = categoriesView(intake);
+          return ok(listed.categories.map((c) => `${c.slug}: ${c.name} (${c.examples})`).join('\n'), listed);
         }
-        const category = intake.bySlug(args.category)!;
-        const profile = await profiles(env.DB).get(account.id);
-        const fields = category.fields.map((f) => ({
-          key: f.key,
-          label: f.label,
-          required: f.required,
-          ask: f.ask,
-          from_profile: f.profile ?? null,
-          known: Boolean(f.profile && profile[f.profile]),
-        }));
+        const needs = await requirementsView(env, intake, account.id, args.category);
         const text = [
-          `${category.name}. Before calling, make sure you have:`,
-          ...fields.map((f) => `- ${f.key}${f.required ? '' : ' (optional)'}: ${f.known ? `have it (profile ${f.from_profile})` : f.ask}`),
+          `${needs.name}. Before calling, make sure you have:`,
+          ...needs.fields.map((f) => `- ${f.key}${f.required ? '' : ' (optional)'}: ${f.known ? `have it (profile ${f.from_profile})` : f.ask}`),
           "Pass answers for this call in place_call \"details\" by key. Ask only for missing details this call needs. Offer to save reusable details with call4me_save_profile only with the user's agreement.",
         ].join('\n');
-        return ok(text, { category: category.slug, fields });
+        return ok(text, needs);
       })()) as never,
   );
 
@@ -501,9 +362,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     }),
     (async () =>
       guard(async () => {
-        const saved = await profiles(env.DB).get(account.id);
-        const profile = Object.fromEntries(intake.profileKeys.filter((k) => saved[k]).map((k) => [k, saved[k]]));
-        const missing = intake.profileKeys.filter((k) => !profile[k] && !PROFILE_FIELDS[k].optional);
+        const { profile, missing } = await profileView(env, intake, account.id);
         const text = [
           ...Object.entries(profile).map(([k, v]) => `${k}: ${v}`),
           missing.length ? `not saved: ${missing.join(', ')}. These are not setup requirements. Only ask for details needed by a specific call, using call4me_get_requirements.` : 'complete',
@@ -517,14 +376,13 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     titled({
       title: 'Save caller profile',
       description: 'Save facts that are the same on every call, so they never have to be asked again. Merges into what is saved; an empty string removes a field. Only save details the user agreed to keep for future calls; use place_call details for information supplied for one call. The user can see, edit and delete everything saved on their call4me account page.',
-      inputSchema: z.object(Object.fromEntries(intake.profileKeys.map((k) => [k, z.string().max(500).optional().describe(PROFILE_FIELDS[k].label)]))),
+      inputSchema: profileInput(surface),
       annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
     }),
     (async (args: Record<string, string | undefined>) =>
       guard(async () => {
-        const saved = await profiles(env.DB).update(account.id, Object.fromEntries(Object.entries(args).filter(([, v]) => v !== undefined)) as Record<string, string>);
-        const shown = Object.fromEntries(intake.profileKeys.filter((k) => saved[k]).map((k) => [k, saved[k]]));
-        return ok(`saved. profile now has: ${Object.keys(shown).join(', ') || 'nothing'}`, { profile: shown });
+        const saved = await saveProfile(env, intake, account.id, args);
+        return ok(`saved. profile now has: ${Object.keys(saved.profile).join(', ') || 'nothing'}`, saved);
       })()) as never,
   );
 
