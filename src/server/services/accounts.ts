@@ -103,15 +103,19 @@ export function accounts(db: D1Database) {
 
     /** Take `cents` out as `kind` only if the balance covers it (see hold). False when short or already recorded. */
     async spend(accountId: string, cents: number, kind: LedgerKind, ref: string, note: string): Promise<boolean> {
-      const r = await db
+      const r = await this.spendStatement(accountId, cents, kind, ref, note).run();
+      return (r.meta.changes ?? 0) > 0;
+    },
+
+    /** spend's statement, to run in a batch with what the credits pay for (it changes no row when short). */
+    spendStatement(accountId: string, cents: number, kind: LedgerKind, ref: string, note: string): D1PreparedStatement {
+      return db
         .prepare(
           `INSERT OR IGNORE INTO ledger (id, account_id, amount_cents, kind, ref, note, created_at)
            SELECT ?1, ?2, -?3, ?4, ?5, ?6, ?7
            WHERE (SELECT COALESCE(SUM(amount_cents), 0) FROM ledger WHERE account_id = ?2) >= ?3`,
         )
-        .bind(newId(), accountId, cents, kind, ref, note, now())
-        .run();
-      return (r.meta.changes ?? 0) > 0;
+        .bind(newId(), accountId, cents, kind, ref, note, now());
     },
 
     async ledger(accountId: string, limit = 50) {

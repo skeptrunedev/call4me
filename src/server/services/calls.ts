@@ -1,4 +1,5 @@
 import { newId, now } from '../lib/ids';
+import { replayOf, type Idempotency } from '../lib/idempotency';
 import { checkDialable, type PhoneCheck } from '../lib/phone';
 import { accounts, type Account } from './accounts';
 import { catalog, missingMessage, PROFILE_FIELDS, resolveIntake, type Surface } from './intake';
@@ -73,6 +74,9 @@ export interface CallRow {
   error: string | null;
   /** Inbound only: the outbound call whose unfinished task this callback picked up. */
   callback_for: string | null;
+  /** The Idempotency-Key the request placing it sent, and its body's fingerprint (lib/idempotency.ts). */
+  idempotency_key: string | null;
+  idempotency_hash: string | null;
   created_at: number;
 }
 
@@ -178,6 +182,14 @@ export function billedCents(talkSeconds: number, pricePerMinuteCents: number, ho
 export const holdSecondsAt = (row: Pick<CallRow, 'hold_seconds' | 'hold_since'>, at: number) =>
   (row.hold_seconds ?? 0) + (row.hold_since ? Math.max(0, Math.round((at - row.hold_since) / 1000)) : 0);
 
+/** A call recorded and ready to dial, with its per-call secrets (account PINs), which are never stored. */
+interface CreatedCall {
+  call: CallRow;
+  secrets: { label: string; value: string }[];
+  to: Dialable;
+  ownerPhone: string | null;
+}
+
 export function calls(db: D1Database) {
   return {
     /**
@@ -245,9 +257,27 @@ export function calls(db: D1Database) {
     /** Validate, check money and limits, and record the call as queued. Dialing is the caller's next step. */
     /**
      * Returns the call plus its per-call secrets (account PINs): those reach the caller's
-     * instructions but are never written to the database.
+     * instructions but are never written to the database. With an Idempotency-Key the request
+     * already made a call for, it throws IdempotentReplay with that call before checking anything:
+     * a retry must get its call back even after the first one spent the balance.
      */
-    async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number, surface: Surface = 'agents'): Promise<{ call: CallRow; secrets: { label: string; value: string }[]; to: Dialable; ownerPhone: string | null }> {
+    async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number, surface: Surface = 'agents', idempotency?: Idempotency): Promise<CreatedCall> {
+      const replay = async () => idempotency && replayOf(await this.byIdempotencyKey(account.id, idempotency.key), idempotency);
+      const earlier = await replay();
+      if (earlier) throw earlier;
+      try {
+        return await this.record(account, input, pricePerMinuteCents, surface, idempotency);
+      } catch (err) {
+        // A concurrent request with the same key won meanwhile: the idempotency index refused this
+        // row, or the winner's hold left the balance short. Answer as that request.
+        const winner = await replay();
+        if (winner) throw winner;
+        throw err;
+      }
+    },
+
+    /** create's work once the Idempotency-Key (if any) is known to be new. */
+    async record(account: Account, input: PlaceCallInput, pricePerMinuteCents: number, surface: Surface, idempotency: Idempotency | undefined): Promise<CreatedCall> {
       const { category, intake, onBehalfOf, to, callerName, callingAs, callbackNumber, ownerPhone } = await this.validate(account, input, surface);
 
       // Credits up front: the call holds its maximum cost now and settles when it ends.
@@ -272,19 +302,33 @@ export function calls(db: D1Database) {
         ...(callbackNumber ? { callback_number: callbackNumber } : {}),
       };
       const id = `call_${newId()}`;
-      if (!(await accounts(db).hold(account.id, holdCents, `hold:${id}`, `up to ${maxMinutes} min to ${input.business.trim()}`))) {
-        throw new CallError('another call is holding those credits; wait for it to finish, add credits, or pass a smaller max_minutes', 402);
-      }
-      await db
-        .prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, category, status, hold_cents, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?)`)
-        .bind(id, account.id, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(brief), category.slug, holdCents, now())
-        .run();
+      // The hold and the row commit together: the row is written only if the hold was, and a row the
+      // idempotency index refuses (a concurrent request with the same key won) takes its hold back with it.
+      const [hold] = await db.batch([
+        accounts(db).spendStatement(account.id, holdCents, 'hold', `hold:${id}`, `up to ${maxMinutes} min to ${input.business.trim()}`),
+        db
+          .prepare(
+            `INSERT INTO calls (id, account_id, to_number, business, goal, brief, category, status, hold_cents, idempotency_key, idempotency_hash, created_at)
+             SELECT ?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?, ?, ? WHERE EXISTS (SELECT 1 FROM ledger WHERE ref = ?)`,
+          )
+          .bind(id, account.id, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(brief), category.slug, holdCents, idempotency?.key ?? null, idempotency?.fingerprint ?? null, now(), `hold:${id}`),
+      ]);
+      if (!hold.meta.changes) throw new CallError('another call is holding those credits; wait for it to finish, add credits, or pass a smaller max_minutes', 402);
       const secrets = intake.known.filter((k) => k.sensitive).map((k) => ({ label: k.label, value: k.value }));
       return { call: (await this.byId(id))!, secrets, to, ownerPhone };
     },
 
     byId(id: string): Promise<CallRow | null> {
       return db.prepare(`SELECT * FROM calls WHERE id = ?`).bind(id).first<CallRow>();
+    },
+
+    byIdempotencyKey(accountId: string, key: string): Promise<CallRow | null> {
+      return db.prepare(`SELECT * FROM calls WHERE account_id = ? AND idempotency_key = ?`).bind(accountId, key).first<CallRow>();
+    },
+
+    /** The carrier never took the call: free its Idempotency-Key, so a retry with it places the call. */
+    async releaseIdempotencyKey(id: string): Promise<void> {
+      await db.prepare(`UPDATE calls SET idempotency_key = NULL, idempotency_hash = NULL WHERE id = ?`).bind(id).run();
     },
 
     async forAccount(accountId: string, id: string): Promise<CallRow> {

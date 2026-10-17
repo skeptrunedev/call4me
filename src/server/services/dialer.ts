@@ -1,4 +1,5 @@
 import { newId, now } from '../lib/ids';
+import type { Idempotency } from '../lib/idempotency';
 import { hmacHex } from '../lib/keys';
 import { checkDialable } from '../lib/phone';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
@@ -118,10 +119,22 @@ function personFor(origin: string, account: Account, profile: Profile, phone: st
   return { name: profile.full_name || account.display_name || 'the account owner', phone, from, webhookUrl: `${origin}/webhooks/telnyx`, connectWhen, listenIn };
 }
 
-export async function placeCall(env: Env, origin: string, account: Account, input: PlaceCallInput & { voice?: Voice }, surface: Surface = 'agents', execution: { unattended?: boolean } = {}): Promise<CallRow> {
+/**
+ * Throws IdempotentReplay instead when `execution.idempotency` names a key an earlier request
+ * already placed a call with (calls.create).
+ */
+export async function placeCall(
+  env: Env,
+  origin: string,
+  account: Account,
+  input: PlaceCallInput & { voice?: Voice },
+  surface: Surface = 'agents',
+  execution: { unattended?: boolean; idempotency?: Idempotency } = {},
+): Promise<CallRow> {
   const price = pricePerMinuteTo(env, input.to);
   const db = calls(env.DB);
-  const { call, secrets, to, ownerPhone } = await db.create(account, input, price, surface);
+  const { call, secrets, to, ownerPhone } = await db.create(account, input, price, surface, execution.idempotency);
+  let controlId: string | null = null;
   const brief = JSON.parse(call.brief) as Brief;
   if (!account.display_name) await accounts(env.DB).setDisplayName(account.id, brief.on_behalf_of);
 
@@ -171,7 +184,7 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
     };
     const session = sessionFor(env, call.id);
     await session.fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
-    const controlId = await telnyx(env).dial({
+    controlId = await telnyx(env).dial({
       to: call.to_number,
       from,
       webhookUrl: `${origin}/webhooks/telnyx`,
@@ -186,6 +199,8 @@ export async function placeCall(env: Env, origin: string, account: Account, inpu
     // The full carrier error stays on the call row for debugging; the agent gets the short version.
     console.error('place call failed', call.id, err);
     await db.finish(call.id, { status: 'failed', error: String(err), pricePerMinuteCents: price });
+    // Refused before the carrier took it, the call was never placed, so a retry with its key places it.
+    if (!controlId && execution.idempotency) await db.releaseIdempotencyKey(call.id);
     if (err instanceof VoiceDeployLocked) {
       throw new CallError(`could not place the call (${call.id}): call4me is updating its phone service. nothing was charged; place it again in about ${err.retryInSeconds} seconds.`, 503, call.id);
     }

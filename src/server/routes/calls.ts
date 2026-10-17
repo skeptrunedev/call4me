@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { z } from 'zod';
 import { bearerAccount } from '../lib/auth';
+import { now } from '../lib/ids';
 import {
   answerInput,
   balancePath,
@@ -25,13 +26,14 @@ import {
   waitSecondsInput,
 } from '../lib/call-schema';
 import { origin, type AppContext, type AppEnv } from '../lib/context';
+import { fingerprintOf, idempotencyKeyOf, IdempotentReplay, type Idempotency } from '../lib/idempotency';
 import { answerQuestion, balanceView, categoriesView, callView, connectPerson, followCall, followedView, hangUp, listCalls, profileView, requirementsView, saveProfile } from '../services/call-ops';
-import { CallError } from '../services/calls';
+import { CallError, type CallRow } from '../services/calls';
 import { placeCall } from '../services/dialer';
 import { catalog } from '../services/intake';
 import { ProfileError } from '../services/profiles';
 import { NumberError } from '../services/numbers';
-import { scheduledCalls, scheduledView } from '../services/scheduled';
+import { scheduledCalls, scheduledView, type ScheduledRow } from '../services/scheduled';
 
 /** Calls, the balance and the caller profile over HTTP: the same operations as the MCP call tools. */
 export const callRoutes = new Hono<AppEnv>();
@@ -57,6 +59,21 @@ function failure(c: AppContext, err: unknown) {
   if (err instanceof CallError || err instanceof NumberError) return c.json({ error: err.message }, err.status as 400);
   if (err instanceof ProfileError) return c.json({ error: err.message }, 400);
   throw err;
+}
+
+/**
+ * A retry under an Idempotency-Key already used: the same request gets what the first one made
+ * (200, Idempotent-Replayed), and nothing new is placed; a different request is refused (422).
+ */
+function replayed<T, V extends object>(c: AppContext, replay: IdempotentReplay<T>, view: (row: T) => V) {
+  if (!replay.sameRequest) return c.json({ error: replay.message }, 422);
+  c.header('idempotent-replayed', 'true');
+  return c.json(view(replay.row), 200);
+}
+
+/** The Idempotency-Key header with the parsed body's fingerprint: undefined without the header. */
+async function idempotencyOf(key: string | null, input: unknown): Promise<Idempotency | undefined> {
+  return key ? { key, fingerprint: await fingerprintOf(input) } : undefined;
 }
 
 const invalid = (c: AppContext, error: z.ZodError) => c.json({ error: z.prettifyError(error) }, 400);
@@ -117,11 +134,15 @@ callRoutes.get(callsPath, async (c) => {
 callRoutes.post(callsPath, async (c) => {
   const account = await signedIn(c);
   if (!account) return unauthorized(c);
+  const key = idempotencyKeyOf(c.req.header('idempotency-key'));
+  if ('error' in key) return c.json({ error: key.error }, 400);
   const input = placeInput.safeParse(await body(c));
   if (!input.success) return invalid(c, input.error);
   try {
-    return c.json(callView(await placeCall(c.env, origin(c), account, input.data), []), 201);
+    const idempotency = await idempotencyOf(key.key, input.data);
+    return c.json(callView(await placeCall(c.env, origin(c), account, input.data, 'agents', { idempotency }), []), 201);
   } catch (err) {
+    if (err instanceof IdempotentReplay) return replayed(c, err as IdempotentReplay<CallRow>, (row) => callView(row, []));
     return failure(c, err);
   }
 });
@@ -183,12 +204,16 @@ callRoutes.post(route(callHangUpPath), async (c) => {
 callRoutes.post(scheduledCallsPath, async (c) => {
   const account = await signedIn(c);
   if (!account) return unauthorized(c);
+  const key = idempotencyKeyOf(c.req.header('idempotency-key'));
+  if ('error' in key) return c.json({ error: key.error }, 400);
   const input = scheduleInput.safeParse(await body(c));
   if (!input.success) return invalid(c, input.error);
   const { call_at, ...call } = input.data;
   try {
-    return c.json(scheduledView(await scheduledCalls(c.env.DB).schedule(account, call, call_at, 'agents')), 201);
+    const idempotency = await idempotencyOf(key.key, input.data);
+    return c.json(scheduledView(await scheduledCalls(c.env.DB).schedule(account, call, call_at, 'agents', now(), idempotency)), 201);
   } catch (err) {
+    if (err instanceof IdempotentReplay) return replayed(c, err as IdempotentReplay<ScheduledRow>, scheduledView);
     return failure(c, err);
   }
 });

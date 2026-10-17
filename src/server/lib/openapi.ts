@@ -49,6 +49,7 @@ import {
   x402CallInput,
   x402CallsPath,
 } from './call-schema';
+import { IDEMPOTENCY_KEY_MAX } from './idempotency';
 import { DESTINATION_PRICE_CENTS } from './rates';
 import { MAX_TOPUP_CENTS, MIN_TOPUP_CENTS } from '../services/topups';
 import { recordingDescription, recordingInput, recordingOutput, recordingPath } from './recording-schema';
@@ -64,6 +65,13 @@ export function openApiDocument(site: string, pricePerMinuteCents = 25) {
   const query = (name: string, description: string, s: z.ZodType) => ({ name, in: 'query', required: false, description, schema: schema(s) });
   const body = (s: z.ZodType) => ({ required: true, content: { 'application/json': { schema: schema(s) } } });
   const callId = path('call_id', 'the call id from placing or listing calls ("call_...")', z.string());
+  const idempotencyKey = (made: string) => ({
+    name: 'Idempotency-Key',
+    in: 'header',
+    required: false,
+    description: `A unique value per request (a UUID), kept on retries of it. A retry with the same key and body returns the ${made} the first request made (200, with Idempotent-Replayed: true) instead of placing another; the same key with a different body is refused (422). Keys belong to the account and never expire. A request refused before anything was placed (422 "Not calling yet", 402) does not use up its key.`,
+    schema: schema(z.string().min(1).max(IDEMPOTENCY_KEY_MAX)),
+  });
   const error = { description: 'Request failed', content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string' } }, required: ['error'] } } } };
   // Paid over x402 (USDC on Base): the 402 carries the exact amount in PAYMENT-REQUIRED.
   const paymentRequired = { description: 'Payment required: the x402 v2 requirements, also in the PAYMENT-REQUIRED header', content: { 'application/json': { schema: { type: 'object', properties: { x402Version: { type: 'integer' }, accepts: { type: 'array', items: { type: 'object' } } }, required: ['x402Version', 'accepts'] } } } };
@@ -145,8 +153,9 @@ export function openApiDocument(site: string, pricePerMinuteCents = 25) {
           description:
             'Call a business for the user and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses with 422 "Not calling yet" until the category\'s required information is known, listing exactly what to ask the user. Returns at once with the call; follow it with GET /api/calls/{call_id}?wait_seconds=30 until finished, answering any open question right away. Credits for the maximum length are held up front; billed per minute from pickup (phone menus and conversation; hold time at half price), rounded up; unanswered calls are free.',
           security: bearer,
+          parameters: [idempotencyKey('call')],
           requestBody: body(placeCallInput('agents')),
-          responses: { '201': json('The call, dialing', callOutput), '400': error, '401': error, '402': error, '403': error, '422': error },
+          responses: { '200': json('A retry under the same Idempotency-Key: the call the first request placed', callOutput), '201': json('The call, dialing', callOutput), '400': error, '401': error, '402': error, '403': error, '422': error },
         },
       },
       [callPath]: {
@@ -192,8 +201,9 @@ export function openApiDocument(site: string, pricePerMinuteCents = 25) {
           operationId: 'scheduleCall',
           description: 'Place a call later (the business is closed, or the user wants it at a set time). Takes everything POST /api/calls takes, plus call_at, and checks it now. Nobody may be following the call when it runs, so give every fact and all the flexibility it needs up front. Credits are held when it dials.',
           security: bearer,
+          parameters: [idempotencyKey('scheduled call')],
           requestBody: body(scheduleCallInput('agents')),
-          responses: { '201': json('The scheduled call', scheduledOutput), '400': error, '401': error, '422': error },
+          responses: { '200': json('A retry under the same Idempotency-Key: the call the first request scheduled', scheduledOutput), '201': json('The scheduled call', scheduledOutput), '400': error, '401': error, '422': error },
         },
       },
       [scheduledCallPath]: {

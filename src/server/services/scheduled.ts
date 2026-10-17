@@ -1,3 +1,4 @@
+import { isUniqueViolation, replayOf, type Idempotency } from '../lib/idempotency';
 import { newId, now } from '../lib/ids';
 import { formatPhone } from '../lib/phone';
 import { accounts, type Account } from './accounts';
@@ -26,6 +27,9 @@ export interface ScheduledRow {
   status: ScheduledStatus;
   call_id: string | null;
   error: string | null;
+  /** The Idempotency-Key the request scheduling it sent, and its body's fingerprint (lib/idempotency.ts). */
+  idempotency_key: string | null;
+  idempotency_hash: string | null;
   created_at: number;
 }
 
@@ -112,8 +116,17 @@ export function scheduledText(v: ScheduledView): string {
 
 export function scheduledCalls(db: D1Database) {
   return {
-    /** Check the call as call4me_place_call would, short of money, and save it to dial at callAt. */
-    async schedule(account: Account, input: ScheduledInput, callAt: string, surface: Surface, at = now()): Promise<ScheduledRow> {
+    /**
+     * Check the call as call4me_place_call would, short of money, and save it to dial at callAt.
+     * With an Idempotency-Key an earlier request already scheduled a call with, it throws
+     * IdempotentReplay with that schedule instead.
+     */
+    async schedule(account: Account, input: ScheduledInput, callAt: string, surface: Surface, at = now(), idempotency?: Idempotency): Promise<ScheduledRow> {
+      const replay = async () =>
+        idempotency &&
+        replayOf(await db.prepare(`SELECT * FROM scheduled_calls WHERE account_id = ? AND idempotency_key = ?`).bind(account.id, idempotency.key).first<ScheduledRow>(), idempotency);
+      const earlier = await replay();
+      if (earlier) throw earlier;
       const when = parseCallAt(callAt, input.timezone);
       if (when <= at) throw new CallError(`call_at ${new Date(when).toISOString()} has already passed (it is ${new Date(at).toISOString()}); to call now, use call4me_place_call`);
       if (when - at > SCHEDULE_LIMITS.maxAheadMs) throw new CallError(`call_at: calls can be scheduled up to ${SCHEDULE_LIMITS.maxAheadMs / 86_400_000} days ahead`);
@@ -126,10 +139,19 @@ export function scheduledCalls(db: D1Database) {
       if ((pending?.n ?? 0) >= SCHEDULE_LIMITS.maxPending) throw new CallError(`${SCHEDULE_LIMITS.maxPending} calls are already scheduled; cancel one with call4me_cancel_scheduled_call first`, 429);
 
       const id = `sched_${newId()}`;
-      await db
-        .prepare(`INSERT INTO scheduled_calls (id, account_id, call_at, to_number, business, goal, input, surface, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)`)
-        .bind(id, account.id, when, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(input), surface, at)
-        .run();
+      try {
+        await db
+          .prepare(
+            `INSERT INTO scheduled_calls (id, account_id, call_at, to_number, business, goal, input, surface, status, idempotency_key, idempotency_hash, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?)`,
+          )
+          .bind(id, account.id, when, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(input), surface, idempotency?.key ?? null, idempotency?.fingerprint ?? null, at)
+          .run();
+      } catch (err) {
+        // A concurrent request with the same key won the idempotency index.
+        const winner = isUniqueViolation(err) && (await replay());
+        if (winner) throw winner;
+        throw err;
+      }
       return (await this.forAccount(account.id, id))!;
     },
 

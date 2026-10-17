@@ -1536,6 +1536,20 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "A unique value per request (a UUID), kept on retries of it. A retry with the same key and body returns the call the first request made (200, with Idempotent-Replayed: true) instead of placing another; the same key with a different body is refused (422). Keys belong to the account and never expire. A request refused before anything was placed (422 \"Not calling yet\", 402) does not use up its key.",
+            "schema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -1673,6 +1687,190 @@
           }
         },
         "responses": {
+          "200": {
+            "description": "A retry under the same Idempotency-Key: the call the first request placed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "queued",
+                        "dialing",
+                        "in_progress",
+                        "completed",
+                        "no_answer",
+                        "busy",
+                        "failed",
+                        "canceled"
+                      ]
+                    },
+                    "finished": {
+                      "type": "boolean",
+                      "description": "true once the call ended and its recap is written; poll until then"
+                    },
+                    "direction": {
+                      "type": "string",
+                      "enum": [
+                        "outbound",
+                        "inbound"
+                      ]
+                    },
+                    "business": {
+                      "type": "string"
+                    },
+                    "number": {
+                      "type": "string"
+                    },
+                    "calling_number": {
+                      "description": "the call4me number that rings the user when they join",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "goal": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "outcome": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "result": {
+                              "type": "string"
+                            },
+                            "summary": {
+                              "type": "string"
+                            },
+                            "details": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {}
+                            }
+                          },
+                          "required": [
+                            "result",
+                            "summary"
+                          ],
+                          "additionalProperties": {}
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "open_questions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "question": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "question"
+                        ],
+                        "additionalProperties": {}
+                      },
+                      "description": "the business is waiting on the line: answer right away"
+                    },
+                    "answered_questions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "question": {
+                            "type": "string"
+                          },
+                          "answer": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "question",
+                          "answer"
+                        ],
+                        "additionalProperties": {}
+                      }
+                    },
+                    "talk_minutes": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "cost": {
+                      "type": "string"
+                    },
+                    "cost_cents": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991,
+                      "description": "billed so far, in US cents; final once finished"
+                    },
+                    "ended": {
+                      "description": "who ended the call and why",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "error": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "transcript": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "finished",
+                    "direction",
+                    "business",
+                    "number",
+                    "calling_number",
+                    "goal",
+                    "outcome",
+                    "open_questions",
+                    "answered_questions",
+                    "talk_minutes",
+                    "cost",
+                    "cost_cents",
+                    "ended",
+                    "error",
+                    "created_at"
+                  ],
+                  "additionalProperties": {}
+                }
+              }
+            }
+          },
           "201": {
             "description": "The call, dialing",
             "content": {
@@ -2625,6 +2823,20 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "A unique value per request (a UUID), kept on retries of it. A retry with the same key and body returns the scheduled call the first request made (200, with Idempotent-Replayed: true) instead of placing another; the same key with a different body is refused (422). Keys belong to the account and never expire. A request refused before anything was placed (422 \"Not calling yet\", 402) does not use up its key.",
+            "schema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -2769,6 +2981,57 @@
           }
         },
         "responses": {
+          "200": {
+            "description": "A retry under the same Idempotency-Key: the call the first request scheduled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$schema": "https://json-schema.org/draft/2020-12/schema",
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "dialing",
+                        "placed",
+                        "failed",
+                        "canceled"
+                      ]
+                    },
+                    "business": {
+                      "type": "string"
+                    },
+                    "number": {
+                      "type": "string"
+                    },
+                    "call_at": {
+                      "type": "string"
+                    },
+                    "call_id": {
+                      "description": "the call it became, once dialed",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "business",
+                    "number",
+                    "call_at",
+                    "call_id"
+                  ],
+                  "additionalProperties": {}
+                }
+              }
+            }
+          },
           "201": {
             "description": "The scheduled call",
             "content": {
