@@ -6,7 +6,7 @@
  */
 
 /** Both sides spoke at most this long before the hard stop. */
-export const TALK_RECENT_MS = 30_000;
+const TALK_RECENT_MS = 30_000;
 
 export function midConversation(o: { theirsAt: number; oursAt: number; personOn: boolean; now: number }): boolean {
   const recent = (at: number) => at > 0 && o.now - at < TALK_RECENT_MS;

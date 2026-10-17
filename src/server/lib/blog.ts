@@ -117,7 +117,7 @@ function linkTimestamps(html: string): string {
   });
 }
 
-export function renderPost(src: PostSource): Post {
+function renderPost(src: PostSource): Post {
   const { meta, body: full } = parseFrontmatter(src.markdown);
   if (!meta.title || !meta.date) throw new Error(`blog post ${src.slug}: frontmatter needs title and date`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(meta.date)) throw new Error(`blog post ${src.slug}: date must be YYYY-MM-DD`);

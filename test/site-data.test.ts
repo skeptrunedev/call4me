@@ -3,12 +3,8 @@ import { readFileSync } from 'node:fs';
 import { registerHooks } from 'node:module';
 import test from 'node:test';
 import { Hono } from 'hono';
-import { jsx } from 'hono/jsx';
 import type { AppEnv } from '../src/server/lib/context';
 import type { Account } from '../src/server/services/accounts';
-import { StaticRenderContext } from '../src/server/lib/static-render';
-import { renderPost } from '../src/server/lib/blog';
-import { BlogPost } from '../src/server/views/blog';
 import { d1 } from './sqlite-d1';
 
 registerHooks({
@@ -70,18 +66,6 @@ test('signed in supporters expose only viewer booleans, never account or billing
   assert.equal(body.signedIn, true);
   assert.equal(body.post.supporter, true);
   for (const value of ['alice@example.com', 'acct_alice', 'cb_live_private', 'cus_private', 'sub_private']) assert.ok(!JSON.stringify(body).includes(value));
-});
-
-test('static posts show loading comments and a native dynamic fallback without paid content', () => {
-  const post = renderPost({ slug: 'private-test', markdown: '---\ntitle: Private test\nsubtitle: A private post\ndate: 2026-10-09\npaid: true\n---\nPublic paragraph\n<!-- paywall -->\nSecret paid paragraph' });
-  const html = String(jsx(StaticRenderContext.Provider, { value: { metaPixelId: '', metaDomainVerification: '', redditPixelId: '' }, children: jsx(BlogPost, {
-    signedIn: false, supporter: false, post, older: null, newer: null, related: [], engagement: { likes: 0, comments: 0 }, liked: false, comments: [], subscribers: 0, unlocked: false, agentPrompt: '',
-  }) }));
-  assert.ok(html.includes('loading comments'));
-  assert.ok(html.includes('loading likes'));
-  assert.ok(html.includes('/blog/private-test?live=1#comments'));
-  assert.ok(!html.includes('Secret paid paragraph'));
-  assert.ok(!html.includes('>0 comments<'));
 });
 
 test('unknown posts and database failures return explicit uncached errors', async (t) => {

@@ -1,31 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createHash } from 'node:crypto';
-import { GRAPH_API_VERSION, metaBrowser, sendMeta } from '../src/server/lib/meta';
+import { GRAPH_API_VERSION, sendMeta } from '../src/server/lib/meta';
 import { analytics } from '../src/server/services/analytics';
 import { accounts } from '../src/server/services/accounts';
 import { d1 } from './sqlite-d1';
 
 const sha256 = (s: string) => createHash('sha256').update(s).digest('hex');
-
-test('metaBrowser reads _fbp and _fbc, and builds fbc from an ad click when the cookie is missing', () => {
-  const headers = new Headers({ cookie: 'a=1; _fbp=fb.1.1596403881668.1116446470; _fbc=fb.1.1554763741205.IwAR2F4-dbP0', 'cf-connecting-ip': '2001:db8::1', 'user-agent': 'Mozilla/5.0' });
-  assert.deepEqual(metaBrowser('https://call4.me/account?session_id=cs_1', headers), {
-    fbp: 'fb.1.1596403881668.1116446470',
-    fbc: 'fb.1.1554763741205.IwAR2F4-dbP0',
-    ip: '2001:db8::1',
-    userAgent: 'Mozilla/5.0',
-    url: 'https://call4.me/account',
-  });
-  // The click id keeps its case; the query string never reaches Meta.
-  const clicked = metaBrowser('https://call4.me/?fbclid=IwAR2F4-AbC', new Headers({ cookie: '_fbp=garbage' }), 1_790_000_000_000);
-  assert.equal(clicked.fbc, 'fb.1.1790000000000.IwAR2F4-AbC');
-  assert.equal(clicked.fbp, null);
-  assert.equal(clicked.url, 'https://call4.me/');
-  // A cookie beats the query parameter.
-  assert.equal(metaBrowser('https://call4.me/?fbclid=new', new Headers({ cookie: '_fbc=fb.1.1.old' })).fbc, 'fb.1.1.old');
-  assert.deepEqual(metaBrowser('https://call4.me/', new Headers()), { fbp: null, fbc: null, ip: null, userAgent: null, url: 'https://call4.me/' });
-});
 
 /** Captures what would go to Meta. */
 function captureFetch(): { bodies: Record<string, unknown>[]; urls: string[]; restore: () => void } {

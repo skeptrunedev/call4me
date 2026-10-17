@@ -18,7 +18,7 @@ export const HOLD_KEYWORDS = ['customer service hold times', 'customer service h
  * where the first live person speaks, or the sentence saying no person was reached. `path` is
  * verbatim from the "What got us through" column in the data post's table.
  */
-export const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
+const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
   'aaa-insurance-customer-service': { evidence: '1:24 Representative: Thank you for calling AAA Insurance. My name is [name removed]. How can I help you?', path: 'Press 4 (membership or insurance quote), then a ZIP code' },
   'aaa-tow-reimbursement': { evidence: '1:08 Representative: AAA reimbursements, how can I help?', path: 'No menu; staying on the line after the recorded mailing instructions' },
   'afternic-domain-broker-phone-number': { evidence: '0:44 Representative: Hi, you\'re through to [broker\'s first name muted] at GoDaddy. How may I help?', path: 'Staying on the line through the greeting, which played twice' },

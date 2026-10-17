@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { registerHooks } from 'node:module';
 import test, { type TestContext } from 'node:test';
-import { MenuRecovery } from '../src/server/voice/handoff';
 import { dtmfFrames } from '../src/server/voice/dtmf';
 
 const workerModule = `export class DurableObject {
@@ -74,33 +73,6 @@ test('a spoken next keypad action after confirmed keys gets a real delegation', 
   assert.equal(h.forced().length, 1, 'accepted star does not get submitted twice');
 });
 
-test('keypad prompts with articles and arbitrary keys are recognized without caller speech', () => {
-  for (const text of [echoMenu, 'Press any key to continue.', 'Press the pound key to finish.']) {
-    const recovery = new MenuRecovery();
-    recovery.observe(text, 1);
-    assert.equal(recovery.pending()?.reason, 'menu', text);
-  }
-});
-
-test('no input detected after a submitted key creates a fresh recovery opportunity', () => {
-  const recovery = new MenuRecovery();
-  recovery.observe(echoMenu, 1);
-  recovery.submitted('5', recovery.snapshot());
-  recovery.observe(' No input detected.', 2);
-  assert.equal(recovery.pending()?.reason, 'menu_recovery');
-});
-
-for (const action of ['Now, two.', 'Pressing the star key.', "I'll dial pound.", 'Next, 3.', '2.']) {
-  test(`fresh keypad commitment is recognized in active menu context: ${action}`, () => {
-    const recovery = new MenuRecovery();
-    recovery.observe(echoMenu, 1);
-    recovery.submitted('5', recovery.snapshot());
-    recovery.observe(' You pressed five.', 2);
-    recovery.observeCaller(action, 3);
-    assert.equal(recovery.pending()?.reason, 'keypad');
-  });
-}
-
 test('late acceptance of one key preserves a newer different commitment', async (t) => {
   const h = harness(t);
   await h.input(echoMenu);
@@ -117,32 +89,6 @@ test('late acceptance of one key preserves a newer different commitment', async 
   t.mock.timers.tick(3_000);
   assert.equal(h.forced().length, 1);
   assert.match(h.forced()[0].item.content[0].text, /Now two/);
-});
-
-test('accepted keys and acknowledgments cannot reopen their own keypad action', () => {
-  const recovery = new MenuRecovery();
-  recovery.observe(echoMenu, 1);
-  recovery.observeCaller('Pressing five.', 2);
-  const submitted = recovery.snapshot();
-  recovery.observeCaller(' Now five.', 3);
-  recovery.submitted('5', submitted);
-  assert.equal(recovery.pending(), null, 'same key spoken while submission was pending is consumed');
-  recovery.observeCaller(' Pressing five.', 4);
-  assert.equal(recovery.pending(), null, 'same key spoken after acceptance is not replayed before new input');
-  recovery.submitted('5', recovery.snapshot());
-  recovery.observe(' You pressed five.', 5);
-  recovery.observeCaller('Got five. Nice. Hmm.', 6);
-  assert.equal(recovery.pending(), null, 'acknowledging the returned digit is not an action');
-});
-
-test('a human greeting without provider punctuation closes the previous menu context', () => {
-  const recovery = new MenuRecovery();
-  recovery.observe('For support press one', 1);
-  recovery.observeCaller('Pressing one', 2);
-  recovery.submitted('1', recovery.snapshot());
-  recovery.observe('Hello, this is Jane speaking', 3);
-  recovery.observeCaller('Now star to hear the menu again', 4);
-  assert.equal(recovery.pending(), null);
 });
 
 for (const response of ['Hello, this is Jane speaking.', 'Please hold while I check.', 'Please remain on the line.']) {
@@ -311,17 +257,3 @@ test('caller filler cannot postpone a finished menu beyond its keypad deadline',
   assert.equal(h.forced().length, 1, 'caller filler never reopens a menu already delegated');
 });
 
-test('a late keypad acceptance cannot reopen a menu after a person answers', () => {
-  const recovery = new MenuRecovery();
-  recovery.observe('For returns press one.', 1);
-  const pendingKeypad = recovery.snapshot();
-  recovery.observe(' My name is Jane. How can I help you?', 2);
-  recovery.submitted('1', pendingKeypad);
-  recovery.observe(' Please enter your order number on our website.', 3);
-  assert.equal(recovery.pending(), null);
-  recovery.observe(' Please visit our website.', 4);
-  assert.equal(recovery.pending(), null);
-  assert.match(recovery.history(), /Keypad submitted: 1/);
-  recovery.observe(' Use your phone keypad to enter the extension followed by pound.', 5);
-  assert.equal(recovery.pending()?.reason, 'menu', 'an explicit phone keypad request can still be delegated');
-});

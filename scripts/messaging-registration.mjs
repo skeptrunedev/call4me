@@ -35,7 +35,7 @@ const usage = 'usage: npm run messaging:registration -- status | enums <name> | 
 const encode = encodeURIComponent;
 const normalized = value => String(value ?? '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
 
-export function redactRegistration(value) {
+function redactRegistration(value) {
   if (Array.isArray(value)) return value.map(redactRegistration);
   if (!value || typeof value !== 'object') return value;
   return Object.fromEntries(Object.entries(value).map(([key, item]) => [key,
@@ -57,7 +57,7 @@ function requireUrl(body, fields) {
   }
 }
 
-export function validateRegistration(kind, body) {
+function validateRegistration(kind, body) {
   if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('Registration JSON must be an object');
   if (kind === 'brand') {
     requireText(body, ['entityType', 'displayName', 'country', 'email', 'vertical', 'phone', 'street', 'city', 'state', 'postalCode', 'website']);
@@ -94,7 +94,7 @@ export function validateRegistration(kind, body) {
   return body;
 }
 
-export function messagingRegistrationClient(apiKey, fetchApi = fetch) {
+function messagingRegistrationClient(apiKey, fetchApi = fetch) {
   async function request(path, method = 'GET', body) {
     if (!apiKey) throw new Error('TELNYX_API_KEY must be set');
     let response;
@@ -187,7 +187,7 @@ export function messagingRegistrationClient(apiKey, fetchApi = fetch) {
   };
 }
 
-export async function runMessagingRegistration(args, apiKey = process.env.TELNYX_API_KEY, fetchApi = fetch) {
+async function runMessagingRegistration(args, apiKey = process.env.TELNYX_API_KEY, fetchApi = fetch) {
   const [kind, action, value, extra, flag] = args;
   const client = messagingRegistrationClient(apiKey, fetchApi);
   if (kind === 'status' && args.length === 1) return redactRegistration(await client.status());

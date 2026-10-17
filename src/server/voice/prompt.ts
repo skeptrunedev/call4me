@@ -192,7 +192,7 @@ const SPOKEN_DOMAINS = new Set(['gmail.com', 'yahoo.com', 'outlook.com', 'hotmai
 const SPOKEN_TLDS = new Set(['com', 'net', 'org', 'edu', 'gov']);
 
 /** An email address the way you read it to someone writing it down: every letter, with "at" and "dot" between the parts. */
-export function spokenEmail(email: string): string {
+function spokenEmail(email: string): string {
   const spell = (part: string) =>
     part
       .split(/([._-])/)
@@ -271,7 +271,7 @@ export interface OpenTask {
   lastResult: string | null;
 }
 
-export interface InboundBrief extends Who {
+interface InboundBrief extends Who {
   /** The number to give for call-backs: the one the returned call named, else the owner's own phone, else the number they rang. */
   callbackNumber: string;
   /** Unfinished tasks, the one this caller is most likely about first. */

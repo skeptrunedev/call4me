@@ -172,14 +172,14 @@ export function redact(text: string, secrets: string[]): string {
  * What a call costs: every started minute at the call's price, except whole minutes spent on hold,
  * which are half price. `holdSeconds` beyond the call's length are ignored.
  */
-export function billedCents(talkSeconds: number, pricePerMinuteCents: number, holdSeconds = 0): number {
+function billedCents(talkSeconds: number, pricePerMinuteCents: number, holdSeconds = 0): number {
   const minutes = Math.ceil(talkSeconds / 60);
   const holdMinutes = Math.min(minutes, Math.floor(Math.min(holdSeconds, talkSeconds) / 60));
   return (minutes - holdMinutes) * pricePerMinuteCents + Math.ceil((holdMinutes * pricePerMinuteCents) / 2);
 }
 
 /** Seconds on hold by `at`: the holds already over plus one still going. */
-export const holdSecondsAt = (row: Pick<CallRow, 'hold_seconds' | 'hold_since'>, at: number) =>
+const holdSecondsAt = (row: Pick<CallRow, 'hold_seconds' | 'hold_since'>, at: number) =>
   (row.hold_seconds ?? 0) + (row.hold_since ? Math.max(0, Math.round((at - row.hold_since) / 1000)) : 0);
 
 /** A call recorded and ready to dial, with its per-call secrets (account PINs), which are never stored. */

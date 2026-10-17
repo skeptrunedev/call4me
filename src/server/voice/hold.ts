@@ -46,7 +46,7 @@ const ACKNOWLEDGMENT = /^(?:(?:sure|okay|ok|alright|all right|no problem|no worr
 const PERSON_BACK = /\b(?:my name is|how (?:can|may) i (?:help|assist)|(?:are you )?still there|mi nombre es|le habla|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir))\b/i;
 
 /** A line from the other side that is part of the wait: a hold request or a queue recording. */
-export function isHoldLine(text: string): boolean {
+function isHoldLine(text: string): boolean {
   return QUEUE_RECORDING.test(text) || WAIT_REQUEST.test(text) || asksUsToWait(text);
 }
 

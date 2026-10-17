@@ -58,7 +58,7 @@ const WITH_OFFSET = /(?:Z|[+-]\d{2}:?\d{2})$/i;
  * When call_at means, in ms since epoch: an ISO time with an offset as given, or a wall-clock time
  * ("2026-10-05T09:15") in the business's IANA time zone.
  */
-export function parseCallAt(callAt: string, timezone: string | undefined): number {
+function parseCallAt(callAt: string, timezone: string | undefined): number {
   const text = callAt.trim();
   if (WITH_OFFSET.test(text)) {
     const at = Date.parse(text);

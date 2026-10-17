@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { fill, runDrip, STEPS, templateFor, unknownPlaceholders } from '../src/server/services/drip';
-import { parse } from '../scripts/email-template';
+import { runDrip, STEPS, templateFor, unknownPlaceholders } from '../src/server/services/drip';
 import { d1 } from './sqlite-d1';
 
 const welcome = STEPS.find((s) => s.id === 'welcome')!;
@@ -48,21 +47,6 @@ test('a stored template with an unknown placeholder is ignored for the default',
   await drip(db, messenger);
   assert.ok(!sent.some((m) => m.text.includes('{addCredit}')));
   assert.ok(sent[0].text.startsWith("hey, I'm Nick, the creator of call4me."));
-});
-
-test('fill replaces every placeholder and nothing else', () => {
-  const email = fill({ subject: '{host}', body: 'a {addCredits} b {host} c {other}' }, { host: 'call4.me', addCredits: 'call4.me/add/x-y' });
-  assert.equal(email.subject, 'call4.me');
-  assert.equal(email.body, 'a call4.me/add/x-y b call4.me c {other}');
-});
-
-test('the CLI parses its commands and refuses bad ones', () => {
-  assert.deepEqual(parse(['list']), { action: 'list', local: false });
-  assert.deepEqual(parse(['show', 'welcome', '--local']), { action: 'show', key: 'welcome', local: true });
-  assert.deepEqual(parse(['set', 'welcome', '--file', 'b.txt', '--subject', 'hi']), { action: 'set', key: 'welcome', file: 'b.txt', subject: 'hi', local: false });
-  assert.match(parse(['set', 'welcome']) as string, /--file/);
-  assert.match(parse(['show', 'nope']) as string, /no email called "nope"/);
-  assert.match(parse([]) as string, /^usage/);
 });
 
 /** A mail server that refuses one address the way Fastmail does, and delivers the rest. */

@@ -32,7 +32,7 @@ export const callPrice = (env: Env, row: Pick<CallRow, 'direction' | 'to_number'
  * Whether keypad presses on a call with `other` should be tones in the audio: anywhere but a +1
  * number, since some international routes drop Telnyx's RFC 2833 key events (voice/dtmf.ts).
  */
-export function inbandKeysFor(other: string): boolean {
+function inbandKeysFor(other: string): boolean {
   const p = checkDialable(other);
   return p.ok && !p.home;
 }

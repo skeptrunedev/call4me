@@ -267,7 +267,7 @@ export const isAwaitingApproval = (offer: CountryOffer) => !offer.available && o
 export const FROM_HOME = new Set([...EUROPE, 'AE', 'JP']);
 
 /** Every country some account may call: the telephone carrier must allow each of them. */
-export const CALLABLE = [...new Set(['US', 'CA', ...FROM_HOME, ...Object.keys(COUNTRIES)])];
+const CALLABLE = [...new Set(['US', 'CA', ...FROM_HOME, ...Object.keys(COUNTRIES)])];
 
 /** Whether the account may reach `to`: +1 numbers and FROM_HOME countries always, elsewhere a country it holds a number in. */
 export async function mayCall(db: D1Database, accountId: string, to: Extract<PhoneCheck, { ok: true }>): Promise<boolean> {

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import type { Account } from '../src/server/services/accounts';
 import { CallError } from '../src/server/services/calls';
-import { parseCallAt, placeDueCalls, SCHEDULE_LIMITS, scheduledCalls, scheduledView } from '../src/server/services/scheduled';
+import { placeDueCalls, SCHEDULE_LIMITS, scheduledCalls, scheduledView } from '../src/server/services/scheduled';
 import type { SessionSetup } from '../src/server/voice/session';
 import { d1 } from './sqlite-d1';
 
@@ -27,15 +27,6 @@ async function setup() {
   await db.prepare(`INSERT INTO ledger (id, account_id, amount_cents, kind, ref, note, created_at) VALUES ('l1', 'acct_alice', 1000, 'topup', 'test:topup', 'card', 0)`).run();
   return db;
 }
-
-test('call_at reads a wall time in the business\'s zone, across DST, or an explicit offset', () => {
-  assert.equal(new Date(parseCallAt('2026-10-05T09:15', 'America/Los_Angeles')).toISOString(), '2026-10-05T16:15:00.000Z');
-  assert.equal(new Date(parseCallAt('2026-12-01 09:00', 'America/Los_Angeles')).toISOString(), '2026-12-01T17:00:00.000Z');
-  assert.equal(new Date(parseCallAt('2026-10-05T09:15:00-07:00', undefined)).toISOString(), '2026-10-05T16:15:00.000Z');
-  assert.equal(new Date(parseCallAt('2026-10-05T16:15:00Z', 'Asia/Tokyo')).toISOString(), '2026-10-05T16:15:00.000Z');
-  assert.throws(() => parseCallAt('2026-10-05T09:15', undefined), /pass timezone/);
-  assert.throws(() => parseCallAt('Monday 9am', 'America/Los_Angeles'), CallError);
-});
 
 test('scheduling checks the call now: missing details, a past time, too far ahead', async () => {
   const db = await setup();

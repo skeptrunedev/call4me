@@ -12,7 +12,7 @@ import { telnyx } from '../src/server/lib/telnyx';
 
 const repository = realpathSync(resolve(dirname(fileURLToPath(import.meta.url)), '..'));
 const hash = (file: string) => createHash('sha256').update(readFileSync(file)).digest('hex');
-export function privatePath(file: string): string {
+function privatePath(file: string): string {
   const path = resolve(file);
   let ancestor = path;
   while (!existsSync(ancestor)) ancestor = dirname(ancestor);
@@ -30,7 +30,7 @@ function save(file: string, value: unknown) {
 export type Mute = { start: number; end: number; label: string };
 /** disguise spans keep a voice audible but pitch and formant shifted, e.g. an account owner who joined the call. */
 export type Manifest = { source: string; sourceSha256: string; reviewed: true; mutes: Mute[]; disguise?: Mute[] };
-export function validateMutes(mutes: Mute[], duration: number) {
+function validateMutes(mutes: Mute[], duration: number) {
   assert.ok(Array.isArray(mutes), 'mutes must be an array');
   let previousEnd = 0;
   for (const mute of mutes) {
@@ -39,7 +39,7 @@ export function validateMutes(mutes: Mute[], duration: number) {
     previousEnd = mute.end;
   }
 }
-export function muteFilter(mutes: Mute[]) {
+function muteFilter(mutes: Mute[]) {
   return mutes.length ? `aeval=exprs='val(0)*(${mutes.map(m => `not(between(t,${m.start},${m.end}))`).join('*')})'` : 'anull';
 }
 export const DISGUISE_PITCH = 0.82;
@@ -53,7 +53,7 @@ export function disguiseGraph(spans: Mute[]) {
     `[kept][shifted]amix=inputs=2:normalize=0[voice]`;
 }
 /** gpt-4o-transcribe rejects audio over 1400 s; split longer files into equal windows under that limit. */
-export function asrWindows(duration: number, limit = 1400) {
+function asrWindows(duration: number, limit = 1400) {
   const count = Math.max(1, Math.ceil(duration / (limit - 60)));
   return Array.from({ length: count }, (_, index) => ({ start: (duration * index) / count, end: (duration * (index + 1)) / count }));
 }
@@ -214,11 +214,11 @@ function exportAudio(manifestFile: string, out: string, binary: string) {
   console.log(JSON.stringify({ file: out, sha256: hash(out), kbps: exportBitrate(duration) }));
 }
 /** Cloudflare Workers serves static assets of at most 25 MiB; leave headroom for MP3 framing. */
-export const MAX_ASSET_BYTES = 24 * 1024 * 1024;
+const MAX_ASSET_BYTES = 24 * 1024 * 1024;
 const BITRATES = [96, 80, 64, 56, 48, 40, 32];
 
 /** The highest standard MP3 bitrate (kbps) at which a recording of this length still fits as a site asset. */
-export function exportBitrate(seconds: number): number {
+function exportBitrate(seconds: number): number {
   const fits = BITRATES.find((kbps) => (seconds * kbps * 1000) / 8 <= MAX_ASSET_BYTES);
   assert.ok(fits, `a ${Math.round(seconds / 60)} minute recording does not fit in a site asset even at 32 kbps`);
   return fits;

@@ -6,12 +6,12 @@
 
 const SAMPLE_RATE = 8000;
 /** Telnyx media frames: 20 ms of 8 kHz G.711 μ-law. */
-export const FRAME_SAMPLES = 160;
+const FRAME_SAMPLES = 160;
 export const FRAME_MS = 20;
-export const TONE_MS = 120;
-export const GAP_MS = 80;
+const TONE_MS = 120;
+const GAP_MS = 80;
 /** What a "w" in the digits waits for, as with send_dtmf. */
-export const WAIT_MS = 500;
+const WAIT_MS = 500;
 
 /** How long a base64 chunk of 8 kHz μ-law audio plays: one byte per sample. */
 export function pcmuMs(base64: string): number {
@@ -39,7 +39,7 @@ const COLS = [1209, 1336, 1477, 1633];
 const KEYS = ['123A', '456B', '789C', '*0#D'];
 
 /** The row and column frequencies of a keypad key, or null for anything else. */
-export function dtmfFrequencies(key: string): [number, number] | null {
+function dtmfFrequencies(key: string): [number, number] | null {
   for (let r = 0; r < KEYS.length; r++) {
     const c = KEYS[r].indexOf(key.toUpperCase());
     if (c >= 0) return [ROWS[r], COLS[c]];
@@ -48,7 +48,7 @@ export function dtmfFrequencies(key: string): [number, number] | null {
 }
 
 /** G.711 μ-law encoding of one 16-bit linear sample. */
-export function linearToMulaw(sample: number): number {
+function linearToMulaw(sample: number): number {
   const BIAS = 0x84;
   const CLIP = 32635;
   const sign = sample < 0 ? 0x80 : 0;
@@ -60,7 +60,7 @@ export function linearToMulaw(sample: number): number {
 }
 
 /** G.711 μ-law decoding, back to a 16-bit linear sample. */
-export function mulawToLinear(byte: number): number {
+function mulawToLinear(byte: number): number {
   const u = ~byte & 0xff;
   const t = (((u & 0x0f) << 3) + 0x84) << ((u & 0x70) >> 4);
   return u & 0x80 ? 0x84 - t : t - 0x84;
@@ -71,7 +71,7 @@ export function mulawToLinear(byte: number): number {
  * of silence. Each tone sits around -9 dBm0 (two components at a quarter of full scale), well
  * inside what phone menus detect.
  */
-export function dtmfSamples(digits: string): Uint8Array {
+function dtmfSamples(digits: string): Uint8Array {
   const out: number[] = [];
   const silence = (ms: number) => {
     for (let i = 0; i < (SAMPLE_RATE * ms) / 1000; i++) out.push(linearToMulaw(0));
