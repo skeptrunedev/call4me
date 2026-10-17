@@ -1,3 +1,12 @@
+import americasTireFremont from './americas-tire-fremont.md';
+import posadaRealLosCondestables from './posada-real-los-condestables.md';
+import uglyBabyBrooklynReservations from './ugly-baby-brooklyn-reservations.md';
+import lincolnUrgentCare from './lincoln-urgent-care.md';
+import samsungOvenDoorGlassRepairSacramento from './samsung-oven-door-glass-repair-sacramento.md';
+import zanAtelierChicagoAlterations from './zan-atelier-chicago-alterations.md';
+import bossFrogsMolokiniSnorkel from './boss-frogs-molokini-snorkel.md';
+import zessanOtemachiPrivateRoom from './zessan-otemachi-private-room.md';
+import theBaseGlampingYugawara from './the-base-glamping-yugawara.md';
 import mHansikDurhamPrivateDining from './m-hansik-durham-private-dining.md';
 import co2TankExchangeSanJuan from './co2-tank-exchange-san-juan.md';
 import bonnerSpringsYmcaSwimLessons from './bonner-springs-ymca-swim-lessons.md';
@@ -174,6 +183,15 @@ import clinePhoneCalls from './cline-phone-calls.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'americas-tire-fremont', markdown: americasTireFremont },
+  { slug: 'posada-real-los-condestables', markdown: posadaRealLosCondestables },
+  { slug: 'ugly-baby-brooklyn-reservations', markdown: uglyBabyBrooklynReservations },
+  { slug: 'lincoln-urgent-care', markdown: lincolnUrgentCare },
+  { slug: 'samsung-oven-door-glass-repair-sacramento', markdown: samsungOvenDoorGlassRepairSacramento },
+  { slug: 'zan-atelier-chicago-alterations', markdown: zanAtelierChicagoAlterations },
+  { slug: 'boss-frogs-molokini-snorkel', markdown: bossFrogsMolokiniSnorkel },
+  { slug: 'zessan-otemachi-private-room', markdown: zessanOtemachiPrivateRoom },
+  { slug: 'the-base-glamping-yugawara', markdown: theBaseGlampingYugawara },
   { slug: 'm-hansik-durham-private-dining', markdown: mHansikDurhamPrivateDining },
   { slug: 'co2-tank-exchange-san-juan', markdown: co2TankExchangeSanJuan },
   { slug: 'bonner-springs-ymca-swim-lessons', markdown: bonnerSpringsYmcaSwimLessons },

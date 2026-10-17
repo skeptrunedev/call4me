@@ -177,4 +177,13 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'bonner-springs-ymca-swim-lessons': ['fitness'],
   'co2-tank-exchange-san-juan': ['retail-shopping'],
   'm-hansik-durham-private-dining': ['dining'],
+  'the-base-glamping-yugawara': ['travel-lodging'],
+  'zessan-otemachi-private-room': ['dining'],
+  'boss-frogs-molokini-snorkel': ['venue-activities'],
+  'zan-atelier-chicago-alterations': ['retail-shopping'],
+  'samsung-oven-door-glass-repair-sacramento': ['furniture-home-services'],
+  'lincoln-urgent-care': ['healthcare'],
+  'ugly-baby-brooklyn-reservations': ['dining'],
+  'posada-real-los-condestables': ['travel-lodging', 'dining'],
+  'americas-tire-fremont': ['car-maintenance'],
 };
