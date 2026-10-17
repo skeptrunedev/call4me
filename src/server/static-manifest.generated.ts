@@ -8,7 +8,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
     "markdown": "/__pages/1a130cabaa8a47b0.md",
-    "tokens": 129356
+    "tokens": 136212
   },
   "/voices": {
     "html": "/__pages/3c1d9b7cb97eed20.html",
@@ -73,97 +73,102 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2307
+    "tokens": 2236
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2154
+    "tokens": 2230
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2067
+    "tokens": 2032
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2268
+    "tokens": 2274
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2284
+    "tokens": 2258
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2217
+    "tokens": 2243
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2080
+    "tokens": 2108
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2149
+    "tokens": 2180
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 1909
+    "tokens": 1854
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2108
+    "tokens": 2137
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 1809
+    "tokens": 1837
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 1766
+    "tokens": 1760
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 1890
+    "tokens": 1881
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 1911
+    "tokens": 1917
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 2052
+    "tokens": 2027
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 2029
+    "tokens": 2063
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 1043
+    "tokens": 1163
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 18075
+    "tokens": 18181
+  },
+  "/blog/victorias-secret-georgetown": {
+    "html": "/__pages/d529bbf9b8194852.html",
+    "markdown": "/__pages/d529bbf9b8194852.md",
+    "tokens": 3604
   },
   "/blog/chase-sapphire-reserve-benefits-phone-number": {
     "html": "/__pages/5279a473dd6999c8.html",
     "markdown": "/__pages/5279a473dd6999c8.md",
-    "tokens": 5158
+    "tokens": 5189
   },
   "/blog/fresh-blades-barbershop-divisadero": {
     "html": "/__pages/c4fbb24653a521ec.html",
@@ -528,7 +533,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/xfinity-customer-service-number": {
     "html": "/__pages/71ceb939dffe328c.html",
     "markdown": "/__pages/71ceb939dffe328c.md",
-    "tokens": 5504
+    "tokens": 5537
   },
   "/blog/irs-phone-number": {
     "html": "/__pages/5c3dbf05923aa44a.html",
@@ -538,7 +543,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/t-mobile-customer-service-number": {
     "html": "/__pages/016e6c0731298402.html",
     "markdown": "/__pages/016e6c0731298402.md",
-    "tokens": 4913
+    "tokens": 13667
   },
   "/blog/langchain-mcp-phone-calls": {
     "html": "/__pages/3a28e046b9bdfb2d.html",
@@ -608,12 +613,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/att-customer-service-number": {
     "html": "/__pages/4fc865890ec1135b.html",
     "markdown": "/__pages/4fc865890ec1135b.md",
-    "tokens": 8247
+    "tokens": 8280
   },
   "/blog/southwest-airlines-phone-number": {
     "html": "/__pages/a044a0c777c5b7fe.html",
     "markdown": "/__pages/a044a0c777c5b7fe.md",
-    "tokens": 5335
+    "tokens": 7881
   },
   "/blog/home-depot-customer-service": {
     "html": "/__pages/386ebcbd12bbbc61.html",
@@ -623,7 +628,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/walmart-customer-service-number": {
     "html": "/__pages/cb58e77742fc6c4a.html",
     "markdown": "/__pages/cb58e77742fc6c4a.md",
-    "tokens": 7183
+    "tokens": 11003
   },
   "/blog/ai-apps-that-make-calls-for-you": {
     "html": "/__pages/427c0a40de2bba10.html",
@@ -748,7 +753,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/windstream-customer-service": {
     "html": "/__pages/1b78d55294739307.html",
     "markdown": "/__pages/1b78d55294739307.md",
-    "tokens": 7926
+    "tokens": 7959
   },
   "/blog/how-long-to-reach-a-human": {
     "html": "/__pages/1624f2222bb89bf3.html",
@@ -828,7 +833,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/macys-bow-tie-stock-check": {
     "html": "/__pages/a57fa317b216d261.html",
     "markdown": "/__pages/a57fa317b216d261.md",
-    "tokens": 8804
+    "tokens": 8770
   },
   "/blog/book-dinner-reservation-by-phone": {
     "html": "/__pages/91e553be51335771.html",
@@ -1053,7 +1058,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/american-airlines-flight-credit": {
     "html": "/__pages/54dd6bcdbea387c1.html",
     "markdown": "/__pages/54dd6bcdbea387c1.md",
-    "tokens": 11057
+    "tokens": 11052
   },
   "/blog/adderall-shortage": {
     "html": "/__pages/0fe25dd718aaf032.html",
@@ -1078,7 +1083,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/verizon-customer-service": {
     "html": "/__pages/6cfd54b00e65d985.html",
     "markdown": "/__pages/6cfd54b00e65d985.md",
-    "tokens": 11175
+    "tokens": 11208
   },
   "/blog/fpl-phone-number": {
     "html": "/__pages/f5806291e5d3e637.html",
@@ -1103,7 +1108,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/need-dress-shoes-today": {
     "html": "/__pages/18c64c271fefb021.html",
     "markdown": "/__pages/18c64c271fefb021.md",
-    "tokens": 7778
+    "tokens": 7904
   },
   "/blog/spectrum-retention-department": {
     "html": "/__pages/cad6a590d97a2bfd.html",
