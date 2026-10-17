@@ -1,3 +1,4 @@
+import victoriasSecretGeorgetown from './victorias-secret-georgetown.md';
 import chaseSapphireReserveBenefitsPhoneNumber from './chase-sapphire-reserve-benefits-phone-number.md';
 import freshBladesBarbershopDivisadero from './fresh-blades-barbershop-divisadero.md';
 import springhillSuitesPhoenixGilbert from './springhill-suites-phoenix-gilbert.md';
@@ -203,6 +204,7 @@ import clinePhoneCalls from './cline-phone-calls.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'victorias-secret-georgetown', markdown: victoriasSecretGeorgetown },
   { slug: 'chase-sapphire-reserve-benefits-phone-number', markdown: chaseSapphireReserveBenefitsPhoneNumber },
   { slug: 'fresh-blades-barbershop-divisadero', markdown: freshBladesBarbershopDivisadero },
   { slug: 'springhill-suites-phoenix-gilbert', markdown: springhillSuitesPhoenixGilbert },
