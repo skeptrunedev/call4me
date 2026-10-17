@@ -115,7 +115,7 @@ export function llmsTxt(site: string, pricePerMinuteCents: number, posts: PostEn
     `- [AI call assistant](${site}/ai-call-assistant): what the AI phone agent does on a call, listening in and taking over, voices, the free US number, pricing, and how to start`,
     `- [Examples](${site}/examples): real call recordings with edited excerpts, outcomes, and transcripts`,
     `- [Customer service numbers](${site}/companies): customer service phone numbers for airlines, banks, telecom, insurance and subscriptions, each with a real recorded call, the phone tree, and how long it took to reach a person`,
-    `- [Customer service hold times by company](${site}${HOLD_PATH}): time to a live person at 42 companies, measured on real recorded calls and ranked, with the transcript line behind each time. Download the dataset as [CSV](${site}${HOLD_DATA_PATH}.csv) or [JSON](${site}${HOLD_DATA_PATH}.json).`,
+    `- [Customer service hold times by company](${site}${HOLD_PATH}): time to a live person at 49 companies, measured on real recorded calls and ranked, with the transcript line behind each time. Download the dataset as [CSV](${site}${HOLD_DATA_PATH}.csv) or [JSON](${site}${HOLD_DATA_PATH}.json).`,
     `- [Students](${site}/students): free call4me credits for students, approved by hand`,
     `- [Superintelligence Calling Index](${site}/superintelligence-calling-index): personal superintelligence phone calling tools, dated evidence and recordings. Download the evidence dataset as [CSV](${site}/static/data/superintelligence-calling-index.csv) or [JSON](${site}/static/data/superintelligence-calling-index.json).`,
     `- [Voices](${site}/voices): a phone-quality sample of each caller voice, and how to pick one`,
