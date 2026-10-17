@@ -8,7 +8,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
     "markdown": "/__pages/1a130cabaa8a47b0.md",
-    "tokens": 72127
+    "tokens": 84551
   },
   "/voices": {
     "html": "/__pages/3c1d9b7cb97eed20.html",
@@ -73,82 +73,127 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2248
+    "tokens": 2148
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2281
+    "tokens": 2219
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2216
+    "tokens": 2319
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2087
+    "tokens": 2194
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2068
+    "tokens": 2129
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 1938
+    "tokens": 1927
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2113
+    "tokens": 2054
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 1811
+    "tokens": 2020
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 1762
+    "tokens": 1778
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 1928
+    "tokens": 1795
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 1860
+    "tokens": 1991
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 2104
+    "tokens": 1850
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 2011
+    "tokens": 2069
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 760
+    "tokens": 2051
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 14373
+    "tokens": 15232
+  },
+  "/blog/m-hansik-durham-private-dining": {
+    "html": "/__pages/8f9904998e34e04e.html",
+    "markdown": "/__pages/8f9904998e34e04e.md",
+    "tokens": 6638
+  },
+  "/blog/co2-tank-exchange-san-juan": {
+    "html": "/__pages/c7de178155fb5365.html",
+    "markdown": "/__pages/c7de178155fb5365.md",
+    "tokens": 10093
+  },
+  "/blog/bonner-springs-ymca-swim-lessons": {
+    "html": "/__pages/629aac246ffff035.html",
+    "markdown": "/__pages/629aac246ffff035.md",
+    "tokens": 2634
+  },
+  "/blog/palmeri-brentwood-private-dining": {
+    "html": "/__pages/a856825addf77839.html",
+    "markdown": "/__pages/a856825addf77839.md",
+    "tokens": 5908
+  },
+  "/blog/cafe-demi-teaneck": {
+    "html": "/__pages/e1a18e6684c857b7.html",
+    "markdown": "/__pages/e1a18e6684c857b7.md",
+    "tokens": 3941
+  },
+  "/blog/aaa-tow-reimbursement": {
+    "html": "/__pages/17f4469d31037469.html",
+    "markdown": "/__pages/17f4469d31037469.md",
+    "tokens": 6611
+  },
+  "/blog/marina-traffic-court-phone-number": {
+    "html": "/__pages/ca0d4a5995068378.html",
+    "markdown": "/__pages/ca0d4a5995068378.md",
+    "tokens": 4371
+  },
+  "/blog/ventura-superior-court-judgment-debtor-exam": {
+    "html": "/__pages/0973dc8faa75059d.html",
+    "markdown": "/__pages/0973dc8faa75059d.md",
+    "tokens": 3577
+  },
+  "/blog/inn-at-jim-thorpe-reservations": {
+    "html": "/__pages/a284502577683584.html",
+    "markdown": "/__pages/a284502577683584.md",
+    "tokens": 3698
   },
   "/blog/air-serbia-customer-service-number": {
     "html": "/__pages/2f9c6095c3eb4998.html",
     "markdown": "/__pages/2f9c6095c3eb4998.md",
-    "tokens": 11126
+    "tokens": 11162
   },
   "/blog/virgin-hotels-new-york-parking": {
     "html": "/__pages/fff4dd4a906f9d0d.html",
@@ -158,7 +203,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/moxy-st-petersburg-downtown": {
     "html": "/__pages/6a400c20fc16bbf9.html",
     "markdown": "/__pages/6a400c20fc16bbf9.md",
-    "tokens": 3076
+    "tokens": 3083
   },
   "/blog/walgreens-specialty-pharmacy-phone-number": {
     "html": "/__pages/040847ce95113c08.html",
@@ -178,7 +223,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/capital-grille-wall-street-private-dining": {
     "html": "/__pages/40a20ad9783237a7.html",
     "markdown": "/__pages/40a20ad9783237a7.md",
-    "tokens": 6971
+    "tokens": 6996
   },
   "/blog/justworks-customer-service": {
     "html": "/__pages/ecea2dccd467201b.html",
@@ -193,7 +238,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/sassafraz-private-dining": {
     "html": "/__pages/2e78db2198e5e261.html",
     "markdown": "/__pages/2e78db2198e5e261.md",
-    "tokens": 8877
+    "tokens": 8893
   },
   "/blog/vitalant-phone-number": {
     "html": "/__pages/f54f1a1afeffcaa3.html",
@@ -208,12 +253,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/paradox-hotel-vancouver": {
     "html": "/__pages/2ce3739ad17124b4.html",
     "markdown": "/__pages/2ce3739ad17124b4.md",
-    "tokens": 3011
+    "tokens": 3169
   },
   "/blog/ritz-carlton-bachelor-gulch-reservations": {
     "html": "/__pages/5004f26f0cf7a4df.html",
     "markdown": "/__pages/5004f26f0cf7a4df.md",
-    "tokens": 4094
+    "tokens": 4253
   },
   "/blog/la-mar-san-francisco-reservations": {
     "html": "/__pages/44e7fe715f5d23f9.html",
@@ -278,7 +323,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/airbnb-customer-service-number": {
     "html": "/__pages/e392dafb7481d910.html",
     "markdown": "/__pages/e392dafb7481d910.md",
-    "tokens": 5510
+    "tokens": 5669
   },
   "/blog/expedia-customer-service-number": {
     "html": "/__pages/adc39c755249459c.html",
@@ -433,7 +478,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/lai-wah-heen-private-dining": {
     "html": "/__pages/f2e99abd9b301d1a.html",
     "markdown": "/__pages/f2e99abd9b301d1a.md",
-    "tokens": 3481
+    "tokens": 3497
   },
   "/blog/pin-on-grand-reservations": {
     "html": "/__pages/4516c0f5bee1ab82.html",
@@ -813,7 +858,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/private-dining-room-cost": {
     "html": "/__pages/071eeba541fc558a.html",
     "markdown": "/__pages/071eeba541fc558a.md",
-    "tokens": 9228
+    "tokens": 9260
   },
   "/blog/how-to-transfer-a-prescription": {
     "html": "/__pages/a4b0bfb79d180b15.html",

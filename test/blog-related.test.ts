@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { checkRelatedIndex } from '../scripts/generate-related-posts';
+import { RELATED_TOPICS } from '../scripts/related-topics';
 import { RELATED_INDEX } from '../src/content/blog/related.generated';
 import { related, renderPost } from '../src/server/lib/blog';
 
@@ -15,7 +16,7 @@ test('recommendations keep cost, healthcare and developer articles on subject', 
   assert.ok(top('costco-eye-exam-cost').includes('eye-exam-cost-without-insurance'));
   assert.ok(!top('costco-eye-exam-cost').includes('wheel-alignment-cost'));
   assert.ok(top('private-dining-room-cost').includes('lai-wah-heen-private-dining'));
-  assert.ok(RELATED_INDEX['private-dining-room-cost']!.some((match) => match.slug === 'book-dinner-reservation-by-phone'));
+  assert.ok(RELATED_INDEX['private-dining-room-cost']!.every((match) => RELATED_TOPICS[match.slug]?.includes('dining')));
   assert.ok(top('how-to-find-a-new-primary-care-doctor').includes('follow-up-appointment-telehealth'));
   assert.ok(top('grok-bot-template-troubleshooting').includes('grok-bot-templates'));
   assert.ok(!top('follow-up-appointment-telehealth').includes('drop-off-vet-appointment'));
