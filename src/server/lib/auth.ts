@@ -5,6 +5,7 @@ import { createLocalJWKSet, jwtVerify, type JWTPayload } from 'jose';
 import { newId, now } from './ids';
 import { authOptions, DIRECTORY_SERVERS, mcpResource, mcpResourceAt as resourceAt, realEmail, siteResource, type McpPath } from './auth-options';
 import { origin, type AppContext, type AppEnv } from './context';
+import { messengerFor } from './messaging';
 import { ACCOUNT_COLUMNS, accounts, type Account } from '../services/accounts';
 
 /**
@@ -21,6 +22,12 @@ const buildAuth = (env: Env, baseURL: string) =>
       appName: env.APP_NAME,
       google: { clientId: env.GOOGLE_CLIENT_ID ?? '', clientSecret: env.GOOGLE_CLIENT_SECRET ?? '' },
       twitter: { clientId: env.X_CLIENT_ID ?? '', clientSecret: env.X_CLIENT_SECRET ?? '' },
+      sendSignInLink: (email, url) =>
+        messengerFor(env).sendEmail(
+          email,
+          'your call4me sign-in link',
+          `open this link to sign in to call4me:\n\n${url}\n\nit works once, for an hour. if you didn't ask to sign in, ignore this email.\n`,
+        ),
     }),
   );
 
@@ -73,7 +80,7 @@ export async function accountForUser(db: D1Database, user: { id: string; email: 
   // X users may share no email; their account is keyed by the placeholder better-auth assigns.
   await db
     .prepare(`INSERT OR IGNORE INTO accounts (id, email, display_name, user_id, created_at) VALUES (?, ?, ?, ?, ?)`)
-    .bind(newId(), email ?? (user.email ?? `${user.id}@users.invalid`).toLowerCase(), user.name, user.id, now())
+    .bind(newId(), email ?? (user.email ?? `${user.id}@users.invalid`).toLowerCase(), user.name || null, user.id, now())
     .run();
   return (await db.prepare(`SELECT ${ACCOUNT_COLUMNS} FROM accounts WHERE user_id = ?`).bind(user.id).first<Account>())!;
 }

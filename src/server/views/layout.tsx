@@ -244,8 +244,10 @@ export const Layout: FC<{
             {/* Stable on static pages; /account handles sign in when needed. */}
             <a class="account-link" href="/account">my account</a>
           </nav>
-          <form method="post" action="/add-funds" class="navform">
-            <button type="submit">add funds</button>
+          {/* Sign up first, then load credits on the account page; signed-in visitors pass straight through. */}
+          <form method="get" action="/login" class="navform">
+            <input type="hidden" name="next" value="/account" />
+            <button type="submit">get started</button>
           </form>
         </header>
         <div class="site-content" id="content">{children}</div>

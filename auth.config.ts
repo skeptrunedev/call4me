@@ -15,5 +15,6 @@ export const auth = betterAuth(
     appName: 'callbay',
     google: { clientId: 'x', clientSecret: 'x' },
     twitter: { clientId: 'x', clientSecret: 'x' },
+    sendSignInLink: async () => {},
   }),
 );

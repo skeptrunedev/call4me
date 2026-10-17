@@ -3,7 +3,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/": {
     "html": "/__pages/8a5edab282632443.html",
     "markdown": "/__pages/8a5edab282632443.md",
-    "tokens": 3017
+    "tokens": 3025
   },
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
@@ -28,7 +28,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/ai-call-assistant": {
     "html": "/__pages/9c2cf5350f943d84.html",
     "markdown": "/__pages/9c2cf5350f943d84.md",
-    "tokens": 2793
+    "tokens": 2796
   },
   "/hold-times": {
     "html": "/__pages/0adb6fe5d87ff479.html",
@@ -38,7 +38,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/students": {
     "html": "/__pages/9a3f77bd97426a79.html",
     "markdown": "/__pages/9a3f77bd97426a79.md",
-    "tokens": 896
+    "tokens": 900
   },
   "/mcp": {
     "html": "/__pages/88fe637beab867e2.html",

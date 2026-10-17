@@ -27,7 +27,7 @@ export const StudentsPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
 
       <h2>how to get the free credits</h2>
       <ol class="steps">
-        <li>sign in at <a href="/login">call4.me</a> with google or x. that creates your account.</li>
+        <li>sign in at <a href="/login">call4.me</a> with google, x, or an emailed link. that creates your account.</li>
         <li>
           email <a href={`mailto:me@call4.me?subject=${encodeURIComponent(CLAIM_SUBJECT)}`}>me@call4.me</a> from your school email address (or
           tell us your GitHub Student Developer Pack username), and include the email you signed in with.

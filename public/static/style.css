@@ -124,6 +124,7 @@ footer .rss-link svg { vertical-align: -.125em; }
 .buy { margin: 24px 0; }
 .buy input[type=text], .buy input[type=email] { width: 260px; }
 .buy .amount { width: 100px; }
+.buy .no-account { margin: 0 0 22px; font-size: 19px; line-height: 1.5; }
 .check { display: block; margin: 16px 0; color: var(--muted); font-size: 13px; font-weight: 400; }
 .check input { margin: 0 6px 0 0; vertical-align: -.1em; }
 form.inline { margin: 18px 0; }
@@ -158,6 +159,8 @@ td { font-size: 14px; }
 .page-login .site-content, .page-consent .site-content { max-width: 680px; padding-top: 90px; padding-bottom: 120px; }
 .page-login h1, .page-consent h1 { font-size: clamp(40px, 5vw, 60px); }
 .page-login form.inline button { min-width: 260px; }
+.page-login .email-link { display: grid; gap: 12px; max-width: 420px; margin: 30px 0 18px; padding-top: 26px; border-top: 1px solid var(--line); }
+.page-login .email-link label { font-size: 14px; color: var(--muted); }
 .page-login details { margin: 30px 0; }
 .page-login details form { display: grid; gap: 12px; margin-top: 16px; }
 .page-privacy .site-content, .page-terms .site-content, .page-rules .site-content, .page-support .site-content { max-width: 900px; }

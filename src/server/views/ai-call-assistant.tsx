@@ -162,7 +162,7 @@ export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: n
 
         <h2>how to start</h2>
         <ol class="steps">
-          <li><a href="/#buy">load credits</a>, from {dollars(MIN_TOPUP_CENTS)}. no account needed first; sign in with google or x afterwards.</li>
+          <li><a href="/#buy">load credits</a>, from {dollars(MIN_TOPUP_CENTS)}. no account needed first; sign in afterwards with the email you paid with.</li>
           <li>
             paste the setup prompt into your assistant. it works with Claude Code, Codex, Claude Desktop, claude.ai, ChatGPT, Grok Bot and other MCP
             clients, and Muse can build its own integration. the <a href="/mcp">install page</a> has the steps for each app.
