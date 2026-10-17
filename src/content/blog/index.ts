@@ -1,3 +1,13 @@
+import mountSinaiDoctorsPhoneNumber from './mount-sinai-doctors-phone-number.md';
+import piedmontNaturalGasCustomerService from './piedmont-natural-gas-customer-service.md';
+import nyTollsByMailPhoneNumber from './ny-tolls-by-mail-phone-number.md';
+import sabatesEyeCentersPediatricEyeExam from './sabates-eye-centers-pediatric-eye-exam.md';
+import afternicDomainBrokerPhoneNumber from './afternic-domain-broker-phone-number.md';
+import maggyMaidSacramento from './maggy-maid-sacramento.md';
+import sevSkinSacramento from './sev-skin-sacramento.md';
+import phoenicianGolfClubTeeTimes from './phoenician-golf-club-tee-times.md';
+import serviceontarioPhoneNumber from './serviceontario-phone-number.md';
+import vanguardCustomerServiceNumber from './vanguard-customer-service-number.md';
 import americasTireFremont from './americas-tire-fremont.md';
 import posadaRealLosCondestables from './posada-real-los-condestables.md';
 import uglyBabyBrooklynReservations from './ugly-baby-brooklyn-reservations.md';
@@ -183,6 +193,16 @@ import clinePhoneCalls from './cline-phone-calls.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'mount-sinai-doctors-phone-number', markdown: mountSinaiDoctorsPhoneNumber },
+  { slug: 'piedmont-natural-gas-customer-service', markdown: piedmontNaturalGasCustomerService },
+  { slug: 'ny-tolls-by-mail-phone-number', markdown: nyTollsByMailPhoneNumber },
+  { slug: 'sabates-eye-centers-pediatric-eye-exam', markdown: sabatesEyeCentersPediatricEyeExam },
+  { slug: 'afternic-domain-broker-phone-number', markdown: afternicDomainBrokerPhoneNumber },
+  { slug: 'maggy-maid-sacramento', markdown: maggyMaidSacramento },
+  { slug: 'sev-skin-sacramento', markdown: sevSkinSacramento },
+  { slug: 'phoenician-golf-club-tee-times', markdown: phoenicianGolfClubTeeTimes },
+  { slug: 'serviceontario-phone-number', markdown: serviceontarioPhoneNumber },
+  { slug: 'vanguard-customer-service-number', markdown: vanguardCustomerServiceNumber },
   { slug: 'americas-tire-fremont', markdown: americasTireFremont },
   { slug: 'posada-real-los-condestables', markdown: posadaRealLosCondestables },
   { slug: 'ugly-baby-brooklyn-reservations', markdown: uglyBabyBrooklynReservations },
