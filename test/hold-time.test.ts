@@ -89,6 +89,25 @@ test('wait requests reps actually said on our calls start a hold', () => {
     assert.ok(!isHoldLine(line), line);
 });
 
+test('a queue that apologizes for the wait stays a hold, and our caller saying it will wait does not end it', () => {
+  // Risa's Dental, Oct 17: "sorry for the wait" counted as a person back, and the 3 minute cap hung up in the queue.
+  const m = new HoldMeter();
+  assert.deepEqual(m.them('Hello, thank you for calling. One of our outstanding assistants will be with you in just a moment.', s(0)), { type: 'start', at: s(0) });
+  assert.equal(m.caller('Okay,'), null);
+  assert.equal(m.them(' All assistants are still helping other patients. We are really sorry for the wait. If you would like us to hold your place in line', s(16)), null);
+  assert.equal(m.caller('Hmm. I\'ll stay on the line.'), null);
+  assert.equal(m.them('At our office, we believe everyone deserves access to quality and affordable care.', s(44)), null);
+  assert.equal(m.caller("Hmm. I'll keep waiting."), null);
+  assert.ok(m.holding());
+});
+
+test('a person thanking us for holding while greeting us ends the hold, and never starts one', () => {
+  const m = new HoldMeter();
+  m.them('Please hold.', s(0));
+  assert.deepEqual(m.them('Thanks so much for holding, how can I help you?', s(300)), { type: 'end', at: s(300), seconds: 300 });
+  assert.equal(new HoldMeter().them('Sorry about the wait, my name is Dana.', s(0)), null);
+});
+
 test('isHoldLine knows queue language from conversation', () => {
   assert.ok(isHoldLine('All agents are currently busy'));
   assert.ok(isHoldLine('The estimated wait time is 10 minutes'));

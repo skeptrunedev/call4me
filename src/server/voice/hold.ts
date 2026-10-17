@@ -31,6 +31,7 @@ const WAIT_REQUEST = new RegExp(
       String.raw`(?:current|estimated|expected|approximate|average) (?:hold|wait) time`,
       String.raw`(?:may|will) be (?:monitored|recorded)|is being recorded|recorded for quality`,
       String.raw`someone (?:who|that) can help|right person|right department`,
+      String.raw`(?:will|'ll) be with you|(?:still )?(?:helping|assisting|serving|with|on the phone with) other (?:callers|patients|customers|guests|clients|members|people)|hold your place|place in (?:line|the queue)|(?:sorry|apologi[sz]e) (?:about |for )?(?:the|your) wait|thanks? (?:you )?(?:so much |kindly )?for (?:your )?(?:patience|holding|waiting)`,
       String.raw`take a (?:quick |little )?look|(?:^|[\s,]+)(?:moment|hold|sec|second|minute)[\s.!]*$`,
     ]
       .map((p) => `(?:${p})`)
@@ -40,9 +41,9 @@ const WAIT_REQUEST = new RegExp(
 );
 
 /** Our caller only acknowledging ("sure", "okay, no problem"): not an answer to someone back from a hold. */
-const ACKNOWLEDGMENT = /^(?:(?:sure|okay|ok|alright|all right|no problem|of course|take your time|thanks?|thank you|got it|perfect|great|sounds good|yes|yeah)[\s,.!]*)+$/i;
-// "Thank you for holding" and "this is a recorded line" are common in queue recordings, so they don't count.
-const PERSON_BACK = /\b(?:my name is|how (?:can|may) i (?:help|assist)|(?:are you )?still there|sorry (?:about|for) the wait|mi nombre es|le habla|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir)|disculpe la espera)\b/i;
+const ACKNOWLEDGMENT = /^(?:(?:sure|okay|ok|alright|all right|no problem|no worries|of course|take your time|thanks?|thank you|got it|perfect|great|sounds good|yes|yeah|hmm+|mm-?hmm|uh-?huh|will do|i can wait|i'?ll (?:stay on the line|keep waiting|keep holding|hold|wait|stay on|hang on)|i'?m (?:still )?(?:here|on the line|holding|waiting))[\s,.!]*)+$/i;
+// "Thank you for holding" and "sorry for the wait" are queue recordings as often as people, so they don't count.
+const PERSON_BACK = /\b(?:my name is|how (?:can|may) i (?:help|assist)|(?:are you )?still there|mi nombre es|le habla|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir))\b/i;
 
 /** A line from the other side that is part of the wait: a hold request or a queue recording. */
 export function isHoldLine(text: string): boolean {
@@ -75,12 +76,13 @@ export class HoldMeter {
     this.theirs += delta;
     this.mine = '';
     const sentence = lastSentence(this.theirs);
-    if (this.since === null) return isHoldLine(sentence) ? this.start(at) : null;
+    // A person greeting us outranks hold words in the same breath ("thanks for holding, how can I help?").
+    if (this.since === null) return isHoldLine(sentence) && !PERSON_BACK.test(sentence) ? this.start(at) : null;
+    if (PERSON_BACK.test(sentence)) return this.end(this.speechAt ?? at);
     if (isHoldLine(sentence)) {
       this.speechAt = null;
       return null;
     }
-    if (PERSON_BACK.test(sentence)) return this.end(this.speechAt ?? at);
     if (this.speechAt === null && /\w{2,}/.test(sentence)) this.speechAt = at;
     return null;
   }
