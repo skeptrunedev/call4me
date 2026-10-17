@@ -108,7 +108,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2180
+    "tokens": 2184
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
@@ -158,7 +158,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 18175
+    "tokens": 18179
   },
   "/blog/victorias-secret-georgetown": {
     "html": "/__pages/d529bbf9b8194852.html",
@@ -633,7 +633,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/ai-apps-that-make-calls-for-you": {
     "html": "/__pages/427c0a40de2bba10.html",
     "markdown": "/__pages/427c0a40de2bba10.md",
-    "tokens": 5704
+    "tokens": 6696
   },
   "/blog/hijinx-hotel-irvine": {
     "html": "/__pages/acb492544467c9de.html",
@@ -778,7 +778,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/ai-agent-that-makes-phone-calls": {
     "html": "/__pages/c6d4cf77fa9ecc89.html",
     "markdown": "/__pages/c6d4cf77fa9ecc89.md",
-    "tokens": 3197
+    "tokens": 3201
   },
   "/blog/gym-day-pass": {
     "html": "/__pages/58e8dd209383d03e.html",
