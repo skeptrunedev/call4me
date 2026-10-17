@@ -1,7 +1,7 @@
 /**
  * Every company we have published a recorded customer service call for, one row each, for the
  * /companies hub. Derived from public/static/blog/how-long-to-reach-a-human.csv (the dataset
- * behind the time-to-a-human post); test/companies.test.ts fails if the two disagree. The
+ * behind the time-to-a-human post); keep the two in agreement. The
  * number is the one dialed on the call that reached a person (else the first call); the time is
  * from the start of that published recording to the first live person.
  */

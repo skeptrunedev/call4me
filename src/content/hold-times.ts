@@ -2,9 +2,9 @@ import { COMPANIES, type Company } from './companies';
 
 /**
  * Customer service hold times by company, ranked. Every number comes from COMPANIES (itself
- * tested against the time-to-a-human CSV); this file adds, per company, the line from the
+ * derived from the time-to-a-human CSV); this file adds, per company, the line from the
  * published transcript that shows the first live person and the route that got us there, in
- * the words of the data post's table. test/hold-times.test.ts fails if either quote drifts.
+ * the words of the data post's table. Keep both quotes matching the post and its table.
  */
 export const HOLD_UPDATED = '2026-10-17';
 export const HOLD_PATH = '/hold-times';
