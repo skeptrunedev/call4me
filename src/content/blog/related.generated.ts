@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "454c6ae686e581e2c204a3b7035ce7672b415054cbfd53b0491f684363fa7aea"
+  "sourceHash": "50a0a8e560b158bbf1172f660df9d7e67edcc4fb6dcb4ab21a70087662737e0e"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -382,6 +382,28 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.609602
     }
   ],
+  "americas-tire-fremont": [
+    {
+      "slug": "town-fair-tire-manchester-ct",
+      "similarity": 0.701119
+    },
+    {
+      "slug": "wheel-alignment-cost",
+      "similarity": 0.650552
+    },
+    {
+      "slug": "walmart-oil-change-prices",
+      "similarity": 0.644253
+    },
+    {
+      "slug": "costco-tire-appointment-cancel-refund",
+      "similarity": 0.640745
+    },
+    {
+      "slug": "les-schwab-oil-change",
+      "similarity": 0.622079
+    }
+  ],
   "aquasana-return-exception": [],
   "att-customer-service-number": [
     {
@@ -477,7 +499,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "pin-on-grand-reservations",
-      "similarity": 0.701475
+      "similarity": 0.701474
     },
     {
       "slug": "ai-personal-assistant-appointment-booking",
@@ -506,6 +528,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.688543
     }
   ],
+  "boss-frogs-molokini-snorkel": [],
   "cafe-demi-teaneck": [
     {
       "slug": "la-mar-san-francisco-reservations",
@@ -518,6 +541,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "palmeri-brentwood-private-dining",
       "similarity": 0.603482
+    },
+    {
+      "slug": "zessan-otemachi-private-room",
+      "similarity": 0.601094
     }
   ],
   "cancel-audible": [
@@ -671,7 +698,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "cancel-planet-fitness",
-      "similarity": 0.688413
+      "similarity": 0.688412
     },
     {
       "slug": "how-to-cancel-siriusxm",
@@ -747,7 +774,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "cancel-hellofresh",
-      "similarity": 0.688413
+      "similarity": 0.688412
     },
     {
       "slug": "cancel-fubo",
@@ -772,6 +799,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.731781
     },
     {
+      "slug": "zessan-otemachi-private-room",
+      "similarity": 0.714505
+    },
+    {
       "slug": "pin-on-grand-reservations",
       "similarity": 0.704784
     },
@@ -784,12 +815,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.68296
     },
     {
-      "slug": "customer-story-rick-dinner-reservation",
-      "similarity": 0.646001
-    },
-    {
-      "slug": "la-mar-san-francisco-reservations",
-      "similarity": 0.615078
+      "slug": "ugly-baby-brooklyn-reservations",
+      "similarity": 0.671145
     }
   ],
   "capital-one-customer-service": [
@@ -915,7 +942,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.828316
+      "similarity": 0.828317
     },
     {
       "slug": "langchain-mcp-phone-calls",
@@ -1105,6 +1132,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "costco-tire-appointment-cancel-refund": [
     {
+      "slug": "americas-tire-fremont",
+      "similarity": 0.640745
+    },
+    {
       "slug": "town-fair-tire-manchester-ct",
       "similarity": 0.616003
     }
@@ -1183,6 +1214,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.712725
     },
     {
+      "slug": "zessan-otemachi-private-room",
+      "similarity": 0.689917
+    },
+    {
       "slug": "pin-on-grand-reservations",
       "similarity": 0.67472
     },
@@ -1205,10 +1240,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "palmeri-brentwood-private-dining",
       "similarity": 0.653971
-    },
-    {
-      "slug": "equal-parts-sf-reservations",
-      "similarity": 0.649409
     }
   ],
   "delta-customer-service": [
@@ -1311,6 +1342,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.733876
     },
     {
+      "slug": "zessan-otemachi-private-room",
+      "similarity": 0.695845
+    },
+    {
       "slug": "pin-on-grand-reservations",
       "similarity": 0.690525
     },
@@ -1319,20 +1354,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.680103
     },
     {
+      "slug": "ugly-baby-brooklyn-reservations",
+      "similarity": 0.657127
+    },
+    {
       "slug": "customer-story-rick-dinner-reservation",
       "similarity": 0.649409
     },
     {
       "slug": "palmeri-brentwood-private-dining",
       "similarity": 0.641034
-    },
-    {
-      "slug": "private-dining-room-cost",
-      "similarity": 0.634145
-    },
-    {
-      "slug": "cafe-demi-teaneck",
-      "similarity": 0.624479
     }
   ],
   "etihad-customer-service": [
@@ -1382,7 +1413,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "expedia-customer-service-number": [
     {
       "slug": "united-change-flight",
-      "similarity": 0.716589
+      "similarity": 0.71659
     },
     {
       "slug": "priceline-customer-service",
@@ -1423,6 +1454,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "costco-eye-exam-cost",
       "similarity": 0.709457
+    },
+    {
+      "slug": "lincoln-urgent-care",
+      "similarity": 0.629337
     }
   ],
   "fabletics-customer-service": [
@@ -1717,7 +1752,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-bot-vs-meta-muse",
-      "similarity": 0.736963
+      "similarity": 0.736964
     },
     {
       "slug": "instinct-ai-phone-calls",
@@ -1751,7 +1786,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-bot-templates",
-      "similarity": 0.736963
+      "similarity": 0.736964
     },
     {
       "slug": "meta-muse-first-task",
@@ -1979,6 +2014,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.610285
     },
     {
+      "slug": "posada-real-los-condestables",
+      "similarity": 0.60776
+    },
+    {
       "slug": "airbnb-customer-service-number",
       "similarity": 0.604445
     },
@@ -2073,6 +2112,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.714701
     },
     {
+      "slug": "zessan-otemachi-private-room",
+      "similarity": 0.713269
+    },
+    {
       "slug": "book-dinner-reservation-by-phone",
       "similarity": 0.706375
     },
@@ -2081,16 +2124,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.686108
     },
     {
+      "slug": "ugly-baby-brooklyn-reservations",
+      "similarity": 0.679839
+    },
+    {
       "slug": "customer-story-rick-dinner-reservation",
       "similarity": 0.672616
-    },
-    {
-      "slug": "private-dining-room-cost",
-      "similarity": 0.660478
-    },
-    {
-      "slug": "lai-wah-heen-private-dining",
-      "similarity": 0.655436
     }
   ],
   "lai-wah-heen-private-dining": [
@@ -2107,6 +2146,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.750465
     },
     {
+      "slug": "zessan-otemachi-private-room",
+      "similarity": 0.737417
+    },
+    {
       "slug": "private-dining-room-cost",
       "similarity": 0.733423
     },
@@ -2121,10 +2164,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "book-dinner-reservation-by-phone",
       "similarity": 0.67184
-    },
-    {
-      "slug": "customer-story-rick-dinner-reservation",
-      "similarity": 0.66815
     }
   ],
   "langchain-mcp-phone-calls": [
@@ -2172,8 +2211,18 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.749782
     },
     {
+      "slug": "americas-tire-fremont",
+      "similarity": 0.622079
+    },
+    {
       "slug": "town-fair-tire-manchester-ct",
       "similarity": 0.613961
+    }
+  ],
+  "lincoln-urgent-care": [
+    {
+      "slug": "eye-exam-cost-without-insurance",
+      "similarity": 0.629337
     }
   ],
   "m-hansik-durham-private-dining": [
@@ -2192,6 +2241,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "palmeri-brentwood-private-dining",
       "similarity": 0.684417
+    },
+    {
+      "slug": "zessan-otemachi-private-room",
+      "similarity": 0.683313
     },
     {
       "slug": "capital-grille-wall-street-private-dining",
@@ -2239,7 +2292,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.828316
+      "similarity": 0.828317
     },
     {
       "slug": "t3-code-phone-calls",
@@ -2281,7 +2334,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.748738
+      "similarity": 0.748737
     },
     {
       "slug": "cursor-phone-calls",
@@ -2374,6 +2427,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "ritz-carlton-bachelor-gulch-reservations",
       "similarity": 0.62983
+    },
+    {
+      "slug": "the-base-glamping-yugawara",
+      "similarity": 0.614935
     },
     {
       "slug": "inn-at-jim-thorpe-reservations",
@@ -2605,6 +2662,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.752317
     },
     {
+      "slug": "zessan-otemachi-private-room",
+      "similarity": 0.735876
+    },
+    {
       "slug": "capital-grille-wall-street-private-dining",
       "similarity": 0.731781
     },
@@ -2617,20 +2678,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.729015
     },
     {
+      "slug": "posada-real-los-condestables",
+      "similarity": 0.689059
+    },
+    {
       "slug": "la-mar-san-francisco-reservations",
       "similarity": 0.686108
     },
     {
       "slug": "m-hansik-durham-private-dining",
       "similarity": 0.684417
-    },
-    {
-      "slug": "pin-on-grand-reservations",
-      "similarity": 0.668795
-    },
-    {
-      "slug": "customer-story-rick-dinner-reservation",
-      "similarity": 0.653971
     }
   ],
   "paradox-hotel-vancouver": [
@@ -2641,6 +2698,14 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "moxy-st-petersburg-downtown",
       "similarity": 0.660825
+    },
+    {
+      "slug": "the-base-glamping-yugawara",
+      "similarity": 0.628709
+    },
+    {
+      "slug": "posada-real-los-condestables",
+      "similarity": 0.625713
     },
     {
       "slug": "inn-at-jim-thorpe-reservations",
@@ -2703,7 +2768,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "t3-code-phone-calls",
-      "similarity": 0.81059
+      "similarity": 0.810589
     },
     {
       "slug": "schedule-phone-calls-claude-code-codex",
@@ -2749,7 +2814,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "book-dinner-reservation-by-phone",
-      "similarity": 0.701475
+      "similarity": 0.701474
+    },
+    {
+      "slug": "ugly-baby-brooklyn-reservations",
+      "similarity": 0.700235
     },
     {
       "slug": "private-dining-room-cost",
@@ -2758,10 +2827,40 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "equal-parts-sf-reservations",
       "similarity": 0.690525
+    }
+  ],
+  "posada-real-los-condestables": [
+    {
+      "slug": "zessan-otemachi-private-room",
+      "similarity": 0.689602
     },
     {
-      "slug": "sabai-eugene-reservations",
-      "similarity": 0.681578
+      "slug": "palmeri-brentwood-private-dining",
+      "similarity": 0.689059
+    },
+    {
+      "slug": "ritz-carlton-bachelor-gulch-reservations",
+      "similarity": 0.662905
+    },
+    {
+      "slug": "the-base-glamping-yugawara",
+      "similarity": 0.661912
+    },
+    {
+      "slug": "la-mar-san-francisco-reservations",
+      "similarity": 0.649476
+    },
+    {
+      "slug": "private-dining-room-cost",
+      "similarity": 0.635329
+    },
+    {
+      "slug": "paradox-hotel-vancouver",
+      "similarity": 0.625713
+    },
+    {
+      "slug": "pin-on-grand-reservations",
+      "similarity": 0.61143
     }
   ],
   "pottery-barn-customer-service": [
@@ -2818,6 +2917,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "private-dining-room-cost": [
     {
+      "slug": "zessan-otemachi-private-room",
+      "similarity": 0.757817
+    },
+    {
       "slug": "lai-wah-heen-private-dining",
       "similarity": 0.733423
     },
@@ -2844,10 +2947,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "customer-story-rick-dinner-reservation",
       "similarity": 0.671405
-    },
-    {
-      "slug": "la-mar-san-francisco-reservations",
-      "similarity": 0.660478
     }
   ],
   "progressive-customer-service": [
@@ -2926,8 +3025,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "ritz-carlton-bachelor-gulch-reservations": [
     {
+      "slug": "the-base-glamping-yugawara",
+      "similarity": 0.671814
+    },
+    {
       "slug": "inn-at-jim-thorpe-reservations",
       "similarity": 0.670147
+    },
+    {
+      "slug": "posada-real-los-condestables",
+      "similarity": 0.662905
     },
     {
       "slug": "paradox-hotel-vancouver",
@@ -2980,8 +3087,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.731895
     },
     {
+      "slug": "ugly-baby-brooklyn-reservations",
+      "similarity": 0.721789
+    },
+    {
       "slug": "book-dinner-reservation-by-phone",
       "similarity": 0.704095
+    },
+    {
+      "slug": "zessan-otemachi-private-room",
+      "similarity": 0.702445
     },
     {
       "slug": "pin-on-grand-reservations",
@@ -2994,10 +3109,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "lai-wah-heen-private-dining",
       "similarity": 0.647034
-    },
-    {
-      "slug": "private-dining-room-cost",
-      "similarity": 0.633499
     }
   ],
   "salon-per-se-bellaire": [
@@ -3016,6 +3127,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.709694
     }
   ],
+  "samsung-oven-door-glass-repair-sacramento": [],
   "sassafraz-private-dining": [
     {
       "slug": "lai-wah-heen-private-dining",
@@ -3034,6 +3146,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.725525
     },
     {
+      "slug": "zessan-otemachi-private-room",
+      "similarity": 0.708715
+    },
+    {
       "slug": "pin-on-grand-reservations",
       "similarity": 0.706867
     },
@@ -3042,12 +3158,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.699352
     },
     {
-      "slug": "customer-story-rick-dinner-reservation",
-      "similarity": 0.629208
-    },
-    {
-      "slug": "la-mar-san-francisco-reservations",
-      "similarity": 0.612404
+      "slug": "ugly-baby-brooklyn-reservations",
+      "similarity": 0.642451
     }
   ],
   "schedule-phone-calls-claude-code-codex": [
@@ -3153,6 +3265,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.678011
     },
     {
+      "slug": "zan-atelier-chicago-alterations",
+      "similarity": 0.655519
+    },
+    {
       "slug": "amazon-customer-service-number",
       "similarity": 0.654632
     },
@@ -3163,10 +3279,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "walmart-customer-service-number",
       "similarity": 0.650455
-    },
-    {
-      "slug": "customer-story-joe-dress-shoes",
-      "similarity": 0.621028
     }
   ],
   "t-mobile-customer-service-number": [
@@ -3206,7 +3318,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.81059
+      "similarity": 0.810589
     },
     {
       "slug": "mastra-mcp-phone-calls",
@@ -3221,7 +3333,29 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.787753
     }
   ],
+  "the-base-glamping-yugawara": [
+    {
+      "slug": "ritz-carlton-bachelor-gulch-reservations",
+      "similarity": 0.671814
+    },
+    {
+      "slug": "posada-real-los-condestables",
+      "similarity": 0.661912
+    },
+    {
+      "slug": "paradox-hotel-vancouver",
+      "similarity": 0.628709
+    },
+    {
+      "slug": "moxy-st-petersburg-downtown",
+      "similarity": 0.614935
+    }
+  ],
   "town-fair-tire-manchester-ct": [
+    {
+      "slug": "americas-tire-fremont",
+      "similarity": 0.701119
+    },
     {
       "slug": "wheel-alignment-cost",
       "similarity": 0.679905
@@ -3273,6 +3407,40 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.778837
     }
   ],
+  "ugly-baby-brooklyn-reservations": [
+    {
+      "slug": "sabai-eugene-reservations",
+      "similarity": 0.721789
+    },
+    {
+      "slug": "pin-on-grand-reservations",
+      "similarity": 0.700235
+    },
+    {
+      "slug": "la-mar-san-francisco-reservations",
+      "similarity": 0.679839
+    },
+    {
+      "slug": "capital-grille-wall-street-private-dining",
+      "similarity": 0.671145
+    },
+    {
+      "slug": "lai-wah-heen-private-dining",
+      "similarity": 0.669223
+    },
+    {
+      "slug": "equal-parts-sf-reservations",
+      "similarity": 0.657127
+    },
+    {
+      "slug": "book-dinner-reservation-by-phone",
+      "similarity": 0.657104
+    },
+    {
+      "slug": "sassafraz-private-dining",
+      "similarity": 0.642451
+    }
+  ],
   "united-change-flight": [
     {
       "slug": "etihad-customer-service",
@@ -3280,7 +3448,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "expedia-customer-service-number",
-      "similarity": 0.716589
+      "similarity": 0.71659
     },
     {
       "slug": "jetblue-customer-service",
@@ -3570,6 +3738,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.749782
     },
     {
+      "slug": "americas-tire-fremont",
+      "similarity": 0.644253
+    },
+    {
       "slug": "town-fair-tire-manchester-ct",
       "similarity": 0.626716
     }
@@ -3634,6 +3806,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "town-fair-tire-manchester-ct",
       "similarity": 0.679905
+    },
+    {
+      "slug": "americas-tire-fremont",
+      "similarity": 0.650552
     }
   ],
   "windstream-customer-service": [
@@ -3683,6 +3859,46 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "att-customer-service-number",
       "similarity": 0.607503
+    }
+  ],
+  "zan-atelier-chicago-alterations": [
+    {
+      "slug": "suitsupply-customer-service",
+      "similarity": 0.655519
+    }
+  ],
+  "zessan-otemachi-private-room": [
+    {
+      "slug": "private-dining-room-cost",
+      "similarity": 0.757817
+    },
+    {
+      "slug": "lai-wah-heen-private-dining",
+      "similarity": 0.737417
+    },
+    {
+      "slug": "palmeri-brentwood-private-dining",
+      "similarity": 0.735876
+    },
+    {
+      "slug": "capital-grille-wall-street-private-dining",
+      "similarity": 0.714505
+    },
+    {
+      "slug": "la-mar-san-francisco-reservations",
+      "similarity": 0.713269
+    },
+    {
+      "slug": "sassafraz-private-dining",
+      "similarity": 0.708715
+    },
+    {
+      "slug": "sabai-eugene-reservations",
+      "similarity": 0.702445
+    },
+    {
+      "slug": "equal-parts-sf-reservations",
+      "similarity": 0.695845
     }
   ]
 };

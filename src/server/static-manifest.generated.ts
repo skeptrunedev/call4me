@@ -8,7 +8,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
     "markdown": "/__pages/1a130cabaa8a47b0.md",
-    "tokens": 84551
+    "tokens": 91602
   },
   "/voices": {
     "html": "/__pages/3c1d9b7cb97eed20.html",
@@ -73,82 +73,132 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2148
+    "tokens": 1999
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2219
+    "tokens": 2172
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2319
+    "tokens": 2247
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2194
+    "tokens": 2312
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2129
+    "tokens": 2137
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 1927
+    "tokens": 2192
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2054
+    "tokens": 1791
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2020
+    "tokens": 2154
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 1778
+    "tokens": 1931
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 1795
+    "tokens": 1773
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 1991
+    "tokens": 1825
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 1850
+    "tokens": 1968
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 2069
+    "tokens": 1890
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 2051
+    "tokens": 2107
+  },
+  "/blog?page=15": {
+    "html": "/__pages/812ea472621cede4.html",
+    "markdown": "/__pages/812ea472621cede4.md",
+    "tokens": 1603
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 15232
+    "tokens": 15968
+  },
+  "/blog/americas-tire-fremont": {
+    "html": "/__pages/a244f81352eb61fc.html",
+    "markdown": "/__pages/a244f81352eb61fc.md",
+    "tokens": 2417
+  },
+  "/blog/posada-real-los-condestables": {
+    "html": "/__pages/cb8eb43c3b5c9aab.html",
+    "markdown": "/__pages/cb8eb43c3b5c9aab.md",
+    "tokens": 5637
+  },
+  "/blog/ugly-baby-brooklyn-reservations": {
+    "html": "/__pages/18af9e6d7e13dee6.html",
+    "markdown": "/__pages/18af9e6d7e13dee6.md",
+    "tokens": 3162
+  },
+  "/blog/lincoln-urgent-care": {
+    "html": "/__pages/9379f6ba5a43af91.html",
+    "markdown": "/__pages/9379f6ba5a43af91.md",
+    "tokens": 2963
+  },
+  "/blog/samsung-oven-door-glass-repair-sacramento": {
+    "html": "/__pages/4dddb6dfe5e4c86b.html",
+    "markdown": "/__pages/4dddb6dfe5e4c86b.md",
+    "tokens": 3238
+  },
+  "/blog/zan-atelier-chicago-alterations": {
+    "html": "/__pages/9bb4732f1d878994.html",
+    "markdown": "/__pages/9bb4732f1d878994.md",
+    "tokens": 2538
+  },
+  "/blog/boss-frogs-molokini-snorkel": {
+    "html": "/__pages/9ea0a6d364098391.html",
+    "markdown": "/__pages/9ea0a6d364098391.md",
+    "tokens": 3865
+  },
+  "/blog/zessan-otemachi-private-room": {
+    "html": "/__pages/24d8ff4fc4fc3fd3.html",
+    "markdown": "/__pages/24d8ff4fc4fc3fd3.md",
+    "tokens": 4181
+  },
+  "/blog/the-base-glamping-yugawara": {
+    "html": "/__pages/6a0ebcfc54e3cd77.html",
+    "markdown": "/__pages/6a0ebcfc54e3cd77.md",
+    "tokens": 7160
   },
   "/blog/m-hansik-durham-private-dining": {
     "html": "/__pages/8f9904998e34e04e.html",
     "markdown": "/__pages/8f9904998e34e04e.md",
-    "tokens": 6638
+    "tokens": 6669
   },
   "/blog/co2-tank-exchange-san-juan": {
     "html": "/__pages/c7de178155fb5365.html",
@@ -163,7 +213,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/palmeri-brentwood-private-dining": {
     "html": "/__pages/a856825addf77839.html",
     "markdown": "/__pages/a856825addf77839.md",
-    "tokens": 5908
+    "tokens": 5901
   },
   "/blog/cafe-demi-teaneck": {
     "html": "/__pages/e1a18e6684c857b7.html",
@@ -203,7 +253,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/moxy-st-petersburg-downtown": {
     "html": "/__pages/6a400c20fc16bbf9.html",
     "markdown": "/__pages/6a400c20fc16bbf9.md",
-    "tokens": 3083
+    "tokens": 3070
   },
   "/blog/walgreens-specialty-pharmacy-phone-number": {
     "html": "/__pages/040847ce95113c08.html",
@@ -233,7 +283,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/town-fair-tire-manchester-ct": {
     "html": "/__pages/d25e218c7665add4.html",
     "markdown": "/__pages/d25e218c7665add4.md",
-    "tokens": 8207
+    "tokens": 8174
   },
   "/blog/sassafraz-private-dining": {
     "html": "/__pages/2e78db2198e5e261.html",
@@ -253,12 +303,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/paradox-hotel-vancouver": {
     "html": "/__pages/2ce3739ad17124b4.html",
     "markdown": "/__pages/2ce3739ad17124b4.md",
-    "tokens": 3169
+    "tokens": 3157
   },
   "/blog/ritz-carlton-bachelor-gulch-reservations": {
     "html": "/__pages/5004f26f0cf7a4df.html",
     "markdown": "/__pages/5004f26f0cf7a4df.md",
-    "tokens": 4253
+    "tokens": 4272
   },
   "/blog/la-mar-san-francisco-reservations": {
     "html": "/__pages/44e7fe715f5d23f9.html",
@@ -268,7 +318,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/equal-parts-sf-reservations": {
     "html": "/__pages/d589aa6f97a1b58f.html",
     "markdown": "/__pages/d589aa6f97a1b58f.md",
-    "tokens": 2971
+    "tokens": 3001
   },
   "/blog/metlife-pet-insurance-phone-number": {
     "html": "/__pages/47ad38c7be331f93.html",
@@ -493,7 +543,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/sabai-eugene-reservations": {
     "html": "/__pages/6310300d393da7e6.html",
     "markdown": "/__pages/6310300d393da7e6.md",
-    "tokens": 2460
+    "tokens": 2473
   },
   "/blog/icebar-orlando-tickets": {
     "html": "/__pages/7a311d54a5cbca68.html",
@@ -508,7 +558,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/customer-story-rick-dinner-reservation": {
     "html": "/__pages/5023fc4d4837d0ba.html",
     "markdown": "/__pages/5023fc4d4837d0ba.md",
-    "tokens": 1723
+    "tokens": 1736
   },
   "/blog/customer-story-dental-appointments": {
     "html": "/__pages/aa1cb4c062716d89.html",
@@ -638,7 +688,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/walmart-oil-change-prices": {
     "html": "/__pages/99fff13b3c5bdd6a.html",
     "markdown": "/__pages/99fff13b3c5bdd6a.md",
-    "tokens": 2712
+    "tokens": 2667
   },
   "/blog/how-to-cancel-siriusxm": {
     "html": "/__pages/89927a745702515f.html",
@@ -763,7 +813,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/les-schwab-oil-change": {
     "html": "/__pages/ba48431d0e7bdb1b.html",
     "markdown": "/__pages/ba48431d0e7bdb1b.md",
-    "tokens": 4476
+    "tokens": 4431
   },
   "/blog/t3-code-phone-calls": {
     "html": "/__pages/c4487b0143fe433f.html",
@@ -848,7 +898,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/eye-exam-cost-without-insurance": {
     "html": "/__pages/759663bac5eb4427.html",
     "markdown": "/__pages/759663bac5eb4427.md",
-    "tokens": 5905
+    "tokens": 6027
   },
   "/blog/follow-up-appointment-telehealth": {
     "html": "/__pages/630731ffc3be9c50.html",
@@ -858,7 +908,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/private-dining-room-cost": {
     "html": "/__pages/071eeba541fc558a.html",
     "markdown": "/__pages/071eeba541fc558a.md",
-    "tokens": 9260
+    "tokens": 9265
   },
   "/blog/how-to-transfer-a-prescription": {
     "html": "/__pages/a4b0bfb79d180b15.html",
@@ -968,7 +1018,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/costco-tire-appointment-cancel-refund": {
     "html": "/__pages/ca5f5983d7127c65.html",
     "markdown": "/__pages/ca5f5983d7127c65.md",
-    "tokens": 4593
+    "tokens": 4719
   },
   "/blog/reschedule-dentist-appointment": {
     "html": "/__pages/1b1129e38f43b43f.html",
