@@ -92,23 +92,50 @@ const dec = (s: string) => JSON.parse(decodeURIComponent(escape(atob(s.trim())))
 
 export const encodeHeader = enc;
 
-/** Bazaar discovery extension (x402 extensions/bazaar) so the CDP index can describe the resource. */
-export function bazaarExtension(routeTemplate: string, description: string, mimeType = 'application/zip', pathParams?: Record<string, string>): Record<string, unknown> {
-  const params = pathParams ?? {};
-  const names = Object.keys(params);
+/** How a paid resource is called and what it answers, for the Bazaar discovery extension. */
+export interface Discovery {
+  /** A GET takes query parameters; a POST takes a JSON body (an example that passes its schema). */
+  input: { method: 'GET'; queryParams?: Record<string, string> } | { method: 'POST'; body: Record<string, unknown>; bodySchema: Record<string, unknown> };
+  /** An example response, so a buyer knows what it gets back. */
+  output: { example: Record<string, unknown> };
+}
+
+/**
+ * Bazaar discovery extension (x402 specs/extensions/bazaar.md) so the CDP index can describe the
+ * resource. The facilitator validates `info` against `schema` before cataloging, so the example
+ * body must pass the body schema.
+ */
+export function bazaarExtension(d: Discovery): Record<string, unknown> {
+  const input =
+    d.input.method === 'POST'
+      ? { type: 'http', method: 'POST', bodyType: 'json', body: d.input.body }
+      : { type: 'http', method: 'GET', ...(d.input.queryParams ? { queryParams: d.input.queryParams } : {}) };
+  const inputSchema =
+    d.input.method === 'POST'
+      ? {
+          type: 'object',
+          properties: { type: { type: 'string', const: 'http' }, method: { type: 'string', enum: ['POST'] }, bodyType: { type: 'string', enum: ['json'] }, body: d.input.bodySchema },
+          required: ['type', 'method', 'bodyType', 'body'],
+          additionalProperties: false,
+        }
+      : {
+          type: 'object',
+          properties: {
+            type: { type: 'string', const: 'http' },
+            method: { type: 'string', enum: ['GET'] },
+            queryParams: { type: 'object', properties: Object.fromEntries(Object.keys(d.input.queryParams ?? {}).map((k) => [k, { type: 'string' }])) },
+          },
+          required: ['type', 'method'],
+          additionalProperties: false,
+        };
   return {
     bazaar: {
-      info: {
-        input: { type: 'http', method: 'GET', ...(names.length ? { pathParams: params } : {}) },
-        output: { type: mimeType === 'application/json' ? 'json' : 'file', mimeType, description },
-        routeTemplate,
-      },
+      info: { input, output: { type: 'json', example: d.output.example } },
       schema: {
         $schema: 'https://json-schema.org/draft/2020-12/schema',
         type: 'object',
-        properties: names.length
-          ? { pathParams: { type: 'object', properties: Object.fromEntries(names.map((n) => [n, { type: 'string', description: params[n] }])), required: names } }
-          : {},
+        properties: { input: inputSchema, output: { type: 'object', properties: { type: { type: 'string' }, example: { type: 'object' } }, required: ['type'] } },
+        required: ['input'],
       },
     },
   };

@@ -104,6 +104,7 @@ export function llmsTxt(site: string, pricePerMinuteCents: number, posts: PostEn
     `- [Agent Skills index](${site}/.well-known/agent-skills/index.json): call4me's own skill, how an agent sets up and places calls (Agent Skills Discovery v0.2.0)`,
     `- [API catalog](${site}/.well-known/api-catalog): RFC 9727 linkset of the machine interfaces`,
     `- [A2A agent card](${site}/.well-known/agent-card.json): what kinds of calls call4me makes and what each needs before dialing (JSON-RPC at ${site}/a2a)`,
+    `- [Calls over x402](${site}/api/x402/calls): POST a call (to, business, goal, category, details, on_behalf_of, max_minutes) and pay the 402 in USDC on Base, no account needed; it returns the call id and an API key to follow it at GET ${site}/api/calls/{call_id}. Unused minutes stay as credits on the paying wallet's account`,
     `- [Credits over x402](${site}/api): GET ${site}/api answers 402 with a USDC price on Base; pay it with a call4me key or OAuth token in the Authorization header and the credits land on that account (?amount=<dollars>, 10 to 500)`,
     `- [auth.md](${site}/auth.md): how an agent registers and signs in (OAuth protected resource metadata at ${site}/.well-known/oauth-protected-resource)`,
     '',

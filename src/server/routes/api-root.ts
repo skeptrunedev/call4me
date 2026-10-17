@@ -41,7 +41,10 @@ apiRoot.get('/api', async (c) => {
     mimeType: 'application/json',
     cents,
     payTo,
-    route: { template: '/api' },
+    discovery: {
+      input: { method: 'GET', queryParams: { amount: '10' } },
+      output: { example: { credited: '$10.00', credited_cents: 1000, balance: '$12.50', balance_cents: 1250, transaction: '0x5f2c…', payer: '0x8a1e…', mcp: `${site}/mcp` } },
+    },
   };
 
   // Credits need an account: refuse a payment that names none before anything settles.

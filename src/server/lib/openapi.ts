@@ -45,11 +45,18 @@ import {
   scheduledCallPath,
   scheduledCallsPath,
   scheduledOutput,
+  X402_CALL_MINUTES,
+  x402CallInput,
+  x402CallsPath,
 } from './call-schema';
+import { DESTINATION_PRICE_CENTS } from './rates';
+import { MAX_TOPUP_CENTS, MIN_TOPUP_CENTS } from '../services/topups';
 import { recordingDescription, recordingInput, recordingOutput, recordingPath } from './recording-schema';
 
+const usd = (cents: number) => (cents / 100).toFixed(2);
+
 /** Generated from the same schemas used by the HTTP route and MCP tool. */
-export function openApiDocument(site: string) {
+export function openApiDocument(site: string, pricePerMinuteCents = 25) {
   const schema = (s: z.ZodType) => z.toJSONSchema(s, { target: 'draft-2020-12' });
   const json = (description: string, s: z.ZodType) => ({ description, content: { 'application/json': { schema: schema(s) } } });
   const bearer = [{ bearerAuth: [] }];
@@ -58,6 +65,10 @@ export function openApiDocument(site: string) {
   const body = (s: z.ZodType) => ({ required: true, content: { 'application/json': { schema: schema(s) } } });
   const callId = path('call_id', 'the call id from placing or listing calls ("call_...")', z.string());
   const error = { description: 'Request failed', content: { 'application/json': { schema: { type: 'object', properties: { error: { type: 'string' } }, required: ['error'] } } } };
+  // Paid over x402 (USDC on Base): the 402 carries the exact amount in PAYMENT-REQUIRED.
+  const paymentRequired = { description: 'Payment required: the x402 v2 requirements, also in the PAYMENT-REQUIRED header', content: { 'application/json': { schema: { type: 'object', properties: { x402Version: { type: 'integer' }, accepts: { type: 'array', items: { type: 'object' } } }, required: ['x402Version', 'accepts'] } } } };
+  const priced = (minCents: number, maxCents: number) => ({ price: { mode: 'dynamic', currency: 'USD', min: usd(minCents), max: usd(maxCents) }, protocols: [{ x402: {} }] });
+  const topPrice = Math.max(pricePerMinuteCents, ...Object.values(DESTINATION_PRICE_CENTS));
   return {
     openapi: '3.1.0',
     info: {
@@ -65,10 +76,37 @@ export function openApiDocument(site: string) {
       version: '1.3.0',
       description:
         'Phone calls an AI agent places for its user: call a business, follow the call to its outcome, answer the caller\'s questions mid-call, and patch the user in. Also the prepaid balance, the caller profile, scheduled calls, the account\'s phone numbers and call recordings. The same operations as the MCP server at /mcp. Calls are billed per minute from pickup (phone menus and conversation; hold time at half price) from the prepaid balance; unanswered calls are free. Refusals name MCP tools (call4me_place_call is POST /api/calls, call4me_save_profile is PATCH /api/profile).',
+      'x-guidance':
+        'With a wallet and no account: POST /api/x402/calls with the call (to, business, goal, category, details, on_behalf_of, max_minutes) and pay the 402 in USDC on Base. A refusal (422 "Not calling yet") lists what to ask the user and takes no payment. The paid response returns the call id and an api_key; follow the call with GET /api/calls/{call_id}?wait_seconds=30 and Authorization: Bearer <api_key> until finished, answering open questions with POST /api/calls/{call_id}/answer. With an account: the bearer routes below, and GET /api to buy credits in USDC.',
+      contact: { name: 'call4me', email: 'me@call4.me', url: site },
     },
     servers: [{ url: site }],
     components: { securitySchemes: { bearerAuth: { type: 'http', scheme: 'bearer', description: 'A call4me API key or OAuth access token for the site or MCP resource.' } } },
     paths: {
+      '/api': {
+        get: {
+          operationId: 'buyCredits',
+          description: 'Buy call credits in USDC on Base over x402 for the account named by the bearer token. Without a payment: 402 with the price of `amount` dollars of credits.',
+          security: bearer,
+          parameters: [query('amount', `dollars of credits, ${MIN_TOPUP_CENTS / 100} to ${MAX_TOPUP_CENTS / 100} (default ${MIN_TOPUP_CENTS / 100})`, z.number().min(MIN_TOPUP_CENTS / 100).max(MAX_TOPUP_CENTS / 100))],
+          'x-payment-info': priced(MIN_TOPUP_CENTS, MAX_TOPUP_CENTS),
+          responses: {
+            '200': json('Credited', z.looseObject({ credited: z.string(), credited_cents: z.number(), balance: z.string(), balance_cents: z.number(), transaction: z.string(), payer: z.string() })),
+            '400': error, '401': error, '402': paymentRequired, '503': error },
+        },
+      },
+      [x402CallsPath]: {
+        post: {
+          operationId: 'placePaidCall',
+          description: `Place a call paid in USDC on Base over x402, with no call4me account: the payment is max_minutes (default ${X402_CALL_MINUTES.default}, up to ${X402_CALL_MINUTES.max}) at the destination's per-minute price, and the paying wallet becomes a call4me account. The call is checked before payment settles: 422 "Not calling yet" lists what to ask the user and takes nothing. Returns the call and the account's api_key; follow it with GET /api/calls/{call_id}. Minutes the call does not use stay as credits on that account.`,
+          security: [],
+          requestBody: body(x402CallInput),
+          'x-payment-info': priced(pricePerMinuteCents, X402_CALL_MINUTES.max * topPrice),
+          responses: {
+            '201': json('Paid and dialing', z.looseObject({ call: callOutput, api_key: z.string(), follow: z.string(), credited: z.string(), credited_cents: z.number(), balance: z.string(), balance_cents: z.number(), transaction: z.string(), payer: z.string() })),
+            '400': error, '402': paymentRequired, '403': error, '409': error, '422': error, '502': error, '503': error },
+        },
+      },
       [balancePath]: {
         get: { operationId: 'getBalance', description: 'The prepaid balance, the per-minute price (and the destinations priced differently), and the account\'s call4me numbers. Free.', security: bearer, responses: { '200': json('The balance and numbers', balanceOutput), '401': error } },
       },

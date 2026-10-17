@@ -3,7 +3,7 @@ import { now } from '../lib/ids';
 import { depositAddress, recordCryptoPayment, type CryptoNetwork } from '../lib/stripe';
 import {
   bazaarExtension, encodeHeader, facilitator, isEvmAddress, matchRequirements, paymentFromRequest, paymentRequiredResponse, requirementsFor, x402Config,
-  type Network, type PaymentPayload, type PaymentRequired, type PaymentRequirements, type SettleResponse,
+  type Discovery, type Network, type PaymentPayload, type PaymentRequired, type PaymentRequirements, type SettleResponse,
 } from '../lib/x402';
 
 /**
@@ -23,8 +23,8 @@ export interface Payable {
   mimeType: string;
   cents: number;
   payTo: string;
-  /** Bazaar route template, for the discovery extension. */
-  route: { template: string };
+  /** How it is called and what it answers, for the Bazaar discovery extension. */
+  discovery: Discovery;
 }
 
 export type Collected =
@@ -76,7 +76,7 @@ export function x402(env: Env, stripe: Stripe) {
         x402Version: 2,
         resource: { url: p.url, description: p.description, mimeType: p.mimeType },
         accepts: [requirementsFor(p.cents, p.payTo, cfg.network)],
-        extensions: bazaarExtension(p.route.template, p.description, p.mimeType),
+        extensions: bazaarExtension(p.discovery),
       };
     },
 
@@ -84,8 +84,10 @@ export function x402(env: Env, stripe: Stripe) {
      * Take payment for a payable: read the client's payment header; with none (or a bad
      * one) return the 402; otherwise verify, settle, and record in Stripe. Settling comes
      * before crediting: the buyer's money must be on-chain before the credits exist.
+     * `ready` runs once the payment verifies and before it settles, with the payer's address:
+     * a response from it refuses the request and nothing is taken.
      */
-    async collect(req: Request, p: Payable, metadata: Record<string, string>): Promise<Collected> {
+    async collect(req: Request, p: Payable, metadata: Record<string, string>, ready?: (payer: string) => Promise<Response | null>): Promise<Collected> {
       if (!cfg) throw new Error('x402 is not configured');
       const required = this.required(p);
 
@@ -103,6 +105,8 @@ export function x402(env: Env, stripe: Stripe) {
       const fac = facilitator(cfg.facilitator);
       const verdict = await fac.verify(payload, chosen);
       if (!verdict.isValid) return { paid: false, response: paymentRequiredResponse({ ...required, error: `payment rejected: ${verdict.invalidReason ?? 'invalid'}` }) };
+      const refused = ready && (await ready(verdict.payer ?? payload.payload.authorization.from));
+      if (refused) return { paid: false, response: refused };
 
       let settled: SettleResponse = await fac.settle(payload, chosen);
       if (!settled.success && settled.errorReason === 'settlement_pending') settled = await fac.settle(payload, chosen);

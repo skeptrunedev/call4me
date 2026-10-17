@@ -30,6 +30,22 @@ export function placeCallInput(surface: Surface) {
   });
 }
 
+/**
+ * POST /api/x402/calls: a call paid for up front in USDC, by an agent with a wallet and no
+ * call4me account. The payment buys max_minutes at the destination's per-minute price.
+ */
+export const x402CallsPath = '/api/x402/calls';
+export const X402_CALL_MINUTES = { default: 10, max: 60 };
+export const x402CallInput = placeCallInput('agents').extend({
+  max_minutes: z
+    .number()
+    .int()
+    .min(1)
+    .max(X402_CALL_MINUTES.max)
+    .optional()
+    .describe(`the most minutes the answered call may run, including phone menus (default ${X402_CALL_MINUTES.default}); the payment is this many minutes at the destination's per-minute price. Minutes the call does not use stay as credits on the paying wallet's call4me account`),
+});
+
 export const callAtInput = z.string().min(10).max(40).describe('when to dial: the business\'s local time like "2026-10-05T09:15" together with timezone, or an ISO time with its offset like "2026-10-05T09:15:00-07:00". Pick a time the business is open and answering (a little after opening beats right at it). Up to 60 days ahead; dials within a minute of it.');
 
 export const scheduleCallInput = (surface: Surface) => placeCallInput(surface).extend({ call_at: callAtInput });

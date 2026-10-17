@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { siteUrl } from '../lib/auth-options';
 import { CALL4ME_SKILL_DESCRIPTION, CALL4ME_SKILL_NAME, call4meSkillMd, LEGACY_SKILL_NAME } from '../lib/call4me-skill';
 import { origin, type AppContext, type AppEnv } from '../lib/context';
+import { x402CallsPath } from '../lib/call-schema';
 import { SKILLS_INDEX_SCHEMA } from '../lib/discovery';
 import { pricePerMinute } from '../services/dialer';
 
@@ -45,4 +46,17 @@ discovery.on(['GET', 'HEAD'], '/agent-skills/index.json', async (c) => {
 discovery.on(['GET', 'HEAD'], '/skills/index.json', (c) => {
   const index = { skills: [{ name: CALL4ME_SKILL_NAME, description: CALL4ME_SKILL_DESCRIPTION, files: ['SKILL.md'] }] };
   return c.body(JSON.stringify(index, null, 2) + '\n', 200, { ...HEADERS, 'content-type': 'application/json' });
+});
+
+// x402 resource manifest (the {version, resources} shape x402scan and agent402.tools read); the
+// methods, prices and bodies are in /openapi.json and each resource's own 402.
+discovery.on(['GET', 'HEAD'], '/x402', (c) => {
+  const site = siteUrl(origin(c));
+  const manifest = {
+    version: 1,
+    resources: [`${site}${x402CallsPath}`, `${site}/api`],
+    description: 'call4me: AI phone calls to businesses (appointments, reservations, questions), paid in USDC on Base.',
+    instructions: `POST ${site}${x402CallsPath} with the call as JSON and pay the 402: it places the call and returns its id and an API key to follow it at GET ${site}/api/calls/{call_id}. GET ${site}/api buys credits for an existing account (Authorization: Bearer <key>). Full API: ${site}/openapi.json.`,
+  };
+  return c.body(JSON.stringify(manifest, null, 2) + '\n', 200, { ...HEADERS, 'content-type': 'application/json' });
 });
