@@ -53,7 +53,12 @@ const PROMISES = [
   /\bi'?ll (?:check|find out|ask)\b/i,
   /\b(?:good)?bye\b/i,
   /\bhave a (?:good|great|nice|wonderful) (?:one|day|night|evening|afternoon|weekend)\b/i,
+  /\b(?:adi[oó]s|hasta luego|hasta pronto|chao|chau|buenas noches)\b/i,
+  /\bque tenga(?:s)? (?:un |una )?buen[oa]s? (?:d[ií]a|noche|tarde|fin de semana)\b/i,
 ];
+
+/** The other side only closing the call after our caller's goodbye: "you too", "de nada", "buenas noches". */
+const CLOSING = /^(?:(?:ok(?:ay)?|alright|all right|thanks?|thank you|you too|same to you|bye(?:[- ]bye)?|goodbye|good ?night|have a (?:good|great|nice|wonderful) (?:one|day|night|evening)|take care|you'?re welcome|no problem|mhm|mm-?hmm|de nada|gracias|igualmente|buenas noches|buen d[ií]a|adi[oó]s|hasta luego|chao)[\s,.!]*)+$/i;
 
 /** The caller said it would go do something (look something up, hang up) that needs the back office. */
 export function promisesAction(text: string): boolean {
@@ -185,7 +190,10 @@ export class MenuRecovery {
  * MenuRecovery handles menus independently of transcript timestamps and delegation events.
  */
 export function missedHandoff(lines: TranscriptLine[], lastHandoffAt: number, forced: ReadonlySet<number>): MissedHandoff | null {
-  const last = lines[lines.length - 1];
+  // Their "buenas noches" after our caller's "bye" still leaves that goodbye unhandled: look past it.
+  let i = lines.length - 1;
+  while (i >= 0 && (lines[i].role === 'note' || (lines[i].role === 'them' && CLOSING.test(lines[i].text.trim())))) i--;
+  const last = lines[i];
   if (!last) return null;
   if (last.role === 'caller' && promisesAction(last.text) && last.at > lastHandoffAt && !forced.has(last.at)) return { reason: 'promise', line: last };
   return null;
