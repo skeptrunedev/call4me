@@ -206,4 +206,5 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'springhill-suites-phoenix-gilbert': ['travel-lodging'],
   'fresh-blades-barbershop-divisadero': ['hair-care'],
   'chase-sapphire-reserve-benefits-phone-number': ['personal-finance', 'insurance'],
+  'victorias-secret-georgetown': ['retail-shopping'],
 };
