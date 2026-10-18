@@ -106,7 +106,7 @@ function spokenKeypadDigits(text: string): string | null {
   return keys ? [...keys.toLowerCase().matchAll(new RegExp(KEY, 'g'))].map(([key]) => words[key] ?? key).join('') : null;
 }
 
-export type MissedHandoff = { reason: 'menu' | 'menu_recovery' | 'keypad' | 'promise'; line: TranscriptLine; menuContext?: string };
+export type MissedHandoff = { reason: 'menu' | 'menu_recovery' | 'keypad' | 'promise' | 'voicemail_left'; line: TranscriptLine; menuContext?: string };
 type MenuSnapshot = { text: string; end: number; at: number; callerEnd: number };
 type KeypadAttempt = { digits: string; prompt: string; inputEnd: number };
 
@@ -199,6 +199,20 @@ export function missedHandoff(lines: TranscriptLine[], lastHandoffAt: number, fo
   return null;
 }
 
+/**
+ * The caller has left its message on voicemail: the latest line is ours, spoken after the beep, and
+ * the line has gone quiet. A message ending "thank you!" has no goodbye for missedHandoff to see, and
+ * an unhung voicemail bills every silent minute up to the cap.
+ */
+export function voicemailLeft(lines: TranscriptLine[], beepAt: number, forced: ReadonlySet<number>): MissedHandoff | null {
+  let i = lines.length - 1;
+  while (i >= 0 && lines[i].role === 'note') i--;
+  const last = lines[i];
+  if (!last || last.role !== 'caller' || last.at < beepAt || forced.has(last.at)) return null;
+  // A message, not the "Hi!" it starts with.
+  return last.text.trim().split(/\s+/).length >= 4 ? { reason: 'voicemail_left', line: last } : null;
+}
+
 /** What the back office is told when the session starts it because the voice model didn't. */
 export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[], keypadHistory = '(no keypad input has been submitted)'): string {
   const recent = lines
@@ -208,6 +222,8 @@ export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[
   const what =
     miss.reason === 'keypad'
       ? `The caller announced a keypad action but no matching keypad submission followed. Speaking a key does not press it. Use press_digits if the announced action is still needed and supported by the task and the menu. Do not repeat a key already submitted or speak an acknowledgment. Stay silent while a person speaks or during hold.\n\nCaller's unfulfilled keypad action:\n${miss.line.text}\n\nActive menu instructions:\n${miss.menuContext}\n\nKeypad history (carrier accepted these requests; navigation may still have failed):\n${keypadHistory}`
+      : miss.reason === 'voicemail_left'
+      ? 'The caller has left its voicemail message after the beep. The call is done: hand off end_call now, and write nothing.'
       : miss.reason !== 'promise'
       ? `The latest phone menu needs attention. ${miss.reason === 'menu_recovery' ? 'It reported missing/invalid input or led to recorded instructions instead of completing the task.' : 'Choose from the fully heard options.'} Use press_digits for an announced option that serves the task or reaches a person. Wait if the options are incomplete. If a choice led to instructions only, use an announced back/main-menu option, then another relevant route such as other questions or a representative. Never assume 0, star or pound works when it was not offered. Do not repeat an unsuccessful route unchanged. Stay silent on hold or while a person speaks. A voicemail after a message was left needs end_call. If there is no supported route left, ask_user or end_call according to the brief.\n\nFresh menu input:\n${miss.line.text}\n\nKeypad history (carrier accepted these requests; navigation may still have failed):\n${keypadHistory}`
       : 'The caller said it would do something but never handed it off. Do it now: if they asked for something the caller does not have, ask_user; if the call is over, end_call; if a menu needs a key, press_digits.';

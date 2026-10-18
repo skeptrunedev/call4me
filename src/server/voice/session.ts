@@ -4,7 +4,7 @@ import { accounts } from '../services/accounts';
 import { ACTIVE, calls, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
 import { dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
-import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, missedHandoff } from './handoff';
+import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, missedHandoff, voicemailLeft } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { HoldMeter, type HoldChange } from './hold';
 import { midConversation } from './time-limit';
@@ -735,7 +735,9 @@ export class VoiceSession extends DurableObject<Env> {
     // The recording kept playing after this check was scheduled: wait for its next pause.
     if (menu && this.menuQuietAt(menu.snapshot.at) > Date.now()) return this.scheduleHandoffCheck();
     if (menu && this.forcedMenus >= MAX_MENU_CHECKS) menu = null;
-    const miss = menu ?? (this.forcedHandoffs.size < MAX_FORCED_HANDOFFS ? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs) : null);
+    // A message left on voicemail ends the call even when the caller never says goodbye.
+    const voicemail = this.machineState?.phase === 'voicemail' ? voicemailLeft(this.transcript, this.machineState.occurredAt, this.forcedHandoffs) : null;
+    const miss = menu ?? voicemail ?? (this.forcedHandoffs.size < MAX_FORCED_HANDOFFS ? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs) : null);
     if (!miss) {
       this.checkConnectCondition();
       return;
@@ -746,7 +748,7 @@ export class VoiceSession extends DurableObject<Env> {
     } else this.forcedHandoffs.add(miss.line.at);
     this.backOfficeBusy = true;
     this.lastHandoffAt = Date.now();
-    this.mark(`no hand-off after ${miss.reason === 'promise' ? 'a spoken promise' : 'a phone menu'}; starting the back office`);
+    this.mark(`no hand-off after ${miss.reason === 'promise' ? 'a spoken promise' : miss.reason === 'voicemail_left' ? 'a voicemail message' : 'a phone menu'}; starting the back office`);
     this.sendLive({ type: 'response.item.create', item: { type: 'message', role: 'user', content: [{ type: 'input_text', text: forcedHandoffMessage(miss, this.transcript, this.menuRecovery.history()) }] } });
     this.sendLive({ type: 'response.create' });
   }
