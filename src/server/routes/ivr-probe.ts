@@ -89,8 +89,12 @@ ivrProbe.all('/probe/ivr/auxilio', async (c) => {
  * `hold` is a customer-service line that tests staying on through holds and transfers: a menu,
  * three and a half minutes of hold music broken up by "please stay on the line" and a callback offer, a
  * frontline rep who transfers the call with eight seconds of dead air into a second hold, then the
- * billing rep who can actually help. Getting Priya's reference number is the pass.
+ * billing rep who can actually help. Ads play between the music, as on real queues. Getting Priya's
+ * reference number is the pass.
  */
+// Real queues play ads between the music: sentences that are neither a hold line nor a person.
+const AD = 'Did you know you can pay your bill online, any time, at northline dot com? Sign up for paperless billing and get a two dollar credit on every statement.';
+const AD2 = 'Planning a move this winter? Northline can transfer your service to your new address in one visit. Ask your representative for details.';
 type HoldStep = 'start' | 'menu' | 'hold' | 'callback' | 'hold2' | 'jordan' | 'transfer' | 'priya' | 'account' | 'reference' | 'bye';
 
 ivrProbe.all('/probe/ivr/hold', async (c) => {
@@ -119,12 +123,12 @@ ivrProbe.all('/probe/ivr/hold', async (c) => {
     if (silent) return respond(n >= 3 ? `${ivr('We did not receive a selection. Goodbye.')}<Hangup/>` : menu(n + 1));
     if (digits !== '1' && digits !== '4') return respond(`${ivr('That option is not available right now.')}${menu(n)}`);
     return respond(
-      `${ivr('Please hold for the next available representative. Your estimated wait time is about three minutes.')}${music(2)}${ivr('Thank you for holding. Your call is important to us. Please stay on the line.')}${music(1)}` +
+      `${ivr('Please hold for the next available representative. Your estimated wait time is about three minutes.')}${music(1)}${ivr(AD)}${music(1)}${ivr('Thank you for holding. Your call is important to us. Please stay on the line.')}${music(1)}` +
         `<Gather action="${url('callback')}" numDigits="1" timeout="6">${ivr('If you would like us to call you back instead of waiting, press 1. Otherwise, please stay on the line.')}</Gather><Redirect>${url('hold2')}</Redirect>`,
     );
   }
   if (step === 'callback') return respond(`${ivr('We will call you back at the number you are calling from, within the next two business days. Goodbye.')}<Hangup/>`);
-  if (step === 'hold2') return respond(`${music(2)}${ivr('All of our representatives are still helping other callers. Please continue to hold.')}${music(1)}<Redirect>${url('jordan', 1, '&silent=1&first=1')}</Redirect>`);
+  if (step === 'hold2') return respond(`${music(1)}${ivr(AD2)}${music(1)}${ivr('All of our representatives are still helping other callers. Please continue to hold.')}${music(1)}<Redirect>${url('jordan', 1, '&silent=1&first=1')}</Redirect>`);
   if (step === 'jordan' && c.req.query('first') === '1') return respond(turn('jordan', jordan('Thanks for holding, this is Jordan with customer care. How can I help you today?')));
   if (step === 'jordan')
     return respond(
