@@ -146,3 +146,33 @@ ivrProbe.all('/probe/ivr/hold', async (c) => {
   if (step === 'reference') return respond(`${priya('Alright, thanks for calling Northline. Have a good day.')}<Hangup/>`);
   return respond(menu(1));
 });
+
+/**
+ * `collect` is a jail's collect call, the other way round from the menus above: Telnyx dials a
+ * call4me number from the probe number with this as the call's TeXML, so call4me answers it. The
+ * accept prompt plays inside a Gather and replays twice before
+ * giving up. Pressing 1 accepts and the inmate leaves a message; the pass is a single 1 on the
+ * first play. Every request logs an `ivr probe` line with the digits it got.
+ */
+ivrProbe.all('/probe/ivr/collect', async (c) => {
+  const form = c.req.method === 'POST' ? await c.req.parseBody() : {};
+  const digits = typeof form.Digits === 'string' ? form.Digits : '';
+  const step = c.req.query('step') ?? 'start';
+  const n = Number(c.req.query('n') ?? '1');
+  console.log('ivr probe', JSON.stringify({ scenario: 'collect', call: form.CallSid ?? null, step, n, digits }));
+
+  const url = (s: string, k: number) => new URL(`/probe/ivr/collect?step=${s}&n=${k}`, c.req.url).toString().replace(/&/g, '&amp;');
+  const system = (text: string) => `<Say voice="Polly.Joanna-Neural">${text}</Say>`;
+  const inmate = (text: string) => `<Say voice="Polly.Matthew-Neural">${text}</Say>`;
+  const prompt = (k: number) =>
+    `<Gather action="${url('accept', k)}" numDigits="1" timeout="6">${system('Hello. This is a collect call from Jordan Test, an inmate at Toronto South Detention Centre. This call is subject to monitoring and recording. To accept this call, press 1. To refuse this call, hang up.')}</Gather><Redirect>${url('silent', k)}</Redirect>`;
+  const respond = (body: string) => c.body(texml(body), 200, { 'content-type': 'application/xml', 'cache-control': 'no-store' });
+
+  // A short pause first: the answering side says hello before the system starts talking.
+  if (step === 'start') return respond(`<Pause length="1"/>${prompt(1)}`);
+  if (step === 'silent') return respond(n >= 3 ? `${system('This call was not accepted. Goodbye.')}<Hangup/>` : prompt(n + 1));
+  if (digits !== '1') return respond(`${system('Invalid selection.')}${prompt(n)}`);
+  return respond(
+    `${system('Thank you. Your call has been accepted. You may begin speaking now.')}${inmate('Hi, it is Jordan Test at Toronto South. Please have my lawyer call my mom at 4 1 6, 5 5 5, 0 1 9 9. It is about my bail hearing on Friday.')}<Pause length="8"/>${inmate('Okay, thanks. Bye.')}<Hangup/>`,
+  );
+});
