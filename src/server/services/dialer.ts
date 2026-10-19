@@ -11,7 +11,7 @@ import type { Voice } from '../voice/voices';
 import { accounts, type Account } from './accounts';
 import { answeringAccountId, numbers, ringablePhone } from './numbers';
 import { profiles } from './profiles';
-import { assistantNameOf, namePronunciationOf, type Profile, type Surface } from './intake';
+import { answeringInstructionsOf, assistantNameOf, namePronunciationOf, type Profile, type Surface } from './intake';
 import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 import { analytics } from './analytics';
 
@@ -316,6 +316,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
       tasks: ordered.map(openTask),
       likely: Boolean(likely),
       localTime: localTimeIn(likelyBrief?.timezone ?? null),
+      standing: answeringInstructionsOf(profile),
       recent: recent.map((r) => ({
         business: r.business,
         goal: r.goal,
@@ -323,7 +324,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
         when: new Date(r.created_at).toISOString().slice(0, 10),
       })),
     }),
-    backOffice: inboundBackOfficeInstructions(owner, ordered.map(openTask)),
+    backOffice: inboundBackOfficeInstructions(owner, ordered.map(openTask), answeringInstructionsOf(profile)),
     inbandKeys: inbandKeysFor(opts.from),
     person: personFor(origin, account, profile, await ringablePhone(env.DB, account.id, profile.phone), opts.to),
     voice: 'marin',

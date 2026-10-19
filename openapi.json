@@ -1093,6 +1093,11 @@
                     "type": "string",
                     "maxLength": 500
                   },
+                  "answering_instructions": {
+                    "description": "answering instructions",
+                    "type": "string",
+                    "maxLength": 500
+                  },
                   "date_of_birth": {
                     "description": "date of birth",
                     "type": "string",

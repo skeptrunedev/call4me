@@ -280,7 +280,15 @@ interface InboundBrief extends Who {
   likely: boolean;
   recent: { business: string; goal: string; summary: string | null; when: string }[];
   localTime: string | null;
+  /** The owner's standing instructions for answered calls (answering_instructions), or null. */
+  standing: string | null;
 }
+
+/** The owner's standing instructions, given to both the answerer and its back office. */
+const standingBlock = (standing: string | null) => (standing ? `# Standing instructions from the owner
+These apply to every call you answer. Anything they allow, you may do or accept without asking, including keypad choices: a recording offering what they allow (such as accepting a collect call) gets its key pressed right away, before it times out.
+${standing}
+` : '');
 
 function taskBlock(t: OpenTask, i: number): string {
   return `## Task ${i + 1}: ${t.business}, for ${t.onBehalfOf} (called ${t.when})
@@ -344,7 +352,7 @@ ${o.tasks.map(taskBlock).join('\n\n')}
 ${o.localTime ? `\nIt's ${o.localTime} right now.\n` : ''}
 ${delegationPolicy(o.owner, o.owner)}
 
-${tasks}
+${standingBlock(o.standing)}${tasks}
 # Recent calls made from this number
 ${recent}
 
@@ -367,9 +375,10 @@ Never say tool names out loud or mention a back office.`;
 }
 
 /** The back office for a callback: same tools, with the unfinished tasks it may finish. */
-export function inboundBackOfficeInstructions(owner: string, tasks: OpenTask[] = []): string {
+export function inboundBackOfficeInstructions(owner: string, tasks: OpenTask[] = [], standing: string | null = null): string {
+  const allowed = standing ? `\n\n${owner}'s standing instructions for answered calls. What they allow needs no ask_user: press_digits for it at once.\n${standing}` : '';
   const context = tasks.length ? `\n\nUnfinished tasks the assistant may be finishing on this call:\n${tasks.map((t, i) => `${i + 1}. ${t.business} for ${t.onBehalfOf}: ${t.goal} Allowed without asking: ${t.flexibility.trim() || '(only exactly the task)'}`).join('\n')}` : '';
-  return `You are the silent back office for a call ${owner}'s assistant is answering. When the assistant hands off: if the call is over, end_call (the recap is written from the transcript afterwards); if a question needs ${owner}, ask_user (the answer goes straight to the assistant). ${SPOKEN_TEXT_RULE}${context}`;
+  return `You are the silent back office for a call ${owner}'s assistant is answering. When the assistant hands off: if the call is over, end_call (the recap is written from the transcript afterwards); if a question needs ${owner}, ask_user (the answer goes straight to the assistant). ${SPOKEN_TEXT_RULE}${allowed}${context}`;
 }
 
 /** Function tools for the Responses back office (the Responses API's function tool shape). */
