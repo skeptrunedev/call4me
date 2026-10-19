@@ -325,8 +325,9 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
       })),
     }),
     backOffice: inboundBackOfficeInstructions(owner, ordered.map(openTask), answeringInstructionsOf(profile)),
-    // Tones even from +1 callers: whoever called hears the key go in (a collect call's "press 1 to accept").
-    inbandKeys: true,
+    inbandKeys: inbandKeysFor(opts.from),
+    // Whoever called hears the key go in (a collect call's "press 1 to accept"): send_dtmf alone is silent to a person.
+    keyBeep: true,
     person: personFor(origin, account, profile, await ringablePhone(env.DB, account.id, profile.phone), opts.to),
     voice: 'marin',
     maxSeconds: maxMinutes * 60,

@@ -93,9 +93,8 @@ function dtmfSamples(digits: string): Uint8Array {
   return Uint8Array.from(out);
 }
 
-/** The samples cut into base64 media frames of FRAME_SAMPLES, the last one padded with silence. */
-export function dtmfFrames(digits: string): string[] {
-  const samples = dtmfSamples(digits);
+/** Samples cut into base64 media frames of FRAME_SAMPLES, the last one padded with silence. */
+function framesOf(samples: Uint8Array): string[] {
   const frames: string[] = [];
   for (let i = 0; i < samples.length; i += FRAME_SAMPLES) {
     const frame = new Uint8Array(FRAME_SAMPLES).fill(linearToMulaw(0));
@@ -103,4 +102,19 @@ export function dtmfFrames(digits: string): string[] {
     frames.push(btoa(String.fromCharCode(...frame)));
   }
   return frames;
+}
+
+/** μ-law media frames that press `digits` as dual tones in the call's own audio. */
+export const dtmfFrames = (digits: string): string[] => framesOf(dtmfSamples(digits));
+
+export const BEEP_MS = 150;
+const BEEP_HZ = 1000;
+
+/**
+ * A short single-pitch beep: heard by a person on the line, never read as a key, since keypad
+ * detectors only accept a row tone and a column tone together.
+ */
+export function beepFrames(): string[] {
+  const n = (SAMPLE_RATE * BEEP_MS) / 1000;
+  return framesOf(Uint8Array.from({ length: n }, (_, i) => linearToMulaw(Math.round(8000 * Math.sin((2 * Math.PI * BEEP_HZ * i) / SAMPLE_RATE)))));
 }

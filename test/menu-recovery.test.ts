@@ -269,3 +269,12 @@ test('the same key twice with nothing heard in between goes in once', async (t) 
   await h.keypress('1');
   assert.equal(presses(), 2);
 });
+
+test('an answered call sends the key to the network once and beeps so the caller hears it', async (t) => {
+  const h = harness(t);
+  h.session.setup.keyBeep = true;
+  await h.input('This is a collect call from an inmate at Toronto South Detention Centre. To accept this call, press 1.');
+  await h.keypress('1');
+  assert.equal((globalThis.fetch as any).mock.calls.length, 1);
+  assert.ok(h.session.phone.sent.filter((m: any) => m.event === 'media').length > 0);
+});

@@ -3,7 +3,7 @@ import { Raindrop, type Interaction } from 'raindrop-ai';
 import { accounts } from '../services/accounts';
 import { ACTIVE, calls, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
-import { dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
+import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
 import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, missedHandoff, voicemailLeft } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { HoldMeter, type HoldChange } from './hold';
@@ -96,10 +96,15 @@ export interface SessionSetup {
   redact?: string[];
   /**
    * Keypad presses go out as tones in our own audio instead of Telnyx send_dtmf. Set for calls
-   * whose other side isn't a +1 number (some international routes drop send_dtmf's RFC 2833
-   * events, voice/dtmf.ts) and for every answered call, so the caller hears the key go in.
+   * whose other side isn't a +1 number: some international routes drop send_dtmf's RFC 2833
+   * events (voice/dtmf.ts).
    */
   inbandKeys?: boolean;
+  /**
+   * A short beep in our audio after each key the caller presses, so a person on the line hears it
+   * go in; send_dtmf alone is silent to them. Set for answered calls (a collect call's "press 1").
+   */
+  keyBeep?: boolean;
   /** Who can be patched into the call (call4me's user), from which number, and where their leg reports. */
   person?: { name: string; phone: string | null; from: string; webhookUrl: string; connectWhen?: string | null; listenIn?: boolean };
 }
@@ -997,6 +1002,7 @@ export class VoiceSession extends DurableObject<Env> {
         else if (digits && s.controlId) {
           const snapshot = this.menuRecovery.snapshot();
           await this.pressKeys(s, s.controlId, digits);
+          if (s.keyBeep && !s.inbandKeys) this.playInCall(beepFrames(), `played the key beep for ${digits}`);
           this.menuRecovery.submitted(digits, snapshot);
           output = `keypad submitted: ${digits}; wait for the next prompt to confirm it worked`;
         }
@@ -1025,13 +1031,16 @@ export class VoiceSession extends DurableObject<Env> {
    */
   private async pressKeys(s: Stored, controlId: string, digits: string): Promise<void> {
     if (!s.inbandKeys) return telnyx(this.env).sendDtmf(controlId, digits);
-    const frames = dtmfFrames(digits);
-    const now = Date.now();
+    this.playInCall(dtmfFrames(digits), `played keypad tones ${digits}`);
+  }
+
+  /** Play generated audio (keypad tones, the key beep) in place of any of the caller's speech still queued. */
+  private playInCall(frames: string[], note: string): void {
     this.sendPhone({ event: 'clear' });
     for (const payload of frames) this.sendPhone({ event: 'media', media: { payload } });
-    this.playbackEndsAt = now + frames.length * FRAME_MS;
+    this.playbackEndsAt = Date.now() + frames.length * FRAME_MS;
     this.keysPlayingUntil = this.playbackEndsAt;
-    this.mark(`played keypad tones ${digits}`);
+    this.mark(note);
   }
 
   private async endCall(s: Stored, args: Record<string, unknown>): Promise<string> {
