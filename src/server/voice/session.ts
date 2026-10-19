@@ -96,8 +96,8 @@ export interface SessionSetup {
   redact?: string[];
   /**
    * Keypad presses go out as tones in our own audio instead of Telnyx send_dtmf. Set for calls
-   * whose other side isn't a +1 number: some international routes drop send_dtmf's RFC 2833
-   * events (voice/dtmf.ts).
+   * whose other side isn't a +1 number (some international routes drop send_dtmf's RFC 2833
+   * events, voice/dtmf.ts) and for every answered call, so the caller hears the key go in.
    */
   inbandKeys?: boolean;
   /** Who can be patched into the call (call4me's user), from which number, and where their leg reports. */
