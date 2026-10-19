@@ -992,7 +992,9 @@ export class VoiceSession extends DurableObject<Env> {
         const digits = String(args.digits ?? '').replace(/[^0-9*#wW]/g, '').slice(0, 32);
         output = 'no valid digits';
         if (digits && !s.controlId) output = 'no phone connection; keypad input was not submitted';
-        if (digits && s.controlId) {
+        // A second press before the other side says anything lands in whatever menu comes next.
+        else if (digits && this.menuRecovery.repeats(digits)) output = `${digits} was already submitted and nothing new has been heard since; do not press it again, wait for the next prompt`;
+        else if (digits && s.controlId) {
           const snapshot = this.menuRecovery.snapshot();
           await this.pressKeys(s, s.controlId, digits);
           this.menuRecovery.submitted(digits, snapshot);

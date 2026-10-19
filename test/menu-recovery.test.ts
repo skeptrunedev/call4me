@@ -257,3 +257,15 @@ test('caller filler cannot postpone a finished menu beyond its keypad deadline',
   assert.equal(h.forced().length, 1, 'caller filler never reopens a menu already delegated');
 });
 
+
+test('the same key twice with nothing heard in between goes in once', async (t) => {
+  const h = harness(t);
+  const presses = () => (globalThis.fetch as any).mock.calls.length;
+  await h.input('This is a collect call from an inmate at Toronto South Detention Centre. To accept this call, press 1.');
+  await h.keypress('1');
+  await h.keypress('1');
+  assert.equal(presses(), 1);
+  await h.input(' To accept this call, press 1.');
+  await h.keypress('1');
+  assert.equal(presses(), 2);
+});

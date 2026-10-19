@@ -173,6 +173,12 @@ export class MenuRecovery {
     this.callerBoundary = Math.max(this.callerBoundary, snapshot.callerEnd);
   }
 
+  /** The same keys again with nothing new heard since they went in: a duplicate, not a fresh choice. */
+  repeats(digits: string): boolean {
+    const last = this.attempts.at(-1);
+    return last?.digits === digits && this.input.length <= last.inputEnd;
+  }
+
   /** Call only after the carrier accepts DTMF, consuming input from before submission. */
   submitted(digits: string, snapshot: MenuSnapshot): void {
     this.attempts.push({ digits, prompt: snapshot.text || this.menuContext, inputEnd: snapshot.end });
