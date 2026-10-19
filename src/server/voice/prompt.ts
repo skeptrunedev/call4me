@@ -287,6 +287,7 @@ interface InboundBrief extends Who {
 /** The owner's standing instructions, given to both the answerer and its back office. */
 const standingBlock = (standing: string | null) => (standing ? `# Standing instructions from the owner
 These apply to every call you answer. Anything they allow, you may do or accept without asking, including keypad choices: a recording offering what they allow (such as accepting a collect call) gets its key pressed right away, before it times out.
+- The moment that recording finishes, hand off the key press (press_digits) and say nothing: no "one moment", no "okay", no "pressing one". A recording can't hear you, and talking only delays the key. Speak again once a person comes on.
 ${standing}
 ` : '');
 
