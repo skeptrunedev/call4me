@@ -106,14 +106,17 @@ ivrProbe.all('/probe/ivr/hold', async (c) => {
   const silent = c.req.query('silent') === '1';
   console.log('ivr probe', JSON.stringify({ scenario: 'hold', call: form.CallSid ?? null, step, n, digits, heard, silent }));
 
-  const url = (s: HoldStep, k = 1, extra = '') => new URL(`/probe/ivr/hold?step=${s}&n=${k}${extra}`, c.req.url).toString().replace(/&/g, '&amp;');
+  // ?rounds=N (on the app's URL) repeats the second hold N times, ~1.7 min each, for long-hold runs.
+  const rounds = Math.min(10, Math.max(1, Number(c.req.query('rounds') ?? '1') || 1));
+  const url = (s: HoldStep, k = 1, extra = '') => new URL(`/probe/ivr/hold?step=${s}&n=${k}&rounds=${rounds}${extra}`, c.req.url).toString().replace(/&/g, '&amp;');
   const music = (times: number) => `<Play loop="${times}">${new URL('/static/probe/hold-music.mp3', c.req.url)}</Play>`;
   const ivr = (text: string) => `<Say voice="Polly.Joanna-Neural">${text}</Say>`;
   const jordan = (text: string) => `<Say voice="Polly.Matthew-Neural">${text}</Say>`;
   const priya = (text: string) => `<Say voice="Polly.Ruth-Neural">${text}</Say>`;
   // A rep's turn: they speak, then listen; no answer gets one "are you still there?" before the next step anyway.
+  // The line plays outside the Gather: a rep finishes their sentence even if our caller talks over it.
   const turn = (s: HoldStep, line: string) =>
-    `<Gather input="speech" action="${url(s)}" language="en-US" speechTimeout="auto" timeout="8">${line}</Gather><Redirect>${url(s, 1, '&silent=1')}</Redirect>`;
+    `${line}<Gather input="speech" action="${url(s)}" language="en-US" speechTimeout="auto" timeout="8"></Gather><Redirect>${url(s, 1, '&silent=1')}</Redirect>`;
   const respond = (body: string) => c.body(texml(body), 200, { 'content-type': 'application/xml', 'cache-control': 'no-store' });
   const menu = (k: number) =>
     `<Gather action="${url('menu', k)}" numDigits="1" timeout="6">${ivr('Thank you for calling Northline Utilities. Calls may be recorded for quality. For billing and payments, press 1. For outages, press 2. For starting or stopping service, press 3. For all other questions, press 4.')}</Gather><Redirect>${url('menu', k, '&silent=1')}</Redirect>`;
@@ -128,7 +131,10 @@ ivrProbe.all('/probe/ivr/hold', async (c) => {
     );
   }
   if (step === 'callback') return respond(`${ivr('We will call you back at the number you are calling from, within the next two business days. Goodbye.')}<Hangup/>`);
-  if (step === 'hold2') return respond(`${music(1)}${ivr(AD2)}${music(1)}${ivr('All of our representatives are still helping other callers. Please continue to hold.')}${music(1)}<Redirect>${url('jordan', 1, '&silent=1&first=1')}</Redirect>`);
+  if (step === 'hold2')
+    return respond(
+      `${music(1)}${ivr(n % 2 ? AD2 : AD)}${music(1)}${ivr('All of our representatives are still helping other callers. Please continue to hold.')}${music(1)}<Redirect>${n < rounds ? url('hold2', n + 1) : url('jordan', 1, '&silent=1&first=1')}</Redirect>`,
+    );
   if (step === 'jordan' && c.req.query('first') === '1') return respond(turn('jordan', jordan('Thanks for holding, this is Jordan with customer care. How can I help you today?')));
   if (step === 'jordan')
     return respond(
