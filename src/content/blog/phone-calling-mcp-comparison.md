@@ -37,7 +37,6 @@ Each guide covers setup in that app and says what we actually tested, and when.
 | Gemini | [Gemini phone calls](/blog/gemini-phone-calls), as a custom app, and Google's own calling feature |
 | Perplexity | [Perplexity phone calls](/blog/perplexity-phone-calls), as a custom remote connector |
 | n8n | [n8n MCP phone calls](/blog/n8n-mcp-phone-calls), an AI Agent workflow with the MCP Client Tool, with a real Xfinity call |
-| OpenClaw | [OpenClaw phone calls](/blog/openclaw-phone-calls), over MCP or the call4me ClawHub skill, with a real T-Mobile call |
 | Goose | [Goose MCP phone calls](/blog/goose-mcp-phone-calls), a remote extension in config.yaml, with a real Amazon call |
 | OpenCode | [OpenCode phone calls](/blog/opencode-phone-calls), a remote MCP server in opencode.json, with a real Pottery Barn call |
 | Cline | [Cline phone calls](/blog/cline-phone-calls), a headless Cline CLI run with a remote MCP server, with a real UPS call |

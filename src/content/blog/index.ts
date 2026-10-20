@@ -175,7 +175,6 @@ import cursorPhoneCalls from './cursor-phone-calls.md';
 import geminiPhoneCalls from './gemini-phone-calls.md';
 import perplexityPhoneCalls from './perplexity-phone-calls.md';
 import n8nMcpPhoneCalls from './n8n-mcp-phone-calls.md';
-import openclawPhoneCalls from './openclaw-phone-calls.md';
 import gooseMcpPhoneCalls from './goose-mcp-phone-calls.md';
 import uspsPhoneNumber from './usps-phone-number.md';
 import socialSecurityPhoneNumber from './social-security-phone-number.md';
@@ -381,7 +380,6 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'gemini-phone-calls', markdown: geminiPhoneCalls },
   { slug: 'perplexity-phone-calls', markdown: perplexityPhoneCalls },
   { slug: 'n8n-mcp-phone-calls', markdown: n8nMcpPhoneCalls },
-  { slug: 'openclaw-phone-calls', markdown: openclawPhoneCalls },
   { slug: 'goose-mcp-phone-calls', markdown: gooseMcpPhoneCalls },
   { slug: 'usps-phone-number', markdown: uspsPhoneNumber },
   { slug: 'social-security-phone-number', markdown: socialSecurityPhoneNumber },
