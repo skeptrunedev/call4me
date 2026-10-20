@@ -240,7 +240,6 @@ export const Layout: FC<{
             <a href="/companies" aria-current={page === 'companies' ? 'page' : undefined}>customer service numbers</a>
             <a href="/mcp" aria-current={page === 'mcp' ? 'page' : undefined}>install mcp</a>
             <a href="/blog" aria-current={page === 'blog' || page === 'blogArchive' ? 'page' : undefined}>blog</a>
-            <a href="/rules" aria-current={page === 'rules' ? 'page' : undefined}>rules</a>
             {/* Stable on static pages; /account handles sign in when needed. */}
             <a class="account-link" href="/account">my account</a>
           </nav>
