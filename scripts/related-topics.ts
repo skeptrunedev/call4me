@@ -22,6 +22,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'lai-wah-heen-private-dining': ['dining'],
   'langchain-mcp-phone-calls': ['agent-software'],
   'n8n-mcp-phone-calls': ['agent-software'],
+  'openclaw-phone-calls': ['agent-software'],
   'perplexity-phone-calls': ['agent-software'],
   'pin-on-grand-reservations': ['dining'],
   'salon-per-se-bellaire': ['hair-care'],
