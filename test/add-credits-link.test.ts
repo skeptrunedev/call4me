@@ -45,8 +45,12 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   if (!url.startsWith('https://api.stripe.com/')) return realFetch(input, init);
   stripeCalls.push({ url, body: String(init?.body ?? '') });
   if (url.includes('/v1/promotion_codes')) {
-    const code = new URL(url).searchParams.get('code');
-    const data = code === 'GIFT50'
+    const query = new URL(url).searchParams;
+    const code = query.get('code');
+    const coupon = (duration: string) => ({ id: `coupon_${duration}`, valid: true, duration });
+    const data = !code && query.get('customer') === 'cus_lifetime'
+      ? [{ id: 'promo_once', customer: 'cus_lifetime', promotion: { type: 'coupon', coupon: coupon('once') } }, { id: 'promo_forever', customer: 'cus_lifetime', promotion: { type: 'coupon', coupon: coupon('forever') } }]
+      : code === 'GIFT50'
       ? [{ id: 'promo_gift', customer: null, customer_account: null }]
       : code === 'PERSONAL50' ? [{ id: 'promo_personal', customer: 'cus_existing', customer_account: 'acct_existing' }] : [];
     return new Response(JSON.stringify({ object: 'list', data, has_more: false, url: '/v1/promotion_codes' }), { headers: { 'content-type': 'application/json' } });
@@ -101,6 +105,23 @@ test('posting the link opens a monthly, adjustable checkout for that account', a
   const topup = writes.find(([sql]) => /INSERT INTO topups/.test(String(sql)));
   assert.ok(topup, 'the topup is recorded');
   assert.ok(topup.includes(account.id), 'for the signed account');
+});
+
+test("a customer's lifetime discount applies to every checkout without a code", async () => {
+  savedCustomer = 'cus_lifetime';
+  try {
+    stripeCalls.length = 0;
+    const res = await pub.request(await addCreditsPath(secret, account.id), { method: 'POST' }, env);
+    assert.equal(res.status, 303);
+    assert.equal(stripeCalls.length, 2);
+    const lookup = new URL(stripeCalls[0].url).searchParams;
+    assert.equal(lookup.get('customer'), 'cus_lifetime');
+    const params = new URLSearchParams(stripeCalls[1].body);
+    assert.equal(params.get('discounts[0][promotion_code]'), 'promo_forever', 'a one-time code is not applied on its own');
+    assert.equal(params.has('allow_promotion_codes'), false);
+  } finally {
+    savedCustomer = null;
+  }
 });
 
 test('the welcome email shows the link without a scheme and the HTML links it', async () => {
