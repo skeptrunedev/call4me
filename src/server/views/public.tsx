@@ -128,7 +128,7 @@ export const GET_STARTED = '/login?next=/account';
 
 export const HomeActions: FC = () => (
   <>
-    <p class="hero-links"><a href={GET_STARTED}>get started</a> <a href="/examples">more real calls</a> <a href="/mcp">works with any agent</a></p>
+    <p class="hero-links"><a href={GET_STARTED}>get started</a> <a href="/examples">more real calls</a> <a href="/mcp">works with chatgpt, claude, grok bot, muse, and all other agents</a></p>
   </>
 );
 
