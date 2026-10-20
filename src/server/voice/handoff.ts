@@ -206,18 +206,27 @@ export function missedHandoff(lines: TranscriptLine[], lastHandoffAt: number, fo
 }
 
 /**
- * The caller has left its message on voicemail: the latest line is ours, spoken after the beep, and
- * the line has gone quiet. A message ending "thank you!" has no goodbye for missedHandoff to see, and
+ * The caller has left its message on voicemail: the latest line is ours, spoken after the beep (or
+ * after the greeting asked for a message), and the line has gone quiet. A message ending "thank you!" has no goodbye for missedHandoff to see, and
  * an unhung voicemail bills every silent minute up to the cap.
  */
-export function voicemailLeft(lines: TranscriptLine[], beepAt: number, forced: ReadonlySet<number>): MissedHandoff | null {
+export function voicemailLeft(lines: TranscriptLine[], beepAt: number | null, forced: ReadonlySet<number>): MissedHandoff | null {
+  // Recording starts at the carrier's beep or, when it heard none, the greeting's own "leave a message".
+  // A menu option ("to leave a message, press 3") is not a recording starting.
+  const prompt = [...lines].reverse().find((l) => l.role === 'them' && VOICEMAIL_PROMPT.test(l.text) && !isPhoneMenu(l.text));
+  const recordingFrom = beepAt ?? prompt?.at ?? null;
+  if (recordingFrom === null) return null;
   let i = lines.length - 1;
   while (i >= 0 && lines[i].role === 'note') i--;
   const last = lines[i];
-  if (!last || last.role !== 'caller' || last.at < beepAt || forced.has(last.at)) return null;
-  // A message, not the "Hi!" it starts with.
-  return last.text.trim().split(/\s+/).length >= 4 ? { reason: 'voicemail_left', line: last } : null;
+  if (!last || last.role !== 'caller' || last.at < recordingFrom || forced.has(last.at)) return null;
+  // A message, not the "Hi!" it starts with; transcripts split it across lines between greeting fragments.
+  const words = lines.filter((l) => l.role === 'caller' && l.at >= recordingFrom).reduce((n, l) => n + l.text.trim().split(/\s+/).filter(Boolean).length, 0);
+  return words >= 4 ? { reason: 'voicemail_left', line: last } : null;
 }
+
+/** A greeting asking for a message: where a voicemail starts recording when the carrier hears no beep. */
+const VOICEMAIL_PROMPT = /\b(?:leave (?:a|your) (?:brief |short )?(?:message|name and number)|after the (?:tone|beep)|record your message|d[eé]je(?:me)? (?:un|su) mensaje|despu[eé]s del tono)\b/i;
 
 /** What the back office is told when the session starts it because the voice model didn't. */
 export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[], keypadHistory = '(no keypad input has been submitted)'): string {

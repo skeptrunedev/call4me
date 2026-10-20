@@ -741,7 +741,10 @@ export class VoiceSession extends DurableObject<Env> {
     if (menu && this.menuQuietAt(menu.snapshot.at) > Date.now()) return this.scheduleHandoffCheck();
     if (menu && this.forcedMenus >= MAX_MENU_CHECKS) menu = null;
     // A message left on voicemail ends the call even when the caller never says goodbye.
-    const voicemail = this.machineState?.phase === 'voicemail' ? voicemailLeft(this.transcript, this.machineState.occurredAt, this.forcedHandoffs) : null;
+    // Only once the carrier has taken the line for automated: a person can ask us to leave a message too.
+    const phase = this.machineState?.phase;
+    const automated = phase === 'voicemail' || phase === 'machine' || phase === 'screening' || phase === 'uncertain';
+    const voicemail = automated ? voicemailLeft(this.transcript, phase === 'voicemail' ? this.machineState!.occurredAt : null, this.forcedHandoffs) : null;
     const miss = menu ?? voicemail ?? (this.forcedHandoffs.size < MAX_FORCED_HANDOFFS ? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs) : null);
     if (!miss) {
       this.checkConnectCondition();
