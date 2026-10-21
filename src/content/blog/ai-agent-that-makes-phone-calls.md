@@ -36,7 +36,7 @@ Each guide below has the details to give your assistant, the questions to ask an
 | Arrange pet care | Compare [dog teeth cleaning quotes](/blog/dog-teeth-cleaning-cost) from three clinics, then use the [vet drop off appointment guide](/blog/drop-off-vet-appointment) to book a visit. |
 | Get quotes from several businesses | Hear an AI collect [dog teeth cleaning quotes](/blog/dog-teeth-cleaning-cost) from three clinics. The [supplier inquiry draft](/blog/meta-muse-supplier-quotes) shows how to ask every business the same questions. |
 | Find somewhere to exercise | Check [gym and pool day passes](/blog/gym-day-pass) or [sauna access](/blog/gyms-with-sauna-near-me). To leave a membership, the [Crunch cancellation guide](/blog/cancel-crunch) covers the steps. |
-| Finish a shopping errand | Ask a store about [stock and order pickup](/blog/macys-bow-tie-stock-check), or follow the [same day dress shoe workflow](/blog/need-dress-shoes-today) to find an item and ask the store to hold it. |
+| Finish a shopping errand | Follow the [same day dress shoe workflow](/blog/need-dress-shoes-today) to find an item and ask the store to hold it. |
 | Sort out a subscription | The [SiriusXM cancellation guide](/blog/how-to-cancel-siriusxm) shows which account questions to prepare, and how to tell cancellation instructions apart from a finished cancellation. |
 | Support a job search | [Applystead](https://applystead.com/) handles AI resume tailoring and job applications. Your assistant can take the phone side, like checking whether a store has interview clothes in your size or [booking a haircut](/blog/book-haircut-appointment) before the big day. |
 

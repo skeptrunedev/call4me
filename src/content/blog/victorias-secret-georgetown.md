@@ -148,4 +148,4 @@ Connect [call4me](/) to your assistant through the [Claude Code guide](/blog/cla
 
 > Call Victoria's Secret Georgetown at (202) 229-1677 (1220 Wisconsin Ave NW, Washington, DC). Say you are an AI assistant at the start. Ask staff to physically check the shelf for [product, color and size]. If it is not there, ask for the closest match and its price, but do not approve a substitute I did not list: [acceptable substitutes]. If something matches, ask for a free hold under [pickup name] at [phone number] for pickup [today or a time]. Confirm how long the hold lasts, and ask for the employee's name. Do not pay for anything.
 
-For another store stock check, see [checking store availability with an AI call to Macy's](/blog/macys-bow-tie-stock-check). Hear this call on the [examples page](/examples#victorias-secret-georgetown).
+Hear this call on the [examples page](/examples#victorias-secret-georgetown).

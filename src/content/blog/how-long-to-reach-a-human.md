@@ -74,7 +74,6 @@ Every company's number, grouped by industry, is also on the [customer service nu
 | [Blue Shield of California (dental)](/blog/blue-shield-of-california-dental-phone-number) | Oct 2 | 2:49 | No | Saying the request, then not giving a member ID |
 | [FPL](/blog/fpl-phone-number) | Oct 1 | 3:07 on the 5th call; 4 calls didn't reach a person | No | "Open a new account", then asking for a representative |
 | [Hertz](/blog/hertz-customer-service-number) | Oct 8 | 3:07 on the 3rd call; 2 calls didn't reach a person | Yes | Asking for a representative six times |
-| [Chase Sapphire Reserve benefits](/blog/chase-sapphire-reserve-benefits-phone-number) | Oct 13 | 3:12 | No | Saying "no" to the text link, then that we didn't have the full card number |
 | [Amazon Pharmacy](/blog/amazon-pharmacy-phone-number) | Sep 28 | 3:40, and 3:18 on a [second call](/blog/how-to-transfer-a-prescription) | Yes (first call; the second post doesn't say) | Stating the request; the system transferred us |
 | [Expedia](/blog/expedia-customer-service-number) | Oct 16 | 3:24 on the 2nd call; the 1st didn't reach a person | No | Press 1, 6, 2, then 0 at the itinerary prompt |
 | [USAA](/blog/usaa-phone-number) | Oct 1 | 3:28 | No | Press 1 (not a member), press 2, say "membership" twice |
@@ -85,7 +84,6 @@ Every company's number, grouped by industry, is also on the [customer service nu
 | [UPS](/blog/ups-contact-number) | Oct 1 | 5:57 on the 2nd call; the 1st didn't reach a person | No | "Representative", twice, at the tracking number prompt |
 | [Aquasana](/blog/aquasana-return-exception) | Oct 6 | 7:49 | No | Staying on hold instead of taking a callback |
 | [Spectrum](/blog/spectrum-retention-department) | Oct 1 | 7:49 | No | "Cancel my account", then "disconnect" |
-| [Air Serbia](/blog/air-serbia-customer-service-number) | Oct 7 to 15 | 13:32, 17:36, 18:23 and 24:47 (4 calls) | No | Press 9 for English, then 1 (or 3, then 1), then hold |
 | [Delta](/blog/delta-customer-service) | Oct 8 | 16:15 | Yes | No confirmation number, "I need a representative", then hold |
 | [United Airlines](/blog/united-change-flight) | Oct 1 | 19:09 | Yes | "Flight change fee", then hold |
 | [Priceline](/blog/priceline-customer-service) | Oct 9 | 25:09 | Yes | Saying we had no trip number, again and again, then about 22 minutes of hold |

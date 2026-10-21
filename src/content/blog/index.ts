@@ -1,5 +1,4 @@
 import victoriasSecretGeorgetown from './victorias-secret-georgetown.md';
-import chaseSapphireReserveBenefitsPhoneNumber from './chase-sapphire-reserve-benefits-phone-number.md';
 import freshBladesBarbershopDivisadero from './fresh-blades-barbershop-divisadero.md';
 import springhillSuitesPhoenixGilbert from './springhill-suites-phoenix-gilbert.md';
 import blueShieldOfCaliforniaDentalPhoneNumber from './blue-shield-of-california-dental-phone-number.md';
@@ -32,12 +31,10 @@ import mHansikDurhamPrivateDining from './m-hansik-durham-private-dining.md';
 import co2TankExchangeSanJuan from './co2-tank-exchange-san-juan.md';
 import bonnerSpringsYmcaSwimLessons from './bonner-springs-ymca-swim-lessons.md';
 import palmeriBrentwoodPrivateDining from './palmeri-brentwood-private-dining.md';
-import cafeDemiTeaneck from './cafe-demi-teaneck.md';
 import aaaTowReimbursement from './aaa-tow-reimbursement.md';
 import marinaTrafficCourtPhoneNumber from './marina-traffic-court-phone-number.md';
 import venturaSuperiorCourtJudgmentDebtorExam from './ventura-superior-court-judgment-debtor-exam.md';
 import innAtJimThorpeReservations from './inn-at-jim-thorpe-reservations.md';
-import airSerbiaCustomerServiceNumber from './air-serbia-customer-service-number.md';
 import virginHotelsNewYorkParking from './virgin-hotels-new-york-parking.md';
 import moxyStPetersburgDowntown from './moxy-st-petersburg-downtown.md';
 import walgreensSpecialtyPharmacyPhoneNumber from './walgreens-specialty-pharmacy-phone-number.md';
@@ -83,7 +80,6 @@ import costcoEyeExamCost from './costco-eye-exam-cost.md';
 import cancelCrunch from './cancel-crunch.md';
 import cancelLaFitness from './cancel-la-fitness.md';
 import aiPersonalAssistantAppointmentBooking from './ai-personal-assistant-appointment-booking.md';
-import macysBowTieStockCheck from './macys-bow-tie-stock-check.md';
 import bookDinnerReservationByPhone from './book-dinner-reservation-by-phone.md';
 import rescheduleDoctorAppointment from './reschedule-doctor-appointment.md';
 import runningLateToBarber from './running-late-to-barber.md';
@@ -205,7 +201,6 @@ import clinePhoneCalls from './cline-phone-calls.md';
  */
 export const POST_SOURCES: PostSource[] = [
   { slug: 'victorias-secret-georgetown', markdown: victoriasSecretGeorgetown },
-  { slug: 'chase-sapphire-reserve-benefits-phone-number', markdown: chaseSapphireReserveBenefitsPhoneNumber },
   { slug: 'fresh-blades-barbershop-divisadero', markdown: freshBladesBarbershopDivisadero },
   { slug: 'springhill-suites-phoenix-gilbert', markdown: springhillSuitesPhoenixGilbert },
   { slug: 'blue-shield-of-california-dental-phone-number', markdown: blueShieldOfCaliforniaDentalPhoneNumber },
@@ -238,12 +233,10 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'co2-tank-exchange-san-juan', markdown: co2TankExchangeSanJuan },
   { slug: 'bonner-springs-ymca-swim-lessons', markdown: bonnerSpringsYmcaSwimLessons },
   { slug: 'palmeri-brentwood-private-dining', markdown: palmeriBrentwoodPrivateDining },
-  { slug: 'cafe-demi-teaneck', markdown: cafeDemiTeaneck },
   { slug: 'aaa-tow-reimbursement', markdown: aaaTowReimbursement },
   { slug: 'marina-traffic-court-phone-number', markdown: marinaTrafficCourtPhoneNumber },
   { slug: 'ventura-superior-court-judgment-debtor-exam', markdown: venturaSuperiorCourtJudgmentDebtorExam },
   { slug: 'inn-at-jim-thorpe-reservations', markdown: innAtJimThorpeReservations },
-  { slug: 'air-serbia-customer-service-number', markdown: airSerbiaCustomerServiceNumber },
   { slug: 'virgin-hotels-new-york-parking', markdown: virginHotelsNewYorkParking },
   { slug: 'moxy-st-petersburg-downtown', markdown: moxyStPetersburgDowntown },
   { slug: 'walgreens-specialty-pharmacy-phone-number', markdown: walgreensSpecialtyPharmacyPhoneNumber },
@@ -289,7 +282,6 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'cancel-crunch', markdown: cancelCrunch },
   { slug: 'cancel-la-fitness', markdown: cancelLaFitness },
   { slug: 'ai-personal-assistant-appointment-booking', markdown: aiPersonalAssistantAppointmentBooking },
-  { slug: 'macys-bow-tie-stock-check', markdown: macysBowTieStockCheck },
   { slug: 'book-dinner-reservation-by-phone', markdown: bookDinnerReservationByPhone },
   { slug: 'reschedule-doctor-appointment', markdown: rescheduleDoctorAppointment },
   { slug: 'running-late-to-barber', markdown: runningLateToBarber },

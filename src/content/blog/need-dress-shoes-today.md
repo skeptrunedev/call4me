@@ -27,8 +27,6 @@ All six calls were made by a call4me user in Washington, DC. Our caller didn't b
 
 ## The six calls, in order
 
-For another shopping trip, our [store availability and order pickup guide](/blog/macys-bow-tie-stock-check) includes separate AI prompts for finding stock and checking whether an order you already bought is ready to collect.
-
 All times Eastern, Thursday, October 1, 2026.
 
 | Call | Store | Time | What happened |

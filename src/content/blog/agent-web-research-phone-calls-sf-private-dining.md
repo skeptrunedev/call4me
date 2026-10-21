@@ -255,7 +255,7 @@ They do give you useful examples of the evidence to request when your own resear
 | Check a shortlisted product | Exact product, required features, store location and published number | Macy's staff checked a black silk bow tie, reported 88 available at $33, and described the finish and adjustable strap | No purchase or hold. Price and stock apply to the October 6 conversation |
 | Turn an evening plan into a reservation | Restaurant, complete date, guest count, acceptable times and booking terms to ask about | Staff confirmed a table for four on October 8 at 7:30 PM | No cancellation terms were confirmed, and no attendance is established |
 
-Listen to the [Macy's inventory call and read its transcript](/blog/macys-bow-tie-stock-check), or the [dinner reservation call and transcript](/blog/book-dinner-reservation-by-phone). The recordings remain on their source pages so you can inspect the complete conversation and its limits.
+Listen to the [dinner reservation call and read its transcript](/blog/book-dinner-reservation-by-phone). The recording remains on its source page so you can inspect the complete conversation and its limits.
 
 ### Stock research brief
 

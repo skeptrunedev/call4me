@@ -34,7 +34,7 @@ There is no phone tree on the store lines. Both calls went the same way:
 2. **A quiet wait** of about 17 seconds in Chicago and 21 seconds in Georgetown. Nothing to press.
 3. **A person answers** with the store name: "Suitsupply Chicago" at 0:31, "Suitsupply D.C." at 0:36.
 
-Have the order details ready before you call. In Georgetown, the first thing the associate asked for was "the phone number for the account". Our earlier, separate [Suitsupply pickup inquiry](/blog/macys-bow-tie-stock-check) at the same store got the same question.
+Have the order details ready before you call. In Georgetown, the first thing the associate asked for was "the phone number for the account". Our earlier, separate Suitsupply pickup inquiry at the same store got the same question.
 
 ## What the two calls established
 
@@ -181,4 +181,4 @@ Connect [call4me](/) to your agent with the [Claude Code guide](/blog/claude-cod
 
 > Call the Suitsupply store at [branch and number from suitsupply.com/en-us/stores]. My order is under [name], [email] and [phone number on the account]. Ask whether every item in [item list] has arrived, including any alterations, and whether I can come in [date and time] to try it on. If I'm returning something, ask whether I can bring in an online return I already registered, and whether the refund goes to my original payment method. If staff look something up, wait quietly for at least 30 seconds before checking in. Don't pay, book, cancel or change anything. Report what staff confirmed separately from anything they didn't answer.
 
-For an order pickup checklist and the earlier Georgetown pickup inquiry, see [checking store stock and order pickup](/blog/macys-bow-tie-stock-check). If you need something to wear today, see [finding dress shoes the same day](/blog/need-dress-shoes-today). For more recorded calls, see the [other companies we've called](/companies).
+If you need something to wear today, see [finding dress shoes the same day](/blog/need-dress-shoes-today). For more recorded calls, see the [other companies we've called](/companies).
