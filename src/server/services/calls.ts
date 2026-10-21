@@ -24,6 +24,8 @@ export interface Brief {
   listen_in?: boolean;
   /** The first name the caller goes by ("Jordan"); none by default. */
   caller_name?: string | null;
+  /** The accent or dialect the caller holds ("Austrian German"); its voice's own by default. */
+  accent?: string | null;
   /** The company the caller calls as ("Acme"); callbacks to the number it called from answer the same way. */
   calling_as?: string | null;
   /** The number the business is given to call back, when the user named one; else the number the call came from. */
@@ -154,6 +156,8 @@ export interface PlaceCallInput {
   from?: string;
   /** The first name the caller introduces itself with. */
   caller_name?: string;
+  /** An accent or dialect the caller speaks with ("Austrian German"). */
+  accent?: string;
   /** The company the caller calls from: "Jordan from Acme" rather than "Alex's assistant". */
   calling_as?: string;
   /** Where callbacks go instead of the number the call comes from, e.g. the user's mobile. */
@@ -228,6 +232,9 @@ export function calls(db: D1Database) {
       const callerName = input.caller_name?.trim() || null;
       const nameProblem = callerName && PROFILE_FIELDS.assistant_name.check?.(callerName);
       if (nameProblem) throw new CallError(`caller_name: ${nameProblem}`);
+      const accent = input.accent?.trim() || null;
+      const accentProblem = accent && PROFILE_FIELDS.accent.check?.(accent);
+      if (accentProblem) throw new CallError(`accent: ${accentProblem}`);
       const callingAs = input.calling_as?.trim() || null;
       let callbackNumber: string | null = null;
       if (input.callback_number?.trim()) {
@@ -251,7 +258,7 @@ export function calls(db: D1Database) {
           422,
         );
       }
-      return { category, intake, onBehalfOf, to, callerName, callingAs, callbackNumber, ownerPhone };
+      return { category, intake, onBehalfOf, to, callerName, accent, callingAs, callbackNumber, ownerPhone };
     },
 
     /** Validate, check money and limits, and record the call as queued. Dialing is the caller's next step. */
@@ -278,7 +285,7 @@ export function calls(db: D1Database) {
 
     /** create's work once the Idempotency-Key (if any) is known to be new. */
     async record(account: Account, input: PlaceCallInput, pricePerMinuteCents: number, surface: Surface, idempotency: Idempotency | undefined): Promise<CreatedCall> {
-      const { category, intake, onBehalfOf, to, callerName, callingAs, callbackNumber, ownerPhone } = await this.validate(account, input, surface);
+      const { category, intake, onBehalfOf, to, callerName, accent, callingAs, callbackNumber, ownerPhone } = await this.validate(account, input, surface);
 
       // Credits up front: the call holds its maximum cost now and settles when it ends.
       const balance = await accounts(db).balanceCents(account.id);
@@ -298,6 +305,7 @@ export function calls(db: D1Database) {
         connect_when: input.connect_when?.trim() || null,
         ...(input.listen_in ? { listen_in: true } : {}),
         ...(callerName ? { caller_name: callerName } : {}),
+        ...(accent ? { accent } : {}),
         ...(callingAs ? { calling_as: callingAs } : {}),
         ...(callbackNumber ? { callback_number: callbackNumber } : {}),
       };

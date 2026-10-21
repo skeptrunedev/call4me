@@ -11,7 +11,7 @@ import type { Voice } from '../voice/voices';
 import { accounts, type Account } from './accounts';
 import { answeringAccountId, numbers, ringablePhone } from './numbers';
 import { profiles } from './profiles';
-import { answeringInstructionsOf, assistantNameOf, namePronunciationOf, type Profile, type Surface } from './intake';
+import { accentOf, answeringInstructionsOf, assistantNameOf, namePronunciationOf, type Profile, type Surface } from './intake';
 import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 import { analytics } from './analytics';
 
@@ -162,6 +162,7 @@ export async function placeCall(
       localTime: localTimeIn(brief.timezone),
       owner: person.name,
       assistantName: brief.caller_name || assistantNameOf(profile),
+      accent: brief.accent || accentOf(profile),
       ownerPronunciation: namePronunciationOf(profile),
       callingAs: brief.calling_as ?? null,
       connectWhen: brief.connect_when ?? null,
@@ -269,10 +270,10 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     : await env.DB.prepare(`SELECT brief FROM calls WHERE account_id = ? AND direction = 'outbound' AND from_number = ? ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 1`)
         .bind(account.id, opts.to, opts.from)
         .first<{ brief: string }>();
-  const identity: Pick<Brief, 'caller_name' | 'calling_as'> = likelyBrief ?? (latest ? (JSON.parse(latest.brief) as Brief) : {});
+  const identity: Pick<Brief, 'caller_name' | 'calling_as' | 'accent'> = likelyBrief ?? (latest ? (JSON.parse(latest.brief) as Brief) : {});
   const brief: Brief = likelyBrief
     ? { ...likelyBrief, max_minutes: maxMinutes }
-    : { on_behalf_of: owner, facts: '', flexibility: '', timezone: null, max_minutes: maxMinutes, caller_name: identity.caller_name ?? null, calling_as: identity.calling_as ?? null };
+    : { on_behalf_of: owner, facts: '', flexibility: '', timezone: null, max_minutes: maxMinutes, caller_name: identity.caller_name ?? null, calling_as: identity.calling_as ?? null, accent: identity.accent ?? null };
   await env.DB.prepare(
     `INSERT INTO calls (id, account_id, direction, to_number, from_number, business, goal, brief, status, telnyx_call_control_id, hold_cents, callback_for, created_at) VALUES (?, ?, 'inbound', ?, ?, ?, ?, ?, 'dialing', ?, ?, ?, ?)`,
   )
@@ -310,6 +311,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     instructions: inboundInstructions({
       owner,
       assistantName: identity.caller_name || assistantNameOf(profile),
+      accent: identity.accent || accentOf(profile),
       ownerPronunciation: namePronunciationOf(profile),
       callingAs: identity.calling_as ?? null,
       callbackNumber,

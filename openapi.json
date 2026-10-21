@@ -293,6 +293,11 @@
                       "willow"
                     ]
                   },
+                  "accent": {
+                    "description": "an accent or dialect the caller speaks with for this call only, e.g. \"Austrian German\" for a call in Vienna (default: the profile's accent, else its voice's own)",
+                    "type": "string",
+                    "maxLength": 40
+                  },
                   "caller_name": {
                     "description": "a first name the caller introduces itself with, e.g. \"Jordan\", for this call only (default: the profile's assistant_name, else none: just \"<user>'s assistant\"). Put the caller's name and company here, never in the goal: the caller's identity comes only from these fields.",
                     "type": "string",
@@ -1093,6 +1098,11 @@
                     "type": "string",
                     "maxLength": 500
                   },
+                  "accent": {
+                    "description": "caller accent",
+                    "type": "string",
+                    "maxLength": 500
+                  },
                   "answering_instructions": {
                     "description": "answering instructions",
                     "type": "string",
@@ -1657,6 +1667,11 @@
                       "vesper",
                       "willow"
                     ]
+                  },
+                  "accent": {
+                    "description": "an accent or dialect the caller speaks with for this call only, e.g. \"Austrian German\" for a call in Vienna (default: the profile's accent, else its voice's own)",
+                    "type": "string",
+                    "maxLength": 40
                   },
                   "caller_name": {
                     "description": "a first name the caller introduces itself with, e.g. \"Jordan\", for this call only (default: the profile's assistant_name, else none: just \"<user>'s assistant\"). Put the caller's name and company here, never in the goal: the caller's identity comes only from these fields.",
@@ -2944,6 +2959,11 @@
                       "vesper",
                       "willow"
                     ]
+                  },
+                  "accent": {
+                    "description": "an accent or dialect the caller speaks with for this call only, e.g. \"Austrian German\" for a call in Vienna (default: the profile's accent, else its voice's own)",
+                    "type": "string",
+                    "maxLength": 40
                   },
                   "caller_name": {
                     "description": "a first name the caller introduces itself with, e.g. \"Jordan\", for this call only (default: the profile's assistant_name, else none: just \"<user>'s assistant\"). Put the caller's name and company here, never in the goal: the caller's identity comes only from these fields.",

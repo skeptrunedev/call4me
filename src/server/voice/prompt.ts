@@ -24,6 +24,8 @@ interface Who {
   callingAs: string | null;
   /** How to say the owner's name, from their profile ("ah-MEER tah-ree-GAHT"); unset: as written. */
   ownerPronunciation?: string | null;
+  /** The accent or dialect to hold ("Austrian German"): the call's accent, else the profile's; unset: the voice's own. */
+  accent?: string | null;
 }
 
 /** Who the caller says it is, after "I'm": "Alex's assistant", "Jordan, Alex's assistant", "Jordan from Acme", "with Acme". */
@@ -77,8 +79,12 @@ export interface CallBrief extends Who {
   voice: Voice;
 }
 
-/** Voices picked for their accent keep it: left alone the model drifts to General American (voices.ts). */
-function accentRule(voice: Voice): string {
+/**
+ * An accent the user asked for, else the one a voice was picked for, is held for the whole call:
+ * left alone the model drifts to General American (voices.ts).
+ */
+function accentRule(voice: Voice, asked?: string | null): string {
+  if (asked) return `- Speak with a natural ${asked} accent and way of speaking for the whole call, in every language you speak on it, even when the person you're talking to sounds different.\n`;
   const accent = VOICE_ACCENTS[voice];
   return accent ? `- Speak in your natural ${accent} accent for the whole call, even when the person you're talking to sounds different.\n` : '';
 }
@@ -127,7 +133,7 @@ ${b.localTime ? `It's ${b.localTime} for them right now.\n` : ''}
 ${delegationPolicy(b.onBehalfOf, b.owner, b.connectWhen)}
 
 # Sound like a person making a quick call
-${accentRule(b.voice)}- Wait for them to answer ("Hi, thanks for calling..."), then get to the point in one sentence, without saying who you are: "Hi! I was hoping to get a table for four tonight, around seven?"
+${accentRule(b.voice, b.accent)}- Wait for them to answer ("Hi, thanks for calling..."), then get to the point in one sentence, without saying who you are: "Hi! I was hoping to get a table for four tonight, around seven?"
 - Keep every turn short. One thing at a time. Most of your turns are a single sentence.
 - With a person, talk casually, with contractions: "yeah", "gotcha", "perfect", "oh nice", "hmm". Don't pile them up.
 - React to what they actually said instead of restating it.
@@ -358,7 +364,7 @@ ${standingBlock(o.standing)}${tasks}
 ${recent}
 
 # What to do
-- Answer with ${o.callingAs ? `"Hi, this is ${o.assistantName ? whoIAm(o) : o.callingAs}."` : 'a simple "Hello?"'} and let them say why they're calling.
+${accentRule('marin', o.accent)}- Answer with ${o.callingAs ? `"Hi, this is ${o.assistantName ? whoIAm(o) : o.callingAs}."` : 'a simple "Hello?"'} and let them say why they're calling.
 ${o.tasks.length ? '- If it\'s about one of the unfinished tasks, finish it (see above).\n' : ''}- If it's about one of the recent calls, note any new time or detail and answer only with what those calls say; if they need a decision, hand off a question (ask_user) or say ${followUp}.
 - Otherwise take a message: who's calling, what it's about, and a good number to reach them.
 - Never agree to anything beyond what a task allows or what the recent calls already agreed to.
