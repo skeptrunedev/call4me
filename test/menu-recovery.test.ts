@@ -326,3 +326,21 @@ for (const [heardFirst, introduces] of [['Thank you for calling Liberty Mutual I
     assert.equal(guidance.length, introduces ? 1 : 0);
   });
 }
+
+// Liberty Mutual (call_3t4vwd5css8izvcp): the back office's response completed while its 1 was
+// still going out and no response followed the key, which held the caller off a yes/no question.
+test('the caller can speak once the chosen key is in, even if no response follows it', async (t) => {
+  const h = harness(t);
+  await h.input(libertyMenu);
+  t.mock.timers.tick(1_000);
+  assert.equal(h.forced().length, 1);
+  let resolve!: (value: Response) => void;
+  t.mock.method(globalThis, 'fetch', () => new Promise<Response>((done) => { resolve = done; }));
+  const running = h.session.onLive(JSON.stringify({ type: 'response.event', delegation_id: 'test-delegation', event: { type: 'response.output_item.done', item: { type: 'function_call', call_id: 'k', name: 'press_digits', arguments: '{"digits":"1"}' } } }));
+  await h.response('response.completed');
+  resolve(Response.json({ data: {} }));
+  await running;
+  await h.input(' Okay, an existing policy. Are you a third party calling on behalf of a customer? Just say yes or no.');
+  await h.session.onLive(JSON.stringify({ type: 'session.output_audio.delta', delta: dtmfFrames('5')[0] }));
+  assert.equal(h.session.phone.sent.filter((m: any) => m.event === 'media').length, 1);
+});

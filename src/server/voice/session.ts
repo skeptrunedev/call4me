@@ -622,6 +622,9 @@ export class VoiceSession extends DurableObject<Env> {
             throw err;
           } finally {
             this.toolsRunning--;
+            // The key is in (or the choice went to ask_user/end_call). GPT-Live may never report the
+            // response that follows a tool result, so the choice ends here, not at that response.
+            if (!this.toolsRunning) this.choosingKey = false;
             this.scheduleHandoffCheck();
             const durationMs = Date.now() - startedAt;
             this.observe(() => {
