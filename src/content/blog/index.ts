@@ -193,6 +193,13 @@ import openaiAgentsSdkPhoneCalls from './openai-agents-sdk-phone-calls.md';
 import mastraMcpPhoneCalls from './mastra-mcp-phone-calls.md';
 import claudeAgentSdkPhoneCalls from './claude-agent-sdk-phone-calls.md';
 import clinePhoneCalls from './cline-phone-calls.md';
+import alaskaAirlinesCustomerService from './alaska-airlines-customer-service.md';
+import chimeCustomerServiceNumber from './chime-customer-service-number.md';
+import coinbaseCustomerServiceNumber from './coinbase-customer-service-number.md';
+import instacartCustomerServiceNumber from './instacart-customer-service-number.md';
+import lyftCustomerServiceNumber from './lyft-customer-service-number.md';
+import uberCustomerServiceNumber from './uber-customer-service-number.md';
+import dellCustomerServiceNumber from './dell-customer-service-number.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -395,4 +402,11 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'mastra-mcp-phone-calls', markdown: mastraMcpPhoneCalls },
   { slug: 'claude-agent-sdk-phone-calls', markdown: claudeAgentSdkPhoneCalls },
   { slug: 'cline-phone-calls', markdown: clinePhoneCalls },
+  { slug: 'alaska-airlines-customer-service', markdown: alaskaAirlinesCustomerService },
+  { slug: 'chime-customer-service-number', markdown: chimeCustomerServiceNumber },
+  { slug: 'coinbase-customer-service-number', markdown: coinbaseCustomerServiceNumber },
+  { slug: 'instacart-customer-service-number', markdown: instacartCustomerServiceNumber },
+  { slug: 'lyft-customer-service-number', markdown: lyftCustomerServiceNumber },
+  { slug: 'uber-customer-service-number', markdown: uberCustomerServiceNumber },
+  { slug: 'dell-customer-service-number', markdown: dellCustomerServiceNumber },
 ];

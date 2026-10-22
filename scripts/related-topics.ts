@@ -203,4 +203,11 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'springhill-suites-phoenix-gilbert': ['travel-lodging'],
   'fresh-blades-barbershop-divisadero': ['hair-care'],
   'victorias-secret-georgetown': ['retail-shopping'],
+  'alaska-airlines-customer-service': ['airlines'],
+  'chime-customer-service-number': ['personal-finance'],
+  'coinbase-customer-service-number': ['personal-finance'],
+  'instacart-customer-service-number': ['meal-delivery'],
+  'lyft-customer-service-number': ['travel-lodging'],
+  'uber-customer-service-number': ['travel-lodging'],
+  'dell-customer-service-number': ['retail-shopping'],
 };

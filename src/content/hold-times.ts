@@ -6,7 +6,7 @@ import { COMPANIES, type Company } from './companies';
  * published transcript that shows the first live person and the route that got us there, in
  * the words of the data post's table. Keep both quotes matching the post and its table.
  */
-export const HOLD_UPDATED = '2026-10-17';
+export const HOLD_UPDATED = '2026-10-22';
 export const HOLD_PATH = '/hold-times';
 export const HOLD_DATA_PATH = '/static/data/customer-service-hold-times';
 export const HOLD_LICENSE = 'https://creativecommons.org/licenses/by/4.0/';
@@ -23,6 +23,7 @@ const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
   'aaa-tow-reimbursement': { evidence: '1:08 Representative: AAA reimbursements, how can I help?', path: 'No menu; staying on the line after the recorded mailing instructions' },
   'afternic-domain-broker-phone-number': { evidence: '0:44 Representative: Hi, you\'re through to [broker\'s first name muted] at GoDaddy. How may I help?', path: 'Staying on the line through the greeting, which played twice' },
   'airbnb-customer-service-number': { evidence: '2:27 Representative: Thank you for calling Airbnb. [Name removed] is speaking. How may I help you today?', path: 'Press 2, say "agent", then press 0' },
+  'alaska-airlines-customer-service': { evidence: '12:44 Agent: Hi, this is [name removed] in Boise. Can I get your name?', path: 'Telling the virtual assistant our question, then "yes" when it offered to connect us to reservations' },
   'allstate-customer-service-number': { evidence: '2:08 Agent: Welcome to Allstate. My name is [name removed], a licensed insurance agent in your state. How can I help you today?', path: 'Answering every question, even with "I\'m not sure"' },
   'amazon-pharmacy-phone-number': { evidence: '3:40 Representative: Clinical customer care. This is [name removed]. How can I help you?', path: 'Stating the request; the system transferred us' },
   'american-airlines-flight-credit': { evidence: '1:40 Representative: Thank you for calling American Airlines. This is [name removed]. I can see that you\'re calling from the United States to book a new reservation. How can I help you?', path: 'Saying "book a held reservation"' },
@@ -32,6 +33,9 @@ const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
   'blue-shield-of-california-dental-phone-number': { evidence: '2:49 Representative: Thank you for calling your Blue Shield of California Dental Plan. My name is [representative name muted]. Who do I have the pleasure of speaking with today?', path: 'Saying the request, then not giving a member ID' },
   'capital-one-customer-service': { evidence: '1:22 Representative: Hi, thank you for calling Capital One. This is [name removed]. May I have your first and last name, please?', path: '"Credit cards", then saying we had no card' },
   'cash-app-customer-service-number': { evidence: '1:35 Representative: Hi, thank you for calling Cash App support. This is [name removed]. How may I help you today?', path: 'Asking the virtual agent three times for a live representative' },
+  'chime-customer-service-number': { evidence: '1:21 Representative: We appreciate your business with Chime. This is [name removed]. May I please have your first and last name?', path: 'Press 9 (all other questions), then 0 for an agent' },
+  'coinbase-customer-service-number': { evidence: '0:02 Coinbase: Thanks for reaching out to Coinbase. Please refer to our help center at help.coinbase.com for additional support as phone support is currently unavailable.', path: 'Nothing we tried' },
+  'dell-customer-service-number': { evidence: '4:38 Sales agent: Welcome to Dell Sales Reception Desk. [word removed] How can I assist you?', path: 'Sales line: "make a purchase", then "something else"' },
   'delta-customer-service': { evidence: '16:15 Representative: Thank you for calling Delta. This is [name removed] speaking. How may I assist you today?', path: 'No confirmation number, "I need a representative", then hold' },
   'directv-customer-service': { evidence: '2:47 DIRECTV rep: Good evening, thank you for calling DIRECTV. My name is [name removed], who do I have the pleasure of speaking with today?', path: '"Cancel service", no account number, then satellite' },
   'doordash-customer-service-number': { evidence: '2:08 Representative: Thank you for calling DoorDash. This is [name removed]. How can I assist?', path: 'Naming the problem ("missing item", then "refund") instead of asking for a representative' },
@@ -49,8 +53,10 @@ const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
   'cancel-hellofresh': { evidence: '1:40 Representative: Hi, thank you so much for calling HelloFresh. This is [representative name removed]. How can I help?', path: 'The cancellation option' },
   'hertz-customer-service-number': { evidence: '3:07 Hertz representative: Hello, thank you for calling Hertz. My name is [name removed]. May I know your rental record number or your reservation ID number, please?', path: 'Asking for a representative six times' },
   'hulu-customer-service-number': { evidence: '1:28 Representative: Thank you for calling Hulu Support. My name is [name removed]. How can I help you?', path: 'Pressing nothing and staying on the line' },
+  'instacart-customer-service-number': { evidence: '0:24 Agent: Thank you for calling Instacart. You\'re through to [name removed]. How can I assist you today?', path: 'Press 1 (English), then press 1 (customer account)' },
   'jetblue-customer-service': { evidence: '1:27 Crew member: Thank you for calling JetBlue. This is [name removed] speaking. Please note that all calls are recorded for quality and training purposes. How can I help?', path: 'Skipping the birthday prompt, then "booking a flight"' },
   'justworks-customer-service': { evidence: '1:03 Representative: Thank you for calling Justworks. My name is [name removed]. May I please have your first and last name?', path: 'Press 2 (administrator), then 1 (benefits)' },
+  'lyft-customer-service-number': { evidence: 'Both numbers played a recording sending callers to the Help tab in the Lyft app, then hung up, on October 22, 2026.', path: 'Nothing we tried' },
   'metlife-pet-insurance-phone-number': { evidence: '2:02 Representative: Thank you for calling MetLife Pet. This is [staff name muted]. Who do I have the pleasure of speaking with?', path: 'Press 4 (another question about an existing policy)' },
   'paypal-customer-service-number': { evidence: '4:30 Representative: Hi, this is [name removed], and welcome to PayPal. Can I have your first and last name?', path: '"General question", "something else", then the keypad menu' },
   'peloton-customer-service-number': { evidence: '0:22 Representative: Hello, thank you so much for contacting Supervisor Support. This is [representative name muted].', path: 'The privacy line; no menu, staying on the line' },
@@ -63,6 +69,7 @@ const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
   'southwest-airlines-phone-number': { evidence: '4:10 Agent: Thank you for calling Southwest Airlines, [name removed]. Who [do] I have the pleasure of speaking with?', path: 'Saying "representative", then hold; or "existing reservation"' },
   'spectrum-retention-department': { evidence: '7:49 Rep: Thank you for calling Spectrum here in Austin, Texas. My name is [name removed]. Who do I have the pleasure of speaking with today?', path: '"Cancel my account", then "disconnect"' },
   't-mobile-customer-service-number': { evidence: '1:49 Representative: Hi, thank you for calling T-Mobile. This is [name removed]. How can I help?', path: '"I don\'t have one" twice, "representative", then "something else"' },
+  'uber-customer-service-number': { evidence: '0:52 Uber: There have been too many invalid entries. For security reasons, we\'ll unfortunately need to end this call.', path: 'Nothing we tried' },
   'united-change-flight': { evidence: '19:09 United agent: Hi, thank you for calling reservations desk. This is [name removed]. How may I help you?', path: '"Flight change fee", then hold' },
   'unitedhealthcare-phone-number': { evidence: '1:04 UnitedHealthcare: Thank you for calling. My name is [name removed], and I\'m a licensed insurance agent. How may I help you today?', path: 'Press 1 (insurance for you or your family)' },
   'ups-contact-number': { evidence: '5:57 UPS agent: Hello, this is [name removed]. May I have your name, please?', path: '"Representative", twice, at the tracking number prompt' },

@@ -157,7 +157,7 @@ export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: n
         </ul>
         <p>
           for longer reads, see <a href="/blog/ai-agent-that-makes-phone-calls">how an AI agent makes calls and gets tasks done for you</a> and{' '}
-          <a href="/blog/how-long-to-reach-a-human">how long it takes to reach a human at 59 companies</a>.
+          <a href="/blog/how-long-to-reach-a-human">how long it takes to reach a human at 64 companies</a>.
         </p>
 
         <h2>how to start</h2>
