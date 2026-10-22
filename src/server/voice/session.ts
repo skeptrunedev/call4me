@@ -4,7 +4,7 @@ import { accounts } from '../services/accounts';
 import { ACTIVE, calls, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
 import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
-import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, missedHandoff, voicemailLeft } from './handoff';
+import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, messageUnanswered, missedHandoff, voicemailLeft } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { HoldMeter, type HoldChange } from './hold';
 import { midConversation } from './time-limit';
@@ -51,6 +51,8 @@ const FIRST_AUDIO_LIMIT_MS = 4_000;
 const HANGUP_GRACE_MS = 700;
 /** Quiet time after the last words before checking for a hand-off the voice model skipped. */
 const HANDOFF_QUIET_MS = 1_500;
+/** Silence after a callback request before it counts as left on voicemail (see messageUnanswered). */
+const UNANSWERED_MS = 45_000;
 /**
  * A menu gets its keypad choice once the recording has paused: its audio quiet this long, and its
  * transcript (which trails the audio by about a second) settled too. Menus take keys while they
@@ -174,6 +176,8 @@ export class VoiceSession extends DurableObject<Env> {
   /** When each side last said something: the hard stop gives a live conversation time to finish. */
   private lastSpokeAt = { them: 0, caller: 0 };
   private handoffTimer: ReturnType<typeof setTimeout> | null = null;
+  /** Checks for a callback request nobody answered, UNANSWERED_MS after the caller last spoke. */
+  private unansweredTimer: ReturnType<typeof setTimeout> | null = null;
   /** Back-office functions still running (an ask_user waits on the person). Its response already reported completed. */
   private toolsRunning = 0;
   /** ask_user calls waiting on the person, by question id. */
@@ -580,6 +584,7 @@ export class VoiceSession extends DurableObject<Env> {
           if (delta) this.menuRecovery.observeCaller(delta, Date.now());
           if (!offLine) this.trackHold(this.hold.caller(delta));
           this.scheduleHandoffCheck();
+          this.scheduleUnansweredCheck();
           this.scheduleHoldingLine();
         }
         break;
@@ -736,6 +741,14 @@ export class VoiceSession extends DurableObject<Env> {
     this.handoffTimer = setTimeout(() => this.checkMissedHandoff(), Math.max(0, due - Date.now()));
   }
 
+  private scheduleUnansweredCheck(): void {
+    if (this.unansweredTimer) clearTimeout(this.unansweredTimer);
+    this.unansweredTimer = setTimeout(() => {
+      this.unansweredTimer = null;
+      this.checkMissedHandoff();
+    }, UNANSWERED_MS + 500);
+  }
+
   /** When the menu has paused: its transcript settled and the phone's audio quiet, or its transcript long settled. */
   private menuQuietAt(menuInputAt: number): number {
     const paused = Math.max(menuInputAt + MENU_TRANSCRIPT_QUIET_MS, this.themAudibleAt + MENU_AUDIO_QUIET_MS);
@@ -756,7 +769,10 @@ export class VoiceSession extends DurableObject<Env> {
     const phase = this.machineState?.phase;
     const automated = phase === 'voicemail' || phase === 'machine' || phase === 'screening' || phase === 'uncertain';
     const voicemail = automated ? voicemailLeft(this.transcript, phase === 'voicemail' ? this.machineState!.occurredAt : null, this.forcedHandoffs) : null;
-    const miss = menu ?? voicemail ?? (this.forcedHandoffs.size < MAX_FORCED_HANDOFFS ? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs) : null);
+    // A callback request met with long silence is a voicemail too, flagged or not.
+    const quietFor = Date.now() - Math.max(this.lastTranscriptAt, this.speechEndsAt);
+    const unanswered = phase !== 'human' && quietFor >= UNANSWERED_MS ? messageUnanswered(this.transcript, this.forcedHandoffs) : null;
+    const miss = menu ?? voicemail ?? unanswered ?? (this.forcedHandoffs.size < MAX_FORCED_HANDOFFS ? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs) : null);
     if (!miss) {
       this.checkConnectCondition();
       return;
@@ -1340,6 +1356,7 @@ export class VoiceSession extends DurableObject<Env> {
   private async teardown(reason: string): Promise<void> {
     this.ended = true;
     this.liveConnectAbort?.abort();
+    if (this.unansweredTimer) clearTimeout(this.unansweredTimer);
     if (this.handoffTimer) clearTimeout(this.handoffTimer);
     if (this.holdingTimer) clearTimeout(this.holdingTimer);
     for (const finish of this.waiting.values()) finish(null);

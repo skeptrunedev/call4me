@@ -243,6 +243,28 @@ export function voicemailLeft(lines: TranscriptLine[], beepAt: number | null, fo
 /** A greeting asking for a message: where a voicemail starts recording when the carrier hears no beep. */
 const VOICEMAIL_PROMPT = /\b(?:leave (?:a|your) (?:brief |short )?(?:message|name and number)|after the (?:tone|beep)|record your message|d[eé]je(?:me)? (?:un|su) mensaje|despu[eé]s del tono)\b/i;
 
+/**
+ * The caller asked to be called, texted or emailed back and nobody answered: a voicemail the carrier
+ * never flagged and whose greeting was never transcribed. Across past calls, a person always
+ * answered such a message within ~26s; voicemails recorded silence for minutes, until "you have
+ * exceeded maximum voicemail duration". The session asks only after UNANSWERED_MS of silence.
+ */
+export function messageUnanswered(lines: TranscriptLine[], forced: ReadonlySet<number>): MissedHandoff | null {
+  let i = lines.length - 1;
+  while (i >= 0 && lines[i].role === 'note') i--;
+  const last = lines[i];
+  if (!last || last.role !== 'caller' || forced.has(last.at)) return null;
+  let k = i;
+  while (k > 0 && lines[k - 1].role !== 'them') k--;
+  const message = lines.slice(k, i + 1).filter((l) => l.role === 'caller').map((l) => l.text).join(' ');
+  // A question is put to a person, who may be quietly looking it up: "can you confirm whether…?".
+  if (message.trim().endsWith('?')) return null;
+  return message.trim().split(/\s+/).length >= 8 && CALLBACK_REQUEST.test(message) ? { reason: 'voicemail_left', line: last } : null;
+}
+
+/** "Please call back at…", "text Michael at four one five…": what a voicemail message asks for. */
+const CALLBACK_REQUEST = /\b(?:call (?:me|him|her|us|them) back|call back|callback number|text (?:me|him|her|us|them)|email (?:me|him|her|us|them)|reply (?:by|to|at)|reach (?:me|him|her|us|them) at|give (?:me|him|her|us|them) a call|(?:my|his|her|our|the) (?:callback )?number is)\b/i;
+
 /** What the back office is told when the session starts it because the voice model didn't. */
 export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[], keypadHistory = '(no keypad input has been submitted)'): string {
   const recent = lines
