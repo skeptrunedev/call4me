@@ -68,6 +68,14 @@ const BACK_OFFICE_STALE_MS = QUESTION_WAIT_MS + 15_000;
 const MAX_FORCED_HANDOFFS = 12;
 /** Menu checks run at every pause in a recording, so they get their own, larger budget. */
 const MAX_MENU_CHECKS = 40;
+/**
+ * After a key the caller stays off the line until the menu answers it, at most this long. Liberty
+ * Mutual's speech-and-keypad menu takes a second or two to act on a key, and the voice model's
+ * "Hmm." after the tool result replaced the key as the menu's answer (call_11ctp62kjbc9rb3k).
+ */
+const KEY_REPLY_HOLD_MS = 8_000;
+/** Words transcribed this soon after a key are the tail of the prompt before it, not the menu's answer. */
+const KEY_TRANSCRIPT_LAG_MS = 500;
 /** One brief acknowledgment while an attended question is pending. */
 const HOLDING_LINE_QUIET_MS = 8_000;
 const MAX_HOLDING_LINES = 1;
@@ -172,6 +180,9 @@ export class VoiceSession extends DurableObject<Env> {
   private forcedMenus = 0;
   /** The back office is choosing a menu's key; started by the session, so it has no delegation of its own. */
   private choosingKey = false;
+  /** When a key went in, and until when the caller waits for the menu's answer to it. */
+  private keySentAt = 0;
+  private keyReplyBy = 0;
   private lastTranscriptAt = 0;
   /** When each side last said something: the hard stop gives a live conversation time to finish. */
   private lastSpokeAt = { them: 0, caller: 0 };
@@ -365,6 +376,7 @@ export class VoiceSession extends DurableObject<Env> {
     this.lastOutputAt = 0;
     this.backOfficeBusy = false;
     this.choosingKey = false;
+    this.keyReplyBy = 0;
     if (live?.readyState === WebSocket.OPEN) live.close(1000, 'phone stream lost');
   }
 
@@ -562,6 +574,7 @@ export class VoiceSession extends DurableObject<Env> {
         const delta = (ev as { delta: string }).delta;
         this.appendTranscript('them', delta);
         if (delta) this.menuRecovery.observe(delta, Date.now());
+        if (delta && Date.now() - this.keySentAt >= KEY_TRANSCRIPT_LAG_MS) this.keyReplyBy = 0;
         if (this.pendingMachineGuidance === 'screening') void this.queueMachineUpdate(() => this.sendMachineGuidance());
         this.trackHold(this.hold.them(delta, Date.now()));
         this.scheduleHandoffCheck();
@@ -606,7 +619,10 @@ export class VoiceSession extends DurableObject<Env> {
           }
         });
         // A line the back office writes is the caller's to say, even to a menu.
-        if (e.event.type === 'response.output_text.delta') this.choosingKey = false;
+        if (e.event.type === 'response.output_text.delta') {
+          this.choosingKey = false;
+          this.keyReplyBy = 0;
+        }
         if (e.event.type === 'response.output_item.done' && e.event.item?.type === 'function_call') {
           console.log('back office call', e.event.item.name, e.event.item.arguments);
           this.toolsRunning++;
@@ -798,7 +814,7 @@ export class VoiceSession extends DurableObject<Env> {
    */
   private menuHoldsCaller(): boolean {
     if (this.forcedMenus >= MAX_MENU_CHECKS) return false;
-    return this.choosingKey || this.menuRecovery.awaitingKey();
+    return this.choosingKey || Date.now() < this.keyReplyBy || this.menuRecovery.awaitingKey();
   }
 
   // ---- patching the person in (and handing back)
@@ -1065,6 +1081,8 @@ export class VoiceSession extends DurableObject<Env> {
           await this.pressKeys(s, s.controlId, digits);
           if (s.keyBeep && !s.inbandKeys) this.playInCall(beepFrames(), `played the key beep for ${digits}`);
           this.menuRecovery.submitted(digits, snapshot);
+          this.keySentAt = Date.now();
+          this.keyReplyBy = this.keySentAt + KEY_REPLY_HOLD_MS;
           output = `keypad submitted: ${digits}; wait for the next prompt to confirm it worked`;
         }
         break;

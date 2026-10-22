@@ -297,7 +297,11 @@ test('the caller makes no sound on a keypad menu until its key is chosen', async
   assert.equal(heard(), 0, 'nor while the back office picks the key');
   await h.keypress('3');
   await h.response('response.completed');
+  await speak();
+  await h.output('Hmm.');
+  assert.equal(heard(), 0, 'nor right after the key, before the menu answers it');
   assert.ok(!h.session.transcript.some((l: any) => l.role === 'caller'), 'what never played is not in the transcript');
+  t.mock.timers.tick(1_000);
   await h.input(' Hello, my name is Dana, how can I help?');
   await speak();
   assert.equal(heard(), 1, 'the caller speaks again once a person answers');
@@ -351,6 +355,23 @@ for (const [heardAfter, introduces] of [[screener, true], [' How can we help you
   });
 }
 
+// Liberty Mutual (call_11ctp62kjbc9rb3k): the voice model's "Hmm." a second after each 3 was taken as the answer.
+test('a menu that never answers the key releases the caller after the hold', async (t) => {
+  const h = harness(t);
+  const speak = () => h.session.onLive(JSON.stringify({ type: 'session.output_audio.delta', delta: dtmfFrames('5')[0] }));
+  const heard = () => h.session.phone.sent.filter((m: any) => m.event === 'media').length;
+  await h.input(libertyMenu);
+  t.mock.timers.tick(1_000);
+  await h.keypress('3');
+  await h.response('response.completed');
+  t.mock.timers.tick(7_000);
+  await speak();
+  assert.equal(heard(), 0, 'held while the menu may still be acting on the key');
+  t.mock.timers.tick(1_500);
+  await speak();
+  assert.equal(heard(), 1, 'never held for good when nothing answers');
+});
+
 // Liberty Mutual (call_3t4vwd5css8izvcp): the back office's response completed while its 1 was
 // still going out and no response followed the key, which held the caller off a yes/no question.
 test('the caller can speak once the chosen key is in, even if no response follows it', async (t) => {
@@ -364,6 +385,7 @@ test('the caller can speak once the chosen key is in, even if no response follow
   await h.response('response.completed');
   resolve(Response.json({ data: {} }));
   await running;
+  t.mock.timers.tick(1_000);
   await h.input(' Okay, an existing policy. Are you a third party calling on behalf of a customer? Just say yes or no.');
   await h.session.onLive(JSON.stringify({ type: 'session.output_audio.delta', delta: dtmfFrames('5')[0] }));
   assert.equal(h.session.phone.sent.filter((m: any) => m.event === 'media').length, 1);
