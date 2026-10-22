@@ -270,6 +270,7 @@ test('undelivered screening guidance survives reset and is delivered once when a
   const restarted = new VoiceSession(h.session.ctx, h.session.env) as any;
   restarted.setup = h.session.setup;
   restarted.live = new Socket();
+  restarted.transcript.push({ role: 'them', text: "If you record your name and reason for calling, I'll see if this person is available.", at: Date.now() });
   await restarted.machineDetected('screening_prompt_ended', '2026-10-06T18:43:01Z');
   assert.deepEqual(restarted.live.sent, []);
   await restarted.onLive(JSON.stringify({ type: 'session.started', session: { id: 'after-reset' } }));

@@ -314,16 +314,40 @@ test('a line the back office writes for a menu is spoken', async (t) => {
   assert.equal(h.session.phone.sent.filter((m: any) => m.event === 'media').length, 1);
 });
 
-for (const [heardFirst, introduces] of [['Thank you for calling Liberty Mutual Insurance. Para español, oprima nueve.', false], ['', true]] as const) {
-  test(`call screening detection ${introduces ? 'asks for an introduction' : 'is ignored on a phone menu'}`, async (t) => {
+// Telnyx's screening detection fires on menu and voicemail greetings too (call_lzc1mh8jaxa5rwhr: the
+// caller's "Hi!" over "monitored and recorded" was a wrong spoken answer). Only a screener's ask gets an introduction.
+const screener = "Hi, if you record your name and reason for calling, I'll see if this person is available.";
+for (const [heardFirst, introduces] of [
+  ['Thank you for calling Liberty Mutual Insurance. Para español, oprima nueve.', false],
+  ['Thank you for calling Liberty Mutual Insurance. This call may be monitored and recorded.', false],
+  [screener, true],
+] as const) {
+  test(`call screening detection after "${heardFirst.slice(0, 40)}" ${introduces ? 'asks for an introduction' : 'is held'}`, async (t) => {
     const h = harness(t);
     const stored = new Map<string, unknown>();
     h.session.ctx.storage = { get: async (k: string) => stored.get(k), put: async (k: string, v: unknown) => void stored.set(k, v) };
     h.session.liveReady = true;
-    if (heardFirst) await h.input(heardFirst);
+    await h.input(heardFirst);
     await h.session.machineDetected('screening_prompt_ended');
     const guidance = h.session.live.sent.filter((m: any) => m.type === 'session.commentary.append');
     assert.equal(guidance.length, introduces ? 1 : 0);
+  });
+}
+
+for (const [heardAfter, introduces] of [[screener, true], [' How can we help you today? You can say Manage Policy, or press 1. Claims, or press 2.', false]] as const) {
+  test(`screening detection before the words ${introduces ? 'introduces once a screener asks' : 'is dropped when a menu follows'}`, async (t) => {
+    const h = harness(t);
+    const stored = new Map<string, unknown>();
+    h.session.ctx.storage = { get: async (k: string) => stored.get(k), put: async (k: string, v: unknown) => void stored.set(k, v) };
+    h.session.liveReady = true;
+    await h.session.machineDetected('screening_prompt_ended');
+    const guidance = () => h.session.live.sent.filter((m: any) => m.type === 'session.commentary.append');
+    assert.equal(guidance().length, 0);
+    await h.input(heardAfter);
+    await h.session.machineUpdates;
+    assert.equal(guidance().length, introduces ? 1 : 0);
+    if (introduces) assert.match(guidance()[0].content, /call screener is ready/);
+    else assert.equal((stored.get('machineDetection') as any).pending, null);
   });
 }
 

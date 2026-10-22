@@ -73,6 +73,15 @@ export function machineTransition(previous: MachineState, event: MachineEvent, o
   return { state, guidance };
 }
 
+/**
+ * What a call screener says when it wants the caller's introduction: iOS ("record your name and reason
+ * for calling, I'll see if this person is available"), Google Voice ("state your name after the tone"),
+ * Pixel ("who's calling?"). Telnyx's screening detection also fires on menu greetings, voicemail
+ * greetings and people mid-sentence, so the introduction waits for one of these.
+ */
+const SCREENER_ASK = /\b(?:(?:record|state|say|tell (?:me|us))\b[^.?!]{0,20}\byour name\b|reason for (?:your )?call(?:ing)?|who(?:'s| is) calling|screening service|see if (?:this|the) person is available|qui[eé]n (?:llama|habla)|(?:diga|grabe) su nombre)/i;
+export const screenerAsked = (heard: string) => SCREENER_ASK.test(heard);
+
 export const MACHINE_GUIDANCE: Record<MachineGuidance, string> = {
   machine:
     'The carrier detected an automated greeting, which may be voicemail or a call screener. Stay silent while the greeting plays. If a live person speaks to you, respond normally. Do not leave a message or hang up unless the audio confirms voicemail is recording.',

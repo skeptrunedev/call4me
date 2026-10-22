@@ -9,7 +9,7 @@ import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMess
 import { HoldMeter, type HoldChange } from './hold';
 import { midConversation } from './time-limit';
 import { BACK_OFFICE_TOOLS } from './prompt';
-import { INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, type MachineEvent, type MachineGuidance, type MachineState } from './voicemail';
+import { INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, screenerAsked, type MachineEvent, type MachineGuidance, type MachineState } from './voicemail';
 
 /**
  * One live phone call: Telnyx's media stream on one side, a GPT-Live session on the other.
@@ -562,6 +562,7 @@ export class VoiceSession extends DurableObject<Env> {
         const delta = (ev as { delta: string }).delta;
         this.appendTranscript('them', delta);
         if (delta) this.menuRecovery.observe(delta, Date.now());
+        if (this.pendingMachineGuidance === 'screening') void this.queueMachineUpdate(() => this.sendMachineGuidance());
         this.trackHold(this.hold.them(delta, Date.now()));
         this.scheduleHandoffCheck();
         this.scheduleHoldingLine();
@@ -958,6 +959,7 @@ export class VoiceSession extends DurableObject<Env> {
       // has offered keypad options is a menu, not a screener waiting for the caller to introduce itself.
       const guidance = detected === 'screening' && this.menuRecovery.heardMenu() ? null : detected;
       if (detected && !guidance) this.mark(`answering machine detection: ${event} on a phone menu, not a screener`);
+      if (guidance === 'screening' && !this.screenerAsked()) this.mark(`answering machine detection: ${event}; introducing once a screener asks for it`);
       this.machineState = state;
       if (guidance) this.pendingMachineGuidance = guidance;
       await this.saveMachineState();
@@ -998,10 +1000,23 @@ export class VoiceSession extends DurableObject<Env> {
 
   private async sendMachineGuidance(): Promise<void> {
     await this.loadMachineState();
+    if (this.pendingMachineGuidance === 'screening' && this.menuRecovery.heardMenu()) {
+      this.mark('screening detection was a phone menu; no introduction');
+      this.pendingMachineGuidance = null;
+      await this.saveMachineState();
+      return;
+    }
+    if (this.pendingMachineGuidance === 'screening' && !this.screenerAsked()) return;
     if (!this.liveReady || this.live?.readyState !== WebSocket.OPEN || this.ended || this.endingCall || this.personHolds() || !this.pendingMachineGuidance) return;
     this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: MACHINE_GUIDANCE[this.pendingMachineGuidance] });
     this.pendingMachineGuidance = null;
     await this.saveMachineState();
+  }
+
+  /** Whether the other side's latest words ask for the caller's name or reason, as a call screener does. */
+  private screenerAsked(): boolean {
+    const heard = this.transcript.filter((line) => line.role === 'them').slice(-2).map((line) => line.text).join(' ');
+    return screenerAsked(heard.slice(-400));
   }
 
   private note(text: string): void {
