@@ -168,6 +168,8 @@ export class VoiceSession extends DurableObject<Env> {
   private forcedHandoffs = new Set<number>();
   private menuRecovery = new MenuRecovery();
   private forcedMenus = 0;
+  /** The back office is choosing a menu's key; started by the session, so it has no delegation of its own. */
+  private choosingKey = false;
   private lastTranscriptAt = 0;
   /** When each side last said something: the hard stop gives a live conversation time to finish. */
   private lastSpokeAt = { them: 0, caller: 0 };
@@ -358,6 +360,7 @@ export class VoiceSession extends DurableObject<Env> {
     this.speechEndsAt = 0;
     this.lastOutputAt = 0;
     this.backOfficeBusy = false;
+    this.choosingKey = false;
     if (live?.readyState === WebSocket.OPEN) live.close(1000, 'phone stream lost');
   }
 
@@ -538,7 +541,7 @@ export class VoiceSession extends DurableObject<Env> {
       case 'session.output_audio.delta': {
         // After the hang-up hand-off the goodbye has already been said; anything more is
         // the model filling the silence before the line drops, so it never reaches the phone.
-        if (this.endingCall || this.personOn || Date.now() < this.keysPlayingUntil) break;
+        if (this.endingCall || this.personOn || Date.now() < this.keysPlayingUntil || this.menuHoldsCaller()) break;
         const e = ev as { delta: string };
         if (this.framesOut++ === 0) this.mark('first caller audio');
         this.sendPhone({ event: 'media', media: { payload: e.delta } });
@@ -571,9 +574,11 @@ export class VoiceSession extends DurableObject<Env> {
       case 'session.output_transcript.delta':
         if (!this.endingCall && !this.personOn) {
           const delta = (ev as { delta: string }).delta;
-          this.appendTranscript('caller', delta);
+          // Kept off a menu's line, a key the caller announces ("pressing 3") still needs pressing.
+          const offLine = this.menuHoldsCaller();
+          if (!offLine) this.appendTranscript('caller', delta);
           if (delta) this.menuRecovery.observeCaller(delta, Date.now());
-          this.trackHold(this.hold.caller(delta));
+          if (!offLine) this.trackHold(this.hold.caller(delta));
           this.scheduleHandoffCheck();
           this.scheduleHoldingLine();
         }
@@ -594,6 +599,8 @@ export class VoiceSession extends DurableObject<Env> {
             this.backOfficeInteractions.get(monitoringId)?.output.push(redact(JSON.stringify(e.event.item), this.setup?.redact ?? []));
           }
         });
+        // A line the back office writes is the caller's to say, even to a menu.
+        if (e.event.type === 'response.output_text.delta') this.choosingKey = false;
         if (e.event.type === 'response.output_item.done' && e.event.item?.type === 'function_call') {
           console.log('back office call', e.event.item.name, e.event.item.arguments);
           this.toolsRunning++;
@@ -628,6 +635,7 @@ export class VoiceSession extends DurableObject<Env> {
           }
         } else if (e.event.type === 'response.completed' || e.event.type === 'response.failed' || e.event.type === 'error') {
           this.backOfficeBusy = false;
+          if (!this.toolsRunning) this.choosingKey = false;
           this.scheduleHandoffCheck();
           console.log('back office', e.event.type);
           this.observe(() => {
@@ -753,12 +761,24 @@ export class VoiceSession extends DurableObject<Env> {
     if (menu) {
       this.menuRecovery.checked(menu.snapshot);
       this.forcedMenus++;
+      this.choosingKey = true;
     } else this.forcedHandoffs.add(miss.line.at);
     this.backOfficeBusy = true;
     this.lastHandoffAt = Date.now();
     this.mark(`no hand-off after ${miss.reason === 'promise' ? 'a spoken promise' : miss.reason === 'voicemail_left' ? 'a voicemail message' : 'a phone menu'}; starting the back office`);
     this.sendLive({ type: 'response.item.create', item: { type: 'message', role: 'user', content: [{ type: 'input_text', text: forcedHandoffMessage(miss, this.transcript, this.menuRecovery.history()) }] } });
     this.sendLive({ type: 'response.create' });
+  }
+
+  /**
+   * A keypad menu waiting on its choice hears only the keypad. Many also take spoken answers
+   * ("say existing policy, or press 1"), so a "hmm" from the voice model is taken as the caller's
+   * answer and rejected before the back office's key arrives (Liberty Mutual hung up after two).
+   * The voice model makes those sounds despite its prompt, so they are kept off the line here.
+   */
+  private menuHoldsCaller(): boolean {
+    if (this.forcedMenus >= MAX_MENU_CHECKS) return false;
+    return this.choosingKey || this.menuRecovery.awaitingKey();
   }
 
   // ---- patching the person in (and handing back)
@@ -914,7 +934,11 @@ export class VoiceSession extends DurableObject<Env> {
     return this.queueMachineUpdate(async () => {
       if (this.ended || this.endingCall) return;
       const previous = await this.loadMachineState();
-      const { state, guidance } = machineTransition(previous, event, occurredAt);
+      const { state, guidance: detected } = machineTransition(previous, event, occurredAt);
+      // Screening detection also fires on a phone menu's open prompt ("How can we help?"). A line that
+      // has offered keypad options is a menu, not a screener waiting for the caller to introduce itself.
+      const guidance = detected === 'screening' && this.menuRecovery.heardMenu() ? null : detected;
+      if (detected && !guidance) this.mark(`answering machine detection: ${event} on a phone menu, not a screener`);
       this.machineState = state;
       if (guidance) this.pendingMachineGuidance = guidance;
       await this.saveMachineState();

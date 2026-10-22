@@ -148,13 +148,28 @@ export class MenuRecovery {
     return { text: this.input.slice(this.boundary).trim(), end: this.input.length, at: this.at, callerEnd: this.callerInput.length };
   }
 
-  pending(): (MissedHandoff & { snapshot: MenuSnapshot }) | null {
-    const snapshot = this.snapshot();
+  /** Fresh input offering keypad options or rejecting a choice, not yet answered or handed to a person. */
+  private openMenu(snapshot: MenuSnapshot): (MissedHandoff & { snapshot: MenuSnapshot }) | null {
     const menu = lastMatch(snapshot.text, this.personSpeaking || WEB_ENTRY.test(snapshot.text) ? KEYPAD_MENU : MENU);
     const failure = this.menuContext && !this.personSpeaking ? lastMatch(snapshot.text, MENU_FAILURE) : -1;
-    if (Math.max(menu, failure) >= 0 && lastMatch(snapshot.text, WAIT_OR_PERSON) <= Math.max(menu, failure)) {
-      return { reason: failure > menu ? 'menu_recovery' : 'menu', line: { role: 'them', text: snapshot.text, at: snapshot.at }, snapshot };
-    }
+    if (Math.max(menu, failure) < 0 || lastMatch(snapshot.text, WAIT_OR_PERSON) > Math.max(menu, failure)) return null;
+    return { reason: failure > menu ? 'menu_recovery' : 'menu', line: { role: 'them', text: snapshot.text, at: snapshot.at }, snapshot };
+  }
+
+  /** A keypad menu is waiting on its choice. */
+  awaitingKey(): boolean {
+    return this.openMenu(this.snapshot()) !== null;
+  }
+
+  /** The line has offered keypad options since a person last spoke: it is a phone menu. */
+  heardMenu(): boolean {
+    return (Boolean(this.menuContext) && !this.personSpeaking) || this.awaitingKey();
+  }
+
+  pending(): (MissedHandoff & { snapshot: MenuSnapshot }) | null {
+    const snapshot = this.snapshot();
+    const menu = this.openMenu(snapshot);
+    if (menu) return menu;
     const spoken = this.callerInput.slice(this.callerBoundary).trim();
     const digits = spokenKeypadDigits(spoken);
     if (!this.menuContext || this.personSpeaking || !digits) return null;

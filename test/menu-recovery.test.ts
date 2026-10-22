@@ -278,3 +278,51 @@ test('an answered call sends the key to the network once and beeps so the caller
   assert.equal((globalThis.fetch as any).mock.calls.length, 1);
   assert.ok(h.session.phone.sent.filter((m: any) => m.event === 'media').length > 0);
 });
+
+// Liberty Mutual (call_nykj75fzteglkx3d): its menu takes keys or speech, and the caller's "Mmh."
+// at the end of the options was rejected as a spoken answer before the back office's 3 arrived.
+const libertyMenu = 'Please say existing policy, or press one. Claims, or press two. Sales, or press three.';
+
+test('the caller makes no sound on a keypad menu until its key is chosen', async (t) => {
+  const h = harness(t);
+  const speak = () => h.session.onLive(JSON.stringify({ type: 'session.output_audio.delta', delta: dtmfFrames('5')[0] }));
+  const heard = () => h.session.phone.sent.filter((m: any) => m.event === 'media').length;
+  await h.input(libertyMenu);
+  await speak();
+  await h.output('Mmh.');
+  assert.equal(heard(), 0, 'filler while the options play never reaches the menu');
+  t.mock.timers.tick(1_000);
+  assert.equal(h.forced().length, 1);
+  await speak();
+  assert.equal(heard(), 0, 'nor while the back office picks the key');
+  await h.keypress('3');
+  await h.response('response.completed');
+  assert.ok(!h.session.transcript.some((l: any) => l.role === 'caller'), 'what never played is not in the transcript');
+  await h.input(' Hello, my name is Dana, how can I help?');
+  await speak();
+  assert.equal(heard(), 1, 'the caller speaks again once a person answers');
+});
+
+test('a line the back office writes for a menu is spoken', async (t) => {
+  const h = harness(t);
+  await h.input(libertyMenu);
+  t.mock.timers.tick(1_000);
+  assert.equal(h.forced().length, 1);
+  await h.response('response.output_text.delta');
+  h.session.menuRecovery.checked(h.session.menuRecovery.snapshot());
+  await h.session.onLive(JSON.stringify({ type: 'session.output_audio.delta', delta: dtmfFrames('5')[0] }));
+  assert.equal(h.session.phone.sent.filter((m: any) => m.event === 'media').length, 1);
+});
+
+for (const [heardFirst, introduces] of [['Thank you for calling Liberty Mutual Insurance. Para español, oprima nueve.', false], ['', true]] as const) {
+  test(`call screening detection ${introduces ? 'asks for an introduction' : 'is ignored on a phone menu'}`, async (t) => {
+    const h = harness(t);
+    const stored = new Map<string, unknown>();
+    h.session.ctx.storage = { get: async (k: string) => stored.get(k), put: async (k: string, v: unknown) => void stored.set(k, v) };
+    h.session.liveReady = true;
+    if (heardFirst) await h.input(heardFirst);
+    await h.session.machineDetected('screening_prompt_ended');
+    const guidance = h.session.live.sent.filter((m: any) => m.type === 'session.commentary.append');
+    assert.equal(guidance.length, introduces ? 1 : 0);
+  });
+}
