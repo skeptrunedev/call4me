@@ -176,3 +176,37 @@ ivrProbe.all('/probe/ivr/collect', async (c) => {
     `${system('Thank you. Your call has been accepted. You may begin speaking now.')}${inmate('Hi, it is Jordan Test at Toronto South. Please have my lawyer call my mom at 4 1 6, 5 5 5, 0 1 9 9. It is about my bail hearing on Friday.')}<Pause length="8"/>${inmate('Okay, thanks. Bye.')}<Hangup/>`,
   );
 });
+
+/**
+ * `liberty` copies Liberty Mutual's speech-and-keypad menu (800-290-8711) as recorded on 2026-10-22:
+ * the options play inside a Gather that takes speech or a key, give up 4 seconds after the last
+ * option, and take any sound as a wrong answer. Two misses and it hangs up. Pressing 3 (a new policy)
+ * reaches the person, which is the pass. Each request logs an `ivr probe` line with the key or speech
+ * it got, so the log time against the voice worker's press_digits line shows how late a key arrives.
+ */
+ivrProbe.all('/probe/ivr/liberty', async (c) => {
+  const form = c.req.method === 'POST' ? await c.req.parseBody() : {};
+  const digits = typeof form.Digits === 'string' ? form.Digits : '';
+  const heard = typeof form.SpeechResult === 'string' ? form.SpeechResult : '';
+  const step = c.req.query('step') ?? 'start';
+  const n = Number(c.req.query('n') ?? '1');
+  console.log('ivr probe', JSON.stringify({ scenario: 'liberty', call: form.CallSid ?? null, step, n, digits, heard }));
+
+  const url = (s: string, k: number) => new URL(`/probe/ivr/liberty?step=${s}&n=${k}`, c.req.url).toString().replace(/&/g, '&amp;');
+  const ivr = (text: string) => `<Say voice="Polly.Joanna-Neural">${text}</Say>`;
+  const OPTIONS = [
+    'How can we help you today? You can say Manage Policy, or press 1. Claims, or press 2. Purchase a new policy, or press 3.',
+    'Please say Existing Policy, or press 1. Claims, or press 2. Sales, or press 3.',
+    'Please choose one of the following options. Press 1 for an existing policy. Press 2 for help with a claim. Press 3 to purchase or get a quote for a new policy.',
+  ];
+  const menu = (k: number, before = '') =>
+    `${before ? ivr(before) : ''}<Gather input="dtmf speech" action="${url('choice', k)}" numDigits="1" timeout="4" speechTimeout="auto" language="en-US">${ivr(OPTIONS[Math.min(k, OPTIONS.length) - 1])}</Gather><Redirect>${url('silent', k)}</Redirect>`;
+  const respond = (body: string) => c.body(texml(body), 200, { 'content-type': 'application/xml', 'cache-control': 'no-store' });
+  const goodbye = `${ivr('Sorry, I still didn\'t get that. Please call us back later, or visit us online. Thanks for calling.')}<Hangup/>`;
+
+  if (step === 'start') return respond(`${ivr('Thank you for calling Liberty Mutual Insurance. This call may be monitored and recorded.')}<Pause length="2"/>${menu(1)}`);
+  if (step === 'silent') return respond(n >= 3 ? goodbye : menu(n + 1, n > 1 ? 'I didn\'t hear you.' : ''));
+  if (digits === '3') return respond(`${ivr('All right, a new policy. Let me get you to someone.')}<Pause length="3"/><Say voice="Polly.Matthew-Neural">Thanks for calling Liberty Mutual, this is Rocky. How can I help?</Say><Pause length="20"/><Hangup/>`);
+  if (digits === '1' || digits === '2') return respond(`${ivr('That line is closed in this test.')}<Hangup/>`);
+  return respond(n >= 3 ? goodbye : menu(n + 1, 'I didn\'t catch that.'));
+});
