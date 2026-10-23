@@ -106,7 +106,7 @@ function spokenKeypadDigits(text: string): string | null {
   return keys ? [...keys.toLowerCase().matchAll(new RegExp(KEY, 'g'))].map(([key]) => words[key] ?? key).join('') : null;
 }
 
-export type MissedHandoff = { reason: 'menu' | 'menu_recovery' | 'keypad' | 'promise' | 'voicemail_left'; line: TranscriptLine; menuContext?: string };
+export type MissedHandoff = { reason: 'menu' | 'menu_recovery' | 'keypad' | 'promise' | 'voicemail_left' | 'signed_off'; line: TranscriptLine; menuContext?: string };
 type MenuSnapshot = { text: string; end: number; at: number; callerEnd: number };
 type KeypadAttempt = { digits: string; prompt: string; inputEnd: number };
 
@@ -240,13 +240,24 @@ export function voicemailLeft(lines: TranscriptLine[], beepAt: number | null, fo
   return words >= 4 ? { reason: 'voicemail_left', line: last } : null;
 }
 
+/**
+ * A message left after a greeting that asked for one, on a line the carrier never flagged: the
+ * greeting is the other side's last word, and only our caller has spoken since. A person who asks
+ * for a message mid-call keeps talking, so an earlier "leave a message" never counts.
+ */
+export function messageAfterGreeting(lines: TranscriptLine[], forced: ReadonlySet<number>): MissedHandoff | null {
+  const theirs = lines.filter((l) => l.role === 'them');
+  const greeting = theirs[theirs.length - 1];
+  return greeting && asksForMessage(greeting.text) ? voicemailLeft(lines, null, forced) : null;
+}
+
 /** A greeting asking for a message, not a menu option for one ("to leave a message, press 3"). */
 export function asksForMessage(text: string): boolean {
   return VOICEMAIL_PROMPT.test(text) && !isPhoneMenu(text);
 }
 
 /** A greeting asking for a message: where a voicemail starts recording when the carrier hears no beep. */
-const VOICEMAIL_PROMPT = /\b(?:leave (?:a|your) (?:brief |short )?(?:message|name and number)|after the (?:tone|beep)|record your message|d[eé]je(?:me)? (?:un|su) mensaje|despu[eé]s del tono)\b/i;
+const VOICEMAIL_PROMPT = /\b(?:leave (?:me )?(?:a|your) (?:brief |short |quick )?(?:message|name and number)|(?:after|at) the (?:tone|beep)|record your message|d[eé]ja(?:r|me)? (?:un|su) mensaje|d[eé]je(?:me)? (?:un|su) mensaje|despu[eé]s del tono|nach dem (?:signalton|piepton|ton)|hinterlass(?:en sie|e) (?:mir )?(?:eine|ihre) nachricht)\b/i;
 
 /**
  * The caller asked to be called, texted or emailed back and nobody answered: a voicemail the carrier
@@ -267,8 +278,21 @@ export function messageUnanswered(lines: TranscriptLine[], forced: ReadonlySet<n
   return message.trim().split(/\s+/).length >= 8 && CALLBACK_REQUEST.test(message) ? { reason: 'voicemail_left', line: last } : null;
 }
 
+/**
+ * A recording that said goodbye ("…through the Help section of your app. Goodbye") and left the
+ * line open. The session asks only after UNANSWERED_MS of silence, so a person's goodbye has long
+ * since been answered or hung up.
+ */
+export function signedOff(lines: TranscriptLine[], forced: ReadonlySet<number>): MissedHandoff | null {
+  let i = lines.length - 1;
+  while (i >= 0 && lines[i].role === 'note') i--;
+  const last = lines[i];
+  if (!last || last.role !== 'them' || forced.has(last.at)) return null;
+  return /\b(?:good-?bye|adi[oó]s|auf wiedersehen|tsch[uü]ss)\W*$/i.test(last.text.trim()) ? { reason: 'signed_off', line: last } : null;
+}
+
 /** "Please call back at…", "text Michael at four one five…": what a voicemail message asks for. */
-const CALLBACK_REQUEST = /\b(?:call (?:me|him|her|us|them) back|call back|callback number|text (?:me|him|her|us|them)|email (?:me|him|her|us|them)|reply (?:by|to|at)|reach (?:me|him|her|us|them) at|give (?:me|him|her|us|them) a call|(?:my|his|her|our|the) (?:callback )?number is)\b/i;
+const CALLBACK_REQUEST = /\b(?:call (?:me|him|her|us|them) back|call back|callback number|text (?:me|him|her|us|them)|email (?:me|him|her|us|them)|reply (?:by|to|at)|reach (?:(?:me|him|her|us|them) )?(?:back )?at|(?:call|text)(?: or (?:call|text))? \w+ at|please call (?:\d|zero|one|two|three|four|five|six|seven|eight|nine)|give (?:me|him|her|us|them) a call|(?:my|his|her|our|the) (?:callback )?number is|devu[eé]lva(?:me|nos)? la llamada|ll[aá]me(?:me|nos)? (?:al|a)|(?:me|nos) (?:puede|podr[ií]a) llamar|r[uü]ckruf|ruf (?:mich|uns) (?:zur[uü]ck|an))\b/i;
 
 /** What the back office is told when the session starts it because the voice model didn't. */
 export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[], keypadHistory = '(no keypad input has been submitted)'): string {
@@ -281,6 +305,8 @@ export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[
       ? `The caller announced a keypad action but no matching keypad submission followed. Speaking a key does not press it. Use press_digits if the announced action is still needed and supported by the task and the menu. Do not repeat a key already submitted or speak an acknowledgment. Stay silent while a person speaks or during hold.\n\nCaller's unfulfilled keypad action:\n${miss.line.text}\n\nActive menu instructions:\n${miss.menuContext}\n\nKeypad history (carrier accepted these requests; navigation may still have failed):\n${keypadHistory}`
       : miss.reason === 'voicemail_left'
       ? 'The caller has left its voicemail message after the beep. The call is done: hand off end_call now, and write nothing.'
+      : miss.reason === 'signed_off'
+      ? 'The other side said goodbye and the line has been silent since. The call is done: hand off end_call now, and write nothing.'
       : miss.reason !== 'promise'
       ? `The latest phone menu needs attention. ${miss.reason === 'menu_recovery' ? 'It reported missing/invalid input or led to recorded instructions instead of completing the task.' : 'Choose from the fully heard options.'} Use press_digits for an announced option that serves the task or reaches a person. Wait if the options are incomplete. If a choice led to instructions only, use an announced back/main-menu option, then another relevant route such as other questions or a representative. Never assume 0, star or pound works when it was not offered. Do not repeat an unsuccessful route unchanged. Stay silent on hold or while a person speaks. A voicemail after a message was left needs end_call. If there is no supported route left, ask_user or end_call according to the brief.\n\nFresh menu input:\n${miss.line.text}\n\nKeypad history (carrier accepted these requests; navigation may still have failed):\n${keypadHistory}`
       : 'The caller said it would do something but never handed it off. Do it now: if they asked for something the caller does not have, ask_user; if the call is over, end_call; if a menu needs a key, press_digits.';

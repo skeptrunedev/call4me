@@ -3,7 +3,7 @@ import { Raindrop, type Interaction } from 'raindrop-ai';
 import { ACTIVE, calls, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
 import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
-import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, messageUnanswered, missedHandoff, voicemailLeft } from './handoff';
+import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { HoldMeter, type HoldChange } from './hold';
 import { midConversation } from './time-limit';
@@ -40,6 +40,8 @@ const TRANSCRIPT_FLUSH_MS = 2_000;
 /** Pickup-to-session-start budget, and how long a call may stay silent both ways before it is abandoned. */
 const SESSION_START_LIMIT_MS = 10_000;
 const SILENCE_LIMIT_MS = 30_000;
+/** How long after pickup a line that has never made a sound (no words, no audio) is given up on. */
+const DEAD_AIR_MS = 60_000;
 /**
  * Audio from the phone normally starts within half a second of pickup. Telnyx sometimes drops the
  * stream within ~100ms of connecting and never says so (no streaming.started, no close reaching us),
@@ -577,6 +579,7 @@ export class VoiceSession extends DurableObject<Env> {
         if (this.pendingMachineGuidance === 'screening') void this.queueMachineUpdate(() => this.sendMachineGuidance());
         this.trackHold(this.hold.them(delta, Date.now()));
         this.scheduleHandoffCheck();
+        this.scheduleUnansweredCheck();
         this.scheduleHoldingLine();
         // Barge-in: GPT-Live stops generating when talked over, but audio already queued at
         // Telnyx keeps playing. If the model has gone quiet while playback is still ahead,
@@ -785,8 +788,9 @@ export class VoiceSession extends DurableObject<Env> {
     const phase = this.machineState?.phase;
     const automated = phase === 'voicemail' || phase === 'machine' || phase === 'screening' || phase === 'uncertain';
     const voicemail = automated ? voicemailLeft(this.transcript, phase === 'voicemail' ? this.machineState!.occurredAt : null, this.forcedHandoffs) : null;
-    // A callback request met with long silence is a voicemail too, flagged or not.
-    let unanswered = phase !== 'human' ? messageUnanswered(this.transcript, this.forcedHandoffs) : null;
+    // After a long silence, flagged or not: a callback request or a message after the greeting's
+    // "leave a message" went to voicemail, and a recording that said goodbye is done.
+    let unanswered = phase !== 'human' ? (messageUnanswered(this.transcript, this.forcedHandoffs) ?? messageAfterGreeting(this.transcript, this.forcedHandoffs) ?? signedOff(this.transcript, this.forcedHandoffs)) : null;
     const quietFor = Date.now() - Math.max(this.lastTranscriptAt, this.speechEndsAt);
     // Its transcript lands before its audio finishes playing, so a long message is still being
     // spoken when the first check comes: check again once the line has been quiet long enough.
@@ -806,7 +810,7 @@ export class VoiceSession extends DurableObject<Env> {
     } else this.forcedHandoffs.add(miss.line.at);
     this.backOfficeBusy = true;
     this.lastHandoffAt = Date.now();
-    this.mark(`no hand-off after ${miss.reason === 'promise' ? 'a spoken promise' : miss.reason === 'voicemail_left' ? 'a voicemail message' : 'a phone menu'}; starting the back office`);
+    this.mark(`no hand-off after ${miss.reason === 'promise' ? 'a spoken promise' : miss.reason === 'voicemail_left' ? 'a voicemail message' : miss.reason === 'signed_off' ? 'their goodbye' : 'a phone menu'}; starting the back office`);
     this.sendLive({ type: 'response.item.create', item: { type: 'message', role: 'user', content: [{ type: 'input_text', text: forcedHandoffMessage(miss, this.transcript, this.menuRecovery.history()) }] } });
     this.sendLive({ type: 'response.create' });
   }
@@ -1288,6 +1292,12 @@ export class VoiceSession extends DurableObject<Env> {
         return;
       }
       await this.fail('lost the call audio and could not reconnect it');
+      return;
+    }
+    // Nobody ever came on: our caller said hello into a line that never answered with a word or a
+    // sound. Hold music and recordings are audible, so a queue is never taken for dead air.
+    if (this.answeredAt && !this.heardThem && !this.hold.holding() && !this.personHolds() && now - Math.max(this.answeredAt, this.themAudibleAt) >= DEAD_AIR_MS) {
+      await this.hangup('nobody came on the line');
       return;
     }
     const [wrapAt, stopAt] = await Promise.all([this.ctx.storage.get<number>('wrapAt'), this.ctx.storage.get<number>('stopAt')]);
