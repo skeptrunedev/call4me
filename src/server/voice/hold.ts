@@ -7,8 +7,12 @@
  * someone greets us ("my name is", "how can I help"), or when they say something that is
  * not a hold recording and our caller answers it, back-dated to when they started talking. Our
  * caller's own "sure, no problem" to "please hold" does not end it.
+ *
+ * A voicemail greeting is not a hold, though many say "your call is important to us": once it asks
+ * for a message, the hold ends. Nobody comes back to a voicemail to end it otherwise, so it kept a
+ * silent line billing past its limit (Fiola's events line, 12 minutes after the message was left).
  */
-import { asksUsToWait, isPhoneMenu } from './handoff';
+import { asksForMessage, asksUsToWait, isPhoneMenu } from './handoff';
 
 const QUEUE_RECORDING = /\b(?:please hold|on (?:a )?(?:(?:brief|short|quick|little|small) )?hold|(?:put|putting|place|placing) you on (?:a )?(?:\w+ )?hold|(?:let me|i'?ll|i will|i'?m going to|i'?m gonna|while i|as i|i'?m|i am) (?:connect|transfer)(?:ing)? you|stay on the line|remain on the line|(?:all )?(?:of )?our (?:agents|representatives|operators|associates|team members)(?: are)? (?:currently )?(?:busy|assisting|helping)|all (?:agents|representatives|operators|associates|lines) are (?:currently )?(?:busy|in use)|your call is (?:very )?important|(?:answered|taken) in the order (?:it was|they were) received|(?:estimated|expected|approximate) wait time|next available|in (?:the )?queue|being transferred|transferring (?:you|your call)|(?:i'?ll )?be right back|be right with you|(?:have|need|got) to (?:check|ask)|check with (?:the|my|our) (?:manager|supervisor|team|kitchen|doctor)|(?:keep|hold) me (?:one|a) (?:sec(?:ond)?|moment|minute)|por favor espere|permanezca en (?:la )?l[ií]nea|todos nuestros (?:representantes|agentes|operadores|asociados) (?:est[aá]n )?(?:ocupados|atendiendo)|su llamada es (?:muy )?importante|en el orden (?:en )?(?:que|en que) (?:fue|fueron) recibidas?|tiempo (?:estimado |aproximado )?de espera|siendo transferida|le (?:estamos )?transfiriendo)\b/i;
 /**
@@ -91,8 +95,10 @@ export class HoldMeter {
       this.sentenceAt = at;
     }
     // A person greeting us outranks hold words in the same breath ("thanks for holding, how can I help?").
-    if (this.since === null) return isHoldLine(sentence) && !PERSON_BACK.test(sentence) ? this.start(at) : null;
+    if (this.since === null) return isHoldLine(sentence) && !PERSON_BACK.test(sentence) && !asksForMessage(sentence) ? this.start(at) : null;
     if (PERSON_BACK.test(sentence)) return this.end(this.speechAt ?? at);
+    // Judged once the sentence is finished: "To leave a message," may still end "press two".
+    if (/[.?!]\s*$/.test(sentence) && asksForMessage(sentence)) return this.end(this.sentenceAt);
     // A phone menu inside the queue ("press two for general inquiries") is part of the wait, not a person.
     if (isHoldLine(sentence) || isPhoneMenu(sentence)) {
       this.speechAt = null;

@@ -758,12 +758,12 @@ export class VoiceSession extends DurableObject<Env> {
     this.handoffTimer = setTimeout(() => this.checkMissedHandoff(), Math.max(0, due - Date.now()));
   }
 
-  private scheduleUnansweredCheck(): void {
+  private scheduleUnansweredCheck(wait = UNANSWERED_MS): void {
     if (this.unansweredTimer) clearTimeout(this.unansweredTimer);
     this.unansweredTimer = setTimeout(() => {
       this.unansweredTimer = null;
       this.checkMissedHandoff();
-    }, UNANSWERED_MS + 500);
+    }, wait + 500);
   }
 
   /** When the menu has paused: its transcript settled and the phone's audio quiet, or its transcript long settled. */
@@ -787,8 +787,14 @@ export class VoiceSession extends DurableObject<Env> {
     const automated = phase === 'voicemail' || phase === 'machine' || phase === 'screening' || phase === 'uncertain';
     const voicemail = automated ? voicemailLeft(this.transcript, phase === 'voicemail' ? this.machineState!.occurredAt : null, this.forcedHandoffs) : null;
     // A callback request met with long silence is a voicemail too, flagged or not.
+    let unanswered = phase !== 'human' ? messageUnanswered(this.transcript, this.forcedHandoffs) : null;
     const quietFor = Date.now() - Math.max(this.lastTranscriptAt, this.speechEndsAt);
-    const unanswered = phase !== 'human' && quietFor >= UNANSWERED_MS ? messageUnanswered(this.transcript, this.forcedHandoffs) : null;
+    // Its transcript lands before its audio finishes playing, so a long message is still being
+    // spoken when the first check comes: check again once the line has been quiet long enough.
+    if (unanswered && quietFor < UNANSWERED_MS) {
+      if (!this.unansweredTimer) this.scheduleUnansweredCheck(UNANSWERED_MS - quietFor);
+      unanswered = null;
+    }
     const miss = menu ?? voicemail ?? unanswered ?? (this.forcedHandoffs.size < MAX_FORCED_HANDOFFS ? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs) : null);
     if (!miss) {
       this.checkConnectCondition();

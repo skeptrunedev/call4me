@@ -228,7 +228,7 @@ export function missedHandoff(lines: TranscriptLine[], lastHandoffAt: number, fo
 export function voicemailLeft(lines: TranscriptLine[], beepAt: number | null, forced: ReadonlySet<number>): MissedHandoff | null {
   // Recording starts at the carrier's beep or, when it heard none, the greeting's own "leave a message".
   // A menu option ("to leave a message, press 3") is not a recording starting.
-  const prompt = [...lines].reverse().find((l) => l.role === 'them' && VOICEMAIL_PROMPT.test(l.text) && !isPhoneMenu(l.text));
+  const prompt = [...lines].reverse().find((l) => l.role === 'them' && asksForMessage(l.text));
   const recordingFrom = beepAt ?? prompt?.at ?? null;
   if (recordingFrom === null) return null;
   let i = lines.length - 1;
@@ -238,6 +238,11 @@ export function voicemailLeft(lines: TranscriptLine[], beepAt: number | null, fo
   // A message, not the "Hi!" it starts with; transcripts split it across lines between greeting fragments.
   const words = lines.filter((l) => l.role === 'caller' && l.at >= recordingFrom).reduce((n, l) => n + l.text.trim().split(/\s+/).filter(Boolean).length, 0);
   return words >= 4 ? { reason: 'voicemail_left', line: last } : null;
+}
+
+/** A greeting asking for a message, not a menu option for one ("to leave a message, press 3"). */
+export function asksForMessage(text: string): boolean {
+  return VOICEMAIL_PROMPT.test(text) && !isPhoneMenu(text);
 }
 
 /** A greeting asking for a message: where a voicemail starts recording when the carrier hears no beep. */
