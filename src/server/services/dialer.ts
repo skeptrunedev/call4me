@@ -3,7 +3,7 @@ import type { Idempotency } from '../lib/idempotency';
 import { hmacHex } from '../lib/keys';
 import { checkDialable } from '../lib/phone';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
-import { telnyx } from '../lib/telnyx';
+import { telnyx, TelnyxError } from '../lib/telnyx';
 import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions, inboundInstructions, type OpenTask } from '../voice/prompt';
 import type { SessionSetup } from '../voice/session';
 import { sessionFor } from '../voice/stub';
@@ -204,6 +204,16 @@ export async function placeCall(
     if (!controlId && execution.idempotency) await db.releaseIdempotencyKey(call.id);
     if (err instanceof VoiceDeployLocked) {
       throw new CallError(`could not place the call (${call.id}): call4me is updating its phone service. nothing was charged; place it again in about ${err.retryInSeconds} seconds.`, 503, call.id);
+    }
+    // Refusals for the destination itself never clear on a retry; agents kept retrying Swiss mobiles.
+    if (err instanceof TelnyxError && /\b(?:D11)\b|destination number is invalid/i.test(err.detail)) {
+      throw new CallError(`could not place the call (${call.id}): the carrier says ${call.to_number} isn't a valid number. nothing was charged; check the number before trying again.`, 422, call.id);
+    }
+    if (err instanceof TelnyxError && /\b(?:D13|D24|PE5)\b|no routes found|destination rate limit|whitelisted countries/i.test(err.detail)) {
+      throw new CallError(`could not place the call (${call.id}): call4me can't reach ${call.to_number} yet; calls to that country or network aren't supported. nothing was charged, and trying again won't change it.`, 422, call.id);
+    }
+    if (err instanceof TelnyxError && /\bD1\b|channel limit/i.test(err.detail)) {
+      throw new CallError(`could not place the call (${call.id}): call4me has too many calls up at once right now. nothing was charged; place it again in about a minute, one call at a time.`, 503, call.id);
     }
     throw new CallError(`could not place the call (${call.id}): the phone carrier refused it. nothing was charged; try again shortly.`, 502, call.id);
   }
