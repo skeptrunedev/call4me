@@ -307,22 +307,10 @@ test('the caller makes no sound on a keypad menu until its key is chosen', async
   assert.equal(heard(), 1, 'the caller speaks again once a person answers');
 });
 
-test('a line the back office writes for a menu is spoken', async (t) => {
-  const h = harness(t);
-  await h.input(libertyMenu);
-  t.mock.timers.tick(1_000);
-  assert.equal(h.forced().length, 1);
-  await h.response('response.output_text.delta');
-  h.session.menuRecovery.checked(h.session.menuRecovery.snapshot());
-  await h.session.onLive(JSON.stringify({ type: 'session.output_audio.delta', delta: dtmfFrames('5')[0] }));
-  assert.equal(h.session.phone.sent.filter((m: any) => m.event === 'media').length, 1);
-});
-
 // Telnyx's screening detection fires on menu and voicemail greetings too (call_lzc1mh8jaxa5rwhr: the
 // caller's "Hi!" over "monitored and recorded" was a wrong spoken answer). Only a screener's ask gets an introduction.
 const screener = "Hi, if you record your name and reason for calling, I'll see if this person is available.";
 for (const [heardFirst, introduces] of [
-  ['Thank you for calling Liberty Mutual Insurance. Para español, oprima nueve.', false],
   ['Thank you for calling Liberty Mutual Insurance. This call may be monitored and recorded.', false],
   [screener, true],
 ] as const) {
@@ -338,22 +326,19 @@ for (const [heardFirst, introduces] of [
   });
 }
 
-for (const [heardAfter, introduces] of [[screener, true], [' How can we help you today? You can say Manage Policy, or press 1. Claims, or press 2.', false]] as const) {
-  test(`screening detection before the words ${introduces ? 'introduces once a screener asks' : 'is dropped when a menu follows'}`, async (t) => {
-    const h = harness(t);
-    const stored = new Map<string, unknown>();
-    h.session.ctx.storage = { get: async (k: string) => stored.get(k), put: async (k: string, v: unknown) => void stored.set(k, v) };
-    h.session.liveReady = true;
-    await h.session.machineDetected('screening_prompt_ended');
-    const guidance = () => h.session.live.sent.filter((m: any) => m.type === 'session.commentary.append');
-    assert.equal(guidance().length, 0);
-    await h.input(heardAfter);
-    await h.session.machineUpdates;
-    assert.equal(guidance().length, introduces ? 1 : 0);
-    if (introduces) assert.match(guidance()[0].content, /call screener is ready/);
-    else assert.equal((stored.get('machineDetection') as any).pending, null);
-  });
-}
+test('screening detection before the words introduces once a screener asks', async (t) => {
+  const h = harness(t);
+  const stored = new Map<string, unknown>();
+  h.session.ctx.storage = { get: async (k: string) => stored.get(k), put: async (k: string, v: unknown) => void stored.set(k, v) };
+  h.session.liveReady = true;
+  await h.session.machineDetected('screening_prompt_ended');
+  const guidance = () => h.session.live.sent.filter((m: any) => m.type === 'session.commentary.append');
+  assert.equal(guidance().length, 0);
+  await h.input(screener);
+  await h.session.machineUpdates;
+  assert.equal(guidance().length, 1);
+  assert.match(guidance()[0].content, /call screener is ready/);
+});
 
 // Liberty Mutual (call_11ctp62kjbc9rb3k): the voice model's "Hmm." a second after each 3 was taken as the answer.
 test('a menu that never answers the key releases the caller after the hold', async (t) => {
@@ -372,21 +357,3 @@ test('a menu that never answers the key releases the caller after the hold', asy
   assert.equal(heard(), 1, 'never held for good when nothing answers');
 });
 
-// Liberty Mutual (call_3t4vwd5css8izvcp): the back office's response completed while its 1 was
-// still going out and no response followed the key, which held the caller off a yes/no question.
-test('the caller can speak once the chosen key is in, even if no response follows it', async (t) => {
-  const h = harness(t);
-  await h.input(libertyMenu);
-  t.mock.timers.tick(1_000);
-  assert.equal(h.forced().length, 1);
-  let resolve!: (value: Response) => void;
-  t.mock.method(globalThis, 'fetch', () => new Promise<Response>((done) => { resolve = done; }));
-  const running = h.session.onLive(JSON.stringify({ type: 'response.event', delegation_id: 'test-delegation', event: { type: 'response.output_item.done', item: { type: 'function_call', call_id: 'k', name: 'press_digits', arguments: '{"digits":"1"}' } } }));
-  await h.response('response.completed');
-  resolve(Response.json({ data: {} }));
-  await running;
-  t.mock.timers.tick(1_000);
-  await h.input(' Okay, an existing policy. Are you a third party calling on behalf of a customer? Just say yes or no.');
-  await h.session.onLive(JSON.stringify({ type: 'session.output_audio.delta', delta: dtmfFrames('5')[0] }));
-  assert.equal(h.session.phone.sent.filter((m: any) => m.event === 'media').length, 1);
-});

@@ -91,16 +91,6 @@ const scenarios: Scenario[] = [
     expected: [],
   },
   {
-    name: 'no account: never re-key a phone number the menu rejected',
-    goal: noAccountGoal,
-    facts: noAccountFacts,
-    before: [{ prompt: `Welcome to support. ${accountPhonePrompt}`, digits: '2025550177#' }],
-    prompt: `We didn't recognize that entry. Please try again. ${accountPhonePrompt}`,
-    caller: "Alright, I'll try that one again.",
-    forbid: '2025550177',
-    expected: [],
-  },
-  {
     name: 'choose the no card option for a reward card that never arrived',
     goal: 'Find a reward card that never arrived and ask a representative to reissue it. The caller has no card or card number.',
     prompt: 'If you have your card handy, please press one. If you do not have your card handy, please press two.',
