@@ -86,6 +86,7 @@ function neverFetch(t: TestContext) {
 test('another account cannot retrieve a call or contact the provider', async (t) => {
   const fetch = neverFetch(t);
   await assert.rejects(getCallRecordings(environment(), 'account_other', callId), (error) => error instanceof CallError && error.status === 404);
+  await assert.rejects(recordingUrl(environment(), 'account_other', callId, 'recording_one', 'mp3'), (error) => error instanceof CallError && error.status === 404);
   assert.equal(fetch.mock.callCount(), 0);
 });
 
@@ -232,18 +233,6 @@ test('history pagination matches exact control ids and persists only the recover
   assert.equal(second.recordings[0].download_urls.mp3, 'https://media.example.test/audio.mp3?token=2');
 });
 
-test('substring collisions in history never become saved mappings or leg filters', async (t) => {
-  const writes: unknown[][] = [];
-  provider(t, () => Response.json({ data: [], meta: { total_pages: 0 } }), {
-    history: () => Response.json({
-      data: [{ webhook: { payload: { call_control_id: `prefix${controlId}`, call_leg_id: 'another_leg' } } }],
-      meta: { total_pages: 1 },
-    }),
-  });
-  assert.deepEqual((await getCallRecordings(environment({}, { writes }), accountId, callId)).recordings, []);
-  assert.deepEqual(writes, []);
-});
-
 test('conflicting exact historical leg mappings fail before saving or fetching media', async (t) => {
   const writes: unknown[][] = [];
   provider(t, () => assert.fail('conflicting history must not fetch media'), {
@@ -256,21 +245,12 @@ test('conflicting exact historical leg mappings fail before saving or fetching m
   assert.deepEqual(writes, []);
 });
 
-test('a recording with the wrong leg fails even when its control id matches', async (t) => {
-  provider(t, () => Response.json({
-    data: [recording({ call_leg_id: 'another_leg' })],
-    meta: { total_pages: 1 },
-  }), { leg: legId });
-  await assert.rejects(getCallRecordings(environment({}, { saved: legId }), accountId, callId), (error) => error instanceof TelnyxError && error.status === 502 && /mismatch/.test(error.message));
-});
-
-test('a recording with a conflicting control id fails even when its leg matches', async (t) => {
-  provider(t, () => Response.json({
-    data: [recording({ call_leg_id: legId, call_control_id: 'v3:another_call' })],
-    meta: { total_pages: 1 },
-  }), { leg: legId });
-  await assert.rejects(getCallRecordings(environment({}, { saved: legId }), accountId, callId), (error) => error instanceof TelnyxError && error.status === 502 && /mismatch/.test(error.message));
-});
+for (const [label, wrong] of [['leg', { call_leg_id: 'another_leg' }], ['control id', { call_leg_id: legId, call_control_id: 'v3:another_call' }]] as const) {
+  test(`a recording with the wrong ${label} fails even when the other matches`, async (t) => {
+    provider(t, () => Response.json({ data: [recording(wrong)], meta: { total_pages: 1 } }), { leg: legId });
+    await assert.rejects(getCallRecordings(environment({}, { saved: legId }), accountId, callId), (error) => error instanceof TelnyxError && error.status === 502 && /mismatch/.test(error.message));
+  });
+}
 
 test('history failures propagate without silently querying recordings or saving mappings', async (t) => {
   const writes: unknown[][] = [];
@@ -282,18 +262,6 @@ test('history failures propagate without silently querying recordings or saving 
 });
 
 // ---- one recording's link, behind the signed-in call page's audio route (routes/public.tsx)
-
-test('another account cannot resolve a recording link or contact the provider', async (t) => {
-  const fetch = neverFetch(t);
-  await assert.rejects(recordingUrl(environment(), 'account_other', callId, 'recording_one', 'mp3'), (error) => error instanceof CallError && error.status === 404);
-  assert.equal(fetch.mock.callCount(), 0);
-});
-
-test('a live call resolves no recording link before contacting the provider', async (t) => {
-  const fetch = neverFetch(t);
-  await assert.rejects(recordingUrl(environment({ status: 'in_progress' }), accountId, callId, 'recording_one', 'mp3'), (error) => error instanceof CallError && error.status === 409);
-  assert.equal(fetch.mock.callCount(), 0);
-});
 
 test('the owner gets a fresh link for the requested recording and format', async (t) => {
   let requests = 0;

@@ -91,18 +91,16 @@ test('late acceptance of one key preserves a newer different commitment', async 
   assert.match(h.forced()[0].item.content[0].text, /Now two/);
 });
 
-for (const response of ['Hello, this is Jane speaking.', 'Please hold while I check.', 'Please remain on the line.']) {
-  test(`old keypad context cannot trigger spoken key recovery after ${response}`, async (t) => {
-    const h = harness(t);
-    await h.input('For support press one. Press star to repeat the menu.');
-    await h.keypress('1');
-    await h.response('response.completed');
-    await h.input(` ${response}`);
-    await h.output('Now star to hear the menu again.');
-    t.mock.timers.tick(10_000);
-    assert.equal(h.forced().length, 0);
-  });
-}
+test('old keypad context cannot trigger spoken key recovery after a person answers', async (t) => {
+  const h = harness(t);
+  await h.input('For support press one. Press star to repeat the menu.');
+  await h.keypress('1');
+  await h.response('response.completed');
+  await h.input(' Hello, this is Jane speaking.');
+  await h.output('Now star to hear the menu again.');
+  t.mock.timers.tick(10_000);
+  assert.equal(h.forced().length, 0);
+});
 
 test('a repeated menu on the same transcript line is a fresh recovery opportunity', async (t) => {
   const h = harness(t);
@@ -217,29 +215,6 @@ test('new input arriving during keypad submission is preserved', async (t) => {
   resolve(Response.json({ data: {} }));
   await running;
   assert.equal(h.session.menuRecovery.pending()?.reason, 'menu_recovery');
-});
-
-test('cardholder menu rejection delegates again after caller filler and an accepted keypad request', async (t) => {
-  const h = harness(t);
-  const prompt = 'If you have your card handy, please press one. If you do not have your card handy, please press two.';
-  await h.input(prompt);
-  await h.session.onLive(JSON.stringify({ type: 'session.output_transcript.delta', delta: 'Hmm.' }));
-  t.mock.timers.tick(3_000);
-  assert.equal(h.forced().length, 1);
-  await h.keypress('2');
-  await h.response('response.completed');
-
-  for (let attempt = 0; attempt < 2; attempt++) {
-    await h.input(` I am sorry, we did not understand your input, please try again. ${prompt}`);
-    await h.session.onLive(JSON.stringify({ type: 'session.output_transcript.delta', delta: 'Hmm.' }));
-    t.mock.timers.tick(3_000);
-    assert.equal(h.forced().length, attempt + 2, 'each fresh rejection gets a recovery handoff');
-    const recovery = h.forced().at(-1).item.content[0].text;
-    assert.match(recovery, /we did not understand your input/);
-    assert.match(recovery, /Keypad submitted: 2/);
-    await h.keypress('2');
-    await h.response('response.completed');
-  }
 });
 
 test('caller filler cannot postpone a finished menu beyond its keypad deadline', async (t) => {

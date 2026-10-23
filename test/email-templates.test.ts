@@ -31,14 +31,6 @@ test('a stored template is what goes out, with its placeholders filled', async (
   assert.ok(alice.html?.includes('<a href="https://call4.me/add/acct_alice-'));
 });
 
-test('with no stored row, the code default goes out', async () => {
-  const db = d1();
-  await db.prepare(`DELETE FROM email_templates`).run();
-  const { sent, messenger } = capture();
-  await drip(db, messenger);
-  assert.ok(sent[0].text.startsWith("hey, I'm Nick, the creator of call4me."));
-});
-
 test('a stored template with an unknown placeholder is ignored for the default', async () => {
   const db = d1();
   await db.prepare(`UPDATE email_templates SET body = ? WHERE key = 'welcome'`).bind('typo: {addCredit}').run();

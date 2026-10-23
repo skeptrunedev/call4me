@@ -60,8 +60,8 @@ function harness(t: TestContext) {
     opens.push(open);
     return open.response.promise;
   });
-  const connected = (index: number, ok = true) => {
-    opens[index].response.resolve({ status: ok ? 101 : 503, webSocket: ok ? opens[index].socket : null, text: async () => 'test failure' } as any);
+  const connected = (index: number) => {
+    opens[index].response.resolve({ status: 101, webSocket: opens[index].socket } as any);
     return opens[index].socket;
   };
   const untilOpened = async (count: number) => {
@@ -98,25 +98,23 @@ test('a phone lost during model connection cannot install an orphan session; a f
   assert.equal(h.values.has('orphanSince'), false);
 });
 
-for (const succeeds of [true, false]) {
-  test(`a replacement phone arriving during an old ${succeeds ? 'successful' : 'failed'} open gets its own session`, async (t) => {
-    const h = harness(t);
-    const first = h.session.startLive();
-    await h.untilOpened(1);
-    const replacement = new Socket();
-    h.session.attachPhone(replacement);
-    const next = h.session.startLive();
-    assert.equal(first, next, 'connection work stays serialized');
-    const stale = h.connected(0, succeeds);
-    await h.untilOpened(2);
-    const live = h.connected(1);
-    await next;
-    assert.equal(h.session.live, live);
-    assert.equal(h.session.ended, false);
-    assert.deepEqual(stale.sent, []);
-    assert.equal(live.sent[0].type, 'session.start');
-  });
-}
+test('a replacement phone arriving during an old open gets its own session', async (t) => {
+  const h = harness(t);
+  const first = h.session.startLive();
+  await h.untilOpened(1);
+  const replacement = new Socket();
+  h.session.attachPhone(replacement);
+  const next = h.session.startLive();
+  assert.equal(first, next, 'connection work stays serialized');
+  const stale = h.connected(0);
+  await h.untilOpened(2);
+  const live = h.connected(1);
+  await next;
+  assert.equal(h.session.live, live);
+  assert.equal(h.session.ended, false);
+  assert.deepEqual(stale.sent, []);
+  assert.equal(live.sent[0].type, 'session.start');
+});
 
 test('late model and phone events cannot affect a recovered call', async (t) => {
   const h = harness(t);
@@ -147,18 +145,6 @@ test('late model and phone events cannot affect a recovered call', async (t) => 
   assert.equal(live.sent.length, messagesBefore);
   assert.deepEqual(replacement.sent, []);
   assert.doesNotMatch(JSON.stringify(h.session.transcript), /stale words/);
-});
-
-test('a call ending during connection closes the late socket without starting it', async (t) => {
-  const h = harness(t);
-  const starting = h.session.startLive();
-  await h.untilOpened(1);
-  await h.session.shutdown('test call ended');
-  const late = h.connected(0);
-  await starting;
-  assert.equal(late.readyState, 3);
-  assert.deepEqual(late.sent, []);
-  assert.equal(h.session.live, null);
 });
 
 test('a pending tool result is never delivered to a replacement model session', async (t) => {

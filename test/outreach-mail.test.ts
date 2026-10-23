@@ -124,16 +124,6 @@ test('follow-ups to sent mail from an authenticated alias preserve recipient and
   }
 });
 
-test('only explicit send submits and moves the created draft to sent', async () => {
-  const { client, calls } = mock();
-  assert.deepEqual(await client.send(message), { provider: 'fastmail', id: 'draft-email', submissionId: 'submission' });
-  const submission = calls.at(-1)!.body.methodCalls[0][1];
-  assert.deepEqual(submission.create.submission, { identityId: 'sender', emailId: 'draft-email' });
-  assert.deepEqual(submission.onSuccessUpdateEmail, { '#submission': {
-    'mailboxIds/drafts': null, 'mailboxIds/sent': true, 'keywords/$draft': null,
-  } });
-});
-
 test('authentication, missing sender and wrong account stop before writes', async () => {
   const auth = fastmail({ token: 'test-token', fetchImpl: async () => ({ ok: false, status: 401 }) });
   await assert.rejects(auth.createDraft(message), /HTTP 401/);

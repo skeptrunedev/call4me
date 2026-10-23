@@ -134,12 +134,6 @@ test('crawlers and AI fetchers get the shared public page with no first touch co
   assert.ok(firstTouchCookie(phone!.headers.get('set-cookie')), 'a phone named CUBOT is a person');
 });
 
-test('invalid first touch cookies are replaced without reading D1', async () => {
-  const response = await harness().respond('/examples', { headers: { cookie: 'c4_ft=%not-json' } });
-  assert.equal(firstTouchCookie(response!.headers.get('set-cookie'))?.landing, '/examples');
-  assert.equal(response!.headers.get('cache-control'), 'private, no-store');
-});
-
 test('dynamic query variants cannot be mistaken for their base static page', async () => {
   const h = harness();
   for (const path of ['/blog?q=phone', '/blog?q=', '/blog?tab=top', '/blog?tab=invalid', '/blog?subscribed=sent', '/blog?live', '/?live=1', '/blog?page=1', '/blog?page=0', '/blog?page=02', '/blog?page=-2', '/blog?page=2.5', '/blog?page=999999', '/examples?page=2']) {

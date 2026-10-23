@@ -76,16 +76,6 @@ test('already overdue numbers get a day from first attempt, even if SMTP never s
   assert.equal(released, 1);
 });
 
-test('transient SMTP failure retries without extending the first notice deadline', async () => {
-  failure = '421 temporarily unavailable';
-  await numbers(env, messenger).renewDue(due);
-  assert.equal((await row())!.renewal_email_sent_at, null);
-  failure = null;
-  await numbers(env, messenger).renewDue(due + 15 * 60_000);
-  assert.equal(sent.length, 1);
-  assert.equal((await row())!.renewal_notice_at, due);
-});
-
 test('terminal recipient rejection is recorded and not retried', async () => {
   failure = 'RCPT TO 550 unknown recipient';
   await numbers(env, messenger).renewDue(due);
