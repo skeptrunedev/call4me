@@ -1,6 +1,5 @@
 import { DurableObject } from 'cloudflare:workers';
 import { Raindrop, type Interaction } from 'raindrop-ai';
-import { accounts } from '../services/accounts';
 import { ACTIVE, calls, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
 import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
@@ -1360,19 +1359,19 @@ export class VoiceSession extends DurableObject<Env> {
   }
 
   /**
-   * Hold up to `want` more minutes of credits past `from`, never past Telnyx's ceiling. Returns the
-   * minutes held, 0 when the balance or the ceiling leaves no room.
+   * Up to `want` more minutes past `from`, never past Telnyx's ceiling. Returns the minutes
+   * granted, 0 when the balance or the ceiling leaves no room.
    */
   private async extendLimit(s: Stored, from: number, want: number): Promise<number> {
     const row = await calls(this.env.DB).byId(s.callId);
     if (!row?.answered_at) return 0;
     const ceilingAt = row.answered_at + (LIMITS.maxMinutes * 60 - 45) * 1000;
-    const balance = await accounts(this.env.DB).balanceCents(row.account_id);
-    const minutes = Math.min(want, Math.floor((ceilingAt - from) / 60_000), Math.floor(balance / s.pricePerMinuteCents));
-    if (minutes < 1) return 0;
+    const room = Math.min(want, Math.floor((ceilingAt - from) / 60_000));
+    if (room < 1) return 0;
     // Hold and talk extensions share one count: each is its own ledger hold (hold:<call>:<n>).
     const n = ((await this.ctx.storage.get<number>('holdExtensions')) ?? 0) + 1;
-    if (!(await calls(this.env.DB).extend(row, minutes, s.pricePerMinuteCents, n))) return 0;
+    const minutes = await calls(this.env.DB).extend(row, room, s.pricePerMinuteCents, n, Date.now());
+    if (!minutes) return 0;
     await this.ctx.storage.put('holdExtensions', n);
     return minutes;
   }

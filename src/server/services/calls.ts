@@ -186,6 +186,16 @@ function billedCents(talkSeconds: number, pricePerMinuteCents: number, holdSecon
 const holdSecondsAt = (row: Pick<CallRow, 'hold_seconds' | 'hold_since'>, at: number) =>
   (row.hold_seconds ?? 0) + (row.hold_since ? Math.max(0, Math.round((at - row.hold_since) / 1000)) : 0);
 
+/**
+ * Credits held for a call that its time up to `at` hasn't used. They are held at full price, so a
+ * call that spent its time on hold has about half its credits left when its limit comes up.
+ */
+function unusedHoldCents(row: Pick<CallRow, 'hold_cents' | 'answered_at' | 'hold_seconds' | 'hold_since'>, at: number, pricePerMinuteCents: number): number {
+  if (!row.hold_cents || !row.answered_at) return 0;
+  const talkSeconds = Math.max(0, Math.round((at - row.answered_at) / 1000));
+  return Math.max(0, row.hold_cents - billedCents(talkSeconds, pricePerMinuteCents, holdSecondsAt(row, at)));
+}
+
 /** A call recorded and ready to dial, with its per-call secrets (account PINs), which are never stored. */
 interface CreatedCall {
   call: CallRow;
@@ -444,14 +454,21 @@ export function calls(db: D1Database) {
     },
 
     /**
-     * Hold `minutes` more of the account's credits for a call still running, the n-th time it has
-     * been extended. False when the balance can't cover them.
+     * Up to `want` more minutes for a call still running at `at`, the n-th time it has been
+     * extended. Credits already held that its time so far hasn't used (hold minutes bill at half
+     * price) pay for them first; only the rest is held from the balance. Returns the minutes
+     * granted, 0 when the balance can't cover one.
      */
-    async extend(row: Pick<CallRow, 'id' | 'account_id' | 'business'>, minutes: number, pricePerMinuteCents: number, n: number): Promise<boolean> {
-      const cents = minutes * pricePerMinuteCents;
-      const held = await accounts(db).hold(row.account_id, cents, `hold:${row.id}:${n}`, `${minutes} more min on hold with ${row.business}`);
-      if (held) await db.prepare(`UPDATE calls SET hold_cents = COALESCE(hold_cents, 0) + ? WHERE id = ?`).bind(cents, row.id).run();
-      return held;
+    async extend(row: Pick<CallRow, 'id' | 'account_id' | 'business' | 'hold_cents' | 'answered_at' | 'hold_seconds' | 'hold_since'>, want: number, pricePerMinuteCents: number, n: number, at: number): Promise<number> {
+      const unused = unusedHoldCents(row, at, pricePerMinuteCents);
+      const balance = await accounts(db).balanceCents(row.account_id);
+      const minutes = Math.min(want, Math.floor((balance + unused) / pricePerMinuteCents));
+      if (minutes < 1) return 0;
+      const cents = Math.max(0, minutes * pricePerMinuteCents - unused);
+      if (!cents) return minutes;
+      if (!(await accounts(db).hold(row.account_id, cents, `hold:${row.id}:${n}`, `${minutes} more min on hold with ${row.business}`))) return 0;
+      await db.prepare(`UPDATE calls SET hold_cents = COALESCE(hold_cents, 0) + ? WHERE id = ?`).bind(cents, row.id).run();
+      return minutes;
     },
 
     async block(number: string, reason: string): Promise<void> {

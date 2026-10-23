@@ -41,7 +41,7 @@ test('extending a call on hold holds more credits, all released when it ends, an
   await answeredCall(db, 5 * 25);
   const c = calls(db);
   const row = (await c.byId('call_1'))!;
-  assert.ok(await c.extend(row, 15, 25, 1));
+  assert.equal(await c.extend(row, 15, 25, 1, s(5 * 60)), 15);
   assert.equal((await c.byId('call_1'))!.hold_cents, 20 * 25);
   assert.equal(await accounts(db).balanceCents('acct_alice'), 10_000 - 20 * 25);
   // Ran 40 minutes with no hold recorded: capped at the 20 minutes held.
@@ -50,12 +50,27 @@ test('extending a call on hold holds more credits, all released when it ends, an
   assert.equal(await accounts(db).balanceCents('acct_alice'), 10_000 - 20 * 25);
 });
 
-test('an extension the balance cannot cover is refused and holds nothing', async () => {
+test('an extension the balance cannot cover a minute of is refused and holds nothing', async () => {
   const db = d1();
   await answeredCall(db, 5 * 25);
-  await accounts(db).post('acct_alice', -(10_000 - 5 * 25 - 100), 'adjustment', 'drain', 'leave $1');
+  await accounts(db).post('acct_alice', -(10_000 - 5 * 25 - 20), 'adjustment', 'drain', 'leave 20 cents');
   const c = calls(db);
-  assert.equal(await c.extend((await c.byId('call_1'))!, 15, 25, 1), false);
+  assert.equal(await c.extend((await c.byId('call_1'))!, 15, 25, 1, s(5 * 60)), 0);
   assert.equal((await c.byId('call_1'))!.hold_cents, 5 * 25);
+});
+
+test('a call on hold at its limit pays for its extension with the credits its half-price hold left unused', async () => {
+  const db = d1();
+  // Delta: $7.75 in the account, 30 minutes held at full price, on hold from minute 2 on.
+  await answeredCall(db, 30 * 25);
+  await accounts(db).post('acct_alice', -(10_000 - 31 * 25), 'adjustment', 'drain', 'leave $7.75');
+  const c = calls(db);
+  await c.holdStarted('call_1', s(90));
+  // 2 minutes talking and 28 on hold cost $4, so $3.50 of the hold is unused: 15 more minutes.
+  assert.equal(await c.extend((await c.byId('call_1'))!, 15, 25, 1, s(30 * 60)), 15);
+  assert.equal(await accounts(db).balanceCents('acct_alice'), 0);
+  const done = await c.finish('call_1', { status: 'completed', pricePerMinuteCents: 25, at: s(45 * 60) });
+  // 45 minutes, 43 of them on hold.
+  assert.equal(done!.cost_cents, 2 * 25 + Math.ceil((43 * 25) / 2));
 });
 
