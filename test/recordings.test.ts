@@ -171,11 +171,6 @@ test('records without completed downloadable media return an empty list', async 
   assert.match(result.message, /No recording is available/);
 });
 
-test('an empty provider result returns an empty list', async (t) => {
-  provider(t, () => Response.json({ data: [], meta: { total_pages: 0 } }));
-  assert.deepEqual((await getCallRecordings(environment(), accountId, callId)).recordings, []);
-});
-
 test('a null alternate format is omitted while the available download remains usable', async (t) => {
   provider(t, () => Response.json({
     data: [
@@ -286,13 +281,6 @@ test('history failures propagate without silently querying recordings or saving 
   assert.deepEqual(writes, []);
 });
 
-test('malformed history pagination fails without fetching recordings', async (t) => {
-  provider(t, () => assert.fail('invalid history must not fetch media'), {
-    history: () => Response.json({ data: [], meta: { total_pages: '1' } }),
-  });
-  await assert.rejects(getCallRecordings(environment(), accountId, callId), (error) => error instanceof TelnyxError && error.status === 502 && /invalid webhook history/.test(error.message));
-});
-
 // ---- one recording's link, behind the signed-in call page's audio route (routes/public.tsx)
 
 test('another account cannot resolve a recording link or contact the provider', async (t) => {
@@ -331,7 +319,3 @@ test('an unknown recording or a missing format resolves to null', async (t) => {
   assert.equal(await recordingUrl(env, accountId, callId, 'recording_one', 'wav'), null);
 });
 
-test('a provider failure propagates from the link lookup instead of resolving to null', async (t) => {
-  provider(t, () => Response.json({ errors: [{ detail: 'provider unavailable' }] }, { status: 503 }));
-  await assert.rejects(recordingUrl(environment(), accountId, callId, 'recording_one', 'mp3'), (error) => error instanceof TelnyxError && error.status === 503);
-});

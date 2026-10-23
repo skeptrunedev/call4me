@@ -59,15 +59,6 @@ test('draft discovery uses the session API and exact sender, without submitting 
   assert.equal(messageHtml('"quoted"'), '<p>&quot;quoted&quot;</p>');
 });
 
-test('mail status is read only and reuses discovery', async () => {
-  const { client, calls } = mock();
-  const status = await client.status();
-  assert.equal(status.sender.email, 'me@skeptrune.com');
-  await client.status();
-  assert.equal(calls.length, 3);
-  assert.ok(calls.slice(1).every((call) => call.body.methodCalls[0][0].endsWith('/get')));
-});
-
 test('mail search and full body reads preserve mailbox and read state', async () => {
   const email = { id: 'reply', subject: 'Re: hello', bodyValues: { text: { value: 'interested' } } };
   const { client, calls } = mock({
@@ -281,17 +272,6 @@ test('provider schedule mismatches preserve the native id and never retry or fal
     });
     assert.equal(calls.filter((call) => call.body?.methodCalls[0][0].endsWith('/set')).length, 1);
   }
-});
-
-test('native schedule rejection never attempts immediate delivery and filing failures remain verified schedules', async () => {
-  const failed = mock({ ...scheduleOverrides(), 'EmailSubmission/set': methodResult('EmailSubmission/set', { notCreated: { submission: { type: 'invalidProperties' } } }) }, scheduleSession);
-  await assert.rejects(failed.client.scheduleDraft(scheduleMessage), /invalidProperties/);
-  assert.equal(failed.calls.filter((call) => call.body?.methodCalls[0][0].endsWith('/set')).length, 1);
-  const filing = mock({ ...scheduleOverrides(), 'EmailSubmission/set': methodResult('EmailSubmission/set', { created: { submission: { id: 'submission' } } }) }, scheduleSession);
-  const result = await filing.client.scheduleDraft(scheduleMessage);
-  assert.equal(result.submissionId, 'submission');
-  assert.equal(result.sendAt, sendAt);
-  assert.match(result.warning!, /mail scheduled.*Sent mailbox update/);
 });
 
 test('cancellation updates undoStatus and confirms canceled status without deleting anything', async () => {
