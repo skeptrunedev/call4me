@@ -123,12 +123,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2305
+    "tokens": 2314
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2189
+    "tokens": 2193
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
@@ -143,7 +143,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2112
+    "tokens": 2115
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
@@ -178,12 +178,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 1606
+    "tokens": 1617
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 18549
+    "tokens": 18576
   },
   "/blog/alaska-airlines-customer-service": {
     "html": "/__pages/5abc3a773d2970a4.html",
@@ -198,7 +198,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/coinbase-customer-service-number": {
     "html": "/__pages/4eeefd0b698f25c8.html",
     "markdown": "/__pages/4eeefd0b698f25c8.md",
-    "tokens": 2945
+    "tokens": 2951
   },
   "/blog/instacart-customer-service-number": {
     "html": "/__pages/5cba68eafa16e436.html",
@@ -213,7 +213,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/uber-customer-service-number": {
     "html": "/__pages/6fa0d71023f29e00.html",
     "markdown": "/__pages/6fa0d71023f29e00.md",
-    "tokens": 3904
+    "tokens": 3907
   },
   "/blog/dell-customer-service-number": {
     "html": "/__pages/bfb05298120f7769.html",
@@ -458,7 +458,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/suitsupply-customer-service": {
     "html": "/__pages/1e7fe1160a540ef2.html",
     "markdown": "/__pages/1e7fe1160a540ef2.md",
-    "tokens": 4430
+    "tokens": 4436
   },
   "/blog/paradox-hotel-vancouver": {
     "html": "/__pages/2ce3739ad17124b4.html",
@@ -503,17 +503,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/capital-one-customer-service": {
     "html": "/__pages/a385bedc31555638.html",
     "markdown": "/__pages/a385bedc31555638.md",
-    "tokens": 5189
+    "tokens": 5201
   },
   "/blog/cash-app-customer-service-number": {
     "html": "/__pages/ebdd37505eadb5a2.html",
     "markdown": "/__pages/ebdd37505eadb5a2.md",
-    "tokens": 5645
+    "tokens": 5780
   },
   "/blog/bank-of-america-customer-service": {
     "html": "/__pages/ff778a2b612c7fe2.html",
     "markdown": "/__pages/ff778a2b612c7fe2.md",
-    "tokens": 4734
+    "tokens": 4740
   },
   "/blog/wells-fargo-customer-service": {
     "html": "/__pages/1909ea4bb7a7f83e.html",
@@ -523,7 +523,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/jetblue-customer-service": {
     "html": "/__pages/61f270608419650f.html",
     "markdown": "/__pages/61f270608419650f.md",
-    "tokens": 5011
+    "tokens": 5014
   },
   "/blog/progressive-customer-service": {
     "html": "/__pages/7ef6426a09eb45df.html",
@@ -533,17 +533,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/airbnb-customer-service-number": {
     "html": "/__pages/e392dafb7481d910.html",
     "markdown": "/__pages/e392dafb7481d910.md",
-    "tokens": 5832
+    "tokens": 5839
   },
   "/blog/expedia-customer-service-number": {
     "html": "/__pages/adc39c755249459c.html",
     "markdown": "/__pages/adc39c755249459c.md",
-    "tokens": 4264
+    "tokens": 4386
   },
   "/blog/opencode-phone-calls": {
     "html": "/__pages/f643b874d5d5cfd4.html",
     "markdown": "/__pages/f643b874d5d5cfd4.md",
-    "tokens": 6601
+    "tokens": 6605
   },
   "/blog/openai-agents-sdk-phone-calls": {
     "html": "/__pages/207258c629ec45f8.html",
@@ -573,27 +573,27 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/amazon-customer-service-number": {
     "html": "/__pages/206c85c5adbd82b1.html",
     "markdown": "/__pages/206c85c5adbd82b1.md",
-    "tokens": 6419
+    "tokens": 6424
   },
   "/blog/xfinity-customer-service-number": {
     "html": "/__pages/71ceb939dffe328c.html",
     "markdown": "/__pages/71ceb939dffe328c.md",
-    "tokens": 5540
+    "tokens": 5544
   },
   "/blog/irs-phone-number": {
     "html": "/__pages/5c3dbf05923aa44a.html",
     "markdown": "/__pages/5c3dbf05923aa44a.md",
-    "tokens": 6624
+    "tokens": 6728
   },
   "/blog/t-mobile-customer-service-number": {
     "html": "/__pages/016e6c0731298402.html",
     "markdown": "/__pages/016e6c0731298402.md",
-    "tokens": 13670
+    "tokens": 13818
   },
   "/blog/langchain-mcp-phone-calls": {
     "html": "/__pages/3a28e046b9bdfb2d.html",
     "markdown": "/__pages/3a28e046b9bdfb2d.md",
-    "tokens": 4022
+    "tokens": 4027
   },
   "/blog/github-copilot-phone-calls": {
     "html": "/__pages/1537745cd96caf99.html",
@@ -648,7 +648,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/social-security-phone-number": {
     "html": "/__pages/ae8a052052c9f693.html",
     "markdown": "/__pages/ae8a052052c9f693.md",
-    "tokens": 7187
+    "tokens": 7193
   },
   "/blog/costco-customer-service": {
     "html": "/__pages/77f87a42aa5bef1c.html",
@@ -658,7 +658,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/att-customer-service-number": {
     "html": "/__pages/4fc865890ec1135b.html",
     "markdown": "/__pages/4fc865890ec1135b.md",
-    "tokens": 8279
+    "tokens": 8283
   },
   "/blog/southwest-airlines-phone-number": {
     "html": "/__pages/a044a0c777c5b7fe.html",
@@ -668,7 +668,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/home-depot-customer-service": {
     "html": "/__pages/386ebcbd12bbbc61.html",
     "markdown": "/__pages/386ebcbd12bbbc61.md",
-    "tokens": 8461
+    "tokens": 8466
   },
   "/blog/walmart-customer-service-number": {
     "html": "/__pages/cb58e77742fc6c4a.html",
@@ -738,17 +738,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/doordash-customer-service-number": {
     "html": "/__pages/ff70cf03e5b76586.html",
     "markdown": "/__pages/ff70cf03e5b76586.md",
-    "tokens": 4688
+    "tokens": 4691
   },
   "/blog/priceline-customer-service": {
     "html": "/__pages/2a91c0a6d3a54c7c.html",
     "markdown": "/__pages/2a91c0a6d3a54c7c.md",
-    "tokens": 5507
+    "tokens": 5663
   },
   "/blog/venmo-customer-service-number": {
     "html": "/__pages/8ddc0d8e5d387de7.html",
     "markdown": "/__pages/8ddc0d8e5d387de7.md",
-    "tokens": 9305
+    "tokens": 9314
   },
   "/blog/everything-we-have-improved-since-launch": {
     "html": "/__pages/ee53e230a99841c0.html",
@@ -783,7 +783,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/pottery-barn-customer-service": {
     "html": "/__pages/7d519b6ada502c05.html",
     "markdown": "/__pages/7d519b6ada502c05.md",
-    "tokens": 3763
+    "tokens": 3768
   },
   "/blog/hertz-customer-service-number": {
     "html": "/__pages/e3ebefa55d525ccc.html",
@@ -798,7 +798,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/windstream-customer-service": {
     "html": "/__pages/1b78d55294739307.html",
     "markdown": "/__pages/1b78d55294739307.md",
-    "tokens": 7983
+    "tokens": 7988
   },
   "/blog/how-long-to-reach-a-human": {
     "html": "/__pages/1624f2222bb89bf3.html",
@@ -1123,7 +1123,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/verizon-customer-service": {
     "html": "/__pages/6cfd54b00e65d985.html",
     "markdown": "/__pages/6cfd54b00e65d985.md",
-    "tokens": 11217
+    "tokens": 11222
   },
   "/blog/fpl-phone-number": {
     "html": "/__pages/f5806291e5d3e637.html",
@@ -1153,27 +1153,27 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/spectrum-retention-department": {
     "html": "/__pages/cad6a590d97a2bfd.html",
     "markdown": "/__pages/cad6a590d97a2bfd.md",
-    "tokens": 6766
+    "tokens": 6771
   },
   "/blog/experian-phone-number": {
     "html": "/__pages/a1897270700e714d.html",
     "markdown": "/__pages/a1897270700e714d.md",
-    "tokens": 4103
+    "tokens": 4331
   },
   "/blog/cancel-planet-fitness": {
     "html": "/__pages/a9a59bfd1e8c3da5.html",
     "markdown": "/__pages/a9a59bfd1e8c3da5.md",
-    "tokens": 3821
+    "tokens": 3832
   },
   "/blog/wayfair-customer-service": {
     "html": "/__pages/3ce73872b4d7c2b7.html",
     "markdown": "/__pages/3ce73872b4d7c2b7.md",
-    "tokens": 4511
+    "tokens": 4716
   },
   "/blog/costco-tire-appointment-cancel-refund": {
     "html": "/__pages/ca5f5983d7127c65.html",
     "markdown": "/__pages/ca5f5983d7127c65.md",
-    "tokens": 4423
+    "tokens": 4429
   },
   "/blog/reschedule-dentist-appointment": {
     "html": "/__pages/1b1129e38f43b43f.html",

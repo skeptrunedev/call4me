@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "055f34215c2463835f1693eca87bd4268179ee23bb47df4ff266dc40f0725733"
+  "sourceHash": "0cabc0373c06d9c77b5d14f4222ccf57c7588247e3b91270cdbf5bb7ebf6c7f6"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -259,10 +259,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.624252
     },
     {
-      "slug": "expedia-customer-service-number",
-      "similarity": 0.617438
-    },
-    {
       "slug": "inn-at-jim-thorpe-reservations",
       "similarity": 0.604445
     }
@@ -283,10 +279,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "american-airlines-flight-credit",
       "similarity": 0.623861
-    },
-    {
-      "slug": "expedia-customer-service-number",
-      "similarity": 0.618081
     },
     {
       "slug": "etihad-customer-service",
@@ -325,16 +317,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.722385
     },
     {
-      "slug": "wayfair-customer-service",
-      "similarity": 0.699208
-    },
-    {
       "slug": "walmart-customer-service-number",
       "similarity": 0.68093
     },
     {
       "slug": "dell-customer-service-number",
       "similarity": 0.678629
+    },
+    {
+      "slug": "wayfair-customer-service",
+      "similarity": 0.657943
     },
     {
       "slug": "pottery-barn-customer-service",
@@ -433,7 +425,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "att-customer-service-number": [
     {
       "slug": "t-mobile-customer-service-number",
-      "similarity": 0.704565
+      "similarity": 0.67045
     },
     {
       "slug": "directv-customer-service",
@@ -493,7 +485,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "cascaded-voice-stack-vs-gpt-live",
-      "similarity": 0.720376
+      "similarity": 0.720377
     },
     {
       "slug": "instinct-ai-phone-calls",
@@ -642,7 +634,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "cancel-la-fitness",
-      "similarity": 0.770518
+      "similarity": 0.770519
     },
     {
       "slug": "cancel-factor",
@@ -778,7 +770,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "cancel-crunch",
-      "similarity": 0.770518
+      "similarity": 0.770519
     },
     {
       "slug": "how-to-cancel-siriusxm",
@@ -883,12 +875,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.630685
     },
     {
-      "slug": "cash-app-customer-service-number",
-      "similarity": 0.618791
-    },
-    {
       "slug": "usaa-phone-number",
       "similarity": 0.617881
+    },
+    {
+      "slug": "experian-phone-number",
+      "similarity": 0.610328
     },
     {
       "slug": "venmo-customer-service-number",
@@ -926,7 +918,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "bland-ai-alternatives",
-      "similarity": 0.720376
+      "similarity": 0.720377
     },
     {
       "slug": "vapi-alternatives",
@@ -940,27 +932,23 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "cash-app-customer-service-number": [
     {
       "slug": "coinbase-customer-service-number",
-      "similarity": 0.740437
+      "similarity": 0.692836
+    },
+    {
+      "slug": "irs-phone-number",
+      "similarity": 0.675248
     },
     {
       "slug": "social-security-phone-number",
-      "similarity": 0.674927
+      "similarity": 0.653531
+    },
+    {
+      "slug": "experian-phone-number",
+      "similarity": 0.635106
     },
     {
       "slug": "venmo-customer-service-number",
-      "similarity": 0.651987
-    },
-    {
-      "slug": "wells-fargo-customer-service",
-      "similarity": 0.623809
-    },
-    {
-      "slug": "capital-one-customer-service",
-      "similarity": 0.618791
-    },
-    {
-      "slug": "paypal-customer-service-number",
-      "similarity": 0.603805
+      "similarity": 0.616715
     }
   ],
   "chatgpt-phone-calls": [
@@ -1201,7 +1189,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "coinbase-customer-service-number": [
     {
       "slug": "cash-app-customer-service-number",
-      "similarity": 0.740437
+      "similarity": 0.692836
     },
     {
       "slug": "venmo-customer-service-number",
@@ -1395,6 +1383,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "dell-customer-service-number": [
     {
+      "slug": "wayfair-customer-service",
+      "similarity": 0.711637
+    },
+    {
       "slug": "suitsupply-customer-service",
       "similarity": 0.691551
     },
@@ -1405,10 +1397,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "amazon-customer-service-number",
       "similarity": 0.678629
-    },
-    {
-      "slug": "wayfair-customer-service",
-      "similarity": 0.675765
     },
     {
       "slug": "walmart-customer-service-number",
@@ -1565,20 +1553,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.665378
     },
     {
-      "slug": "expedia-customer-service-number",
-      "similarity": 0.63638
-    },
-    {
       "slug": "alaska-airlines-customer-service",
       "similarity": 0.616296
     },
     {
       "slug": "delta-customer-service",
       "similarity": 0.616051
-    },
-    {
-      "slug": "priceline-customer-service",
-      "similarity": 0.611485
     }
   ],
   "everything-we-have-improved-since-launch": [
@@ -1590,34 +1570,23 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "expedia-customer-service-number": [
     {
       "slug": "priceline-customer-service",
-      "similarity": 0.683774
-    },
-    {
-      "slug": "uber-customer-service-number",
-      "similarity": 0.66163
-    },
-    {
-      "slug": "jetblue-customer-service",
-      "similarity": 0.639702
-    },
-    {
-      "slug": "etihad-customer-service",
-      "similarity": 0.63638
-    },
-    {
-      "slug": "southwest-airlines-phone-number",
-      "similarity": 0.631541
-    },
-    {
-      "slug": "alaska-airlines-customer-service",
-      "similarity": 0.618081
-    },
-    {
-      "slug": "airbnb-customer-service-number",
-      "similarity": 0.617438
+      "similarity": 0.725623
     }
   ],
-  "experian-phone-number": [],
+  "experian-phone-number": [
+    {
+      "slug": "cash-app-customer-service-number",
+      "similarity": 0.635106
+    },
+    {
+      "slug": "usaa-phone-number",
+      "similarity": 0.615017
+    },
+    {
+      "slug": "capital-one-customer-service",
+      "similarity": 0.610328
+    }
+  ],
   "eye-exam-cost-without-insurance": [
     {
       "slug": "same-day-eye-exam-brooklyn",
@@ -1659,7 +1628,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "wayfair-customer-service",
-      "similarity": 0.653133
+      "similarity": 0.651302
     },
     {
       "slug": "cancel-audible",
@@ -2132,10 +2101,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.710361
     },
     {
-      "slug": "wayfair-customer-service",
-      "similarity": 0.694694
-    },
-    {
       "slug": "dell-customer-service-number",
       "similarity": 0.690412
     },
@@ -2146,6 +2111,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "walmart-customer-service-number",
       "similarity": 0.67795
+    },
+    {
+      "slug": "wayfair-customer-service",
+      "similarity": 0.676832
     },
     {
       "slug": "vivint-customer-service-number",
@@ -2329,12 +2298,13 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.706903
     }
   ],
-  "irs-phone-number": [],
-  "jetblue-customer-service": [
+  "irs-phone-number": [
     {
-      "slug": "priceline-customer-service",
-      "similarity": 0.682067
-    },
+      "slug": "cash-app-customer-service-number",
+      "similarity": 0.675248
+    }
+  ],
+  "jetblue-customer-service": [
     {
       "slug": "etihad-customer-service",
       "similarity": 0.676851
@@ -2344,8 +2314,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.653515
     },
     {
-      "slug": "expedia-customer-service-number",
-      "similarity": 0.639702
+      "slug": "priceline-customer-service",
+      "similarity": 0.653283
     },
     {
       "slug": "southwest-airlines-phone-number",
@@ -3073,10 +3043,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "chime-customer-service-number",
       "similarity": 0.610987
-    },
-    {
-      "slug": "cash-app-customer-service-number",
-      "similarity": 0.603805
     }
   ],
   "peloton-customer-service-number": [],
@@ -3230,7 +3196,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "wayfair-customer-service",
-      "similarity": 0.696719
+      "similarity": 0.696908
     },
     {
       "slug": "suitsupply-customer-service",
@@ -3260,19 +3226,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "priceline-customer-service": [
     {
       "slug": "expedia-customer-service-number",
-      "similarity": 0.683774
+      "similarity": 0.725623
     },
     {
       "slug": "jetblue-customer-service",
-      "similarity": 0.682067
-    },
-    {
-      "slug": "southwest-airlines-phone-number",
-      "similarity": 0.625076
-    },
-    {
-      "slug": "etihad-customer-service",
-      "similarity": 0.611485
+      "similarity": 0.653283
     }
   ],
   "private-dining-room-cost": [
@@ -3660,7 +3618,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "social-security-phone-number": [
     {
       "slug": "cash-app-customer-service-number",
-      "similarity": 0.674927
+      "similarity": 0.653531
     },
     {
       "slug": "coinbase-customer-service-number",
@@ -3687,14 +3645,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "jetblue-customer-service",
       "similarity": 0.638786
-    },
-    {
-      "slug": "expedia-customer-service-number",
-      "similarity": 0.631541
-    },
-    {
-      "slug": "priceline-customer-service",
-      "similarity": 0.625076
     }
   ],
   "spectrum-retention-department": [
@@ -3717,10 +3667,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "xfinity-customer-service-number",
       "similarity": 0.609473
-    },
-    {
-      "slug": "t-mobile-customer-service-number",
-      "similarity": 0.600603
     }
   ],
   "springhill-suites-phoenix-gilbert": [
@@ -3740,7 +3686,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "wayfair-customer-service",
-      "similarity": 0.702172
+      "similarity": 0.708223
     },
     {
       "slug": "dell-customer-service-number",
@@ -3769,24 +3715,20 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "t-mobile-customer-service-number": [
     {
-      "slug": "xfinity-customer-service-number",
-      "similarity": 0.727098
+      "slug": "att-customer-service-number",
+      "similarity": 0.67045
     },
     {
-      "slug": "att-customer-service-number",
-      "similarity": 0.704565
+      "slug": "xfinity-customer-service-number",
+      "similarity": 0.663878
     },
     {
       "slug": "windstream-customer-service",
-      "similarity": 0.677764
+      "similarity": 0.632007
     },
     {
       "slug": "verizon-customer-service",
-      "similarity": 0.658499
-    },
-    {
-      "slug": "spectrum-retention-department",
-      "similarity": 0.600603
+      "similarity": 0.630285
     }
   ],
   "t3-code-phone-calls": [
@@ -3901,10 +3843,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "airbnb-customer-service-number",
       "similarity": 0.670253
-    },
-    {
-      "slug": "expedia-customer-service-number",
-      "similarity": 0.66163
     }
   ],
   "ugly-baby-brooklyn-reservations": [
@@ -4075,10 +4013,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.67058
     },
     {
-      "slug": "cash-app-customer-service-number",
-      "similarity": 0.651987
-    },
-    {
       "slug": "wells-fargo-customer-service",
       "similarity": 0.644662
     },
@@ -4093,6 +4027,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "bank-of-america-customer-service",
       "similarity": 0.621712
+    },
+    {
+      "slug": "cash-app-customer-service-number",
+      "similarity": 0.616715
     },
     {
       "slug": "capital-one-customer-service",
@@ -4141,12 +4079,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "verizon-customer-service": [
     {
-      "slug": "t-mobile-customer-service-number",
-      "similarity": 0.658499
-    },
-    {
       "slug": "att-customer-service-number",
       "similarity": 0.631471
+    },
+    {
+      "slug": "t-mobile-customer-service-number",
+      "similarity": 0.630285
     },
     {
       "slug": "xfinity-customer-service-number",
@@ -4243,11 +4181,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "wayfair-customer-service",
-      "similarity": 0.650865
+      "similarity": 0.635299
     },
     {
       "slug": "pottery-barn-customer-service",
-      "similarity": 0.601851
+      "similarity": 0.601852
     }
   ],
   "walmart-oil-change-prices": [
@@ -4270,32 +4208,32 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "wayfair-customer-service": [
     {
-      "slug": "suitsupply-customer-service",
-      "similarity": 0.702172
+      "slug": "dell-customer-service-number",
+      "similarity": 0.711637
     },
     {
-      "slug": "amazon-customer-service-number",
-      "similarity": 0.699208
+      "slug": "suitsupply-customer-service",
+      "similarity": 0.708223
     },
     {
       "slug": "pottery-barn-customer-service",
-      "similarity": 0.696719
+      "similarity": 0.696908
     },
     {
       "slug": "home-depot-customer-service",
-      "similarity": 0.694694
+      "similarity": 0.676832
     },
     {
-      "slug": "dell-customer-service-number",
-      "similarity": 0.675765
+      "slug": "amazon-customer-service-number",
+      "similarity": 0.657943
     },
     {
       "slug": "fabletics-customer-service",
-      "similarity": 0.653133
+      "similarity": 0.651302
     },
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.650865
+      "similarity": 0.635299
     }
   ],
   "wells-fargo-customer-service": [
@@ -4314,10 +4252,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "chime-customer-service-number",
       "similarity": 0.637974
-    },
-    {
-      "slug": "cash-app-customer-service-number",
-      "similarity": 0.623809
     },
     {
       "slug": "usaa-phone-number",
@@ -4348,16 +4282,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "windstream-customer-service": [
     {
-      "slug": "t-mobile-customer-service-number",
-      "similarity": 0.677764
-    },
-    {
       "slug": "xfinity-customer-service-number",
       "similarity": 0.666164
     },
     {
       "slug": "spectrum-retention-department",
       "similarity": 0.633673
+    },
+    {
+      "slug": "t-mobile-customer-service-number",
+      "similarity": 0.632007
     },
     {
       "slug": "att-customer-service-number",
@@ -4371,12 +4305,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "wyoming-registered-agent-consent-form": [],
   "xfinity-customer-service-number": [
     {
-      "slug": "t-mobile-customer-service-number",
-      "similarity": 0.727098
-    },
-    {
       "slug": "windstream-customer-service",
       "similarity": 0.666164
+    },
+    {
+      "slug": "t-mobile-customer-service-number",
+      "similarity": 0.663878
     },
     {
       "slug": "verizon-customer-service",

@@ -1,17 +1,19 @@
 ---
-title: "T-Mobile customer service number: how to reach a real person"
-seoTitle: "T-Mobile customer service number: 1-800-937-8997"
+title: "T-Mobile customer service number: not 24 hours, and how to reach a live person"
+seoTitle: "T-Mobile live person: 1-800-937-8997, 4am-9pm PT"
 subtitle: "We called T-Mobile customer service with general questions and no account. Here is the exact menu route that got us to a live representative in 1 minute 49 seconds with no hold music, what the rep said about hours and billing credits, and the full 3 minute recording. Plus three recorded T-Mobile Home Internet calls by a call4me customer's assistant: the no-PIN router code check that fixed a login."
-description: "The T-Mobile customer service number is 1-800-937-8997, or 611 from a T-Mobile phone. Say \"I don't have one,\" then \"something else\" to reach a person."
+description: "T-Mobile's 1-800-937-8997 isn't 24 hours: reps work 4 am to 9 pm Pacific daily. Say \"I don't have one\" twice, then \"something else\" for a live person."
 date: 2026-10-13
-updated: 2026-10-17
+updated: 2026-10-24
 verified: 2026-10-13
 tags: t-mobile, t-mobile home internet, wireless carriers, customer service, phone trees, phone numbers
 authors: nick
 imageAlt: "T-Mobile 1-800-937-8997, the menu route to a live customer care representative"
 ---
 
-**The short answer:** the T-Mobile customer service number is **1-800-937-8997**. From a T-Mobile phone, you can **dial 611** instead. **An automated voice menu answers, not a person.** When it asks for your mobile number, say **"I don't have one"** (it asks twice). When it offers payment, tech support, billing or something else, say **"something else."** **A live representative answered 1 minute 49 seconds into our recording**, about 1 minute 52 seconds after we dialed, and about 20 seconds after the menu said it was connecting us. There was no hold music. **For T-Mobile Home Internet, the support line is 1-844-275-9310**, and on a [recorded customer call](#t-mobile-home-internet-customer-service-fixing-a-login-without-the-pin) a representative verified the account with a code sent to the gateway instead of the PIN, then fixed the T-Mobile ID login.
+**The short answer:** T-Mobile customer service by phone is **not 24 hours**. Its contact page says Customer Care Representatives are available **daily from 4 a.m. to 9 p.m. Pacific Time**; only the T-Life app offers "24/7 support." To reach a **live person** at **1-800-937-8997**, say **"I don't have one"** twice at the mobile number prompt, then **"something else"** when it lists payment, tech support and billing. **A live representative answered 1 minute 49 seconds into our recording**, with no hold music.
+
+The T-Mobile customer service number is **1-800-937-8997**. From a T-Mobile phone, you can **dial 611** instead. **An automated voice menu answers, not a person.** When it asks for your mobile number, say **"I don't have one"** (it asks twice). When it offers payment, tech support, billing or something else, say **"something else."** **A live representative answered 1 minute 49 seconds into our recording**, about 1 minute 52 seconds after we dialed, and about 20 seconds after the menu said it was connecting us. There was no hold music. **For T-Mobile Home Internet, the support line is 1-844-275-9310**, and on a [recorded customer call](#t-mobile-home-internet-customer-service-fixing-a-login-without-the-pin) a representative verified the account with a code sent to the gateway instead of the PIN, then fixed the T-Mobile ID login.
 
 T-Mobile's [contact us page](https://www.t-mobile.com/contact-us) lists it this way: "Customer Service: Dial 611 from your T-Mobile phone or call: 1-800-937-8997." The same page says "Customer Care Representatives are available daily from 4 a.m. to 9 p.m. Pacific Time," and "Live agent chat is available in T-Life from 4 a.m. until 12 a.m. Pacific Time."
 

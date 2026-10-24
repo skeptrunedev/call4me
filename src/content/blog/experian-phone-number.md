@@ -1,15 +1,17 @@
 ---
-title: "Experian credit freeze by phone: what happens when you call"
-seoTitle: "Experian credit freeze phone number: what happens"
+title: "Experian phone number: can you speak to a live person? What happens when you call"
+seoTitle: "Experian live person: what 1-888-397-3742 does"
 subtitle: We called Experian’s freeze line 15 times in one afternoon. Here are the routes we tried and a 9 minute recording of the call that got furthest.
-description: "The Experian credit freeze phone number is 1-888-397-3742. It asks for your full SSN first, and we found no way to reach a person without it."
+description: "Experian's 1-888-397-3742 freeze line is automated and asks for your full SSN. We found no way to speak to a live person on it. What Experian lists instead."
 date: 2026-09-30
-updated: 2026-10-17
+updated: 2026-10-24
 verified: 2026-09-30
 tags: experian, credit freeze, phone trees, customer service
 authors: nick
 imageAlt: Experian 1-888-397-3742, what happens when you call to freeze your credit
 ---
+
+**Can you speak to a live person at Experian?** Not on the credit freeze line, in our tests. In 15 calls to **1-888-397-3742** we found no menu option that reached a person. Without your full Social Security number it goes no further, and once we passed its identity check it steered us to freeze online or by mail, then ended the call. Experian's [contact page](https://www.experian.com/contact/personal-services-contacts.html) lists a separate phone number for **Experian membership** questions, **1-866-617-1894**, open **Monday to Friday 8 am to 8 pm Central** and **Saturday and Sunday 8 am to 6 pm Central**, so it isn't 24 hours. For disputes, the same page says to call "the number displayed on your report." We haven't called either of those yet, so we can't say who answers.
 
 **The short answer:** Experian's credit freeze line is **1-888-397-3742** (1-888-EXPERIAN). It is fully automated. It asks for your **complete Social Security number** before it will do anything, and we found no option that reaches a live person without it. After you pass its identity check (SSN, ZIP code, street number, date of birth), it still steers you to freeze **online at experian.com/freeze** or **by mail**. In our tests it never placed the freeze over the phone.
 

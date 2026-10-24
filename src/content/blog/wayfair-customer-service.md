@@ -1,17 +1,19 @@
 ---
-title: "Wayfair customer service: start a return and check shipping costs"
-seoTitle: "Wayfair customer service number: 844-403-5086"
+title: "Wayfair customer service: reach a live person, start a return and check shipping costs"
+seoTitle: "Wayfair customer service live person: 844-403-5086"
 subtitle: We called Wayfair twice in one evening to ask how returning a big item works and who pays to ship it back. Here's the phone path to a person, what the agents said, and both recordings.
-description: "Call Wayfair customer service at 844-403-5086 to start a return. Two recorded calls cover reaching a person and return shipping cost on big items."
+description: "Reach a live person at Wayfair customer service: tell the virtual assistant why you're calling in one sentence. A person answered in about a minute, twice."
 date: 2026-09-30
-updated: 2026-10-17
+updated: 2026-10-24
 verified: 2026-09-30
 tags: wayfair, customer service, returns, phone trees
 authors: nick
 imageAlt: Wayfair 844-403-5086, return shipping rules from two calls
 ---
 
-**The short answer:** Wayfair's customer service number is **844-403-5086** (from wayfair.com/help-and-contact). An **AI virtual assistant** answers, not a person. Tell it in a sentence why you're calling, and it says "Let me connect you with a live agent." **A sales agent picked up 1 minute 12 seconds into our first call** and 56 seconds into the second. We had no specific item; they gave return rules and hypothetical fees:
+**The short answer:** to reach a **live person** at Wayfair customer service, tell the virtual assistant in one sentence why you're calling. It said "Let me connect you with a live agent," and **a person answered 1 minute 12 seconds into our first call and 56 seconds into the second**, both on a Wednesday evening around 7:40 pm Eastern. We couldn't read Wayfair's phone hours on its own [help page](https://www.wayfair.com/help-and-contact) on October 24, 2026, so we can't tell you whether the line is open 24 hours.
+
+Wayfair's customer service number is **844-403-5086** (from wayfair.com/help-and-contact). That page now shows a different 844 number on each visit: on October 24, 2026 we saw 844-604-0351, 844-370-1978 and 844-585-0457. 844-403-5086 is the one it showed us on September 30, and the one we called. An **AI virtual assistant** answers, not a person. Tell it in a sentence why you're calling, and it says "Let me connect you with a live agent." **A sales agent picked up 1 minute 12 seconds into our first call** and 56 seconds into the second. We had no specific item; they gave return rules and hypothetical fees:
 
 - **30 days** from delivery, for a refund or store credit. Not every item is eligible, and you need the original packaging.
 - You **call Wayfair to start** a return and get a label. It then goes back via **FedEx pickup, FedEx drop off, or a store** if one is nearby.

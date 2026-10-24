@@ -1,17 +1,19 @@
 ---
-title: "How to reach a live person at Cash App customer service"
-seoTitle: "Cash App customer service number: 1-800-969-1940"
+title: "Cash App customer service number: not 24 hours, and how to reach a live person"
+seoTitle: "Cash App live person: 1-800-969-1940, 8am-9:30pm"
 subtitle: "We called Cash App's support line twice. A virtual agent answers first. On the first call we let it answer our questions; on the second, asking three times for a live representative got us a person 1 minute 35 seconds in. Here's what each said about hours, callbacks and scams, and both recordings."
-description: "Cash App's customer service number is 1-800-969-1940, 8 am to 9:30 pm Eastern daily. Ask the virtual agent for a live representative; a person answered in 1:35."
+description: "Cash App's 1-800-969-1940 isn't 24 hours: it's 8 am to 9:30 pm Eastern daily. Ask the virtual agent for a live person three times; one answered in 1:35."
 date: 2026-10-16
-updated: 2026-10-17
+updated: 2026-10-24
 verified: 2026-10-16
 tags: cash app, customer service, scams, phone trees, phone numbers
 authors: nick
 imageAlt: "Cash App customer service number 1-800-969-1940, and how to get past the virtual agent to a live person"
 ---
 
-**The short answer:** the Cash App customer service number is **1-800-969-1940**, open **every day from 8 am to 9:30 pm Eastern**. Cash App's own help article, [Contact Cash App Support](https://cash.app/contact) on cash.app, says: "You can reach Cash App Support by calling 1 (800) 969-1940. We're here to help every day from 8 AM to 9:30 PM ET." The same article says it's "the only phone number customers can call for Cash App Support." **Fake Cash App numbers are a common scam, so if a number isn't 1-800-969-1940, don't call it.**
+**The short answer:** the Cash App customer service number, **1-800-969-1940**, is **not open 24 hours**. Phone support runs **every day from 8 am to 9:30 pm Eastern**. To reach a **live person**, ask the virtual agent for a live representative, describe your issue in a sentence, and ask again: **a person answered 1 minute 35 seconds into our call.** The virtual agent on our first call said chat in the app "is available 24-7."
+
+The Cash App customer service number is **1-800-969-1940**, open **every day from 8 am to 9:30 pm Eastern**. Cash App's own help article, [Contact Cash App Support](https://cash.app/contact) on cash.app, says: "You can reach Cash App Support by calling 1 (800) 969-1940. We're here to help every day from 8 AM to 9:30 PM ET." The same article says it's "the only phone number customers can call for Cash App Support." **Fake Cash App numbers are a common scam, so if a number isn't 1-800-969-1940, don't call it.**
 
 A **Cash App virtual agent** answers, not a person. This got us to a live representative:
 
