@@ -30,6 +30,7 @@
     "openapi:generate": "tsx scripts/generate-openapi.ts",
     "blog:related": "tsx scripts/generate-related-posts.ts",
     "seo:conversions": "tsx scripts/article-conversions.ts",
+    "geo:check": "tsx scripts/geo-check.ts",
     "test": "node --import tsx --test test/*.test.ts",
     "test:menu:live": "tsx scripts/eval-menu-recovery.ts",
     "build:site": "tsx scripts/build-site.tsx"
