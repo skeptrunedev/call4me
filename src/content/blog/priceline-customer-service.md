@@ -1,6 +1,6 @@
 ---
-title: "Priceline 24 hour customer service: reach a live person at 1-877-477-5807"
-seoTitle: "Priceline 24 hour customer service: 1-877-477-5807"
+title: "Is Priceline customer service 24 hours? How to reach a live person at 1-877-477-5807"
+seoTitle: "Priceline 24 hour customer service? 1-877-477-5807"
 subtitle: "We called Priceline's customer service number with no booking. An automated assistant, then a trip number menu, then a 22 minute hold. Here is every prompt, what the representative said about changes, cancellations and non-refundable refunds, and the full 26 minute recording."
 description: "Priceline says help is available 24/7. For a live person at 1-877-477-5807, keep saying you have no trip number. A person answered after a 22 minute hold."
 date: 2026-10-09
