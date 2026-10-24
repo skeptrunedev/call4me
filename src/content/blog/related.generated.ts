@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "5446274034a8480343a80b54c71fcce1afe45b32883651fecc6d4057670976f6"
+  "sourceHash": "07c7cbd7a1a7ff826adf9e16cf07b348ecd39fe4b5bf6b661422edb2c20c4bc7"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -475,6 +475,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.645138
     },
     {
+      "slug": "chase-dispute-charge",
+      "similarity": 0.633351
+    },
+    {
       "slug": "venmo-customer-service-number",
       "similarity": 0.621712
     }
@@ -649,7 +653,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "cancel-la-fitness",
-      "similarity": 0.770519
+      "similarity": 0.770518
     },
     {
       "slug": "cancel-factor",
@@ -785,7 +789,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "cancel-crunch",
-      "similarity": 0.770519
+      "similarity": 0.770518
     },
     {
       "slug": "how-to-cancel-siriusxm",
@@ -882,32 +886,70 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "capital-one-customer-service": [
     {
+      "slug": "capital-one-dispute-charge",
+      "similarity": 0.815578
+    },
+    {
+      "slug": "wells-fargo-dispute-charge",
+      "similarity": 0.706822
+    },
+    {
+      "slug": "chase-dispute-charge",
+      "similarity": 0.693467
+    },
+    {
+      "slug": "pnc-dispute-charge",
+      "similarity": 0.68714
+    },
+    {
+      "slug": "how-to-dispute-a-charge",
+      "similarity": 0.635718
+    },
+    {
       "slug": "coinbase-customer-service-number",
       "similarity": 0.635162
     },
     {
+      "slug": "discover-dispute-charge",
+      "similarity": 0.632383
+    },
+    {
       "slug": "paypal-customer-service-number",
       "similarity": 0.630685
+    }
+  ],
+  "capital-one-dispute-charge": [
+    {
+      "slug": "capital-one-customer-service",
+      "similarity": 0.815578
     },
     {
-      "slug": "usaa-phone-number",
-      "similarity": 0.617881
+      "slug": "wells-fargo-dispute-charge",
+      "similarity": 0.784432
     },
     {
-      "slug": "experian-phone-number",
-      "similarity": 0.610328
+      "slug": "chase-dispute-charge",
+      "similarity": 0.781854
+    },
+    {
+      "slug": "pnc-dispute-charge",
+      "similarity": 0.766318
+    },
+    {
+      "slug": "how-to-dispute-a-charge",
+      "similarity": 0.72069
+    },
+    {
+      "slug": "discover-dispute-charge",
+      "similarity": 0.717006
+    },
+    {
+      "slug": "paypal-customer-service-number",
+      "similarity": 0.655838
     },
     {
       "slug": "venmo-customer-service-number",
-      "similarity": 0.606836
-    },
-    {
-      "slug": "wells-fargo-customer-service",
-      "similarity": 0.603466
-    },
-    {
-      "slug": "chime-customer-service-number",
-      "similarity": 0.601117
+      "similarity": 0.628399
     }
   ],
   "cascaded-voice-stack-vs-gpt-live": [
@@ -964,6 +1006,44 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "venmo-customer-service-number",
       "similarity": 0.616715
+    },
+    {
+      "slug": "capital-one-dispute-charge",
+      "similarity": 0.600701
+    }
+  ],
+  "chase-dispute-charge": [
+    {
+      "slug": "capital-one-dispute-charge",
+      "similarity": 0.781854
+    },
+    {
+      "slug": "pnc-dispute-charge",
+      "similarity": 0.761656
+    },
+    {
+      "slug": "discover-dispute-charge",
+      "similarity": 0.742897
+    },
+    {
+      "slug": "wells-fargo-dispute-charge",
+      "similarity": 0.733412
+    },
+    {
+      "slug": "how-to-dispute-a-charge",
+      "similarity": 0.717884
+    },
+    {
+      "slug": "capital-one-customer-service",
+      "similarity": 0.693467
+    },
+    {
+      "slug": "venmo-customer-service-number",
+      "similarity": 0.649278
+    },
+    {
+      "slug": "chime-customer-service-number",
+      "similarity": 0.648039
     }
   ],
   "chatgpt-phone-calls": [
@@ -1003,11 +1083,23 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "chime-customer-service-number": [
     {
       "slug": "venmo-customer-service-number",
-      "similarity": 0.690259
+      "similarity": 0.690258
     },
     {
       "slug": "bank-of-america-customer-service",
       "similarity": 0.649742
+    },
+    {
+      "slug": "chase-dispute-charge",
+      "similarity": 0.648039
+    },
+    {
+      "slug": "wells-fargo-dispute-charge",
+      "similarity": 0.641741
+    },
+    {
+      "slug": "pnc-dispute-charge",
+      "similarity": 0.640728
     },
     {
       "slug": "wells-fargo-customer-service",
@@ -1018,16 +1110,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.628835
     },
     {
-      "slug": "coinbase-customer-service-number",
-      "similarity": 0.612958
-    },
-    {
-      "slug": "paypal-customer-service-number",
-      "similarity": 0.610987
-    },
-    {
-      "slug": "capital-one-customer-service",
-      "similarity": 0.601117
+      "slug": "capital-one-dispute-charge",
+      "similarity": 0.616666
     }
   ],
   "claude-agent-sdk-phone-calls": [
@@ -1121,7 +1205,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "github-copilot-phone-calls",
-      "similarity": 0.714884
+      "similarity": 0.714883
     },
     {
       "slug": "grok-connectors-mcp-phone-calls",
@@ -1260,7 +1344,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "home-depot-customer-service",
-      "similarity": 0.641561
+      "similarity": 0.641562
     },
     {
       "slug": "dell-customer-service-number",
@@ -1508,6 +1592,36 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.630825
     }
   ],
+  "discover-dispute-charge": [
+    {
+      "slug": "how-to-dispute-a-charge",
+      "similarity": 0.866353
+    },
+    {
+      "slug": "pnc-dispute-charge",
+      "similarity": 0.75727
+    },
+    {
+      "slug": "chase-dispute-charge",
+      "similarity": 0.742897
+    },
+    {
+      "slug": "capital-one-dispute-charge",
+      "similarity": 0.717006
+    },
+    {
+      "slug": "wells-fargo-dispute-charge",
+      "similarity": 0.705504
+    },
+    {
+      "slug": "capital-one-customer-service",
+      "similarity": 0.632383
+    },
+    {
+      "slug": "paypal-customer-service-number",
+      "similarity": 0.616891
+    }
+  ],
   "dog-teeth-cleaning-cost": [
     {
       "slug": "veterinary-behavior-consultation-call",
@@ -1557,7 +1671,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "zessan-otemachi-private-room",
-      "similarity": 0.695846
+      "similarity": 0.695845
     },
     {
       "slug": "pin-on-grand-reservations",
@@ -1885,7 +1999,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.733995
+      "similarity": 0.733996
     },
     {
       "slug": "chatgpt-phone-calls",
@@ -1893,7 +2007,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "claude-phone-calls",
-      "similarity": 0.714884
+      "similarity": 0.714883
     }
   ],
   "global-blue-customer-service-number": [],
@@ -2060,7 +2174,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "muse-code-mcp-phone-calls",
-      "similarity": 0.700502
+      "similarity": 0.700503
     },
     {
       "slug": "cascaded-voice-stack-vs-gpt-live",
@@ -2163,7 +2277,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "costco-customer-service",
-      "similarity": 0.641561
+      "similarity": 0.641562
     }
   ],
   "how-long-to-reach-a-human": [],
@@ -2198,7 +2312,37 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "hulu-customer-service-number",
-      "similarity": 0.673184
+      "similarity": 0.673183
+    }
+  ],
+  "how-to-dispute-a-charge": [
+    {
+      "slug": "discover-dispute-charge",
+      "similarity": 0.866353
+    },
+    {
+      "slug": "pnc-dispute-charge",
+      "similarity": 0.752868
+    },
+    {
+      "slug": "capital-one-dispute-charge",
+      "similarity": 0.72069
+    },
+    {
+      "slug": "chase-dispute-charge",
+      "similarity": 0.717884
+    },
+    {
+      "slug": "wells-fargo-dispute-charge",
+      "similarity": 0.712171
+    },
+    {
+      "slug": "capital-one-customer-service",
+      "similarity": 0.635718
+    },
+    {
+      "slug": "paypal-customer-service-number",
+      "similarity": 0.629766
     }
   ],
   "how-to-find-a-new-primary-care-doctor": [
@@ -2212,7 +2356,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "san-francisco-oral-surgeon-consultation",
-      "similarity": 0.623342
+      "similarity": 0.623343
     },
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
@@ -2370,7 +2514,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-cancel-siriusxm",
-      "similarity": 0.673184
+      "similarity": 0.673183
     },
     {
       "slug": "cancel-hellofresh",
@@ -2889,7 +3033,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "springhill-suites-phoenix-gilbert",
-      "similarity": 0.649898
+      "similarity": 0.649897
     },
     {
       "slug": "ritz-carlton-bachelor-gulch-reservations",
@@ -3196,20 +3340,32 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.67058
     },
     {
+      "slug": "capital-one-dispute-charge",
+      "similarity": 0.655838
+    },
+    {
+      "slug": "chase-dispute-charge",
+      "similarity": 0.642467
+    },
+    {
+      "slug": "pnc-dispute-charge",
+      "similarity": 0.639336
+    },
+    {
       "slug": "capital-one-customer-service",
       "similarity": 0.630685
     },
     {
+      "slug": "how-to-dispute-a-charge",
+      "similarity": 0.629766
+    },
+    {
+      "slug": "discover-dispute-charge",
+      "similarity": 0.616891
+    },
+    {
       "slug": "coinbase-customer-service-number",
       "similarity": 0.61392
-    },
-    {
-      "slug": "usaa-phone-number",
-      "similarity": 0.61371
-    },
-    {
-      "slug": "chime-customer-service-number",
-      "similarity": 0.610987
     }
   ],
   "peloton-customer-service-number": [],
@@ -3338,6 +3494,40 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "customer-story-rick-dinner-reservation",
       "similarity": 0.6837
+    }
+  ],
+  "pnc-dispute-charge": [
+    {
+      "slug": "wells-fargo-dispute-charge",
+      "similarity": 0.813411
+    },
+    {
+      "slug": "capital-one-dispute-charge",
+      "similarity": 0.766318
+    },
+    {
+      "slug": "chase-dispute-charge",
+      "similarity": 0.761656
+    },
+    {
+      "slug": "discover-dispute-charge",
+      "similarity": 0.75727
+    },
+    {
+      "slug": "how-to-dispute-a-charge",
+      "similarity": 0.752868
+    },
+    {
+      "slug": "capital-one-customer-service",
+      "similarity": 0.68714
+    },
+    {
+      "slug": "venmo-customer-service-number",
+      "similarity": 0.645623
+    },
+    {
+      "slug": "chime-customer-service-number",
+      "similarity": 0.640728
     }
   ],
   "posada-real-los-condestables": [
@@ -3697,7 +3887,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-find-a-new-primary-care-doctor",
-      "similarity": 0.623342
+      "similarity": 0.623343
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -3808,6 +3998,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "coinbase-customer-service-number",
       "similarity": 0.637692
+    },
+    {
+      "slug": "chase-dispute-charge",
+      "similarity": 0.608943
     }
   ],
   "southwest-airlines-phone-number": [
@@ -3869,7 +4063,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "springhill-suites-phoenix-gilbert": [
     {
       "slug": "moxy-st-petersburg-downtown",
-      "similarity": 0.649898
+      "similarity": 0.649897
     },
     {
       "slug": "ritz-carlton-bachelor-gulch-reservations",
@@ -4203,11 +4397,23 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "venmo-customer-service-number": [
     {
       "slug": "chime-customer-service-number",
-      "similarity": 0.690259
+      "similarity": 0.690258
     },
     {
       "slug": "paypal-customer-service-number",
       "similarity": 0.67058
+    },
+    {
+      "slug": "wells-fargo-dispute-charge",
+      "similarity": 0.656285
+    },
+    {
+      "slug": "chase-dispute-charge",
+      "similarity": 0.649278
+    },
+    {
+      "slug": "pnc-dispute-charge",
+      "similarity": 0.645623
     },
     {
       "slug": "wells-fargo-customer-service",
@@ -4220,18 +4426,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "fifth-third-bank-customer-service",
       "similarity": 0.634519
-    },
-    {
-      "slug": "bank-of-america-customer-service",
-      "similarity": 0.621712
-    },
-    {
-      "slug": "cash-app-customer-service-number",
-      "similarity": 0.616715
-    },
-    {
-      "slug": "capital-one-customer-service",
-      "similarity": 0.606836
     }
   ],
   "ventura-superior-court-judgment-debtor-exam": [
@@ -4447,6 +4641,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.698104
     },
     {
+      "slug": "wells-fargo-dispute-charge",
+      "similarity": 0.675198
+    },
+    {
       "slug": "venmo-customer-service-number",
       "similarity": 0.644662
     },
@@ -4463,8 +4661,46 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.617797
     },
     {
+      "slug": "pnc-dispute-charge",
+      "similarity": 0.606934
+    },
+    {
+      "slug": "capital-one-dispute-charge",
+      "similarity": 0.604077
+    }
+  ],
+  "wells-fargo-dispute-charge": [
+    {
+      "slug": "pnc-dispute-charge",
+      "similarity": 0.813411
+    },
+    {
+      "slug": "capital-one-dispute-charge",
+      "similarity": 0.784432
+    },
+    {
+      "slug": "chase-dispute-charge",
+      "similarity": 0.733412
+    },
+    {
+      "slug": "how-to-dispute-a-charge",
+      "similarity": 0.712171
+    },
+    {
       "slug": "capital-one-customer-service",
-      "similarity": 0.603466
+      "similarity": 0.706822
+    },
+    {
+      "slug": "discover-dispute-charge",
+      "similarity": 0.705504
+    },
+    {
+      "slug": "wells-fargo-customer-service",
+      "similarity": 0.675198
+    },
+    {
+      "slug": "venmo-customer-service-number",
+      "similarity": 0.656285
     }
   ],
   "wheel-alignment-cost": [
@@ -4567,7 +4803,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "equal-parts-sf-reservations",
-      "similarity": 0.695846
+      "similarity": 0.695845
     },
     {
       "slug": "posada-real-los-condestables",

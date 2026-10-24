@@ -218,4 +218,10 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'dell-customer-service-number': ['retail-shopping'],
   'costco-return-policy': ['retail-shopping'],
   'best-buy-return-policy': ['retail-shopping'],
+  'how-to-dispute-a-charge': ['personal-finance'],
+  'chase-dispute-charge': ['personal-finance'],
+  'discover-dispute-charge': ['personal-finance'],
+  'capital-one-dispute-charge': ['personal-finance'],
+  'pnc-dispute-charge': ['personal-finance'],
+  'wells-fargo-dispute-charge': ['personal-finance'],
 };

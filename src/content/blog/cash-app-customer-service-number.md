@@ -114,7 +114,7 @@ On the second call it asked all its questions in one go, so the representative's
 
 We kept the audio of both calls as it happened, apart from the muted name.
 
-We've also called Venmo: see [the Venmo customer service number](/blog/venmo-customer-service-number). For more phone trees and recorded calls, see the [other companies we've called](/companies).
+We've also called Venmo: see [the Venmo customer service number](/blog/venmo-customer-service-number). For card disputes at banks, see [how to dispute a charge](/blog/how-to-dispute-a-charge). For more phone trees and recorded calls, see the [other companies we've called](/companies).
 
 ## Have your agent make this call
 

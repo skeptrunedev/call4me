@@ -98,97 +98,97 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2168
+    "tokens": 2153
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2197
+    "tokens": 2224
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2285
+    "tokens": 2331
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2009
+    "tokens": 2059
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2265
+    "tokens": 2134
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2235
+    "tokens": 2205
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2248
+    "tokens": 2304
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2112
+    "tokens": 2235
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2184
+    "tokens": 2128
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 1864
+    "tokens": 1924
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 2137
+    "tokens": 2074
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 1838
+    "tokens": 2011
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 1782
+    "tokens": 1797
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 1899
+    "tokens": 1836
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1911
+    "tokens": 1967
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 2052
+    "tokens": 1894
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 2049
+    "tokens": 2044
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 1052
+    "tokens": 1941
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 19382
+    "tokens": 20045
   },
   "/blog/phone-anxiety": {
     "html": "/__pages/613a99d49cf748b0.html",
@@ -228,12 +228,42 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/best-buy-return-policy": {
     "html": "/__pages/bc0a2254204b3439.html",
     "markdown": "/__pages/bc0a2254204b3439.md",
-    "tokens": 6580
+    "tokens": 6579
+  },
+  "/blog/how-to-dispute-a-charge": {
+    "html": "/__pages/b68e60a4c403ef68.html",
+    "markdown": "/__pages/b68e60a4c403ef68.md",
+    "tokens": 4684
+  },
+  "/blog/chase-dispute-charge": {
+    "html": "/__pages/07e3773a42bc4215.html",
+    "markdown": "/__pages/07e3773a42bc4215.md",
+    "tokens": 5015
+  },
+  "/blog/discover-dispute-charge": {
+    "html": "/__pages/05ce3ce54c06968a.html",
+    "markdown": "/__pages/05ce3ce54c06968a.md",
+    "tokens": 4760
+  },
+  "/blog/capital-one-dispute-charge": {
+    "html": "/__pages/13369443550ec4d1.html",
+    "markdown": "/__pages/13369443550ec4d1.md",
+    "tokens": 4977
+  },
+  "/blog/pnc-dispute-charge": {
+    "html": "/__pages/87106f62ee87bf38.html",
+    "markdown": "/__pages/87106f62ee87bf38.md",
+    "tokens": 4743
+  },
+  "/blog/wells-fargo-dispute-charge": {
+    "html": "/__pages/4cc7813ba81080b2.html",
+    "markdown": "/__pages/4cc7813ba81080b2.md",
+    "tokens": 5577
   },
   "/blog/alaska-airlines-customer-service": {
     "html": "/__pages/5abc3a773d2970a4.html",
     "markdown": "/__pages/5abc3a773d2970a4.md",
-    "tokens": 6204
+    "tokens": 6194
   },
   "/blog/chime-customer-service-number": {
     "html": "/__pages/f8a85f06f342ef96.html",
@@ -548,12 +578,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/capital-one-customer-service": {
     "html": "/__pages/a385bedc31555638.html",
     "markdown": "/__pages/a385bedc31555638.md",
-    "tokens": 5149
+    "tokens": 5250
   },
   "/blog/cash-app-customer-service-number": {
     "html": "/__pages/ebdd37505eadb5a2.html",
     "markdown": "/__pages/ebdd37505eadb5a2.md",
-    "tokens": 5743
+    "tokens": 5770
   },
   "/blog/bank-of-america-customer-service": {
     "html": "/__pages/ff778a2b612c7fe2.html",
@@ -563,7 +593,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/wells-fargo-customer-service": {
     "html": "/__pages/1909ea4bb7a7f83e.html",
     "markdown": "/__pages/1909ea4bb7a7f83e.md",
-    "tokens": 4389
+    "tokens": 4459
   },
   "/blog/jetblue-customer-service": {
     "html": "/__pages/61f270608419650f.html",
@@ -693,7 +723,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/social-security-phone-number": {
     "html": "/__pages/ae8a052052c9f693.html",
     "markdown": "/__pages/ae8a052052c9f693.md",
-    "tokens": 7193
+    "tokens": 7343
   },
   "/blog/costco-customer-service": {
     "html": "/__pages/77f87a42aa5bef1c.html",
@@ -793,7 +823,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/venmo-customer-service-number": {
     "html": "/__pages/8ddc0d8e5d387de7.html",
     "markdown": "/__pages/8ddc0d8e5d387de7.md",
-    "tokens": 9290
+    "tokens": 9306
   },
   "/blog/everything-we-have-improved-since-launch": {
     "html": "/__pages/ee53e230a99841c0.html",
@@ -808,7 +838,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/paypal-customer-service-number": {
     "html": "/__pages/14df76f086347bc7.html",
     "markdown": "/__pages/14df76f086347bc7.md",
-    "tokens": 6483
+    "tokens": 6472
   },
   "/blog/fifth-third-bank-customer-service": {
     "html": "/__pages/84b4a369f5053ffa.html",

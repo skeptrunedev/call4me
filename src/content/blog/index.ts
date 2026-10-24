@@ -208,6 +208,12 @@ import uberCustomerServiceNumber from './uber-customer-service-number.md';
 import dellCustomerServiceNumber from './dell-customer-service-number.md';
 import costcoReturnPolicy from './costco-return-policy.md';
 import bestBuyReturnPolicy from './best-buy-return-policy.md';
+import howToDisputeACharge from './how-to-dispute-a-charge.md';
+import chaseDisputeCharge from './chase-dispute-charge.md';
+import discoverDisputeCharge from './discover-dispute-charge.md';
+import capitalOneDisputeCharge from './capital-one-dispute-charge.md';
+import pncDisputeCharge from './pnc-dispute-charge.md';
+import wellsFargoDisputeCharge from './wells-fargo-dispute-charge.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -425,4 +431,10 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'dell-customer-service-number', markdown: dellCustomerServiceNumber },
   { slug: 'costco-return-policy', markdown: costcoReturnPolicy },
   { slug: 'best-buy-return-policy', markdown: bestBuyReturnPolicy },
+  { slug: 'how-to-dispute-a-charge', markdown: howToDisputeACharge },
+  { slug: 'chase-dispute-charge', markdown: chaseDisputeCharge },
+  { slug: 'discover-dispute-charge', markdown: discoverDisputeCharge },
+  { slug: 'capital-one-dispute-charge', markdown: capitalOneDisputeCharge },
+  { slug: 'pnc-dispute-charge', markdown: pncDisputeCharge },
+  { slug: 'wells-fargo-dispute-charge', markdown: wellsFargoDisputeCharge },
 ];

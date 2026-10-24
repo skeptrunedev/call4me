@@ -103,7 +103,7 @@ A few things to know about our side of the call:
 
 We kept the audio as it happened, apart from the two muted names.
 
-For more phone trees and recorded calls, see the [other companies we've called](/companies).
+To dispute a charge, see [our recorded call to Capital One's card line about disputes](/blog/capital-one-dispute-charge) and [how to dispute a charge](/blog/how-to-dispute-a-charge). For more phone trees and recorded calls, see the [other companies we've called](/companies).
 
 ## Have your agent make this call
 
