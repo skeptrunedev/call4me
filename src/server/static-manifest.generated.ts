@@ -18,7 +18,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/companies": {
     "html": "/__pages/965e43e2b9e71740.html",
     "markdown": "/__pages/965e43e2b9e71740.md",
-    "tokens": 2397
+    "tokens": 2579
   },
   "/superintelligence-calling-index": {
     "html": "/__pages/7fec148cf54c375f.html",
@@ -33,7 +33,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/hold-for-me": {
     "html": "/__pages/ba822c49c148d1be.html",
     "markdown": "/__pages/ba822c49c148d1be.md",
-    "tokens": 2055
+    "tokens": 2057
   },
   "/book-doctor-appointment": {
     "html": "/__pages/c75d5c79ab7b63e3.html",
@@ -58,7 +58,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/hold-times": {
     "html": "/__pages/0adb6fe5d87ff479.html",
     "markdown": "/__pages/0adb6fe5d87ff479.md",
-    "tokens": 8276
+    "tokens": 8990
   },
   "/students": {
     "html": "/__pages/9a3f77bd97426a79.html",
@@ -878,7 +878,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-long-to-reach-a-human": {
     "html": "/__pages/1624f2222bb89bf3.html",
     "markdown": "/__pages/1624f2222bb89bf3.md",
-    "tokens": 11081
+    "tokens": 12109
   },
   "/blog/vercel-ai-sdk-phone-calls": {
     "html": "/__pages/ff098db0a2035f3b.html",

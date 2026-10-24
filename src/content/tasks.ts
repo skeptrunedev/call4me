@@ -65,7 +65,7 @@ export const TASKS: Task[] = [
     holdHeading: 'The longest holds we sat through',
     holds: HOLD_TIMES.filter((r) => r.status === 'measured').slice(0, 6),
     posts: [
-      { slug: 'how-long-to-reach-a-human', label: 'How long it takes to reach a human at 64 companies', fact: 'we timed 107 calls to 64 customer service lines. the slowest were Priceline at 25:09, United at 19:09, Delta at 16:15 and Alaska Airlines at 12:44, and on all four most of that was hold time after the menu had already put us in the queue.' },
+      { slug: 'how-long-to-reach-a-human', label: 'How long it takes to reach a human at 71 companies', fact: 'we timed 123 calls to 71 customer service lines. the slowest were Priceline at 25:09, United at 19:09, Delta at 16:15 and Alaska Airlines at 12:44, and on all four most of that was hold time after the menu had already put us in the queue.' },
       { slug: 'priceline-customer-service', label: 'Priceline customer service', fact: 'a live representative answered 25 minutes 9 seconds into the call, after about 22 minutes on hold, once we kept saying we had no trip number.' },
       { slug: 'united-change-flight', label: 'Changing a United flight by phone', fact: 'saying "flight change fee" got the call into the reservations queue, and an agent picked up 19:09 into the call.' },
       { slug: 'spectrum-retention-department', label: 'Calling Spectrum retention', fact: 'a call4me user\'s assistant got through the phone menu, about 5 minutes on hold and an identity check, then the user joined the call and the rep offered two deals.' },
@@ -159,7 +159,7 @@ export const TASKS: Task[] = [
     holdHeading: 'What got us to a person',
     holds: holds('delta-customer-service', 'paypal-customer-service-number', 'venmo-customer-service-number', 'amazon-pharmacy-phone-number', 'airbnb-customer-service-number', 'bank-of-america-customer-service', 't-mobile-customer-service-number', 'cash-app-customer-service-number'),
     posts: [
-      { slug: 'how-long-to-reach-a-human', label: 'How long it takes to reach a human at 64 companies', fact: 'we timed 107 calls to 64 customer service lines, and 32 of the 107 never reached a person.' },
+      { slug: 'how-long-to-reach-a-human', label: 'How long it takes to reach a human at 71 companies', fact: 'we timed 123 calls to 71 customer service lines, and 37 of the 123 never reached a person.' },
       { slug: 'customer-story-flight-credit', label: 'A $100 JSX voucher by phone', fact: 'Grok Bot and call4me called JSX Reservations about a delayed flight and got Jem a $100 courtesy travel voucher, valid for one year. Jem on X: "literally zero chance i was going to do that myself"' },
       { slug: 'amazon-pharmacy-phone-number', label: 'Amazon Pharmacy customer care', fact: 'the representative said she would mark the stuck prescriptions as important, and the "ready to order" email arrived 48 minutes after we dialed.' },
       { slug: 'priceline-customer-service', label: 'Priceline customer service', fact: 'saying we had no trip number, again and again, reached a live representative 25 minutes 9 seconds into the call.' },
