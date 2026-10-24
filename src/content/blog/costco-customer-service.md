@@ -167,7 +167,7 @@ From the same [Contact Us page](https://customerservice.costco.com/app/answers/a
 | Mail Order Pharmacy | 1-800-607-6861 | Mon-Fri 5am-7pm, Sat 9:30am-2pm |
 | Costco Travel | 1-877-849-2730 | Mon-Fri 5am-7pm, Sat-Sun 6am-5pm |
 
-For a question about one warehouse, like tires or the pharmacy, your local Costco's own number is usually more direct. The main menu's option 4 can give you that number. We've written up [calling a Costco warehouse to cancel a tire appointment and ask about a refund](/blog/costco-tire-appointment-cancel-refund), where the warehouse menu had its own traps.
+For a question about one warehouse, like tires or the pharmacy, your local Costco's own number is usually more direct. The main menu's option 4 can give you that number. We've written up [calling a Costco warehouse to cancel a tire appointment and ask about a refund](/blog/costco-tire-appointment-cancel-refund), where the warehouse menu had its own traps. For returns past the window or without a receipt, see the [Costco return policy, from a recorded call](/blog/costco-return-policy).
 
 ## What wasn't answered
 

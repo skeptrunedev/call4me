@@ -206,6 +206,8 @@ import instacartCustomerServiceNumber from './instacart-customer-service-number.
 import lyftCustomerServiceNumber from './lyft-customer-service-number.md';
 import uberCustomerServiceNumber from './uber-customer-service-number.md';
 import dellCustomerServiceNumber from './dell-customer-service-number.md';
+import costcoReturnPolicy from './costco-return-policy.md';
+import bestBuyReturnPolicy from './best-buy-return-policy.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -421,4 +423,6 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'lyft-customer-service-number', markdown: lyftCustomerServiceNumber },
   { slug: 'uber-customer-service-number', markdown: uberCustomerServiceNumber },
   { slug: 'dell-customer-service-number', markdown: dellCustomerServiceNumber },
+  { slug: 'costco-return-policy', markdown: costcoReturnPolicy },
+  { slug: 'best-buy-return-policy', markdown: bestBuyReturnPolicy },
 ];

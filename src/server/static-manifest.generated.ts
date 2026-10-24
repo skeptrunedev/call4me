@@ -98,97 +98,97 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2202
+    "tokens": 2168
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2206
+    "tokens": 2197
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2229
+    "tokens": 2285
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2064
+    "tokens": 2009
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2231
+    "tokens": 2265
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2270
+    "tokens": 2235
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2219
+    "tokens": 2248
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2126
+    "tokens": 2112
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2100
+    "tokens": 2184
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 1926
+    "tokens": 1864
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 2116
+    "tokens": 2137
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 1831
+    "tokens": 1838
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 1779
+    "tokens": 1782
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 1939
+    "tokens": 1899
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1864
+    "tokens": 1911
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 2101
+    "tokens": 2052
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 2037
+    "tokens": 2049
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 761
+    "tokens": 1052
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 19192
+    "tokens": 19382
   },
   "/blog/phone-anxiety": {
     "html": "/__pages/613a99d49cf748b0.html",
@@ -218,12 +218,22 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-to-lower-directv-bill": {
     "html": "/__pages/0b3cdc5fd14536d3.html",
     "markdown": "/__pages/0b3cdc5fd14536d3.md",
-    "tokens": 4059
+    "tokens": 4061
+  },
+  "/blog/costco-return-policy": {
+    "html": "/__pages/c869c2262ed0adcb.html",
+    "markdown": "/__pages/c869c2262ed0adcb.md",
+    "tokens": 6201
+  },
+  "/blog/best-buy-return-policy": {
+    "html": "/__pages/bc0a2254204b3439.html",
+    "markdown": "/__pages/bc0a2254204b3439.md",
+    "tokens": 6580
   },
   "/blog/alaska-airlines-customer-service": {
     "html": "/__pages/5abc3a773d2970a4.html",
     "markdown": "/__pages/5abc3a773d2970a4.md",
-    "tokens": 6197
+    "tokens": 6204
   },
   "/blog/chime-customer-service-number": {
     "html": "/__pages/f8a85f06f342ef96.html",
@@ -688,7 +698,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/costco-customer-service": {
     "html": "/__pages/77f87a42aa5bef1c.html",
     "markdown": "/__pages/77f87a42aa5bef1c.md",
-    "tokens": 7592
+    "tokens": 7629
   },
   "/blog/att-customer-service-number": {
     "html": "/__pages/4fc865890ec1135b.html",
@@ -938,7 +948,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/aquasana-return-exception": {
     "html": "/__pages/0cdf5c587fc9e991.html",
     "markdown": "/__pages/0cdf5c587fc9e991.md",
-    "tokens": 5221
+    "tokens": 5364
   },
   "/blog/running-late-to-appointment": {
     "html": "/__pages/46652be8ed2e540e.html",

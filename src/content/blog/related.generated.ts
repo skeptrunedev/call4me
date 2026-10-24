@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "656a01333760e72b800e67632cf776f0f7c34e7d73fc1d5b59a0c3741802fc7c"
+  "sourceHash": "5446274034a8480343a80b54c71fcce1afe45b32883651fecc6d4057670976f6"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -421,7 +421,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.622079
     }
   ],
-  "aquasana-return-exception": [],
+  "aquasana-return-exception": [
+    {
+      "slug": "costco-return-policy",
+      "similarity": 0.619983
+    }
+  ],
   "att-customer-service-number": [
     {
       "slug": "how-to-lower-att-bill",
@@ -472,6 +477,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "venmo-customer-service-number",
       "similarity": 0.621712
+    }
+  ],
+  "best-buy-return-policy": [
+    {
+      "slug": "costco-return-policy",
+      "similarity": 0.760775
     }
   ],
   "bland-ai-alternatives": [
@@ -1034,7 +1045,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.828317
+      "similarity": 0.828316
     },
     {
       "slug": "langchain-mcp-phone-calls",
@@ -1249,7 +1260,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "home-depot-customer-service",
-      "similarity": 0.641562
+      "similarity": 0.641561
     },
     {
       "slug": "dell-customer-service-number",
@@ -1258,6 +1269,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "fabletics-customer-service",
       "similarity": 0.610432
+    },
+    {
+      "slug": "costco-return-policy",
+      "similarity": 0.603842
     }
   ],
   "costco-eye-exam-cost": [
@@ -1268,6 +1283,28 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
       "similarity": 0.621841
+    }
+  ],
+  "costco-return-policy": [
+    {
+      "slug": "best-buy-return-policy",
+      "similarity": 0.760775
+    },
+    {
+      "slug": "aquasana-return-exception",
+      "similarity": 0.619983
+    },
+    {
+      "slug": "home-depot-customer-service",
+      "similarity": 0.614827
+    },
+    {
+      "slug": "walmart-customer-service-number",
+      "similarity": 0.611386
+    },
+    {
+      "slug": "costco-customer-service",
+      "similarity": 0.603842
     }
   ],
   "costco-tire-appointment-cancel-refund": [],
@@ -1520,7 +1557,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "zessan-otemachi-private-room",
-      "similarity": 0.695845
+      "similarity": 0.695846
     },
     {
       "slug": "pin-on-grand-reservations",
@@ -1616,7 +1653,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.719138
+      "similarity": 0.719139
     },
     {
       "slug": "directv-customer-service",
@@ -2023,7 +2060,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "muse-code-mcp-phone-calls",
-      "similarity": 0.700503
+      "similarity": 0.700502
     },
     {
       "slug": "cascaded-voice-stack-vs-gpt-live",
@@ -2067,7 +2104,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "gym-day-pass": [
     {
       "slug": "gyms-with-sauna-near-me",
-      "similarity": 0.810295
+      "similarity": 0.810296
     },
     {
       "slug": "bonner-springs-ymca-swim-lessons",
@@ -2085,7 +2122,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "gyms-with-sauna-near-me": [
     {
       "slug": "gym-day-pass",
-      "similarity": 0.810295
+      "similarity": 0.810296
     }
   ],
   "hertz-customer-service-number": [],
@@ -2126,7 +2163,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "costco-customer-service",
-      "similarity": 0.641562
+      "similarity": 0.641561
     }
   ],
   "how-long-to-reach-a-human": [],
@@ -2197,7 +2234,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-lower-spectrum-bill",
-      "similarity": 0.789518
+      "similarity": 0.789517
     },
     {
       "slug": "how-to-lower-verizon-bill",
@@ -2245,7 +2282,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-lower-att-bill",
-      "similarity": 0.789518
+      "similarity": 0.789517
     },
     {
       "slug": "how-to-lower-directv-bill",
@@ -2640,7 +2677,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "pin-on-grand-reservations",
-      "similarity": 0.614578
+      "similarity": 0.614577
     },
     {
       "slug": "posada-real-los-condestables",
@@ -2692,7 +2729,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.828317
+      "similarity": 0.828316
     },
     {
       "slug": "cline-phone-calls",
@@ -3842,7 +3879,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "suitsupply-customer-service": [
     {
       "slug": "fabletics-customer-service",
-      "similarity": 0.719138
+      "similarity": 0.719139
     },
     {
       "slug": "wayfair-customer-service",
@@ -4348,6 +4385,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.635299
     },
     {
+      "slug": "costco-return-policy",
+      "similarity": 0.611386
+    },
+    {
       "slug": "pottery-barn-customer-service",
       "similarity": 0.601852
     }
@@ -4526,7 +4567,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "equal-parts-sf-reservations",
-      "similarity": 0.695845
+      "similarity": 0.695846
     },
     {
       "slug": "posada-real-los-condestables",

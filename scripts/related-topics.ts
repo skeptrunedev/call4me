@@ -216,4 +216,6 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'lyft-customer-service-number': ['travel-lodging'],
   'uber-customer-service-number': ['travel-lodging'],
   'dell-customer-service-number': ['retail-shopping'],
+  'costco-return-policy': ['retail-shopping'],
+  'best-buy-return-policy': ['retail-shopping'],
 };
