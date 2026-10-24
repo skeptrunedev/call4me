@@ -43,7 +43,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/mcp": {
     "html": "/__pages/88fe637beab867e2.html",
     "markdown": "/__pages/88fe637beab867e2.md",
-    "tokens": 1641
+    "tokens": 1646
   },
   "/rules": {
     "html": "/__pages/933053fc294245bb.html",

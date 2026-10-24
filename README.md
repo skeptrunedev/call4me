@@ -1,4 +1,11 @@
-# call4me
+# call4me: MCP server for making phone calls
+
+call4me is a remote MCP server for making phone calls. Point any MCP client at `https://call4.me/mcp`
+(streamable HTTP) and your agent can phone a business for you. One-line install for Claude Code:
+
+```
+claude mcp add --scope user --transport http call4me https://call4.me/mcp
+```
 
 [![AllMCPs Verified](https://allmcps.com/api/badge/call4me)](https://allmcps.com/mcp/call4me?verify=e7873d62-b4c4-4ca2-a61e-e8df3f1b7446)
 

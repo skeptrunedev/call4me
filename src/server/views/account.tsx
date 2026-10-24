@@ -449,8 +449,8 @@ export const CallPage: FC<{ call: CallView; recordings: CallRecordings; agentPro
 );
 
 export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: string; apiKey: string | null; numbers?: NumberView[] }> = ({ signedIn, installPrompt, origin, apiKey, numbers }) => (
-  <Layout title="install mcp" page="mcp" signedIn={signedIn}>
-    <h1>install the call4me mcp</h1>
+  <Layout title="MCP server for phone calls" page="mcp" signedIn={signedIn}>
+    <h1>call4me: the MCP server that makes phone calls</h1>
     {apiKey ? (
       <p>
         your server URL is <code class="server-url">{mcpUrl(origin, apiKey)}</code>. it carries your key, so your agent needs no sign-in. the easiest way is to paste this prompt into your agent:
