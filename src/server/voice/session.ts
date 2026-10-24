@@ -101,6 +101,8 @@ export interface SessionSetup {
   unattended?: boolean;
   /** Telnyx's id for the phone leg: known up front for inbound calls, after dialing for outbound. */
   controlId?: string;
+  /** We picked up their call, so we speak first, the moment the line is live. */
+  answering?: boolean;
   /** Where Telnyx streams the call's audio, to reattach it after a reset. */
   streamUrl?: string;
   /** Per-call secrets (account PINs) to mask in the stored transcript. */
@@ -549,10 +551,16 @@ export class VoiceSession extends DurableObject<Env> {
         for (const a of this.pendingAudio) this.sendLive({ type: 'session.input_audio.append', audio: a });
         this.pendingAudio = [];
         await this.queueMachineUpdate(() => this.sendMachineGuidance());
+        // Answering a call, we speak first: whoever rang waits on our hello, and after 9 silent
+        // seconds MaxProMow asked "are you…" and hung up on a callback.
+        const answering = Boolean(this.setup?.answering);
         setTimeout(() => {
           const personOrUnknown = !this.machineState || this.machineState.phase === 'unknown' || this.machineState.phase === 'human';
-          if (this.live === live && personOrUnknown && !this.heardThem && !this.ended) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'Nobody has spoken since the call connected. Say a short "Hi, hello?" and then wait.' });
-        }, SILENT_PICKUP_MS);
+          if (this.live === live && personOrUnknown && !this.heardThem && !this.ended) {
+            const content = answering ? 'You just picked up their call. Answer it now, the way your instructions say.' : 'Nobody has spoken since the call connected. Say a short "Hi, hello?" and then wait.';
+            this.sendLive({ type: 'session.instructions.append', delegation_id: null, content });
+          }
+        }, answering ? 0 : SILENT_PICKUP_MS);
         break;
       }
       case 'session.output_audio.delta': {

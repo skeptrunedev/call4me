@@ -345,6 +345,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     maxSeconds: maxMinutes * 60,
     pricePerMinuteCents: price,
     controlId: opts.controlId,
+    answering: true,
     streamUrl: await streamUrl(env, id),
   };
   try {
