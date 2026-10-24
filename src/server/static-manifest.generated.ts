@@ -98,7 +98,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2153
+    "tokens": 2152
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
@@ -143,12 +143,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 1924
+    "tokens": 1923
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 2074
+    "tokens": 2073
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
@@ -188,7 +188,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 20045
+    "tokens": 20042
   },
   "/blog/phone-anxiety": {
     "html": "/__pages/613a99d49cf748b0.html",
@@ -213,12 +213,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-to-lower-att-bill": {
     "html": "/__pages/ba7ae6d76a630486.html",
     "markdown": "/__pages/ba7ae6d76a630486.md",
-    "tokens": 4529
+    "tokens": 4525
   },
   "/blog/how-to-lower-directv-bill": {
     "html": "/__pages/0b3cdc5fd14536d3.html",
     "markdown": "/__pages/0b3cdc5fd14536d3.md",
-    "tokens": 4061
+    "tokens": 4060
   },
   "/blog/costco-return-policy": {
     "html": "/__pages/c869c2262ed0adcb.html",
@@ -263,7 +263,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/alaska-airlines-customer-service": {
     "html": "/__pages/5abc3a773d2970a4.html",
     "markdown": "/__pages/5abc3a773d2970a4.md",
-    "tokens": 6194
+    "tokens": 6193
   },
   "/blog/chime-customer-service-number": {
     "html": "/__pages/f8a85f06f342ef96.html",
@@ -558,7 +558,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/metlife-pet-insurance-phone-number": {
     "html": "/__pages/47ad38c7be331f93.html",
     "markdown": "/__pages/47ad38c7be331f93.md",
-    "tokens": 7618
+    "tokens": 7617
   },
   "/blog/peloton-customer-service-number": {
     "html": "/__pages/2572dd8b520382ff.html",
@@ -598,12 +598,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/jetblue-customer-service": {
     "html": "/__pages/61f270608419650f.html",
     "markdown": "/__pages/61f270608419650f.md",
-    "tokens": 5021
+    "tokens": 5017
   },
   "/blog/progressive-customer-service": {
     "html": "/__pages/7ef6426a09eb45df.html",
     "markdown": "/__pages/7ef6426a09eb45df.md",
-    "tokens": 4772
+    "tokens": 4771
   },
   "/blog/airbnb-customer-service-number": {
     "html": "/__pages/e392dafb7481d910.html",
@@ -733,12 +733,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/att-customer-service-number": {
     "html": "/__pages/4fc865890ec1135b.html",
     "markdown": "/__pages/4fc865890ec1135b.md",
-    "tokens": 8348
+    "tokens": 8347
   },
   "/blog/southwest-airlines-phone-number": {
     "html": "/__pages/a044a0c777c5b7fe.html",
     "markdown": "/__pages/a044a0c777c5b7fe.md",
-    "tokens": 7899
+    "tokens": 7895
   },
   "/blog/home-depot-customer-service": {
     "html": "/__pages/386ebcbd12bbbc61.html",
@@ -808,7 +808,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/geico-customer-service": {
     "html": "/__pages/41d589203042a30a.html",
     "markdown": "/__pages/41d589203042a30a.md",
-    "tokens": 6512
+    "tokens": 6505
   },
   "/blog/doordash-customer-service-number": {
     "html": "/__pages/ff70cf03e5b76586.html",
@@ -833,7 +833,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/delta-customer-service": {
     "html": "/__pages/61e1d8ba2e5289ea.html",
     "markdown": "/__pages/61e1d8ba2e5289ea.md",
-    "tokens": 5617
+    "tokens": 5616
   },
   "/blog/paypal-customer-service-number": {
     "html": "/__pages/14df76f086347bc7.html",
@@ -1113,7 +1113,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/allstate-customer-service-number": {
     "html": "/__pages/9ac645ac6d4e4820.html",
     "markdown": "/__pages/9ac645ac6d4e4820.md",
-    "tokens": 4598
+    "tokens": 4597
   },
   "/blog/cancel-audible": {
     "html": "/__pages/5aba5afde50e26d0.html",
@@ -1163,7 +1163,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/etihad-customer-service": {
     "html": "/__pages/a609f08f0c294628.html",
     "markdown": "/__pages/a609f08f0c294628.md",
-    "tokens": 6871
+    "tokens": 6870
   },
   "/blog/lawyer-consultation-fee": {
     "html": "/__pages/ee87b1a08149cfbd.html",
@@ -1173,7 +1173,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/american-airlines-flight-credit": {
     "html": "/__pages/54dd6bcdbea387c1.html",
     "markdown": "/__pages/54dd6bcdbea387c1.md",
-    "tokens": 11003
+    "tokens": 11002
   },
   "/blog/adderall-shortage": {
     "html": "/__pages/0fe25dd718aaf032.html",

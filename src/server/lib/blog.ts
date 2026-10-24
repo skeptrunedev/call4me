@@ -67,7 +67,11 @@ export function parseFrontmatter(markdown: string): { meta: Record<string, strin
   const meta: Record<string, string> = {};
   for (const line of m[1]!.split('\n')) {
     const kv = /^([A-Za-z_][\w-]*):\s*(.*)$/.exec(line);
-    if (kv) meta[kv[1]!] = kv[2]!.trim().replace(/^["'](.*)["']$/, '$1');
+    if (!kv) continue;
+    const value = kv[2]!.trim();
+    // A double-quoted YAML value escapes its quotes (\"); a bare or single-quoted one is literal.
+    const quoted = /^"(.*)"$/.exec(value);
+    meta[kv[1]!] = quoted ? quoted[1]!.replace(/\\(["\\])/g, '$1') : value.replace(/^'(.*)'$/, '$1');
   }
   return { meta, body: m[2]! };
 }
