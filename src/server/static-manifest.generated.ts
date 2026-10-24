@@ -98,102 +98,132 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2238
+    "tokens": 2202
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2303
+    "tokens": 2206
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2041
+    "tokens": 2229
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2170
+    "tokens": 2064
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2153
+    "tokens": 2231
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2334
+    "tokens": 2270
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2230
+    "tokens": 2219
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2138
+    "tokens": 2126
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 1884
+    "tokens": 2100
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2107
+    "tokens": 1926
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 1991
+    "tokens": 2116
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 1791
+    "tokens": 1831
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 1833
+    "tokens": 1779
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 1965
+    "tokens": 1939
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1901
+    "tokens": 1864
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 2064
+    "tokens": 2101
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 1791
+    "tokens": 2037
+  },
+  "/blog?page=18": {
+    "html": "/__pages/ccf83eb6730467b6.html",
+    "markdown": "/__pages/ccf83eb6730467b6.md",
+    "tokens": 761
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 18694
+    "tokens": 19192
   },
   "/blog/phone-anxiety": {
     "html": "/__pages/613a99d49cf748b0.html",
     "markdown": "/__pages/613a99d49cf748b0.md",
-    "tokens": 7033
+    "tokens": 7032
+  },
+  "/blog/how-to-lower-spectrum-bill": {
+    "html": "/__pages/3757bfbc7bfb1d6a.html",
+    "markdown": "/__pages/3757bfbc7bfb1d6a.md",
+    "tokens": 3142
+  },
+  "/blog/how-to-lower-verizon-bill": {
+    "html": "/__pages/6d3278a6117e42d5.html",
+    "markdown": "/__pages/6d3278a6117e42d5.md",
+    "tokens": 3832
+  },
+  "/blog/how-to-lower-xfinity-bill": {
+    "html": "/__pages/3e87e3ae29ee9e41.html",
+    "markdown": "/__pages/3e87e3ae29ee9e41.md",
+    "tokens": 5899
+  },
+  "/blog/how-to-lower-att-bill": {
+    "html": "/__pages/ba7ae6d76a630486.html",
+    "markdown": "/__pages/ba7ae6d76a630486.md",
+    "tokens": 4529
+  },
+  "/blog/how-to-lower-directv-bill": {
+    "html": "/__pages/0b3cdc5fd14536d3.html",
+    "markdown": "/__pages/0b3cdc5fd14536d3.md",
+    "tokens": 4059
   },
   "/blog/alaska-airlines-customer-service": {
     "html": "/__pages/5abc3a773d2970a4.html",
     "markdown": "/__pages/5abc3a773d2970a4.md",
-    "tokens": 6195
+    "tokens": 6197
   },
   "/blog/chime-customer-service-number": {
     "html": "/__pages/f8a85f06f342ef96.html",
@@ -583,7 +613,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/xfinity-customer-service-number": {
     "html": "/__pages/71ceb939dffe328c.html",
     "markdown": "/__pages/71ceb939dffe328c.md",
-    "tokens": 5544
+    "tokens": 5634
   },
   "/blog/irs-phone-number": {
     "html": "/__pages/5c3dbf05923aa44a.html",
@@ -663,7 +693,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/att-customer-service-number": {
     "html": "/__pages/4fc865890ec1135b.html",
     "markdown": "/__pages/4fc865890ec1135b.md",
-    "tokens": 8283
+    "tokens": 8348
   },
   "/blog/southwest-airlines-phone-number": {
     "html": "/__pages/a044a0c777c5b7fe.html",
@@ -783,7 +813,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/directv-customer-service": {
     "html": "/__pages/3ae0ffa568610e73.html",
     "markdown": "/__pages/3ae0ffa568610e73.md",
-    "tokens": 6942
+    "tokens": 6991
   },
   "/blog/pottery-barn-customer-service": {
     "html": "/__pages/7d519b6ada502c05.html",
@@ -1128,7 +1158,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/verizon-customer-service": {
     "html": "/__pages/6cfd54b00e65d985.html",
     "markdown": "/__pages/6cfd54b00e65d985.md",
-    "tokens": 11222
+    "tokens": 11265
   },
   "/blog/fpl-phone-number": {
     "html": "/__pages/f5806291e5d3e637.html",
@@ -1158,7 +1188,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/spectrum-retention-department": {
     "html": "/__pages/cad6a590d97a2bfd.html",
     "markdown": "/__pages/cad6a590d97a2bfd.md",
-    "tokens": 6771
+    "tokens": 6847
   },
   "/blog/experian-phone-number": {
     "html": "/__pages/a1897270700e714d.html",

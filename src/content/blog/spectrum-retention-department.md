@@ -98,6 +98,8 @@ Only the **account holder** or an **authorized user**. Spectrum's [account roles
 7. **Confirm the date it starts.** "My next bill... will be 55 instead of 85, right?" "That is correct."
 8. **Bring up service problems after the new price is set**, through retention, for a free technician visit.
 
+For every way to get the bill down, with what to have ready and how to do it without making the call yourself, see [how to lower your Spectrum bill](/blog/how-to-lower-spectrum-bill).
+
 ## Where our caller fell short
 
 - **It went silent while waiting on the user.** Twice, our caller had to wait for the user to answer: once for the text code (72 seconds) and once for whether they could join (76 seconds). Both times it said nothing to the rep, and he asked, "Muse, are you still there?" We fixed this the same night: when the line goes quiet while it's waiting on you, our caller now says something like "sorry, still checking on that, one sec."

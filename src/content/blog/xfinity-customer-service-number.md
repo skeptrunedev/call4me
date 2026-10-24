@@ -121,6 +121,8 @@ Two things our caller could have done better:
 - **It said yes to "service support"** at the first question, even though it had no service problem. That sent it into the internet troubleshooting branch, and it took two more answers to get out. Saying "billing" right away might be shorter. We didn't test it.
 - **Its first "billing" didn't register.** The assistant asked "Are you still there?" and repeated the question. A clear, single word the second time worked.
 
+To lower an Xfinity bill, we called the same number again and asked the billing department about promotions, speeds and the autopay discount: [how to lower your Xfinity bill](/blog/how-to-lower-xfinity-bill).
+
 ## Have your agent make this call
 
 If you use call4me, paste this into your agent:

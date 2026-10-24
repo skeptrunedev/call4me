@@ -61,6 +61,11 @@ import salonPerSeBellaire from './salon-per-se-bellaire.md';
 import sabaiEugeneReservations from './sabai-eugene-reservations.md';
 import icebarOrlandoTickets from './icebar-orlando-tickets.md';
 import phoneAnxiety from './phone-anxiety.md';
+import howToLowerSpectrumBill from './how-to-lower-spectrum-bill.md';
+import howToLowerVerizonBill from './how-to-lower-verizon-bill.md';
+import howToLowerXfinityBill from './how-to-lower-xfinity-bill.md';
+import howToLowerAttBill from './how-to-lower-att-bill.md';
+import howToLowerDirectvBill from './how-to-lower-directv-bill.md';
 import type { PostSource } from '../../server/lib/blog';
 import customerFlightCredit from './customer-story-flight-credit.md';
 import customerRickDinner from './customer-story-rick-dinner-reservation.md';
@@ -209,6 +214,11 @@ import dellCustomerServiceNumber from './dell-customer-service-number.md';
  */
 export const POST_SOURCES: PostSource[] = [
   { slug: 'phone-anxiety', markdown: phoneAnxiety },
+  { slug: 'how-to-lower-spectrum-bill', markdown: howToLowerSpectrumBill },
+  { slug: 'how-to-lower-verizon-bill', markdown: howToLowerVerizonBill },
+  { slug: 'how-to-lower-xfinity-bill', markdown: howToLowerXfinityBill },
+  { slug: 'how-to-lower-att-bill', markdown: howToLowerAttBill },
+  { slug: 'how-to-lower-directv-bill', markdown: howToLowerDirectvBill },
   { slug: 'victorias-secret-georgetown', markdown: victoriasSecretGeorgetown },
   { slug: 'fresh-blades-barbershop-divisadero', markdown: freshBladesBarbershopDivisadero },
   { slug: 'springhill-suites-phoenix-gilbert', markdown: springhillSuitesPhoenixGilbert },

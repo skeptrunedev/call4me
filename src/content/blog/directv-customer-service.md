@@ -172,6 +172,8 @@ The two calls asked the same three things. The live representative's answers wer
 - **Equipment.** The person: "they will run their equipment to see if they have to return it or not." The AI agent: you "usually need to return any leased equipment, like receivers, remotes, and power cords, to avoid a non-return fee", by return kit or at "a FedEx Office location." The cancel help page says "Your cancellation support agent will guide you through what (if anything) you need to return," and "All you have to return is the box itself, power cord, and remote."
 - **Offers.** The person: "We do have different, multiple different promotional offers," depending on the account. The AI agent: offers exist, "but the details depend on your account and situation," and "a live agent can review them with you directly."
 
+If you'd rather keep DIRECTV and pay less, a representative told us the ways to lower the bill on a later call: [how to lower your DIRECTV bill](/blog/how-to-lower-directv-bill).
+
 ## How to cancel DIRECTV by phone
 
 Based on our two calls and DIRECTV's own pages:

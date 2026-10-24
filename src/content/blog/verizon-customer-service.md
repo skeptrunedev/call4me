@@ -92,6 +92,8 @@ The AI assistant couldn't give a 3 line total with taxes and fees. The represent
 
 **What we didn't get on this call.** The call hit our 25 minute limit while our caller was asking about cancelling: any device payment balance, fees, when it takes effect, and keeping or porting the number. The representative's callback answered the balance and porting questions. Neither call answered whether there's a fee or when a cancellation takes effect. Verizon's own rules on cancelling are [below](#cancelling-a-verizon-line).
 
+For the ways Verizon says you can lower a bill, and what its AI assistant said on a second call, see [how to lower your Verizon bill](/blog/how-to-lower-verizon-bill).
+
 ## Verizon called us back
 
 Our call ended at 2:36 pm Eastern when it hit call4me's 25 minute limit. At 2:37 pm, Verizon called our call4me number back. It was the same representative: "Our call suddenly dropped earlier. I would just like to ask if you still need my assistance." call4me answered and picked up the same questions. Nothing was changed on this call either.

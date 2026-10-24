@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "733303ecc318a8ec26a79c36bfb79f37393ca63e45842387ac473713fdc2f2a6"
+  "sourceHash": "656a01333760e72b800e67632cf776f0f7c34e7d73fc1d5b59a0c3741802fc7c"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -424,6 +424,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "aquasana-return-exception": [],
   "att-customer-service-number": [
     {
+      "slug": "how-to-lower-att-bill",
+      "similarity": 0.679155
+    },
+    {
       "slug": "t-mobile-customer-service-number",
       "similarity": 0.67045
     },
@@ -585,7 +589,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "salon-per-se-bellaire",
-      "similarity": 0.688542
+      "similarity": 0.688543
     },
     {
       "slug": "fresh-blades-barbershop-divisadero",
@@ -1030,7 +1034,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.828316
+      "similarity": 0.828317
     },
     {
       "slug": "langchain-mcp-phone-calls",
@@ -1459,12 +1463,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.640604
     },
     {
-      "slug": "cancel-hellofresh",
-      "similarity": 0.630825
+      "slug": "how-to-lower-directv-bill",
+      "similarity": 0.635668
     },
     {
-      "slug": "cancel-factor",
-      "similarity": 0.615064
+      "slug": "cancel-hellofresh",
+      "similarity": 0.630825
     }
   ],
   "dog-teeth-cleaning-cost": [
@@ -1844,7 +1848,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.733996
+      "similarity": 0.733995
     },
     {
       "slug": "chatgpt-phone-calls",
@@ -1985,7 +1989,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.66789
+      "similarity": 0.667889
     },
     {
       "slug": "schedule-phone-calls-claude-code-codex",
@@ -2171,7 +2175,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "san-francisco-oral-surgeon-consultation",
-      "similarity": 0.623343
+      "similarity": 0.623342
     },
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
@@ -2180,6 +2184,128 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "same-day-eye-exam-brooklyn",
       "similarity": 0.607304
+    }
+  ],
+  "how-to-lower-att-bill": [
+    {
+      "slug": "how-to-lower-directv-bill",
+      "similarity": 0.865348
+    },
+    {
+      "slug": "how-to-lower-xfinity-bill",
+      "similarity": 0.806543
+    },
+    {
+      "slug": "how-to-lower-spectrum-bill",
+      "similarity": 0.789518
+    },
+    {
+      "slug": "how-to-lower-verizon-bill",
+      "similarity": 0.747689
+    },
+    {
+      "slug": "att-customer-service-number",
+      "similarity": 0.679155
+    },
+    {
+      "slug": "spectrum-retention-department",
+      "similarity": 0.650371
+    }
+  ],
+  "how-to-lower-directv-bill": [
+    {
+      "slug": "how-to-lower-att-bill",
+      "similarity": 0.865348
+    },
+    {
+      "slug": "how-to-lower-xfinity-bill",
+      "similarity": 0.780104
+    },
+    {
+      "slug": "how-to-lower-spectrum-bill",
+      "similarity": 0.773996
+    },
+    {
+      "slug": "how-to-lower-verizon-bill",
+      "similarity": 0.748605
+    },
+    {
+      "slug": "spectrum-retention-department",
+      "similarity": 0.692357
+    },
+    {
+      "slug": "directv-customer-service",
+      "similarity": 0.635668
+    }
+  ],
+  "how-to-lower-spectrum-bill": [
+    {
+      "slug": "how-to-lower-xfinity-bill",
+      "similarity": 0.800353
+    },
+    {
+      "slug": "how-to-lower-att-bill",
+      "similarity": 0.789518
+    },
+    {
+      "slug": "how-to-lower-directv-bill",
+      "similarity": 0.773996
+    },
+    {
+      "slug": "spectrum-retention-department",
+      "similarity": 0.753445
+    },
+    {
+      "slug": "how-to-lower-verizon-bill",
+      "similarity": 0.752381
+    }
+  ],
+  "how-to-lower-verizon-bill": [
+    {
+      "slug": "how-to-lower-spectrum-bill",
+      "similarity": 0.752381
+    },
+    {
+      "slug": "how-to-lower-directv-bill",
+      "similarity": 0.748605
+    },
+    {
+      "slug": "how-to-lower-att-bill",
+      "similarity": 0.747689
+    },
+    {
+      "slug": "how-to-lower-xfinity-bill",
+      "similarity": 0.72132
+    },
+    {
+      "slug": "verizon-customer-service",
+      "similarity": 0.63425
+    }
+  ],
+  "how-to-lower-xfinity-bill": [
+    {
+      "slug": "how-to-lower-att-bill",
+      "similarity": 0.806543
+    },
+    {
+      "slug": "how-to-lower-spectrum-bill",
+      "similarity": 0.800353
+    },
+    {
+      "slug": "how-to-lower-directv-bill",
+      "similarity": 0.780104
+    },
+    {
+      "slug": "how-to-lower-verizon-bill",
+      "similarity": 0.72132
+    },
+    {
+      "slug": "xfinity-customer-service-number",
+      "similarity": 0.66988
+    },
+    {
+      "slug": "spectrum-retention-department",
+      "similarity": 0.640098
     }
   ],
   "how-to-transfer-a-prescription": [
@@ -2566,7 +2692,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.828316
+      "similarity": 0.828317
     },
     {
       "slug": "cline-phone-calls",
@@ -3110,7 +3236,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "t3-code-phone-calls",
-      "similarity": 0.810589
+      "similarity": 0.81059
     },
     {
       "slug": "schedule-phone-calls-claude-code-codex",
@@ -3480,7 +3606,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "salon-per-se-bellaire": [
     {
       "slug": "book-haircut-appointment",
-      "similarity": 0.688542
+      "similarity": 0.688543
     },
     {
       "slug": "fresh-blades-barbershop-divisadero",
@@ -3534,7 +3660,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-find-a-new-primary-care-doctor",
-      "similarity": 0.623343
+      "similarity": 0.623342
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -3671,8 +3797,24 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "spectrum-retention-department": [
     {
+      "slug": "how-to-lower-spectrum-bill",
+      "similarity": 0.753445
+    },
+    {
+      "slug": "how-to-lower-directv-bill",
+      "similarity": 0.692357
+    },
+    {
       "slug": "directv-customer-service",
       "similarity": 0.653121
+    },
+    {
+      "slug": "how-to-lower-att-bill",
+      "similarity": 0.650371
+    },
+    {
+      "slug": "how-to-lower-xfinity-bill",
+      "similarity": 0.640098
     },
     {
       "slug": "windstream-customer-service",
@@ -3685,10 +3827,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "att-customer-service-number",
       "similarity": 0.61712
-    },
-    {
-      "slug": "xfinity-customer-service-number",
-      "similarity": 0.609473
     }
   ],
   "springhill-suites-phoenix-gilbert": [
@@ -3772,7 +3910,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.810589
+      "similarity": 0.81059
     },
     {
       "slug": "mastra-mcp-phone-calls",
@@ -4101,6 +4239,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "verizon-customer-service": [
     {
+      "slug": "how-to-lower-verizon-bill",
+      "similarity": 0.63425
+    },
+    {
       "slug": "att-customer-service-number",
       "similarity": 0.631471
     },
@@ -4326,6 +4468,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "wyoming-registered-agent-consent-form": [],
   "xfinity-customer-service-number": [
+    {
+      "slug": "how-to-lower-xfinity-bill",
+      "similarity": 0.66988
+    },
     {
       "slug": "windstream-customer-service",
       "similarity": 0.666164
