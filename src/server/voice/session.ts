@@ -150,6 +150,8 @@ export class VoiceSession extends DurableObject<Env> {
   private phone: WebSocket | null = null;
   private live: WebSocket | null = null;
   private liveReady = false;
+  /** The silent-pickup nudge is set for this voice session (nudgeWhenSilent). */
+  private nudgeScheduled = false;
   private answered = false;
   /** This instance took over a call already in progress (the previous one was reset). */
   private resumed = false;
@@ -260,6 +262,7 @@ export class VoiceSession extends DurableObject<Env> {
         this.mark('answered');
         this.startWatchdog();
         await this.startLive();
+        this.nudgeWhenSilent();
         // place_call's listen_in: they hear the call from the moment the business answers.
         if (this.setup?.person?.listenIn) void this.connectPerson(undefined, 'listen');
         return new Response('ok');
@@ -336,8 +339,10 @@ export class VoiceSession extends DurableObject<Env> {
     if (this.phone !== socket || this.ended) return;
     await this.ctx.storage.delete(['orphanSince', 'reattached']);
     if (!this.answered) await this.resumeIfLive();
-    // Inbound calls are answered with the stream attached, so the stream itself means "answered".
-    if (this.phone === socket && !this.ended && this.answered) await this.startLive();
+    // Open the voice session while it rings, so it is ready the moment they pick up: opened at
+    // pickup, it took 1.2-1.7s, and whoever said "hello" waited that long on top of our reply.
+    // Nothing reaches either side before pickup (onPhoneFrame and the output audio check answered).
+    if (this.phone === socket && !this.ended) await this.startLive();
   }
 
   /** A stream reaching a fresh instance of a call whose voice session already ran: pick the call back up. */
@@ -372,6 +377,7 @@ export class VoiceSession extends DurableObject<Env> {
     const live = this.live;
     this.live = null;
     this.liveReady = false;
+    this.nudgeScheduled = false;
     this.resumed ||= this.liveStartedAt > 0;
     this.pendingAudio = [];
     this.playbackEndsAt = 0;
@@ -551,22 +557,14 @@ export class VoiceSession extends DurableObject<Env> {
         for (const a of this.pendingAudio) this.sendLive({ type: 'session.input_audio.append', audio: a });
         this.pendingAudio = [];
         await this.queueMachineUpdate(() => this.sendMachineGuidance());
-        // Answering a call, we speak first: whoever rang waits on our hello, and after 9 silent
-        // seconds MaxProMow asked "are you…" and hung up on a callback.
-        const answering = Boolean(this.setup?.answering);
-        setTimeout(() => {
-          const personOrUnknown = !this.machineState || this.machineState.phase === 'unknown' || this.machineState.phase === 'human';
-          if (this.live === live && personOrUnknown && !this.heardThem && !this.ended) {
-            const content = answering ? 'You just picked up their call. Answer it now, the way your instructions say.' : 'Nobody has spoken since the call connected. Say a short "Hi, hello?" and then wait.';
-            this.sendLive({ type: 'session.instructions.append', delegation_id: null, content });
-          }
-        }, answering ? 0 : SILENT_PICKUP_MS);
+        if (this.live === live) this.nudgeWhenSilent();
         break;
       }
       case 'session.output_audio.delta': {
         // After the hang-up hand-off the goodbye has already been said; anything more is
         // the model filling the silence before the line drops, so it never reaches the phone.
-        if (this.endingCall || this.personOn || Date.now() < this.keysPlayingUntil || this.menuHoldsCaller()) break;
+        // Before pickup the session is only warming up: nothing it says is heard.
+        if (!this.answered || this.endingCall || this.personOn || Date.now() < this.keysPlayingUntil || this.menuHoldsCaller()) break;
         const e = ev as { delta: string };
         if (this.framesOut++ === 0) this.mark('first caller audio');
         this.sendPhone({ event: 'media', media: { payload: e.delta } });
@@ -600,7 +598,7 @@ export class VoiceSession extends DurableObject<Env> {
         break;
       }
       case 'session.output_transcript.delta':
-        if (!this.endingCall && !this.personOn) {
+        if (this.answered && !this.endingCall && !this.personOn) {
           const delta = (ev as { delta: string }).delta;
           // Kept off a menu's line, a key the caller announces ("pressing 3") still needs pressing.
           const offLine = this.menuHoldsCaller();
@@ -745,6 +743,25 @@ export class VoiceSession extends DurableObject<Env> {
    * after pickup, or nothing has been said in either direction a while later, hang up and mark
    * the call failed (failed calls are not billed).
    */
+  /**
+   * Once the call is answered and the voice session is live, whichever comes last: if nobody has
+   * spoken, have the caller speak. Answering a call, we speak first, right away: whoever rang
+   * waits on our hello, and after 9 silent seconds MaxProMow asked "are you…" and hung up.
+   */
+  private nudgeWhenSilent(): void {
+    if (!this.answered || !this.liveReady || this.nudgeScheduled) return;
+    this.nudgeScheduled = true;
+    const live = this.live;
+    const answering = Boolean(this.setup?.answering);
+    setTimeout(() => {
+      const personOrUnknown = !this.machineState || this.machineState.phase === 'unknown' || this.machineState.phase === 'human';
+      if (this.live === live && personOrUnknown && !this.heardThem && !this.ended) {
+        const content = answering ? 'You just picked up their call. Answer it now, the way your instructions say.' : 'Nobody has spoken since the call connected. Say a short "Hi, hello?" and then wait.';
+        this.sendLive({ type: 'session.instructions.append', delegation_id: null, content });
+      }
+    }, answering ? 0 : SILENT_PICKUP_MS);
+  }
+
   private startWatchdog(): void {
     setTimeout(() => {
       if (!this.ended && this.framesIn === 0 && this.phone) void this.phoneLost(this.phone, `no audio from the phone ${FIRST_AUDIO_LIMIT_MS / 1000}s after pickup`);

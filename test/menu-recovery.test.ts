@@ -27,6 +27,7 @@ function harness(t: TestContext) {
   // Match the existing session tests: exercise real provider message handling, no live calls.
   const session = new VoiceSession({ storage: {} } as any, { TELNYX_API_KEY: 'test-key' } as any) as any;
   session.setup = { callId: 'menu_test', controlId: 'test-control', redact: [] };
+  session.answered = true; // A menu is talking, so the call is up: nothing is heard before pickup.
   session.live = new Socket();
   session.phone = new Socket();
   session.flushTimer = 1; // Transcript persistence is tested elsewhere.
