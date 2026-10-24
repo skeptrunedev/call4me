@@ -120,6 +120,8 @@ Simple AI launched as a consumer app that waited on hold and worked through phon
 
 call4me is an [AI call assistant](/ai-call-assistant) that adds phone calls to an AI assistant you already use. It connects over MCP to [Claude Code](/blog/claude-code-phone-calls), [Codex](/blog/codex-phone-calls), Claude, ChatGPT, [Grok Bot](/blog/grok-connectors-mcp-phone-calls) and other MCP clients. Muse can build its own connector. Your assistant researches the business, sends the brief, and can answer the caller's questions while the call is still going.
 
+Each common errand has a page with the recorded calls behind it: [waiting on hold](/hold-for-me), [doctor and dentist appointments](/book-doctor-appointment), [cancelling a subscription](/cancel-subscription), [restaurant reservations](/book-restaurant-reservation) and [customer service](/call-customer-service).
+
 You can ask to be connected when a person picks up, join mid-call, or listen silently and press 1 to take over. Calls can be scheduled for business hours, and several can run at once. Results include the outcome, transcript and available recording.
 
 Calls cost **$0.25 a minute** from pickup, including phone menus and hold time, with prepaid credits from $10. Unanswered, busy and failed calls are free. Some destinations cost more, as the account page lists. Each account gets a free US number that can call the US, Canada, Europe, the UAE and Japan. Sign in uses Google or X.

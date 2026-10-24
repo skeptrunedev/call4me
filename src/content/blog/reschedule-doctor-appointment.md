@@ -12,7 +12,7 @@ imageAlt: Doctor appointment rescheduled, Thursday at 1:30 PM
 
 When you **reschedule a doctor appointment**, start by checking what is already on the office's calendar. If you think a visit was canceled but are not certain, ask before creating another booking. Then give the scheduler complete dates and times you can attend.
 
-Your existing personal assistant can handle this scheduling call through [call4me](/). If you use Claude Code or Codex to organize your week, connect through the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). The workflow below is a suggestion for your assistant; the recorded customer's client is unknown.
+Your existing personal assistant can handle this scheduling call through [call4me](/). If you use Claude Code or Codex to organize your week, connect through the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). The workflow below is a suggestion for your assistant; the recorded customer's client is unknown. More recorded doctor and dentist calls are on [an AI that calls your doctor or dentist to book an appointment](/book-doctor-appointment).
 
 On October 6, 2026, a call4me customer's AI assistant asked an office to check an earlier **Thursday, October 8 at 10 AM** appointment. The office's virtual assistant confirmed that it was already canceled. After a transfer to scheduling, a representative offered Thursday at 1:30 PM or Friday at 11:30 AM.
 

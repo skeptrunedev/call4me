@@ -226,6 +226,6 @@ The full dataset is here: **[how-long-to-reach-a-human.csv](/static/blog/how-lon
 
 ## Have your agent make these calls
 
-call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) tells it what to get done and it makes the call, waits through the menu and the hold, and reports back with the outcome and the transcript. If you use call4me, paste this into your agent:
+call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) tells it what to get done and it makes the call, waits through the menu and the hold, and reports back with the outcome and the transcript. It can also ring you when a person picks up, so you skip the hold: see [an AI that waits on hold for you](/hold-for-me) and [an AI that calls customer service for you](/call-customer-service). If you use call4me, paste this into your agent:
 
 > Call [company] customer service at [number] and reach a live person. Answer the menu's questions in a few words. If it asks for an account or confirmation number, give [my number], or say I don't have it and ask for a representative. If it doesn't take "representative", try "agent", say what I'm calling about in a few words, or pick the new customer option and ask to be transferred. If an assistant goes quiet, answer it when it comes back. Ask [your question], and don't agree to any change or charge without checking with me.

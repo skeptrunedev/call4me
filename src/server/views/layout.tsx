@@ -260,6 +260,11 @@ export const Layout: FC<{
               <a href="/support">support</a>
               <a href="/about">about</a>
               <a href="/ai-call-assistant">ai call assistant</a>
+              <a href="/hold-for-me">ai that waits on hold</a>
+              <a href="/book-doctor-appointment">ai that books doctor appointments</a>
+              <a href="/cancel-subscription">ai that cancels subscriptions</a>
+              <a href="/book-restaurant-reservation">ai that books restaurants</a>
+              <a href="/call-customer-service">ai that calls customer service</a>
               <a href="/blog">blog</a>
               <a href="/companies">customer service numbers</a>
               <a href="/students">students</a>

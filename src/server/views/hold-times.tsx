@@ -127,7 +127,8 @@ export const HoldTimesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
       <h2 id="skip-the-hold">Skip the hold</h2>
       <p>
         call4me is a phone for your AI agent. Tell Claude Code, Codex or ChatGPT what you need from a company and it calls, gets through the menu,
-        waits on hold and brings back the answer. <a href="/mcp">Install it</a> / <a href="/examples">listen to more calls</a>
+        waits on hold and brings back the answer, or rings you when a person picks up: <a href="/hold-for-me">an AI that waits on hold for you</a>.
+        {' '}<a href="/mcp">Install it</a> / <a href="/examples">listen to more calls</a>
       </p>
     </main>
   </Layout>

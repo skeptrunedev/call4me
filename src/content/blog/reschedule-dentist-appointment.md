@@ -18,6 +18,8 @@ The assistant needed four things, and so do you if you call yourself: **the pati
 
 ## Have your AI assistant make the call
 
+More recorded doctor and dentist calls are on [an AI that calls your doctor or dentist to book an appointment](/book-doctor-appointment).
+
 The caller was [call4me](/), which gives the agent you already use (Claude Code, Codex, ChatGPT, Claude) a phone. Connect it with the [Claude Code guide](/blog/claude-code-phone-calls), [Codex guide](/blog/codex-phone-calls) or [ChatGPT guide](/blog/chatgpt-phone-calls), then paste this:
 
 > Call [dental office] at [phone number] and reschedule [patient name]'s [day] appointment at [time]. Times that work: [windows]. Keep the same dentist if possible; if they can only offer a different provider, ask me first. Confirm the new date and time before hanging up.

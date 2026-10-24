@@ -19,6 +19,9 @@ import { HoldTimesPage } from '../src/server/views/hold-times';
 import { HOLD_DATA_PATH, HOLD_PATH, holdCsv, holdDataset } from '../src/content/hold-times';
 import { StudentsPage } from '../src/server/views/students';
 import { AiCallAssistantPage } from '../src/server/views/ai-call-assistant';
+import { TaskPage } from '../src/server/views/tasks';
+import { TASKS } from '../src/content/tasks';
+import { PAGES } from '../src/server/lib/pages';
 import { McpPage } from '../src/server/views/account';
 import { BlogIndex, BlogArchive, BlogPost } from '../src/server/views/blog';
 import { archive, atomFeed, related, renderAll, rssFeed } from '../src/server/lib/blog';
@@ -92,6 +95,10 @@ await page('/voices', <VoicesPage {...common} agentPrompt={prompts.voicesPrompt(
 await page('/companies', <CompaniesPage {...common} agentPrompt={prompts.companiesPrompt(origin, null)} />);
 await page(SI_PATH, <SuperintelligenceCallingPage {...common} />);
 await page('/ai-call-assistant', <AiCallAssistantPage {...common} pricePerMinuteCents={price} agentPrompt={prompts.aiCallAssistantPrompt(origin, null)} />);
+for (const task of TASKS) {
+  const path = PAGES[task.key].path;
+  await page(path, <TaskPage {...common} task={task} pricePerMinuteCents={price} agentPrompt={prompts.taskPrompt(origin, null, path, task.ask)} />);
+}
 await page(HOLD_PATH, <HoldTimesPage {...common} />);
 await page('/students', <StudentsPage {...common} agentPrompt={prompts.studentsPrompt(origin, null)} />);
 await page('/mcp', <McpPage {...common} origin={origin} installPrompt={installPrompt} apiKey={null} />);

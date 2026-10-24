@@ -161,6 +161,19 @@ ${connect(origin, key)}
 5. Tell me the result in one or two lines.`;
 }
 
+/** A task page (content/tasks.ts): set up, then make that kind of call. */
+export function taskPrompt(origin: string, key: string | null, path: string, ask: string): string {
+  return `I read ${origin}${path}. Make that phone call for me with call4me.
+
+${connect(origin, key)}
+
+1. ${ask}
+2. Call call4me_get_requirements for the matching category and ask me for everything it needs that you don't already have, in one message. Find the business's number (web search if needed) and check it's the right location.
+3. If I want to join when a person picks up or just listen in, pass connect_when or listen_in, and tell me first which call4me number will ring me.
+4. Place the call with call4me_place_call, show me the calling_number it returns, then keep calling call4me_get_call with wait_seconds until it finishes. Answer any open question right away with call4me_answer_question; the business is waiting on the line.
+5. Tell me the result in one or two lines.`;
+}
+
 /** Voices: pick the caller voice, then make a call with it. */
 export function studentsPrompt(origin: string, key: string | null): string {
   return `I read ${origin}/students. Help me make a phone call I've been putting off.

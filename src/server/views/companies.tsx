@@ -34,7 +34,8 @@ export const CompaniesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ 
         recording and transcript. times are from the start of the published recording to the first live person, on one call (or the call that got
         through). <a href={DATA_POST}>how long it takes to reach a human</a> compares them all, and the{' '}
         <a href="/static/blog/how-long-to-reach-a-human.csv">raw data is a csv</a>. the same companies, ranked by hold time with the transcript
-        line behind each time, are on <a href="/hold-times">customer service hold times by company</a>.
+        line behind each time, are on <a href="/hold-times">customer service hold times by company</a>. to have one of them called for you, see{' '}
+        <a href="/call-customer-service">an AI that calls customer service for you</a>.
       </p>
       {INDUSTRIES.map((industry) => (
         <section aria-labelledby={`industry-${industry.replace(/\W+/g, '-')}`}>

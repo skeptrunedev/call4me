@@ -18,7 +18,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/companies": {
     "html": "/__pages/965e43e2b9e71740.html",
     "markdown": "/__pages/965e43e2b9e71740.md",
-    "tokens": 2365
+    "tokens": 2397
   },
   "/superintelligence-calling-index": {
     "html": "/__pages/7fec148cf54c375f.html",
@@ -30,10 +30,35 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
     "markdown": "/__pages/9c2cf5350f943d84.md",
     "tokens": 2796
   },
+  "/hold-for-me": {
+    "html": "/__pages/ba822c49c148d1be.html",
+    "markdown": "/__pages/ba822c49c148d1be.md",
+    "tokens": 2005
+  },
+  "/book-doctor-appointment": {
+    "html": "/__pages/c75d5c79ab7b63e3.html",
+    "markdown": "/__pages/c75d5c79ab7b63e3.md",
+    "tokens": 2000
+  },
+  "/cancel-subscription": {
+    "html": "/__pages/25b27c4f152aa217.html",
+    "markdown": "/__pages/25b27c4f152aa217.md",
+    "tokens": 2131
+  },
+  "/book-restaurant-reservation": {
+    "html": "/__pages/3dba287a8c818da2.html",
+    "markdown": "/__pages/3dba287a8c818da2.md",
+    "tokens": 1745
+  },
+  "/call-customer-service": {
+    "html": "/__pages/83c8be2160d0ee48.html",
+    "markdown": "/__pages/83c8be2160d0ee48.md",
+    "tokens": 2008
+  },
   "/hold-times": {
     "html": "/__pages/0adb6fe5d87ff479.html",
     "markdown": "/__pages/0adb6fe5d87ff479.md",
-    "tokens": 8251
+    "tokens": 8276
   },
   "/students": {
     "html": "/__pages/9a3f77bd97426a79.html",
@@ -653,7 +678,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/ai-apps-that-make-calls-for-you": {
     "html": "/__pages/427c0a40de2bba10.html",
     "markdown": "/__pages/427c0a40de2bba10.md",
-    "tokens": 6706
+    "tokens": 6805
   },
   "/blog/hijinx-hotel-irvine": {
     "html": "/__pages/acb492544467c9de.html",
@@ -778,7 +803,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-long-to-reach-a-human": {
     "html": "/__pages/1624f2222bb89bf3.html",
     "markdown": "/__pages/1624f2222bb89bf3.md",
-    "tokens": 10979
+    "tokens": 11036
   },
   "/blog/vercel-ai-sdk-phone-calls": {
     "html": "/__pages/ff098db0a2035f3b.html",
@@ -853,12 +878,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/book-dinner-reservation-by-phone": {
     "html": "/__pages/91e553be51335771.html",
     "markdown": "/__pages/91e553be51335771.md",
-    "tokens": 2913
+    "tokens": 2949
   },
   "/blog/reschedule-doctor-appointment": {
     "html": "/__pages/58950964777a3366.html",
     "markdown": "/__pages/58950964777a3366.md",
-    "tokens": 5222
+    "tokens": 5261
   },
   "/blog/running-late-to-barber": {
     "html": "/__pages/3df0f1db1eb5aeb6.html",
@@ -1018,7 +1043,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/cancel-audible": {
     "html": "/__pages/5aba5afde50e26d0.html",
     "markdown": "/__pages/5aba5afde50e26d0.md",
-    "tokens": 4852
+    "tokens": 4887
   },
   "/blog/fabletics-customer-service": {
     "html": "/__pages/5b5c1e7011303734.html",
@@ -1128,7 +1153,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/spectrum-retention-department": {
     "html": "/__pages/cad6a590d97a2bfd.html",
     "markdown": "/__pages/cad6a590d97a2bfd.md",
-    "tokens": 6731
+    "tokens": 6766
   },
   "/blog/experian-phone-number": {
     "html": "/__pages/a1897270700e714d.html",
@@ -1153,7 +1178,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/reschedule-dentist-appointment": {
     "html": "/__pages/1b1129e38f43b43f.html",
     "markdown": "/__pages/1b1129e38f43b43f.md",
-    "tokens": 2806
+    "tokens": 2845
   },
   "/blog/junk-removal-cost": {
     "html": "/__pages/3f44cdf8260b9b11.html",

@@ -112,7 +112,7 @@ Only the **account holder** or an **authorized user**. Spectrum's [account roles
 
 ## Let an AI phone assistant make the call
 
-This call was made by [call4me](/), an AI phone assistant that works inside the agent you already use (Claude Code, Codex, ChatGPT). It handled the phone menu, the hold and the first round of verification, then rang the user to join when Spectrum asked for the account holder. If you use call4me, paste this into your agent:
+This call was made by [call4me](/), an AI phone assistant that works inside the agent you already use (Claude Code, Codex, ChatGPT). It handled the phone menu, the hold and the first round of verification, then rang the user to join when Spectrum asked for the account holder. More recorded cancel and retention calls are on [an AI that calls to cancel a subscription for you](/cancel-subscription). If you use call4me, paste this into your agent:
 
 > Call Spectrum at (833) 267-6094 about my internet bill. At the phone menu, say "cancel my account" and then "disconnect" to reach retention. Tell them the bill went from [old price] to [new price] and I'm looking at [competitor]. Get the lowest rate for the same speed, and ask for the 1-year and 2-year offers. Don't cancel anything, don't add TV or phone, and don't agree to a contract longer than 12 months. When they ask for the account holder, connect me to the call.
 

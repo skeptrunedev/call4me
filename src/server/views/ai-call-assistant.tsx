@@ -18,12 +18,11 @@ const ASSISTANT_EXAMPLES = ['dinner-reservation', 'dentist-reschedule', 'spectru
 
 const list = (items: readonly string[]) => `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`;
 
-/** What it is and what it costs, for search and answer engines (schema.org). The price is the live per-minute rate. */
-const assistantLd = (pricePerMinuteCents: number) => {
+/** What it is and what it costs, for search and answer engines (schema.org). The price is the live per-minute rate. Task pages reference the same node. */
+export const assistantApp = (pricePerMinuteCents: number) => {
   const url = `${SITE}${PAGES.aiCallAssistant.path}`;
   const price = (pricePerMinuteCents / 100).toFixed(2);
   return {
-    '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     '@id': `${url}#app`,
     name: 'call4me',
@@ -40,6 +39,7 @@ const assistantLd = (pricePerMinuteCents: number) => {
     },
   };
 };
+const assistantLd = (pricePerMinuteCents: number) => ({ '@context': 'https://schema.org', ...assistantApp(pricePerMinuteCents) });
 
 /** Product page for "AI call assistant" searches: what call4me does on a call, what it costs, and how to start. */
 export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: number; agentPrompt: string }> = ({ signedIn, pricePerMinuteCents, agentPrompt }) => {

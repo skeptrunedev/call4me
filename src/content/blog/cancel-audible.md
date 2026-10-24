@@ -23,7 +23,7 @@ Before you cancel, know these, all from the associate on our call:
 - **Signed up through Apple or Google?** Then you have to cancel with Apple or Google subscriptions, not Audible. If you signed up through Amazon, Audible handles it.
 - **Ask about cheaper plans.** "We do have plans that are discounted", and you don't have to be cancelling to ask.
 
-We called on Friday, October 2, 2026, at about 2:18 pm Pacific, with [call4me](/) asking the questions. This page is what we heard.
+We called on Friday, October 2, 2026, at about 2:18 pm Pacific, with [call4me](/) asking the questions. This page is what we heard. Our other recorded cancel calls are collected on [an AI that calls to cancel a subscription for you](/cancel-subscription).
 
 ## Listen to the call
 
