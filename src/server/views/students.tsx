@@ -21,7 +21,7 @@ export const StudentsPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
       <h2>who it's for</h2>
       <p>
         any student. we especially built this for students the phone gets in the way of: deaf and hard of hearing students, students with speech
-        differences, autistic students, and anyone with phone anxiety who keeps putting off a call. you don't need to tell us why or show any
+        differences, autistic students, and anyone with <a href="/blog/phone-anxiety">phone anxiety</a> who keeps putting off a call. you don't need to tell us why or show any
         documentation.
       </p>
 

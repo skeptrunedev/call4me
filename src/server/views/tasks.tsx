@@ -76,6 +76,8 @@ export const TaskPage: FC<{ task: Task; signedIn: boolean; pricePerMinuteCents: 
       </ul>
       <p>
         everything else the <a href="/ai-call-assistant">AI call assistant</a> does on a call, from voices to the free US number, is on its own page.
+        if you keep putting calls off because they make you anxious, our guide to <a href="/blog/phone-anxiety">phone anxiety</a> covers which calls
+        are worth practicing and which are fine to hand off.
       </p>
 
       <h2>How to start</h2>

@@ -138,6 +138,7 @@ call4me has no standalone app. If you do not already use an AI assistant, an app
 - **You want to hear every call.** Mitra and Pine center on live transcripts and taking over. Mitra also uses your own number.
 - **The lowest entry price, many channels.** Voyp has a free pay as you go plan and works in WhatsApp, ChatGPT and its own apps.
 - **You already live in Muse or Instinct.** Check whether calling is enabled in your account. Both are still limited tests.
+- **Calls make you anxious and you want to stay in control.** Pick one that lets you follow the call live and take over: in the table, that's Gemini Call for Me, Pine, Mitra and call4me. Our [phone anxiety guide](/blog/phone-anxiety) covers which calls are worth handing off.
 - **You already use Claude, ChatGPT, Codex or another MCP client.** call4me keeps the call inside that assistant's task, with live questions and per minute pricing.
 
 Whatever you choose, judge the result by what the business actually confirmed. A finished call is not always a finished task. Our [guide to agents that make calls for you](/blog/ai-agent-that-makes-phone-calls) has a brief template and a checklist for that, and our [phone calling MCP comparison](/blog/phone-calling-mcp-comparison) covers developer focused calling tools.

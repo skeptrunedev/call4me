@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "0cabc0373c06d9c77b5d14f4222ccf57c7588247e3b91270cdbf5bb7ebf6c7f6"
+  "sourceHash": "733303ecc318a8ec26a79c36bfb79f37393ca63e45842387ac473713fdc2f2a6"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -1570,7 +1570,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "expedia-customer-service-number": [
     {
       "slug": "priceline-customer-service",
-      "similarity": 0.725623
+      "similarity": 0.706477
     }
   ],
   "experian-phone-number": [
@@ -2171,7 +2171,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "san-francisco-oral-surgeon-consultation",
-      "similarity": 0.623342
+      "similarity": 0.623343
     },
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
@@ -2314,16 +2314,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.653515
     },
     {
-      "slug": "priceline-customer-service",
-      "similarity": 0.653283
-    },
-    {
       "slug": "southwest-airlines-phone-number",
       "similarity": 0.638786
     },
     {
       "slug": "delta-customer-service",
       "similarity": 0.630579
+    },
+    {
+      "slug": "priceline-customer-service",
+      "similarity": 0.629862
     }
   ],
   "junk-removal-cost": [
@@ -2539,6 +2539,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "ai-personal-assistant-appointment-booking",
       "similarity": 0.749489
+    },
+    {
+      "slug": "phone-anxiety",
+      "similarity": 0.622781
     }
   ],
   "marina-traffic-court-phone-number": [
@@ -3081,6 +3085,24 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "phoenician-golf-club-tee-times": [],
+  "phone-anxiety": [
+    {
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.634139
+    },
+    {
+      "slug": "meta-muse-first-task",
+      "similarity": 0.625478
+    },
+    {
+      "slug": "mandarin-phone-call-scheduling",
+      "similarity": 0.622781
+    },
+    {
+      "slug": "ai-agent-that-makes-phone-calls",
+      "similarity": 0.609141
+    }
+  ],
   "phone-calling-mcp-comparison": [
     {
       "slug": "twilio-mcp-phone-calls",
@@ -3088,7 +3110,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "t3-code-phone-calls",
-      "similarity": 0.81059
+      "similarity": 0.810589
     },
     {
       "slug": "schedule-phone-calls-claude-code-codex",
@@ -3226,11 +3248,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "priceline-customer-service": [
     {
       "slug": "expedia-customer-service-number",
-      "similarity": 0.725623
+      "similarity": 0.706477
     },
     {
       "slug": "jetblue-customer-service",
-      "similarity": 0.653283
+      "similarity": 0.629862
     }
   ],
   "private-dining-room-cost": [
@@ -3512,7 +3534,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-find-a-new-primary-care-doctor",
-      "similarity": 0.623342
+      "similarity": 0.623343
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -3750,7 +3772,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.81059
+      "similarity": 0.810589
     },
     {
       "slug": "mastra-mcp-phone-calls",

@@ -74,7 +74,8 @@ export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: n
           call4me can ring your own phone. ask your assistant to connect you "as soon as a person picks up" and you skip the hold music; hold time is
           still billed, at half the normal rate. answer and press 1 to join, so your voicemail never ends up on the call. the AI caller goes quiet while you
           talk, and when you press * or hang up, it takes the call back and carries on with the task. if you'd rather just hear how it's going, ask to
-          listen in: nobody on the call hears you, the caller keeps working, and you can press 1 anytime to take over.
+          listen in: nobody on the call hears you, the caller keeps working, and you can press 1 anytime to take over. if calls make you anxious, our
+          guide to <a href="/blog/phone-anxiety">phone anxiety</a> has scripts for the common ones and is honest about when to hand a call off.
         </p>
         <p>
           this matters when a business wants the account holder. on a <a href="/examples#spectrum-retention">call to spectrum</a>, the caller got through

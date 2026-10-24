@@ -60,6 +60,7 @@ import pinOnGrandReservations from './pin-on-grand-reservations.md';
 import salonPerSeBellaire from './salon-per-se-bellaire.md';
 import sabaiEugeneReservations from './sabai-eugene-reservations.md';
 import icebarOrlandoTickets from './icebar-orlando-tickets.md';
+import phoneAnxiety from './phone-anxiety.md';
 import type { PostSource } from '../../server/lib/blog';
 import customerFlightCredit from './customer-story-flight-credit.md';
 import customerRickDinner from './customer-story-rick-dinner-reservation.md';
@@ -207,6 +208,7 @@ import dellCustomerServiceNumber from './dell-customer-service-number.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'phone-anxiety', markdown: phoneAnxiety },
   { slug: 'victorias-secret-georgetown', markdown: victoriasSecretGeorgetown },
   { slug: 'fresh-blades-barbershop-divisadero', markdown: freshBladesBarbershopDivisadero },
   { slug: 'springhill-suites-phoenix-gilbert', markdown: springhillSuitesPhoenixGilbert },

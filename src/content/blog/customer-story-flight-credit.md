@@ -32,7 +32,7 @@ That is the result the recording supports: a representative confirmed a courtesy
 
 Jem's public post describes the result as a $100 flight credit. What made it useful was getting an answer to a question Jem otherwise would have left unasked.
 
-The personal assistant already had the task. call4me gave it a way to reach a person, explain the request and bring the answer back. Jem did not have to take over the conversation to obtain the offer.
+The personal assistant already had the task. call4me gave it a way to reach a person, explain the request and bring the answer back. Jem did not have to take over the conversation to obtain the offer. Calls like this, where the call is the obstacle rather than the point, are the ones our [phone anxiety guide](/blog/phone-anxiety) says are fine to hand off.
 
 This account is based on the recorded conversation. Booking references and personal travel details are omitted.
 

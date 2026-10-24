@@ -8,6 +8,7 @@
  * Add subjects for every new article without selecting individual related links.
  */
 export const RELATED_TOPICS: Record<string, string[]> = {
+  'phone-anxiety': ['agent-software', 'appointment-management', 'healthcare', 'subscription-cancellation'],
   'amazon-seller-distributor-calls': ['agent-software', 'business-procurement'],
   'att-customer-service-number': ['telecom'],
   'chatgpt-phone-calls': ['agent-software'],
