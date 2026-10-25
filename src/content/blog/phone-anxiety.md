@@ -207,7 +207,7 @@ Every number and quote on this page comes from the source linked here, read on O
 - Centre for Clinical Interventions, [Stepping Out of Social Anxiety](https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself/Social-Anxiety), modules 3 and 5.
 - Mind, [Anxiety and panic attacks](https://www.mind.org.uk/media/7089/anxiety-and-panic-attacks-2021-pdf-version.pdf) (PDF), 2021.
 - Samaritans, [little tips for listening](https://www.samaritans.org/how-we-can-help/if-youre-worried-about-someone-else/little-tips/).
-- call4me, [how long it takes to reach a human at 64 companies](/blog/how-long-to-reach-a-human), our own recorded calls.
+- call4me, [how long it takes to reach a human at 71 companies](/blog/how-long-to-reach-a-human), our own recorded calls.
 
 ## Have your agent make the call
 
