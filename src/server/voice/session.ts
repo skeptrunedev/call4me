@@ -54,6 +54,8 @@ const HANGUP_GRACE_MS = 700;
 const HANDOFF_QUIET_MS = 1_500;
 /** Silence after a callback request before it counts as left on voicemail (see messageUnanswered). */
 const UNANSWERED_MS = 45_000;
+/** Silence after a message on a line the carrier flagged as automated before it counts as left on voicemail. */
+const VOICEMAIL_QUIET_MS = 6_000;
 /**
  * A menu gets its keypad choice once the recording has paused: its audio quiet this long, and its
  * transcript (which trails the audio by about a second) settled too. Menus take keys while they
@@ -812,11 +814,17 @@ export class VoiceSession extends DurableObject<Env> {
     // Only once the carrier has taken the line for automated: a person can ask us to leave a message too.
     const phase = this.machineState?.phase;
     const automated = phase === 'voicemail' || phase === 'machine' || phase === 'screening' || phase === 'uncertain';
-    const voicemail = automated ? voicemailLeft(this.transcript, phase === 'voicemail' ? this.machineState!.occurredAt : null, this.forcedHandoffs) : null;
+    const quietFor = Date.now() - Math.max(this.lastTranscriptAt, this.speechEndsAt);
+    let voicemail = automated ? voicemailLeft(this.transcript, phase === 'voicemail' ? this.machineState!.occurredAt : null, this.forcedHandoffs) : null;
+    // A recording stays silent after the message; a person who picked up answers within seconds
+    // (Haileybury Beach Motel's receptionist began "Just give me..." 4s after ours ended).
+    if (voicemail && quietFor < VOICEMAIL_QUIET_MS) {
+      this.scheduleUnansweredCheck(VOICEMAIL_QUIET_MS - quietFor);
+      voicemail = null;
+    }
     // After a long silence, flagged or not: a callback request or a message after the greeting's
     // "leave a message" went to voicemail, and a recording that said goodbye is done.
     let unanswered = phase !== 'human' ? (messageUnanswered(this.transcript, this.forcedHandoffs) ?? messageAfterGreeting(this.transcript, this.forcedHandoffs) ?? signedOff(this.transcript, this.forcedHandoffs)) : null;
-    const quietFor = Date.now() - Math.max(this.lastTranscriptAt, this.speechEndsAt);
     // Its transcript lands before its audio finishes playing, so a long message is still being
     // spoken when the first check comes: check again once the line has been quiet long enough.
     if (unanswered && quietFor < UNANSWERED_MS) {

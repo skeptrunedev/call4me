@@ -231,6 +231,7 @@ export function voicemailLeft(lines: TranscriptLine[], beepAt: number | null, fo
   const prompt = [...lines].reverse().find((l) => l.role === 'them' && asksForMessage(l.text));
   const recordingFrom = beepAt ?? prompt?.at ?? null;
   if (recordingFrom === null) return null;
+  if (prompt && pickedUpAfter(lines, prompt)) return null;
   let i = lines.length - 1;
   while (i >= 0 && lines[i].role === 'note') i--;
   const last = lines[i];
@@ -250,6 +251,22 @@ export function messageAfterGreeting(lines: TranscriptLine[], forced: ReadonlySe
   const greeting = theirs[theirs.length - 1];
   return greeting && asksForMessage(greeting.text) ? voicemailLeft(lines, null, forced) : null;
 }
+
+/**
+ * Someone picked up after the greeting asked for a message: forwarded lines ring a person while
+ * the voicemail plays, and a receptionist's "Good afternoon, Haileybury Beach Motel, how can I help
+ * you" ran on in the same line as "at the tone, please record your message". Counting that as a
+ * message left hung up on her mid-sentence. Only what follows the prompt counts: voicemail
+ * greetings say "thanks for calling" before it.
+ */
+function pickedUpAfter(lines: TranscriptLine[], prompt: TranscriptLine): boolean {
+  const ask = [...prompt.text.matchAll(new RegExp(VOICEMAIL_PROMPT.source, 'gi'))].pop();
+  const after = [prompt.text.slice(ask ? ask.index! + ask[0].length : 0), ...lines.filter((l) => l.role === 'them' && l.at > prompt.at).map((l) => l.text)].join(' ');
+  return PICKED_UP.test(after);
+}
+
+/** A person answering the phone, as opposed to a greeting that is still recording. */
+const PICKED_UP = /\b(?:how (?:can|may) (?:i|we) (?:help|assist)|what can (?:i|we) do for you|(?<!have a |a very |enjoy your )good (?:morning|afternoon|evening)|(?:this is|it'?s) \w+(?: \w+)? speaking|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir)|buen(?:os d[ií]as|as tardes|as noches))\b/i;
 
 /** A greeting asking for a message, not a menu option for one ("to leave a message, press 3"). */
 export function asksForMessage(text: string): boolean {
