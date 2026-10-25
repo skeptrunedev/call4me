@@ -4,7 +4,7 @@ seoTitle: "United change flight fee: what an agent told us"
 subtitle: We called United reservations to ask how changing a flight works and what it costs. Here is the phone tree, the three words that got us to a person, what the agent said about Economy, Basic Economy and same-day changes, where united.com says something different, and the recording.
 description: "Call United Airlines customer service at 1-800-864-8331 and say \"flight change fee\" to reach an agent. What they said about fees and Basic Economy."
 date: 2026-10-01
-updated: 2026-10-17
+updated: 2026-10-24
 tags: united, airlines, flight changes, customer service, phone trees
 authors: nick
 imageAlt: United 1-800-864-8331, how to change a flight and what it costs
@@ -120,6 +120,8 @@ Three words, "flight change fee", went straight through to the agent queue.
 ## How we made this recording
 
 call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) tells it what to get done and it makes the call. For this one, the brief was to reach a live United reservations agent, ask how changing a flight works (Economy, Basic Economy, same-day changes, phone versus online), and note every menu prompt and what got through. We had no trip booked and told the agent so.
+
+For other airlines, we've also called [Southwest Airlines](/blog/southwest-airlines-phone-number), [Alaska Airlines](/blog/alaska-airlines-customer-service) and [Delta](/blog/delta-customer-service).
 
 ## Have your agent make this call
 

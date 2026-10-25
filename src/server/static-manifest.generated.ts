@@ -608,7 +608,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/airbnb-customer-service-number": {
     "html": "/__pages/e392dafb7481d910.html",
     "markdown": "/__pages/e392dafb7481d910.md",
-    "tokens": 5838
+    "tokens": 5889
   },
   "/blog/expedia-customer-service-number": {
     "html": "/__pages/adc39c755249459c.html",
@@ -658,7 +658,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/irs-phone-number": {
     "html": "/__pages/5c3dbf05923aa44a.html",
     "markdown": "/__pages/5c3dbf05923aa44a.md",
-    "tokens": 6908
+    "tokens": 6940
   },
   "/blog/t-mobile-customer-service-number": {
     "html": "/__pages/016e6c0731298402.html",
@@ -823,7 +823,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/venmo-customer-service-number": {
     "html": "/__pages/8ddc0d8e5d387de7.html",
     "markdown": "/__pages/8ddc0d8e5d387de7.md",
-    "tokens": 9306
+    "tokens": 9364
   },
   "/blog/everything-we-have-improved-since-launch": {
     "html": "/__pages/ee53e230a99841c0.html",
@@ -833,12 +833,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/delta-customer-service": {
     "html": "/__pages/61e1d8ba2e5289ea.html",
     "markdown": "/__pages/61e1d8ba2e5289ea.md",
-    "tokens": 5616
+    "tokens": 5702
   },
   "/blog/paypal-customer-service-number": {
     "html": "/__pages/14df76f086347bc7.html",
     "markdown": "/__pages/14df76f086347bc7.md",
-    "tokens": 6472
+    "tokens": 6516
   },
   "/blog/fifth-third-bank-customer-service": {
     "html": "/__pages/84b4a369f5053ffa.html",
@@ -863,7 +863,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/hertz-customer-service-number": {
     "html": "/__pages/e3ebefa55d525ccc.html",
     "markdown": "/__pages/e3ebefa55d525ccc.md",
-    "tokens": 9274
+    "tokens": 9326
   },
   "/blog/hulu-customer-service-number": {
     "html": "/__pages/4f5cdd1adcfe8559.html",
@@ -1203,17 +1203,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/fpl-phone-number": {
     "html": "/__pages/f5806291e5d3e637.html",
     "markdown": "/__pages/f5806291e5d3e637.md",
-    "tokens": 10395
+    "tokens": 10435
   },
   "/blog/fedex-customer-service-number": {
     "html": "/__pages/d15a265e3315048f.html",
     "markdown": "/__pages/d15a265e3315048f.md",
-    "tokens": 11134
+    "tokens": 11171
   },
   "/blog/united-change-flight": {
     "html": "/__pages/a3ec4a65792b971c.html",
     "markdown": "/__pages/a3ec4a65792b971c.md",
-    "tokens": 6091
+    "tokens": 6153
   },
   "/blog/unitedhealthcare-phone-number": {
     "html": "/__pages/8f9029f0cf73d4f9.html",

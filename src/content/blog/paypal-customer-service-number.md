@@ -4,7 +4,7 @@ seoTitle: "PayPal customer service number: 1-888-221-1161"
 subtitle: "We called PayPal's customer service line without logging in. Here is how the AI assistant handled us, the menu that ended in a transfer, what the representative said about disputes, holds and verification, and the full 8 minute recording."
 description: The PayPal customer service number is 1-888-221-1161. An AI assistant answers first; here's how we reached a live representative, from a real recorded call.
 date: 2026-10-08
-updated: 2026-10-16
+updated: 2026-10-24
 verified: 2026-10-08
 tags: paypal, customer service, disputes, payment holds, phone trees, phone numbers
 authors: nick
@@ -139,6 +139,8 @@ Things to know about how our caller did it:
 - At the keypad menu the only sound from our side is "Hmm." Our call log doesn't record key presses, so we can't say for sure whether it pressed 3.
 - When the representative asked for a first and last name, our caller said "I'm Nick's assistant calling with a general question" (my last name is muted). She didn't ask again and answered every question.
 - She called our caller "ma'am" throughout. The caller's voice is synthetic.
+
+For other payment apps, we've also called [Cash App](/blog/cash-app-customer-service-number) and [Venmo](/blog/venmo-customer-service-number).
 
 ## Have your agent make this call
 

@@ -4,6 +4,7 @@ seoTitle: "Airbnb customer service number: 1-844-234-2500"
 subtitle: "We called Airbnb's support line twice with general questions for this guide. Here are the key presses that got us to a person, what the representative said about last minute host cancellations and refunds, and the full recordings."
 description: "Airbnb's customer service number is 1-844-234-2500. Press 2, say \"agent\", then press 0 to reach a person. We got one in 1:56. From real recorded calls."
 date: 2026-10-16
+updated: 2026-10-24
 verified: 2026-10-16
 tags: airbnb, customer service, refunds, cancellations, phone trees
 authors: nick
@@ -104,6 +105,8 @@ For the second call we told our caller to ask one question at a time and to pres
 - **3:59** We ask about callbacks, and the call ends a few seconds later
 
 We can't tell from this recording whether our caller pressed 2 or 0 on this call, since key presses are silent and it didn't say so out loud.
+
+For other travel bookings, we've also called [Expedia](/blog/expedia-customer-service-number) and [Priceline](/blog/priceline-customer-service).
 
 ## Have your agent make this call
 

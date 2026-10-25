@@ -4,7 +4,7 @@ seoTitle: "FPL phone number: 1-888-988-8249, reach a person"
 subtitle: We called FPL customer service five times to ask how starting electric service works for someone new to FPL. Four calls stayed in the voice menu. On the fifth, one route got us to an agent, who told us what you need, how fast service is connected, and how the deposit is decided. All five recordings, the exact route, and the phone tree.
 description: "FPL's phone number is 1-888-988-8249. \"Representative\" fails, so go through new service signup to reach a live person. The route and what the agent said."
 date: 2026-10-01
-updated: 2026-10-17
+updated: 2026-10-24
 verified: 2026-10-01
 tags: fpl, electric service, utilities, phone trees, customer service, phone numbers
 authors: nick
@@ -174,6 +174,8 @@ From [FPL's residential deposit page](https://www.fpl.com/rates/residential-depo
 ## How we made these recordings
 
 call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) tells it what to get done and it makes the call. These were our own test calls. We had no move and no new address. We asked our caller to reach a person and find out what starting service takes, how far ahead to call, any connection fee, and how the deposit is decided, how much it is and when it's due. On the fifth call we also asked it to note every prompt and exactly which words or keys got through to a person.
+
+For another utility, we've also called [Piedmont Natural Gas](/blog/piedmont-natural-gas-customer-service), where a person answered after 2:06.
 
 ## Have your agent make this call
 
