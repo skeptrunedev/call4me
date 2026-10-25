@@ -36,7 +36,7 @@ Two things stand out. Feeling anxious about calls is far more common than the cl
 
 ## Why phone calls give you anxiety
 
-Some of the dread is reasonable. A phone call to a business is often a bad experience. We've timed 107 of our own calls to 64 customer service lines, and [32 of them never reached a person](/blog/how-long-to-reach-a-human) at all. The slowest that did took 25 minutes 9 seconds. Phone menus mishear you, holds don't say how long they'll be, and when someone finally answers, they ask for an account number you don't have in front of you. Not wanting to do that is a sensible reaction to a bad system, not a personal failing.
+Some of the dread is reasonable. A phone call to a business is often a bad experience. We've timed 123 of our own calls to 71 customer service lines, and [37 of them never reached a person](/blog/how-long-to-reach-a-human) at all. The slowest that did took 25 minutes 9 seconds. Phone menus mishear you, holds don't say how long they'll be, and when someone finally answers, they ask for an account number you don't have in front of you. Not wanting to do that is a sensible reaction to a bad system, not a personal failing.
 
 Unknown calls are a different, also reasonable, worry. In the Uswitch survey, 63% of the people who said they're likely to ignore a call said nuisance calls made them likely to avoid answering.
 
