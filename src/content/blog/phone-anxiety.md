@@ -2,14 +2,15 @@
 title: "Phone anxiety: why calls feel so hard, and what actually helps"
 seoTitle: "Phone anxiety: why calls are hard and what helps"
 subtitle: Most phone advice tells you to breathe and smile. This is the honest version, from the research and from a company that makes phone calls for a living. Why the dread is half reasonable, which calls to practice and which to hand off, copy-paste scripts for four everyday calls, and when it's worth talking to a professional.
-description: "Phone anxiety is dread of making or taking calls, and it's common: 66% of 18 to 34 year olds in one poll. What it is, scripts, practice, and what to delegate."
+description: "Phone anxiety is dread of making or taking calls, and half of US adults feel it calling a stranger. What it is, scripts, practice, and what to delegate."
 date: 2026-10-24
+updated: 2026-10-25
 tags: phone anxiety, social anxiety, call scripts, appointments, reschedule, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Phone anxiety, why calls feel hard and what helps
 ---
 
-**The short answer:** phone anxiety is dread of making or answering phone calls: putting off the call, rehearsing it for an hour, letting it ring out, feeling shaky or sick before you dial. There's no separate diagnosis called phone anxiety. The NHS lists ["speaking on the phone"](https://www.nhs.uk/mental-health/conditions/social-anxiety/) among the everyday activities people with social anxiety worry about, and it is very common: in an August 2023 [Research Co. poll](https://researchco.ca/2023/08/25/communicaton-canada/) of 1,000 Canadian adults, **53% said they feel anxious when they have to call someone they don't know**, and **66% of 18 to 34 year olds** said so.
+**The short answer:** phone anxiety is dread of making or answering phone calls: putting off the call, rehearsing it for an hour, letting it ring out, feeling shaky or sick before you dial. There's no separate diagnosis called phone anxiety. The NHS lists ["speaking on the phone"](https://www.nhs.uk/mental-health/conditions/social-anxiety/) among the everyday activities people with social anxiety worry about, and it is very common: in a 2025 [Research Co. poll](https://researchco.ca/2025/09/08/communication-na/) of 1,000 US adults, **50% said they feel anxious when they have to call someone they don't know**, and **57% of 18 to 34 year olds** said so.
 
 What actually helps, in order:
 
@@ -26,11 +27,12 @@ Every survey measures something a little different, so here is exactly what each
 
 | Survey | Who | What they found |
 |---|---|---|
+| [Research Co.](https://researchco.ca/2025/09/08/communication-na/), Sept 2025 (fielded June 30 to July 2) | 1,000 US and 1,001 Canadian adults, online, margin of error ±3.1 points in each | **50%** of Americans and **48%** of Canadians feel anxious calling a person they don't know. By age, US / Canada: **57% / 58%** of 18 to 34s, **57% / 53%** of 35 to 54s, **38% / 35%** of those 55 and over |
 | [Research Co.](https://researchco.ca/2023/08/25/communicaton-canada/), Aug 2023 | 1,000 Canadian adults, online, margin of error ±3.1 points | **53%** feel anxious calling a person they don't know. By age: **66%** of 18 to 34s, **55%** of 35 to 54s, **40%** of those 55 and over |
 | [Uswitch, run by Opinium](https://www.uswitch.com/media-centre/2024/04/Call-me-maybe-quarter-young-people-never-answer-phone/), Apr 2024 | 2,000 UK adults | **23%** of 18 to 34s never answer voice calls. **56%** of 18 to 34s assume a call out of the blue means bad news. **61%** would always prefer a message to a call |
 | [NIMH](https://www.nimh.nih.gov/health/statistics/social-anxiety-disorder), survey run 2001 to 2003 | US adults, National Comorbidity Survey Replication | **7.1%** of US adults had social anxiety disorder in the past year, and **12.1%** at some point in their lives. The past-year rate was highest among 18 to 29 year olds, at **9.1%** |
 
-Two things stand out. Feeling anxious about calls is far more common than the clinical condition. The surveys cover different countries and years, so it's only a rough comparison, but 53% against 7.1% means most people who dread calls don't have social anxiety disorder. They just don't like calling strangers. And in all three, it skews young.
+Two things stand out. Feeling anxious about calls is far more common than the clinical condition. Both of those are US adults, though the surveys are two decades apart, so it's only a rough comparison: 50% against 7.1% means most people who dread calls don't have social anxiety disorder. They just don't like calling strangers. And in both Research Co. polls, people 55 and over report it least.
 
 ## Why phone calls give you anxiety
 
@@ -194,6 +196,7 @@ If you're in crisis or thinking about harming yourself, in the US call or text *
 
 Every number and quote on this page comes from the source linked here, read on October 24, 2026.
 
+- Research Co., [Generational split on communications evident in Canada and U.S.](https://researchco.ca/2025/09/08/communication-na/), September 8, 2025. Online, June 30 to July 2, 2025, 1,000 adults in the United States and 1,001 in Canada.
 - Research Co., [Canadians and communication](https://researchco.ca/2023/08/25/communicaton-canada/), August 25, 2023. Online, August 17 to 19, 2023, 1,000 adults in Canada.
 - Uswitch, [a quarter of young people never answer the phone](https://www.uswitch.com/media-centre/2024/04/Call-me-maybe-quarter-young-people-never-answer-phone/), April 2024. Opinium for Uswitch, 2,000 UK adults, April 9 to 12, 2024.
 - National Institute of Mental Health, [social anxiety disorder statistics](https://www.nimh.nih.gov/health/statistics/social-anxiety-disorder) and [Social Anxiety Disorder: More Than Just Shyness](https://www.nimh.nih.gov/health/publications/social-anxiety-disorder-more-than-just-shyness).

@@ -193,7 +193,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/phone-anxiety": {
     "html": "/__pages/613a99d49cf748b0.html",
     "markdown": "/__pages/613a99d49cf748b0.md",
-    "tokens": 7032
+    "tokens": 7208
   },
   "/blog/how-to-lower-spectrum-bill": {
     "html": "/__pages/3757bfbc7bfb1d6a.html",
