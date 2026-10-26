@@ -6,7 +6,7 @@ import { COMPANIES, type Company } from './companies';
  * published transcript that shows the first live person and the route that got us there, in
  * the words of the data post's table. Keep both quotes matching the post and its table.
  */
-export const HOLD_UPDATED = '2026-10-24';
+export const HOLD_UPDATED = '2026-10-26';
 export const HOLD_PATH = '/hold-times';
 export const HOLD_DATA_PATH = '/static/data/customer-service-hold-times';
 export const HOLD_LICENSE = 'https://creativecommons.org/licenses/by/4.0/';
@@ -46,6 +46,9 @@ const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
   'doordash-customer-service-number': { evidence: '2:08 Representative: Thank you for calling DoorDash. This is [name removed]. How can I assist?', path: 'Naming the problem ("missing item", then "refund") instead of asking for a representative' },
   'etihad-customer-service': { evidence: '2:21 Agent: Thank you for calling Etihad. My name is [name removed]. How may I assist you today? May I get your name, please?', path: 'Press 1, your cabin class, then 2' },
   'expedia-customer-service-number': { evidence: '3:24 Agent: Hi, thank you for calling. This is [name removed]. How can I help you today?', path: 'Press 1, 6, 2, then 0 at the itinerary prompt' },
+  'cleveland-clinic': { evidence: '4:57 Representative: Good morning. Thank you for calling customer service at Cleveland Clinic. My name is [name removed], can I have your first and last name?', path: 'Staying on the line after the billing menu' },
+  'advocate-health': { evidence: '5:18 Representative: Hi, this is [name removed]. How can I help you today?', path: 'The billing menus, then hold' },
+  'hca-florida-northside-hospital': { evidence: '2:41 Representative: Thank you for calling the customer service department. This is [name removed] on a recorded line. To better assist you, may I have the name on the account?', path: 'Asking the AI assistant to speak with someone about billing and financial assistance' },
   'experian-phone-number': { evidence: 'These routes did not reach a consumer support agent on September 30, 2026.', path: 'Nothing we tried' },
   'fabletics-customer-service': { evidence: '1:08 Consultant: Thank you for calling Fabletics. My name is [name removed]. How may I assist you today?', path: 'Saying we didn\'t have the account phone number' },
   'cancel-factor': { evidence: '2:00 Representative: Hello, thank you for calling Factor. This is [representative name removed]. How can I help?', path: 'Press 4 for account cancellation' },
@@ -98,6 +101,8 @@ export type FirstAnswer = 'AI or virtual assistant' | 'phone menu' | 'not stated
 export interface HoldTime {
   /** 1 is the longest measured hold; tied times share a rank. Null when there is no time to rank. */
   rank: number | null;
+  /** Unique per row: the company's id, else its post slug. */
+  id: string;
   slug: string;
   company: string;
   industry: Company['industry'];
@@ -125,10 +130,11 @@ const STATUS_ORDER: HoldStatus[] = ['measured', 'not measured', 'never reached a
 /** Longest measured hold first, then companies we reached without a stated time, then companies we never reached. */
 export const HOLD_TIMES: HoldTime[] = (() => {
   const rows = COMPANIES.map((c): Omit<HoldTime, 'rank'> => {
-    const quoted = HOLD_EVIDENCE[c.slug];
-    if (!quoted) throw new Error(`hold-times: no evidence for ${c.slug}`);
+    const id = c.id ?? c.slug;
+    const quoted = HOLD_EVIDENCE[id];
+    if (!quoted) throw new Error(`hold-times: no evidence for ${id}`);
     return {
-      slug: c.slug, company: c.name, industry: c.industry, number: c.number, called: c.called,
+      id, slug: c.slug, company: c.name, industry: c.industry, number: c.number, called: c.called,
       timeToHuman: c.timeToHuman, seconds: c.timeToHuman ? toSeconds(c.timeToHuman) : null,
       status: c.timeToHuman ? 'measured' : c.reached ? 'not measured' : 'never reached a person',
       firstAnswer: c.aiFirst === null ? 'not stated' : c.aiFirst ? 'AI or virtual assistant' : 'phone menu',

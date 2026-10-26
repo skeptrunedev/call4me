@@ -6,7 +6,10 @@
  * from the start of that published recording to the first live person.
  */
 export interface Company {
+  /** The post with the recording. Several companies can share one post (the hospital bill guide). */
   slug: string;
+  /** Unique row id when the post covers more than one company; defaults to slug. */
+  id?: string;
   name: string;
   industry: Industry;
   number: string | null;
@@ -26,6 +29,7 @@ export type Industry = (typeof INDUSTRIES)[number];
 export const COMPANIES: Company[] = [
   { slug: 'aaa-insurance-customer-service', name: 'AAA (Mountain West)', industry: 'insurance and health', number: '877-323-4222', timeToHuman: '1:24', aiFirst: false, reached: true, calls: 1, called: '2026-10-08' },
   { slug: 'aaa-tow-reimbursement', name: 'AAA Northeast (reimbursements)', industry: 'insurance and health', number: '1-844-765-6428', timeToHuman: '1:08', aiFirst: false, reached: true, calls: 1, called: '2026-10-15' },
+  { slug: 'how-to-negotiate-a-hospital-bill', id: 'advocate-health', name: 'Advocate Health', industry: 'insurance and health', number: '847-795-2300', timeToHuman: '5:18', aiFirst: false, reached: true, calls: 1, called: '2026-10-26' },
   { slug: 'afternic-domain-broker-phone-number', name: 'Afternic (GoDaddy)', industry: 'shopping and home', number: '+44 20 7255 0717', timeToHuman: '0:44', aiFirst: false, reached: true, calls: 1, called: '2026-10-13' },
   { slug: 'airbnb-customer-service-number', name: 'Airbnb', industry: 'airlines and travel', number: '1-844-234-2500', timeToHuman: '2:27', aiFirst: false, reached: true, calls: 2, called: '2026-10-16' },
   { slug: 'alaska-airlines-customer-service', name: 'Alaska Airlines', industry: 'airlines and travel', number: '1-800-252-7522', timeToHuman: '12:44', aiFirst: true, reached: true, calls: 1, called: '2026-10-22' },
@@ -42,6 +46,7 @@ export const COMPANIES: Company[] = [
   { slug: 'cash-app-customer-service-number', name: 'Cash App', industry: 'banking, payments and credit', number: '1-800-969-1940', timeToHuman: '1:35', aiFirst: true, reached: true, calls: 2, called: '2026-10-16' },
   { slug: 'chase-dispute-charge', name: 'Chase', industry: 'banking, payments and credit', number: '1-800-432-3117', timeToHuman: '2:14', aiFirst: false, reached: true, calls: 1, called: '2026-10-24' },
   { slug: 'chime-customer-service-number', name: 'Chime', industry: 'banking, payments and credit', number: '(844) 244-6363', timeToHuman: '1:21', aiFirst: false, reached: true, calls: 1, called: '2026-10-22' },
+  { slug: 'how-to-negotiate-a-hospital-bill', id: 'cleveland-clinic', name: 'Cleveland Clinic', industry: 'insurance and health', number: '866-621-6385', timeToHuman: '4:57', aiFirst: false, reached: true, calls: 1, called: '2026-10-26' },
   { slug: 'coinbase-customer-service-number', name: 'Coinbase', industry: 'banking, payments and credit', number: '1-888-908-7930', timeToHuman: null, aiFirst: false, reached: false, calls: 2, called: '2026-10-22' },
   { slug: 'costco-return-policy', name: 'Costco', industry: 'shopping and home', number: '1-800-774-2678', timeToHuman: '8:21', aiFirst: false, reached: true, calls: 2, called: '2026-10-24' },
   { slug: 'dell-customer-service-number', name: 'Dell', industry: 'shopping and home', number: '1-877-275-3355', timeToHuman: '4:38', aiFirst: false, reached: true, calls: 3, called: '2026-10-22' },
@@ -51,7 +56,7 @@ export const COMPANIES: Company[] = [
   { slug: 'doordash-customer-service-number', name: 'DoorDash', industry: 'shopping and home', number: '855-431-0459', timeToHuman: '2:08', aiFirst: true, reached: true, calls: 1, called: '2026-10-09' },
   { slug: 'etihad-customer-service', name: 'Etihad', industry: 'airlines and travel', number: '+1 914-303-8393', timeToHuman: '2:21', aiFirst: false, reached: true, calls: 1, called: '2026-10-01' },
   { slug: 'expedia-customer-service-number', name: 'Expedia', industry: 'airlines and travel', number: '1-866-310-5768', timeToHuman: '3:24', aiFirst: false, reached: true, calls: 2, called: '2026-10-16' },
-  { slug: 'experian-phone-number', name: 'Experian', industry: 'banking, payments and credit', number: '1-888-397-3742', timeToHuman: null, aiFirst: false, reached: false, calls: 1, called: '2026-09-30' },
+  { slug: 'experian-phone-number', name: 'Experian', industry: 'banking, payments and credit', number: '1-888-397-3742', timeToHuman: null, aiFirst: false, reached: false, calls: 2, called: '2026-09-30' },
   { slug: 'fabletics-customer-service', name: 'Fabletics', industry: 'shopping and home', number: '1-844-322-5384', timeToHuman: '1:08', aiFirst: true, reached: true, calls: 1, called: '2026-10-02' },
   { slug: 'cancel-factor', name: 'Factor', industry: 'subscriptions', number: '(888) 573 5727', timeToHuman: '2:00', aiFirst: false, reached: true, calls: 2, called: '2026-10-03' },
   { slug: 'fedex-customer-service-number', name: 'FedEx', industry: 'shipping', number: '1-800-463-3339', timeToHuman: null, aiFirst: true, reached: false, calls: 4, called: '2026-10-01' },
@@ -60,6 +65,7 @@ export const COMPANIES: Company[] = [
   { slug: 'cancel-fubo', name: 'Fubo', industry: 'subscriptions', number: '(844) 441 3826', timeToHuman: '1:59', aiFirst: true, reached: true, calls: 2, called: '2026-10-03' },
   { slug: 'geico-customer-service', name: 'GEICO', industry: 'insurance and health', number: '(800) 207-7847', timeToHuman: '2:35', aiFirst: true, reached: true, calls: 2, called: '2026-10-09' },
   { slug: 'global-blue-customer-service-number', name: 'Global Blue', industry: 'airlines and travel', number: '+46 8 545 284 40', timeToHuman: '0:24', aiFirst: false, reached: true, calls: 1, called: '2026-10-16' },
+  { slug: 'how-to-negotiate-a-hospital-bill', id: 'hca-florida-northside-hospital', name: 'HCA Florida Northside Hospital', industry: 'insurance and health', number: '800-733-0483', timeToHuman: '2:41', aiFirst: true, reached: true, calls: 1, called: '2026-10-26' },
   { slug: 'cancel-hellofresh', name: 'HelloFresh', industry: 'subscriptions', number: '(646) 846 3663', timeToHuman: '1:40', aiFirst: false, reached: true, calls: 1, called: '2026-10-03' },
   { slug: 'hertz-customer-service-number', name: 'Hertz', industry: 'airlines and travel', number: '1-800-654-4173', timeToHuman: '3:07', aiFirst: true, reached: true, calls: 3, called: '2026-10-08' },
   { slug: 'hulu-customer-service-number', name: 'Hulu', industry: 'subscriptions', number: '877-824-4858', timeToHuman: '1:28', aiFirst: false, reached: true, calls: 1, called: '2026-10-08' },

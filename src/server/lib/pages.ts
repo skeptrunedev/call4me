@@ -50,8 +50,8 @@ export const PAGES = {
   restaurantReservation: { description: 'call4me is an AI that calls the restaurant to book your table, within the times you accept, and brings back the confirmation. Hear real reservation calls.', card: 'restaurant', path: '/book-restaurant-reservation' },
   customerService: { description: 'call4me is an AI that calls customer service for you: it gets through the phone tree and the hold, talks to the rep, and patches you in when needed.', card: 'customerservice', path: '/call-customer-service' },
   students: { description: 'free call4me credits for students: an AI assistant that makes phone calls for you, built for students the phone gets in the way of. approved by hand.', card: 'students', path: '/students' },
-  companies: { description: 'customer service phone numbers for delta, paypal, verizon, hulu and 67 more, each with a real recorded call, the phone tree, and how long it took to reach a person.', card: 'companies', path: '/companies' },
-  holdTimes: { description: 'Customer service hold times at 71 companies, timed on real recorded calls and ranked. Longest: Priceline at 25:09. Free CSV and JSON.', card: 'holdtimes', path: '/hold-times' },
+  companies: { description: 'customer service phone numbers for delta, paypal, verizon, hulu and 70 more, each with a real recorded call, the phone tree, and how long it took to reach a person.', card: 'companies', path: '/companies' },
+  holdTimes: { description: 'Customer service hold times at 74 companies, timed on real recorded calls and ranked. Longest: Priceline at 25:09. Free CSV and JSON.', card: 'holdtimes', path: '/hold-times' },
   superintelligenceCalling: { description: 'Compare personal superintelligence phone calling tools: Muse, Grok Bot, Instinct and Pine. Recorded calls, source evidence and a free CSV and JSON dataset.', card: 'superintelligence', path: '/superintelligence-calling-index' },
   voices: { description: 'hear every call4me caller voice (marin, cedar, gleam, meridian, vesper, willow) saying the same line at phone quality, and how to pick one for your calls.', card: 'voices', path: '/voices' },
   mcp: { description: 'call4me is a remote MCP server for making phone calls at https://call4.me/mcp. install it in claude code, codex, claude desktop, claude.ai, chatgpt, muse, or grok bot with one prompt.', card: 'mcp', path: '/mcp' },
@@ -76,7 +76,7 @@ export type PageKey = keyof typeof PAGES;
 
 /** The card image behind each /og/<name>.png. */
 export const CARDS: Record<string, OgCard> = {
-  holdtimes: { title: 'customer service hold times, measured', subtitle: '71 companies, ranked by how long it took a real recorded call to reach a person', footer: 'open dataset · call4.me/hold-times' },
+  holdtimes: { title: 'customer service hold times, measured', subtitle: '74 companies, ranked by how long it took a real recorded call to reach a person', footer: 'open dataset · call4.me/hold-times' },
   superintelligence: { title: 'Can your superintelligence make a phone call?', subtitle: 'Muse, Grok Bot, Instinct and Pine. Calling tools, recorded evidence and an open dataset.', footer: 'Superintelligence Calling Index · call4.me' },
   examples: { title: 'listen to real calls', subtitle: 'hear the agent ask questions and get things done before you buy', footer: 'original voices · edited excerpts · transcripts' },
   assistant: { title: 'an AI call assistant that makes phone calls for you', subtitle: 'books appointments, asks questions, waits on hold, and patches you in', footer: 'free US number · prepaid credits from $10' },

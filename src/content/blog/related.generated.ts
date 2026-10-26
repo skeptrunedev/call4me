@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "a2f2a10ce18b7262db5aecb28e58c779d162969b508a3ed1b1e1d7f8db3f04a2"
+  "sourceHash": "8cede30ff8605d0442ce0bd27d8c2ec364dca5eb39aa4e18c96ff895899620a1"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -2284,7 +2284,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.641562
     }
   ],
-  "how-long-to-reach-a-human": [],
+  "how-long-to-reach-a-human": [
+    {
+      "slug": "usaa-phone-number",
+      "similarity": 0.609214
+    }
+  ],
   "how-to-cancel-siriusxm": [
     {
       "slug": "cancel-audible",
