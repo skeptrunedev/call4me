@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { createAuth } from '../lib/auth';
 import { DIRECTORY_SERVERS, siteUrl } from '../lib/auth-options';
 import { origin, type AppContext, type AppEnv } from '../lib/context';
-import { agentAuth, aiCatalog, authMd, directoryMcpProtectedResource, llmsTxt, robotsTxt, serverCard, siteProtectedResource, sitemapXml, webBotAuthDirectory } from '../lib/discovery';
+import { agentAuth, aiCatalog, authMd, directoryMcpProtectedResource, llmsTxt, mcpProtectedResource, robotsTxt, serverCard, siteProtectedResource, sitemapXml, webBotAuthDirectory } from '../lib/discovery';
 import { SERVER_NAME, SERVER_VERSION } from '../mcp/server';
 import { pricePerMinute } from '../services/dialer';
 import { posts } from './blog';
@@ -92,9 +92,10 @@ agent.on(['GET', 'HEAD'], '/.well-known/openid-configuration', (c) => {
   return createAuth(c).handler(new Request(url, { method: c.req.method, headers: c.req.raw.headers }));
 });
 
-/** Protected resource metadata for the site itself and the app directories' servers; /.well-known/oauth-protected-resource/mcp stays with the auth plugin. */
+/** Protected resource metadata for the site itself, the MCP server, and the app directories' servers. */
 for (const [path, metadata] of [
   ['/.well-known/oauth-protected-resource', siteProtectedResource],
+  ['/.well-known/oauth-protected-resource/mcp', mcpProtectedResource],
   ...DIRECTORY_SERVERS.map((s) => [`/.well-known/oauth-protected-resource${s.path}`, (site: string) => directoryMcpProtectedResource(site, s)] as const),
 ] as const) {
   agent.on(['GET', 'HEAD'], path, (c) => {
@@ -102,3 +103,6 @@ for (const [path, metadata] of [
     return c.req.method === 'HEAD' ? c.body(null, 200, headers) : c.body(JSON.stringify(metadata(site(c)), null, 2) + '\n', 200, headers);
   });
 }
+// A key in the URL (/mcp/cb_live_...) is the credential, so there is no protected resource to
+// describe: the plugin answered 404 too, but only after its init, which is where these probes hung.
+agent.on(['GET', 'HEAD'], '/.well-known/oauth-protected-resource/mcp/*', (c) => c.body(null, 404));

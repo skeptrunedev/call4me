@@ -242,9 +242,24 @@ export function agentAuth(site: string) {
 }
 
 /**
+ * RFC 9728 protected resource metadata for the MCP server, the document the auth plugin used to
+ * serve at /.well-known/oauth-protected-resource/mcp, field for field. It is fixed, but the plugin
+ * built it behind its own init (several D1 calls), and it is the call every MCP client makes first:
+ * it was the request that hung when that init stalled.
+ */
+export function mcpProtectedResource(site: string) {
+  return {
+    resource: `${site}/mcp`,
+    authorization_servers: [`${site}/api/auth`],
+    bearer_methods_supported: ['header'],
+    dpop_signing_alg_values_supported: ['EdDSA', 'ES256', 'ES512', 'PS256', 'RS256'],
+    scopes_supported: ['calls'],
+  };
+}
+
+/**
  * RFC 9728 protected resource metadata for the site itself: GET /api takes the same OAuth tokens
- * as the MCP server. The MCP endpoint's own document is served by the auth plugin at
- * /.well-known/oauth-protected-resource/mcp.
+ * as the MCP server.
  */
 export function siteProtectedResource(site: string) {
   return {
@@ -259,8 +274,8 @@ export function siteProtectedResource(site: string) {
 }
 
 /**
- * RFC 9728 protected resource metadata for an app directory's MCP server (DIRECTORY_SERVERS). The
- * auth plugin serves only the /mcp document, so this one mirrors it for the other resources.
+ * RFC 9728 protected resource metadata for an app directory's MCP server (DIRECTORY_SERVERS),
+ * mirroring the /mcp document for the other resources.
  */
 export function directoryMcpProtectedResource(site: string, server: { path: string; host: string }) {
   return {
