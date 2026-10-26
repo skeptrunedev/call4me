@@ -209,6 +209,7 @@ import dellCustomerServiceNumber from './dell-customer-service-number.md';
 import costcoReturnPolicy from './costco-return-policy.md';
 import bestBuyReturnPolicy from './best-buy-return-policy.md';
 import howToDisputeACharge from './how-to-dispute-a-charge.md';
+import howToNegotiateAHospitalBill from './how-to-negotiate-a-hospital-bill.md';
 import chaseDisputeCharge from './chase-dispute-charge.md';
 import discoverDisputeCharge from './discover-dispute-charge.md';
 import capitalOneDisputeCharge from './capital-one-dispute-charge.md';
@@ -432,6 +433,7 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'costco-return-policy', markdown: costcoReturnPolicy },
   { slug: 'best-buy-return-policy', markdown: bestBuyReturnPolicy },
   { slug: 'how-to-dispute-a-charge', markdown: howToDisputeACharge },
+  { slug: 'how-to-negotiate-a-hospital-bill', markdown: howToNegotiateAHospitalBill },
   { slug: 'chase-dispute-charge', markdown: chaseDisputeCharge },
   { slug: 'discover-dispute-charge', markdown: discoverDisputeCharge },
   { slug: 'capital-one-dispute-charge', markdown: capitalOneDisputeCharge },

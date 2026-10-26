@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "ab1d076af28be90b8081d8fe86016abb7a2ac91eb6ff78221cefa8e3c3bd73f6"
+  "sourceHash": "a2f2a10ce18b7262db5aecb28e58c779d162969b508a3ed1b1e1d7f8db3f04a2"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -1620,6 +1620,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "paypal-customer-service-number",
       "similarity": 0.616891
+    },
+    {
+      "slug": "how-to-negotiate-a-hospital-bill",
+      "similarity": 0.609871
     }
   ],
   "dog-teeth-cleaning-cost": [
@@ -2140,7 +2144,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.667889
+      "similarity": 0.66789
     },
     {
       "slug": "schedule-phone-calls-claude-code-codex",
@@ -2312,7 +2316,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "hulu-customer-service-number",
-      "similarity": 0.673183
+      "similarity": 0.673184
     }
   ],
   "how-to-dispute-a-charge": [
@@ -2337,6 +2341,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.712171
     },
     {
+      "slug": "how-to-negotiate-a-hospital-bill",
+      "similarity": 0.649324
+    },
+    {
       "slug": "capital-one-customer-service",
       "similarity": 0.635718
     },
@@ -2356,7 +2364,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "san-francisco-oral-surgeon-consultation",
-      "similarity": 0.623343
+      "similarity": 0.623342
     },
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
@@ -2489,6 +2497,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.640098
     }
   ],
+  "how-to-negotiate-a-hospital-bill": [
+    {
+      "slug": "how-to-dispute-a-charge",
+      "similarity": 0.649324
+    },
+    {
+      "slug": "discover-dispute-charge",
+      "similarity": 0.609871
+    }
+  ],
   "how-to-transfer-a-prescription": [
     {
       "slug": "farmacia-luma-viejo-san-juan",
@@ -2514,7 +2532,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-cancel-siriusxm",
-      "similarity": 0.673183
+      "similarity": 0.673184
     },
     {
       "slug": "cancel-hellofresh",
@@ -2821,7 +2839,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "pin-on-grand-reservations",
-      "similarity": 0.614577
+      "similarity": 0.614578
     },
     {
       "slug": "posada-real-los-condestables",
@@ -3033,7 +3051,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "springhill-suites-phoenix-gilbert",
-      "similarity": 0.649897
+      "similarity": 0.649898
     },
     {
       "slug": "ritz-carlton-bachelor-gulch-reservations",
@@ -3887,7 +3905,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-find-a-new-primary-care-doctor",
-      "similarity": 0.623343
+      "similarity": 0.623342
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -4063,7 +4081,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "springhill-suites-phoenix-gilbert": [
     {
       "slug": "moxy-st-petersburg-downtown",
-      "similarity": 0.649897
+      "similarity": 0.649898
     },
     {
       "slug": "ritz-carlton-bachelor-gulch-reservations",

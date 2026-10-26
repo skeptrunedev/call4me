@@ -219,6 +219,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'costco-return-policy': ['retail-shopping'],
   'best-buy-return-policy': ['retail-shopping'],
   'how-to-dispute-a-charge': ['personal-finance'],
+  'how-to-negotiate-a-hospital-bill': ['healthcare', 'personal-finance', 'insurance'],
   'chase-dispute-charge': ['personal-finance'],
   'discover-dispute-charge': ['personal-finance'],
   'capital-one-dispute-charge': ['personal-finance'],

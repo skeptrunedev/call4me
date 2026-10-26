@@ -98,102 +98,107 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2152
+    "tokens": 2154
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2224
+    "tokens": 2237
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2331
+    "tokens": 2300
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2059
+    "tokens": 2117
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2134
+    "tokens": 2124
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2205
+    "tokens": 2210
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2304
+    "tokens": 2287
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2235
+    "tokens": 2238
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2128
+    "tokens": 2107
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 1923
+    "tokens": 1971
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 2073
+    "tokens": 2032
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 2011
+    "tokens": 2048
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 1797
+    "tokens": 1793
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 1836
+    "tokens": 1814
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1967
+    "tokens": 1985
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 1894
+    "tokens": 1864
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 2044
+    "tokens": 2071
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 1941
+    "tokens": 2071
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 20042
+    "tokens": 20152
+  },
+  "/blog/how-to-negotiate-a-hospital-bill": {
+    "html": "/__pages/b88beca37c93cea2.html",
+    "markdown": "/__pages/b88beca37c93cea2.md",
+    "tokens": 12245
   },
   "/blog/phone-anxiety": {
     "html": "/__pages/613a99d49cf748b0.html",
     "markdown": "/__pages/613a99d49cf748b0.md",
-    "tokens": 7208
+    "tokens": 7241
   },
   "/blog/how-to-lower-spectrum-bill": {
     "html": "/__pages/3757bfbc7bfb1d6a.html",
@@ -1233,7 +1238,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/experian-phone-number": {
     "html": "/__pages/a1897270700e714d.html",
     "markdown": "/__pages/a1897270700e714d.md",
-    "tokens": 4803
+    "tokens": 5418
   },
   "/blog/cancel-planet-fitness": {
     "html": "/__pages/a9a59bfd1e8c3da5.html",
