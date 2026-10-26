@@ -42,14 +42,18 @@ export function createAuth(c: AppContext) {
   const baseURL = origin(c);
   let byOrigin = instances.get(c.env.DB);
   if (!byOrigin) instances.set(c.env.DB, (byOrigin = new Map()));
-  let auth = byOrigin.get(baseURL);
-  if (!auth) {
-    const built = buildAuth(c.env, baseURL);
-    // A failed init (a D1 hiccup) is not kept: the next request builds afresh.
-    built.$context.catch(() => byOrigin.get(baseURL) === built && byOrigin.delete(baseURL));
-    byOrigin.set(baseURL, (auth = built));
-  }
-  return auth;
+  const shared = byOrigin.get(baseURL);
+  if (shared) return shared;
+  // Shared only once its init has finished. A pending init belongs to the request that started
+  // it, and on Workers a canceled request's D1 calls never settle: shared while pending, it hung
+  // every later auth request in the isolate (token, discovery, /account) until the client gave up.
+  // Until one finishes, each request builds its own, as before the cache. A failed init is never kept.
+  const built = buildAuth(c.env, baseURL);
+  built.$context.then(
+    () => byOrigin.has(baseURL) || byOrigin.set(baseURL, built),
+    () => {},
+  );
+  return built;
 }
 
 export function mountAuth(app: Hono<AppEnv>) {
