@@ -61,9 +61,10 @@ const userUnknown = 'Invalid RCPT TO: <alice@example.com> 550 5.1.1 <alice@examp
 test('an address the mail server rejects outright is not retried, and gets no more email', async () => {
   const db = d1();
   const { sent, messenger } = rejecting('alice@example.com', userUnknown);
-  assert.deepEqual(await drip(db, messenger), { sent: 1, failed: 1 });
+  // Bob gets both steps (welcome, and first-call since neither has called); Alice is dropped after the first.
+  assert.deepEqual(await drip(db, messenger), { sent: STEPS.length, failed: 1 });
   assert.deepEqual(await drip(db, messenger), { sent: 0, failed: 0 });
-  assert.deepEqual(sent.map((m) => m.to), ['bob@example.com']);
+  assert.deepEqual(sent.map((m) => m.to), STEPS.map(() => 'bob@example.com'));
   const alice = await db.prepare(`SELECT email_opt_out FROM accounts WHERE id = 'acct_alice'`).first<{ email_opt_out: number }>();
   assert.equal(alice!.email_opt_out, 1);
 });
@@ -71,9 +72,19 @@ test('an address the mail server rejects outright is not retried, and gets no mo
 test('a temporary failure is retried on the next run', async () => {
   const db = d1();
   const { sent, messenger } = rejecting('alice@example.com', 'Invalid RCPT TO: <alice@example.com> 451 4.3.0 try again later');
-  assert.deepEqual(await drip(db, messenger), { sent: 1, failed: 1 });
-  assert.deepEqual(await drip(db, messenger), { sent: 0, failed: 1 });
+  // Every step is tried for Alice on every run; Bob gets each step once.
+  assert.deepEqual(await drip(db, messenger), { sent: STEPS.length, failed: STEPS.length });
+  assert.deepEqual(await drip(db, messenger), { sent: 0, failed: STEPS.length });
   const alice = await db.prepare(`SELECT email_opt_out FROM accounts WHERE id = 'acct_alice'`).first<{ email_opt_out: number }>();
   assert.equal(alice!.email_opt_out, 0);
-  assert.deepEqual(sent.map((m) => m.to), ['bob@example.com']);
+  assert.deepEqual(sent.map((m) => m.to), STEPS.map(() => 'bob@example.com'));
+});
+
+test('the first-call nudge skips accounts that have placed a call', async () => {
+  const db = d1();
+  await db.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at) VALUES ('call_1', 'acct_alice', '+15555550100', 'Rosa', 'hours', '{}', 'completed', 1)`).run();
+  const { sent, messenger } = capture();
+  await drip(db, messenger);
+  const nudges = sent.filter((m) => m.subject === STEPS.find((s) => s.id === 'first-call')!.template.subject).map((m) => m.to);
+  assert.deepEqual(nudges, ['bob@example.com']);
 });
