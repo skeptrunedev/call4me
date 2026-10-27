@@ -48,6 +48,7 @@ export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: stri
   { page: 'negotiateBills', changefreq: 'monthly', priority: '0.8' },
   { page: 'disputeCharge', changefreq: 'monthly', priority: '0.8' },
   { page: 'mcp', changefreq: 'monthly', priority: '0.9' },
+  { page: 'pricing', changefreq: 'monthly', priority: '0.8' },
   { page: 'companies', changefreq: 'weekly', priority: '0.8' },
   { page: 'holdTimes', changefreq: 'weekly', priority: '0.8' },
   { page: 'superintelligenceCalling', changefreq: 'weekly', priority: '0.8' },

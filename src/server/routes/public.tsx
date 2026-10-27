@@ -15,7 +15,7 @@ import { addCreditsAccount, addCreditsPath, validUnsubscribe } from '../services
 import { validCampaignUnsubscribe } from '../services/campaign-unsubscribe';
 import { getCallRecordings, recordingUrl } from '../services/recordings';
 import { AccountPage, CallPage, NewKeyPage, type CallRecordings } from '../views/account';
-import { AboutPage, AddCreditsPage, HomePage, MessagePage, PrivacyPage, RulesPage, SupportPage, TermsPage, UnsubscribePage, WelcomePage } from '../views/public';
+import { AboutPage, AddCreditsPage, HomePage, MessagePage, PricingPage, PrivacyPage, RulesPage, SupportPage, TermsPage, UnsubscribePage, WelcomePage } from '../views/public';
 import { ExamplesPage } from '../views/examples';
 import { VoicesPage } from '../views/voices';
 import { CompaniesPage } from '../views/companies';
@@ -378,4 +378,5 @@ pub.get('/rules', async (c) => c.html(<RulesPage signedIn={signedIn(c)} pricePer
 pub.get('/privacy', async (c) => c.html(<PrivacyPage signedIn={signedIn(c)} agentPrompt={privacyPrompt(origin(c), await viewerKey(c))} />));
 pub.get('/terms', async (c) => c.html(<TermsPage signedIn={signedIn(c)} agentPrompt={termsPrompt(origin(c), await viewerKey(c))} />));
 pub.get('/about', (c) => c.html(<AboutPage signedIn={signedIn(c)} />));
+pub.get('/pricing', (c) => c.html(<PricingPage signedIn={signedIn(c)} pricePerMinuteCents={pricePerMinute(c.env)} />));
 pub.get('/support', async (c) => c.html(<SupportPage signedIn={signedIn(c)} agentPrompt={supportPrompt(origin(c), await viewerKey(c))} />));

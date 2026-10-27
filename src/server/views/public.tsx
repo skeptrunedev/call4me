@@ -2,11 +2,12 @@ import type { FC } from 'hono/jsx';
 import { raw } from 'hono/html';
 import { dollars } from '../services/accounts';
 import type { CountryOffer, NumberView } from '../services/numbers';
-import { MIN_TOPUP_CENTS } from '../services/topups';
+import { MAX_TOPUP_CENTS, MIN_TOPUP_CENTS } from '../services/topups';
 import { MonthlyBox } from './account';
 import { accountPath, SITE, SITE_DESCRIPTION } from '../lib/pages';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { CopyBlock, Layout } from './layout';
+import { STUDENT_CREDIT_DOLLARS } from './students';
 import { CallOnboarding } from './onboarding';
 import type { RedditPixelEvent } from '../lib/reddit';
 import { EXAMPLES } from '../../content/examples';
@@ -589,6 +590,67 @@ export const AboutPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
     </p>
   </Layout>
 );
+
+/** Every price in one place, from the same constants the dialer bills with, so the page can't drift from the charge. */
+export const PricingPage: FC<{ signedIn: boolean; pricePerMinuteCents: number }> = ({ signedIn, pricePerMinuteCents }) => {
+  const extra = pricierDestinations();
+  return (
+    <Layout title="pricing" page="pricing" signedIn={signedIn}>
+      <h1>call4me pricing</h1>
+      <p>
+        calls cost <b>{dollars(pricePerMinuteCents)} a minute</b> from pickup, and half that on hold. there is no subscription and no per-seat fee: you load
+        prepaid credits, from {dollars(MIN_TOPUP_CENTS)}, and each call is paid from them. unanswered, busy and failed calls are free, and so is your US number.
+      </p>
+
+      <h2 id="calls">what a call costs</h2>
+      <table class="rows stats">
+        <thead>
+          <tr><th>part of the call</th><th class="n">price</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>talking, and phone menus, from pickup by a person or automated system</td><td class="n" data-label="price">{dollars(pricePerMinuteCents)}/min</td></tr>
+          <tr><td>whole minutes on hold</td><td class="n" data-label="price">half price</td></tr>
+          <tr><td>unanswered, busy and failed calls</td><td class="n" data-label="price">free</td></tr>
+        </tbody>
+      </table>
+      <p>
+        time is rounded up to the minute. each call reserves its maximum cost before it dials and returns the unused credit when it ends. ask your agent
+        to set a maximum call length to cap the cost. a call still on hold when it reaches its time limit keeps waiting instead of hanging up, as long as
+        your credits cover it.
+      </p>
+
+      <h2 id="examples">what real calls cost</h2>
+      <ul>
+        <li>a dinner reservation: <a href="/blog/customer-story-rick-dinner-reservation">Rick's table for two at Farmer's Grain</a> took 56 billed seconds and cost 25 cents.</li>
+        <li>a hospital billing call where an AI assistant answered first: <a href="/blog/how-to-negotiate-a-hospital-bill">HCA Florida Northside</a>, 5 minutes 53 seconds, cost $1.25 on October 26, 2026.</li>
+        <li>a hospital billing call with about 5 minutes on hold: <a href="/blog/how-to-negotiate-a-hospital-bill">Cleveland Clinic</a>, 12 minutes 26 seconds, cost $2.75 the same day.</li>
+      </ul>
+      <p>how long companies keep you waiting is on <a href="/hold-times">customer service hold times by company</a>.</p>
+
+      <h2 id="credits">credits</h2>
+      <ul>
+        <li>load {dollars(MIN_TOPUP_CENTS)} to {dollars(MAX_TOPUP_CENTS)} at a time. credits don't expire.</li>
+        <li>what you load reloads every month by default. untick it before paying, or stop it anytime in <a href={accountPath(signedIn)}>my account</a>; credits already loaded stay.</li>
+        <li>students get ${STUDENT_CREDIT_DOLLARS} in free credits, approved by hand: see <a href="/students">call4me for students</a>.</li>
+      </ul>
+
+      <h2 id="numbers">phone numbers</h2>
+      <ul>
+        <li>every account gets a free US number, and the agent answers callbacks to it.</li>
+        <li>you can also verify your own number as caller ID; callbacks then go directly to your phone.</li>
+        <li>extra numbers cost exactly what our phone carrier charges us, no markup: the upfront cost plus the first month when you buy one, then the monthly cost every 30 days from your credits. your account page shows each country's price.</li>
+      </ul>
+
+      <h2 id="countries">countries</h2>
+      <p>
+        calls to the us, canada, the eu, the uk, iceland, liechtenstein, norway and switzerland cost {dollars(pricePerMinuteCents)}/min with your free US number.
+        {extra && <> higher rates: {extra}.</>}
+      </p>
+
+      <p><a href="/#buy">load credits</a> or <a href="/mcp">install call4me in your agent</a>.</p>
+    </Layout>
+  );
+};
 
 export const SupportPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ signedIn, agentPrompt }) => (
   <Layout title="support" page="support" signedIn={signedIn}>
