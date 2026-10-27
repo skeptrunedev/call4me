@@ -1,0 +1,343 @@
+{
+  "id": 43,
+  "key": "arms-shoulders-male-4x",
+  "name": "Arms & Shoulders Emphasis",
+  "emphasis": "Arms & Shoulders",
+  "sex": "male",
+  "userId": null,
+  "sourceTemplateId": null,
+  "sourceMesoId": null,
+  "prevTemplateId": null,
+  "createdAt": "2023-10-03T22:54:43.304Z",
+  "updatedAt": "2023-10-03T22:54:43.304Z",
+  "deletedAt": null,
+  "generatedFrom": "",
+  "days": [
+    {
+      "id": 129,
+      "position": 0,
+      "templateId": 43,
+      "createdAt": "2023-10-03T22:54:43.304Z",
+      "updatedAt": "2023-10-03T22:54:43.304Z",
+      "slots": [
+        {
+          "id": 923,
+          "templateDayId": 129,
+          "position": 0,
+          "muscleGroupId": 3,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 924,
+          "templateDayId": 129,
+          "position": 1,
+          "muscleGroupId": 3,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 925,
+          "templateDayId": 129,
+          "position": 2,
+          "muscleGroupId": 1,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 926,
+          "templateDayId": 129,
+          "position": 3,
+          "muscleGroupId": 5,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 927,
+          "templateDayId": 129,
+          "position": 4,
+          "muscleGroupId": 6,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 928,
+          "templateDayId": 129,
+          "position": 5,
+          "muscleGroupId": 7,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        }
+      ]
+    },
+    {
+      "id": 130,
+      "position": 1,
+      "templateId": 43,
+      "createdAt": "2023-10-03T22:54:43.304Z",
+      "updatedAt": "2023-10-03T22:54:43.304Z",
+      "slots": [
+        {
+          "id": 929,
+          "templateDayId": 130,
+          "position": 0,
+          "muscleGroupId": 4,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 930,
+          "templateDayId": 130,
+          "position": 1,
+          "muscleGroupId": 4,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 931,
+          "templateDayId": 130,
+          "position": 2,
+          "muscleGroupId": 2,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 932,
+          "templateDayId": 130,
+          "position": 3,
+          "muscleGroupId": 5,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 933,
+          "templateDayId": 130,
+          "position": 4,
+          "muscleGroupId": 8,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 934,
+          "templateDayId": 130,
+          "position": 5,
+          "muscleGroupId": 9,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        }
+      ]
+    },
+    {
+      "id": 131,
+      "position": 2,
+      "templateId": 43,
+      "createdAt": "2023-10-03T22:54:43.304Z",
+      "updatedAt": "2023-10-03T22:54:43.304Z",
+      "slots": [
+        {
+          "id": 935,
+          "templateDayId": 131,
+          "position": 0,
+          "muscleGroupId": 5,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 936,
+          "templateDayId": 131,
+          "position": 1,
+          "muscleGroupId": 3,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 937,
+          "templateDayId": 131,
+          "position": 2,
+          "muscleGroupId": 3,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 938,
+          "templateDayId": 131,
+          "position": 3,
+          "muscleGroupId": 1,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 939,
+          "templateDayId": 131,
+          "position": 4,
+          "muscleGroupId": 6,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 940,
+          "templateDayId": 131,
+          "position": 5,
+          "muscleGroupId": 7,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        }
+      ]
+    },
+    {
+      "id": 132,
+      "position": 3,
+      "templateId": 43,
+      "createdAt": "2023-10-03T22:54:43.304Z",
+      "updatedAt": "2023-10-03T22:54:43.304Z",
+      "slots": [
+        {
+          "id": 941,
+          "templateDayId": 132,
+          "position": 0,
+          "muscleGroupId": 5,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 942,
+          "templateDayId": 132,
+          "position": 1,
+          "muscleGroupId": 4,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 943,
+          "templateDayId": 132,
+          "position": 2,
+          "muscleGroupId": 4,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 944,
+          "templateDayId": 132,
+          "position": 3,
+          "muscleGroupId": 2,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 945,
+          "templateDayId": 132,
+          "position": 4,
+          "muscleGroupId": 8,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        },
+        {
+          "id": 946,
+          "templateDayId": 132,
+          "position": 5,
+          "muscleGroupId": 9,
+          "exerciseId": null,
+          "createdAt": "2023-10-03T22:54:43.304Z",
+          "updatedAt": "2023-10-03T22:54:43.304Z"
+        }
+      ]
+    }
+  ],
+  "priorities": {
+    "1": {
+      "id": 345,
+      "templateId": 43,
+      "muscleGroupId": 1,
+      "mgPriorityType": "grow",
+      "createdAt": "2023-11-16T20:22:54.929Z",
+      "updatedAt": "2025-09-05T23:27:22.341Z"
+    },
+    "2": {
+      "id": 346,
+      "templateId": 43,
+      "muscleGroupId": 2,
+      "mgPriorityType": "grow",
+      "createdAt": "2023-11-16T20:22:54.929Z",
+      "updatedAt": "2025-09-05T23:27:22.341Z"
+    },
+    "3": {
+      "id": 347,
+      "templateId": 43,
+      "muscleGroupId": 3,
+      "mgPriorityType": "emphasize",
+      "createdAt": "2023-11-16T20:22:54.929Z",
+      "updatedAt": "2025-09-05T23:27:22.341Z"
+    },
+    "4": {
+      "id": 348,
+      "templateId": 43,
+      "muscleGroupId": 4,
+      "mgPriorityType": "emphasize",
+      "createdAt": "2023-11-16T20:22:54.929Z",
+      "updatedAt": "2025-09-05T23:27:22.341Z"
+    },
+    "5": {
+      "id": 349,
+      "templateId": 43,
+      "muscleGroupId": 5,
+      "mgPriorityType": "emphasize",
+      "createdAt": "2023-11-16T20:22:54.929Z",
+      "updatedAt": "2025-09-05T23:27:22.341Z"
+    },
+    "6": {
+      "id": 350,
+      "templateId": 43,
+      "muscleGroupId": 6,
+      "mgPriorityType": "grow",
+      "createdAt": "2023-11-16T20:22:54.929Z",
+      "updatedAt": "2025-09-05T23:27:22.341Z"
+    },
+    "7": {
+      "id": 351,
+      "templateId": 43,
+      "muscleGroupId": 7,
+      "mgPriorityType": "grow",
+      "createdAt": "2023-11-16T20:22:54.929Z",
+      "updatedAt": "2025-09-05T23:27:22.341Z"
+    },
+    "8": {
+      "id": 352,
+      "templateId": 43,
+      "muscleGroupId": 8,
+      "mgPriorityType": "grow",
+      "createdAt": "2023-11-16T20:22:54.929Z",
+      "updatedAt": "2025-09-05T23:27:22.341Z"
+    },
+    "9": {
+      "id": 353,
+      "templateId": 43,
+      "muscleGroupId": 9,
+      "mgPriorityType": "grow",
+      "createdAt": "2023-11-16T20:22:54.929Z",
+      "updatedAt": "2025-09-05T23:27:22.341Z"
+    }
+  }
+}

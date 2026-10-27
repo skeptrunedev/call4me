@@ -1,14 +1,14 @@
 import { DurableObject } from 'cloudflare:workers';
 import { Raindrop, type Interaction } from 'raindrop-ai';
+import { accounts } from '../services/accounts';
 import { ACTIVE, calls, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/calls';
 import { telnyx } from '../lib/telnyx';
-import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
-import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft } from './handoff';
+import { dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
+import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, missedHandoff } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { HoldMeter, type HoldChange } from './hold';
-import { midConversation } from './time-limit';
 import { BACK_OFFICE_TOOLS } from './prompt';
-import { INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, screenerAsked, type MachineEvent, type MachineGuidance, type MachineState } from './voicemail';
+import { INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, type MachineEvent, type MachineGuidance, type MachineState } from './voicemail';
 
 /**
  * One live phone call: Telnyx's media stream on one side, a GPT-Live session on the other.
@@ -40,8 +40,6 @@ const TRANSCRIPT_FLUSH_MS = 2_000;
 /** Pickup-to-session-start budget, and how long a call may stay silent both ways before it is abandoned. */
 const SESSION_START_LIMIT_MS = 10_000;
 const SILENCE_LIMIT_MS = 30_000;
-/** How long after pickup a line that has never made a sound (no words, no audio) is given up on. */
-const DEAD_AIR_MS = 60_000;
 /**
  * Audio from the phone normally starts within half a second of pickup. Telnyx sometimes drops the
  * stream within ~100ms of connecting and never says so (no streaming.started, no close reaching us),
@@ -52,10 +50,6 @@ const FIRST_AUDIO_LIMIT_MS = 4_000;
 const HANGUP_GRACE_MS = 700;
 /** Quiet time after the last words before checking for a hand-off the voice model skipped. */
 const HANDOFF_QUIET_MS = 1_500;
-/** Silence after a callback request before it counts as left on voicemail (see messageUnanswered). */
-const UNANSWERED_MS = 45_000;
-/** Silence after a message on a line the carrier flagged as automated before it counts as left on voicemail. */
-const VOICEMAIL_QUIET_MS = 6_000;
 /**
  * A menu gets its keypad choice once the recording has paused: its audio quiet this long, and its
  * transcript (which trails the audio by about a second) settled too. Menus take keys while they
@@ -71,14 +65,6 @@ const BACK_OFFICE_STALE_MS = QUESTION_WAIT_MS + 15_000;
 const MAX_FORCED_HANDOFFS = 12;
 /** Menu checks run at every pause in a recording, so they get their own, larger budget. */
 const MAX_MENU_CHECKS = 40;
-/**
- * After a key the caller stays off the line until the menu answers it, at most this long. Liberty
- * Mutual's speech-and-keypad menu takes a second or two to act on a key, and the voice model's
- * "Hmm." after the tool result replaced the key as the menu's answer (call_11ctp62kjbc9rb3k).
- */
-const KEY_REPLY_HOLD_MS = 8_000;
-/** Words transcribed this soon after a key are the tail of the prompt before it, not the menu's answer. */
-const KEY_TRANSCRIPT_LAG_MS = 500;
 /** One brief acknowledgment while an attended question is pending. */
 const HOLDING_LINE_QUIET_MS = 8_000;
 const MAX_HOLDING_LINES = 1;
@@ -103,8 +89,6 @@ export interface SessionSetup {
   unattended?: boolean;
   /** Telnyx's id for the phone leg: known up front for inbound calls, after dialing for outbound. */
   controlId?: string;
-  /** We picked up their call, so we speak first, the moment the line is live. */
-  answering?: boolean;
   /** Where Telnyx streams the call's audio, to reattach it after a reset. */
   streamUrl?: string;
   /** Per-call secrets (account PINs) to mask in the stored transcript. */
@@ -115,11 +99,6 @@ export interface SessionSetup {
    * events (voice/dtmf.ts).
    */
   inbandKeys?: boolean;
-  /**
-   * A short beep in our audio after each key the caller presses, so a person on the line hears it
-   * go in; send_dtmf alone is silent to them. Set for answered calls (a collect call's "press 1").
-   */
-  keyBeep?: boolean;
   /** Who can be patched into the call (call4me's user), from which number, and where their leg reports. */
   person?: { name: string; phone: string | null; from: string; webhookUrl: string; connectWhen?: string | null; listenIn?: boolean };
 }
@@ -152,8 +131,6 @@ export class VoiceSession extends DurableObject<Env> {
   private phone: WebSocket | null = null;
   private live: WebSocket | null = null;
   private liveReady = false;
-  /** The silent-pickup nudge is set for this voice session (nudgeWhenSilent). */
-  private nudgeScheduled = false;
   private answered = false;
   /** This instance took over a call already in progress (the previous one was reset). */
   private resumed = false;
@@ -185,17 +162,8 @@ export class VoiceSession extends DurableObject<Env> {
   private forcedHandoffs = new Set<number>();
   private menuRecovery = new MenuRecovery();
   private forcedMenus = 0;
-  /** The back office is choosing a menu's key; started by the session, so it has no delegation of its own. */
-  private choosingKey = false;
-  /** When a key went in, and until when the caller waits for the menu's answer to it. */
-  private keySentAt = 0;
-  private keyReplyBy = 0;
   private lastTranscriptAt = 0;
-  /** When each side last said something: the hard stop gives a live conversation time to finish. */
-  private lastSpokeAt = { them: 0, caller: 0 };
   private handoffTimer: ReturnType<typeof setTimeout> | null = null;
-  /** Checks for a callback request nobody answered, UNANSWERED_MS after the caller last spoke. */
-  private unansweredTimer: ReturnType<typeof setTimeout> | null = null;
   /** Back-office functions still running (an ask_user waits on the person). Its response already reported completed. */
   private toolsRunning = 0;
   /** ask_user calls waiting on the person, by question id. */
@@ -264,7 +232,6 @@ export class VoiceSession extends DurableObject<Env> {
         this.mark('answered');
         this.startWatchdog();
         await this.startLive();
-        this.nudgeWhenSilent();
         // place_call's listen_in: they hear the call from the moment the business answers.
         if (this.setup?.person?.listenIn) void this.connectPerson(undefined, 'listen');
         return new Response('ok');
@@ -341,10 +308,8 @@ export class VoiceSession extends DurableObject<Env> {
     if (this.phone !== socket || this.ended) return;
     await this.ctx.storage.delete(['orphanSince', 'reattached']);
     if (!this.answered) await this.resumeIfLive();
-    // Open the voice session while it rings, so it is ready the moment they pick up: opened at
-    // pickup, it took 1.2-1.7s, and whoever said "hello" waited that long on top of our reply.
-    // Nothing reaches either side before pickup (onPhoneFrame and the output audio check answered).
-    if (this.phone === socket && !this.ended) await this.startLive();
+    // Inbound calls are answered with the stream attached, so the stream itself means "answered".
+    if (this.phone === socket && !this.ended && this.answered) await this.startLive();
   }
 
   /** A stream reaching a fresh instance of a call whose voice session already ran: pick the call back up. */
@@ -379,15 +344,12 @@ export class VoiceSession extends DurableObject<Env> {
     const live = this.live;
     this.live = null;
     this.liveReady = false;
-    this.nudgeScheduled = false;
     this.resumed ||= this.liveStartedAt > 0;
     this.pendingAudio = [];
     this.playbackEndsAt = 0;
     this.speechEndsAt = 0;
     this.lastOutputAt = 0;
     this.backOfficeBusy = false;
-    this.choosingKey = false;
-    this.keyReplyBy = 0;
     if (live?.readyState === WebSocket.OPEN) live.close(1000, 'phone stream lost');
   }
 
@@ -559,14 +521,16 @@ export class VoiceSession extends DurableObject<Env> {
         for (const a of this.pendingAudio) this.sendLive({ type: 'session.input_audio.append', audio: a });
         this.pendingAudio = [];
         await this.queueMachineUpdate(() => this.sendMachineGuidance());
-        if (this.live === live) this.nudgeWhenSilent();
+        setTimeout(() => {
+          const personOrUnknown = !this.machineState || this.machineState.phase === 'unknown' || this.machineState.phase === 'human';
+          if (this.live === live && personOrUnknown && !this.heardThem && !this.ended) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'Nobody has spoken since the call connected. Say a short "Hi, hello?" and then wait.' });
+        }, SILENT_PICKUP_MS);
         break;
       }
       case 'session.output_audio.delta': {
         // After the hang-up hand-off the goodbye has already been said; anything more is
         // the model filling the silence before the line drops, so it never reaches the phone.
-        // Before pickup the session is only warming up: nothing it says is heard.
-        if (!this.answered || this.endingCall || this.personOn || Date.now() < this.keysPlayingUntil || this.menuHoldsCaller()) break;
+        if (this.endingCall || this.personOn || Date.now() < this.keysPlayingUntil) break;
         const e = ev as { delta: string };
         if (this.framesOut++ === 0) this.mark('first caller audio');
         this.sendPhone({ event: 'media', media: { payload: e.delta } });
@@ -583,11 +547,8 @@ export class VoiceSession extends DurableObject<Env> {
         const delta = (ev as { delta: string }).delta;
         this.appendTranscript('them', delta);
         if (delta) this.menuRecovery.observe(delta, Date.now());
-        if (delta && Date.now() - this.keySentAt >= KEY_TRANSCRIPT_LAG_MS) this.keyReplyBy = 0;
-        if (this.pendingMachineGuidance === 'screening') void this.queueMachineUpdate(() => this.sendMachineGuidance());
         this.trackHold(this.hold.them(delta, Date.now()));
         this.scheduleHandoffCheck();
-        this.scheduleUnansweredCheck();
         this.scheduleHoldingLine();
         // Barge-in: GPT-Live stops generating when talked over, but audio already queued at
         // Telnyx keeps playing. If the model has gone quiet while playback is still ahead,
@@ -600,15 +561,12 @@ export class VoiceSession extends DurableObject<Env> {
         break;
       }
       case 'session.output_transcript.delta':
-        if (this.answered && !this.endingCall && !this.personOn) {
+        if (!this.endingCall && !this.personOn) {
           const delta = (ev as { delta: string }).delta;
-          // Kept off a menu's line, a key the caller announces ("pressing 3") still needs pressing.
-          const offLine = this.menuHoldsCaller();
-          if (!offLine) this.appendTranscript('caller', delta);
+          this.appendTranscript('caller', delta);
           if (delta) this.menuRecovery.observeCaller(delta, Date.now());
-          if (!offLine) this.trackHold(this.hold.caller(delta));
+          this.trackHold(this.hold.caller(delta));
           this.scheduleHandoffCheck();
-          this.scheduleUnansweredCheck();
           this.scheduleHoldingLine();
         }
         break;
@@ -628,11 +586,6 @@ export class VoiceSession extends DurableObject<Env> {
             this.backOfficeInteractions.get(monitoringId)?.output.push(redact(JSON.stringify(e.event.item), this.setup?.redact ?? []));
           }
         });
-        // A line the back office writes is the caller's to say, even to a menu.
-        if (e.event.type === 'response.output_text.delta') {
-          this.choosingKey = false;
-          this.keyReplyBy = 0;
-        }
         if (e.event.type === 'response.output_item.done' && e.event.item?.type === 'function_call') {
           console.log('back office call', e.event.item.name, e.event.item.arguments);
           this.toolsRunning++;
@@ -654,9 +607,6 @@ export class VoiceSession extends DurableObject<Env> {
             throw err;
           } finally {
             this.toolsRunning--;
-            // The key is in (or the choice went to ask_user/end_call). GPT-Live may never report the
-            // response that follows a tool result, so the choice ends here, not at that response.
-            if (!this.toolsRunning) this.choosingKey = false;
             this.scheduleHandoffCheck();
             const durationMs = Date.now() - startedAt;
             this.observe(() => {
@@ -670,7 +620,6 @@ export class VoiceSession extends DurableObject<Env> {
           }
         } else if (e.event.type === 'response.completed' || e.event.type === 'response.failed' || e.event.type === 'error') {
           this.backOfficeBusy = false;
-          if (!this.toolsRunning) this.choosingKey = false;
           this.scheduleHandoffCheck();
           console.log('back office', e.event.type);
           this.observe(() => {
@@ -745,25 +694,6 @@ export class VoiceSession extends DurableObject<Env> {
    * after pickup, or nothing has been said in either direction a while later, hang up and mark
    * the call failed (failed calls are not billed).
    */
-  /**
-   * Once the call is answered and the voice session is live, whichever comes last: if nobody has
-   * spoken, have the caller speak. Answering a call, we speak first, right away: whoever rang
-   * waits on our hello, and after 9 silent seconds MaxProMow asked "are you…" and hung up.
-   */
-  private nudgeWhenSilent(): void {
-    if (!this.answered || !this.liveReady || this.nudgeScheduled) return;
-    this.nudgeScheduled = true;
-    const live = this.live;
-    const answering = Boolean(this.setup?.answering);
-    setTimeout(() => {
-      const personOrUnknown = !this.machineState || this.machineState.phase === 'unknown' || this.machineState.phase === 'human';
-      if (this.live === live && personOrUnknown && !this.heardThem && !this.ended) {
-        const content = answering ? 'You just picked up their call. Answer it now, the way your instructions say.' : 'Nobody has spoken since the call connected. Say a short "Hi, hello?" and then wait.';
-        this.sendLive({ type: 'session.instructions.append', delegation_id: null, content });
-      }
-    }, answering ? 0 : SILENT_PICKUP_MS);
-  }
-
   private startWatchdog(): void {
     setTimeout(() => {
       if (!this.ended && this.framesIn === 0 && this.phone) void this.phoneLost(this.phone, `no audio from the phone ${FIRST_AUDIO_LIMIT_MS / 1000}s after pickup`);
@@ -787,14 +717,6 @@ export class VoiceSession extends DurableObject<Env> {
     this.handoffTimer = setTimeout(() => this.checkMissedHandoff(), Math.max(0, due - Date.now()));
   }
 
-  private scheduleUnansweredCheck(wait = UNANSWERED_MS): void {
-    if (this.unansweredTimer) clearTimeout(this.unansweredTimer);
-    this.unansweredTimer = setTimeout(() => {
-      this.unansweredTimer = null;
-      this.checkMissedHandoff();
-    }, wait + 500);
-  }
-
   /** When the menu has paused: its transcript settled and the phone's audio quiet, or its transcript long settled. */
   private menuQuietAt(menuInputAt: number): number {
     const paused = Math.max(menuInputAt + MENU_TRANSCRIPT_QUIET_MS, this.themAudibleAt + MENU_AUDIO_QUIET_MS);
@@ -810,28 +732,7 @@ export class VoiceSession extends DurableObject<Env> {
     // The recording kept playing after this check was scheduled: wait for its next pause.
     if (menu && this.menuQuietAt(menu.snapshot.at) > Date.now()) return this.scheduleHandoffCheck();
     if (menu && this.forcedMenus >= MAX_MENU_CHECKS) menu = null;
-    // A message left on voicemail ends the call even when the caller never says goodbye.
-    // Only once the carrier has taken the line for automated: a person can ask us to leave a message too.
-    const phase = this.machineState?.phase;
-    const automated = phase === 'voicemail' || phase === 'machine' || phase === 'screening' || phase === 'uncertain';
-    const quietFor = Date.now() - Math.max(this.lastTranscriptAt, this.speechEndsAt);
-    let voicemail = automated ? voicemailLeft(this.transcript, phase === 'voicemail' ? this.machineState!.occurredAt : null, this.forcedHandoffs) : null;
-    // A recording stays silent after the message; a person who picked up answers within seconds
-    // (Haileybury Beach Motel's receptionist began "Just give me..." 4s after ours ended).
-    if (voicemail && quietFor < VOICEMAIL_QUIET_MS) {
-      this.scheduleUnansweredCheck(VOICEMAIL_QUIET_MS - quietFor);
-      voicemail = null;
-    }
-    // After a long silence, flagged or not: a callback request or a message after the greeting's
-    // "leave a message" went to voicemail, and a recording that said goodbye is done.
-    let unanswered = phase !== 'human' ? (messageUnanswered(this.transcript, this.forcedHandoffs) ?? messageAfterGreeting(this.transcript, this.forcedHandoffs) ?? signedOff(this.transcript, this.forcedHandoffs)) : null;
-    // Its transcript lands before its audio finishes playing, so a long message is still being
-    // spoken when the first check comes: check again once the line has been quiet long enough.
-    if (unanswered && quietFor < UNANSWERED_MS) {
-      if (!this.unansweredTimer) this.scheduleUnansweredCheck(UNANSWERED_MS - quietFor);
-      unanswered = null;
-    }
-    const miss = menu ?? voicemail ?? unanswered ?? (this.forcedHandoffs.size < MAX_FORCED_HANDOFFS ? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs) : null);
+    const miss = menu ?? (this.forcedHandoffs.size < MAX_FORCED_HANDOFFS ? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs) : null);
     if (!miss) {
       this.checkConnectCondition();
       return;
@@ -839,24 +740,12 @@ export class VoiceSession extends DurableObject<Env> {
     if (menu) {
       this.menuRecovery.checked(menu.snapshot);
       this.forcedMenus++;
-      this.choosingKey = true;
     } else this.forcedHandoffs.add(miss.line.at);
     this.backOfficeBusy = true;
     this.lastHandoffAt = Date.now();
-    this.mark(`no hand-off after ${miss.reason === 'promise' ? 'a spoken promise' : miss.reason === 'voicemail_left' ? 'a voicemail message' : miss.reason === 'signed_off' ? 'their goodbye' : 'a phone menu'}; starting the back office`);
+    this.mark(`no hand-off after ${miss.reason === 'promise' ? 'a spoken promise' : 'a phone menu'}; starting the back office`);
     this.sendLive({ type: 'response.item.create', item: { type: 'message', role: 'user', content: [{ type: 'input_text', text: forcedHandoffMessage(miss, this.transcript, this.menuRecovery.history()) }] } });
     this.sendLive({ type: 'response.create' });
-  }
-
-  /**
-   * A keypad menu waiting on its choice hears only the keypad. Many also take spoken answers
-   * ("say existing policy, or press 1"), so a "hmm" from the voice model is taken as the caller's
-   * answer and rejected before the back office's key arrives (Liberty Mutual hung up after two).
-   * The voice model makes those sounds despite its prompt, so they are kept off the line here.
-   */
-  private menuHoldsCaller(): boolean {
-    if (this.forcedMenus >= MAX_MENU_CHECKS) return false;
-    return this.choosingKey || Date.now() < this.keyReplyBy || this.menuRecovery.awaitingKey();
   }
 
   // ---- patching the person in (and handing back)
@@ -1012,12 +901,7 @@ export class VoiceSession extends DurableObject<Env> {
     return this.queueMachineUpdate(async () => {
       if (this.ended || this.endingCall) return;
       const previous = await this.loadMachineState();
-      const { state, guidance: detected } = machineTransition(previous, event, occurredAt);
-      // Screening detection also fires on a phone menu's open prompt ("How can we help?"). A line that
-      // has offered keypad options is a menu, not a screener waiting for the caller to introduce itself.
-      const guidance = detected === 'screening' && this.menuRecovery.heardMenu() ? null : detected;
-      if (detected && !guidance) this.mark(`answering machine detection: ${event} on a phone menu, not a screener`);
-      if (guidance === 'screening' && !this.screenerAsked()) this.mark(`answering machine detection: ${event}; introducing once a screener asks for it`);
+      const { state, guidance } = machineTransition(previous, event, occurredAt);
       this.machineState = state;
       if (guidance) this.pendingMachineGuidance = guidance;
       await this.saveMachineState();
@@ -1058,23 +942,10 @@ export class VoiceSession extends DurableObject<Env> {
 
   private async sendMachineGuidance(): Promise<void> {
     await this.loadMachineState();
-    if (this.pendingMachineGuidance === 'screening' && this.menuRecovery.heardMenu()) {
-      this.mark('screening detection was a phone menu; no introduction');
-      this.pendingMachineGuidance = null;
-      await this.saveMachineState();
-      return;
-    }
-    if (this.pendingMachineGuidance === 'screening' && !this.screenerAsked()) return;
     if (!this.liveReady || this.live?.readyState !== WebSocket.OPEN || this.ended || this.endingCall || this.personHolds() || !this.pendingMachineGuidance) return;
     this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: MACHINE_GUIDANCE[this.pendingMachineGuidance] });
     this.pendingMachineGuidance = null;
     await this.saveMachineState();
-  }
-
-  /** Whether the other side's latest words ask for the caller's name or reason, as a call screener does. */
-  private screenerAsked(): boolean {
-    const heard = this.transcript.filter((line) => line.role === 'them').slice(-2).map((line) => line.text).join(' ');
-    return screenerAsked(heard.slice(-400));
   }
 
   private note(text: string): void {
@@ -1116,15 +987,10 @@ export class VoiceSession extends DurableObject<Env> {
         const digits = String(args.digits ?? '').replace(/[^0-9*#wW]/g, '').slice(0, 32);
         output = 'no valid digits';
         if (digits && !s.controlId) output = 'no phone connection; keypad input was not submitted';
-        // A second press before the other side says anything lands in whatever menu comes next.
-        else if (digits && this.menuRecovery.repeats(digits)) output = `${digits} was already submitted and nothing new has been heard since; do not press it again, wait for the next prompt`;
-        else if (digits && s.controlId) {
+        if (digits && s.controlId) {
           const snapshot = this.menuRecovery.snapshot();
           await this.pressKeys(s, s.controlId, digits);
-          if (s.keyBeep && !s.inbandKeys) this.playInCall(beepFrames(), `played the key beep for ${digits}`);
           this.menuRecovery.submitted(digits, snapshot);
-          this.keySentAt = Date.now();
-          this.keyReplyBy = this.keySentAt + KEY_REPLY_HOLD_MS;
           output = `keypad submitted: ${digits}; wait for the next prompt to confirm it worked`;
         }
         break;
@@ -1152,16 +1018,13 @@ export class VoiceSession extends DurableObject<Env> {
    */
   private async pressKeys(s: Stored, controlId: string, digits: string): Promise<void> {
     if (!s.inbandKeys) return telnyx(this.env).sendDtmf(controlId, digits);
-    this.playInCall(dtmfFrames(digits), `played keypad tones ${digits}`);
-  }
-
-  /** Play generated audio (keypad tones, the key beep) in place of any of the caller's speech still queued. */
-  private playInCall(frames: string[], note: string): void {
+    const frames = dtmfFrames(digits);
+    const now = Date.now();
     this.sendPhone({ event: 'clear' });
     for (const payload of frames) this.sendPhone({ event: 'media', media: { payload } });
-    this.playbackEndsAt = Date.now() + frames.length * FRAME_MS;
+    this.playbackEndsAt = now + frames.length * FRAME_MS;
     this.keysPlayingUntil = this.playbackEndsAt;
-    this.mark(note);
+    this.mark(`played keypad tones ${digits}`);
   }
 
   private async endCall(s: Stored, args: Record<string, unknown>): Promise<string> {
@@ -1269,7 +1132,6 @@ export class VoiceSession extends DurableObject<Env> {
   private appendTranscript(role: TranscriptLine['role'], delta: string): void {
     if (!delta) return;
     this.lastTranscriptAt = Date.now();
-    if (role === 'them' || role === 'caller') this.lastSpokeAt[role] = this.lastTranscriptAt;
     const last = this.transcript[this.transcript.length - 1];
     if (last && last.role === role) last.text += delta;
     else this.transcript.push({ role, text: delta.trimStart(), at: Date.now() });
@@ -1327,23 +1189,12 @@ export class VoiceSession extends DurableObject<Env> {
       await this.fail('lost the call audio and could not reconnect it');
       return;
     }
-    // Nobody ever came on: our caller said hello into a line that never answered with a word or a
-    // sound. Hold music and recordings are audible, so a queue is never taken for dead air.
-    if (this.answeredAt && !this.heardThem && !this.hold.holding() && !this.personHolds() && now - Math.max(this.answeredAt, this.themAudibleAt) >= DEAD_AIR_MS) {
-      await this.hangup('nobody came on the line');
-      return;
-    }
     const [wrapAt, stopAt] = await Promise.all([this.ctx.storage.get<number>('wrapAt'), this.ctx.storage.get<number>('stopAt')]);
     if (stopAt && now >= stopAt) {
       // Put on hold during the wrap-up: keep waiting instead of hanging up on the queue.
       if (this.hold.holding() && (await this.extendOnHold(s, now))) {
         await this.ctx.storage.delete('stopAt');
         if (!this.personOn) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'Ignore the earlier time warning: there is more time now. Stay on the line, stay silent while they have you waiting, and carry on when they come back.' });
-        await this.scheduleAlarm();
-        return;
-      }
-      // Still talking with them: a couple more minutes to finish rather than hang up mid-sentence.
-      if (midConversation({ theirsAt: this.lastSpokeAt.them, oursAt: this.lastSpokeAt.caller, personOn: this.personOn, now }) && (await this.extendTalk(s, now))) {
         await this.scheduleAlarm();
         return;
       }
@@ -1376,47 +1227,21 @@ export class VoiceSession extends DurableObject<Env> {
   /**
    * The time limit came up during a hold (at the wrap-up point, or at the hard stop when the hold
    * began during the wrap-up): hold up to LIMITS.holdExtensionMinutes more of the account's
-   * credits and move the wrap-up point that far past `wrapAt`. False when the balance or the
-   * ceiling leaves no room, and the call wraps up as usual.
+   * credits and move the wrap-up point that far past `wrapAt`, never past Telnyx's ceiling. False
+   * when the balance or the ceiling leaves no room, and the call wraps up as usual.
    */
   private async extendOnHold(s: Stored, wrapAt: number): Promise<boolean> {
-    const minutes = await this.extendLimit(s, wrapAt, LIMITS.holdExtensionMinutes);
-    if (!minutes) return false;
-    await this.ctx.storage.put('wrapAt', wrapAt + minutes * 60_000);
-    this.mark(`still on hold at the time limit: held ${minutes} more min`);
-    return true;
-  }
-
-  /**
-   * The hard stop came up mid-conversation: hold up to LIMITS.talkExtensionMinutes more credits,
-   * move the stop that far out, and tell the caller to finish. Checked again at the new stop, so a
-   * conversation that keeps going keeps getting time, up to the balance and the ceiling.
-   */
-  private async extendTalk(s: Stored, now: number): Promise<boolean> {
-    const minutes = await this.extendLimit(s, now, LIMITS.talkExtensionMinutes);
-    if (!minutes) return false;
-    await this.ctx.storage.put('stopAt', now + minutes * 60_000);
-    this.mark(`still talking at the time limit: ${minutes} more min to finish`);
-    if (!this.personOn) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: `They're still talking with you, so you have ${minutes} more minutes. Finish this conversation: get what you still need, then say a quick goodbye and hand off to hang up (end_call).` });
-    return true;
-  }
-
-  /**
-   * Up to `want` more minutes past `from`, never past Telnyx's ceiling. Returns the minutes
-   * granted, 0 when the balance or the ceiling leaves no room.
-   */
-  private async extendLimit(s: Stored, from: number, want: number): Promise<number> {
     const row = await calls(this.env.DB).byId(s.callId);
-    if (!row?.answered_at) return 0;
+    if (!row?.answered_at) return false;
     const ceilingAt = row.answered_at + (LIMITS.maxMinutes * 60 - 45) * 1000;
-    const room = Math.min(want, Math.floor((ceilingAt - from) / 60_000));
-    if (room < 1) return 0;
-    // Hold and talk extensions share one count: each is its own ledger hold (hold:<call>:<n>).
+    const balance = await accounts(this.env.DB).balanceCents(row.account_id);
+    const minutes = Math.min(LIMITS.holdExtensionMinutes, Math.floor((ceilingAt - wrapAt) / 60_000), Math.floor(balance / s.pricePerMinuteCents));
+    if (minutes < 1) return false;
     const n = ((await this.ctx.storage.get<number>('holdExtensions')) ?? 0) + 1;
-    const minutes = await calls(this.env.DB).extend(row, room, s.pricePerMinuteCents, n, Date.now());
-    if (!minutes) return 0;
-    await this.ctx.storage.put('holdExtensions', n);
-    return minutes;
+    if (!(await calls(this.env.DB).extend(row, minutes, s.pricePerMinuteCents, n))) return false;
+    await this.ctx.storage.put({ holdExtensions: n, wrapAt: wrapAt + minutes * 60_000 });
+    this.mark(`still on hold at the time limit: held ${minutes} more min (extension ${n})`);
+    return true;
   }
 
   // ---- teardown
@@ -1437,7 +1262,6 @@ export class VoiceSession extends DurableObject<Env> {
   private async teardown(reason: string): Promise<void> {
     this.ended = true;
     this.liveConnectAbort?.abort();
-    if (this.unansweredTimer) clearTimeout(this.unansweredTimer);
     if (this.handoffTimer) clearTimeout(this.handoffTimer);
     if (this.holdingTimer) clearTimeout(this.holdingTimer);
     for (const finish of this.waiting.values()) finish(null);

@@ -5,7 +5,6 @@ import { createLocalJWKSet, jwtVerify, type JWTPayload } from 'jose';
 import { newId, now } from './ids';
 import { authOptions, DIRECTORY_SERVERS, mcpResource, mcpResourceAt as resourceAt, realEmail, siteResource, type McpPath } from './auth-options';
 import { origin, type AppContext, type AppEnv } from './context';
-import { messengerFor } from './messaging';
 import { ACCOUNT_COLUMNS, accounts, type Account } from '../services/accounts';
 
 /**
@@ -22,12 +21,6 @@ const buildAuth = (env: Env, baseURL: string) =>
       appName: env.APP_NAME,
       google: { clientId: env.GOOGLE_CLIENT_ID ?? '', clientSecret: env.GOOGLE_CLIENT_SECRET ?? '' },
       twitter: { clientId: env.X_CLIENT_ID ?? '', clientSecret: env.X_CLIENT_SECRET ?? '' },
-      sendSignInLink: (email, url) =>
-        messengerFor(env).sendEmail(
-          email,
-          'your call4me sign-in link',
-          `open this link to sign in to call4me:\n\n${url}\n\nit works once, for an hour. if you didn't ask to sign in, ignore this email.\n`,
-        ),
     }),
   );
 
@@ -42,21 +35,53 @@ export function createAuth(c: AppContext) {
   const baseURL = origin(c);
   let byOrigin = instances.get(c.env.DB);
   if (!byOrigin) instances.set(c.env.DB, (byOrigin = new Map()));
-  const shared = byOrigin.get(baseURL);
-  if (shared) return shared;
-  // Shared only once its init has finished. A pending init belongs to the request that started
-  // it, and on Workers a canceled request's D1 calls never settle: shared while pending, it hung
-  // every later auth request in the isolate (token, discovery, /account) until the client gave up.
-  // Until one finishes, each request builds its own, as before the cache. A failed init is never kept.
-  const built = buildAuth(c.env, baseURL);
-  built.$context.then(
-    () => byOrigin.has(baseURL) || byOrigin.set(baseURL, built),
-    () => {},
-  );
-  return built;
+  let auth = byOrigin.get(baseURL);
+  if (!auth) {
+    const built = buildAuth(c.env, baseURL);
+    // A failed init (a D1 hiccup) is not kept: the next request builds afresh.
+    built.$context.catch(() => byOrigin.get(baseURL) === built && byOrigin.delete(baseURL));
+    byOrigin.set(baseURL, (auth = built));
+  }
+  return auth;
+}
+
+/** A redirect only an app on the user's own device can receive (RFC 8252): loopback http or a private-use scheme. */
+export function isNativeRedirect(uri: string): boolean {
+  let url: URL;
+  try {
+    url = new URL(uri);
+  } catch {
+    return false;
+  }
+  if (url.protocol === 'https:') return false;
+  if (url.protocol !== 'http:') return true;
+  return ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
+}
+
+/**
+ * RFC 7591 defaults a registering client to a web application, and the provider holds web
+ * applications to https redirects. Most MCP clients and agents leave application_type out while
+ * listening on localhost for the sign-in, so they were refused at registration. A client whose
+ * every redirect is a native one registers as the native app it is.
+ */
+export function withNativeDefault(metadata: unknown): unknown {
+  if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) return metadata;
+  const client = metadata as { application_type?: unknown; redirect_uris?: unknown };
+  const uris = client.redirect_uris;
+  if (client.application_type !== undefined || !Array.isArray(uris) || uris.length === 0) return metadata;
+  if (!uris.every((uri) => typeof uri === 'string' && isNativeRedirect(uri))) return metadata;
+  return { ...client, application_type: 'native' };
 }
 
 export function mountAuth(app: Hono<AppEnv>) {
+  app.post('/api/auth/oauth2/register', async (c) => {
+    const metadata: unknown = await c.req.raw.clone().json().catch(() => null);
+    const registered = withNativeDefault(metadata);
+    if (registered === metadata) return createAuth(c).handler(c.req.raw);
+    const headers = new Headers(c.req.raw.headers);
+    headers.delete('content-length');
+    return createAuth(c).handler(new Request(c.req.url, { method: 'POST', headers, body: JSON.stringify(registered) }));
+  });
   app.on(['GET', 'POST'], '/api/auth/*', (c) => createAuth(c).handler(c.req.raw));
   // The provider serves RFC 9728 / RFC 8414 / OIDC discovery under /api/auth; clients look at the site root.
   app.on(
@@ -84,7 +109,7 @@ export async function accountForUser(db: D1Database, user: { id: string; email: 
   // X users may share no email; their account is keyed by the placeholder better-auth assigns.
   await db
     .prepare(`INSERT OR IGNORE INTO accounts (id, email, display_name, user_id, created_at) VALUES (?, ?, ?, ?, ?)`)
-    .bind(newId(), email ?? (user.email ?? `${user.id}@users.invalid`).toLowerCase(), user.name || null, user.id, now())
+    .bind(newId(), email ?? (user.email ?? `${user.id}@users.invalid`).toLowerCase(), user.name, user.id, now())
     .run();
   return (await db.prepare(`SELECT ${ACCOUNT_COLUMNS} FROM accounts WHERE user_id = ?`).bind(user.id).first<Account>())!;
 }

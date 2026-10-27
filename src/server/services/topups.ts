@@ -127,16 +127,6 @@ export function topups(db: D1Database, stripe: Stripe) {
           }
         }
         if (!promotion) throw new TopupError(PROMOTION_ERROR);
-      } else if (customer) {
-        // A lifetime discount given to one customer (a forever coupon behind a code restricted
-        // to them) applies to every top-up without them entering the code.
-        for await (const candidate of stripe.promotionCodes.list({ customer, active: true, limit: 100, expand: ['data.promotion.coupon'] })) {
-          const coupon = candidate.promotion.coupon;
-          if (typeof coupon === 'object' && coupon?.valid && coupon.duration === 'forever') {
-            promotion = candidate;
-            break;
-          }
-        }
       }
       // Adjustable: $10 units, quantity chosen on Stripe's page (the "add funds" button goes
       // straight there). Otherwise the amount was chosen on our form.

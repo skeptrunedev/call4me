@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "call4me": {
-      "type": "http",
-      "url": "https://call4.me/claude/mcp"
-    }
-  }
-}

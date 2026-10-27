@@ -29,7 +29,7 @@ export const HoldTimesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
           distribution: ['csv', 'json'].map(format => ({ '@type': 'DataDownload', contentUrl: `${SITE}${HOLD_DATA_PATH}.${format}`, encodingFormat: format === 'csv' ? 'text/csv' : 'application/json' })),
         },
         { '@type': 'ItemList', name: 'Customer service hold times by company, longest first', itemListOrder: 'https://schema.org/ItemListOrderDescending',
-          numberOfItems: measured.length, itemListElement: measured.map(r => ({ '@type': 'ListItem', position: r.rank, name: `${r.company}: ${r.timeToHuman}`, url: `${url}#evidence-${r.id}` })),
+          numberOfItems: measured.length, itemListElement: measured.map(r => ({ '@type': 'ListItem', position: r.rank, name: `${r.company}: ${r.timeToHuman}`, url: `${url}#evidence-${r.slug}` })),
         },
       ],
     } }}>
@@ -61,9 +61,9 @@ export const HoldTimesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
         </thead>
         <tbody>
           {measured.map(r => (
-            <tr id={r.id}>
+            <tr id={r.slug}>
               <td class="n" data-label="Rank">{r.rank}</td>
-              <td><a href={`#evidence-${r.id}`}>{r.company}</a></td>
+              <td><a href={`#evidence-${r.slug}`}>{r.company}</a></td>
               <td class="n" data-label="Time to a person">{r.timeToHuman}</td>
               <td data-label="Answered first">{r.firstAnswer}</td>
               <td data-label="Called">{shortDate(r.called)}{r.calls > 1 ? ` (${r.calls} calls)` : ''}</td>
@@ -80,8 +80,8 @@ export const HoldTimesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
         </thead>
         <tbody>
           {unranked.map(r => (
-            <tr id={r.id}>
-              <td><a href={`#evidence-${r.id}`}>{r.company}</a></td>
+            <tr id={r.slug}>
+              <td><a href={`#evidence-${r.slug}`}>{r.company}</a></td>
               <td data-label="Result">{r.status === 'not measured' ? 'Reached a person; the post does not say when' : `Never reached a person (${r.calls} ${r.calls === 1 ? 'call' : 'calls'})`}</td>
               <td data-label="Answered first">{r.firstAnswer}</td>
               <td data-label="Called">{shortDate(r.called)}</td>
@@ -96,7 +96,7 @@ export const HoldTimesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
       <p>For each company: the number we dialed, and the line in the published transcript where the first live person speaks, quoted as it appears in the post. Where no time was measured, the sentence from the post that says so.</p>
       <ul>
         {HOLD_TIMES.map(r => (
-          <li id={`evidence-${r.id}`}>
+          <li id={`evidence-${r.slug}`}>
             <strong>{r.company}{r.timeToHuman ? `, ${r.timeToHuman}` : ''}</strong>, called {r.number ? `${r.number} ` : ''}on {longDate(r.called)}{r.number ? '' : ' (the post does not state the number)'}.
             {' '}"{r.evidence}" <a href={`/blog/${r.slug}`}>Recording and transcript</a>
           </li>
@@ -127,8 +127,7 @@ export const HoldTimesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
       <h2 id="skip-the-hold">Skip the hold</h2>
       <p>
         call4me is a phone for your AI agent. Tell Claude Code, Codex or ChatGPT what you need from a company and it calls, gets through the menu,
-        waits on hold and brings back the answer, or rings you when a person picks up: <a href="/hold-for-me">an AI that waits on hold for you</a>.
-        {' '}<a href="/mcp">Install it</a> / <a href="/examples">listen to more calls</a>
+        waits on hold and brings back the answer. <a href="/mcp">Install it</a> / <a href="/examples">listen to more calls</a>
       </p>
     </main>
   </Layout>

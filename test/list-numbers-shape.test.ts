@@ -56,9 +56,6 @@ test('an account without own numbers gets exactly the list_numbers shape cached 
   for (const n of out.numbers) assert.deepEqual(keys(n), OLD_NUMBER);
   assert.ok(out.countries.length > 0);
   for (const c of out.countries) assert.deepEqual(keys(c), OLD_COUNTRY);
-  const text = (result.content as { text: string }[]).map((part) => part.text).join('\n');
-  assert.match(text, /calling rates: \$0.25\/min/);
-  for (const [country, cents] of Object.entries(DESTINATION_PRICE_CENTS)) assert.ok(text.includes(`${country} $${(cents / 100).toFixed(2)}/min`));
 });
 
 test('own numbers show up in list_numbers once the account has one', async () => {
@@ -100,6 +97,15 @@ for (const surface of ['agents', 'chatgpt', 'claude'] as const) {
     }
   });
 }
+
+test('list_numbers returns all current destination rates even without number availability', async () => {
+  const result = await rpc({ id: 'acct_alice', email: 'alice@example.com' } as Account, 'tools/call', { name: 'call4me_list_numbers', arguments: {} });
+  const text = (result.content as { text: string }[]).map((part) => part.text).join('\n');
+  assert.match(text, /calling rates: \$0.25\/min/);
+  for (const [country, cents] of Object.entries(DESTINATION_PRICE_CENTS)) {
+    assert.ok(text.includes(`${country} $${(cents / 100).toFixed(2)}/min`));
+  }
+});
 
 test('ChatGPT balance returns current destination rates without needing a purchase tool', async () => {
   const result = await rpc({ id: 'acct_alice', email: 'alice@example.com' } as Account, 'tools/call', { name: 'call4me_get_balance', arguments: {} }, 'chatgpt');

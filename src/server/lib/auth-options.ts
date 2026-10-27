@@ -1,6 +1,6 @@
 import { COOKIE_PREFIX } from './session-credentials';
 import type { BetterAuthOptions } from 'better-auth';
-import { bearer, jwt, magicLink } from 'better-auth/plugins';
+import { bearer, jwt } from 'better-auth/plugins';
 import { mcp } from '@better-auth/mcp';
 
 /**
@@ -19,15 +19,11 @@ export interface AuthDeps {
   appName: string;
   google: { clientId: string; clientSecret: string };
   twitter: { clientId: string; clientSecret: string };
-  /** Mails a sign-in link (the email-link sign-in below). */
-  sendSignInLink: (email: string, url: string) => Promise<void>;
 }
 
 /** Prefix of better-auth's cookies (`callbay.session_token`); kept from before the rename so sessions survive. */
 export { COOKIE_PREFIX } from './session-credentials';
 const ACCESS_TOKEN_TTL = 7 * 24 * 3600;
-/** Where an emailed sign-in link lands: our page with a button, not the verify endpoint itself. */
-export const SIGN_IN_LINK_PATH = '/login/email';
 
 export function authOptions(deps: AuthDeps) {
   return {
@@ -65,19 +61,6 @@ export function authOptions(deps: AuthDeps) {
       database: { validateSchema: false, generateId: 'uuid' },
     },
     plugins: [
-      // Sign-in by emailed link: the only way in for someone who paid at Checkout with an address
-      // no Google or X account carries (Apple Pay hands Stripe an iCloud Hide My Email relay).
-      magicLink({
-        // An hour: relay addresses and some inboxes deliver minutes late, and the token is single-use.
-        expiresIn: 3600,
-        storeToken: 'hashed',
-        // Mail scanners open every link in an email, and opening the verify endpoint spends the
-        // token. The email points at our page instead, which verifies only when a person clicks.
-        sendMagicLink: async ({ email, url }) => {
-          const link = new URL(url);
-          await deps.sendSignInLink(email, `${new URL(SIGN_IN_LINK_PATH, deps.baseURL)}?${link.searchParams}`);
-        },
-      }),
       // Lets API clients send the session token as `Authorization: Bearer` instead of a cookie.
       bearer(),
       // JWT access tokens (and the /jwks endpoint) the MCP OAuth provider issues and verifies.

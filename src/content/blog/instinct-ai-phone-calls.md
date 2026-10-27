@@ -1,10 +1,9 @@
 ---
-title: Can Instinct AI make phone calls? Concierge or a phone for your existing agent
-seoTitle: Can Instinct AI make phone calls? Concierge vs MCP
+title: "Instinct AI phone calls: Concierge or a phone for your existing agent?"
+seoTitle: Instinct AI phone calls, Concierge and MCP
 subtitle: Instinct offers phone calls through Concierge. If you already work in Claude Code or Codex, you can also add a calling tool to that session. Here is the difference, how call4me signup works, and what we have actually tested.
-description: Instinct calling runs through its announced Concierge feature. Check if it's in your account, or add phone calls to Claude Code or Codex with an MCP server.
+description: Understand Instinct Concierge, custom MCP connection questions, and adding phone calls to Claude Code or Codex, with signup steps and a recorded research call.
 date: 2026-10-04
-updated: 2026-10-17
 tags: instinct ai, instinct concierge, mcp, claude code, codex, ai phone assistant
 authors: nick
 imageAlt: Instinct Concierge and an existing coding agent with a phone calling MCP tool

@@ -1,10 +1,10 @@
 ---
-title: "Verizon customer service number: how to reach a live agent"
+title: "Verizon customer service number: how we reached a person"
 seoTitle: "Verizon customer service number: 800-922-0204"
 subtitle: "Three recordings cover account verification, a cheaper plan quote and the representative's callback. Nothing on the account was changed."
-description: "Verizon customer service is 800-922-0204. Say \"An agent, please\" to reach a live agent, who said a plan switch saves about $48 a month."
+description: Verizon customer service is 800-922-0204. An AI assistant answers; "An agent, please" reached a person, who said a plan switch saves about $48 a month.
 date: 2026-10-01
-updated: 2026-10-17
+updated: 2026-10-07
 verified: 2026-10-01
 tags: verizon, customer service, phone plans, phone trees
 authors: nick
@@ -91,8 +91,6 @@ The AI assistant couldn't give a 3 line total with taxes and fees. The represent
 **Cancelling a line and the multi-line discount:** asked what cancelling one line would do, the representative said "there will not be much of a change because your account actually subscribed into multi-line discount, meaning to say, the more line you add, the more discount you can have." Their example: Unlimited Welcome "would be just $50 per month, but if you would remove a one line there, it could actually increase up to $10 more." So dropping a line could raise the price of each remaining line by up to about $10.
 
 **What we didn't get on this call.** The call hit our 25 minute limit while our caller was asking about cancelling: any device payment balance, fees, when it takes effect, and keeping or porting the number. The representative's callback answered the balance and porting questions. Neither call answered whether there's a fee or when a cancellation takes effect. Verizon's own rules on cancelling are [below](#cancelling-a-verizon-line).
-
-For the ways Verizon says you can lower a bill, and what its AI assistant said on a second call, see [how to lower your Verizon bill](/blog/how-to-lower-verizon-bill).
 
 ## Verizon called us back
 

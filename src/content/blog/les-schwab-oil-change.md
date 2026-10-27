@@ -1,10 +1,10 @@
 ---
-title: "Does Les Schwab do oil changes? How to check your store and price"
+title: Does Les Schwab do oil changes? Have your AI assistant check the store
 seoTitle: Does Les Schwab do oil changes? An AI phone quote
 subtitle: Let the assistant you already use ask your store about service, price and availability. A real customer call got a $100 to $110 combined quote and a walk in plan.
-description: "Yes, Les Schwab does oil changes at select locations, so call your store. A real call got a $100 to $110 quote for an oil change and tire rotation."
+description: Have your AI assistant check Les Schwab oil change cost and availability. Hear a real store quote and try a suggested Claude Code or Codex workflow.
 date: 2026-10-05
-updated: 2026-10-17
+updated: 2026-10-07
 tags: oil change, les schwab, tire rotation, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Does Les Schwab do oil changes, a real $100 to $110 store quote

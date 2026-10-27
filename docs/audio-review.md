@@ -30,15 +30,9 @@ The `reviewed` field records the operator's review, not an automated assertion.
   "source": "source.wav",
   "sourceSha256": "COPY_THE_ACTUAL_SOURCE_HASH",
   "reviewed": true,
-  "mutes": [{ "start": 1.2, "end": 2.8, "label": "private name" }],
-  "disguise": [{ "start": 40.0, "end": 95.5, "label": "account owner after joining" }]
+  "mutes": [{ "start": 1.2, "end": 2.8, "label": "private name" }]
 }
 ```
-
-`disguise` is optional. Each span keeps the voice audible at the same timing,
-with pitch and formants shifted (rubberband, so FFmpeg needs librubberband).
-Use it for an account owner who joined the call. Mutes still apply on top, so
-mute their name and other identifiers inside a disguised span as usual.
 
 ```sh
 node --import tsx scripts/review-call-audio.ts export --manifest /private/call/manifest.private.json --out /private/call/review.mp3 --ffmpeg /path/to/ffmpeg

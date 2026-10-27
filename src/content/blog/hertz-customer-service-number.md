@@ -4,7 +4,7 @@ seoTitle: "Hertz customer service number: 1-800-654-4173"
 subtitle: "We called Hertz three times. On the past rentals line, a virtual assistant named Haley answers first. One call reached a live representative after six requests. One call ended when Haley hung up on us. Here are all three recordings, the exact prompts, and what the person told us."
 description: "The Hertz customer service number for past rentals is 1-800-654-4173. A virtual assistant answers. How we got a live person, from real recorded calls."
 date: 2026-10-08
-updated: 2026-10-24
+updated: 2026-10-16
 verified: 2026-10-08
 tags: hertz, car rental, customer service, phone numbers, virtual assistants, phone trees
 authors: nick
@@ -190,8 +190,6 @@ call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) t
 **The third call fixed it, partly by luck.** We told our caller about the second call and to answer Haley right away if it said it hadn't heard from us. Our caller also answered every one of Haley's questions straight away and explained the topic (charges on a finished rental, possibly fuel or damage). Haley never said it hadn't heard from us this time: the transfer went through about 19 seconds after "Let me connect you now". So we can't prove that answering the "haven't heard from you" prompt gets you transferred. We only know that staying silent got us hung up on.
 
 After the goodbye on the third call, the representative came back on with "Hello, I don't know if there's anything else I can assist you today", and our caller said goodbye again. We kept the audio of all three calls as it happened, apart from the muted name.
-
-For travel bookings, we've also called [Expedia](/blog/expedia-customer-service-number), where a person answered after 3:24, and [Priceline](/blog/priceline-customer-service).
 
 ## Have your agent make this call
 

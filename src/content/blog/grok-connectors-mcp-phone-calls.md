@@ -1,10 +1,10 @@
 ---
-title: "How to add a phone calling MCP server to Grok and Grok Bot"
-seoTitle: "Grok MCP: add phone calls to Grok and Grok Bot"
+title: "Grok MCP and Grok Bot MCP: add phone calling tools"
+seoTitle: "Grok phone calls: Grok MCP and Grok Bot setup"
 subtitle: Set up custom tools on grok.com, in Grok Bot or through the xAI API. Then hear our actual Grok Bot restaurant call, including the partial answer and the menu problem.
-description: "Make Grok phone calls by adding a calling MCP server in Grok, Grok Bot or the xAI API. Setup for each, access checks and our recorded Grok Bot call."
+description: "Grok phone calls work once you connect a calling MCP server. Set up call4me in Grok or Grok Bot, check access and hear our recorded Grok Bot call."
 date: 2026-10-01
-updated: 2026-10-17
+updated: 2026-10-16
 tags: grok, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: Grok connectors and MCP servers, with phone calls as the worked example

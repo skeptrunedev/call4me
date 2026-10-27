@@ -1,10 +1,10 @@
 ---
-title: "How to reschedule a dentist appointment by phone, or have your AI assistant do it"
+title: Have your AI assistant reschedule a dentist appointment (a real 2 minute call)
 seoTitle: Reschedule a dentist appointment with AI
 subtitle: A call4me user had his AI assistant call his dentist and move an appointment. Hear the full recording, copy a prompt for your own appointment, and see what the office needed.
-description: "To reschedule a dentist appointment, have the patient name, current time and two or three open windows ready. Hear an AI assistant do it in 2 minutes."
+description: An AI assistant called a dentist and rescheduled an appointment in under two minutes. Hear the recording, copy the prompt, and see what to have ready.
 date: 2026-09-30
-updated: 2026-10-17
+updated: 2026-10-13
 tags: dentist, appointments, reschedule, ai phone assistant
 authors: nick
 imageAlt: An AI assistant reschedules a dentist appointment in a 2 minute call
@@ -17,8 +17,6 @@ He wrote to us afterwards: "It works great! Got my first dentist appointment res
 The assistant needed four things, and so do you if you call yourself: **the patient's name**, **the appointment you're moving** (day and time), **two or three windows that work**, and **whether staying with the same dentist matters more than the day**.
 
 ## Have your AI assistant make the call
-
-More recorded doctor and dentist calls are on [an AI that calls your doctor or dentist to book an appointment](/book-doctor-appointment).
 
 The caller was [call4me](/), which gives the agent you already use (Claude Code, Codex, ChatGPT, Claude) a phone. Connect it with the [Claude Code guide](/blog/claude-code-phone-calls), [Codex guide](/blog/codex-phone-calls) or [ChatGPT guide](/blog/chatgpt-phone-calls), then paste this:
 

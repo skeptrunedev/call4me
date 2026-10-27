@@ -15,7 +15,7 @@ One new informational call per company, using the same number and the same route
    - the company's post: add the new call's date, time to a person and transcript line next to the earlier one
    - `public/static/blog/how-long-to-reach-a-human.csv` and the table in `src/content/blog/how-long-to-reach-a-human.md`
    - `src/content/companies.ts` (`timeToHuman`, `calls`) and `HOLD_EVIDENCE` plus `HOLD_UPDATED` in `src/content/hold-times.ts`
-5. Check that every quote and time matches across these files, then run `npm test`.
+5. Run `npm test`. `test/hold-times.test.ts` and `test/companies.test.ts` fail if a quote or time drifts between these files.
 6. Push, then email reporters who covered the data only if a number moved a lot (for example, a new longest wait).
 
 ## New companies

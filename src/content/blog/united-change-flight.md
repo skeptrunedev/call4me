@@ -1,16 +1,16 @@
 ---
-title: "How to change a United flight by phone, and what the change fee is"
-seoTitle: "United change flight fee: what an agent told us"
+title: "United Airlines customer service: how to reach a person, and the change flight rules"
+seoTitle: "United Airlines customer service: 1-800-864-8331"
 subtitle: We called United reservations to ask how changing a flight works and what it costs. Here is the phone tree, the three words that got us to a person, what the agent said about Economy, Basic Economy and same-day changes, where united.com says something different, and the recording.
-description: "Call United Airlines customer service at 1-800-864-8331 and say \"flight change fee\" to reach an agent. What they said about fees and Basic Economy."
+description: "United Airlines customer service is 1-800-864-8331. Say \"flight change fee\" to reach an agent. What they told us about change fees, from a recorded call."
 date: 2026-10-01
-updated: 2026-10-24
+updated: 2026-10-04
 tags: united, airlines, flight changes, customer service, phone trees
 authors: nick
 imageAlt: United 1-800-864-8331, how to change a flight and what it costs
 ---
 
-**To change a United flight or ask about the fee, call United Airlines customer service at 1-800-864-8331 and say "flight change fee".** Its voice assistant answers first; that phrase got us into the reservations queue, and an agent picked up 19:09 into the call. Every prompt and the full recording are below.
+**United Airlines customer service is 1-800-864-8331.** Its voice assistant answers first; saying "flight change fee" got us into the reservations queue, and an agent picked up 19:09 into the call. Every prompt and the full recording are below.
 
 **The short answer on changes:** United change flight rules depend on your ticket. A United reservations agent told us that on a **Standard Economy** ticket, and on United First, you can change "anytime" and pay **the fare difference only**. **Basic Economy** "is the most restrictive ticket": she said a **flexibility fee plus the fare difference** applies, with the fee depending on the route. united.com says something different about Basic Economy (more [below](#what-united-com-says)), so check your own ticket before you rely on either.
 
@@ -120,8 +120,6 @@ Three words, "flight change fee", went straight through to the agent queue.
 ## How we made this recording
 
 call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) tells it what to get done and it makes the call. For this one, the brief was to reach a live United reservations agent, ask how changing a flight works (Economy, Basic Economy, same-day changes, phone versus online), and note every menu prompt and what got through. We had no trip booked and told the agent so.
-
-For other airlines, we've also called [Southwest Airlines](/blog/southwest-airlines-phone-number), [Alaska Airlines](/blog/alaska-airlines-customer-service) and [Delta](/blog/delta-customer-service).
 
 ## Have your agent make this call
 

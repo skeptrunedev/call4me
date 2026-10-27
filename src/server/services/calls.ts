@@ -1,5 +1,4 @@
 import { newId, now } from '../lib/ids';
-import { replayOf, type Idempotency } from '../lib/idempotency';
 import { checkDialable, type PhoneCheck } from '../lib/phone';
 import { accounts, type Account } from './accounts';
 import { catalog, missingMessage, PROFILE_FIELDS, resolveIntake, type Surface } from './intake';
@@ -24,8 +23,6 @@ export interface Brief {
   listen_in?: boolean;
   /** The first name the caller goes by ("Jordan"); none by default. */
   caller_name?: string | null;
-  /** The accent or dialect the caller holds ("Austrian German"); its voice's own by default. */
-  accent?: string | null;
   /** The company the caller calls as ("Acme"); callbacks to the number it called from answer the same way. */
   calling_as?: string | null;
   /** The number the business is given to call back, when the user named one; else the number the call came from. */
@@ -76,9 +73,6 @@ export interface CallRow {
   error: string | null;
   /** Inbound only: the outbound call whose unfinished task this callback picked up. */
   callback_for: string | null;
-  /** The Idempotency-Key the request placing it sent, and its body's fingerprint (lib/idempotency.ts). */
-  idempotency_key: string | null;
-  idempotency_hash: string | null;
   created_at: number;
 }
 
@@ -123,15 +117,13 @@ export class CallError extends Error {
 
 /**
  * Calls default to 30 minutes; an explicit cap can reach Telnyx's 4 hour ceiling. A call still on
- * hold when its cap comes up holds `holdExtensionMinutes` more credits and keeps waiting, and one
- * still mid-conversation holds `talkExtensionMinutes` more to finish it, as long as the balance
- * covers it, up to that ceiling.
+ * hold when its cap comes up holds `holdExtensionMinutes` more credits and keeps waiting, as long
+ * as the balance covers it, up to that ceiling.
  */
 export const LIMITS = {
   defaultMinutes: 30,
   maxMinutes: 240,
   holdExtensionMinutes: 15,
-  talkExtensionMinutes: 2,
 };
 
 export interface PlaceCallInput {
@@ -156,8 +148,6 @@ export interface PlaceCallInput {
   from?: string;
   /** The first name the caller introduces itself with. */
   caller_name?: string;
-  /** An accent or dialect the caller speaks with ("Austrian German"). */
-  accent?: string;
   /** The company the caller calls from: "Jordan from Acme" rather than "Alex's assistant". */
   calling_as?: string;
   /** Where callbacks go instead of the number the call comes from, e.g. the user's mobile. */
@@ -176,33 +166,15 @@ export function redact(text: string, secrets: string[]): string {
  * What a call costs: every started minute at the call's price, except whole minutes spent on hold,
  * which are half price. `holdSeconds` beyond the call's length are ignored.
  */
-function billedCents(talkSeconds: number, pricePerMinuteCents: number, holdSeconds = 0): number {
+export function billedCents(talkSeconds: number, pricePerMinuteCents: number, holdSeconds = 0): number {
   const minutes = Math.ceil(talkSeconds / 60);
   const holdMinutes = Math.min(minutes, Math.floor(Math.min(holdSeconds, talkSeconds) / 60));
   return (minutes - holdMinutes) * pricePerMinuteCents + Math.ceil((holdMinutes * pricePerMinuteCents) / 2);
 }
 
 /** Seconds on hold by `at`: the holds already over plus one still going. */
-const holdSecondsAt = (row: Pick<CallRow, 'hold_seconds' | 'hold_since'>, at: number) =>
+export const holdSecondsAt = (row: Pick<CallRow, 'hold_seconds' | 'hold_since'>, at: number) =>
   (row.hold_seconds ?? 0) + (row.hold_since ? Math.max(0, Math.round((at - row.hold_since) / 1000)) : 0);
-
-/**
- * Credits held for a call that its time up to `at` hasn't used. They are held at full price, so a
- * call that spent its time on hold has about half its credits left when its limit comes up.
- */
-function unusedHoldCents(row: Pick<CallRow, 'hold_cents' | 'answered_at' | 'hold_seconds' | 'hold_since'>, at: number, pricePerMinuteCents: number): number {
-  if (!row.hold_cents || !row.answered_at) return 0;
-  const talkSeconds = Math.max(0, Math.round((at - row.answered_at) / 1000));
-  return Math.max(0, row.hold_cents - billedCents(talkSeconds, pricePerMinuteCents, holdSecondsAt(row, at)));
-}
-
-/** A call recorded and ready to dial, with its per-call secrets (account PINs), which are never stored. */
-interface CreatedCall {
-  call: CallRow;
-  secrets: { label: string; value: string }[];
-  to: Dialable;
-  ownerPhone: string | null;
-}
 
 export function calls(db: D1Database) {
   return {
@@ -242,9 +214,6 @@ export function calls(db: D1Database) {
       const callerName = input.caller_name?.trim() || null;
       const nameProblem = callerName && PROFILE_FIELDS.assistant_name.check?.(callerName);
       if (nameProblem) throw new CallError(`caller_name: ${nameProblem}`);
-      const accent = input.accent?.trim() || null;
-      const accentProblem = accent && PROFILE_FIELDS.accent.check?.(accent);
-      if (accentProblem) throw new CallError(`accent: ${accentProblem}`);
       const callingAs = input.calling_as?.trim() || null;
       let callbackNumber: string | null = null;
       if (input.callback_number?.trim()) {
@@ -268,34 +237,16 @@ export function calls(db: D1Database) {
           422,
         );
       }
-      return { category, intake, onBehalfOf, to, callerName, accent, callingAs, callbackNumber, ownerPhone };
+      return { category, intake, onBehalfOf, to, callerName, callingAs, callbackNumber, ownerPhone };
     },
 
     /** Validate, check money and limits, and record the call as queued. Dialing is the caller's next step. */
     /**
      * Returns the call plus its per-call secrets (account PINs): those reach the caller's
-     * instructions but are never written to the database. With an Idempotency-Key the request
-     * already made a call for, it throws IdempotentReplay with that call before checking anything:
-     * a retry must get its call back even after the first one spent the balance.
+     * instructions but are never written to the database.
      */
-    async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number, surface: Surface = 'agents', idempotency?: Idempotency): Promise<CreatedCall> {
-      const replay = async () => idempotency && replayOf(await this.byIdempotencyKey(account.id, idempotency.key), idempotency);
-      const earlier = await replay();
-      if (earlier) throw earlier;
-      try {
-        return await this.record(account, input, pricePerMinuteCents, surface, idempotency);
-      } catch (err) {
-        // A concurrent request with the same key won meanwhile: the idempotency index refused this
-        // row, or the winner's hold left the balance short. Answer as that request.
-        const winner = await replay();
-        if (winner) throw winner;
-        throw err;
-      }
-    },
-
-    /** create's work once the Idempotency-Key (if any) is known to be new. */
-    async record(account: Account, input: PlaceCallInput, pricePerMinuteCents: number, surface: Surface, idempotency: Idempotency | undefined): Promise<CreatedCall> {
-      const { category, intake, onBehalfOf, to, callerName, accent, callingAs, callbackNumber, ownerPhone } = await this.validate(account, input, surface);
+    async create(account: Account, input: PlaceCallInput, pricePerMinuteCents: number, surface: Surface = 'agents'): Promise<{ call: CallRow; secrets: { label: string; value: string }[]; to: Dialable; ownerPhone: string | null }> {
+      const { category, intake, onBehalfOf, to, callerName, callingAs, callbackNumber, ownerPhone } = await this.validate(account, input, surface);
 
       // Credits up front: the call holds its maximum cost now and settles when it ends.
       const balance = await accounts(db).balanceCents(account.id);
@@ -315,38 +266,23 @@ export function calls(db: D1Database) {
         connect_when: input.connect_when?.trim() || null,
         ...(input.listen_in ? { listen_in: true } : {}),
         ...(callerName ? { caller_name: callerName } : {}),
-        ...(accent ? { accent } : {}),
         ...(callingAs ? { calling_as: callingAs } : {}),
         ...(callbackNumber ? { callback_number: callbackNumber } : {}),
       };
       const id = `call_${newId()}`;
-      // The hold and the row commit together: the row is written only if the hold was, and a row the
-      // idempotency index refuses (a concurrent request with the same key won) takes its hold back with it.
-      const [hold] = await db.batch([
-        accounts(db).spendStatement(account.id, holdCents, 'hold', `hold:${id}`, `up to ${maxMinutes} min to ${input.business.trim()}`),
-        db
-          .prepare(
-            `INSERT INTO calls (id, account_id, to_number, business, goal, brief, category, status, hold_cents, idempotency_key, idempotency_hash, created_at)
-             SELECT ?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?, ?, ? WHERE EXISTS (SELECT 1 FROM ledger WHERE ref = ?)`,
-          )
-          .bind(id, account.id, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(brief), category.slug, holdCents, idempotency?.key ?? null, idempotency?.fingerprint ?? null, now(), `hold:${id}`),
-      ]);
-      if (!hold.meta.changes) throw new CallError('another call is holding those credits; wait for it to finish, add credits, or pass a smaller max_minutes', 402);
+      if (!(await accounts(db).hold(account.id, holdCents, `hold:${id}`, `up to ${maxMinutes} min to ${input.business.trim()}`))) {
+        throw new CallError('another call is holding those credits; wait for it to finish, add credits, or pass a smaller max_minutes', 402);
+      }
+      await db
+        .prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, category, status, hold_cents, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?)`)
+        .bind(id, account.id, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(brief), category.slug, holdCents, now())
+        .run();
       const secrets = intake.known.filter((k) => k.sensitive).map((k) => ({ label: k.label, value: k.value }));
       return { call: (await this.byId(id))!, secrets, to, ownerPhone };
     },
 
     byId(id: string): Promise<CallRow | null> {
       return db.prepare(`SELECT * FROM calls WHERE id = ?`).bind(id).first<CallRow>();
-    },
-
-    byIdempotencyKey(accountId: string, key: string): Promise<CallRow | null> {
-      return db.prepare(`SELECT * FROM calls WHERE account_id = ? AND idempotency_key = ?`).bind(accountId, key).first<CallRow>();
-    },
-
-    /** The carrier never took the call: free its Idempotency-Key, so a retry with it places the call. */
-    async releaseIdempotencyKey(id: string): Promise<void> {
-      await db.prepare(`UPDATE calls SET idempotency_key = NULL, idempotency_hash = NULL WHERE id = ?`).bind(id).run();
     },
 
     async forAccount(accountId: string, id: string): Promise<CallRow> {
@@ -454,21 +390,14 @@ export function calls(db: D1Database) {
     },
 
     /**
-     * Up to `want` more minutes for a call still running at `at`, the n-th time it has been
-     * extended. Credits already held that its time so far hasn't used (hold minutes bill at half
-     * price) pay for them first; only the rest is held from the balance. Returns the minutes
-     * granted, 0 when the balance can't cover one.
+     * Hold `minutes` more of the account's credits for a call still running, the n-th time it has
+     * been extended. False when the balance can't cover them.
      */
-    async extend(row: Pick<CallRow, 'id' | 'account_id' | 'business' | 'hold_cents' | 'answered_at' | 'hold_seconds' | 'hold_since'>, want: number, pricePerMinuteCents: number, n: number, at: number): Promise<number> {
-      const unused = unusedHoldCents(row, at, pricePerMinuteCents);
-      const balance = await accounts(db).balanceCents(row.account_id);
-      const minutes = Math.min(want, Math.floor((balance + unused) / pricePerMinuteCents));
-      if (minutes < 1) return 0;
-      const cents = Math.max(0, minutes * pricePerMinuteCents - unused);
-      if (!cents) return minutes;
-      if (!(await accounts(db).hold(row.account_id, cents, `hold:${row.id}:${n}`, `${minutes} more min on hold with ${row.business}`))) return 0;
-      await db.prepare(`UPDATE calls SET hold_cents = COALESCE(hold_cents, 0) + ? WHERE id = ?`).bind(cents, row.id).run();
-      return minutes;
+    async extend(row: Pick<CallRow, 'id' | 'account_id' | 'business'>, minutes: number, pricePerMinuteCents: number, n: number): Promise<boolean> {
+      const cents = minutes * pricePerMinuteCents;
+      const held = await accounts(db).hold(row.account_id, cents, `hold:${row.id}:${n}`, `${minutes} more min on hold with ${row.business}`);
+      if (held) await db.prepare(`UPDATE calls SET hold_cents = COALESCE(hold_cents, 0) + ? WHERE id = ?`).bind(cents, row.id).run();
+      return held;
     },
 
     async block(number: string, reason: string): Promise<void> {

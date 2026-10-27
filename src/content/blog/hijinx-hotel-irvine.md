@@ -1,16 +1,15 @@
 ---
-title: "Change a Hijinx Hotel Irvine booking for adults and kids"
+title: Hijinx Hotel Irvine: changing a booking for adults and kids
 seoTitle: Hijinx Hotel Irvine: ages and booking changes
 subtitle: A real call to Irvine Spectrum clarified a family booking, the evening age cutoff and how eight players would split across challenge rooms.
-description: "To change a Hijinx Hotel Irvine booking, call with your booking reference. Hear a real call that switched 8 adults to 4 adults and 4 kids and checked ages."
+description: Hear a real Hijinx Hotel Irvine call about changing eight adult tickets to four adults and four kids, checking the age policy and splitting the group.
 date: 2026-10-11
-updated: 2026-10-17
 tags: Hijinx Hotel Irvine, challenge rooms, family activities, group bookings, ai phone assistant
 authors: nick
 imageAlt: Hijinx Hotel Irvine, a booking change for four adults and four kids
 ---
 
-**To change a Hijinx Hotel Irvine booking with the wrong mix of adults and children, call the venue with the booking reference and ask staff to check the exact session before changing it.** Hijinx Hotel Irvine is at Irvine Spectrum, 517 Spectrum Center Drive, Irvine, California. The [official location page](https://hijinxhotel.com/locations/irvine-spectrum) describes teams of two to six players and recommends booking ahead.
+**Hijinx Hotel Irvine is at Irvine Spectrum, 517 Spectrum Center Drive, Irvine, California.** If an existing challenge room booking has the wrong mix of adults and children, call the venue with the booking reference and ask staff to check the exact session before changing it. The [official location page](https://hijinxhotel.com/locations/irvine-spectrum) describes teams of two to six players and recommends booking ahead.
 
 On October 10, 2026, a call4me customer's assistant called about that evening's 7:30 PM session. The booking listed eight adults. The actual group was four adults and four children. Staff found the booking, agreed that it could be adjusted, and said they would email confirmation after the change.
 

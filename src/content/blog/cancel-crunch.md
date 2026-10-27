@@ -1,10 +1,10 @@
 ---
-title: How to cancel a Crunch Fitness membership with help from your AI agent
-seoTitle: "Cancel Crunch Fitness membership: app, club, email"
+title: How to cancel Crunch membership with help from your AI agent
+seoTitle: How to cancel Crunch membership with AI agent help
 subtitle: Give your AI assistant the job of finding your home club’s cancellation route, checking the deadline and preparing the next step. Hear what Crunch Polk Street told our caller.
-description: Cancel a Crunch Fitness membership in the app, at the club or by email; some clubs use Member Portal, Manage Membership. Our AI agent prompt checks yours.
+description: Want help cancelling Crunch? Give your AI agent this prompt to check your club’s rules, call for missing details and prepare a cancellation request to review.
 date: 2026-10-06
-updated: 2026-10-17
+updated: 2026-10-07
 verified: 2026-10-06
 tags: crunch, cancel subscription, gym membership, personal assistant, ai phone assistant
 authors: nick

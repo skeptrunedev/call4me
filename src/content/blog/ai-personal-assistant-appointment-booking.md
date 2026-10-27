@@ -1,10 +1,9 @@
 ---
-title: "How to have your AI personal assistant book an appointment and confirm it"
+title: "Let your AI personal assistant book an appointment: prompts and confirmation checklist"
 seoTitle: "AI appointment booking with a personal assistant"
 subtitle: Give Claude Code, Codex or Muse a clear scheduling brief, then check what the business actually confirmed. Includes three real calls and reusable templates.
 description: Use your AI personal assistant for appointment booking. Download a call brief and confirmation checklist with real booking and arrival update recordings.
 date: 2026-10-06
-updated: 2026-10-17
 tags: ai appointment booking, personal assistant, appointments, phone calls
 authors: nick
 imageAlt: Three steps for an appointment call, choose your limits, let the assistant call, check the confirmation

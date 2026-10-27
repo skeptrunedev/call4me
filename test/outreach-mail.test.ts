@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { execFileSync } from 'node:child_process';
-import { fastmail, messageHtml } from '../scripts/outreach-mail.mjs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fastmail, messageHtml, parseMessage, statusAfterDraft } from '../scripts/outreach-mail.mjs';
 
 const MAIL = 'urn:ietf:params:jmap:mail';
 const SUBMISSION = 'urn:ietf:params:jmap:submission';
@@ -23,6 +26,13 @@ const defaults: Record<string, unknown> = {
   ] },
 };
 const message = { to: 'creator@example.com', subject: 'hello', text: 'hi <creator> & team\nnext line\n\nnick' };
+
+test('email links stay clickable while HTML and unsafe links remain escaped text', () => {
+  assert.equal(messageHtml('[read <this>](https://example.com/?a=1&b=2)'), '<p><a href="https://example.com/?a=1&amp;b=2">read &lt;this&gt;</a></p>');
+  assert.equal(messageHtml('[bad](javascript:alert(1))'), '<p>[bad](javascript:alert(1))</p>');
+  assert.equal(messageHtml('<script>bad()</script>'), '<p>&lt;script&gt;bad()&lt;/script&gt;</p>');
+  assert.equal(messageHtml('[quote](https://example.com/"onclick="bad)'), '<p><a href="https://example.com/&quot;onclick=&quot;bad">quote</a></p>');
+});
 
 test('mail-send previews the exact launch file without credentials or network writes', () => {
   const result = JSON.parse(execFileSync(process.execPath, ['scripts/outreach.mjs', 'mail-send', 'me@skeptrune.com', 'docs/product-hunt/launch-email.md', '--dry-run'], { encoding: 'utf8', env: { ...process.env, FASTMAIL_JMAP_TOKEN: '' } }));
@@ -57,6 +67,15 @@ test('draft discovery uses the session API and exact sender, without submitting 
   assert.deepEqual(draft.keywords, { $draft: true });
   assert.equal(draft.bodyValues.html.value, '<p>hi &lt;creator&gt; &amp; team<br>next line</p>\n<p>nick</p>');
   assert.equal(messageHtml('"quoted"'), '<p>&quot;quoted&quot;</p>');
+});
+
+test('mail status is read only and reuses discovery', async () => {
+  const { client, calls } = mock();
+  const status = await client.status();
+  assert.equal(status.sender.email, 'me@skeptrune.com');
+  await client.status();
+  assert.equal(calls.length, 3);
+  assert.ok(calls.slice(1).every((call) => call.body.methodCalls[0][0].endsWith('/get')));
 });
 
 test('mail search and full body reads preserve mailbox and read state', async () => {
@@ -124,6 +143,16 @@ test('follow-ups to sent mail from an authenticated alias preserve recipient and
   }
 });
 
+test('only explicit send submits and moves the created draft to sent', async () => {
+  const { client, calls } = mock();
+  assert.deepEqual(await client.send(message), { provider: 'fastmail', id: 'draft-email', submissionId: 'submission' });
+  const submission = calls.at(-1)!.body.methodCalls[0][1];
+  assert.deepEqual(submission.create.submission, { identityId: 'sender', emailId: 'draft-email' });
+  assert.deepEqual(submission.onSuccessUpdateEmail, { '#submission': {
+    'mailboxIds/drafts': null, 'mailboxIds/sent': true, 'keywords/$draft': null,
+  } });
+});
+
 test('authentication, missing sender and wrong account stop before writes', async () => {
   const auth = fastmail({ token: 'test-token', fetchImpl: async () => ({ ok: false, status: 401 }) });
   await assert.rejects(auth.createDraft(message), /HTTP 401/);
@@ -159,6 +188,11 @@ test('successful submission with a filing error stays successful to prevent a du
   assert.equal(delivered.submissionId, 'submission');
   assert.match(delivered.warning, /mail submitted, but Sent mailbox update was not confirmed \(serverFail\)/);
   assert.equal(calls.length, 5);
+});
+
+test('drafting preserves prior contact history statuses', () => {
+  for (const status of ['new', 'drafted', 'no_contact']) assert.equal(statusAfterDraft(status), 'drafted');
+  for (const status of ['sent', 'replied', 'won', 'declined']) assert.equal(statusAfterDraft(status), status);
 });
 
 const originalDraft = {
@@ -200,6 +234,11 @@ const scheduleOverrides = () => ({
   'EmailSubmission/get': methodResult('EmailSubmission/get', { list: [scheduled], notFound: [] }),
 });
 const scheduleMessage = { ...sendDraftMessage, sendAt };
+
+test('message parsing requires a subject and body and handles CRLF', () => {
+  assert.deepEqual(parseMessage('Subject: hello\r\n\r\nbody\r\n'), { subject: 'hello', text: 'body' });
+  for (const value of ['', 'Subject: hello\nbody', 'Subject: \n\nbody', 'Subject: hello\n\n ', 'Subject: hi\rBcc: surprise\n\nbody']) assert.throws(() => parseMessage(value), /Subject/);
+});
 
 test('native scheduling uses HOLDUNTIL, verifies provider state and files the existing message', async () => {
   const { client, calls } = mock(scheduleOverrides(), scheduleSession);
@@ -262,6 +301,17 @@ test('provider schedule mismatches preserve the native id and never retry or fal
     });
     assert.equal(calls.filter((call) => call.body?.methodCalls[0][0].endsWith('/set')).length, 1);
   }
+});
+
+test('native schedule rejection never attempts immediate delivery and filing failures remain verified schedules', async () => {
+  const failed = mock({ ...scheduleOverrides(), 'EmailSubmission/set': methodResult('EmailSubmission/set', { notCreated: { submission: { type: 'invalidProperties' } } }) }, scheduleSession);
+  await assert.rejects(failed.client.scheduleDraft(scheduleMessage), /invalidProperties/);
+  assert.equal(failed.calls.filter((call) => call.body?.methodCalls[0][0].endsWith('/set')).length, 1);
+  const filing = mock({ ...scheduleOverrides(), 'EmailSubmission/set': methodResult('EmailSubmission/set', { created: { submission: { id: 'submission' } } }) }, scheduleSession);
+  const result = await filing.client.scheduleDraft(scheduleMessage);
+  assert.equal(result.submissionId, 'submission');
+  assert.equal(result.sendAt, sendAt);
+  assert.match(result.warning!, /mail scheduled.*Sent mailbox update/);
 });
 
 test('cancellation updates undoStatus and confirms canceled status without deleting anything', async () => {
@@ -446,5 +496,221 @@ test('partial replacement returns the created draft id and inspection warning wi
 });
 
 // Stub only external boundaries so the actual CLI routing and SQL are exercised.
+function cliFixture(row: Record<string, unknown>, run: (fixture: { run: (args: string[]) => string; calls: () => any[] }) => void, overrides: Record<string, unknown> = {}) {
+  const directory = mkdtempSync(join(tmpdir(), 'outreach-mail-test-'));
+  const log = join(directory, 'calls.jsonl');
+  const preload = join(directory, 'fetch.mjs');
+  writeFileSync(join(directory, 'npx'), `#!${process.execPath}\nimport {appendFileSync} from 'node:fs';\nappendFileSync(${JSON.stringify(log)},JSON.stringify({sql:process.argv.at(-1)})+'\\n');\nconsole.log(JSON.stringify([{results:[${JSON.stringify(row)}]}]));\n`, { mode: 0o755 });
+  writeFileSync(preload, `import {appendFileSync} from 'node:fs';\nconst responses=${JSON.stringify({ ...defaults, ...overrides })};\nglobalThis.fetch=async(url,options)=>{const body=options.body?JSON.parse(options.body):null;appendFileSync(${JSON.stringify(log)},JSON.stringify({url,body})+'\\n');const result=body?responses[body.methodCalls[0][0]]:${JSON.stringify(session)};return{ok:true,json:async()=>Array.isArray(result)?result.shift():result}};\n`);
+  try {
+    run({
+      run: (args) => execFileSync(process.execPath, ['--import', preload, 'scripts/outreach.mjs', ...args], {
+        encoding: 'utf8', env: { ...process.env, PATH: `${directory}:${process.env.PATH}`, FASTMAIL_JMAP_TOKEN: 'test-token' }, stdio: ['ignore', 'pipe', 'pipe'],
+      }),
+      calls: () => readFileSync(log, 'utf8').trim().split('\n').filter(Boolean).map((line) => JSON.parse(line)),
+    });
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+}
 
+const row = { id: 'person', name: 'Creator', kind: 'creator', email: message.to, message: message.text, notes: 'existing notes', status: 'new' };
 
+test('both CLI dry runs only read D1, without provider requests or mutations', () => {
+  cliFixture(row, (fixture) => {
+    for (const command of ['email', 'email-draft']) assert.match(fixture.run([command, 'person', 'hello', '--dry-run']), /to: creator@example.com/);
+    assert.equal(fixture.calls().length, 2);
+    assert.ok(fixture.calls().every((call) => call.sql.startsWith('SELECT')));
+  });
+});
+
+test('list JSON preserves structural data and email duplicate guard prevents provider calls', () => {
+  cliFixture({ ...row, sent_via: 'email' }, (fixture) => {
+    assert.equal(JSON.parse(fixture.run(['list', '--json']))[0].id, 'person');
+    assert.throws(() => fixture.run(['email', 'person', 'hello']), /already emailed/);
+    assert.ok(fixture.calls().every((call) => call.sql.startsWith('SELECT')));
+  });
+});
+
+test('CLI draft records native draft id without changing prior sent history', () => {
+  cliFixture({ ...row, status: 'sent', sent_via: 'other', sent_at: 123 }, (fixture) => {
+    assert.match(fixture.run(['email-draft', 'person', 'hello']), /draft-email/);
+    const calls = fixture.calls();
+    const update = calls.find((call) => call.sql?.startsWith('UPDATE')).sql;
+    assert.match(update, /status = 'sent'/);
+    assert.match(update, /existing notes/);
+    assert.match(update, /fastmail draft id draft-email/);
+    assert.doesNotMatch(update, /sent_via|sent_at|message =/);
+    assert.ok(calls.every((call) => !call.body || call.body.methodCalls[0][0] !== 'EmailSubmission/set'));
+  });
+});
+
+test('CLI existing draft send dry run is read only and successful send records the native id and sent timestamp', () => {
+  cliFixture({ ...row, status: 'drafted' }, (fixture) => {
+    const args = ['email-send-draft', 'person', 'original-draft', message.subject];
+    assert.equal(fixture.run([...args, '--dry-run']), `to: ${message.to}\nsubject: ${message.subject}\n\n${message.text}\n`);
+    assert.ok(fixture.calls().every((call) => !call.sql || call.sql.startsWith('SELECT')));
+    assert.ok(fixture.calls().every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+    assert.match(fixture.run(args), /original-draft/);
+    const calls = fixture.calls();
+    const update = calls.find((call) => call.sql?.startsWith('UPDATE')).sql;
+    assert.match(update, /status = 'sent'/);
+    assert.match(update, /sent_via = 'email'/);
+    assert.match(update, /sent_at = \d+/);
+    assert.match(update, /existing notes/);
+    assert.match(update, /original-draft/);
+    assert.match(update, /submission/);
+    assert.doesNotMatch(update, /message =/);
+    assert.equal(calls.filter((call) => call.body?.methodCalls[0][0] === 'EmailSubmission/set').length, 1);
+    assert.ok(calls.every((call) => call.body?.methodCalls[0][0] !== 'Email/set'));
+  }, sendDraftOverrides());
+});
+
+test('CLI existing draft send refuses already emailed rows before provider access and content mismatches before submit', () => {
+  cliFixture({ ...row, status: 'sent', sent_via: 'email', sent_at: 123 }, (fixture) => {
+    assert.throws(() => fixture.run(['email-send-draft', 'person', 'original-draft', message.subject]), /already emailed/);
+    assert.ok(fixture.calls().every((call) => call.sql?.startsWith('SELECT')));
+  }, sendDraftOverrides());
+  cliFixture(row, (fixture) => {
+    assert.throws(() => fixture.run(['email-send-draft', 'person', 'original-draft', message.subject]), /body.*match/);
+    assert.ok(fixture.calls().every((call) => !call.sql || call.sql.startsWith('SELECT')));
+    assert.ok(fixture.calls().every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+  }, sendDraftOverrides({ ...originalDraft, bodyValues: { html: { value: '<p>unexpected draft body</p>' } } }));
+});
+
+test('CLI existing draft send preserves replied status and records confirmed submission despite a filing warning', () => {
+  cliFixture({ ...row, status: 'replied', replied_at: 456 }, (fixture) => {
+    assert.match(fixture.run(['email-send-draft', 'person', 'original-draft', message.subject]), /original-draft/);
+    const calls = fixture.calls();
+    const update = calls.find((call) => call.sql?.startsWith('UPDATE')).sql;
+    assert.match(update, /status = 'replied'/);
+    assert.match(update, /sent_via = 'email'/);
+    assert.match(update, /sent_at = \d+/);
+    assert.match(update, /submission/);
+    assert.match(update, /Sent mailbox update/);
+    assert.doesNotMatch(update, /message =|replied_at/);
+    assert.equal(calls.filter((call) => call.body?.methodCalls[0][0] === 'EmailSubmission/set').length, 1);
+  }, { ...sendDraftOverrides(), 'EmailSubmission/set': { methodResponses: [
+    ['Email/set', { accountId: 'account', notUpdated: { 'original-draft': { type: 'forbidden' } } }, 'outreach'],
+    ['EmailSubmission/set', { accountId: 'account', created: { submission: { id: 'submission' } } }, 'outreach'],
+  ] } });
+});
+
+test('CLI draft update routes the guarded replacement and preserves prior sent history', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'outreach-draft-update-test-'));
+  const file = join(directory, 'body.txt');
+  writeFileSync(file, replacementMessage.text);
+  try {
+    cliFixture({ ...row, status: 'replied', sent_via: 'email', sent_at: 123, replied_at: 456 }, (fixture) => {
+      const args = ['email-draft-update', 'person', 'original-draft', 'updated subject', file];
+      assert.match(fixture.run([...args, '--dry-run']), /replace draft: original-draft/);
+      assert.ok(fixture.calls().every((call) => call.sql?.startsWith('SELECT')));
+      const result = JSON.parse(fixture.run(args));
+      assert.equal(result.id, 'replacement-draft');
+      assert.equal(result.replaced, true);
+      const calls = fixture.calls();
+      const update = calls.find((call) => call.sql?.startsWith('UPDATE')).sql;
+      assert.match(update, /message = 'updated body\n\nnick'/);
+      assert.match(update, /status = 'replied'/);
+      assert.match(update, /existing notes/);
+      assert.match(update, /replaced fastmail draft original-draft with draft replacement-draft/);
+      assert.doesNotMatch(update, /sent_via|sent_at|replied_at/);
+      const create = calls.find((call) => call.body?.methodCalls[0][1].create)?.body.methodCalls[0][1].create.draft;
+      assert.equal(create.subject, 'updated subject');
+      assert.ok(calls.every((call) => call.body?.methodCalls[0][0] !== 'EmailSubmission/set'));
+    }, replacementOverrides());
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('CLI draft update leaves tracker unchanged on original mismatch or partial replacement', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'outreach-draft-update-failure-test-'));
+  const file = join(directory, 'body.txt');
+  writeFileSync(file, replacementMessage.text);
+  try {
+    cliFixture(row, (fixture) => {
+      assert.throws(() => fixture.run(['email-draft-update', 'person', 'original-draft', 'hello', file]), /does not match the outreach tracker/);
+      assert.ok(fixture.calls().every((call) => !call.sql || call.sql.startsWith('SELECT')));
+      assert.ok(fixture.calls().every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+    }, replacementOverrides({ ...originalDraft, bodyValues: { html: { value: '<p>edited</p>' } } }));
+    const responses = replacementResponses();
+    responses[1] = methodResult('Email/set', { notDestroyed: { 'original-draft': { type: 'forbidden' } } });
+    cliFixture(row, (fixture) => {
+      assert.throws(() => fixture.run(['email-draft-update', 'person', 'original-draft', 'hello', file]), (error: any) => {
+        assert.equal(JSON.parse(error.stdout).id, 'replacement-draft');
+        assert.match(error.stderr, /inspect both drafts before retrying to avoid duplicates/);
+        return true;
+      });
+      assert.ok(fixture.calls().every((call) => !call.sql || call.sql.startsWith('SELECT')));
+      assert.ok(fixture.calls().every((call) => call.body?.methodCalls[0][0] !== 'EmailSubmission/set'));
+    }, { ...replacementOverrides(), 'Email/set': responses });
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('CLI reply dry run stays read only and sending preserves original contact history', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'outreach-reply-test-'));
+  const file = join(directory, 'reply.txt');
+  writeFileSync(file, 'thanks, interested');
+  try {
+    cliFixture({ ...row, status: 'replied', sent_via: 'email', sent_at: 123 }, (fixture) => {
+      const preview = JSON.parse(fixture.run(['email-reply', 'person', 'incoming', file, '--dry-run']));
+      assert.equal(preview.expectedThreadId, 'thread');
+      assert.ok(fixture.calls().every((call) => !call.sql || call.sql.startsWith('SELECT')));
+      assert.ok(fixture.calls().every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+      assert.equal(JSON.parse(fixture.run(['email-reply', 'person', 'incoming', file])).submissionId, 'submission');
+      const update = fixture.calls().find((call) => call.sql?.startsWith('UPDATE')).sql;
+      assert.match(update, /thanks, interested/);
+      assert.doesNotMatch(update, /sent_at|sent_via|message =|status =/);
+    });
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('direct mail reply does not query or modify the outreach tracker', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'mail-reply-test-'));
+  const file = join(directory, 'reply.txt');
+  writeFileSync(file, 'thanks for the feedback');
+  try {
+    cliFixture(row, (fixture) => {
+      assert.equal(JSON.parse(fixture.run(['mail-reply', message.to, 'incoming', file, '--dry-run'])).expectedThreadId, 'thread');
+      assert.ok(fixture.calls().every((call) => !call.sql && !call.body?.methodCalls[0][0].endsWith('/set')));
+      assert.equal(JSON.parse(fixture.run(['mail-reply', message.to, 'incoming', file])).submissionId, 'submission');
+      assert.ok(fixture.calls().every((call) => !call.sql));
+    });
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('CLI sends approved reply drafts without duplicates and preserves original outreach history', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'outreach-send-reply-draft-test-'));
+  const file = join(directory, 'reply.txt');
+  writeFileSync(file, message.text);
+  try {
+    for (const command of ['mail-send-reply-draft', 'email-send-reply-draft']) {
+      const tracked = command.startsWith('email-');
+      cliFixture({ ...row, status: 'replied', sent_via: 'email', sent_at: 123 }, (fixture) => {
+        const args = [command, tracked ? row.id : message.to, replySource.id, originalDraft.id, file];
+        assert.equal(JSON.parse(fixture.run([...args, '--dry-run'])).draftId, originalDraft.id);
+        assert.ok(fixture.calls().every((call) => !call.body?.methodCalls[0][0].endsWith('/set')));
+        assert.equal(JSON.parse(fixture.run(args)).id, originalDraft.id);
+        const calls = fixture.calls();
+        assert.equal(calls.filter((call) => call.body?.methodCalls[0][0] === 'EmailSubmission/set').length, 1);
+        assert.ok(calls.every((call) => call.body?.methodCalls[0][0] !== 'Email/set'));
+        if (tracked) {
+          const update = calls.find((call) => call.sql?.startsWith('UPDATE')).sql;
+          assert.match(update, /original-draft/);
+          assert.doesNotMatch(update, /sent_at|sent_via|message =|status =/);
+        } else {
+          assert.ok(calls.every((call) => !call.sql));
+        }
+      }, { 'Email/get': replyDraftReads(), 'EmailSubmission/set': draftSubmissionResponse });
+    }
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});

@@ -240,13 +240,12 @@ export const Layout: FC<{
             <a href="/companies" aria-current={page === 'companies' ? 'page' : undefined}>customer service numbers</a>
             <a href="/mcp" aria-current={page === 'mcp' ? 'page' : undefined}>install mcp</a>
             <a href="/blog" aria-current={page === 'blog' || page === 'blogArchive' ? 'page' : undefined}>blog</a>
+            <a href="/rules" aria-current={page === 'rules' ? 'page' : undefined}>rules</a>
             {/* Stable on static pages; /account handles sign in when needed. */}
             <a class="account-link" href="/account">my account</a>
           </nav>
-          {/* Sign up first, then load credits on the account page; signed-in visitors pass straight through. */}
-          <form method="get" action="/login" class="navform">
-            <input type="hidden" name="next" value="/account" />
-            <button type="submit">get started</button>
+          <form method="post" action="/add-funds" class="navform">
+            <button type="submit">add funds</button>
           </form>
         </header>
         <div class="site-content" id="content">{children}</div>
@@ -260,13 +259,6 @@ export const Layout: FC<{
               <a href="/support">support</a>
               <a href="/about">about</a>
               <a href="/ai-call-assistant">ai call assistant</a>
-              <a href="/hold-for-me">ai that waits on hold</a>
-              <a href="/book-doctor-appointment">ai that books doctor appointments</a>
-              <a href="/cancel-subscription">ai that cancels subscriptions</a>
-              <a href="/book-restaurant-reservation">ai that books restaurants</a>
-              <a href="/call-customer-service">ai that calls customer service</a>
-              <a href="/negotiate-bills">ai that negotiates bills</a>
-              <a href="/dispute-a-charge">ai that disputes charges</a>
               <a href="/blog">blog</a>
               <a href="/companies">customer service numbers</a>
               <a href="/students">students</a>

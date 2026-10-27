@@ -1,10 +1,9 @@
 ---
-title: "How to cancel LA Fitness: online, in person or by mail"
-seoTitle: "Can you cancel LA Fitness over the phone?"
-subtitle: "LA Fitness lists online, in person and mailed cancellation. Our recorded club call said in person only, so here is how to check your route and your next billing date."
-description: "Cancel LA Fitness online, in person or by mail to P.O. Box 54170, Irvine, CA 92619. A club told us in person only. Hear both calls and check your billing date."
+title: "LA Fitness membership cancellation with your AI agent"
+seoTitle: LA Fitness cancel membership: AI agent help
+subtitle: Ask your AI assistant to check the published options, call about missing details and prepare your cancellation checklist. Our recorded club answer shows why conflicts need followup.
+description: Give your AI agent a plan for LA Fitness cancellation: check official options, call about missing details and return the next steps. Hear both recordings.
 date: 2026-10-06
-updated: 2026-10-17
 verified: 2026-10-06
 tags: la fitness, cancel subscription, gym membership, personal assistant, ai phone assistant
 authors: nick

@@ -1,10 +1,9 @@
 ---
-title: "How to apply for Ohio workers compensation insurance when the form rejects an ITIN"
-seoTitle: "Apply for Ohio workers compensation insurance"
+title: Ohio workers compensation insurance: ask BWC with your AI assistant
+seoTitle: Ohio workers compensation insurance: an AI call
 subtitle: When an application needs a phone answer, your existing assistant can ask BWC. A real customer call clarified a paper route for an owner with an ITIN, without submitting the application.
-description: "Apply for Ohio workers compensation insurance with BWC form U3. If the online form rejects an ITIN, BWC said to use the paper application. Hear the call."
+description: Applying for Ohio workers compensation insurance? See a real BWC call and a suggested workflow for your Claude Code or Codex personal assistant.
 date: 2026-10-05
-updated: 2026-10-17
 tags: workers compensation, ohio, applications, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Ohio workers compensation insurance, a real call about a blocked application

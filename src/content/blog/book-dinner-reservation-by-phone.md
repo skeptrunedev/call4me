@@ -1,10 +1,9 @@
 ---
-title: "How to make a restaurant reservation by phone, or have your AI assistant call"
+title: How to make a restaurant reservation with your AI assistant
 seoTitle: How to make a restaurant reservation with AI
 subtitle: A real restaurant call confirmed a table for four on Thursday, October 8 at 7:30 PM. Cancellation terms were not discussed.
-description: "To make a restaurant reservation, give the date, time, party size and name, then have staff repeat it. Hear a real AI booking call and copy the prompt."
+description: Make a restaurant reservation from your existing Claude Code or Codex assistant. Hear a real booking call and use a suggested prompt for your own table.
 date: 2026-10-06
-updated: 2026-10-17
 tags: restaurant reservations, dinner, bookings, personal assistant, ai phone assistant
 authors: nick
 imageAlt: A dinner reservation for four, Thursday at 7:30 PM
@@ -12,7 +11,7 @@ imageAlt: A dinner reservation for four, Thursday at 7:30 PM
 
 Here is **how to make a restaurant reservation** by phone: give the restaurant the full date, preferred time, party size and reservation name. Ask staff to repeat the booking before hanging up, and ask about any deposit or cancellation terms that matter to your plans.
 
-If you already use Claude Code or Codex to plan an evening, your assistant can make the reservation call through [call4me](/). Connect with the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls), then give it your booking limits. The customer call below demonstrates the task; it does not identify which client the customer used. More recorded booking calls are on [an AI that calls a restaurant to book a reservation for you](/book-restaurant-reservation).
+If you already use Claude Code or Codex to plan an evening, your assistant can make the reservation call through [call4me](/). Connect with the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls), then give it your booking limits. The customer call below demonstrates the task; it does not identify which client the customer used.
 
 On October 6, 2026, a call4me customer's AI assistant asked a restaurant for **a table for four on Thursday, October 8 at 7:30 PM**. Staff checked, took a callback number and reservation name, then explicitly confirmed the table for that date and time.
 

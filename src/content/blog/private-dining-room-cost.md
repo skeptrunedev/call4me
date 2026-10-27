@@ -1,10 +1,10 @@
 ---
-title: "How much does a private dining room cost? We called 5 Durham restaurants for a dinner for 10"
-seoTitle: "Private dining room cost for 10: 5 Durham calls"
+title: How much does a private dining room cost? We called 5 restaurants for a dinner for 10
+seoTitle: Private dining room cost: 5 restaurant calls
 subtitle: Five Durham restaurant calls for a dinner for 10. Hear the recordings, compare room fees and food costs, and see which amounts remain unconfirmed.
-description: "A private dining room for 10 people in Durham, NC ran from no room fee to $350 or $1,500 in our 5 recorded calls. Room fees, food costs and deposit questions."
+description: Five recorded restaurant calls about private dining for 10, with room fees, food costs and unanswered deposit questions.
 date: 2026-10-01
-updated: 2026-10-17
+updated: 2026-10-07
 tags: private dining room, restaurants, group dinner, reservations, ai phone assistant
 authors: nick
 imageAlt: Private dining for 10, five restaurant calls recorded

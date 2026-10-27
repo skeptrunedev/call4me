@@ -21,13 +21,13 @@ export const StudentsPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
       <h2>who it's for</h2>
       <p>
         any student. we especially built this for students the phone gets in the way of: deaf and hard of hearing students, students with speech
-        differences, autistic students, and anyone with <a href="/blog/phone-anxiety">phone anxiety</a> who keeps putting off a call. you don't need to tell us why or show any
+        differences, autistic students, and anyone with phone anxiety who keeps putting off a call. you don't need to tell us why or show any
         documentation.
       </p>
 
       <h2>how to get the free credits</h2>
       <ol class="steps">
-        <li>sign in at <a href="/login">call4.me</a> with google, x, or an emailed link. that creates your account.</li>
+        <li>sign in at <a href="/login">call4.me</a> with google or x. that creates your account.</li>
         <li>
           email <a href={`mailto:me@call4.me?subject=${encodeURIComponent(CLAIM_SUBJECT)}`}>me@call4.me</a> from your school email address (or
           tell us your GitHub Student Developer Pack username), and include the email you signed in with.
@@ -40,7 +40,7 @@ export const StudentsPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ s
       <ul>
         <li>appointments: <a href="/blog/reschedule-dentist-appointment">rescheduling a dentist appointment</a>, <a href="/blog/book-haircut-appointment">booking a haircut</a>, <a href="/blog/follow-up-appointment-telehealth">switching a doctor's visit to telehealth</a></li>
         <li>pharmacy: <a href="/blog/how-to-transfer-a-prescription">transferring a prescription</a>, <a href="/blog/amazon-pharmacy-phone-number">calling amazon pharmacy</a></li>
-        <li>customer service: waiting on hold and getting a person at <a href="/companies">74 companies</a>, from airlines to banks</li>
+        <li>customer service: waiting on hold and getting a person at <a href="/companies">42 companies</a>, from airlines to banks</li>
         <li>anything routine where a phone call is the only way to get an answer</li>
       </ul>
 

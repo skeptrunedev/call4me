@@ -15,10 +15,8 @@ import { og } from './routes/og';
 import { agent } from './routes/agent';
 import { a2a } from './routes/a2a';
 import { apiRoot } from './routes/api-root';
-import { x402Calls } from './routes/x402-calls';
 import { recordings } from './routes/recordings';
 import { numberRoutes } from './routes/numbers';
-import { callRoutes } from './routes/calls';
 import { discovery } from './routes/discovery';
 import { DIRECTORY_SERVERS, siteUrl } from './lib/auth-options';
 import { API_CATALOG_LINK, API_CATALOG_MEDIA_TYPE, buildApiCatalog } from './lib/discovery';
@@ -99,10 +97,8 @@ app.route('/', ivrProbe);
 app.route('/', agent);
 app.route('/', a2a);
 app.route('/', apiRoot);
-app.route('/', x402Calls);
 app.route('/', recordings);
 app.route('/', numberRoutes);
-app.route('/', callRoutes);
 app.route('/.well-known', discovery);
 // RFC 9727 API catalog, advertised from the home page's Link header (below).
 app.on(['GET', 'HEAD'], '/.well-known/api-catalog', (c) =>

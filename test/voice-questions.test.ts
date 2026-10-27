@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { registerHooks } from 'node:module';
 import test, { type TestContext } from 'node:test';
 import { calls } from '../src/server/services/calls';
+import { backOfficeInstructions, callInstructions, type CallBrief } from '../src/server/voice/prompt';
 import { d1 } from './sqlite-d1';
 
 registerHooks({
@@ -106,6 +107,19 @@ test('a pending question never injects checking speech while the business has as
   assert.deepEqual(h.session.live.sent, []);
   h.session.answerCameIn(question.id, question.question, '$50');
   await result;
+});
+
+test('voice and back office honor known unknowns and unattended execution', () => {
+  const brief: CallBrief = {
+    owner: 'Alice', assistantName: null, callingAs: null, onBehalfOf: 'Alice',
+    business: 'Test business', goal: 'Look up a rebate', facts: 'Exact amount unknown, possibly $50 or $100.', flexibility: '',
+    callbackNumber: '+14155550100', callbackRingsOwner: false, localTime: null, connectWhen: null, unattended: true, voice: 'marin',
+  };
+  const voice = callInstructions(brief);
+  assert.match(voice, /Never turn an estimate into a confirmed answer/);
+  assert.match(voice, /Do not put the other person on hold for a user response/);
+  assert.match(backOfficeInstructions(brief), /saves a question but does not wait/);
+  assert.doesNotMatch(callInstructions({ ...brief, unattended: false }), /This is a scheduled call/);
 });
 
 test('ending a call resolves its pending questions without a timeout announcement', async (t) => {

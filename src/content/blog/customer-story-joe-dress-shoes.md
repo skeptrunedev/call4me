@@ -1,10 +1,9 @@
 ---
-title: How Joe got dress shoes held for same day pickup before a gala
+title: Joe needed dress shoes before a gala
 seoTitle: Joe's same day dress shoe search with call4me
 subtitle: Six calls to three DC stores ended with black Stacy Adams loafers set aside at Men's Wearhouse for pickup that day.
-description: Need dress shoes the same day? Joe's assistant called three DC stores and got size 10.5 black loafers held at Men's Wearhouse for pickup. Hear the call.
+description: Joe Finberg needed replacement dress shoes before a gala. Hear the call that got a size 10.5 pair held at Men's Wearhouse in Washington, DC.
 date: 2026-10-09
-updated: 2026-10-17
 tags: customer stories, dress shoes, shopping, same day pickup, ai phone assistant
 authors: nick
 imageAlt: Joe's dress shoe search, three stores called and one pair set aside for pickup

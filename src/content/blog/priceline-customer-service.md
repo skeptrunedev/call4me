@@ -1,21 +1,18 @@
 ---
-title: "Is Priceline customer service 24 hours? How to reach a live person at 1-877-477-5807"
-seoTitle: "Priceline 24 hour customer service? 1-877-477-5807"
+title: "Priceline customer service: reach a person at 1-877-477-5807"
+seoTitle: "Priceline customer service: 1-877-477-5807"
 subtitle: "We called Priceline's customer service number with no booking. An automated assistant, then a trip number menu, then a 22 minute hold. Here is every prompt, what the representative said about changes, cancellations and non-refundable refunds, and the full 26 minute recording."
-description: "Priceline says help is available 24/7. For a live person at 1-877-477-5807, keep saying you have no trip number. A person answered after a 22 minute hold."
+description: "1-877-477-5807 is the Priceline customer service number. No trip number? Here's how we got past the menu to a person, and what they said about refunds."
 date: 2026-10-09
-updated: 2026-10-24
 verified: 2026-10-09
 tags: priceline, travel, hotels, customer service, phone numbers, phone trees
 authors: nick
 imageAlt: "Priceline customer service number 1-877-477-5807, and how we reached a live person"
 ---
 
-**The short answer:** Priceline's homepage says its help is **24/7**, and the Priceline customer service number is **1-877-477-5807**. To reach a **live person**, keep telling the automated assistant you don't have a trip number or phone number until it connects you. **A live representative answered 25 minutes 9 seconds into our call**, after about 22 minutes on hold, and said phone agents work "every day of the week."
+**The short answer:** the Priceline customer service number is **1-877-477-5807**. An automated assistant answers, not a person. Keep saying you don't have a trip number or phone number, through two menus, until it says "You'll now be connected with one of our agents." **A live representative answered 25 minutes 9 seconds into the call**, after about 22 minutes on hold. The representative said phone agents work "every day of the week."
 
-The Priceline customer service number is **1-877-477-5807**. An automated assistant answers, not a person. Keep saying you don't have a trip number or phone number, through two menus, until it says "You'll now be connected with one of our agents." **A live representative answered 25 minutes 9 seconds into the call**, after about 22 minutes on hold. The representative said phone agents work "every day of the week."
-
-Priceline's own homepage lists it in its site data as a toll-free "customer service" contact: `"telephone":"1-877-477-5807","contactType":"customer service"` ([priceline.com](https://www.priceline.com/)). The same homepage has a "Help 24/7" link to its help center that says "reach us 24 hours a day, 7 days a week" (checked October 24, 2026). It doesn't say whether that means the phone line or chat. Priceline's help links (help.priceline.com) sent us to its "Penny" chat assistant instead. When we asked the representative if phone agents are available 24/7, the answer was: "Every day of the week."
+Priceline's own homepage lists it in its site data as a toll-free "customer service" contact: `"telephone":"1-877-477-5807","contactType":"customer service"` ([priceline.com](https://www.priceline.com/)). We couldn't find hours on a Priceline page we could open. Priceline's help links (help.priceline.com) sent us to its "Penny" chat assistant instead. When we asked the representative if phone agents are available 24/7, the answer was: "Every day of the week."
 
 You don't need a booking to get a person, but the phone system will ask for one again and again. This got us through:
 

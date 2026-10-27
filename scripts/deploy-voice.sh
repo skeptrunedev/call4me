@@ -23,10 +23,7 @@ NEVER_DIALED_SECONDS=300 # queued with no carrier call this long never dialed (N
 out=$(mktemp -d)
 trap 'rm -rf "$out"' EXIT
 npx wrangler deploy -c "$CONFIG" --dry-run --outdir "$out" >/dev/null
-# The contract is part of the build: the site deploy waits for /contract to match, and a
-# comment-only session.ts change alters the contract without changing worker.js.
-contract=$(scripts/voice-contract.sh)
-build=$({ cat "$CONFIG" "$out/worker.js"; echo "$contract"; } | sha256sum | cut -c1-16)
+build=$(cat "$CONFIG" "$out/worker.js" | sha256sum | cut -c1-16)
 live=$(curl -fsS --max-time 10 "https://$HOST/build" || true)
 if [ "$live" = "$build" ]; then
   echo "voice worker unchanged ($build), not deploying"
@@ -59,7 +56,7 @@ while :; do
   echo "waiting on $n active call(s)"
   sleep 15
 done
-if ! npx wrangler deploy -c "$CONFIG" --var "VOICE_BUILD:$build" --var "VOICE_CONTRACT:$contract"; then
+if ! npx wrangler deploy -c "$CONFIG" --var "VOICE_BUILD:$build" --var "VOICE_CONTRACT:$(scripts/voice-contract.sh)"; then
   lock 0   # nothing was deployed, so nothing to wait out
   exit 1
 fi

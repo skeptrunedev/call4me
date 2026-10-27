@@ -18,7 +18,7 @@ import { pathToFileURL } from 'node:url';
 const MAX_PDF_BYTES = 20_000_000;
 const usage = 'usage: npm run requirements -- list | show <group-id> | replace-document <group-id> <requirement-id> <file.pdf> | attach-order-document <phone-order-id> <requirement-id> <document-id> | set-text <group-id> <requirement-id> <value> | submit <group-id>';
 
-function requirementsClient(apiKey, fetchApi = fetch) {
+export function requirementsClient(apiKey, fetchApi = fetch) {
   if (!apiKey) throw new Error('TELNYX_API_KEY must be set');
 
   async function request(path, method = 'GET', body) {

@@ -2,9 +2,8 @@
 title: Costco eye exam cost: let your AI agent get local quotes
 seoTitle: Costco eye exam cost: ask your AI agent to call
 subtitle: Let your existing AI assistant call nearby Costco optometrists and bring back a price comparison. Hear the real call that returned a $99 glasses exam quote.
-description: Costco eye exam cost is set by each independent optometrist; one Santa Clara office quoted $99. Have your AI agent call nearby offices and compare quotes.
+description: Compare Costco eye exam costs with your AI agent. Use our call prompt to collect local quotes, check optional fees and return a table before choosing an office.
 date: 2026-10-06
-updated: 2026-10-17
 tags: costco, eye exam, prices, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Costco eye exam cost, let your AI agent collect local quotes

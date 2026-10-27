@@ -146,6 +146,13 @@ test('an order the carrier turns down after review is refunded in full and the n
   assert.equal(await balance(), 1500);
 });
 
+test('an order still under review keeps waiting', async () => {
+  const n = numbers(env);
+  await polled(n.buy(alice, { country: 'IL' }));
+  assert.deepEqual(await n.settlePending(), { activated: 0, failed: 0, waiting: 1 });
+  assert.equal(await balance(), 1500 - 660);
+});
+
 test('a pending number cannot be released yet', async () => {
   const n = numbers(env);
   await polled(n.buy(alice, { country: 'IL' }));

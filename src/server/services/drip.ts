@@ -25,8 +25,6 @@ interface Step {
   id: string;
   /** How long after signup the step is due, in ms. */
   after: number;
-  /** Only for accounts that have never placed a call: a nudge to try it, not news for a regular. */
-  onlyWithoutCalls?: boolean;
   /** The copy used when the email_templates table has no valid row for this step. */
   template: EmailTemplate;
 }
@@ -50,22 +48,6 @@ export const STEPS: Step[] = [
 If you reply with feedback, I'm happy to give you $25 in credits. Anything helps, including how you found it and why you signed up.
 
 Here's my cell # for imessage or whatsapp - 7379832612 .
-
-- Nick`,
-    },
-  },
-  {
-    // Every free user who paid had made a call first, and none of the ones who never called did.
-    id: 'first-call',
-    after: 2 * 24 * 60 * 60 * 1000,
-    onlyWithoutCalls: true,
-    template: {
-      subject: 'did you get to try call4me?',
-      body: `hey, nick here. I noticed you signed up for call4me but haven't made a call yet.
-
-the easiest way to try it: copy the prompt at {host}/#install-prompt and paste it into chatgpt, claude or whatever agent you use, then ask it to call somewhere you've been putting off, like canceling a subscription, checking a store's hours, or getting a quote. you can even have it call your own phone first to hear what it sounds like.
-
-if something got in the way or it wasn't clear how to start, just reply and tell me. I read every one.
 
 - Nick`,
     },
@@ -178,10 +160,9 @@ export async function runDrip(opts: {
          WHERE created_at >= ?1 AND created_at <= ?2 AND email_opt_out = 0
            AND email NOT LIKE '%.invalid'
            AND NOT EXISTS (SELECT 1 FROM drip_sends d WHERE d.account_id = accounts.id AND d.step = ?3)
-           AND (?5 = 0 OR NOT EXISTS (SELECT 1 FROM calls c WHERE c.account_id = accounts.id))
          ORDER BY created_at LIMIT ?4`,
       )
-      .bind(opts.start, t - step.after, step.id, opts.limit ?? 50, step.onlyWithoutCalls ? 1 : 0)
+      .bind(opts.start, t - step.after, step.id, opts.limit ?? 50)
       .all<Candidate>();
     for (const a of results) {
       const claim = await opts.db.prepare(`INSERT OR IGNORE INTO drip_sends (account_id, step, sent_at) VALUES (?, ?, ?)`).bind(a.id, step.id, t).run();

@@ -1,10 +1,9 @@
 ---
-title: "How to talk to a real person at Costco customer service"
+title: "Costco customer service number: how to talk to a real person"
 seoTitle: "Costco customer service number: 1-800-774-2678"
 subtitle: "We called Costco's membership and warehouse line with general questions and no member number. Here is the touch-tone menu, how long it took to reach a person, what the representative said about prices, refunds, non-members and scams, where Costco's own website says something different, and the full 19 minute recording."
 description: "Costco customer service is 1-800-774-2678. With no member number and no keys pressed, a live person answered in 14:09. What they said vs. costco.com."
 date: 2026-10-13
-updated: 2026-10-17
 verified: 2026-10-13
 tags: costco, customer service, membership, phone trees, phone numbers
 authors: nick
@@ -167,7 +166,7 @@ From the same [Contact Us page](https://customerservice.costco.com/app/answers/a
 | Mail Order Pharmacy | 1-800-607-6861 | Mon-Fri 5am-7pm, Sat 9:30am-2pm |
 | Costco Travel | 1-877-849-2730 | Mon-Fri 5am-7pm, Sat-Sun 6am-5pm |
 
-For a question about one warehouse, like tires or the pharmacy, your local Costco's own number is usually more direct. The main menu's option 4 can give you that number. We've written up [calling a Costco warehouse to cancel a tire appointment and ask about a refund](/blog/costco-tire-appointment-cancel-refund), where the warehouse menu had its own traps. For returns past the window or without a receipt, see the [Costco return policy, from a recorded call](/blog/costco-return-policy).
+For a question about one warehouse, like tires or the pharmacy, your local Costco's own number is usually more direct. The main menu's option 4 can give you that number. We've written up [calling a Costco warehouse to cancel a tire appointment and ask about a refund](/blog/costco-tire-appointment-cancel-refund), where the warehouse menu had its own traps.
 
 ## What wasn't answered
 

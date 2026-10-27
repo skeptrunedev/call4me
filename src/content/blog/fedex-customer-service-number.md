@@ -1,10 +1,10 @@
 ---
-title: "FedEx customer service number: how to get a live agent to call you back"
+title: "FedEx customer service number: how we got a callback"
 seoTitle: "FedEx customer service number: 1-800-463-3339"
 subtitle: "Five recordings show why our calls needed a tracking number, how the callback worked, and what the agent said about holding a package."
 description: The FedEx customer service number is 1-800-463-3339. With a tracking number, asking for a representative got us a callback from a live agent.
 date: 2026-10-01
-updated: 2026-10-24
+updated: 2026-10-07
 verified: 2026-10-01
 tags: fedex, package delivery, phone trees, customer service, phone numbers
 authors: nick
@@ -228,8 +228,6 @@ FedEx's U.S. call page doesn't list hours. FedEx's Canada page says its voice as
 call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) tells it what to get done and it makes the call. For the three calls without a tracking number, the brief was to ask how a recipient holds a package at a FedEx location or redirects one on the way. For the fourth, we gave it the tracking number of my own package from an online order that FedEx tried to deliver four times in June before returning it to the seller, and asked it to reach a person about the delivery attempts and then ask the same questions.
 
 call4me also answers calls to its own number, so when FedEx called back, it picked up and asked the hold and redirect questions. It didn't ask the agent about our June package.
-
-We've also called the other two big carriers: [UPS](/blog/ups-contact-number) and [USPS](/blog/usps-phone-number).
 
 ## Have your agent make this call
 

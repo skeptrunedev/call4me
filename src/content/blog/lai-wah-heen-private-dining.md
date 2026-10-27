@@ -1,16 +1,15 @@
 ---
-title: "Book a private dining room at Lai Wah Heen in Toronto"
+title: Lai Wah Heen private dining in Toronto: a real reservation call
 seoTitle: Lai Wah Heen private dining in Toronto
 subtitle: A real Toronto call secured a private dinner reservation for a group, but left the final menu, price and room capacity to confirm in writing.
-description: "To book Lai Wah Heen private dining, call (416) 260 8988. Hear a real call for 12 to 14 guests, the spoken room minimums and what to confirm in writing."
+description: Hear a Lai Wah Heen private dining call for 12 to 14 guests. Compare the spoken room minimums, the reservation result and the details still unresolved.
 date: 2026-10-11
-updated: 2026-10-17
 tags: Lai Wah Heen, private dining Toronto, group dinner, restaurant reservations, ai phone assistant
 authors: nick
 imageAlt: Lai Wah Heen in Toronto, a private dining reservation with a proposal pending
 ---
 
-**To book private dining at Lai Wah Heen, call the restaurant at (416) 260 8988.** It is at 108 Chestnut Street in Toronto, and its [official private dining page](https://laiwahheen.com/events/) lists several event spaces and gives that contact number. When arranging a group dinner, ask for the exact room, seated capacity, spending minimum and final total before treating a reservation as a finished event plan.
+**Lai Wah Heen is at 108 Chestnut Street in Toronto.** Its [official private dining page](https://laiwahheen.com/events/) lists several event spaces and gives the restaurant's contact number, (416) 260 8988. When arranging a group dinner, ask for the exact room, seated capacity, spending minimum and final total before treating a reservation as a finished event plan.
 
 On October 9, 2026, a call4me customer's assistant called about a private dinner for 12 to 14 people on Thursday, November 19, from approximately 6:00 to 9:00 PM. The caller asked for a courtesy hold without a deposit. Staff collected the booking details and explicitly said the reservation was made, with further details to follow.
 

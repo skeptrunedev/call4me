@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { createHash } from 'node:crypto';
-import { downloadRecording, silenceChecks } from '../scripts/review-call-audio';
+import { asrWindows, downloadRecording, exportBitrate, MAX_ASSET_BYTES, muteFilter, privatePath, silenceChecks, validateMutes } from '../scripts/review-call-audio';
 
 test('ranged acquisition preserves exact bytes and rejects changed provider objects', async t => {
   const source = Buffer.alloc(3 * 1024 * 1024 + 37);
@@ -22,6 +22,27 @@ test('ranged acquisition preserves exact bytes and rejects changed provider obje
   assert.deepEqual(await downloadRecording('https://example.invalid/private.wav'), source);
   changed = true;
   await assert.rejects(downloadRecording('https://example.invalid/private.wav'), /changed during download/);
+});
+
+test('private evidence paths cannot point into the repository', () => {
+  assert.throws(() => privatePath(resolve('public/static/raw.wav')), /outside/);
+  assert.throws(() => privatePath(resolve('.')), /outside/);
+  assert.equal(privatePath(join(tmpdir(), 'call-review-test', 'source.wav')), join(tmpdir(), 'call-review-test', 'source.wav'));
+});
+
+test('manual intervals reject overlap, nonfinite values and out of bounds', () => {
+  const valid = { start: 1, end: 2, label: 'name' };
+  validateMutes([valid], 3);
+  for (const spans of [[{ ...valid, start: NaN }], [valid, { ...valid, start: 1.5 }], [{ ...valid, end: 4 }], [{ ...valid, label: '' }]]) assert.throws(() => validateMutes(spans, 3));
+  assert.match(muteFilter([valid]), /between\(t,1,2\)/);
+});
+
+test('decoded silence checks fail on audible private spans', () => {
+  const samples = new Float32Array(48000);
+  const spans = [{ start: 1, end: 2, label: 'name' }];
+  assert.equal(silenceChecks(samples, spans)[0].peak, 0);
+  samples[24000] = 0.1;
+  assert.throws(() => silenceChecks(samples, spans), /contains decoded audio/);
 });
 
 const binary = process.env.FFMPEG ?? 'ffmpeg';
@@ -48,3 +69,29 @@ test('real MP3 export preserves full duration, mutes interior and retains surrou
   assert.throws(() => execFileSync(process.execPath, ['--import', 'tsx', 'scripts/review-call-audio.ts', 'export', '--manifest', manifest, '--out', out, '--ffmpeg', binary], { stdio: 'pipe' }), /source hash does not match/);
 });
 
+test('long recordings split into contiguous gpt-4o-transcribe windows under its 1400 second limit', () => {
+  assert.deepEqual(asrWindows(663), [{ start: 0, end: 663 }]);
+  const windows = asrWindows(1591.32);
+  assert.equal(windows.length, 2);
+  assert.equal(windows[0].start, 0);
+  assert.equal(windows.at(-1)!.end, 1591.32);
+  for (const [index, window] of windows.entries()) {
+    assert.ok(window.end - window.start < 1400);
+    if (index) assert.equal(window.start, windows[index - 1].end);
+  }
+  assert.equal(asrWindows(5000).length, 4);
+});
+
+test('exports pick the highest bitrate that keeps a recording under the site asset limit', () => {
+  assert.equal(exportBitrate(23 * 60), 96);
+  assert.equal(exportBitrate(48 * 60), 64);
+  assert.ok((48 * 60 * exportBitrate(48 * 60) * 1000) / 8 <= MAX_ASSET_BYTES);
+  assert.throws(() => exportBitrate(3 * 60 * 60));
+});
+
+test('every published recording fits Cloudflare\'s 25 MiB static asset limit', () => {
+  const dir = new URL('../public/static/blog/', import.meta.url);
+  for (const name of readdirSync(dir).filter((f) => f.endsWith('.mp3'))) {
+    assert.ok(statSync(new URL(name, dir)).size <= 25 * 1024 * 1024, `${name} is over 25 MiB and would fail the deploy`);
+  }
+});

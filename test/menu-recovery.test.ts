@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { registerHooks } from 'node:module';
 import test, { type TestContext } from 'node:test';
+import { MenuRecovery } from '../src/server/voice/handoff';
 import { dtmfFrames } from '../src/server/voice/dtmf';
 
 const workerModule = `export class DurableObject {
@@ -27,7 +28,6 @@ function harness(t: TestContext) {
   // Match the existing session tests: exercise real provider message handling, no live calls.
   const session = new VoiceSession({ storage: {} } as any, { TELNYX_API_KEY: 'test-key' } as any) as any;
   session.setup = { callId: 'menu_test', controlId: 'test-control', redact: [] };
-  session.answered = true; // A menu is talking, so the call is up: nothing is heard before pickup.
   session.live = new Socket();
   session.phone = new Socket();
   session.flushTimer = 1; // Transcript persistence is tested elsewhere.
@@ -74,6 +74,33 @@ test('a spoken next keypad action after confirmed keys gets a real delegation', 
   assert.equal(h.forced().length, 1, 'accepted star does not get submitted twice');
 });
 
+test('keypad prompts with articles and arbitrary keys are recognized without caller speech', () => {
+  for (const text of [echoMenu, 'Press any key to continue.', 'Press the pound key to finish.']) {
+    const recovery = new MenuRecovery();
+    recovery.observe(text, 1);
+    assert.equal(recovery.pending()?.reason, 'menu', text);
+  }
+});
+
+test('no input detected after a submitted key creates a fresh recovery opportunity', () => {
+  const recovery = new MenuRecovery();
+  recovery.observe(echoMenu, 1);
+  recovery.submitted('5', recovery.snapshot());
+  recovery.observe(' No input detected.', 2);
+  assert.equal(recovery.pending()?.reason, 'menu_recovery');
+});
+
+for (const action of ['Now, two.', 'Pressing the star key.', "I'll dial pound.", 'Next, 3.', '2.']) {
+  test(`fresh keypad commitment is recognized in active menu context: ${action}`, () => {
+    const recovery = new MenuRecovery();
+    recovery.observe(echoMenu, 1);
+    recovery.submitted('5', recovery.snapshot());
+    recovery.observe(' You pressed five.', 2);
+    recovery.observeCaller(action, 3);
+    assert.equal(recovery.pending()?.reason, 'keypad');
+  });
+}
+
 test('late acceptance of one key preserves a newer different commitment', async (t) => {
   const h = harness(t);
   await h.input(echoMenu);
@@ -92,16 +119,44 @@ test('late acceptance of one key preserves a newer different commitment', async 
   assert.match(h.forced()[0].item.content[0].text, /Now two/);
 });
 
-test('old keypad context cannot trigger spoken key recovery after a person answers', async (t) => {
-  const h = harness(t);
-  await h.input('For support press one. Press star to repeat the menu.');
-  await h.keypress('1');
-  await h.response('response.completed');
-  await h.input(' Hello, this is Jane speaking.');
-  await h.output('Now star to hear the menu again.');
-  t.mock.timers.tick(10_000);
-  assert.equal(h.forced().length, 0);
+test('accepted keys and acknowledgments cannot reopen their own keypad action', () => {
+  const recovery = new MenuRecovery();
+  recovery.observe(echoMenu, 1);
+  recovery.observeCaller('Pressing five.', 2);
+  const submitted = recovery.snapshot();
+  recovery.observeCaller(' Now five.', 3);
+  recovery.submitted('5', submitted);
+  assert.equal(recovery.pending(), null, 'same key spoken while submission was pending is consumed');
+  recovery.observeCaller(' Pressing five.', 4);
+  assert.equal(recovery.pending(), null, 'same key spoken after acceptance is not replayed before new input');
+  recovery.submitted('5', recovery.snapshot());
+  recovery.observe(' You pressed five.', 5);
+  recovery.observeCaller('Got five. Nice. Hmm.', 6);
+  assert.equal(recovery.pending(), null, 'acknowledging the returned digit is not an action');
 });
+
+test('a human greeting without provider punctuation closes the previous menu context', () => {
+  const recovery = new MenuRecovery();
+  recovery.observe('For support press one', 1);
+  recovery.observeCaller('Pressing one', 2);
+  recovery.submitted('1', recovery.snapshot());
+  recovery.observe('Hello, this is Jane speaking', 3);
+  recovery.observeCaller('Now star to hear the menu again', 4);
+  assert.equal(recovery.pending(), null);
+});
+
+for (const response of ['Hello, this is Jane speaking.', 'Please hold while I check.', 'Please remain on the line.']) {
+  test(`old keypad context cannot trigger spoken key recovery after ${response}`, async (t) => {
+    const h = harness(t);
+    await h.input('For support press one. Press star to repeat the menu.');
+    await h.keypress('1');
+    await h.response('response.completed');
+    await h.input(` ${response}`);
+    await h.output('Now star to hear the menu again.');
+    t.mock.timers.tick(10_000);
+    assert.equal(h.forced().length, 0);
+  });
+}
 
 test('a repeated menu on the same transcript line is a fresh recovery opportunity', async (t) => {
   const h = harness(t);
@@ -218,6 +273,29 @@ test('new input arriving during keypad submission is preserved', async (t) => {
   assert.equal(h.session.menuRecovery.pending()?.reason, 'menu_recovery');
 });
 
+test('cardholder menu rejection delegates again after caller filler and an accepted keypad request', async (t) => {
+  const h = harness(t);
+  const prompt = 'If you have your card handy, please press one. If you do not have your card handy, please press two.';
+  await h.input(prompt);
+  await h.session.onLive(JSON.stringify({ type: 'session.output_transcript.delta', delta: 'Hmm.' }));
+  t.mock.timers.tick(3_000);
+  assert.equal(h.forced().length, 1);
+  await h.keypress('2');
+  await h.response('response.completed');
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await h.input(` I am sorry, we did not understand your input, please try again. ${prompt}`);
+    await h.session.onLive(JSON.stringify({ type: 'session.output_transcript.delta', delta: 'Hmm.' }));
+    t.mock.timers.tick(3_000);
+    assert.equal(h.forced().length, attempt + 2, 'each fresh rejection gets a recovery handoff');
+    const recovery = h.forced().at(-1).item.content[0].text;
+    assert.match(recovery, /we did not understand your input/);
+    assert.match(recovery, /Keypad submitted: 2/);
+    await h.keypress('2');
+    await h.response('response.completed');
+  }
+});
+
 test('caller filler cannot postpone a finished menu beyond its keypad deadline', async (t) => {
   const h = harness(t);
   await h.input('If you have your card handy, please press one. If you do not have your card handy, please press two.');
@@ -233,103 +311,17 @@ test('caller filler cannot postpone a finished menu beyond its keypad deadline',
   assert.equal(h.forced().length, 1, 'caller filler never reopens a menu already delegated');
 });
 
-
-test('the same key twice with nothing heard in between goes in once', async (t) => {
-  const h = harness(t);
-  const presses = () => (globalThis.fetch as any).mock.calls.length;
-  await h.input('This is a collect call from an inmate at Toronto South Detention Centre. To accept this call, press 1.');
-  await h.keypress('1');
-  await h.keypress('1');
-  assert.equal(presses(), 1);
-  await h.input(' To accept this call, press 1.');
-  await h.keypress('1');
-  assert.equal(presses(), 2);
+test('a late keypad acceptance cannot reopen a menu after a person answers', () => {
+  const recovery = new MenuRecovery();
+  recovery.observe('For returns press one.', 1);
+  const pendingKeypad = recovery.snapshot();
+  recovery.observe(' My name is Jane. How can I help you?', 2);
+  recovery.submitted('1', pendingKeypad);
+  recovery.observe(' Please enter your order number on our website.', 3);
+  assert.equal(recovery.pending(), null);
+  recovery.observe(' Please visit our website.', 4);
+  assert.equal(recovery.pending(), null);
+  assert.match(recovery.history(), /Keypad submitted: 1/);
+  recovery.observe(' Use your phone keypad to enter the extension followed by pound.', 5);
+  assert.equal(recovery.pending()?.reason, 'menu', 'an explicit phone keypad request can still be delegated');
 });
-
-test('an answered call sends the key to the network once and beeps so the caller hears it', async (t) => {
-  const h = harness(t);
-  h.session.setup.keyBeep = true;
-  await h.input('This is a collect call from an inmate at Toronto South Detention Centre. To accept this call, press 1.');
-  await h.keypress('1');
-  assert.equal((globalThis.fetch as any).mock.calls.length, 1);
-  assert.ok(h.session.phone.sent.filter((m: any) => m.event === 'media').length > 0);
-});
-
-// Liberty Mutual (call_nykj75fzteglkx3d): its menu takes keys or speech, and the caller's "Mmh."
-// at the end of the options was rejected as a spoken answer before the back office's 3 arrived.
-const libertyMenu = 'Please say existing policy, or press one. Claims, or press two. Sales, or press three.';
-
-test('the caller makes no sound on a keypad menu until its key is chosen', async (t) => {
-  const h = harness(t);
-  const speak = () => h.session.onLive(JSON.stringify({ type: 'session.output_audio.delta', delta: dtmfFrames('5')[0] }));
-  const heard = () => h.session.phone.sent.filter((m: any) => m.event === 'media').length;
-  await h.input(libertyMenu);
-  await speak();
-  await h.output('Mmh.');
-  assert.equal(heard(), 0, 'filler while the options play never reaches the menu');
-  t.mock.timers.tick(1_000);
-  assert.equal(h.forced().length, 1);
-  await speak();
-  assert.equal(heard(), 0, 'nor while the back office picks the key');
-  await h.keypress('3');
-  await h.response('response.completed');
-  await speak();
-  await h.output('Hmm.');
-  assert.equal(heard(), 0, 'nor right after the key, before the menu answers it');
-  assert.ok(!h.session.transcript.some((l: any) => l.role === 'caller'), 'what never played is not in the transcript');
-  t.mock.timers.tick(1_000);
-  await h.input(' Hello, my name is Dana, how can I help?');
-  await speak();
-  assert.equal(heard(), 1, 'the caller speaks again once a person answers');
-});
-
-// Telnyx's screening detection fires on menu and voicemail greetings too (call_lzc1mh8jaxa5rwhr: the
-// caller's "Hi!" over "monitored and recorded" was a wrong spoken answer). Only a screener's ask gets an introduction.
-const screener = "Hi, if you record your name and reason for calling, I'll see if this person is available.";
-for (const [heardFirst, introduces] of [
-  ['Thank you for calling Liberty Mutual Insurance. This call may be monitored and recorded.', false],
-  [screener, true],
-] as const) {
-  test(`call screening detection after "${heardFirst.slice(0, 40)}" ${introduces ? 'asks for an introduction' : 'is held'}`, async (t) => {
-    const h = harness(t);
-    const stored = new Map<string, unknown>();
-    h.session.ctx.storage = { get: async (k: string) => stored.get(k), put: async (k: string, v: unknown) => void stored.set(k, v) };
-    h.session.liveReady = true;
-    await h.input(heardFirst);
-    await h.session.machineDetected('screening_prompt_ended');
-    const guidance = h.session.live.sent.filter((m: any) => m.type === 'session.commentary.append');
-    assert.equal(guidance.length, introduces ? 1 : 0);
-  });
-}
-
-test('screening detection before the words introduces once a screener asks', async (t) => {
-  const h = harness(t);
-  const stored = new Map<string, unknown>();
-  h.session.ctx.storage = { get: async (k: string) => stored.get(k), put: async (k: string, v: unknown) => void stored.set(k, v) };
-  h.session.liveReady = true;
-  await h.session.machineDetected('screening_prompt_ended');
-  const guidance = () => h.session.live.sent.filter((m: any) => m.type === 'session.commentary.append');
-  assert.equal(guidance().length, 0);
-  await h.input(screener);
-  await h.session.machineUpdates;
-  assert.equal(guidance().length, 1);
-  assert.match(guidance()[0].content, /call screener is ready/);
-});
-
-// Liberty Mutual (call_11ctp62kjbc9rb3k): the voice model's "Hmm." a second after each 3 was taken as the answer.
-test('a menu that never answers the key releases the caller after the hold', async (t) => {
-  const h = harness(t);
-  const speak = () => h.session.onLive(JSON.stringify({ type: 'session.output_audio.delta', delta: dtmfFrames('5')[0] }));
-  const heard = () => h.session.phone.sent.filter((m: any) => m.event === 'media').length;
-  await h.input(libertyMenu);
-  t.mock.timers.tick(1_000);
-  await h.keypress('3');
-  await h.response('response.completed');
-  t.mock.timers.tick(7_000);
-  await speak();
-  assert.equal(heard(), 0, 'held while the menu may still be acting on the key');
-  t.mock.timers.tick(1_500);
-  await speak();
-  assert.equal(heard(), 1, 'never held for good when nothing answers');
-});
-

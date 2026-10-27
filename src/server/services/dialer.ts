@@ -1,9 +1,8 @@
 import { newId, now } from '../lib/ids';
-import type { Idempotency } from '../lib/idempotency';
 import { hmacHex } from '../lib/keys';
 import { checkDialable } from '../lib/phone';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
-import { telnyx, TelnyxError } from '../lib/telnyx';
+import { telnyx } from '../lib/telnyx';
 import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions, inboundInstructions, type OpenTask } from '../voice/prompt';
 import type { SessionSetup } from '../voice/session';
 import { sessionFor } from '../voice/stub';
@@ -11,7 +10,7 @@ import type { Voice } from '../voice/voices';
 import { accounts, type Account } from './accounts';
 import { answeringAccountId, numbers, ringablePhone } from './numbers';
 import { profiles } from './profiles';
-import { accentOf, answeringInstructionsOf, assistantNameOf, namePronunciationOf, type Profile, type Surface } from './intake';
+import { assistantNameOf, namePronunciationOf, type Profile, type Surface } from './intake';
 import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 import { analytics } from './analytics';
 
@@ -32,7 +31,7 @@ export const callPrice = (env: Env, row: Pick<CallRow, 'direction' | 'to_number'
  * Whether keypad presses on a call with `other` should be tones in the audio: anywhere but a +1
  * number, since some international routes drop Telnyx's RFC 2833 key events (voice/dtmf.ts).
  */
-function inbandKeysFor(other: string): boolean {
+export function inbandKeysFor(other: string): boolean {
   const p = checkDialable(other);
   return p.ok && !p.home;
 }
@@ -119,22 +118,10 @@ function personFor(origin: string, account: Account, profile: Profile, phone: st
   return { name: profile.full_name || account.display_name || 'the account owner', phone, from, webhookUrl: `${origin}/webhooks/telnyx`, connectWhen, listenIn };
 }
 
-/**
- * Throws IdempotentReplay instead when `execution.idempotency` names a key an earlier request
- * already placed a call with (calls.create).
- */
-export async function placeCall(
-  env: Env,
-  origin: string,
-  account: Account,
-  input: PlaceCallInput & { voice?: Voice },
-  surface: Surface = 'agents',
-  execution: { unattended?: boolean; idempotency?: Idempotency } = {},
-): Promise<CallRow> {
+export async function placeCall(env: Env, origin: string, account: Account, input: PlaceCallInput & { voice?: Voice }, surface: Surface = 'agents', execution: { unattended?: boolean } = {}): Promise<CallRow> {
   const price = pricePerMinuteTo(env, input.to);
   const db = calls(env.DB);
-  const { call, secrets, to, ownerPhone } = await db.create(account, input, price, surface, execution.idempotency);
-  let controlId: string | null = null;
+  const { call, secrets, to, ownerPhone } = await db.create(account, input, price, surface);
   const brief = JSON.parse(call.brief) as Brief;
   if (!account.display_name) await accounts(env.DB).setDisplayName(account.id, brief.on_behalf_of);
 
@@ -162,7 +149,6 @@ export async function placeCall(
       localTime: localTimeIn(brief.timezone),
       owner: person.name,
       assistantName: brief.caller_name || assistantNameOf(profile),
-      accent: brief.accent || accentOf(profile),
       ownerPronunciation: namePronunciationOf(profile),
       callingAs: brief.calling_as ?? null,
       connectWhen: brief.connect_when ?? null,
@@ -185,7 +171,7 @@ export async function placeCall(
     };
     const session = sessionFor(env, call.id);
     await session.fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
-    controlId = await telnyx(env).dial({
+    const controlId = await telnyx(env).dial({
       to: call.to_number,
       from,
       webhookUrl: `${origin}/webhooks/telnyx`,
@@ -200,20 +186,8 @@ export async function placeCall(
     // The full carrier error stays on the call row for debugging; the agent gets the short version.
     console.error('place call failed', call.id, err);
     await db.finish(call.id, { status: 'failed', error: String(err), pricePerMinuteCents: price });
-    // Refused before the carrier took it, the call was never placed, so a retry with its key places it.
-    if (!controlId && execution.idempotency) await db.releaseIdempotencyKey(call.id);
     if (err instanceof VoiceDeployLocked) {
       throw new CallError(`could not place the call (${call.id}): call4me is updating its phone service. nothing was charged; place it again in about ${err.retryInSeconds} seconds.`, 503, call.id);
-    }
-    // Refusals for the destination itself never clear on a retry; agents kept retrying Swiss mobiles.
-    if (err instanceof TelnyxError && /\b(?:D11)\b|destination number is invalid/i.test(err.detail)) {
-      throw new CallError(`could not place the call (${call.id}): the carrier says ${call.to_number} isn't a valid number. nothing was charged; check the number before trying again.`, 422, call.id);
-    }
-    if (err instanceof TelnyxError && /\b(?:D13|D24|PE5)\b|no routes found|destination rate limit|whitelisted countries/i.test(err.detail)) {
-      throw new CallError(`could not place the call (${call.id}): call4me can't reach ${call.to_number} yet; calls to that country or network aren't supported. nothing was charged, and trying again won't change it.`, 422, call.id);
-    }
-    if (err instanceof TelnyxError && /\bD1\b|channel limit/i.test(err.detail)) {
-      throw new CallError(`could not place the call (${call.id}): call4me has too many calls up at once right now. nothing was charged; place it again in about a minute, one call at a time.`, 503, call.id);
     }
     throw new CallError(`could not place the call (${call.id}): the phone carrier refused it. nothing was charged; try again shortly.`, 502, call.id);
   }
@@ -280,10 +254,10 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     : await env.DB.prepare(`SELECT brief FROM calls WHERE account_id = ? AND direction = 'outbound' AND from_number = ? ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 1`)
         .bind(account.id, opts.to, opts.from)
         .first<{ brief: string }>();
-  const identity: Pick<Brief, 'caller_name' | 'calling_as' | 'accent'> = likelyBrief ?? (latest ? (JSON.parse(latest.brief) as Brief) : {});
+  const identity: Pick<Brief, 'caller_name' | 'calling_as'> = likelyBrief ?? (latest ? (JSON.parse(latest.brief) as Brief) : {});
   const brief: Brief = likelyBrief
     ? { ...likelyBrief, max_minutes: maxMinutes }
-    : { on_behalf_of: owner, facts: '', flexibility: '', timezone: null, max_minutes: maxMinutes, caller_name: identity.caller_name ?? null, calling_as: identity.calling_as ?? null, accent: identity.accent ?? null };
+    : { on_behalf_of: owner, facts: '', flexibility: '', timezone: null, max_minutes: maxMinutes, caller_name: identity.caller_name ?? null, calling_as: identity.calling_as ?? null };
   await env.DB.prepare(
     `INSERT INTO calls (id, account_id, direction, to_number, from_number, business, goal, brief, status, telnyx_call_control_id, hold_cents, callback_for, created_at) VALUES (?, ?, 'inbound', ?, ?, ?, ?, ?, 'dialing', ?, ?, ?, ?)`,
   )
@@ -321,14 +295,12 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     instructions: inboundInstructions({
       owner,
       assistantName: identity.caller_name || assistantNameOf(profile),
-      accent: identity.accent || accentOf(profile),
       ownerPronunciation: namePronunciationOf(profile),
       callingAs: identity.calling_as ?? null,
       callbackNumber,
       tasks: ordered.map(openTask),
       likely: Boolean(likely),
       localTime: localTimeIn(likelyBrief?.timezone ?? null),
-      standing: answeringInstructionsOf(profile),
       recent: recent.map((r) => ({
         business: r.business,
         goal: r.goal,
@@ -336,16 +308,13 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
         when: new Date(r.created_at).toISOString().slice(0, 10),
       })),
     }),
-    backOffice: inboundBackOfficeInstructions(owner, ordered.map(openTask), answeringInstructionsOf(profile)),
+    backOffice: inboundBackOfficeInstructions(owner, ordered.map(openTask)),
     inbandKeys: inbandKeysFor(opts.from),
-    // Whoever called hears the key go in (a collect call's "press 1 to accept"): send_dtmf alone is silent to a person.
-    keyBeep: true,
     person: personFor(origin, account, profile, await ringablePhone(env.DB, account.id, profile.phone), opts.to),
     voice: 'marin',
     maxSeconds: maxMinutes * 60,
     pricePerMinuteCents: price,
     controlId: opts.controlId,
-    answering: true,
     streamUrl: await streamUrl(env, id),
   };
   try {

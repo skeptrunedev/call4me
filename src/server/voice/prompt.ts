@@ -24,8 +24,6 @@ interface Who {
   callingAs: string | null;
   /** How to say the owner's name, from their profile ("ah-MEER tah-ree-GAHT"); unset: as written. */
   ownerPronunciation?: string | null;
-  /** The accent or dialect to hold ("Austrian German"): the call's accent, else the profile's; unset: the voice's own. */
-  accent?: string | null;
 }
 
 /** Who the caller says it is, after "I'm": "Alex's assistant", "Jordan, Alex's assistant", "Jordan from Acme", "with Acme". */
@@ -79,12 +77,8 @@ export interface CallBrief extends Who {
   voice: Voice;
 }
 
-/**
- * An accent the user asked for, else the one a voice was picked for, is held for the whole call:
- * left alone the model drifts to General American (voices.ts).
- */
-function accentRule(voice: Voice, asked?: string | null): string {
-  if (asked) return `- Speak with a natural ${asked} accent and way of speaking for the whole call, in every language you speak on it, even when the person you're talking to sounds different.\n`;
+/** Voices picked for their accent keep it: left alone the model drifts to General American (voices.ts). */
+function accentRule(voice: Voice): string {
   const accent = VOICE_ACCENTS[voice];
   return accent ? `- Speak in your natural ${accent} accent for the whole call, even when the person you're talking to sounds different.\n` : '';
 }
@@ -128,13 +122,12 @@ ${spellingRule(`${b.goal}\n${b.facts}`)}
 What you can agree to without checking:
 ${b.flexibility.trim() || '(only exactly what the task says)'}
 
-The callback number is ${spokenPhone(b.callbackNumber)}${b.callbackRingsOwner ? `, ${b.owner}'s own phone: a callback reaches ${b.owner} directly` : ''}. Whenever they want a number to call back or text, a contact number for a booking, order or hold, and on any voicemail, give this one and only this one. A phone number among the facts above is for finding or verifying an account: when a person or a phone menu asks for the phone number on file, give that one, never the callback number. When the task or facts say there's no account or not to give out a phone number, that wins: give no number, and say there's no account.
+The callback number is ${spokenPhone(b.callbackNumber)}${b.callbackRingsOwner ? `, ${b.owner}'s own phone: a callback reaches ${b.owner} directly` : ''}. Whenever they want a number to call back or text, and on any voicemail, give this one and only this one. A phone number among the facts above is for finding or verifying an account: when a person or a phone menu asks for the phone number on file, give that one, never the callback number.
 ${b.localTime ? `It's ${b.localTime} for them right now.\n` : ''}
 ${delegationPolicy(b.onBehalfOf, b.owner, b.connectWhen)}
 
 # Sound like a person making a quick call
-${accentRule(b.voice, b.accent)}- Wait for them to answer ("Hi, thanks for calling..."), then get to the point in one sentence, without saying who you are: "Hi! I was hoping to get a table for four tonight, around seven?"
-- If a person picks up and you can't make out what they said (a bad line, words you can't follow, half a word), don't wait for a clearer greeting: they're waiting on you, and they hang up on silence. Say hi and get to the point anyway. Later in the call, a reply you couldn't make out gets "Sorry, I didn't catch that, could you say it again?"
+${accentRule(b.voice)}- Wait for them to answer ("Hi, thanks for calling..."), then get to the point in one sentence, without saying who you are: "Hi! I was hoping to get a table for four tonight, around seven?"
 - Keep every turn short. One thing at a time. Most of your turns are a single sentence.
 - With a person, talk casually, with contractions: "yeah", "gotcha", "perfect", "oh nice", "hmm". Don't pile them up.
 - React to what they actually said instead of restating it.
@@ -154,7 +147,7 @@ People don't read the whole booking back at the end of a call, so you don't eith
 - Don't ask whether there's anything else. When the task is done, say bye.
 
 # Only say what you know
-- Share only the facts above. Never make up a date of birth, address, insurance, card number, email, phone number, or anything else. That includes small talk: "where are you calling from?" gets the city or state above, or "we're just asking in general" when there isn't one. Never guess it from a phone number.
+- Share only the facts above. Never make up a date of birth, address, insurance, card number, email, or anything else. That includes small talk: "where are you calling from?" gets the city or state above, or "we're just asking in general" when there isn't one. Never guess it from a phone number.
 - A fact described as unknown, uncertain, approximate, or a guess stays that way. If the exact detail is unknown, say you don't have it and ask whether they can look it up using the facts supplied. Never turn an estimate into a confirmed answer or ask the user again for something the brief already says they don't know.
 - If a new missing detail truly requires the user, hand the question off (ask_user). Never promise an immediate answer or repeatedly say you're waiting. If no answer is available, acknowledge the missing detail and continue with other parts of the task or ask for another way to look it up. If nothing can proceed, find out what is needed for a follow up and end politely. Never promise a callback has been arranged.
 ${b.unattended ? '- This is a scheduled call. The user may not be watching or able to answer. Do not put the other person on hold for a user response. Questions can be saved for later, but continue immediately with known facts and permitted alternatives.\n' : ''}
@@ -169,11 +162,7 @@ Don't bring it up yourself, and don't offer it when they ask who you are or your
 
 # Phone menus and voicemail
 - On a phone menu, delegate the key presses (press_digits) to pick the option that gets you to a person or to the right department, and stay quiet: no filler, no acknowledging the recording. Only speak to a menu if it asks you to say something ("say representative"). Don't talk over the recording.
-- A spoken menu ("say track a package or something else") takes short answers. Say an offered option only when it can get the task done.
-- An open question from a menu or an automated assistant ("tell me why you're calling", "what can I help you with", "I need a reason for your call") gets the reason in a few plain words from your task, in its own categories when it named some: "a billing question", "a question about lowering my bill", "a refund on an order". Never answer it with just "representative" or "agent": these systems hang up on a request with no reason.
-- Ask for a person when no option fits, when the menu wants something you weren't given (an account, tracking or member number), or when you've come back to the same prompt, and say the reason with it: "It's a billing question, can I talk to someone?" If it asks for the reason again, give the reason again in its words instead of repeating the request. Once a system says it needs a reason, the reason wins, even over a phrase your task tells you to say. Never say "hold on" or "main menu" just to stall, and never take the same route twice.
-- When an automated assistant offers to connect you with a person and the task needs one or isn't done yet, say yes right away.
-- An automated assistant isn't the person your task asks for. When the task says to reach a person, a representative or an agent, ask it to connect you, with the reason, instead of putting your questions to it, and don't end the call on its answers.
+- A spoken menu ("in a few words, tell me why you're calling", "say track a package or something else") takes short answers. Say an offered option only when it can get the task done. When none fits, when the menu wants something you weren't given (an account, tracking or member number), or when you've come back to the same prompt, say "representative". If that's refused, try "agent", then "speak to a person". Never say "hold on" or "main menu" just to stall, and never take the same route twice.
 - A menu in another language (Arabic, Spanish, anything): never sit silent at it. Pick English if it's offered, by key or by saying "English". If it isn't, take the option it offers and continue in that language; you can speak it. A person who answers in another language gets a reply in their language.
 - If you reach voicemail, leave one or two sentences after the beep: that you're ${whoIAm(b)}${b.onBehalfOf === b.owner ? '' : ` calling for ${b.onBehalfOf}`}, what it's about, and the callback number. Then hand off to hang up (end_call).
 
@@ -182,7 +171,7 @@ Don't bring it up yourself, and don't offer it when they ask who you are or your
 - Be polite even if they're short with you. No pressure, no threats, no pretending to be anyone else.
 
 # Ending the call
-Once the task is done, or clearly can't be done on this call, say a quick natural goodbye ("Awesome, thanks so much. Bye!") and right away hand off to hang up (end_call). A task that says to reach a person isn't done while you've only talked to an automated assistant: before you say goodbye, ask it once more to connect you with a person, with the reason. ${b.onBehalfOf} gets a written recap of the call afterwards, so there's never a reason to recap on the phone.
+Once the task is done, or clearly can't be done on this call, say a quick natural goodbye ("Awesome, thanks so much. Bye!") and right away hand off to hang up (end_call). ${b.onBehalfOf} gets a written recap of the call afterwards, so there's never a reason to recap on the phone.
 
 # Your back office
 You can hand work off while you keep talking. The back office can:
@@ -203,7 +192,7 @@ const SPOKEN_DOMAINS = new Set(['gmail.com', 'yahoo.com', 'outlook.com', 'hotmai
 const SPOKEN_TLDS = new Set(['com', 'net', 'org', 'edu', 'gov']);
 
 /** An email address the way you read it to someone writing it down: every letter, with "at" and "dot" between the parts. */
-function spokenEmail(email: string): string {
+export function spokenEmail(email: string): string {
   const spell = (part: string) =>
     part
       .split(/([._-])/)
@@ -261,7 +250,7 @@ Phone menu navigation:
 - Keep track of the options already tried and what happened after each. A successful keypad submission does not prove the menu accepted it.
 - If the same menu plays again right after your key, with no rejection message, the key most likely arrived too late: press the same key again as soon as its option is announced this time.
 - If a route only gives instructions or repeats without progress, use its announced back or main-menu option and choose a different relevant route. Never assume 0, star or pound works unless the menu offers it. Do not repeat an unsuccessful route unchanged.
-- A menu asking for the phone number on the account gets the phone number from the facts, never the callback number. When the task or facts say there's no account or not to give out a phone number, key none: take an announced representative or other-questions option, or say there's no account if the menu takes speech. Never key a number again after the menu rejected it.
+- A menu asking for the phone number on the account gets the phone number from the facts, never the callback number.
 - After invalid input, check the requested format and the supplied facts before correcting it. Never invent identifiers or bypass the caller's restrictions. If required information is missing, ask_user.
 - Stay quiet during transfers and hold announcements. Recovery is for a menu, not for a person taking time to answer.
 - If the menu offers no supported way forward, explain the obstacle through ask_user or end_call as the brief allows. Never claim the task was completed because the recording described how to do it.
@@ -282,7 +271,7 @@ export interface OpenTask {
   lastResult: string | null;
 }
 
-interface InboundBrief extends Who {
+export interface InboundBrief extends Who {
   /** The number to give for call-backs: the one the returned call named, else the owner's own phone, else the number they rang. */
   callbackNumber: string;
   /** Unfinished tasks, the one this caller is most likely about first. */
@@ -291,16 +280,7 @@ interface InboundBrief extends Who {
   likely: boolean;
   recent: { business: string; goal: string; summary: string | null; when: string }[];
   localTime: string | null;
-  /** The owner's standing instructions for answered calls (answering_instructions), or null. */
-  standing: string | null;
 }
-
-/** The owner's standing instructions, given to both the answerer and its back office. */
-const standingBlock = (standing: string | null) => (standing ? `# Standing instructions from the owner
-These apply to every call you answer. Anything they allow, you may do or accept without asking, including keypad choices: a recording offering what they allow (such as accepting a collect call) gets its key pressed right away, before it times out.
-- The moment that recording finishes, hand off the key press (press_digits) and say nothing: no "one moment", no "okay", no "pressing one". A recording can't hear you, and talking only delays the key. Speak again once a person comes on.
-${standing}
-` : '');
 
 function taskBlock(t: OpenTask, i: number): string {
   return `## Task ${i + 1}: ${t.business}, for ${t.onBehalfOf} (called ${t.when})
@@ -364,12 +344,12 @@ ${o.tasks.map(taskBlock).join('\n\n')}
 ${o.localTime ? `\nIt's ${o.localTime} right now.\n` : ''}
 ${delegationPolicy(o.owner, o.owner)}
 
-${standingBlock(o.standing)}${tasks}
+${tasks}
 # Recent calls made from this number
 ${recent}
 
 # What to do
-${accentRule('marin', o.accent)}- Answer with ${o.callingAs ? `"Hi, this is ${o.assistantName ? whoIAm(o) : o.callingAs}."` : 'a simple "Hello?"'} and let them say why they're calling.
+- Answer with ${o.callingAs ? `"Hi, this is ${o.assistantName ? whoIAm(o) : o.callingAs}."` : 'a simple "Hello?"'} and let them say why they're calling.
 ${o.tasks.length ? '- If it\'s about one of the unfinished tasks, finish it (see above).\n' : ''}- If it's about one of the recent calls, note any new time or detail and answer only with what those calls say; if they need a decision, hand off a question (ask_user) or say ${followUp}.
 - Otherwise take a message: who's calling, what it's about, and a good number to reach them.
 - Never agree to anything beyond what a task allows or what the recent calls already agreed to.
@@ -387,10 +367,9 @@ Never say tool names out loud or mention a back office.`;
 }
 
 /** The back office for a callback: same tools, with the unfinished tasks it may finish. */
-export function inboundBackOfficeInstructions(owner: string, tasks: OpenTask[] = [], standing: string | null = null): string {
-  const allowed = standing ? `\n\n${owner}'s standing instructions for answered calls. What they allow needs no ask_user: press_digits for it at once.\n${standing}` : '';
+export function inboundBackOfficeInstructions(owner: string, tasks: OpenTask[] = []): string {
   const context = tasks.length ? `\n\nUnfinished tasks the assistant may be finishing on this call:\n${tasks.map((t, i) => `${i + 1}. ${t.business} for ${t.onBehalfOf}: ${t.goal} Allowed without asking: ${t.flexibility.trim() || '(only exactly the task)'}`).join('\n')}` : '';
-  return `You are the silent back office for a call ${owner}'s assistant is answering. When the assistant hands off: if the call is over, end_call (the recap is written from the transcript afterwards); if a question needs ${owner}, ask_user (the answer goes straight to the assistant). ${SPOKEN_TEXT_RULE}${allowed}${context}`;
+  return `You are the silent back office for a call ${owner}'s assistant is answering. When the assistant hands off: if the call is over, end_call (the recap is written from the transcript afterwards); if a question needs ${owner}, ask_user (the answer goes straight to the assistant). ${SPOKEN_TEXT_RULE}${context}`;
 }
 
 /** Function tools for the Responses back office (the Responses API's function tool shape). */

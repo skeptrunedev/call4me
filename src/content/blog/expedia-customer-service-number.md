@@ -1,19 +1,16 @@
 ---
-title: "Expedia customer service 24 hours: reach a live person at 1-866-310-5768"
-seoTitle: "Expedia live person 24/7: 1-866-310-5768"
+title: "Expedia customer service number: how to reach a live agent"
+seoTitle: "Expedia customer service number: 1-866-310-5768"
 subtitle: "We called Expedia's support line with general questions for this guide. It asks for an itinerary number and hangs up if you don't have one, unless you press 0. Here are the key presses that got us to an agent, what she said, and the full recording."
-description: "Expedia customer service is open 24 hours. For a live person at 1-866-310-5768, press 1, 6, 2, then 0 at the itinerary prompt. An agent answered in 3:24."
+description: "Expedia's number 1-866-310-5768 asks for an itinerary number. Press 1, 6, 2, then 0 at that prompt. We reached a live agent in 3:24. From a real recorded call."
 date: 2026-10-16
-updated: 2026-10-24
 verified: 2026-10-16
 tags: expedia, travel, customer service, flights, phone trees
 authors: nick
 imageAlt: "Expedia customer service number 1-866-310-5768, how to reach a live agent"
 ---
 
-**The short answer:** yes, Expedia customer service is open **24 hours a day**. Expedia's contact page says agents "are available 24 hours a day, 365 days a year," and the agent we reached said "Expedia, yes. 24-7." To reach a **live person** at **1-866-310-5768**, press **1**, **6**, **2**, then **0** when it asks for an itinerary number. **A live agent answered 3 minutes 24 seconds after we dialed.**
-
-We reached Expedia customer service at **1-866-310-5768**. Expedia's own [name correction page](https://www.expedia.com/customersupport/name-correction) gives that number: "If you are due to check-in or depart in the next 72 hours, please contact us by phone on 1-866-310-5768." An automated menu answers. It asks for your **itinerary number**, and if you don't enter one it hangs up. **Pressing 0 at that prompt got us past it.** The full path: **press 1** (English), **press 6** (billing or something else), **press 2** (you don't know the phone number on the booking), then **press 0** at the itinerary prompt. **A live agent answered 3 minutes 24 seconds after we dialed.**
+**The short answer:** we reached Expedia customer service at **1-866-310-5768**. Expedia's own [name correction page](https://www.expedia.com/customersupport/name-correction) gives that number: "If you are due to check-in or depart in the next 72 hours, please contact us by phone on 1-866-310-5768." An automated menu answers. It asks for your **itinerary number**, and if you don't enter one it hangs up. **Pressing 0 at that prompt got us past it.** The full path: **press 1** (English), **press 6** (billing or something else), **press 2** (you don't know the phone number on the booking), then **press 0** at the itinerary prompt. **A live agent answered 3 minutes 24 seconds after we dialed.**
 
 Expedia's [contact page](https://www.expedia.com/lp/b/getintouch) doesn't print a general phone number. It says agents "are available 24 hours a day, 365 days a year," and that "To get you to the right agent and phone number, we'll need to ask a few questions first." It also warns: "Fake Expedia phone numbers are circulating online, often through misleading search engine ads and even whole pages." Get the number from expedia.com or the app, not a search ad.
 

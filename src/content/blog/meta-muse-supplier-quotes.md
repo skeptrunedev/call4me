@@ -1,16 +1,16 @@
 ---
-title: "Prepare a supplier quote request with Meta Muse: a draft brief and published prices"
+title: "Meta Muse supplier inquiry brief: draft and published prices"
 seoTitle: "Meta Muse supplier inquiry brief"
 subtitle: A draft brief and three published box prices. No supplier calls or Muse execution were completed for this example.
-description: "Prepare a supplier inquiry for shipping boxes in Meta Muse: published prices, the buyer details to add first and a quote worksheet. No supplier calls completed."
+description: A supplier inquiry draft for Meta Muse, with published packaging prices, missing buyer details and a downloadable quote worksheet. No supplier calls completed.
 date: 2026-10-05
-updated: 2026-10-17
+updated: 2026-10-07
 tags: meta muse, small business, ai agents, supplier quotes
 authors: nick
 imageAlt: Draft supplier inquiry brief and published prices, with no completed supplier calls
 ---
 
-To prepare a supplier quote request in Meta Muse, start from the published prices and supply the missing buyer details (destination, deadline, required inside dimensions) before any supplier is called. **This is a supplier inquiry draft, not a completed Muse task or a set of phone quotes.** We researched three published listings on October 5, 2026. No supplier was contacted and this workflow was not executed in Muse.
+**This is a supplier inquiry draft, not a completed Muse task or a set of phone quotes.** We researched three published listings on October 5, 2026. No supplier was contacted and this workflow was not executed in Muse.
 
 The proposed order is 25 brown corrugated boxes advertised as 12 by 12 by 12 inches, rated 32 ECT. No delivery destination, deadline, account discount or approved substitute was supplied, so there is no delivered price winner.
 

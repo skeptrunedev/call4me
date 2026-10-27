@@ -11,11 +11,11 @@ export interface Signup {
   email: string;
   display_name: string | null;
   created_at: number;
-  /** better-auth provider ("google", "twitter"), "email" for an emailed sign-in link, or null for an account a checkout created. */
+  /** better-auth provider ("google", "twitter"), or null for an account a checkout created. */
   provider: string | null;
 }
 
-const PROVIDERS: Record<string, string> = { google: 'Google', twitter: 'X', email: 'an email link' };
+const PROVIDERS: Record<string, string> = { google: 'Google', twitter: 'X' };
 
 export function signupEmail(s: Signup, origin: string): { subject: string; text: string } {
   const how = s.provider ? `signed in with ${PROVIDERS[s.provider] ?? s.provider}` : 'paid at checkout before signing in';
@@ -38,7 +38,7 @@ export async function notifySignups(opts: { db: D1Database; messenger: Messenger
   const { results } = await opts.db
     .prepare(
       `SELECT a.id, a.email, a.display_name, a.created_at,
-              COALESCE((SELECT p."providerId" FROM "account" p WHERE p."userId" = a.user_id LIMIT 1), CASE WHEN a.user_id IS NOT NULL THEN 'email' END) AS provider
+              (SELECT p."providerId" FROM "account" p WHERE p."userId" = a.user_id LIMIT 1) AS provider
        FROM accounts a
        WHERE NOT EXISTS (SELECT 1 FROM signup_notices n WHERE n.account_id = a.id)
        ORDER BY a.created_at LIMIT ?`,

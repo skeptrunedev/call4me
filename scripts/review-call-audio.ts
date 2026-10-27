@@ -12,7 +12,7 @@ import { telnyx } from '../src/server/lib/telnyx';
 
 const repository = realpathSync(resolve(dirname(fileURLToPath(import.meta.url)), '..'));
 const hash = (file: string) => createHash('sha256').update(readFileSync(file)).digest('hex');
-function privatePath(file: string): string {
+export function privatePath(file: string): string {
   const path = resolve(file);
   let ancestor = path;
   while (!existsSync(ancestor)) ancestor = dirname(ancestor);
@@ -28,9 +28,8 @@ function save(file: string, value: unknown) {
   chmodSync(file, 0o600);
 }
 export type Mute = { start: number; end: number; label: string };
-/** disguise spans keep a voice audible but pitch and formant shifted, e.g. an account owner who joined the call. */
-export type Manifest = { source: string; sourceSha256: string; reviewed: true; mutes: Mute[]; disguise?: Mute[] };
-function validateMutes(mutes: Mute[], duration: number) {
+export type Manifest = { source: string; sourceSha256: string; reviewed: true; mutes: Mute[] };
+export function validateMutes(mutes: Mute[], duration: number) {
   assert.ok(Array.isArray(mutes), 'mutes must be an array');
   let previousEnd = 0;
   for (const mute of mutes) {
@@ -39,21 +38,11 @@ function validateMutes(mutes: Mute[], duration: number) {
     previousEnd = mute.end;
   }
 }
-function muteFilter(mutes: Mute[]) {
+export function muteFilter(mutes: Mute[]) {
   return mutes.length ? `aeval=exprs='val(0)*(${mutes.map(m => `not(between(t,${m.start},${m.end}))`).join('*')})'` : 'anull';
 }
-export const DISGUISE_PITCH = 0.82;
-const within = (spans: Mute[]) => spans.map(m => `between(t,${m.start},${m.end})`).join('+');
-/** Mono source to [voice]: disguise spans replaced by a pitch and formant shifted copy at the same timing. */
-export function disguiseGraph(spans: Mute[]) {
-  if (!spans.length) return '[0:a:0]aformat=channel_layouts=mono[voice]';
-  return `[0:a:0]aformat=channel_layouts=mono,asplit[keep][shift];` +
-    `[keep]aeval=exprs='val(0)*not(${within(spans)})'[kept];` +
-    `[shift]rubberband=pitch=${DISGUISE_PITCH}:formant=shifted,aeval=exprs='val(0)*(${within(spans)})'[shifted];` +
-    `[kept][shifted]amix=inputs=2:normalize=0[voice]`;
-}
 /** gpt-4o-transcribe rejects audio over 1400 s; split longer files into equal windows under that limit. */
-function asrWindows(duration: number, limit = 1400) {
+export function asrWindows(duration: number, limit = 1400) {
   const count = Math.max(1, Math.ceil(duration / (limit - 60)));
   return Array.from({ length: count }, (_, index) => ({ start: (duration * index) / count, end: (duration * (index + 1)) / count }));
 }
@@ -198,7 +187,6 @@ function loadManifest(file: string, binary: string) {
   assert.equal(hash(manifest.source), manifest.sourceSha256, 'source hash does not match reviewed manifest');
   const duration = decode(manifest.source, binary).length / 16000;
   validateMutes(manifest.mutes, duration);
-  validateMutes(manifest.disguise ?? [], duration);
   return { manifest, duration };
 }
 function exportAudio(manifestFile: string, out: string, binary: string) {
@@ -209,16 +197,15 @@ function exportAudio(manifestFile: string, out: string, binary: string) {
   // Mono first, sample accurate muting, normal speed and complete timing. Mute
   // again after normalization/resampling to prevent filters smearing private audio.
   const mute = muteFilter(manifest.mutes);
-  const graph = `${disguiseGraph(manifest.disguise ?? [])};[voice]${mute},loudnorm=I=-16:TP=-1.5:LRA=11,aresample=24000,${mute}[out]`;
-  ffmpeg(binary, ['-y', '-i', manifest.source, '-vn', '-filter_complex', graph, '-map', '[out]', '-ac', '1', '-ar', '24000', '-c:a', 'libmp3lame', '-b:a', `${exportBitrate(duration)}k`, '-map_metadata', '-1', '-id3v2_version', '0', out]);
+  ffmpeg(binary, ['-y', '-i', manifest.source, '-map', '0:a:0', '-vn', '-af', `aformat=channel_layouts=mono,${mute},loudnorm=I=-16:TP=-1.5:LRA=11,aresample=24000,${mute}`, '-ac', '1', '-ar', '24000', '-c:a', 'libmp3lame', '-b:a', `${exportBitrate(duration)}k`, '-map_metadata', '-1', '-id3v2_version', '0', out]);
   console.log(JSON.stringify({ file: out, sha256: hash(out), kbps: exportBitrate(duration) }));
 }
 /** Cloudflare Workers serves static assets of at most 25 MiB; leave headroom for MP3 framing. */
-const MAX_ASSET_BYTES = 24 * 1024 * 1024;
+export const MAX_ASSET_BYTES = 24 * 1024 * 1024;
 const BITRATES = [96, 80, 64, 56, 48, 40, 32];
 
 /** The highest standard MP3 bitrate (kbps) at which a recording of this length still fits as a site asset. */
-function exportBitrate(seconds: number): number {
+export function exportBitrate(seconds: number): number {
   const fits = BITRATES.find((kbps) => (seconds * kbps * 1000) / 8 <= MAX_ASSET_BYTES);
   assert.ok(fits, `a ${Math.round(seconds / 60)} minute recording does not fit in a site asset even at 32 kbps`);
   return fits;

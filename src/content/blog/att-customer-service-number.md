@@ -180,8 +180,6 @@ What went wrong on our side:
 
 We've had quicker routes at other carriers: see [Verizon customer service](/blog/verizon-customer-service), [T-Mobile's customer service number](/blog/t-mobile-customer-service-number) and [Xfinity's customer service number](/blog/xfinity-customer-service-number). For more recorded calls, see the [companies we've called](/companies).
 
-To lower an AT&T bill, saying "a billing question, my bill is too high" at 800-288-2020 reached a person in 2 minutes. That call is in [how to lower your AT&T bill](/blog/how-to-lower-att-bill).
-
 ## Have your agent make this call
 
 If you use call4me, paste this into your agent:

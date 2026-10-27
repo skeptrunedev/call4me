@@ -1,10 +1,10 @@
 ---
-title: "Have your AI agent research and call SF private dining rooms"
+title: Web research and phone calls in your AI agent: comparing SF private dining
 seoTitle: AI agent web research and phone calls: a real task
 subtitle: We used Codex to research and call Waterbar and EPIC Steak, plus a separate Claude Code call to Foreign Cinema. Here is what the websites answered, what the calls added, and what stayed unknown.
-description: "Have Codex or Claude Code research SF private dining sites, call Waterbar, EPIC Steak and Foreign Cinema, and return a sourced comparison with recordings."
+description: A real Codex web research and phone workflow, plus customer stock and reservation examples. Reusable briefs, recordings and clear limits on each result.
 date: 2026-10-03
-updated: 2026-10-17
+updated: 2026-10-06
 tags: claude code, codex, mcp, ai agents, private dining, ai phone assistant
 authors: nick
 imageAlt: Official websites, phone calls and a sourced private dining comparison in an existing AI agent
@@ -255,7 +255,7 @@ They do give you useful examples of the evidence to request when your own resear
 | Check a shortlisted product | Exact product, required features, store location and published number | Macy's staff checked a black silk bow tie, reported 88 available at $33, and described the finish and adjustable strap | No purchase or hold. Price and stock apply to the October 6 conversation |
 | Turn an evening plan into a reservation | Restaurant, complete date, guest count, acceptable times and booking terms to ask about | Staff confirmed a table for four on October 8 at 7:30 PM | No cancellation terms were confirmed, and no attendance is established |
 
-Listen to the [dinner reservation call and read its transcript](/blog/book-dinner-reservation-by-phone). The recording remains on its source page so you can inspect the complete conversation and its limits.
+Listen to the [Macy's inventory call and read its transcript](/blog/macys-bow-tie-stock-check), or the [dinner reservation call and transcript](/blog/book-dinner-reservation-by-phone). The recordings remain on their source pages so you can inspect the complete conversation and its limits.
 
 ### Stock research brief
 

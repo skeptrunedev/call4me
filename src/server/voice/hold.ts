@@ -7,12 +7,8 @@
  * someone greets us ("my name is", "how can I help"), or when they say something that is
  * not a hold recording and our caller answers it, back-dated to when they started talking. Our
  * caller's own "sure, no problem" to "please hold" does not end it.
- *
- * A voicemail greeting is not a hold, though many say "your call is important to us": once it asks
- * for a message, the hold ends. Nobody comes back to a voicemail to end it otherwise, so it kept a
- * silent line billing past its limit (Fiola's events line, 12 minutes after the message was left).
  */
-import { asksForMessage, asksUsToWait, isPhoneMenu } from './handoff';
+import { asksUsToWait } from './handoff';
 
 const QUEUE_RECORDING = /\b(?:please hold|on (?:a )?(?:(?:brief|short|quick|little|small) )?hold|(?:put|putting|place|placing) you on (?:a )?(?:\w+ )?hold|(?:let me|i'?ll|i will|i'?m going to|i'?m gonna|while i|as i|i'?m|i am) (?:connect|transfer)(?:ing)? you|stay on the line|remain on the line|(?:all )?(?:of )?our (?:agents|representatives|operators|associates|team members)(?: are)? (?:currently )?(?:busy|assisting|helping)|all (?:agents|representatives|operators|associates|lines) are (?:currently )?(?:busy|in use)|your call is (?:very )?important|(?:answered|taken) in the order (?:it was|they were) received|(?:estimated|expected|approximate) wait time|next available|in (?:the )?queue|being transferred|transferring (?:you|your call)|(?:i'?ll )?be right back|be right with you|(?:have|need|got) to (?:check|ask)|check with (?:the|my|our) (?:manager|supervisor|team|kitchen|doctor)|(?:keep|hold) me (?:one|a) (?:sec(?:ond)?|moment|minute)|por favor espere|permanezca en (?:la )?l[ií]nea|todos nuestros (?:representantes|agentes|operadores|asociados) (?:est[aá]n )?(?:ocupados|atendiendo)|su llamada es (?:muy )?importante|en el orden (?:en )?(?:que|en que) (?:fue|fueron) recibidas?|tiempo (?:estimado |aproximado )?de espera|siendo transferida|le (?:estamos )?transfiriendo)\b/i;
 /**
@@ -35,7 +31,6 @@ const WAIT_REQUEST = new RegExp(
       String.raw`(?:current|estimated|expected|approximate|average) (?:hold|wait) time`,
       String.raw`(?:may|will) be (?:monitored|recorded)|is being recorded|recorded for quality`,
       String.raw`someone (?:who|that) can help|right person|right department`,
-      String.raw`(?:will|'ll) be with you|(?:still )?(?:helping|assisting|serving|with|on the phone with) other (?:callers|patients|customers|guests|clients|members|people)|hold your place|place in (?:line|the queue)|(?:sorry|apologi[sz]e) (?:about |for )?(?:the|your) wait|thanks? (?:you )?(?:so much |kindly )?for (?:your )?(?:patience|holding|waiting)`,
       String.raw`take a (?:quick |little )?look|(?:^|[\s,]+)(?:moment|hold|sec|second|minute)[\s.!]*$`,
     ]
       .map((p) => `(?:${p})`)
@@ -45,12 +40,12 @@ const WAIT_REQUEST = new RegExp(
 );
 
 /** Our caller only acknowledging ("sure", "okay, no problem"): not an answer to someone back from a hold. */
-const ACKNOWLEDGMENT = /^(?:(?:\[[^\]]*\]?|[^\s[\]]*\]|sure|okay|ok|alright|all right|no problem|no worries|of course|take your time|thanks?|thank you|got it|perfect|great|sounds good|yes|yeah|hmm+|mm-?hmm|uh-?huh|will do|i can wait|i'?ll (?:stay on the line|keep waiting|keep holding|hold|wait|stay on|hang on)|i'?m (?:still )?(?:here|on the line|holding|waiting))[\s,.!]*)+$/i;
-// "Thank you for holding" and "sorry for the wait" are queue recordings as often as people, so they don't count.
-const PERSON_BACK = /\b(?:my name is|how (?:can|may) i (?:help|assist)|(?:are you )?still there|mi nombre es|le habla|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir))\b/i;
+const ACKNOWLEDGMENT = /^(?:(?:sure|okay|ok|alright|all right|no problem|of course|take your time|thanks?|thank you|got it|perfect|great|sounds good|yes|yeah)[\s,.!]*)+$/i;
+// "Thank you for holding" and "this is a recorded line" are common in queue recordings, so they don't count.
+const PERSON_BACK = /\b(?:my name is|how (?:can|may) i (?:help|assist)|(?:are you )?still there|sorry (?:about|for) the wait|mi nombre es|le habla|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir)|disculpe la espera)\b/i;
 
 /** A line from the other side that is part of the wait: a hold request or a queue recording. */
-function isHoldLine(text: string): boolean {
+export function isHoldLine(text: string): boolean {
   return QUEUE_RECORDING.test(text) || WAIT_REQUEST.test(text) || asksUsToWait(text);
 }
 
@@ -62,11 +57,8 @@ export class HoldMeter {
   private theirs = '';
   /** Our caller's words since the other side last spoke. */
   private mine = '';
-  /** When they started their latest sentence that is not a hold recording or a menu, while on hold. */
+  /** When they started saying something that is not a hold recording, while on hold. */
   private speechAt: number | null = null;
-  /** How many sentences of theirs have started since our caller last answered, and when the latest began. */
-  private sentences = 0;
-  private sentenceAt = 0;
 
   /** Resume a hold already in progress (the session object was reset mid-call). */
   constructor(since: number | null = null) {
@@ -80,58 +72,29 @@ export class HoldMeter {
   /** Words from the other side. Returns the change in hold state, if any. Judged one sentence at a time. */
   them(delta: string, at: number): HoldChange | null {
     if (!delta) return null;
-    // Our caller's turn is over once they speak again: judge it whole.
-    const answered = this.settleCaller();
-    if (answered) {
-      this.theirs = delta;
-      this.sentences = 0;
-      return answered;
-    }
     this.theirs += delta;
-    const all = this.theirs.trim().split(/[.?!]+\s+/);
-    const sentence = all[all.length - 1] ?? '';
-    if (all.length !== this.sentences) {
-      this.sentences = all.length;
-      this.sentenceAt = at;
-    }
-    // A person greeting us outranks hold words in the same breath ("thanks for holding, how can I help?").
-    if (this.since === null) return isHoldLine(sentence) && !PERSON_BACK.test(sentence) && !asksForMessage(sentence) ? this.start(at) : null;
-    if (PERSON_BACK.test(sentence)) return this.end(this.speechAt ?? at);
-    // Judged once the sentence is finished: "To leave a message," may still end "press two".
-    if (/[.?!]\s*$/.test(sentence) && asksForMessage(sentence)) return this.end(this.sentenceAt);
-    // A phone menu inside the queue ("press two for general inquiries") is part of the wait, not a person.
-    if (isHoldLine(sentence) || isPhoneMenu(sentence)) {
+    this.mine = '';
+    const sentence = lastSentence(this.theirs);
+    if (this.since === null) return isHoldLine(sentence) ? this.start(at) : null;
+    if (isHoldLine(sentence)) {
       this.speechAt = null;
       return null;
     }
-    // Back-dated to their latest sentence, not their first: hold music transcribed as lyrics runs
-    // straight into a person, and the music is still part of the hold.
-    if (/\w{2,}/.test(sentence)) this.speechAt = this.sentenceAt;
+    if (PERSON_BACK.test(sentence)) return this.end(this.speechAt ?? at);
+    if (this.speechAt === null && /\w{2,}/.test(sentence)) this.speechAt = at;
     return null;
   }
 
   /**
-   * Our caller spoke. Its words stream in a few at a time and "Hmm. I'll" could still become "Hmm.
-   * I'll stay on the line", so nothing is decided here: the turn is judged whole once the other
-   * side speaks again (settleCaller). Never changes the hold state itself.
+   * Our caller spoke. A person who spoke just before and got an answer is back from the hold. A
+   * bare "sure" or "okay" is not an answer, and keeps their half-heard sentence together: speech
+   * comes in fragments, and "I'll be right" / "Sure." / "back" is still one hold request.
    */
   caller(delta: string): HoldChange | null {
-    if (delta.trim()) this.mine += delta;
-    return null;
-  }
-
-  /**
-   * Our caller's finished turn. A person who spoke just before and got an answer is back from the
-   * hold, back-dated to when they started. A bare "sure" or "I'll stay on the line" is not an
-   * answer, and keeps their half-heard sentence together: speech comes in fragments, and "I'll be
-   * right" / "Sure." / "back" is still one hold request.
-   */
-  private settleCaller(): HoldChange | null {
-    const mine = this.mine.trim();
-    this.mine = '';
-    if (!mine || ACKNOWLEDGMENT.test(mine)) return null;
+    if (!delta.trim()) return null;
+    this.mine += delta;
+    if (ACKNOWLEDGMENT.test(this.mine.trim())) return null;
     this.theirs = '';
-    this.sentences = 0;
     if (this.since !== null && this.speechAt !== null) return this.end(this.speechAt);
     this.speechAt = null;
     return null;
@@ -141,7 +104,6 @@ export class HoldMeter {
     this.since = at;
     this.speechAt = null;
     this.theirs = '';
-    this.sentences = 0;
     this.mine = '';
     return { type: 'start', at };
   }
@@ -151,7 +113,11 @@ export class HoldMeter {
     this.since = null;
     this.speechAt = null;
     this.theirs = '';
-    this.sentences = 0;
     return { type: 'end', at, seconds };
   }
+}
+
+function lastSentence(text: string): string {
+  const sentences = text.trim().split(/[.?!]+\s+/);
+  return sentences[sentences.length - 1] ?? '';
 }

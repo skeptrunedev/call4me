@@ -5,15 +5,12 @@ subtitle: "We called 1-800-WALMART with general questions for this guide. An AI 
 description: "Walmart's customer service number is 1-800-925-6278 (1-800-WALMART). An AI agent answers; asking twice for a representative reached a person in 1:15."
 date: 2026-10-13
 verified: 2026-10-13
-updated: 2026-10-17
-tags: walmart, walmart plus, customer service, phone trees, phone numbers, refunds
+tags: walmart, customer service, phone trees, phone numbers, refunds
 authors: nick
 imageAlt: "Walmart 1-800-925-6278, how to get past the AI agent to a person at Walmart customer service"
 ---
 
 **The short answer:** Walmart's customer service number is **1-800-925-6278 (1-800-WALMART)**. **The "Walmart AI agent" answers, not a person.** To reach a real person, **ask for a representative, and when it asks for an order number, say you don't have one and ask again.** On our call it transferred us after the second request, a recording said there was one caller ahead of us, and **a live representative answered 1 minute 15 seconds into the call.**
-
-**Walmart+ refunds:** Walmart's written policy says Walmart+ fees aren't refunded, but on a call4me customer's call to 1-800-966-6546 after cancelling, a representative said a refund usually takes zero to seven business days and passed the request to another team, without confirming one. [Details below](#if-i-cancel-walmart-plus-do-i-get-a-refund).
 
 **One thing to know first:** earlier the same day, the same line played "I'm sorry. We cannot take your call at this time" and hung up within about 13 seconds, three times. All three of those calls came from one of our phone numbers. Both calls from our other number were answered by the AI agent. Walmart's line refused calls from one of our numbers and answered from another; if you hear that message, try calling from a different phone. That's what we observed on one day, not a Walmart policy we can confirm.
 
@@ -90,143 +87,6 @@ Before answering, the representative said the team works "different shifts" and 
 
 They agree on seven days for a card. Only the AI mentioned the faster gift card and Walmart Cash option, and only the representative mentioned the 10 business day case. We didn't check either against walmart.com's written return policy.
 
-## If I cancel Walmart Plus, do I get a refund?
-
-**Walmart's written policy says no.** Its [Walmart+ billing help page](https://www.walmart.com/help/article/walmart-billing-and-payments/6d81a1f3cfe843e8b9cbeebe926e7cdf) says "We're not able to offer refunds on Walmart+." The [Walmart+ Terms of Use](https://www.walmart.com/help/article/walmart-terms-of-use/de696dfa1dd4423bb1005668dd19b845) (last updated October 13, 2026) say the membership fee "is non-refundable except as expressly set forth in these Terms or as required by applicable law," and that if you cancel, "you can continue to use your Walmart+ Membership and any such Plus Up Benefit until the end of your relevant term."
-
-**On the phone, a representative didn't say no.** On October 9, 2026, a call4me customer's assistant called Walmart to ask for a one-time goodwill refund of a $13.89 monthly Walmart+ charge from October 7. The membership had been canceled on October 9, two days after the charge. The representative confirmed the cancellation, said a refund "usually would take at least zero to seven business days" after cancelling, and said the request would go to "the right appropriate team." **No refund was issued or confirmed on the call.**
-
-### How the call got to a person
-
-The assistant called **1-800-966-6546**, the Customer Care number on Walmart.com's [Responsible Disclosure and Accessibility Policies](https://www.walmart.com/help/article/responsible-disclosure-and-accessibility-policies/0f173dab8bd942da84b1cd7ab5ffc3cb) page (we checked the live page on October 17, 2026). This is the same number that refused our own calls on October 13, [below](#we-cannot-take-your-call-at-this-time). This customer's call, from a different phone number four days earlier, was answered.
-
-1. The Walmart AI agent answered: "Can I help with tracking an order, making a return, or something else today?"
-2. The assistant described the problem: a recent Walmart Plus charge and a goodwill refund after cancelling.
-3. The AI said "I can't help you with that. I'm now transferring you to a Walmart associate," then "Your call is next in line. Your estimated wait time is less than one minute."
-4. **A representative answered 1 minute 3 seconds into the call.** No second request and no order number were needed.
-
-The Walmart+ Terms list a different number for cancelling a membership by phone, **(800) 924-9206**. Nobody called that one for this guide.
-
-### What the Walmart+ refund call established
-
-| Question | What the representative said |
-|---|---|
-| How was the account found? | The representative asked for "the phone number and the email" on the Walmart.com account. The first phone number "is not pulling up any account"; a second one found it. |
-| Was the membership canceled? | "The account is no longer active. Like, the membership was successfully canceled." |
-| How long does a refund take? | "Refund usually would take at least zero to seven business days to reflect back to the customer's account after it was cancelled." |
-| Is the charge refundable? | Hedged: "as far as I know, based on my experience," if the membership wasn't used "for any online orders" before the cancellation, "then that's waivable as far as I know." Later: "refundable like if the membership wasn't being fully used." |
-| Can the call go to the Walmart+ team? | No: "we cannot able to transfer you" there "because the cancellation already did went through." |
-| What happens next? | "We're going to address this to the right appropriate team who can, you know, consider this request." They asked for 24 to 48 hours for an update and said to call back after seven business days, or "if you did not receive any notification email." |
-
-### What this call didn't settle
-
-- **No refund was granted.** The representative never said the $13.89 would come back. The representative described a request passed to another team.
-- **That answer conflicts with Walmart's written policy**, which says Walmart+ fees aren't refunded. The "waivable" answer came with "as far as I know" twice.
-- **Whether the refund arrived.** We don't know what happened after the call, or whether the update email came.
-- **No reference number** was given for the request, and the assistant didn't ask for one.
-- **Whether the membership had been used** for any orders before cancelling. The representative's condition depends on it, and nobody checked it on the call.
-- **A partial refund.** The assistant asked; the representative didn't answer it directly.
-
-### Listen to the Walmart+ refund call
-
-The whole call, 7 minutes 26 seconds, published with the account owner's permission. Silences replace the account owner's name, the account email, both phone numbers and their readbacks, the representative's first name, and two single words the representative may have used as a name. Nothing is cut; the timing is original.
-
-<audio controls preload="metadata" src="/static/examples/walmart-customer-service-number-customer.mp3" style="width:100%"><a href="/static/examples/walmart-customer-service-number-customer.mp3">listen to the Walmart+ refund call</a></audio>
-
-- **0:02** "Hi, I'm the Walmart AI agent"
-- **0:17** The assistant asks about a goodwill refund
-- **0:30** "I can't help you with that. I'm now transferring you"
-- **1:03** A live representative answers
-- **1:39** The representative asks for the account phone number and email
-- **3:21** "The membership was successfully canceled," and "zero to seven business days"
-- **5:02** "Then that's waivable as far as I know"
-- **6:37** The request goes to "the right appropriate team," with an update in 24 to 48 hours
-
-It's also on our [examples page](/examples#walmart-customer-service-number-customer). For another refund request that went past the written policy, see the [Aquasana return exception](/blog/aquasana-return-exception). For a refund after cancelling a different kind of booking, see [Costco Tire appointment cancel and refund](/blog/costco-tire-appointment-cancel-refund).
-
-<details>
-<summary>Read the transcript: the Walmart+ refund call</summary>
-
-The transcript follows the recording. "Walmart AI" is Walmart's AI agent and its recorded messages. "Representative" is the live person. "Caller" is the call4me customer's assistant. Silenced details are shown in brackets. Filler words ("um," "uh") are left out, and words the transcriptions disagree on are marked unclear.
-
-**0:02 Walmart AI:** Hi, I'm the Walmart AI agent. I'm not perfect, and this call is being recorded to improve quality. Para ayuda en español, solo pregunte. Can I help with tracking an order, making a return, or something else today?
-
-**0:17 Caller:** Hi, I'm calling on behalf of [account owner's name muted] to ask about a recent Walmart Plus charge and see if there's any chance of a goodwill refund after canceling the membership.
-
-**0:30 Walmart AI:** Okay, thanks for sharing that. I can't help you with that. I'm now transferring you to a Walmart associate to help you.
-
-**0:45 Walmart recording:** Your call is next in line. Your estimated wait time is less than one minute. This call and your voice may be recorded for quality or other business purposes, including fraud prevention.
-
-**1:03 Representative:** Hi, thank you so much for calling Walmart.com. My name is [name removed]. May I have your full name, please?
-
-**1:09 Caller:** Sure. I'm [muted: the account owner's name] assistant, calling on his behalf.
-
-**1:18 Representative:** Oh, all right. Good afternoon. Yes, [unclear]. How can I help you today?
-
-**1:23 Caller:** Hi, thanks. We were just wondering if there's any chance of a one-time goodwill refund for a Walmart Plus charge of $13.89 on October 7th. He canceled it two days later.
-
-**1:39 Representative:** A goodwill refund. Can you by any chance help me verify the customer's account, like the phone number and the email to his Walmart.com account?
-
-**1:52 Caller:** Sure. The account email is [email muted]. And the phone number is [phone number muted].
-
-**2:03 Representative:** All right, thank you. One moment, okay?
-
-**2:07 Caller:** Sure, no problem.
-
-**2:10 Representative:** Okay. As per thorough check in here, you know, phone number is not pulling up any account under account name [first name muted]. Let me repeat it back to you just to make sure. [Phone number muted.] Is that right?
-
-**2:26 Caller:** Yeah, that's right. He's the account holder, [name muted]. The membership that was canceled October 9th, just two days after that $13.89 charge on October 7th.
-
-**2:41 Representative:** A membership here at Walmart.com, right?
-
-**2:44 Caller:** Yeah, the monthly Walmart Plus plan.
-
-**2:49 Representative:** By any chance, like, do you happen to know if [first name muted] have a different phone number might associated to his Walmart.com account?
-
-**2:59 Caller:** Hmm, I am checking on another phone number, just a second. It might be [second phone number muted].
-
-**3:13 Representative:** [Phone number readback muted.] Is that correct?
-
-**3:17 Caller:** Yes, that's the one.
-
-**3:21 Representative:** All right. Okay, yeah, as per check in here, the account is no longer active. Like, the membership was successfully canceled. So, you know, as far as I know, refund usually would take at least zero to seven business days to reflect back to the customer's account after it was cancelled.
-
-**3:51 Caller:** Perfect. So would that still be possible for the $13.89 from October 7th, though, even though it was canceled two days later?
-
-**4:05 Representative:** For that, actually, you know, I [unclear: kind of, or can't] fully guarantee because it will gonna depend on, you know... By the way, if I may ask, did you cancel the membership of [first name muted] here on his behalf?
-
-**4:21 Caller:** Yeah, yeah, that's right. I'm his assistant and I'm calling on his behalf.
-
-**4:28 Representative:** Gotcha. Did, by any chance, the Walmart Plus membership mention about the reimbursal? Because actually, you know, they're the one who will determine if that membership choice is still refundable.
-
-**4:48 Caller:** I'm not really sure. We were just hoping since it was canceled so soon after billing, maybe there's a chance for an exception.
-
-**5:02 Representative:** Yeah, sure. For now, we will just kind of highly suggest to at least allow us, you know, until zero to seven business days from the time it was canceled. So that means, you know, at the seven business days, if the charge, I mean, if the refund is not there, just give us a call right back, okay? Because as far as I know, based on my experience, once if, you know, the membership wasn't successful or wasn't been able used for any online orders, you know, before the cancellation, then that's waivable as far as I know. So yeah, how about just give us a call back like the next Friday, this next weekend, okay?
-
-**5:44 Caller:** Okay. Well, if it's not there by then, could we maybe just get like even a partial goodwill refund?
-
-**5:56 Representative:** I tell you, [one word muted], for now, you know, we cannot able to transfer you to the [unclear, likely Walmart Plus] team because the cancellation already did went through. But after, you know, the seven business days, if there are no refund, just give us a call right back, okay? But again, as far as I know, it's, you know, refundable, like if the membership wasn't being fully used, the [unclear] of, you know...
-
-**6:23 Caller:** Okay, got you. Yeah, okay. I was hoping there's some way to make a one-time exception since it was canceled so quickly after being billed.
-
-**6:37 Representative:** I totally [unclear, one word muted]. No worries, I'll go ahead. We're going to address this to the right appropriate team who can, you know, consider this request. Just allow us within the 24 to 48 hours to get an update for this, okay?
-
-**6:51 Caller:** Okay, yeah, that's really helpful. Thanks so much for taking care of that. Okay, if we don't see anything...
-
-**6:59 Representative:** Thank you for calling Walmart [unclear]. Just give us a call right back. Just give us a call back, okay? If after 48 hours you did not receive any notification email.
-
-**7:19 Caller:** Sure. Okay, sounds good. Really appreciate your help. Thank you. Bye.
-
-**7:24 Representative:** Bye. You're welcome. Bye.
-
-</details>
-
-### Have your agent ask for a Walmart+ refund
-
-You can connect [call4me](/) through the [Claude Code guide](/blog/claude-code-phone-calls) or the [Codex guide](/blog/codex-phone-calls). This is a suggested brief, not the one the customer used:
-
-> Call Walmart Customer Care at 1-800-966-6546. When the Walmart AI agent answers, say it's about a Walmart Plus charge after cancelling and ask for an associate. Ask for a refund of [amount] charged on [date]; the membership was canceled on [date]. Give the account email and phone number only when asked. If they won't refund it, ask once for a one-time exception. Before hanging up, ask whether a refund was actually issued or only requested, for a reference number, when the update will arrive and how. Never read out a password, card number or one-time code, and don't accept any other offer or change.
-
 ## What the AI agent said on its own
 
 Three minutes before the call above, we called the same number from the same phone and didn't ask for a representative. The AI agent answered our questions itself. This is Walmart's AI, not a person, and its hours don't match what the representative said.
@@ -255,7 +115,7 @@ Our first three calls to Walmart that day didn't reach the AI agent. Each played
 | 4:45 pm | 1-800-925-6278 | Our second number | AI agent answered |
 | 4:48 pm | 1-800-925-6278 | Our second number | AI agent, then a person |
 
-Walmart's line refused calls from one of our numbers and answered from another; if you hear that message, try calling from a different phone. We saw this on one afternoon with two phone numbers. We don't know why Walmart refused the first number, and the recording didn't say. We also never called 1-800-966-6546 from the second number. A call4me customer's assistant did reach the AI agent and then a person on that line on October 9, from the customer's own number; that call is [above](#if-i-cancel-walmart-plus-do-i-get-a-refund).
+Walmart's line refused calls from one of our numbers and answered from another; if you hear that message, try calling from a different phone. We saw this on one afternoon with two phone numbers. We don't know why Walmart refused the first number, and the recording didn't say. We also never called 1-800-966-6546 from the second number, so we can't say whether that line would have answered.
 
 Here's the 11:47 am call to 1-800-925-6278, the whole 13 seconds. Nothing is muted or cut. The first calls were placed from [GitHub Copilot CLI](/blog/github-copilot-phone-calls).
 
@@ -272,8 +132,7 @@ There was no greeting before the message, no menu and no hold music.
 | Route | Where Walmart lists it | Did we try it? |
 |---|---|---|
 | **1-800-925-6278** (1-800-WALMART) | Walmart's [contact page](https://corporate.walmart.com/about/contact) and [Ask Walmart FAQ](https://corporate.walmart.com/askwalmart) | Yes, the call above |
-| **1-800-966-6546** (Customer Care) | Walmart.com's Responsible Disclosure and Accessibility Policies page, as of an [August 31, 2026 archived copy](http://web.archive.org/web/20260831032214/https://www.walmart.com/help/article/responsible-disclosure-and-accessibility-policies/0f173dab8bd942da84b1cd7ab5ffc3cb): "If you experience difficulty accessing our website content, reach out to our Customer Care associates at 1-800-966-6546 for assistance and to provide feedback. For relay service, please dial 711." | Yes, from our first number only. Refused twice. A call4me customer's call from another number on October 9 reached a person, [above](#how-the-call-got-to-a-person) |
-| **(800) 924-9206** (Walmart+ cancellations) | The [Walmart+ Terms of Use](https://www.walmart.com/help/article/walmart-terms-of-use/de696dfa1dd4423bb1005668dd19b845): "You may cancel your Walmart+ Membership or any Plus Up Benefit by calling Walmart Customer Care at (800) 924-9206" | No |
+| **1-800-966-6546** (Customer Care) | Walmart.com's Responsible Disclosure and Accessibility Policies page, as of an [August 31, 2026 archived copy](http://web.archive.org/web/20260831032214/https://www.walmart.com/help/article/responsible-disclosure-and-accessibility-policies/0f173dab8bd942da84b1cd7ab5ffc3cb): "If you experience difficulty accessing our website content, reach out to our Customer Care associates at 1-800-966-6546 for assistance and to provide feedback. For relay service, please dial 711." | Yes, from our first number only. Refused twice |
 | **Walmart.com Help Center chat** | The [contact page](https://corporate.walmart.com/about/contact): "Visit the Walmart.com Help Center to find answers to common questions, use our online chat and more." The [FAQ](https://corporate.walmart.com/askwalmart) calls it an "automated assistant" for "online and delivery orders, member benefits and more." | No |
 | **American Sign Language** | The [contact page](https://corporate.walmart.com/about/contact): "Customer support is available in American Sign Language (enable video)." | No |
 | **Your store's customer service desk** | What the representative told us to use for in-store purchases | No |
@@ -297,8 +156,7 @@ The representative said that for an online order, the agent will ask for the fir
 - **Asking for a representative at the very first prompt** on a call that opens with "tracking an order, making a return, or something else." Our successful call opened differently.
 - **Giving an order number** to the AI agent, which may route you differently.
 - **The Help Center chat**, the app's help options, or ASL video support.
-- **1-800-966-6546 from our second number.** A customer's call reached a person on it on October 9, from a different number.
-- **(800) 924-9206**, the Walmart+ cancellation number in the Terms of Use.
+- **1-800-966-6546 from our second number.**
 
 ## How we made this recording
 

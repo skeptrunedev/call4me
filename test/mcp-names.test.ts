@@ -15,7 +15,7 @@ registerHooks({
   },
 });
 
-const { createCall4meServer, withCurrentToolNames } = await import('../src/server/mcp/server');
+const { createCall4meServer, currentToolName, withCurrentToolNames } = await import('../src/server/mcp/server');
 
 // Neither tools/list nor call4me_get_requirements without a category touches the database.
 const account = { id: 'acct_test', email: 'test@example.com' } as Account;
@@ -33,6 +33,12 @@ async function rpc(method: string, params: Record<string, unknown> = {}): Promis
   const json = text.startsWith('{') ? text : text.split('\n').find((l) => l.startsWith('data: '))!.slice(6);
   return JSON.parse(json) as { result?: Record<string, unknown>; error?: { message: string } };
 }
+
+test('legacy callbay_ names map to call4me_ and everything else is left alone', () => {
+  assert.equal(currentToolName('callbay_place_call'), 'call4me_place_call');
+  assert.equal(currentToolName('call4me_place_call'), 'call4me_place_call');
+  assert.equal(currentToolName('something_else'), 'something_else');
+});
 
 test('tools/list shows only call4me_ tools', async () => {
   const { result } = await rpc('tools/list');

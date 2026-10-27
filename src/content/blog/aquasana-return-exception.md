@@ -1,16 +1,15 @@
 ---
-title: "How to return an Aquasana product after the 90 day window"
-seoTitle: "Aquasana return policy: exceptions after 90 days"
+title: Aquasana return policy and an exception call by an AI assistant
+seoTitle: Aquasana return policy: an AI exception request
 subtitle: A real call obtained approval for a $551.79 filter return exception. Return paperwork and payment remained pending.
-description: "Aquasana's return policy gives 90 days. Past that, call customer service and ask for an exception: a real call got a $551.79 filter return approved."
+description: Check Aquasana's return policy and hear a real exception request. Use your existing Claude Code or Codex assistant to call about your own return.
 date: 2026-10-06
-updated: 2026-10-17
 tags: customer service, returns, Aquasana, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Aquasana return exception approved for $551.79, paperwork pending
 ---
 
-To return an Aquasana product, request a Return Authorization Code within 90 days of the order under the **Aquasana return policy**; past that window, call customer service and ask for an exception, as the call below did and got approved. An exception request also needs a clear account of the item, why the ordinary window does not cover it and what you are asking customer service to approve. Before ending the call, confirm the instructions, approved amount, refund method and next step.
+The **Aquasana return policy** is the starting point for a return request. An exception request also needs a clear account of the item, why the ordinary window does not cover it and what you are asking customer service to approve. Before ending the call, confirm the instructions, approved amount, refund method and next step.
 
 If you already use Claude Code or Codex as a personal assistant, [call4me](/) lets it make that customer service call and bring the answer back to your conversation. Connect with the [Claude Code guide](/blog/claude-code-phone-calls) or [Codex guide](/blog/codex-phone-calls). The prompt below is a suggested workflow; the customer recording does not establish which client was used.
 

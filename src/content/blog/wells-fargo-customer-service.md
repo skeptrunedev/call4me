@@ -84,8 +84,6 @@ call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) t
 
 We're not a Wells Fargo customer. To get through the menu, our caller said it had a "checking account question", which got it routed to the checking team; it told the representative right away that it wasn't a customer. The recording above is our second call. The first one reached a person but ended before we asked anything, as described above.
 
-To dispute a credit card charge, see [our recorded call to Wells Fargo's card line about disputes](/blog/wells-fargo-dispute-charge) and [how to dispute a charge](/blog/how-to-dispute-a-charge).
-
 ## Have your agent make this call
 
 If you use call4me, paste this into your agent:

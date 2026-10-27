@@ -1,10 +1,9 @@
 ---
-title: "How much is a wheel alignment? Compare local shop quotes"
-seoTitle: "Wheel alignment cost: how to compare shop quotes"
+title: Wheel alignment cost: let your AI agent compare local quotes
+seoTitle: Wheel alignment cost: quotes with your AI agent
 subtitle: A San Francisco shop quoted $129.99 for standard alignment and about $210 for its lifetime option. Give your AI assistant the calls needed to compare your own options.
-description: "Wheel alignment cost $129.99 at one San Francisco shop, about $210 for lifetime. Hear the call, then compare local quotes yourself or with your AI agent."
+description: Check wheel alignment cost with your AI agent. Hear a real $129.99 shop quote and use our prompt to compare local prices, warranty terms and availability.
 date: 2026-10-07
-updated: 2026-10-17
 tags: wheel alignment, car maintenance, prices, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Wheel alignment cost, ask your AI agent to compare local quotes

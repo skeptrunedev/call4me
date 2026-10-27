@@ -1,16 +1,16 @@
 ---
-title: How to set up an AI that makes phone calls for you
-seoTitle: "AI that makes phone calls for you: setup guide"
+title: "Can AI make phone calls for you? Yes, here's how to set it up"
+seoTitle: "Can AI make phone calls for you? Here's how"
 subtitle: Your AI assistant can call a business, talk to whoever answers and bring the result back to you. Here's how to connect it, what to ask for, and how to tell when the job is actually done.
-description: "Set up an AI that makes phone calls for you: connect a calling tool to ChatGPT, Claude, Codex or Gemini, then have it get quotes and book appointments."
+description: Yes, AI can make phone calls for you. Connect a calling tool to ChatGPT, Claude, Codex or Gemini, then have it get quotes and book appointments by phone.
 date: 2026-10-07
-updated: 2026-10-17
+updated: 2026-10-14
 tags: ai agent, ai phone assistant, personal assistant, phone calls
 authors: nick
 imageAlt: An AI assistant calls a business for you and brings back the result
 ---
 
-**Yes, AI can make phone calls for you once you connect a calling tool to the assistant you already use.** Most assistants can't dial on their own, but once you connect a calling tool like [call4me](/), you can ask ChatGPT, Claude, Codex or Gemini to call a business, and it will. A voice caller handles the conversation while your assistant follows along, answers questions that come up mid-call, and reports back what the business said.
+**Yes, AI can make phone calls for you.** Most assistants can't dial on their own, but once you connect a calling tool like [call4me](/), you can ask ChatGPT, Claude, Codex or Gemini to call a business, and it will. A voice caller handles the conversation while your assistant follows along, answers questions that come up mid-call, and reports back what the business said.
 
 The calls worth handing off are the ones you keep putting off: checking a price, asking whether something's in stock, booking or moving an appointment, chasing an order. Say you want a pool you can swim at after work. A list of nearby gyms doesn't answer that. Someone has to ask about guest passes, the price, and whether the pool is open at 7pm. Or you need your car aligned: your assistant can call three shops for quotes, then book the one you pick.
 
@@ -36,7 +36,7 @@ Each guide below has the details to give your assistant, the questions to ask an
 | Arrange pet care | Compare [dog teeth cleaning quotes](/blog/dog-teeth-cleaning-cost) from three clinics, then use the [vet drop off appointment guide](/blog/drop-off-vet-appointment) to book a visit. |
 | Get quotes from several businesses | Hear an AI collect [dog teeth cleaning quotes](/blog/dog-teeth-cleaning-cost) from three clinics. The [supplier inquiry draft](/blog/meta-muse-supplier-quotes) shows how to ask every business the same questions. |
 | Find somewhere to exercise | Check [gym and pool day passes](/blog/gym-day-pass) or [sauna access](/blog/gyms-with-sauna-near-me). To leave a membership, the [Crunch cancellation guide](/blog/cancel-crunch) covers the steps. |
-| Finish a shopping errand | Follow the [same day dress shoe workflow](/blog/need-dress-shoes-today) to find an item and ask the store to hold it. |
+| Finish a shopping errand | Ask a store about [stock and order pickup](/blog/macys-bow-tie-stock-check), or follow the [same day dress shoe workflow](/blog/need-dress-shoes-today) to find an item and ask the store to hold it. |
 | Sort out a subscription | The [SiriusXM cancellation guide](/blog/how-to-cancel-siriusxm) shows which account questions to prepare, and how to tell cancellation instructions apart from a finished cancellation. |
 | Support a job search | [Applystead](https://applystead.com/) handles AI resume tailoring and job applications. Your assistant can take the phone side, like checking whether a store has interview clothes in your size or [booking a haircut](/blog/book-haircut-appointment) before the big day. |
 

@@ -11,8 +11,6 @@ export type ProfileKey =
   | 'full_name'
   | 'name_pronunciation'
   | 'assistant_name'
-  | 'accent'
-  | 'answering_instructions'
   | 'date_of_birth'
   | 'phone'
   | 'email'
@@ -42,8 +40,6 @@ export const PROFILE_FIELDS: Record<ProfileKey, ProfileField> = {
   full_name: { label: 'full name', ask: "What's your full legal name (as it appears on your ID/insurance card)?" },
   name_pronunciation: { label: 'name pronunciation', ask: 'Only if the user asks for it, or their name is easy to say wrong: how to say their name, written the way it sounds, stressed syllable in capitals (e.g. "ah-MEER tah-ree-GAHT"). The caller says it exactly this way.', optional: true },
   assistant_name: { label: 'assistant name', ask: 'Only if the user asks for it: a first name the caller introduces itself with ("Hi, I\'m Sam, Alex\'s assistant"). Unset, it is just "Alex\'s assistant".', check: (v) => (/^[\p{L}][\p{L}' -]{0,29}$/u.test(v) ? null : 'use a first name, letters only'), optional: true },
-  accent: { label: 'caller accent', ask: 'Only if the user asks for it: the accent or dialect the caller speaks with on every call, e.g. "Austrian German" or "Scottish". Unset, it uses its voice\'s own.', check: (v) => (/^[\p{L}][\p{L}' -]{0,39}$/u.test(v) ? null : 'name an accent, letters only, e.g. "Austrian German"'), optional: true },
-  answering_instructions: { label: 'answering instructions', ask: 'Only if the user asks for it: standing instructions for calls their call4me number answers, and what it may accept on them without asking (e.g. "Accept collect calls from jails and prisons by pressing 1, then take the inmate\'s name, facility and message").', optional: true },
   date_of_birth: { label: 'date of birth', ask: "What's your date of birth?", check: (v) => (parseDate(v) ? null : 'use a full date like 1990-03-14') },
   phone: { label: 'phone number', ask: "What's the best phone number for them to reach you?", check: (v) => (v.replace(/\D/g, '').length >= 10 ? null : 'use a 10-digit phone number') },
   email: { label: 'email', ask: 'What email should they use if they need one?' },
@@ -326,12 +322,6 @@ export type Profile = Partial<Record<ProfileKey, string>>;
 
 /** The first name the caller introduces itself with ("Hi, I'm Sam, Alex's assistant"), or null: by default it has none. */
 export const assistantNameOf = (profile: Profile) => profile.assistant_name || null;
-
-/** The accent or dialect the caller holds on every call ("Austrian German"), or null for its voice's own. */
-export const accentOf = (profile: Profile) => profile.accent?.trim() || null;
-
-/** What answered calls may do and accept without asking the owner, e.g. take collect calls from jails; null for just taking messages. */
-export const answeringInstructionsOf = (profile: Profile) => profile.answering_instructions?.trim() || null;
 
 /** How to say the owner's name ("ah-MEER tah-ree-GAHT"), or null to say it as written. */
 export const namePronunciationOf = (profile: Profile) => profile.name_pronunciation?.trim() || null;

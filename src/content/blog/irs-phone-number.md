@@ -1,19 +1,16 @@
 ---
-title: "IRS phone number to talk to a live person: 800-829-1040"
-seoTitle: "IRS live person: 800-829-1040, 7am-7pm local"
+title: "IRS phone number: how to talk to a real person at the IRS"
+seoTitle: "IRS phone number: 800-829-1040 and a real person"
 subtitle: "We called the IRS individual taxpayer line twice with general questions for this guide. The first call was hung up on by the voice menu. On the second, we named a reason and reached a live representative. Here are both recordings, the menu, and what the representative said."
-description: "To talk to a live person at the IRS, call 800-829-1040, weekdays 7 am to 7 pm local time, and name a real reason like Form 1099. A person answered at 9:52."
+description: "The IRS phone number for individuals is 800-829-1040, 7 a.m. to 7 p.m. local time. Name a specific reason at the menu: a vague one got our call hung up."
 date: 2026-10-13
-updated: 2026-10-24
 verified: 2026-10-13
 tags: irs, taxes, customer service, phone trees, phone numbers
 authors: nick
 imageAlt: "IRS 800-829-1040, how to talk to a real person at the IRS"
 ---
 
-**The short answer:** to talk to a **live person at the IRS**, call **800-829-1040**, Monday through Friday, 7 a.m. to 7 p.m. local time. It isn't open 24 hours or on weekends. When the voice menu asks why you're calling, **name a specific reason**, like "I have a general question about Form 1099." **A live IRS representative answered 9 minutes 52 seconds into our call.** A vague reason got our first call hung up.
-
-The IRS phone number for individuals is **800-829-1040**. It's open **Monday through Friday, 7 a.m. to 7 p.m. local time** (Alaska and Hawaii follow Pacific time). **An automated voice menu answers, and it won't transfer you until it knows why you're calling.** When we only said we had "a general question about reaching customer service," it said it would "need to end the call," and then it hung up. On our second call we gave a specific reason, **"I have a general question about Form 1099,"** and **a live IRS representative answered 9 minutes 52 seconds into the recording.**
+**The short answer:** the IRS phone number for individuals is **800-829-1040**. It's open **Monday through Friday, 7 a.m. to 7 p.m. local time** (Alaska and Hawaii follow Pacific time). **An automated voice menu answers, and it won't transfer you until it knows why you're calling.** When we only said we had "a general question about reaching customer service," it said it would "need to end the call," and then it hung up. On our second call we gave a specific reason, **"I have a general question about Form 1099,"** and **a live IRS representative answered 9 minutes 52 seconds into the recording.**
 
 The number and hours are from the IRS's [telephone assistance page](https://www.irs.gov/help/telephone-assistance), which lists "Individuals 800-829-1040, 7 a.m. to 7 p.m. local time" and says "Our help lines are open Monday through Friday. Residents of Alaska and Hawaii should follow Pacific time."
 
@@ -178,8 +175,6 @@ call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) t
 The first call failed because our caller answered "why are you calling" with the purpose of the guide itself: a general question about reaching customer service. The menu treats that as no reason at all. Even after the menu suggested "I have a question about Form 1099," our caller stuck to "how to reach a representative," and the menu hung up. For the second call we gave it the Form 1099 question to lead with, and the menu put us through.
 
 We've seen a different failure on another automated line: [Experian's phone number](/blog/experian-phone-number) asks for your full Social Security number before anything else, and we never reached a person there. For more recorded calls, see the [companies we've called](/companies).
-
-For another federal agency, see our [Social Security phone number](/blog/social-security-phone-number) guide.
 
 ## Have your agent make this call
 

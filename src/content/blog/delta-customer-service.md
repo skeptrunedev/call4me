@@ -2,9 +2,9 @@
 title: "Delta customer service: get past the AI to a person"
 seoTitle: "Delta customer service: 800-221-1212, get a human"
 subtitle: "We called Delta's reservations line with general questions and no confirmation number. Here is how the AI voice assistant handed us off, how long the hold took, what the representative said about change fees and eCredits, and the full 18 minute recording."
-description: "The Delta reservations phone number is 800-221-1212. An AI voice assistant answers; asking for a representative got us a live agent in about 16 minutes."
+description: "The Delta customer service phone number is 800-221-1212. An AI voice assistant answers; asking for a representative got us a live agent in about 16 minutes."
 date: 2026-10-08
-updated: 2026-10-24
+updated: 2026-10-16
 verified: 2026-10-08
 tags: delta, airlines, customer service, phone trees, phone numbers
 authors: nick
@@ -122,8 +122,6 @@ Two things our caller did weren't ideal:
 
 - **It picked "change or cancel a trip"** at the second question, though it had no trip. That's what led the assistant to ask for a confirmation number. It worked out, because the assistant transferred us as soon as we said we didn't have one, but "book a new flight" or a plain request for a representative might have been a cleaner path. We didn't test either.
 - **It said "Just a minute. No thanks. Sure."** at the callback offer. The assistant answered "I'm sorry, I didn't catch that" and repeated the offer. A plain "no thanks" the second time went through.
-
-For other airlines, we've also called [Alaska Airlines](/blog/alaska-airlines-customer-service), where a person answered after 12:44, [Southwest Airlines](/blog/southwest-airlines-phone-number), where our second call reached a person in 46 seconds, and [JetBlue](/blog/jetblue-customer-service).
 
 ## Have your agent make this call
 

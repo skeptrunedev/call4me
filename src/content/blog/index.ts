@@ -1,71 +1,9 @@
-import victoriasSecretGeorgetown from './victorias-secret-georgetown.md';
-import freshBladesBarbershopDivisadero from './fresh-blades-barbershop-divisadero.md';
-import springhillSuitesPhoenixGilbert from './springhill-suites-phoenix-gilbert.md';
-import blueShieldOfCaliforniaDentalPhoneNumber from './blue-shield-of-california-dental-phone-number.md';
-import skipHireAbingdon from './skip-hire-abingdon.md';
-import farmaciaLumaViejoSanJuan from './farmacia-luma-viejo-san-juan.md';
-import colonoscopyScreeningSanJuan from './colonoscopy-screening-san-juan.md';
-import fortLeonardWoodDentalClinic from './fort-leonard-wood-dental-clinic.md';
-import sanFranciscoOralSurgeonConsultation from './san-francisco-oral-surgeon-consultation.md';
-import globalBlueCustomerServiceNumber from './global-blue-customer-service-number.md';
-import mountSinaiDoctorsPhoneNumber from './mount-sinai-doctors-phone-number.md';
-import piedmontNaturalGasCustomerService from './piedmont-natural-gas-customer-service.md';
-import nyTollsByMailPhoneNumber from './ny-tolls-by-mail-phone-number.md';
-import sabatesEyeCentersPediatricEyeExam from './sabates-eye-centers-pediatric-eye-exam.md';
-import afternicDomainBrokerPhoneNumber from './afternic-domain-broker-phone-number.md';
-import maggyMaidSacramento from './maggy-maid-sacramento.md';
-import sevSkinSacramento from './sev-skin-sacramento.md';
-import phoenicianGolfClubTeeTimes from './phoenician-golf-club-tee-times.md';
-import serviceontarioPhoneNumber from './serviceontario-phone-number.md';
-import vanguardCustomerServiceNumber from './vanguard-customer-service-number.md';
-import americasTireFremont from './americas-tire-fremont.md';
-import posadaRealLosCondestables from './posada-real-los-condestables.md';
-import uglyBabyBrooklynReservations from './ugly-baby-brooklyn-reservations.md';
-import lincolnUrgentCare from './lincoln-urgent-care.md';
-import samsungOvenDoorGlassRepairSacramento from './samsung-oven-door-glass-repair-sacramento.md';
-import zanAtelierChicagoAlterations from './zan-atelier-chicago-alterations.md';
-import bossFrogsMolokiniSnorkel from './boss-frogs-molokini-snorkel.md';
-import zessanOtemachiPrivateRoom from './zessan-otemachi-private-room.md';
-import theBaseGlampingYugawara from './the-base-glamping-yugawara.md';
-import mHansikDurhamPrivateDining from './m-hansik-durham-private-dining.md';
-import co2TankExchangeSanJuan from './co2-tank-exchange-san-juan.md';
-import bonnerSpringsYmcaSwimLessons from './bonner-springs-ymca-swim-lessons.md';
-import palmeriBrentwoodPrivateDining from './palmeri-brentwood-private-dining.md';
-import aaaTowReimbursement from './aaa-tow-reimbursement.md';
-import marinaTrafficCourtPhoneNumber from './marina-traffic-court-phone-number.md';
-import venturaSuperiorCourtJudgmentDebtorExam from './ventura-superior-court-judgment-debtor-exam.md';
-import innAtJimThorpeReservations from './inn-at-jim-thorpe-reservations.md';
-import virginHotelsNewYorkParking from './virgin-hotels-new-york-parking.md';
-import moxyStPetersburgDowntown from './moxy-st-petersburg-downtown.md';
-import walgreensSpecialtyPharmacyPhoneNumber from './walgreens-specialty-pharmacy-phone-number.md';
-import sameDayEyeExamBrooklyn from './same-day-eye-exam-brooklyn.md';
-import adobeAnimalHospitalLosAltos from './adobe-animal-hospital-los-altos.md';
-import capitalGrilleWallStreetPrivateDining from './capital-grille-wall-street-private-dining.md';
-import justworksCustomerService from './justworks-customer-service.md';
-import townFairTireManchesterCt from './town-fair-tire-manchester-ct.md';
-import sassafrazPrivateDining from './sassafraz-private-dining.md';
-import vitalantPhoneNumber from './vitalant-phone-number.md';
-import suitsupplyCustomerService from './suitsupply-customer-service.md';
-import paradoxHotelVancouver from './paradox-hotel-vancouver.md';
-import ritzCarltonBachelorGulchReservations from './ritz-carlton-bachelor-gulch-reservations.md';
-import laMarSanFranciscoReservations from './la-mar-san-francisco-reservations.md';
-import equalPartsSfReservations from './equal-parts-sf-reservations.md';
-import metlifePetInsurancePhoneNumber from './metlife-pet-insurance-phone-number.md';
-import pelotonCustomerServiceNumber from './peloton-customer-service-number.md';
-import vivintCustomerServiceNumber from './vivint-customer-service-number.md';
-import simonmedImagingPhoneNumber from './simonmed-imaging-phone-number.md';
 import hijinxHotelIrvine from './hijinx-hotel-irvine.md';
 import laiWahHeenPrivateDining from './lai-wah-heen-private-dining.md';
 import pinOnGrandReservations from './pin-on-grand-reservations.md';
 import salonPerSeBellaire from './salon-per-se-bellaire.md';
 import sabaiEugeneReservations from './sabai-eugene-reservations.md';
 import icebarOrlandoTickets from './icebar-orlando-tickets.md';
-import phoneAnxiety from './phone-anxiety.md';
-import howToLowerSpectrumBill from './how-to-lower-spectrum-bill.md';
-import howToLowerVerizonBill from './how-to-lower-verizon-bill.md';
-import howToLowerXfinityBill from './how-to-lower-xfinity-bill.md';
-import howToLowerAttBill from './how-to-lower-att-bill.md';
-import howToLowerDirectvBill from './how-to-lower-directv-bill.md';
 import type { PostSource } from '../../server/lib/blog';
 import customerFlightCredit from './customer-story-flight-credit.md';
 import customerRickDinner from './customer-story-rick-dinner-reservation.md';
@@ -86,6 +24,7 @@ import costcoEyeExamCost from './costco-eye-exam-cost.md';
 import cancelCrunch from './cancel-crunch.md';
 import cancelLaFitness from './cancel-la-fitness.md';
 import aiPersonalAssistantAppointmentBooking from './ai-personal-assistant-appointment-booking.md';
+import macysBowTieStockCheck from './macys-bow-tie-stock-check.md';
 import bookDinnerReservationByPhone from './book-dinner-reservation-by-phone.md';
 import rescheduleDoctorAppointment from './reschedule-doctor-appointment.md';
 import runningLateToBarber from './running-late-to-barber.md';
@@ -199,22 +138,6 @@ import openaiAgentsSdkPhoneCalls from './openai-agents-sdk-phone-calls.md';
 import mastraMcpPhoneCalls from './mastra-mcp-phone-calls.md';
 import claudeAgentSdkPhoneCalls from './claude-agent-sdk-phone-calls.md';
 import clinePhoneCalls from './cline-phone-calls.md';
-import alaskaAirlinesCustomerService from './alaska-airlines-customer-service.md';
-import chimeCustomerServiceNumber from './chime-customer-service-number.md';
-import coinbaseCustomerServiceNumber from './coinbase-customer-service-number.md';
-import instacartCustomerServiceNumber from './instacart-customer-service-number.md';
-import lyftCustomerServiceNumber from './lyft-customer-service-number.md';
-import uberCustomerServiceNumber from './uber-customer-service-number.md';
-import dellCustomerServiceNumber from './dell-customer-service-number.md';
-import costcoReturnPolicy from './costco-return-policy.md';
-import bestBuyReturnPolicy from './best-buy-return-policy.md';
-import howToDisputeACharge from './how-to-dispute-a-charge.md';
-import howToNegotiateAHospitalBill from './how-to-negotiate-a-hospital-bill.md';
-import chaseDisputeCharge from './chase-dispute-charge.md';
-import discoverDisputeCharge from './discover-dispute-charge.md';
-import capitalOneDisputeCharge from './capital-one-dispute-charge.md';
-import pncDisputeCharge from './pnc-dispute-charge.md';
-import wellsFargoDisputeCharge from './wells-fargo-dispute-charge.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -222,68 +145,6 @@ import wellsFargoDisputeCharge from './wells-fargo-dispute-charge.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
-  { slug: 'phone-anxiety', markdown: phoneAnxiety },
-  { slug: 'how-to-lower-spectrum-bill', markdown: howToLowerSpectrumBill },
-  { slug: 'how-to-lower-verizon-bill', markdown: howToLowerVerizonBill },
-  { slug: 'how-to-lower-xfinity-bill', markdown: howToLowerXfinityBill },
-  { slug: 'how-to-lower-att-bill', markdown: howToLowerAttBill },
-  { slug: 'how-to-lower-directv-bill', markdown: howToLowerDirectvBill },
-  { slug: 'victorias-secret-georgetown', markdown: victoriasSecretGeorgetown },
-  { slug: 'fresh-blades-barbershop-divisadero', markdown: freshBladesBarbershopDivisadero },
-  { slug: 'springhill-suites-phoenix-gilbert', markdown: springhillSuitesPhoenixGilbert },
-  { slug: 'blue-shield-of-california-dental-phone-number', markdown: blueShieldOfCaliforniaDentalPhoneNumber },
-  { slug: 'skip-hire-abingdon', markdown: skipHireAbingdon },
-  { slug: 'farmacia-luma-viejo-san-juan', markdown: farmaciaLumaViejoSanJuan },
-  { slug: 'colonoscopy-screening-san-juan', markdown: colonoscopyScreeningSanJuan },
-  { slug: 'fort-leonard-wood-dental-clinic', markdown: fortLeonardWoodDentalClinic },
-  { slug: 'san-francisco-oral-surgeon-consultation', markdown: sanFranciscoOralSurgeonConsultation },
-  { slug: 'global-blue-customer-service-number', markdown: globalBlueCustomerServiceNumber },
-  { slug: 'mount-sinai-doctors-phone-number', markdown: mountSinaiDoctorsPhoneNumber },
-  { slug: 'piedmont-natural-gas-customer-service', markdown: piedmontNaturalGasCustomerService },
-  { slug: 'ny-tolls-by-mail-phone-number', markdown: nyTollsByMailPhoneNumber },
-  { slug: 'sabates-eye-centers-pediatric-eye-exam', markdown: sabatesEyeCentersPediatricEyeExam },
-  { slug: 'afternic-domain-broker-phone-number', markdown: afternicDomainBrokerPhoneNumber },
-  { slug: 'maggy-maid-sacramento', markdown: maggyMaidSacramento },
-  { slug: 'sev-skin-sacramento', markdown: sevSkinSacramento },
-  { slug: 'phoenician-golf-club-tee-times', markdown: phoenicianGolfClubTeeTimes },
-  { slug: 'serviceontario-phone-number', markdown: serviceontarioPhoneNumber },
-  { slug: 'vanguard-customer-service-number', markdown: vanguardCustomerServiceNumber },
-  { slug: 'americas-tire-fremont', markdown: americasTireFremont },
-  { slug: 'posada-real-los-condestables', markdown: posadaRealLosCondestables },
-  { slug: 'ugly-baby-brooklyn-reservations', markdown: uglyBabyBrooklynReservations },
-  { slug: 'lincoln-urgent-care', markdown: lincolnUrgentCare },
-  { slug: 'samsung-oven-door-glass-repair-sacramento', markdown: samsungOvenDoorGlassRepairSacramento },
-  { slug: 'zan-atelier-chicago-alterations', markdown: zanAtelierChicagoAlterations },
-  { slug: 'boss-frogs-molokini-snorkel', markdown: bossFrogsMolokiniSnorkel },
-  { slug: 'zessan-otemachi-private-room', markdown: zessanOtemachiPrivateRoom },
-  { slug: 'the-base-glamping-yugawara', markdown: theBaseGlampingYugawara },
-  { slug: 'm-hansik-durham-private-dining', markdown: mHansikDurhamPrivateDining },
-  { slug: 'co2-tank-exchange-san-juan', markdown: co2TankExchangeSanJuan },
-  { slug: 'bonner-springs-ymca-swim-lessons', markdown: bonnerSpringsYmcaSwimLessons },
-  { slug: 'palmeri-brentwood-private-dining', markdown: palmeriBrentwoodPrivateDining },
-  { slug: 'aaa-tow-reimbursement', markdown: aaaTowReimbursement },
-  { slug: 'marina-traffic-court-phone-number', markdown: marinaTrafficCourtPhoneNumber },
-  { slug: 'ventura-superior-court-judgment-debtor-exam', markdown: venturaSuperiorCourtJudgmentDebtorExam },
-  { slug: 'inn-at-jim-thorpe-reservations', markdown: innAtJimThorpeReservations },
-  { slug: 'virgin-hotels-new-york-parking', markdown: virginHotelsNewYorkParking },
-  { slug: 'moxy-st-petersburg-downtown', markdown: moxyStPetersburgDowntown },
-  { slug: 'walgreens-specialty-pharmacy-phone-number', markdown: walgreensSpecialtyPharmacyPhoneNumber },
-  { slug: 'same-day-eye-exam-brooklyn', markdown: sameDayEyeExamBrooklyn },
-  { slug: 'adobe-animal-hospital-los-altos', markdown: adobeAnimalHospitalLosAltos },
-  { slug: 'capital-grille-wall-street-private-dining', markdown: capitalGrilleWallStreetPrivateDining },
-  { slug: 'justworks-customer-service', markdown: justworksCustomerService },
-  { slug: 'town-fair-tire-manchester-ct', markdown: townFairTireManchesterCt },
-  { slug: 'sassafraz-private-dining', markdown: sassafrazPrivateDining },
-  { slug: 'vitalant-phone-number', markdown: vitalantPhoneNumber },
-  { slug: 'suitsupply-customer-service', markdown: suitsupplyCustomerService },
-  { slug: 'paradox-hotel-vancouver', markdown: paradoxHotelVancouver },
-  { slug: 'ritz-carlton-bachelor-gulch-reservations', markdown: ritzCarltonBachelorGulchReservations },
-  { slug: 'la-mar-san-francisco-reservations', markdown: laMarSanFranciscoReservations },
-  { slug: 'equal-parts-sf-reservations', markdown: equalPartsSfReservations },
-  { slug: 'metlife-pet-insurance-phone-number', markdown: metlifePetInsurancePhoneNumber },
-  { slug: 'peloton-customer-service-number', markdown: pelotonCustomerServiceNumber },
-  { slug: 'vivint-customer-service-number', markdown: vivintCustomerServiceNumber },
-  { slug: 'simonmed-imaging-phone-number', markdown: simonmedImagingPhoneNumber },
   { slug: 'hijinx-hotel-irvine', markdown: hijinxHotelIrvine },
   { slug: 'lai-wah-heen-private-dining', markdown: laiWahHeenPrivateDining },
   { slug: 'pin-on-grand-reservations', markdown: pinOnGrandReservations },
@@ -310,6 +171,7 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'cancel-crunch', markdown: cancelCrunch },
   { slug: 'cancel-la-fitness', markdown: cancelLaFitness },
   { slug: 'ai-personal-assistant-appointment-booking', markdown: aiPersonalAssistantAppointmentBooking },
+  { slug: 'macys-bow-tie-stock-check', markdown: macysBowTieStockCheck },
   { slug: 'book-dinner-reservation-by-phone', markdown: bookDinnerReservationByPhone },
   { slug: 'reschedule-doctor-appointment', markdown: rescheduleDoctorAppointment },
   { slug: 'running-late-to-barber', markdown: runningLateToBarber },
@@ -423,20 +285,4 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'mastra-mcp-phone-calls', markdown: mastraMcpPhoneCalls },
   { slug: 'claude-agent-sdk-phone-calls', markdown: claudeAgentSdkPhoneCalls },
   { slug: 'cline-phone-calls', markdown: clinePhoneCalls },
-  { slug: 'alaska-airlines-customer-service', markdown: alaskaAirlinesCustomerService },
-  { slug: 'chime-customer-service-number', markdown: chimeCustomerServiceNumber },
-  { slug: 'coinbase-customer-service-number', markdown: coinbaseCustomerServiceNumber },
-  { slug: 'instacart-customer-service-number', markdown: instacartCustomerServiceNumber },
-  { slug: 'lyft-customer-service-number', markdown: lyftCustomerServiceNumber },
-  { slug: 'uber-customer-service-number', markdown: uberCustomerServiceNumber },
-  { slug: 'dell-customer-service-number', markdown: dellCustomerServiceNumber },
-  { slug: 'costco-return-policy', markdown: costcoReturnPolicy },
-  { slug: 'best-buy-return-policy', markdown: bestBuyReturnPolicy },
-  { slug: 'how-to-dispute-a-charge', markdown: howToDisputeACharge },
-  { slug: 'how-to-negotiate-a-hospital-bill', markdown: howToNegotiateAHospitalBill },
-  { slug: 'chase-dispute-charge', markdown: chaseDisputeCharge },
-  { slug: 'discover-dispute-charge', markdown: discoverDisputeCharge },
-  { slug: 'capital-one-dispute-charge', markdown: capitalOneDisputeCharge },
-  { slug: 'pnc-dispute-charge', markdown: pncDisputeCharge },
-  { slug: 'wells-fargo-dispute-charge', markdown: wellsFargoDisputeCharge },
 ];

@@ -4,15 +4,13 @@ import { origin, type AppEnv } from '../lib/context';
 import { openApiDocument } from '../lib/openapi';
 import { recordingInput, recordingPath } from '../lib/recording-schema';
 import { CallError } from '../services/calls';
-import { pricePerMinute } from '../services/dialer';
 import { getCallRecordings } from '../services/recordings';
 
 export const recordings = new Hono<AppEnv>();
 
-// At the site root too, where x402 directories (x402scan, agent402) look for it.
-recordings.on('GET', ['/openapi.json', '/api/openapi.json'], (c) => {
+recordings.get('/api/openapi.json', (c) => {
   c.header('cache-control', 'public, max-age=300');
-  return c.json(openApiDocument(origin(c), pricePerMinute(c.env)));
+  return c.json(openApiDocument(origin(c)));
 });
 
 recordings.get(recordingPath.replace('{call_id}', ':call_id'), async (c) => {

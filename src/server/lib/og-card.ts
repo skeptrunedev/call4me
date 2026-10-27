@@ -6,7 +6,7 @@
  */
 
 export const OG_WIDTH = 1200;
-const OG_HEIGHT = 630;
+export const OG_HEIGHT = 630;
 /** Bump when the shared card changes so edge caches and new link previews refresh. */
 export const OG_CARD_VERSION = '3';
 

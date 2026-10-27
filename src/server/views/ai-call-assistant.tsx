@@ -18,11 +18,12 @@ const ASSISTANT_EXAMPLES = ['dinner-reservation', 'dentist-reschedule', 'spectru
 
 const list = (items: readonly string[]) => `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`;
 
-/** What it is and what it costs, for search and answer engines (schema.org). The price is the live per-minute rate. Task pages reference the same node. */
-export const assistantApp = (pricePerMinuteCents: number) => {
+/** What it is and what it costs, for search and answer engines (schema.org). The price is the live per-minute rate. */
+const assistantLd = (pricePerMinuteCents: number) => {
   const url = `${SITE}${PAGES.aiCallAssistant.path}`;
   const price = (pricePerMinuteCents / 100).toFixed(2);
   return {
+    '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     '@id': `${url}#app`,
     name: 'call4me',
@@ -39,7 +40,6 @@ export const assistantApp = (pricePerMinuteCents: number) => {
     },
   };
 };
-const assistantLd = (pricePerMinuteCents: number) => ({ '@context': 'https://schema.org', ...assistantApp(pricePerMinuteCents) });
 
 /** Product page for "AI call assistant" searches: what call4me does on a call, what it costs, and how to start. */
 export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: number; agentPrompt: string }> = ({ signedIn, pricePerMinuteCents, agentPrompt }) => {
@@ -74,8 +74,7 @@ export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: n
           call4me can ring your own phone. ask your assistant to connect you "as soon as a person picks up" and you skip the hold music; hold time is
           still billed, at half the normal rate. answer and press 1 to join, so your voicemail never ends up on the call. the AI caller goes quiet while you
           talk, and when you press * or hang up, it takes the call back and carries on with the task. if you'd rather just hear how it's going, ask to
-          listen in: nobody on the call hears you, the caller keeps working, and you can press 1 anytime to take over. if calls make you anxious, our
-          guide to <a href="/blog/phone-anxiety">phone anxiety</a> has scripts for the common ones and is honest about when to hand a call off.
+          listen in: nobody on the call hears you, the caller keeps working, and you can press 1 anytime to take over.
         </p>
         <p>
           this matters when a business wants the account holder. on a <a href="/examples#spectrum-retention">call to spectrum</a>, the caller got through
@@ -158,12 +157,12 @@ export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: n
         </ul>
         <p>
           for longer reads, see <a href="/blog/ai-agent-that-makes-phone-calls">how an AI agent makes calls and gets tasks done for you</a> and{' '}
-          <a href="/blog/how-long-to-reach-a-human">how long it takes to reach a human at 74 companies</a>.
+          <a href="/blog/how-long-to-reach-a-human">how long it takes to reach a human at 42 companies</a>.
         </p>
 
         <h2>how to start</h2>
         <ol class="steps">
-          <li><a href="/#buy">load credits</a>, from {dollars(MIN_TOPUP_CENTS)}. no account needed first; sign in afterwards with the email you paid with.</li>
+          <li><a href="/#buy">load credits</a>, from {dollars(MIN_TOPUP_CENTS)}. no account needed first; sign in with google or x afterwards.</li>
           <li>
             paste the setup prompt into your assistant. it works with Claude Code, Codex, Claude Desktop, claude.ai, ChatGPT, Grok Bot and other MCP
             clients, and Muse can build its own integration. the <a href="/mcp">install page</a> has the steps for each app.

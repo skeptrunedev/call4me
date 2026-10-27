@@ -40,7 +40,7 @@ export function sourceHash(inputs: ArticleInput[]): string {
   return createHash('sha256').update(JSON.stringify(inputs)).digest('hex');
 }
 
-async function checkRelatedIndex(): Promise<void> {
+export async function checkRelatedIndex(): Promise<void> {
   const inputs = await articleInputs();
   if (RELATED_METADATA.sourceHash !== sourceHash(inputs) || RELATED_METADATA.model !== model
     || RELATED_METADATA.dtype !== 'q8' || RELATED_METADATA.revision !== revision || RELATED_METADATA.prompt !== prompt || RELATED_METADATA.recipe !== recipe || RELATED_METADATA.minimumSimilarity !== minimumSimilarity) {

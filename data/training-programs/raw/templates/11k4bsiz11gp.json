@@ -1,0 +1,108 @@
+{
+  "id": 199083,
+  "key": "11k4bsiz11gp",
+  "name": "3 Day Delt Annihilation",
+  "emphasis": "Arms & Shoulders",
+  "sex": "male",
+  "userId": null,
+  "sourceTemplateId": null,
+  "sourceMesoId": null,
+  "prevTemplateId": null,
+  "createdAt": "2026-05-28T16:14:37.382Z",
+  "updatedAt": "2026-05-28T16:19:18.982Z",
+  "deletedAt": null,
+  "generatedFrom": "",
+  "days": [
+    {
+      "id": 927104,
+      "position": 0,
+      "templateId": 199083,
+      "createdAt": "2026-05-28T16:14:37.382Z",
+      "updatedAt": "2026-05-28T16:14:37.382Z",
+      "slots": [
+        {
+          "id": 5508825,
+          "templateDayId": 927104,
+          "position": 0,
+          "muscleGroupId": 5,
+          "exerciseId": 712802,
+          "createdAt": "2026-05-28T16:14:37.382Z",
+          "updatedAt": "2026-05-28T16:14:37.382Z"
+        },
+        {
+          "id": 5508826,
+          "templateDayId": 927104,
+          "position": 1,
+          "muscleGroupId": 5,
+          "exerciseId": 109,
+          "createdAt": "2026-05-28T16:14:37.382Z",
+          "updatedAt": "2026-05-28T16:14:37.382Z"
+        }
+      ]
+    },
+    {
+      "id": 927105,
+      "position": 1,
+      "templateId": 199083,
+      "createdAt": "2026-05-28T16:14:37.382Z",
+      "updatedAt": "2026-05-28T16:14:37.382Z",
+      "slots": [
+        {
+          "id": 5508827,
+          "templateDayId": 927105,
+          "position": 0,
+          "muscleGroupId": 5,
+          "exerciseId": 712802,
+          "createdAt": "2026-05-28T16:14:37.382Z",
+          "updatedAt": "2026-05-28T16:14:37.382Z"
+        },
+        {
+          "id": 5508828,
+          "templateDayId": 927105,
+          "position": 1,
+          "muscleGroupId": 5,
+          "exerciseId": 109,
+          "createdAt": "2026-05-28T16:14:37.382Z",
+          "updatedAt": "2026-05-28T16:14:37.382Z"
+        }
+      ]
+    },
+    {
+      "id": 927106,
+      "position": 2,
+      "templateId": 199083,
+      "createdAt": "2026-05-28T16:14:37.382Z",
+      "updatedAt": "2026-05-28T16:14:37.382Z",
+      "slots": [
+        {
+          "id": 5508829,
+          "templateDayId": 927106,
+          "position": 0,
+          "muscleGroupId": 5,
+          "exerciseId": 120,
+          "createdAt": "2026-05-28T16:14:37.382Z",
+          "updatedAt": "2026-05-28T16:14:37.382Z"
+        },
+        {
+          "id": 5508830,
+          "templateDayId": 927106,
+          "position": 1,
+          "muscleGroupId": 5,
+          "exerciseId": 124,
+          "createdAt": "2026-05-28T16:14:37.382Z",
+          "updatedAt": "2026-05-28T16:14:37.382Z"
+        }
+      ]
+    }
+  ],
+  "priorities": {
+    "5": {
+      "id": 1793042,
+      "templateId": 199083,
+      "muscleGroupId": 5,
+      "mgPriorityType": "emphasize",
+      "createdAt": "2026-05-28T16:14:37.382Z",
+      "updatedAt": "2026-05-28T16:14:37.382Z"
+    }
+  }
+}

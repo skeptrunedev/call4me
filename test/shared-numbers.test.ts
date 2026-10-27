@@ -35,10 +35,13 @@ beforeEach(() => {
   env = { DB: db, TELNYX_API_KEY: 'test', TELNYX_CONNECTION_ID: 'conn' } as unknown as Env;
 });
 
-test('a shared Israel number lets every account call Israel, going out from it', async () => {
+test('without a shared number, an account with no Israel number cannot call Israel', async () => {
   await addNumber('acct_alice', SHARED, 'IL');
-  assert.equal(await mayCall(db, bob.id, business), false, 'another account\'s unshared number lets no one else call Israel');
-  await db.prepare('UPDATE numbers SET shared = 1 WHERE phone_number = ?').bind(SHARED).run();
+  assert.equal(await mayCall(db, bob.id, business), false);
+});
+
+test('a shared Israel number lets every account call Israel, going out from it', async () => {
+  await addNumber('acct_alice', SHARED, 'IL', 1);
   assert.equal(await mayCall(db, bob.id, business), true);
   assert.deepEqual(await numbers(env).callerId(bob, business), { number: SHARED, own: false });
 });

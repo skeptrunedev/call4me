@@ -1,10 +1,10 @@
 ---
-title: "How to call Spectrum retention and lower your internet bill"
+title: "Spectrum retention: what to say, and $85 cut to $55"
 seoTitle: "Spectrum retention department: 833-267-6094"
 subtitle: A call4me user's Spectrum internet bill had climbed to $85 a month. Their AI phone assistant called Spectrum, said "cancel" to get routed to retention, sat through the hold, and got the user patched in. Spectrum offered $55 a month for a year. Here's the phone tree, the recording, both offers, and the free technician tip the rep gave.
 description: Spectrum retention: call 833-267-6094 and say "cancel," then "disconnect." Spectrum lists 888-369-2408 for Internet support. Our call cut $85/mo to $55.
 date: 2026-10-01
-updated: 2026-10-17
+updated: 2026-10-16
 verified: 2026-10-01
 tags: spectrum retention, spectrum customer service, lower spectrum bill, cancel spectrum, ai phone assistant
 authors: nick
@@ -98,8 +98,6 @@ Only the **account holder** or an **authorized user**. Spectrum's [account roles
 7. **Confirm the date it starts.** "My next bill... will be 55 instead of 85, right?" "That is correct."
 8. **Bring up service problems after the new price is set**, through retention, for a free technician visit.
 
-For every way to get the bill down, with what to have ready and how to do it without making the call yourself, see [how to lower your Spectrum bill](/blog/how-to-lower-spectrum-bill).
-
 ## Where our caller fell short
 
 - **It went silent while waiting on the user.** Twice, our caller had to wait for the user to answer: once for the text code (72 seconds) and once for whether they could join (76 seconds). Both times it said nothing to the rep, and he asked, "Muse, are you still there?" We fixed this the same night: when the line goes quiet while it's waiting on you, our caller now says something like "sorry, still checking on that, one sec."
@@ -114,7 +112,7 @@ For every way to get the bill down, with what to have ready and how to do it wit
 
 ## Let an AI phone assistant make the call
 
-This call was made by [call4me](/), an AI phone assistant that works inside the agent you already use (Claude Code, Codex, ChatGPT). It handled the phone menu, the hold and the first round of verification, then rang the user to join when Spectrum asked for the account holder. More recorded cancel and retention calls are on [an AI that calls to cancel a subscription for you](/cancel-subscription). If you use call4me, paste this into your agent:
+This call was made by [call4me](/), an AI phone assistant that works inside the agent you already use (Claude Code, Codex, ChatGPT). It handled the phone menu, the hold and the first round of verification, then rang the user to join when Spectrum asked for the account holder. If you use call4me, paste this into your agent:
 
 > Call Spectrum at (833) 267-6094 about my internet bill. At the phone menu, say "cancel my account" and then "disconnect" to reach retention. Tell them the bill went from [old price] to [new price] and I'm looking at [competitor]. Get the lowest rate for the same speed, and ask for the 1-year and 2-year offers. Don't cancel anything, don't add TV or phone, and don't agree to a contract longer than 12 months. When they ask for the account holder, connect me to the call.
 

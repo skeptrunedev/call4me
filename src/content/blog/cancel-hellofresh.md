@@ -2,9 +2,9 @@
 title: How to cancel HelloFresh: next box, deadline and a real call
 seoTitle: "Cancel HelloFresh: deadline, app and phone help"
 subtitle: We reached HelloFresh customer care to ask about cancellation, a box already in progress and missing cancel options. Hear the call and follow the official online route.
-description: "Cancel HelloFresh online five days before your next box, or skip a week to pause. Hear our support call and phone help at (646) 846 3663."
+description: Cancel HelloFresh online before the next box cutoff. Hear our support call about processed orders, confirmation and phone help at (646) 846 3663.
 date: 2026-10-03
-updated: 2026-10-17
+updated: 2026-10-04
 verified: 2026-10-03
 tags: hellofresh, cancel subscription, meal delivery, phone trees
 authors: nick

@@ -4,7 +4,7 @@ seoTitle: "Venmo customer service number: (855) 812-4430"
 subtitle: "We called Venmo twice. The first call got stuck at a prompt for the phone number on your Venmo account. The second took the dispute branch, said yes to the calling number check, and reached a live representative 4 minutes 57 seconds in. Here are both recordings, every key we pressed, and what the representative told us."
 description: "The Venmo customer service number is (855) 812-4430, 8 am to 8 pm Central daily. The keys that reached a live person in 4:57, from two recorded calls."
 date: 2026-10-09
-updated: 2026-10-24
+updated: 2026-10-16
 verified: 2026-10-09
 tags: venmo, customer service, disputes, bank transfers, phone trees, phone numbers
 authors: nick
@@ -156,8 +156,6 @@ Our caller got a few things wrong, and you should know which:
 We kept the audio of both calls as it happened, apart from the muted names. Key presses were sent as signals, not sounds, so no number our caller keyed in is in either recording.
 
 We also called PayPal: see [the PayPal customer service number](/blog/paypal-customer-service-number). For more phone trees and recorded calls, see the [other companies we've called](/companies).
-
-For other payment apps, we've also called [Cash App](/blog/cash-app-customer-service-number), where our second call reached a person after 1:35, and [PayPal](/blog/paypal-customer-service-number).
 
 ## Have your agent make this call
 

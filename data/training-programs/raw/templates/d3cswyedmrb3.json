@@ -1,0 +1,125 @@
+{
+  "id": 199082,
+  "key": "d3cswyedmrb3",
+  "name": "Bench Press Rep Max Plan",
+  "emphasis": "Upper Body",
+  "sex": "male",
+  "userId": null,
+  "sourceTemplateId": null,
+  "sourceMesoId": null,
+  "prevTemplateId": null,
+  "createdAt": "2026-05-28T16:10:17.127Z",
+  "updatedAt": "2026-05-28T16:18:41.563Z",
+  "deletedAt": null,
+  "generatedFrom": "",
+  "days": [
+    {
+      "id": 927101,
+      "position": 0,
+      "templateId": 199082,
+      "createdAt": "2026-05-28T16:10:17.127Z",
+      "updatedAt": "2026-05-28T16:10:17.127Z",
+      "slots": [
+        {
+          "id": 5508818,
+          "templateDayId": 927101,
+          "position": 0,
+          "muscleGroupId": 1,
+          "exerciseId": 6,
+          "createdAt": "2026-05-28T16:10:17.127Z",
+          "updatedAt": "2026-05-28T16:10:17.127Z"
+        },
+        {
+          "id": 5508819,
+          "templateDayId": 927101,
+          "position": 1,
+          "muscleGroupId": 1,
+          "exerciseId": 17,
+          "createdAt": "2026-05-28T16:10:17.127Z",
+          "updatedAt": "2026-05-28T16:10:17.127Z"
+        },
+        {
+          "id": 5508820,
+          "templateDayId": 927101,
+          "position": 2,
+          "muscleGroupId": 3,
+          "exerciseId": 70,
+          "createdAt": "2026-05-28T16:10:17.127Z",
+          "updatedAt": "2026-05-28T16:10:17.127Z"
+        }
+      ]
+    },
+    {
+      "id": 927102,
+      "position": 1,
+      "templateId": 199082,
+      "createdAt": "2026-05-28T16:10:17.127Z",
+      "updatedAt": "2026-05-28T16:10:17.127Z",
+      "slots": [
+        {
+          "id": 5508821,
+          "templateDayId": 927102,
+          "position": 0,
+          "muscleGroupId": 1,
+          "exerciseId": 6,
+          "createdAt": "2026-05-28T16:10:17.127Z",
+          "updatedAt": "2026-05-28T16:10:17.127Z"
+        },
+        {
+          "id": 5508822,
+          "templateDayId": 927102,
+          "position": 1,
+          "muscleGroupId": 3,
+          "exerciseId": 84,
+          "createdAt": "2026-05-28T16:10:17.127Z",
+          "updatedAt": "2026-05-28T16:10:17.127Z"
+        }
+      ]
+    },
+    {
+      "id": 927103,
+      "position": 2,
+      "templateId": 199082,
+      "createdAt": "2026-05-28T16:10:17.127Z",
+      "updatedAt": "2026-05-28T16:10:17.127Z",
+      "slots": [
+        {
+          "id": 5508823,
+          "templateDayId": 927103,
+          "position": 0,
+          "muscleGroupId": 1,
+          "exerciseId": 6,
+          "createdAt": "2026-05-28T16:10:17.127Z",
+          "updatedAt": "2026-05-28T16:10:17.127Z"
+        },
+        {
+          "id": 5508824,
+          "templateDayId": 927103,
+          "position": 1,
+          "muscleGroupId": 3,
+          "exerciseId": 71,
+          "createdAt": "2026-05-28T16:10:17.127Z",
+          "updatedAt": "2026-05-28T16:10:17.127Z"
+        }
+      ]
+    }
+  ],
+  "priorities": {
+    "1": {
+      "id": 1793040,
+      "templateId": 199082,
+      "muscleGroupId": 1,
+      "mgPriorityType": "emphasize",
+      "createdAt": "2026-05-28T16:10:17.127Z",
+      "updatedAt": "2026-05-28T16:10:17.127Z"
+    },
+    "3": {
+      "id": 1793041,
+      "templateId": 199082,
+      "muscleGroupId": 3,
+      "mgPriorityType": "emphasize",
+      "createdAt": "2026-05-28T16:10:17.127Z",
+      "updatedAt": "2026-05-28T16:10:17.127Z"
+    }
+  }
+}

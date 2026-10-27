@@ -14,7 +14,7 @@ import { now } from '../lib/ids';
  * egress IPs, and Yandex started answering 520 on October 9, 2026, so a single endpoint
  * silently stops every ping.
  */
-const ENDPOINTS = ['https://yandex.com/indexnow', 'https://search.seznam.cz/indexnow', 'https://searchadvisor.naver.com/indexnow', 'https://indexnow.yep.com/indexnow'];
+export const ENDPOINTS = ['https://yandex.com/indexnow', 'https://search.seznam.cz/indexnow', 'https://searchadvisor.naver.com/indexnow', 'https://indexnow.yep.com/indexnow'];
 /** The protocol's limit per request. */
 const MAX_URLS = 10_000;
 

@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.skeptrunedev/call4me",
   "title": "call4me",
-  "description": "MCP server for making phone calls: your agent books, cancels, asks and waits on hold for you.",
-  "version": "1.1.2",
+  "description": "Your AI agent phones businesses for you: books, reschedules, cancels, asks, and waits on hold.",
+  "version": "1.1.1",
   "websiteUrl": "https://call4.me",
   "repository": {
     "url": "https://github.com/skeptrunedev/call4me",

@@ -1,18 +1,18 @@
 ---
-title: "How to make phone calls from Claude Code with MCP"
+title: "Make phone calls from Claude Code with MCP: setup and a real test"
 seoTitle: "Claude Code phone calls: personal assistant setup"
 subtitle: Give the Claude Code session you already use a phone. We connected a real account, checked its balance, and asked Claude to call a restaurant during private dining research. Here is the setup, the actual tool sequence, and what the voicemail did and did not answer.
-description: "Yes, Claude can make phone calls: add a calling MCP server to your Claude Code personal assistant and ask it to call. Setup, tool sequence and a real test."
+description: "Add phone calls to your Claude Code personal assistant with MCP. Use booking, shopping and return briefs with real outcomes and a verified setup walkthrough."
 date: 2026-10-03
-updated: 2026-10-17
+updated: 2026-10-06
 tags: claude code, mcp, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Claude Code connects to call4me, makes a phone call, and returns the evidence to the research task
 ---
 
-Claude Code can make phone calls through an MCP server. Add [call4me](/) to the session you already use, ask it to call a business, and it gets the status, transcript and outcome back through tools. The conversation stays part of the research or planning task Claude was already doing.
-
 If you use Claude Code as a personal assistant, a task can reach a point where it needs to call a business. A subscription has unclear cancellation terms. An appointment needs a conversation. A restaurant's website leaves a question unanswered.
+
+Claude Code can make those phone calls through an MCP server. Add [call4me](/) to the session you already use, ask it to call a business, and it gets the status, transcript and outcome back through tools. The conversation stays part of the research or planning task Claude was already doing.
 
 We tested this on October 3, 2026 with **Claude Code 2.1.288** and our own account. Claude connected, read a live balance, called Foreign Cinema in San Francisco, followed the call, and hung up when it reached the private dining voicemail. **It did not reach a person or get a quote.** The recording and the unanswered questions are below.
 
@@ -154,6 +154,7 @@ The setup above adds the phone part to the assistant you already use. Start with
 | Understand a subscription cancellation | The available cancellation route, fees, deadline and proof to request before changing the account | Our [Planet Fitness calls](/blog/cancel-planet-fitness) asked two clubs about their rules. They did not cancel a membership |
 | Plan an appointment | The original booking status, a replacement within your available hours and an explicit confirmation | Our [doctor appointment call](/blog/reschedule-doctor-appointment) checked that the old slot was already canceled, then confirmed October 8 at 1:30 PM |
 | Reserve dinner | The date, time, party size and terms staff actually agreed to | Our [dinner booking](/blog/book-dinner-reservation-by-phone) confirmed four people for October 8 at 7:30 PM; cancellation terms remained unknown |
+| Finish shopping research | Local stock of the exact item, its features and current price | Our [Macy's stock check](/blog/macys-bow-tie-stock-check) established those answers on the call date, without a purchase or hold |
 | Resolve a return request | Whether an exception is approved and which steps remain | Our [Aquasana call](/blog/aquasana-return-exception) obtained approval for $551.79 by check; paperwork and payment remained pending |
 | Compare businesses | Answers missing online, who supplied them and what remains unresolved | Our [private dining research](/blog/agent-web-research-phone-calls-sf-private-dining) combines web sources with recorded calls |
 | Get business paperwork | Which document is needed, whether the provider sent it and where it was delivered | Our [Wyoming registered agent consent call](/blog/wyoming-registered-agent-consent-form) requested the document by phone; I confirmed it arrived afterward |

@@ -258,7 +258,7 @@ Exports use original voices at normal speed, FFmpeg loudness normalization at
 16 LUFS below full scale, a true peak limit of 1.5 dB below full scale, and mono
 MP3 at 96 kbps with source metadata removed. The silent privacy spans preserve
 timing. Update the duration and transcript together whenever audio changes.
-No synthetic voices, music, or call sounds belong in these recordings. The one exception: when an account owner joined the call, their own voice is published disguised (the manifest `disguise` spans in the [recording review CLI](audio-review.md)), at Nick's direction on October 16, 2026.
+No synthetic voices, music, or call sounds belong in these recordings.
 
 Before publishing, verify the exact provider call association, read the saved
 transcript, and check the source words around each silent interval. Decode the

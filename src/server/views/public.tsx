@@ -26,15 +26,11 @@ const HOME_LD = {
 /** No sign-in needed: signed out, Stripe asks for an email and the credits wait on that email's account. */
 export const BuyForm: FC<{ signedIn: boolean; error?: string; amount?: string }> = ({ signedIn, error, amount = String(MIN_TOPUP_CENTS / 100) }) => (
   <form method="post" action="/buy" class="buy" id="buy">
-    {!signedIn && (
-      <p class="no-account">
-        <b>no account needed.</b> pay first, then we email a sign-in link to the address you paid with and the credits are waiting.
-      </p>
-    )}
     {error && <p class="err">{error}</p>}
     <label for="amount">amount in dollars (min ${MIN_TOPUP_CENTS / 100})</label>
     <input type="text" id="amount" name="amount" class="amount" inputmode="decimal" required value={amount} /> <button type="submit">pay with card</button>
     <MonthlyBox />
+    {!signedIn && <p class="small">no account needed first. after paying, sign in with google or x using the email you paid with and the credits are yours.</p>}
   </form>
 );
 
@@ -123,12 +119,9 @@ export const HomeRecordings: FC = () => (
   </>
 );
 
-/** Where "get started" goes: sign up first (signed-in visitors pass straight through to their account), then load credits. */
-export const GET_STARTED = '/login?next=/account';
-
 export const HomeActions: FC = () => (
   <>
-    <p class="hero-links"><a href={GET_STARTED}>get started</a> <a href="/examples">more real calls</a> <a href="/mcp">works with chatgpt, claude, grok bot, muse, and all other agents</a></p>
+    <p class="hero-links"><a href="#buy">add credits</a> <a href="/examples">more real calls</a> <a href="/mcp">works with any agent</a></p>
   </>
 );
 
@@ -262,7 +255,7 @@ export const HomePage: FC<HomePageProps> = (p) => (
     <section class="home-section home-faq"><Faq {...p} /></section>
     <section class="home-section home-closing">
       <h2>let your agents make phone calls</h2>
-      <a href={GET_STARTED} class="button">get started <span aria-hidden="true">→</span></a>
+      <a href="#buy" class="button">add credits <span aria-hidden="true">→</span></a>
     </section>
   </Layout>
 );
@@ -363,15 +356,9 @@ export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; bal
         <h1>
           paid. <span class="price">{dollars(p.balanceCents)}</span> in credits for {p.email}
         </h1>
-        <p>sign in to use them: we'll email a sign-in link to {p.email}. paid with apple pay? that can be an icloud relay address, and the link still reaches your inbox.</p>
-        <form method="post" action="/login/email" class="inline">
-          <input type="hidden" name="email" value={p.email} />
-          <input type="hidden" name="next" value={p.next ?? '/account'} />
-          <button type="submit">email me a sign-in link</button>
-        </form>
-        <p class="small">
-          or <a href={`/login?next=${encodeURIComponent(p.next ?? '/account')}`}>sign in with google or x</a>: with the same email the credits are already there, and any other
-          sign-in brings you back here to move them to that account.
+        <p>sign in to use them. with google, use {p.email} and they're already there. signing in any other way (x, or another email) brings you back here and moves them to that account.</p>
+        <p>
+          <a href={`/login?next=${encodeURIComponent(p.next ?? '/account')}`}>sign in with google or x</a>
         </p>
       </>
     ) : (

@@ -1,16 +1,15 @@
 ---
-title: "Check a gym day pass and pool access before you go"
-seoTitle: "Gym or pool day pass near me: what to check"
+title: Gym day pass and pool access: have your AI assistant check before you go
+seoTitle: Gym day pass: check pool access with your AI
 subtitle: A real call to Long Bridge Aquatics confirmed adult day pass prices and access rules. Use the same workflow to check a nearby gym or pool for your visit.
-description: "Before you buy a gym or pool day pass, check price, pool hours, access and ID. Hear a real Long Bridge call ($12 to $15) and copy the prompt."
+description: Compare gym and pool day passes with an AI assistant. Hear a real Long Bridge pricing call and copy a prompt to check access, hours, fees and ID.
 date: 2026-10-07
-updated: 2026-10-17
 tags: gym day pass, pool day pass, Long Bridge Aquatics, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Gym and pool day passes, check price, access and the time you want to visit
 ---
 
-**Before you buy a gym day pass, check that it covers the facilities you want at the time you plan to visit.** On October 7, 2026, Long Bridge Aquatics & Fitness Center in Arlington, Virginia quoted our AI caller **$12 for resident adults and $15 for nonresident adults**. Staff said a nonmember could buy at the desk and use the gym, available lap lanes and hot tub during public access periods.
+**A gym day pass is useful only if it covers the facilities you want at the time you plan to visit.** On October 7, 2026, Long Bridge Aquatics & Fitness Center in Arlington, Virginia quoted our AI caller **$12 for resident adults and $15 for nonresident adults**. Staff said a nonmember could buy at the desk and use the gym, available lap lanes and hot tub during public access periods.
 
 The same conversation brought out the condition that matters: lessons and classes can close parts of the pool. A pass price does not establish that a lane or hot tub will be available at your arrival time. We also found a difference between the broad hours answer on the phone and the detailed published pool schedule, explained below.
 

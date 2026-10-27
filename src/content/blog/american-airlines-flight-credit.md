@@ -1,10 +1,10 @@
 ---
-title: "How to use an American Airlines flight credit by phone"
-seoTitle: "American Airlines flight credit: use it by phone"
+title: "American Airlines flight credit: what it takes to use one by phone, from two recorded calls"
+seoTitle: American Airlines flight credit: 2 real calls
 subtitle: A call4me user's aa.com checkout wouldn't take their flight credit, so their AI phone assistant called American Airlines reservations twice to apply it to a held trip. Here's who has to be on the line, why the credit was worth less than the full ticket, both recordings, and what to have ready.
-description: "To use an American Airlines flight credit by phone, call 800-433-7300 with the named traveler on the line. Two recorded calls show what to expect."
+description: We called American Airlines twice to apply a flight credit to a held trip. Who must be on the line, why it was worth less, and both recordings.
 date: 2026-10-01
-updated: 2026-10-17
+updated: 2026-10-04
 tags: american airlines, flight credit, airlines, phone numbers, ai phone assistant
 authors: nick
 imageAlt: American Airlines flight credit, two calls to reservations, recorded

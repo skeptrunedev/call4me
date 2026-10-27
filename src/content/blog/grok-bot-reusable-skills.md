@@ -1,16 +1,16 @@
 ---
-title: "Set up a Grok Bot skill for restaurant phone calls: a draft method"
-seoTitle: "Grok Bot calling skill: draft method and checklist"
+title: "Grok Bot calling skill: a draft method and review checklist"
+seoTitle: "Grok Bot calling skill draft and checklist"
 subtitle: Download a draft restaurant inquiry method, with documented saving controls and checks for fresh inputs and call evidence.
-description: "Can Grok Bot make phone calls? Yes, with a call4me connector. Download a draft restaurant inquiry skill, the save prompt and a review checklist."
+description: "A draft Grok Bot restaurant inquiry skill based on xAI documentation. Download the method and review its setup, permissions and expected results."
 date: 2026-10-05
-updated: 2026-10-17
+updated: 2026-10-07
 tags: grok, skills, ai agents, ai phone assistant
 authors: nick
 imageAlt: A draft Grok Bot calling method with saving and reuse checks
 ---
 
-**To give a Grok Bot a reusable calling skill, attach this draft restaurant inquiry method and ask Grok to save it as a skill.** The method's instructions request fresh inputs, a call4me access check and a report of unanswered questions.
+**This is a draft restaurant inquiry method for a Grok Bot skill.** Its instructions request fresh inputs, a call4me access check and a report of unanswered questions.
 
 [Download the complete draft method](/static/blog/resources/grok-bot-reusable-skills/restaurant-inquiry-method.md) and [the prompt to save it](/static/blog/resources/grok-bot-reusable-skills/save-skill.txt). The method is a Markdown file to review and attach to your Bot.
 

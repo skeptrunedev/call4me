@@ -1,10 +1,9 @@
 ---
-title: "DIRECTV customer service: how to reach a live person"
-seoTitle: "DIRECTV customer service hours: 800-531-5000"
+title: "DIRECTV customer service: how we reached a live person"
+seoTitle: "DIRECTV customer service: 800-531-5000"
 subtitle: 'We called DIRECTV customer service twice. The first time its AI agent answered and we never got past it. The second time we said "cancel service", said we had no account number, chose satellite, and a live representative picked up. The route, what each said, and both recordings.'
-description: "DIRECTV customer service is 800-531-5000, 8 am to 9 pm CT daily. Say \"cancel service\", say you have no account number, then \"satellite\" to reach a person."
+description: 'DIRECTV customer service is 800-531-5000. We reached a live person by saying "cancel service", saying we had no account number and choosing satellite.'
 date: 2026-10-08
-updated: 2026-10-17
 verified: 2026-10-08
 tags: directv, customer service, cancel directv, phone trees, phone numbers
 authors: nick
@@ -171,8 +170,6 @@ The two calls asked the same three things. The live representative's answers wer
 - **Early termination fee.** The person: "It all depends on the information on the account." The AI agent: "up to $20 for each month left in their commitment." DIRECTV's cancel help page says only "If you have a contract, you may need to pay a fee for the number of months left on your contract", with no amount. So the $20 figure is still unconfirmed.
 - **Equipment.** The person: "they will run their equipment to see if they have to return it or not." The AI agent: you "usually need to return any leased equipment, like receivers, remotes, and power cords, to avoid a non-return fee", by return kit or at "a FedEx Office location." The cancel help page says "Your cancellation support agent will guide you through what (if anything) you need to return," and "All you have to return is the box itself, power cord, and remote."
 - **Offers.** The person: "We do have different, multiple different promotional offers," depending on the account. The AI agent: offers exist, "but the details depend on your account and situation," and "a live agent can review them with you directly."
-
-If you'd rather keep DIRECTV and pay less, a representative told us the ways to lower the bill on a later call: [how to lower your DIRECTV bill](/blog/how-to-lower-directv-bill).
 
 ## How to cancel DIRECTV by phone
 

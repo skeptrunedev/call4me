@@ -2,9 +2,9 @@
 title: "How to use Meta Muse for your first informational phone call"
 seoTitle: "How to use Meta Muse for a first phone call"
 subtitle: Hear Muse use call4me to ask a library about laptop seating, outlets and guest WiFi. Includes the actual recording, a bounded call brief and the limits of the answers.
-description: "Use Meta Muse to place a first phone call through a saved call4me connector. Hear our library call, read the transcript and copy a reusable call brief."
+description: Hear our actual Meta Muse phone call to a library through call4me. Includes saved connector reuse, the recording, transcript and a reusable call brief.
 date: 2026-10-05
-updated: 2026-10-17
+updated: 2026-10-06
 tags: meta muse, ai agents, phone calls, muse use cases
 authors: nick
 imageAlt: A first Muse phone task moves from a verified branch number through one approved call to sourced answers

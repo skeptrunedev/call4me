@@ -1,10 +1,9 @@
 ---
-title: "How to book a table at Sabai Eugene by phone"
-seoTitle: "Sabai reservations in Eugene: book by phone"
+title: Sabai Eugene reservations: the call that booked Friday dinner
+seoTitle: Sabai Eugene reservations: a real booking call
 subtitle: The assistant waited through the reservation queue, accepted 7:15 PM instead of 7:00 PM and got an explicit table confirmation.
-description: "Make Sabai reservations by calling (541) 654 5424. A real call waited on hold, took 7:15 PM instead of 7:00 PM and got a Friday table for two."
+description: Sabai in Eugene accepts reservations by phone. Hear a real call that waited on hold and booked dinner for two at an acceptable alternative time.
 date: 2026-10-11
-updated: 2026-10-17
 tags: Sabai Eugene, Thai restaurant, Eugene restaurants, restaurant reservations, ai phone assistant
 authors: nick
 imageAlt: Sabai in Eugene, a Friday reservation confirmed after waiting on hold

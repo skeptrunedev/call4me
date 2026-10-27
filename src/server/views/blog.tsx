@@ -224,6 +224,15 @@ export const BlogArchive: FC<{ signedIn: boolean; groups: { month: string; posts
   </Layout>
 );
 
+const SHARE_SCRIPT = `
+document.querySelectorAll('.copy-link').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var url = location.origin + location.pathname;
+    var done = function () { b.textContent = '[ copied ]'; setTimeout(function () { b.textContent = '[ copy link ]'; }, 1500); };
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(done); else { prompt('copy this link', url); }
+  });
+});`;
+
 /** Timestamp links (lib/blog.ts linkTimestamps) seek the recording on the page instead of opening the file. */
 const SEEK_SCRIPT = `
 document.addEventListener('play', function (event) {
@@ -263,7 +272,10 @@ const Share: FC<{ post: Post }> = ({ post }) => {
       <a href={`https://news.ycombinator.com/submitlink?u=${encodeURIComponent(url)}&t=${encodeURIComponent(post.title)}`} rel="noopener">
         hn
       </a>{' '}
-      <a href={`mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(`${post.subtitle}\n\n${url}`)}`}>email</a>
+      <a href={`mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(`${post.subtitle}\n\n${url}`)}`}>email</a>{' '}
+      <button type="button" class="linkbutton copy-link">
+        [ copy link ]
+      </button>
     </div>
   );
 };
@@ -501,6 +513,7 @@ export const BlogPost: FC<{
         )}
         <a href="/blog">all posts</a> / <a href="/blog/archive">archive</a> / <a href="/blog/feed.xml">atom feed</a>
       </p>
+      <script>{raw(SHARE_SCRIPT)}</script>
       <script>{raw(SEEK_SCRIPT)}</script>
     </Layout>
   );

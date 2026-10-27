@@ -1,10 +1,10 @@
 ---
-title: "How to reach a person at Pottery Barn customer service"
+title: "Pottery Barn customer service: number and what a rep said"
 seoTitle: "Pottery Barn customer service: 1-888-779-5176"
 subtitle: "We called Pottery Barn's customer service line to ask about order status, returns and furniture delivery. Here is the phone menu, the one phrase that got us to a person, what she said, and the full 2 minute recording."
 description: "The Pottery Barn customer service number is 1-888-779-5176. Say \"customer service\" at the menu to reach a person. Returns and delivery, from a real call."
 date: 2026-10-08
-updated: 2026-10-17
+updated: 2026-10-16
 verified: 2026-10-08
 tags: pottery barn, customer service, returns, furniture delivery, phone trees
 authors: nick

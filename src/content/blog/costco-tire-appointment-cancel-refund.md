@@ -1,10 +1,10 @@
 ---
-title: "How to cancel a Costco tire appointment and get a tire order refund"
-seoTitle: "How to cancel a Costco tire appointment"
+title: Costco tire appointment: cancellation, order lookup and refund inquiry
+seoTitle: Costco tire appointment: cancel and refund steps
 subtitle: A call4me user ordered the wrong size tires on Costco.com for install at a Costco Tire Center. His agent made the calls to find the order, learn the refund process, and cancel the install appointment. Here's what worked, what didn't, and the recordings.
-description: "To cancel a Costco tire appointment, call your warehouse, press 1 and ask for the Tire Center. That doesn't cancel the tire order: how the refund works."
+description: Three Costco calls show a cancelled tire appointment, an order lookup and refund instructions. The agent said requests can go through a warehouse or Costco.com.
 date: 2026-09-30
-updated: 2026-10-27
+updated: 2026-10-07
 tags: costco, tires, cancel appointment, refunds, phone trees
 authors: nick
 imageAlt: Costco tire appointment cancellation, order lookup and refund inquiry

@@ -1,17 +1,15 @@
 ---
-title: "Experian phone number: can you speak to a live person? What happens when you call"
-seoTitle: "Experian live person: what 1-888-397-3742 does"
-subtitle: We called Experian’s freeze line 15 times in one afternoon, then its membership line. Here are the routes we tried and recordings of both lines.
-description: "Experian's 1-888-397-3742 freeze line is automated and asks for your full SSN. We found no way to speak to a live person on it. What Experian lists instead."
+title: "Experian phone number: what happens when you call"
+seoTitle: "Experian phone number: 1-888-397-3742"
+subtitle: We called Experian’s freeze line 15 times in one afternoon. Here are the routes we tried and a 9 minute recording of the call that got furthest.
+description: Experian's number is 1-888-397-3742. It asks for your full SSN first, and we found no way to reach a person without it. Full recording and phone tree.
 date: 2026-09-30
-updated: 2026-10-26
+updated: 2026-10-07
 verified: 2026-09-30
 tags: experian, credit freeze, phone trees, customer service
 authors: nick
 imageAlt: Experian 1-888-397-3742, what happens when you call to freeze your credit
 ---
-
-**Can you speak to a live person at Experian?** Not on the credit freeze line, in our tests. In 15 calls to **1-888-397-3742** we found no menu option that reached a person. Without your full Social Security number it goes no further, and once we passed its identity check it steered us to freeze online or by mail, then ended the call. Experian's [contact page](https://www.experian.com/contact/personal-services-contacts.html) lists a separate phone number for **Experian membership** questions, **1-866-617-1894**, open **Monday to Friday 8 am to 8 pm Central** and **Saturday and Sunday 8 am to 6 pm Central**, so it isn't 24 hours. We called it on Sunday, October 25, 2026, and it didn't reach a person either: an AI assistant asks for your complete Social Security number, and when we said we had no account and asked for a representative more than 10 times, it said "I can only transfer calls under specific circumstances" and hung up. More on that call below. For disputes, the same page says to call "the number displayed on your report."
 
 **The short answer:** Experian's credit freeze line is **1-888-397-3742** (1-888-EXPERIAN). It is fully automated. It asks for your **complete Social Security number** before it will do anything, and we found no option that reaches a live person without it. After you pass its identity check (SSN, ZIP code, street number, date of birth), it still steers you to freeze **online at experian.com/freeze** or **by mail**. In our tests it never placed the freeze over the phone.
 
@@ -74,26 +72,6 @@ These routes did not reach a consumer support agent on September 30, 2026.
 - **Pressing 0 at the Social Security prompt.** It skips ahead to a spoken menu (freeze or unfreeze, fraud alert, report or score). Asking for anything there sends you to experian.com/help.
 - **Saying "other questions" or "representative" at that menu.** You get "visit experian dot com slash help", then "I'm currently unable to provide support on this matter", and the call ends.
 - **Calling Experian's headquarters line, 714-830-7000.** It's a corporate switchboard "intended to assist Experian business partners". Press 1 and you land in the same automated system. Press 2 and a real operator answers, but only to transfer you into that same system, which asks for your Social Security number again.
-
-## The membership line, 1-866-617-1894
-
-Experian's contact page lists this number for Experian membership questions. We called it on Sunday, October 25, 2026, at 10 am Central, inside its posted weekend hours, saying we weren't a member and had a general question. It didn't reach a person.
-
-<audio controls preload="metadata" src="/static/blog/experian-membership-line.mp3" style="width:100%"><a href="/static/blog/experian-membership-line.mp3">listen to the membership line recording</a></audio>
-
-The whole call, 8 minutes, with nothing removed.
-
-- **0:00** The same consent notice as the freeze line: recording, AI transcription and "biometric technology"
-- **0:33** "Please tell me how may I help you today"
-- **0:57** Before anything else: "please say or enter your complete social security number"
-- **1:13** Asking for a representative: "I don't recognize that entry"
-- **1:34** A menu of membership tasks: profile update, cancellation, upgrade or enrollment, adding a payment card, refund, billing, dark web alerts
-- **2:39** After we picked "membership cancellation": "we're experiencing difficulty in verifying you at the moment. Please visit Experian dot com"
-- **5:23** "I'm sorry, I can't get you to a specialist right now"
-- **6:41** "While I can only transfer calls under specific circumstances, I'm here to help you with tasks such as ordering a credit report or disputing an item on your report"
-- **7:55** "I'm afraid I can't proceed without valid information", and it hangs up
-
-Saying "agent" when it offered "continue or agent" just repeated the "specific circumstances" line. A member with a Social Security number on file may get further; without one, we found no way through.
 
 ## How to actually freeze your Experian credit
 

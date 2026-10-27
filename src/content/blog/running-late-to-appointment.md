@@ -1,10 +1,9 @@
 ---
-title: "Running late to an appointment? Call the desk, or have your assistant call"
-seoTitle: "How late can you be to a doctor appointment?"
+title: Running late to an appointment? Ask your assistant to call
+seoTitle: Running late to an appointment? Have your AI call
 subtitle: A real call passed along a 10:10 AM arrival estimate for a 10 AM appointment. The desk said it should be okay and would notify the provider.
-description: "How late can you be to a doctor appointment? Call the desk with your arrival time and ask. On a real call, 10 minutes late should be okay. Prompt included."
+description: Running late to an appointment? Have your existing Claude Code or Codex assistant notify the office and ask whether you should still come in.
 date: 2026-10-06
-updated: 2026-10-17
 tags: running late, arrival updates, personal assistant, ai phone assistant
 authors: nick
 imageAlt: Appointment arrival update, 10:10 AM expected for a 10 AM booking

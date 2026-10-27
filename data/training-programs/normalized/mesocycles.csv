@@ -1,0 +1,6 @@
+id,key,name,days_per_week,weeks,unit,status,created_at,finished_at,last_workout_finished_at,micro_rirs,priorities
+1213957,3t9nt69leo5p,3x per week upper,3,8,lb,ready,2026-10-04T19:23:52.712Z,,2026-10-17T22:28:02.932Z,33221108,Chest:emphasize; Back:grow; Triceps:emphasize; Biceps:emphasize; Shoulders:emphasize; Quads:emphasize; Forearms:grow; Abs:emphasize
+1158891,n4y37ki1earf,8-week upper,4,8,lb,complete,2026-07-14T15:48:34.660Z,2026-10-04T19:21:16.962Z,2026-10-04T19:21:14.886Z,33221108,Chest:emphasize; Back:grow; Triceps:grow; Biceps:emphasize; Shoulders:emphasize; Hamstrings:maintain; Forearms:emphasize; Abs:grow
+1119324,zi177rcvbfw9,MESO 3,3,6,lb,complete,2026-05-23T04:25:09.049Z,2026-07-14T15:44:13.292Z,2026-07-14T15:44:10.788Z,322108,Chest:grow; Back:grow; Triceps:emphasize; Biceps:emphasize; Shoulders:emphasize; Quads:grow; Hamstrings:grow; Forearms:emphasize
+1074681,ka0fwu73ilpn,Meso 2,4,4,lb,complete,2026-03-30T14:13:38.246Z,2026-05-23T04:23:23.256Z,2026-05-23T04:23:21.471Z,2108,Chest:emphasize; Back:emphasize; Triceps:emphasize; Biceps:emphasize; Shoulders:emphasize; Hamstrings:emphasize; Calves:emphasize
+1035637,qosfjaynaoe9,First meso,3,5,lb,complete,2026-02-13T04:44:18.264Z,2026-03-30T14:11:33.733Z,2026-03-30T14:11:31.229Z,21108,Chest:grow; Back:grow; Triceps:emphasize; Biceps:emphasize; Shoulders:emphasize; Quads:grow; Hamstrings:grow

@@ -3,7 +3,8 @@ import test, { beforeEach } from 'node:test';
 import { CODE_ATTEMPTS, VERIFICATIONS_PER_DAY } from '../src/server/lib/number-schema';
 import { checkDialable } from '../src/server/lib/phone';
 import type { Account } from '../src/server/services/accounts';
-import { NumberError, numbers } from '../src/server/services/numbers';
+import { NumberError, numbers, ownNumberRefusal } from '../src/server/services/numbers';
+import { callInstructions, type CallBrief } from '../src/server/voice/prompt';
 import { d1 } from './sqlite-d1';
 
 /** Telnyx as these tests need it: which numbers it lists as verified, the codes it sent, and every request. */
@@ -142,3 +143,19 @@ test('a number waiting on its code is dropped without touching the carrier', asy
   await refusal(numbers(env).removeOwn(alice, mine), 404, /no such number/);
 });
 
+test('own numbers reach their own country, and +1 numbers all of the US and Canada', () => {
+  const to = (n: string) => {
+    const p = checkDialable(n);
+    assert.ok(p.ok);
+    return p;
+  };
+  assert.equal(ownNumberRefusal({ phone_number: mine, country: 'US' }, to('+1 604 555 0100')), null);
+  assert.equal(ownNumberRefusal({ phone_number: '+442079460958', country: 'GB' }, to('+44 161 496 0000')), null);
+  assert.match(ownNumberRefusal({ phone_number: '+442079460958', country: 'GB' }, to('+33 1 23 45 67 89'))!, /United Kingdom/);
+});
+
+test('the caller tells businesses that a callback to the owner\'s own number reaches them directly', () => {
+  const brief: CallBrief = { onBehalfOf: 'Sam', owner: 'Sam', business: 'Nopa', goal: 'Book a table.', facts: '', flexibility: '', callbackNumber: mine, callbackRingsOwner: true, localTime: null, connectWhen: null, voice: 'marin' };
+  assert.match(callInstructions(brief), /callback number is 202-555-0123, Sam's own phone: a callback reaches Sam directly/);
+  assert.doesNotMatch(callInstructions({ ...brief, callbackRingsOwner: false }), /own phone/);
+});

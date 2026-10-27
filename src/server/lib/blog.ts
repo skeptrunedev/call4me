@@ -67,11 +67,7 @@ export function parseFrontmatter(markdown: string): { meta: Record<string, strin
   const meta: Record<string, string> = {};
   for (const line of m[1]!.split('\n')) {
     const kv = /^([A-Za-z_][\w-]*):\s*(.*)$/.exec(line);
-    if (!kv) continue;
-    const value = kv[2]!.trim();
-    // A double-quoted YAML value escapes its quotes (\"); a bare or single-quoted one is literal.
-    const quoted = /^"(.*)"$/.exec(value);
-    meta[kv[1]!] = quoted ? quoted[1]!.replace(/\\(["\\])/g, '$1') : value.replace(/^'(.*)'$/, '$1');
+    if (kv) meta[kv[1]!] = kv[2]!.trim().replace(/^["'](.*)["']$/, '$1');
   }
   return { meta, body: m[2]! };
 }
@@ -121,7 +117,7 @@ function linkTimestamps(html: string): string {
   });
 }
 
-function renderPost(src: PostSource): Post {
+export function renderPost(src: PostSource): Post {
   const { meta, body: full } = parseFrontmatter(src.markdown);
   if (!meta.title || !meta.date) throw new Error(`blog post ${src.slug}: frontmatter needs title and date`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(meta.date)) throw new Error(`blog post ${src.slug}: date must be YYYY-MM-DD`);

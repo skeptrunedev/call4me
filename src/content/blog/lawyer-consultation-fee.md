@@ -1,10 +1,10 @@
 ---
 title: How much does a lawyer consultation cost? We called 4 law firms and booked one for $300
-seoTitle: "How much does a lawyer consultation cost?"
+seoTitle: Lawyer consultation fee: a real $300 booking
 subtitle: A call4me user had their AI phone assistant call four Michigan law firms to book a consultation about software and internet law. One firm quoted $400, agreed to $300 for 30 minutes, and booked it. Here's what the firm asked, the recordings, and what our caller got wrong at the other three.
-description: "To book a lawyer consultation by phone, have times and your issue ready. One Michigan firm quoted $400, then booked 30 minutes for $300. Hear the calls."
+description: We called four Michigan law firms to book a lawyer consultation. One quoted $400, then booked 30 minutes by phone for $300. The recordings and what to ask.
 date: 2026-10-01
-updated: 2026-10-17
+updated: 2026-10-07
 tags: lawyer consultation, lawyer consultation fee, legal help, attorneys, ai phone assistant
 authors: nick
 imageAlt: Lawyer consultation fee, four law firms, one $300 booking, recorded

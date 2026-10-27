@@ -1,16 +1,15 @@
 ---
-title: Reschedule a haircut at Salon Per Se Bellaire with the same stylist
-seoTitle: "Salon Per Se Bellaire: haircut appointment changes"
+title: Salon Per Se Bellaire: rescheduling a haircut with the same stylist
+seoTitle: Salon Per Se Bellaire: haircut appointment changes
 subtitle: A real call moved a haircut to an evening slot with the customer's preferred stylist, after checking several acceptable days.
-description: "To reschedule at Salon Per Se Bellaire in Houston, call (281) 501 2516 and name the branch and stylist. Hear a call that kept the stylist for Oct 15 at 5:30 PM."
+description: Hear a Salon Per Se Bellaire appointment reschedule in Houston. The assistant kept the preferred stylist and confirmed Thursday, October 15 at 5:30 PM.
 date: 2026-10-11
-updated: 2026-10-17
 tags: Salon Per Se Bellaire, Houston hair salon, haircut appointment, reschedule appointment, ai phone assistant
 authors: nick
 imageAlt: Salon Per Se Bellaire in Houston, a haircut moved to Thursday at five thirty
 ---
 
-**To move an appointment at Salon Per Se's Bellaire branch, call (281) 501 2516 and name the branch and your stylist.** The branch is at 9630 Clarewood Drive, Unit A6, Houston, Texas, and its [official locations page](https://www.salonperse.com/locations) lists **(281) 501 2516** for it.
+**Salon Per Se's Bellaire branch is at 9630 Clarewood Drive, Unit A6, Houston, Texas.** Its [official locations page](https://www.salonperse.com/locations) lists **(281) 501 2516** for that branch. Specify the branch and stylist when calling to move an appointment.
 
 On October 8, 2026, a call4me customer's assistant called to reschedule a men's haircut with the preferred stylist. The customer wanted to keep the stylist and had several acceptable windows: Tuesday or Thursday after 5:00 PM, or availability later that week.
 

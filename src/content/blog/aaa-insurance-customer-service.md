@@ -1,10 +1,9 @@
 ---
-title: "How to reach a person at AAA insurance for a quote or claim"
-seoTitle: "AAA insurance claims phone number and quote line"
+title: "AAA insurance customer service: how to reach a person"
+seoTitle: "AAA insurance customer service: 877-323-4222"
 subtitle: "AAA is run by regional clubs, so the number depends on where you live. We called the AAA Mountain West Group insurance line, reached a person in under a minute and a half, and asked about quotes, membership and claims. Here is the phone tree and the full 3 minute recording."
-description: "AAA insurance customer service: call 877-323-4222 for quotes or the 24/7 claims phone number, 800-922-8228. Member services is 800-564-6222. From a real call."
+description: "AAA insurance customer service at AAA Mountain West Group: 877-323-4222 for quotes, 800-922-8228 for 24/7 claims. The phone tree and a real recorded call."
 date: 2026-10-08
-updated: 2026-10-17
 verified: 2026-10-08
 tags: aaa, insurance, customer service, phone trees, phone numbers
 authors: nick

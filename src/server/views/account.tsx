@@ -2,7 +2,7 @@ import type { FC } from 'hono/jsx';
 import type { z } from 'zod';
 import { mcpUrl } from '../lib/prompts';
 import type { recordingOutput } from '../lib/recording-schema';
-import type { callView } from '../services/call-ops';
+import type { callView } from '../mcp/server';
 import { dollars, type Account } from '../services/accounts';
 import type { CountryOffer, NumberView, OwnNumberView, PendingNumberView } from '../services/numbers';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
@@ -17,24 +17,12 @@ type Recording = z.infer<typeof recordingOutput>['recordings'][number];
 /** A call's recordings as its page shows them: none while it is live, then the carrier's, or a failed lookup. */
 export type CallRecordings = { state: 'live' } | { state: 'ready'; recordings: Recording[] } | { state: 'failed' };
 
-export const LoginPage: FC<{ next: string; error?: string; email?: string; sent?: boolean; providers: { google: boolean; x: boolean }; agentPrompt?: string }> = ({
-  next,
-  error,
-  email,
-  sent,
-  providers,
-  agentPrompt,
-}) => (
+export const LoginPage: FC<{ next: string; error?: string; providers: { google: boolean; x: boolean }; agentPrompt?: string }> = ({ next, error, providers, agentPrompt }) => (
   <Layout title="sign up or sign in" page="login">
     <h1>sign up or sign in</h1>
-    <p>new here? any of these creates your account. there's no separate sign-up.</p>
+    <p>new here? continue with google or x and your account is created automatically. there's no separate sign-up and no password.</p>
     {agentPrompt && <CopyBlock id="agent-prompt" text={agentPrompt} label="[ or have your agent connect: copy prompt for your agent ]" rows={12} hidden />}
     {error && <p class="err">{error}</p>}
-    {sent && (
-      <p class="notice">
-        sign-in link sent to <b>{email}</b>. open it on this device to finish. it works once, for an hour.
-      </p>
-    )}
     {providers.google && (
       <form method="post" action="/login/google" class="inline">
         <input type="hidden" name="next" value={next} />
@@ -47,16 +35,7 @@ export const LoginPage: FC<{ next: string; error?: string; email?: string; sent?
         <button type="submit">continue with x</button>
       </form>
     )}
-    <form method="post" action="/login/email" class="email-link">
-      <input type="hidden" name="next" value={next} />
-      <label for="login-email">or with any email</label>
-      <input type="email" id="login-email" name="email" placeholder="you@example.com" autocomplete="email" value={email} required />{' '}
-      <button type="submit">email me a sign-in link</button>
-    </form>
-    <p class="small">
-      paid before signing in? use the email you paid with and your credits are there. paid with apple pay? apple may have given us an icloud relay address
-      (like name.0w@icloud.com): it's on your receipt from stripe, and the link still reaches your inbox.
-    </p>
+    {!providers.google && !providers.x && <p class="muted">sign-in is being set up. check back shortly.</p>}
     <details>
       <summary class="small">sign in with a password</summary>
       <form method="post" action="/login/password">
@@ -66,20 +45,7 @@ export const LoginPage: FC<{ next: string; error?: string; email?: string; sent?
         <button type="submit">sign in</button>
       </form>
     </details>
-  </Layout>
-);
-
-/** The emailed sign-in link's page: one click verifies the link (see the GET /login/email route). */
-export const EmailLinkPage: FC<{ params: [string, string][] }> = ({ params }) => (
-  <Layout title="sign in" page="login">
-    <h1>sign in to call4me</h1>
-    <form method="get" action="/api/auth/magic-link/verify" class="inline">
-      {params.map(([name, value]) => (
-        <input type="hidden" name={name} value={value} />
-      ))}
-      <button type="submit">sign in</button>
-    </form>
-    <p class="small">the link works once. if it has expired, <a href="/login">get a new one</a>.</p>
+    <p class="small">your credits, calls, and calling profile belong to the account you sign in with. an account you paid for before sign-in existed is linked by its email.</p>
   </Layout>
 );
 
@@ -100,6 +66,20 @@ export const ConsentPage: FC<{ client: string; query: string; error?: string }> 
         deny
       </button>
     </form>
+  </Layout>
+);
+
+export const SignInHandoffPage: FC<{ client: string; url: string }> = ({ client, url }) => (
+  <Layout title="finish connecting" page="consent" signedIn>
+    <h1>one more step</h1>
+    <p>
+      {client} is waiting for this sign-in on the computer it runs on, and this phone can't reach it. copy this link and send it to {client}: opening it on
+      that computer finishes connecting. the link works for an hour.
+    </p>
+    <CopyBlock id="sign-in-link" text={url} label="[ copy link for your agent ]" rows={4} />
+    <p>
+      if {client} runs on this phone, <a href={url}>continue here</a>.
+    </p>
   </Layout>
 );
 
@@ -449,8 +429,8 @@ export const CallPage: FC<{ call: CallView; recordings: CallRecordings; agentPro
 );
 
 export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: string; apiKey: string | null; numbers?: NumberView[] }> = ({ signedIn, installPrompt, origin, apiKey, numbers }) => (
-  <Layout title="MCP server for phone calls" page="mcp" signedIn={signedIn}>
-    <h1>call4me: the MCP server that makes phone calls</h1>
+  <Layout title="install mcp" page="mcp" signedIn={signedIn}>
+    <h1>install the call4me mcp</h1>
     {apiKey ? (
       <p>
         your server URL is <code class="server-url">{mcpUrl(origin, apiKey)}</code>. it carries your key, so your agent needs no sign-in. the easiest way is to paste this prompt into your agent:

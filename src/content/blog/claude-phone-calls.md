@@ -4,7 +4,6 @@ seoTitle: "Can Claude make phone calls? Connector setup"
 subtitle: Claude on the web, in Claude Desktop and in the mobile apps can place phone calls once you add a calling MCP server as a custom connector. Here are the steps from Anthropic's docs, the plan limits, and a first prompt that checks the connection before anything dials.
 description: "Yes, Claude can make phone calls. Add call4me as a custom connector, sign in, turn it on in a chat, and give Claude a bounded call brief."
 date: 2026-10-13
-updated: 2026-10-27
 tags: claude, mcp, custom connector, ai phone assistant
 authors: nick
 imageAlt: Claude adds call4me as a custom connector, places a phone call, and reports the outcome in the chat

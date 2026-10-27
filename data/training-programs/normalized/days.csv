@@ -1,0 +1,106 @@
+meso_key,meso_name,week_index,day_position,day_label,bodyweight,unit,status,finished_at
+3t9nt69leo5p,3x per week upper,0,0,Monday,151,lb,partial,2026-10-07T07:31:07.475Z
+3t9nt69leo5p,3x per week upper,0,1,Wednesday,151,lb,partial,2026-10-08T17:33:47.790Z
+3t9nt69leo5p,3x per week upper,0,2,Friday,151,lb,complete,2026-10-11T23:49:10.759Z
+3t9nt69leo5p,3x per week upper,1,0,Monday,151,lb,partial,2026-10-13T16:31:31.879Z
+3t9nt69leo5p,3x per week upper,1,1,Wednesday,151,lb,partial,2026-10-16T15:12:09.709Z
+3t9nt69leo5p,3x per week upper,1,2,Friday,151,lb,partial,2026-10-17T22:28:02.932Z
+3t9nt69leo5p,3x per week upper,2,0,Monday,151,lb,started,
+3t9nt69leo5p,3x per week upper,2,1,Wednesday,151,lb,ready,
+3t9nt69leo5p,3x per week upper,2,2,Friday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,3,0,Monday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,3,1,Wednesday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,3,2,Friday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,4,0,Monday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,4,1,Wednesday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,4,2,Friday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,5,0,Monday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,5,1,Wednesday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,5,2,Friday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,6,0,Monday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,6,1,Wednesday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,6,2,Friday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,7,0,Monday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,7,1,Wednesday,151,lb,pending,
+3t9nt69leo5p,3x per week upper,7,2,Friday,151,lb,pending,
+n4y37ki1earf,8-week upper,0,0,Monday,156.1,lb,complete,2026-07-25T19:09:05.598Z
+n4y37ki1earf,8-week upper,0,1,Tuesday,156.1,lb,complete,2026-07-29T16:00:00.341Z
+n4y37ki1earf,8-week upper,0,2,Thursday,156.1,lb,complete,2026-08-01T17:16:32.572Z
+n4y37ki1earf,8-week upper,0,3,Saturday,156.1,lb,complete,2026-08-07T07:26:44.435Z
+n4y37ki1earf,8-week upper,1,0,Monday,156.1,lb,complete,2026-08-10T06:33:20.548Z
+n4y37ki1earf,8-week upper,1,1,Tuesday,156.1,lb,complete,2026-08-16T05:55:07.764Z
+n4y37ki1earf,8-week upper,1,2,Thursday,156.1,lb,complete,2026-08-16T06:15:17.574Z
+n4y37ki1earf,8-week upper,1,3,Saturday,156.1,lb,complete,2026-08-19T16:22:29.508Z
+n4y37ki1earf,8-week upper,2,0,Monday,156.1,lb,complete,2026-08-24T14:41:50.620Z
+n4y37ki1earf,8-week upper,2,1,Tuesday,156.1,lb,complete,2026-08-25T06:42:57.763Z
+n4y37ki1earf,8-week upper,2,2,Thursday,156.1,lb,complete,2026-08-29T06:48:48.485Z
+n4y37ki1earf,8-week upper,2,3,Saturday,156.1,lb,complete,2026-08-30T19:10:13.751Z
+n4y37ki1earf,8-week upper,3,0,Monday,156.1,lb,complete,2026-09-01T16:55:29.044Z
+n4y37ki1earf,8-week upper,3,1,Tuesday,156.1,lb,complete,2026-09-03T06:04:13.877Z
+n4y37ki1earf,8-week upper,3,2,Thursday,156.1,lb,complete,2026-09-05T19:38:43.645Z
+n4y37ki1earf,8-week upper,3,3,Saturday,156.1,lb,partial,2026-09-06T16:07:44.417Z
+n4y37ki1earf,8-week upper,4,0,Monday,156.1,lb,complete,2026-09-08T05:38:52.762Z
+n4y37ki1earf,8-week upper,4,1,Tuesday,156.1,lb,partial,2026-09-09T06:10:38.285Z
+n4y37ki1earf,8-week upper,4,2,Thursday,156.1,lb,complete,2026-09-11T05:45:56.461Z
+n4y37ki1earf,8-week upper,4,3,Saturday,156.1,lb,partial,2026-09-14T07:03:07.144Z
+n4y37ki1earf,8-week upper,5,0,Monday,156.1,lb,complete,2026-09-15T05:39:14.818Z
+n4y37ki1earf,8-week upper,5,1,Tuesday,156.1,lb,partial,2026-09-17T05:41:12.210Z
+n4y37ki1earf,8-week upper,5,2,Thursday,156.1,lb,partial,2026-09-19T18:00:48.767Z
+n4y37ki1earf,8-week upper,5,3,Saturday,156.1,lb,complete,2026-09-19T20:53:53.232Z
+n4y37ki1earf,8-week upper,6,0,Monday,156.1,lb,complete,2026-09-22T09:27:32.499Z
+n4y37ki1earf,8-week upper,6,1,Tuesday,156.1,lb,partial,2026-09-23T06:47:17.501Z
+n4y37ki1earf,8-week upper,6,2,Thursday,156.1,lb,partial,2026-09-25T17:18:16.963Z
+n4y37ki1earf,8-week upper,6,3,Saturday,156.1,lb,complete,2026-09-27T20:20:49.513Z
+n4y37ki1earf,8-week upper,7,0,Monday,156.1,lb,complete,2026-09-29T06:07:50.709Z
+n4y37ki1earf,8-week upper,7,1,Tuesday,156.1,lb,partial,2026-09-30T15:48:49.260Z
+n4y37ki1earf,8-week upper,7,2,Thursday,156.1,lb,complete,2026-10-04T18:42:20.017Z
+n4y37ki1earf,8-week upper,7,3,Saturday,156.1,lb,complete,2026-10-04T19:21:14.886Z
+zi177rcvbfw9,MESO 3,0,0,Monday,152,lb,complete,2026-05-25T23:49:47.544Z
+zi177rcvbfw9,MESO 3,0,1,Wednesday,152,lb,complete,2026-05-28T23:15:42.477Z
+zi177rcvbfw9,MESO 3,0,2,Friday,152,lb,complete,2026-05-30T20:19:33.790Z
+zi177rcvbfw9,MESO 3,1,0,Monday,152,lb,complete,2026-06-04T15:32:57.196Z
+zi177rcvbfw9,MESO 3,1,1,Wednesday,152,lb,complete,2026-06-06T20:41:55.108Z
+zi177rcvbfw9,MESO 3,1,2,Friday,152,lb,complete,2026-06-09T15:50:09.905Z
+zi177rcvbfw9,MESO 3,2,0,Monday,152,lb,complete,2026-06-18T13:50:18.715Z
+zi177rcvbfw9,MESO 3,2,1,Wednesday,152,lb,complete,2026-06-20T17:08:52.996Z
+zi177rcvbfw9,MESO 3,2,2,Friday,152,lb,complete,2026-06-21T20:19:05.290Z
+zi177rcvbfw9,MESO 3,3,0,Monday,152,lb,complete,2026-06-27T17:38:19.630Z
+zi177rcvbfw9,MESO 3,3,1,Wednesday,152,lb,complete,2026-06-27T19:23:59.426Z
+zi177rcvbfw9,MESO 3,3,2,Friday,152,lb,complete,2026-07-01T15:49:31.943Z
+zi177rcvbfw9,MESO 3,4,0,Monday,152,lb,complete,2026-07-03T08:14:34.114Z
+zi177rcvbfw9,MESO 3,4,1,Wednesday,152,lb,complete,2026-07-05T18:12:07.060Z
+zi177rcvbfw9,MESO 3,4,2,Friday,152,lb,complete,2026-07-09T16:06:18.498Z
+zi177rcvbfw9,MESO 3,5,0,Monday,152,lb,complete,2026-07-10T06:52:30.041Z
+zi177rcvbfw9,MESO 3,5,1,Wednesday,152,lb,complete,2026-07-12T05:37:10.411Z
+zi177rcvbfw9,MESO 3,5,2,Friday,152,lb,complete,2026-07-14T15:44:10.788Z
+ka0fwu73ilpn,Meso 2,0,0,Monday,150,lb,complete,2026-04-02T15:55:27.027Z
+ka0fwu73ilpn,Meso 2,0,1,Tuesday,150,lb,complete,2026-04-05T15:32:33.946Z
+ka0fwu73ilpn,Meso 2,0,2,Thursday,150,lb,complete,2026-04-07T14:25:57.756Z
+ka0fwu73ilpn,Meso 2,0,3,Saturday,150,lb,complete,2026-04-10T07:42:16.100Z
+ka0fwu73ilpn,Meso 2,1,0,Monday,150,lb,complete,2026-04-12T16:44:53.105Z
+ka0fwu73ilpn,Meso 2,1,1,Tuesday,150,lb,complete,2026-04-18T13:51:01.313Z
+ka0fwu73ilpn,Meso 2,1,2,Thursday,150,lb,complete,2026-04-21T01:43:43.928Z
+ka0fwu73ilpn,Meso 2,1,3,Saturday,150,lb,complete,2026-04-23T12:48:29.136Z
+ka0fwu73ilpn,Meso 2,2,0,Monday,150,lb,complete,2026-04-26T20:59:15.094Z
+ka0fwu73ilpn,Meso 2,2,1,Tuesday,150,lb,complete,2026-05-05T09:26:40.790Z
+ka0fwu73ilpn,Meso 2,2,2,Thursday,150,lb,complete,2026-05-06T02:55:33.987Z
+ka0fwu73ilpn,Meso 2,2,3,Saturday,150,lb,complete,2026-05-09T21:37:03.649Z
+ka0fwu73ilpn,Meso 2,3,0,Monday,150,lb,complete,2026-05-11T16:06:40.468Z
+ka0fwu73ilpn,Meso 2,3,1,Tuesday,150,lb,complete,2026-05-18T15:06:46.097Z
+ka0fwu73ilpn,Meso 2,3,2,Thursday,150,lb,complete,2026-05-22T00:49:37.113Z
+ka0fwu73ilpn,Meso 2,3,3,Saturday,150,lb,complete,2026-05-23T04:23:21.471Z
+qosfjaynaoe9,First meso,0,0,Monday,148,lb,complete,2026-02-14T18:33:18.142Z
+qosfjaynaoe9,First meso,0,1,Wednesday,148,lb,complete,2026-02-17T14:29:13.348Z
+qosfjaynaoe9,First meso,0,2,Friday,148,lb,complete,2026-02-20T06:24:15.841Z
+qosfjaynaoe9,First meso,1,0,Monday,148,lb,complete,2026-02-23T15:56:56.429Z
+qosfjaynaoe9,First meso,1,1,Wednesday,148,lb,complete,2026-03-01T21:13:30.608Z
+qosfjaynaoe9,First meso,1,2,Friday,148,lb,complete,2026-03-02T14:08:37.100Z
+qosfjaynaoe9,First meso,2,0,Monday,148,lb,complete,2026-03-05T15:49:06.834Z
+qosfjaynaoe9,First meso,2,1,Wednesday,148,lb,complete,2026-03-09T13:26:54.086Z
+qosfjaynaoe9,First meso,2,2,Friday,148,lb,complete,2026-03-09T15:21:49.537Z
+qosfjaynaoe9,First meso,3,0,Monday,148,lb,complete,2026-03-13T07:34:51.245Z
+qosfjaynaoe9,First meso,3,1,Wednesday,148,lb,complete,2026-03-18T14:40:06.047Z
+qosfjaynaoe9,First meso,3,2,Friday,148,lb,complete,2026-03-19T16:01:07.838Z
+qosfjaynaoe9,First meso,4,0,Monday,148,lb,complete,2026-03-21T18:59:53.091Z
+qosfjaynaoe9,First meso,4,1,Wednesday,148,lb,complete,2026-03-27T08:01:08.161Z
+qosfjaynaoe9,First meso,4,2,Friday,148,lb,complete,2026-03-30T14:11:31.229Z

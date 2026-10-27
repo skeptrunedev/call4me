@@ -122,7 +122,7 @@ export function termsPrompt(origin: string, key: string | null): string {
 
 ${connect(origin, key)}
 
-Call call4me_get_balance and tell me my balance, the price per minute, about how many minutes that is, and my monthly reload if I have one. Then explain in a few lines: a call holds its maximum cost before it dials and settles when it ends; billing starts when a person or automated system answers and includes phone menus and conversation at the full rate, rounded up to the minute; whole minutes on hold cost half, and a call still on hold or mid-conversation at its time limit keeps going while the balance covers it; unanswered, busy and failed calls are free; credits don't expire; the monthly reload can be stopped anytime at ${origin}/account and the credits already loaded stay.`;
+Call call4me_get_balance and tell me my balance, the price per minute, about how many minutes that is, and my monthly reload if I have one. Then explain in a few lines: a call holds its maximum cost before it dials and settles when it ends; billing starts when a person or automated system answers and includes phone menus and conversation at the full rate, rounded up to the minute; whole minutes on hold cost half, and a call still on hold at its time limit keeps waiting while the balance covers it; unanswered, busy and failed calls are free; credits don't expire; the monthly reload can be stopped anytime at ${origin}/account and the credits already loaded stay.`;
 }
 
 /** Support: work out what went wrong, then hand off to a person with the details. */
@@ -155,19 +155,6 @@ export function aiCallAssistantPrompt(origin: string, key: string | null): strin
 ${connect(origin, key)}
 
 1. Ask me what I want done and where (book or move an appointment, a reservation, a question for a business, waiting on hold for customer service).
-2. Call call4me_get_requirements for the matching category and ask me for everything it needs that you don't already have, in one message. Find the business's number (web search if needed) and check it's the right location.
-3. If I want to join when a person picks up or just listen in, pass connect_when or listen_in, and tell me first which call4me number will ring me.
-4. Place the call with call4me_place_call, show me the calling_number it returns, then keep calling call4me_get_call with wait_seconds until it finishes. Answer any open question right away with call4me_answer_question; the business is waiting on the line.
-5. Tell me the result in one or two lines.`;
-}
-
-/** A task page (content/tasks.ts): set up, then make that kind of call. */
-export function taskPrompt(origin: string, key: string | null, path: string, ask: string): string {
-  return `I read ${origin}${path}. Make that phone call for me with call4me.
-
-${connect(origin, key)}
-
-1. ${ask}
 2. Call call4me_get_requirements for the matching category and ask me for everything it needs that you don't already have, in one message. Find the business's number (web search if needed) and check it's the right location.
 3. If I want to join when a person picks up or just listen in, pass connect_when or listen_in, and tell me first which call4me number will ring me.
 4. Place the call with call4me_place_call, show me the calling_number it returns, then keep calling call4me_get_call with wait_seconds until it finishes. Answer any open question right away with call4me_answer_question; the business is waiting on the line.

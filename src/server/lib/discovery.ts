@@ -40,13 +40,6 @@ export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: stri
   { page: 'home', changefreq: 'weekly', priority: '1.0' },
   { page: 'examples', changefreq: 'monthly', priority: '0.9' },
   { page: 'aiCallAssistant', changefreq: 'monthly', priority: '0.9' },
-  { page: 'holdForMe', changefreq: 'monthly', priority: '0.8' },
-  { page: 'doctorAppointment', changefreq: 'monthly', priority: '0.8' },
-  { page: 'cancelSubscription', changefreq: 'monthly', priority: '0.8' },
-  { page: 'restaurantReservation', changefreq: 'monthly', priority: '0.8' },
-  { page: 'customerService', changefreq: 'monthly', priority: '0.8' },
-  { page: 'negotiateBills', changefreq: 'monthly', priority: '0.8' },
-  { page: 'disputeCharge', changefreq: 'monthly', priority: '0.8' },
   { page: 'mcp', changefreq: 'monthly', priority: '0.9' },
   { page: 'companies', changefreq: 'weekly', priority: '0.8' },
   { page: 'holdTimes', changefreq: 'weekly', priority: '0.8' },
@@ -111,7 +104,6 @@ export function llmsTxt(site: string, pricePerMinuteCents: number, posts: PostEn
     `- [Agent Skills index](${site}/.well-known/agent-skills/index.json): call4me's own skill, how an agent sets up and places calls (Agent Skills Discovery v0.2.0)`,
     `- [API catalog](${site}/.well-known/api-catalog): RFC 9727 linkset of the machine interfaces`,
     `- [A2A agent card](${site}/.well-known/agent-card.json): what kinds of calls call4me makes and what each needs before dialing (JSON-RPC at ${site}/a2a)`,
-    `- [Calls over x402](${site}/api/x402/calls): POST a call (to, business, goal, category, details, on_behalf_of, max_minutes) and pay the 402 in USDC on Base, no account needed; it returns the call id and an API key to follow it at GET ${site}/api/calls/{call_id}. Unused minutes stay as credits on the paying wallet's account`,
     `- [Credits over x402](${site}/api): GET ${site}/api answers 402 with a USDC price on Base; pay it with a call4me key or OAuth token in the Authorization header and the credits land on that account (?amount=<dollars>, 10 to 500)`,
     `- [auth.md](${site}/auth.md): how an agent registers and signs in (OAuth protected resource metadata at ${site}/.well-known/oauth-protected-resource)`,
     '',
@@ -122,7 +114,7 @@ export function llmsTxt(site: string, pricePerMinuteCents: number, posts: PostEn
     `- [AI call assistant](${site}/ai-call-assistant): what the AI phone agent does on a call, listening in and taking over, voices, the free US number, pricing, and how to start`,
     `- [Examples](${site}/examples): real call recordings with edited excerpts, outcomes, and transcripts`,
     `- [Customer service numbers](${site}/companies): customer service phone numbers for airlines, banks, telecom, insurance and subscriptions, each with a real recorded call, the phone tree, and how long it took to reach a person`,
-    `- [Customer service hold times by company](${site}${HOLD_PATH}): time to a live person at 74 companies, measured on real recorded calls and ranked, with the transcript line behind each time. Download the dataset as [CSV](${site}${HOLD_DATA_PATH}.csv) or [JSON](${site}${HOLD_DATA_PATH}.json).`,
+    `- [Customer service hold times by company](${site}${HOLD_PATH}): time to a live person at 42 companies, measured on real recorded calls and ranked, with the transcript line behind each time. Download the dataset as [CSV](${site}${HOLD_DATA_PATH}.csv) or [JSON](${site}${HOLD_DATA_PATH}.json).`,
     `- [Students](${site}/students): free call4me credits for students, approved by hand`,
     `- [Superintelligence Calling Index](${site}/superintelligence-calling-index): personal superintelligence phone calling tools, dated evidence and recordings. Download the evidence dataset as [CSV](${site}/static/data/superintelligence-calling-index.csv) or [JSON](${site}/static/data/superintelligence-calling-index.json).`,
     `- [Voices](${site}/voices): a phone-quality sample of each caller voice, and how to pick one`,
@@ -244,24 +236,9 @@ export function agentAuth(site: string) {
 }
 
 /**
- * RFC 9728 protected resource metadata for the MCP server, the document the auth plugin used to
- * serve at /.well-known/oauth-protected-resource/mcp, field for field. It is fixed, but the plugin
- * built it behind its own init (several D1 calls), and it is the call every MCP client makes first:
- * it was the request that hung when that init stalled.
- */
-export function mcpProtectedResource(site: string) {
-  return {
-    resource: `${site}/mcp`,
-    authorization_servers: [`${site}/api/auth`],
-    bearer_methods_supported: ['header'],
-    dpop_signing_alg_values_supported: ['EdDSA', 'ES256', 'ES512', 'PS256', 'RS256'],
-    scopes_supported: ['calls'],
-  };
-}
-
-/**
  * RFC 9728 protected resource metadata for the site itself: GET /api takes the same OAuth tokens
- * as the MCP server.
+ * as the MCP server. The MCP endpoint's own document is served by the auth plugin at
+ * /.well-known/oauth-protected-resource/mcp.
  */
 export function siteProtectedResource(site: string) {
   return {
@@ -276,8 +253,8 @@ export function siteProtectedResource(site: string) {
 }
 
 /**
- * RFC 9728 protected resource metadata for an app directory's MCP server (DIRECTORY_SERVERS),
- * mirroring the /mcp document for the other resources.
+ * RFC 9728 protected resource metadata for an app directory's MCP server (DIRECTORY_SERVERS). The
+ * auth plugin serves only the /mcp document, so this one mirrors it for the other resources.
  */
 export function directoryMcpProtectedResource(site: string, server: { path: string; host: string }) {
   return {
