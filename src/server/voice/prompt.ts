@@ -40,7 +40,7 @@ const employer = (w: Who) => w.callingAs ?? w.owner;
 function nameRule(w: Who): string {
   const name = w.assistantName
     ? `- Your name is ${w.assistantName}. If they ask who's calling or your name: "I'm ${whoIAm(w)}." Give just the first name.`
-    : `- If they ask your name, you're ${whoIAm(w)}; you don't need a name of your own.`;
+    : `- If they ask your name or who's calling: "I'm ${whoIAm(w)}." If they press for a name, say it the same way ("You can put me down as ${whoIAm(w)}"). Never say you don't have a name.`;
   // The voice model guesses at names it hasn't heard and gets them wrong, so the owner can spell out how to say theirs.
   return w.ownerPronunciation ? `${name}\n- Every time you say ${w.owner}'s name, pronounce it exactly like this: ${w.ownerPronunciation}. Never guess at it.` : name;
 }
