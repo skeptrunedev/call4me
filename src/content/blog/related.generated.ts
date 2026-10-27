@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "c36b86c737f050e0a5136699c485016c9de23a52a2707a46c9e0b3d768d6e1f2"
+  "sourceHash": "11f7a3c750367fbb906cc97bc6ef55643357e96f3b2adec0f19fae3abb271558"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -252,6 +252,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "pottery-barn-customer-service",
       "similarity": 0.657206
+    },
+    {
+      "slug": "suitsupply-customer-service",
+      "similarity": 0.6432
     }
   ],
   "amazon-pharmacy-phone-number": [
@@ -389,12 +393,20 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.712725
     },
     {
+      "slug": "la-mar-san-francisco-reservations",
+      "similarity": 0.706375
+    },
+    {
       "slug": "sabai-eugene-reservations",
       "similarity": 0.704095
     },
     {
       "slug": "pin-on-grand-reservations",
-      "similarity": 0.701475
+      "similarity": 0.701474
+    },
+    {
+      "slug": "equal-parts-sf-reservations",
+      "similarity": 0.700434
     },
     {
       "slug": "ai-personal-assistant-appointment-booking",
@@ -407,10 +419,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
       "similarity": 0.671669
-    },
-    {
-      "slug": "private-dining-room-cost",
-      "similarity": 0.65722
     }
   ],
   "book-haircut-appointment": [
@@ -1034,6 +1042,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "macys-bow-tie-stock-check",
       "similarity": 0.6512
+    },
+    {
+      "slug": "suitsupply-customer-service",
+      "similarity": 0.620825
     }
   ],
   "customer-story-rick-dinner-reservation": [
@@ -1046,6 +1058,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.67472
     },
     {
+      "slug": "la-mar-san-francisco-reservations",
+      "similarity": 0.672616
+    },
+    {
       "slug": "private-dining-room-cost",
       "similarity": 0.671405
     },
@@ -1056,6 +1072,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "lai-wah-heen-private-dining",
       "similarity": 0.66815
+    },
+    {
+      "slug": "equal-parts-sf-reservations",
+      "similarity": 0.668038
     },
     {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
@@ -1138,6 +1158,36 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "dog-teeth-cleaning-cost",
       "similarity": 0.625724
+    }
+  ],
+  "equal-parts-sf-reservations": [
+    {
+      "slug": "la-mar-san-francisco-reservations",
+      "similarity": 0.860399
+    },
+    {
+      "slug": "sabai-eugene-reservations",
+      "similarity": 0.742256
+    },
+    {
+      "slug": "pin-on-grand-reservations",
+      "similarity": 0.709226
+    },
+    {
+      "slug": "book-dinner-reservation-by-phone",
+      "similarity": 0.700434
+    },
+    {
+      "slug": "customer-story-rick-dinner-reservation",
+      "similarity": 0.668038
+    },
+    {
+      "slug": "private-dining-room-cost",
+      "similarity": 0.646361
+    },
+    {
+      "slug": "lai-wah-heen-private-dining",
+      "similarity": 0.636236
     }
   ],
   "etihad-customer-service": [
@@ -1224,6 +1274,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.723351
     },
     {
+      "slug": "suitsupply-customer-service",
+      "similarity": 0.705448
+    },
+    {
       "slug": "directv-customer-service",
       "similarity": 0.69159
     },
@@ -1246,10 +1300,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "cancel-crunch",
       "similarity": 0.643524
-    },
-    {
-      "slug": "cancel-hellofresh",
-      "similarity": 0.638181
     }
   ],
   "fedex-customer-service-number": [
@@ -1315,6 +1365,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "aaa-insurance-customer-service",
       "similarity": 0.664687
+    },
+    {
+      "slug": "metlife-pet-insurance-phone-number",
+      "similarity": 0.643827
     },
     {
       "slug": "unitedhealthcare-phone-number",
@@ -1464,7 +1518,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-connectors-mcp-phone-calls",
-      "similarity": 0.795628
+      "similarity": 0.795629
     },
     {
       "slug": "grok-bot-templates",
@@ -1506,7 +1560,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-bot-vs-meta-muse",
-      "similarity": 0.736963
+      "similarity": 0.736964
     },
     {
       "slug": "instinct-ai-phone-calls",
@@ -1540,7 +1594,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-bot-templates",
-      "similarity": 0.736963
+      "similarity": 0.736964
     },
     {
       "slug": "meta-muse-first-task",
@@ -1570,7 +1624,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-bot-template-troubleshooting",
-      "similarity": 0.795628
+      "similarity": 0.795629
     },
     {
       "slug": "opencode-phone-calls",
@@ -1647,8 +1701,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.694694
     },
     {
+      "slug": "suitsupply-customer-service",
+      "similarity": 0.678201
+    },
+    {
       "slug": "walmart-customer-service-number",
       "similarity": 0.67472
+    },
+    {
+      "slug": "vivint-customer-service-number",
+      "similarity": 0.663956
     },
     {
       "slug": "costco-customer-service",
@@ -1808,6 +1870,36 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "junk-removal-cost": [],
+  "la-mar-san-francisco-reservations": [
+    {
+      "slug": "equal-parts-sf-reservations",
+      "similarity": 0.860399
+    },
+    {
+      "slug": "sabai-eugene-reservations",
+      "similarity": 0.731895
+    },
+    {
+      "slug": "pin-on-grand-reservations",
+      "similarity": 0.714701
+    },
+    {
+      "slug": "book-dinner-reservation-by-phone",
+      "similarity": 0.706375
+    },
+    {
+      "slug": "customer-story-rick-dinner-reservation",
+      "similarity": 0.672616
+    },
+    {
+      "slug": "private-dining-room-cost",
+      "similarity": 0.660478
+    },
+    {
+      "slug": "lai-wah-heen-private-dining",
+      "similarity": 0.655436
+    }
+  ],
   "lai-wah-heen-private-dining": [
     {
       "slug": "private-dining-room-cost",
@@ -1826,8 +1918,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.66815
     },
     {
+      "slug": "la-mar-san-francisco-reservations",
+      "similarity": 0.655436
+    },
+    {
       "slug": "sabai-eugene-reservations",
       "similarity": 0.647034
+    },
+    {
+      "slug": "equal-parts-sf-reservations",
+      "similarity": 0.636236
     }
   ],
   "langchain-mcp-phone-calls": [
@@ -1876,6 +1976,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "macys-bow-tie-stock-check": [
+    {
+      "slug": "suitsupply-customer-service",
+      "similarity": 0.665923
+    },
     {
       "slug": "customer-story-joe-dress-shoes",
       "similarity": 0.6512
@@ -2009,6 +2113,20 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "muse-code-mcp-phone-calls",
       "similarity": 0.630604
+    }
+  ],
+  "metlife-pet-insurance-phone-number": [
+    {
+      "slug": "geico-customer-service",
+      "similarity": 0.643827
+    },
+    {
+      "slug": "progressive-customer-service",
+      "similarity": 0.615147
+    },
+    {
+      "slug": "unitedhealthcare-phone-number",
+      "similarity": 0.615136
     }
   ],
   "muse-code-mcp-phone-calls": [
@@ -2226,6 +2344,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.794574
     }
   ],
+  "paradox-hotel-vancouver": [
+    {
+      "slug": "ritz-carlton-bachelor-gulch-reservations",
+      "similarity": 0.648404
+    }
+  ],
   "paypal-customer-service-number": [
     {
       "slug": "venmo-customer-service-number",
@@ -2240,6 +2364,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.603805
     }
   ],
+  "peloton-customer-service-number": [],
   "perplexity-phone-calls": [
     {
       "slug": "claude-phone-calls",
@@ -2314,8 +2439,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.722478
     },
     {
+      "slug": "la-mar-san-francisco-reservations",
+      "similarity": 0.714701
+    },
+    {
+      "slug": "equal-parts-sf-reservations",
+      "similarity": 0.709226
+    },
+    {
       "slug": "book-dinner-reservation-by-phone",
-      "similarity": 0.701475
+      "similarity": 0.701474
     },
     {
       "slug": "private-dining-room-cost",
@@ -2340,12 +2473,20 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.696719
     },
     {
+      "slug": "suitsupply-customer-service",
+      "similarity": 0.668785
+    },
+    {
       "slug": "amazon-customer-service-number",
       "similarity": 0.657206
     },
     {
       "slug": "costco-customer-service",
       "similarity": 0.644421
+    },
+    {
+      "slug": "vivint-customer-service-number",
+      "similarity": 0.611875
     },
     {
       "slug": "fabletics-customer-service",
@@ -2388,8 +2529,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.671405
     },
     {
+      "slug": "la-mar-san-francisco-reservations",
+      "similarity": 0.660478
+    },
+    {
       "slug": "book-dinner-reservation-by-phone",
       "similarity": 0.65722
+    },
+    {
+      "slug": "equal-parts-sf-reservations",
+      "similarity": 0.646361
     },
     {
       "slug": "sabai-eugene-reservations",
@@ -2412,6 +2561,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "unitedhealthcare-phone-number",
       "similarity": 0.652878
+    },
+    {
+      "slug": "metlife-pet-insurance-phone-number",
+      "similarity": 0.615147
     }
   ],
   "reschedule-dentist-appointment": [
@@ -2458,6 +2611,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.614724
     }
   ],
+  "ritz-carlton-bachelor-gulch-reservations": [
+    {
+      "slug": "paradox-hotel-vancouver",
+      "similarity": 0.648404
+    }
+  ],
   "running-late-to-appointment": [
     {
       "slug": "reschedule-doctor-appointment",
@@ -2491,6 +2650,14 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "sabai-eugene-reservations": [
+    {
+      "slug": "equal-parts-sf-reservations",
+      "similarity": 0.742256
+    },
+    {
+      "slug": "la-mar-san-francisco-reservations",
+      "similarity": 0.731895
+    },
     {
       "slug": "book-dinner-reservation-by-phone",
       "similarity": 0.704095
@@ -2556,6 +2723,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.741059
     }
   ],
+  "simonmed-imaging-phone-number": [],
   "social-security-phone-number": [
     {
       "slug": "cash-app-customer-service-number",
@@ -2600,6 +2768,40 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "xfinity-customer-service-number",
       "similarity": 0.609473
+    }
+  ],
+  "suitsupply-customer-service": [
+    {
+      "slug": "fabletics-customer-service",
+      "similarity": 0.705448
+    },
+    {
+      "slug": "wayfair-customer-service",
+      "similarity": 0.687498
+    },
+    {
+      "slug": "home-depot-customer-service",
+      "similarity": 0.678201
+    },
+    {
+      "slug": "pottery-barn-customer-service",
+      "similarity": 0.668785
+    },
+    {
+      "slug": "macys-bow-tie-stock-check",
+      "similarity": 0.665923
+    },
+    {
+      "slug": "amazon-customer-service-number",
+      "similarity": 0.6432
+    },
+    {
+      "slug": "walmart-customer-service-number",
+      "similarity": 0.64123
+    },
+    {
+      "slug": "customer-story-joe-dress-shoes",
+      "similarity": 0.620825
     }
   ],
   "t-mobile-customer-service-number": [
@@ -2734,6 +2936,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "usaa-phone-number",
       "similarity": 0.620231
+    },
+    {
+      "slug": "metlife-pet-insurance-phone-number",
+      "similarity": 0.615136
     }
   ],
   "ups-contact-number": [
@@ -2823,7 +3029,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "wells-fargo-customer-service",
-      "similarity": 0.644662
+      "similarity": 0.644663
     },
     {
       "slug": "fifth-third-bank-customer-service",
@@ -2904,6 +3110,17 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.698975
     }
   ],
+  "vitalant-phone-number": [],
+  "vivint-customer-service-number": [
+    {
+      "slug": "home-depot-customer-service",
+      "similarity": 0.663956
+    },
+    {
+      "slug": "pottery-barn-customer-service",
+      "similarity": 0.611875
+    }
+  ],
   "walmart-customer-service-number": [
     {
       "slug": "amazon-customer-service-number",
@@ -2920,6 +3137,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "costco-customer-service",
       "similarity": 0.655079
+    },
+    {
+      "slug": "suitsupply-customer-service",
+      "similarity": 0.64123
     }
   ],
   "walmart-oil-change-prices": [
@@ -2946,6 +3167,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.694694
     },
     {
+      "slug": "suitsupply-customer-service",
+      "similarity": 0.687498
+    },
+    {
       "slug": "walmart-customer-service-number",
       "similarity": 0.662603
     },
@@ -2961,7 +3186,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "venmo-customer-service-number",
-      "similarity": 0.644662
+      "similarity": 0.644663
     },
     {
       "slug": "fifth-third-bank-customer-service",
