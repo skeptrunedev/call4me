@@ -69,6 +69,20 @@ export const ConsentPage: FC<{ client: string; query: string; error?: string }> 
   </Layout>
 );
 
+export const SignInHandoffPage: FC<{ client: string; url: string }> = ({ client, url }) => (
+  <Layout title="finish connecting" page="consent" signedIn>
+    <h1>one more step</h1>
+    <p>
+      {client} is waiting for this sign-in on the computer it runs on, and this phone can't reach it. copy this link and send it to {client}: opening it on
+      that computer finishes connecting. the link works for an hour.
+    </p>
+    <CopyBlock id="sign-in-link" text={url} label="[ copy link for your agent ]" rows={4} />
+    <p>
+      if {client} runs on this phone, <a href={url}>continue here</a>.
+    </p>
+  </Layout>
+);
+
 export const NewKeyPage: FC<{ apiKey: string; installPrompt: string }> = ({ apiKey, installPrompt }) => (
   <Layout title="new key" page="key" signedIn>
     <h1>your new key</h1>

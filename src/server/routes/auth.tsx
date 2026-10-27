@@ -1,8 +1,10 @@
 import { Hono } from 'hono';
-import { createAuth, withAuthCookies } from '../lib/auth';
+import { createAuth, isNativeRedirect, withAuthCookies } from '../lib/auth';
 import { field, origin, safeNext, type AppContext, type AppEnv } from '../lib/context';
 import { signInPrompt } from '../lib/prompts';
-import { ConsentPage, LoginPage } from '../views/account';
+import { ConsentPage, LoginPage, SignInHandoffPage } from '../views/account';
+
+const PHONE = /iPhone|iPad|iPod|Android/i;
 
 /** Sign-in with Google or X (better-auth), password sign-in for provisioned accounts, and the consent step of the MCP OAuth provider. */
 export const authRoutes = new Hono<AppEnv>();
@@ -85,7 +87,13 @@ authRoutes.post('/oauth/consent', async (c) => {
     }),
   );
   const body = (await res.json().catch(() => ({}))) as { url?: string; error?: string; error_description?: string; message?: string };
-  if (res.ok && body.url) return c.redirect(body.url, 303);
+  if (res.ok && body.url) {
+    // An agent listening on its own computer's localhost cannot be reached from a phone: show the
+    // link to send to it instead of a redirect that dead-ends in the phone's browser.
+    const client = await clientName(c, new URLSearchParams(query).get('client_id') ?? '');
+    if (accept && isNativeRedirect(body.url) && PHONE.test(c.req.header('user-agent') ?? '')) return c.html(<SignInHandoffPage client={client} url={body.url} />);
+    return c.redirect(body.url, 303);
+  }
   const message = [body.error, body.error_description ?? body.message].filter(Boolean).join(' ') || `status ${res.status}`;
   const params = new URLSearchParams(query);
   return c.html(<ConsentPage client={await clientName(c, params.get('client_id') ?? '')} query={query} error={`could not complete: ${message}. start again from your MCP client.`} />, 400);

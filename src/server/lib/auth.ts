@@ -45,7 +45,43 @@ export function createAuth(c: AppContext) {
   return auth;
 }
 
+/** A redirect only an app on the user's own device can receive (RFC 8252): loopback http or a private-use scheme. */
+export function isNativeRedirect(uri: string): boolean {
+  let url: URL;
+  try {
+    url = new URL(uri);
+  } catch {
+    return false;
+  }
+  if (url.protocol === 'https:') return false;
+  if (url.protocol !== 'http:') return true;
+  return ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
+}
+
+/**
+ * RFC 7591 defaults a registering client to a web application, and the provider holds web
+ * applications to https redirects. Most MCP clients and agents leave application_type out while
+ * listening on localhost for the sign-in, so they were refused at registration. A client whose
+ * every redirect is a native one registers as the native app it is.
+ */
+export function withNativeDefault(metadata: unknown): unknown {
+  if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) return metadata;
+  const client = metadata as { application_type?: unknown; redirect_uris?: unknown };
+  const uris = client.redirect_uris;
+  if (client.application_type !== undefined || !Array.isArray(uris) || uris.length === 0) return metadata;
+  if (!uris.every((uri) => typeof uri === 'string' && isNativeRedirect(uri))) return metadata;
+  return { ...client, application_type: 'native' };
+}
+
 export function mountAuth(app: Hono<AppEnv>) {
+  app.post('/api/auth/oauth2/register', async (c) => {
+    const metadata: unknown = await c.req.raw.clone().json().catch(() => null);
+    const registered = withNativeDefault(metadata);
+    if (registered === metadata) return createAuth(c).handler(c.req.raw);
+    const headers = new Headers(c.req.raw.headers);
+    headers.delete('content-length');
+    return createAuth(c).handler(new Request(c.req.url, { method: 'POST', headers, body: JSON.stringify(registered) }));
+  });
   app.on(['GET', 'POST'], '/api/auth/*', (c) => createAuth(c).handler(c.req.raw));
   // The provider serves RFC 9728 / RFC 8414 / OIDC discovery under /api/auth; clients look at the site root.
   app.on(

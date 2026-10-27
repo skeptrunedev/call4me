@@ -3,7 +3,7 @@ import { DatabaseSync, type SQLInputValue } from 'node:sqlite';
 
 /**
  * D1 for tests that hang on real SQL (partial unique indexes, status changes): every migration run
- * on an in-memory SQLite, behind the prepare/bind/first/all/run calls the services use. Seeded with
+ * on an in-memory SQLite, behind the prepare/bind/first/all/run calls the services and better-auth use. Seeded with
  * the accounts acct_alice and acct_bob.
  */
 export function d1(): D1Database {
@@ -13,8 +13,19 @@ export function d1(): D1Database {
   const statement = (sql: string, args: SQLInputValue[] = []) => ({
     bind: (...next: unknown[]) => statement(sql, next as SQLInputValue[]),
     first: async () => sqlite.prepare(sql).get(...args) ?? null,
-    all: async () => ({ results: sqlite.prepare(sql).all(...args) }),
+    all: async () => {
+      const prepared = sqlite.prepare(sql);
+      if (prepared.columns().length) return { results: prepared.all(...args), meta: {} };
+      const { changes, lastInsertRowid } = prepared.run(...args);
+      return { results: [], meta: { changes: Number(changes), last_row_id: Number(lastInsertRowid) } };
+    },
     run: async () => ({ meta: { changes: Number(sqlite.prepare(sql).run(...args).changes) } }),
   });
-  return { prepare: (sql: string) => statement(sql) } as unknown as D1Database;
+  // batch and exec complete the binding better-auth recognizes as D1.
+  type Statement = ReturnType<typeof statement>;
+  return {
+    prepare: (sql: string) => statement(sql),
+    batch: async (statements: Statement[]) => Promise.all(statements.map((s) => s.all())),
+    exec: async (sql: string) => sqlite.exec(sql),
+  } as unknown as D1Database;
 }

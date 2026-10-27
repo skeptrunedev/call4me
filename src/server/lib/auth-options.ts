@@ -54,6 +54,9 @@ export function authOptions(deps: AuthDeps) {
     rateLimit: { enabled: true, storage: 'database' },
     advanced: {
       cookiePrefix: COOKIE_PREFIX,
+      // Cloudflare sets this to the visitor's address and overwrites any copy the client sends. Without
+      // it every visitor shared one rate-limit bucket per path: three sign-ins every ten seconds for the whole site.
+      ipAddress: { ipAddressHeaders: ['cf-connecting-ip'] },
       // Migrations are applied by wrangler from migrations/; skip per-instance introspection.
       database: { validateSchema: false, generateId: 'uuid' },
     },
