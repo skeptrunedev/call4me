@@ -595,7 +595,7 @@ export const AboutPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
 export const PricingPage: FC<{ signedIn: boolean; pricePerMinuteCents: number }> = ({ signedIn, pricePerMinuteCents }) => {
   const extra = pricierDestinations();
   return (
-    <Layout title="pricing" page="pricing" signedIn={signedIn}>
+    <Layout title={`pricing: ${dollars(pricePerMinuteCents)} a minute`} page="pricing" signedIn={signedIn}>
       <h1>call4me pricing</h1>
       <p>
         calls cost <b>{dollars(pricePerMinuteCents)} a minute</b> from pickup, and half that on hold. there is no subscription and no per-seat fee: you load
