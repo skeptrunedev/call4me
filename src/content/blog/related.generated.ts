@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "8cede30ff8605d0442ce0bd27d8c2ec364dca5eb39aa4e18c96ff895899620a1"
+  "sourceHash": "3b16c82519159932d008d0ee996ac57b70609f50c25639026be6d41cc275d807"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -16,16 +16,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.718536
     },
     {
-      "slug": "progressive-customer-service",
-      "similarity": 0.715449
-    },
-    {
       "slug": "usaa-phone-number",
       "similarity": 0.699403
     },
     {
       "slug": "aaa-tow-reimbursement",
       "similarity": 0.695909
+    },
+    {
+      "slug": "progressive-customer-service",
+      "similarity": 0.692423
     },
     {
       "slug": "blue-shield-of-california-dental-phone-number",
@@ -50,12 +50,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.695909
     },
     {
-      "slug": "progressive-customer-service",
-      "similarity": 0.625588
-    },
-    {
       "slug": "allstate-customer-service-number",
       "similarity": 0.62304
+    },
+    {
+      "slug": "progressive-customer-service",
+      "similarity": 0.604503
     }
   ],
   "adderall-shortage": [],
@@ -299,16 +299,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.678039
     },
     {
-      "slug": "progressive-customer-service",
-      "similarity": 0.660873
-    },
-    {
       "slug": "usaa-phone-number",
       "similarity": 0.626398
     },
     {
       "slug": "aaa-tow-reimbursement",
       "similarity": 0.62304
+    },
+    {
+      "slug": "progressive-customer-service",
+      "similarity": 0.603013
     }
   ],
   "amazon-customer-service-number": [
@@ -354,7 +354,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "amazon-seller-distributor-calls": [
     {
       "slug": "claude-phone-calls",
-      "similarity": 0.702786
+      "similarity": 0.70753
     },
     {
       "slug": "claude-code-phone-calls",
@@ -419,6 +419,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "les-schwab-oil-change",
       "similarity": 0.622079
+    },
+    {
+      "slug": "costco-tire-appointment-cancel-refund",
+      "similarity": 0.613308
     }
   ],
   "aquasana-return-exception": [
@@ -541,10 +545,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.64593
     },
     {
-      "slug": "progressive-customer-service",
-      "similarity": 0.63429
-    },
-    {
       "slug": "unitedhealthcare-phone-number",
       "similarity": 0.623914
     },
@@ -555,6 +555,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "usaa-phone-number",
       "similarity": 0.623252
+    },
+    {
+      "slug": "metlife-pet-insurance-phone-number",
+      "similarity": 0.614812
     }
   ],
   "bonner-springs-ymca-swim-lessons": [
@@ -1052,6 +1056,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.752832
     },
     {
+      "slug": "claude-phone-calls",
+      "similarity": 0.739605
+    },
+    {
       "slug": "github-copilot-phone-calls",
       "similarity": 0.726648
     },
@@ -1074,16 +1082,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "openai-agents-sdk-phone-calls",
       "similarity": 0.688737
-    },
-    {
-      "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.684686
     }
   ],
   "chime-customer-service-number": [
     {
       "slug": "venmo-customer-service-number",
-      "similarity": 0.690258
+      "similarity": 0.690259
     },
     {
       "slug": "bank-of-america-customer-service",
@@ -1129,7 +1133,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.828316
+      "similarity": 0.828317
     },
     {
       "slug": "langchain-mcp-phone-calls",
@@ -1179,41 +1183,41 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "claude-phone-calls",
-      "similarity": 0.759642
+      "similarity": 0.765727
     }
   ],
   "claude-phone-calls": [
     {
-      "slug": "claude-code-phone-calls",
-      "similarity": 0.759642
-    },
-    {
       "slug": "perplexity-phone-calls",
-      "similarity": 0.745093
+      "similarity": 0.783965
     },
     {
-      "slug": "gemini-phone-calls",
-      "similarity": 0.734709
-    },
-    {
-      "slug": "schedule-phone-calls-claude-code-codex",
-      "similarity": 0.730084
-    },
-    {
-      "slug": "cursor-phone-calls",
-      "similarity": 0.715472
-    },
-    {
-      "slug": "github-copilot-phone-calls",
-      "similarity": 0.714883
-    },
-    {
-      "slug": "grok-connectors-mcp-phone-calls",
-      "similarity": 0.710176
+      "slug": "claude-code-phone-calls",
+      "similarity": 0.765727
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.707392
+      "similarity": 0.753519
+    },
+    {
+      "slug": "instinct-ai-phone-calls",
+      "similarity": 0.751609
+    },
+    {
+      "slug": "chatgpt-phone-calls",
+      "similarity": 0.739605
+    },
+    {
+      "slug": "schedule-phone-calls-claude-code-codex",
+      "similarity": 0.727201
+    },
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.717715
+    },
+    {
+      "slug": "twilio-mcp-phone-calls",
+      "similarity": 0.711255
     }
   ],
   "cline-phone-calls": [
@@ -1336,7 +1340,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "costco-customer-service": [
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.669985
+      "similarity": 0.669986
     },
     {
       "slug": "pottery-barn-customer-service",
@@ -1391,7 +1395,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.603842
     }
   ],
-  "costco-tire-appointment-cancel-refund": [],
+  "costco-tire-appointment-cancel-refund": [
+    {
+      "slug": "wheel-alignment-cost",
+      "similarity": 0.667456
+    },
+    {
+      "slug": "americas-tire-fremont",
+      "similarity": 0.613308
+    }
+  ],
   "cursor-phone-calls": [
     {
       "slug": "github-copilot-phone-calls",
@@ -1724,6 +1737,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "meta-muse-first-task",
       "similarity": 0.620497
+    },
+    {
+      "slug": "claude-phone-calls",
+      "similarity": 0.601127
     }
   ],
   "expedia-customer-service-number": [
@@ -1919,7 +1936,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "geico-customer-service": [
     {
       "slug": "progressive-customer-service",
-      "similarity": 0.713164
+      "similarity": 0.684251
     },
     {
       "slug": "aaa-insurance-customer-service",
@@ -1972,12 +1989,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.738946
     },
     {
-      "slug": "claude-phone-calls",
-      "similarity": 0.734709
-    },
-    {
       "slug": "claude-agent-sdk-phone-calls",
       "similarity": 0.734386
+    },
+    {
+      "slug": "claude-code-phone-calls",
+      "similarity": 0.733937
     }
   ],
   "github-copilot-phone-calls": [
@@ -2010,8 +2027,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.726648
     },
     {
-      "slug": "claude-phone-calls",
-      "similarity": 0.714883
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.712676
     }
   ],
   "global-blue-customer-service-number": [],
@@ -2600,6 +2617,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.752832
     },
     {
+      "slug": "claude-phone-calls",
+      "similarity": 0.751609
+    },
+    {
       "slug": "n8n-mcp-phone-calls",
       "similarity": 0.750946
     },
@@ -2622,10 +2643,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
       "similarity": 0.716794
-    },
-    {
-      "slug": "twilio-mcp-phone-calls",
-      "similarity": 0.706903
     }
   ],
   "irs-phone-number": [
@@ -2670,10 +2687,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "unitedhealthcare-phone-number",
       "similarity": 0.651915
-    },
-    {
-      "slug": "progressive-customer-service",
-      "similarity": 0.651298
     },
     {
       "slug": "usaa-phone-number",
@@ -2896,7 +2909,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.828316
+      "similarity": 0.828317
     },
     {
       "slug": "cline-phone-calls",
@@ -3016,7 +3029,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "progressive-customer-service",
-      "similarity": 0.615147
+      "similarity": 0.623648
     },
     {
       "slug": "blue-shield-of-california-dental-phone-number",
@@ -3394,16 +3407,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "peloton-customer-service-number": [],
   "perplexity-phone-calls": [
     {
+      "slug": "claude-phone-calls",
+      "similarity": 0.783965
+    },
+    {
       "slug": "meta-muse-ai-agent-phone-calls",
       "similarity": 0.763476
     },
     {
       "slug": "gemini-phone-calls",
       "similarity": 0.760057
-    },
-    {
-      "slug": "claude-phone-calls",
-      "similarity": 0.745093
     },
     {
       "slug": "openclaw-phone-calls",
@@ -3668,35 +3681,31 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "progressive-customer-service": [
     {
       "slug": "aaa-insurance-customer-service",
-      "similarity": 0.715449
+      "similarity": 0.692423
     },
     {
       "slug": "geico-customer-service",
-      "similarity": 0.713164
-    },
-    {
-      "slug": "unitedhealthcare-phone-number",
-      "similarity": 0.687744
-    },
-    {
-      "slug": "allstate-customer-service-number",
-      "similarity": 0.660873
-    },
-    {
-      "slug": "justworks-customer-service",
-      "similarity": 0.651298
-    },
-    {
-      "slug": "blue-shield-of-california-dental-phone-number",
-      "similarity": 0.63429
-    },
-    {
-      "slug": "aaa-tow-reimbursement",
-      "similarity": 0.625588
+      "similarity": 0.684251
     },
     {
       "slug": "metlife-pet-insurance-phone-number",
-      "similarity": 0.615147
+      "similarity": 0.623648
+    },
+    {
+      "slug": "unitedhealthcare-phone-number",
+      "similarity": 0.61321
+    },
+    {
+      "slug": "blue-shield-of-california-dental-phone-number",
+      "similarity": 0.607284
+    },
+    {
+      "slug": "aaa-tow-reimbursement",
+      "similarity": 0.604503
+    },
+    {
+      "slug": "allstate-customer-service-number",
+      "similarity": 0.603013
     }
   ],
   "reschedule-dentist-appointment": [
@@ -4296,10 +4305,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "united-change-flight": [],
   "unitedhealthcare-phone-number": [
     {
-      "slug": "progressive-customer-service",
-      "similarity": 0.687744
-    },
-    {
       "slug": "allstate-customer-service-number",
       "similarity": 0.678455
     },
@@ -4322,6 +4327,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "blue-shield-of-california-dental-phone-number",
       "similarity": 0.623914
+    },
+    {
+      "slug": "progressive-customer-service",
+      "similarity": 0.61321
     },
     {
       "slug": "metlife-pet-insurance-phone-number",
@@ -4420,7 +4429,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "venmo-customer-service-number": [
     {
       "slug": "chime-customer-service-number",
-      "similarity": 0.690258
+      "similarity": 0.690259
     },
     {
       "slug": "paypal-customer-service-number",
@@ -4591,7 +4600,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "costco-customer-service",
-      "similarity": 0.669985
+      "similarity": 0.669986
     },
     {
       "slug": "suitsupply-customer-service",
@@ -4742,6 +4751,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "les-schwab-oil-change",
       "similarity": 0.669422
+    },
+    {
+      "slug": "costco-tire-appointment-cancel-refund",
+      "similarity": 0.667456
     }
   ],
   "windstream-customer-service": [

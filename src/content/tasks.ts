@@ -7,7 +7,7 @@ import { HOLD_TIMES, holdSummary, type HoldTime } from './hold-times';
  * Every fact here is stated by the linked post, the example call, or the hold-time data, and
  * the price comes from the live per-minute rate. Keep each sentence true to its source.
  */
-export type TaskKey = 'holdForMe' | 'doctorAppointment' | 'cancelSubscription' | 'restaurantReservation' | 'customerService';
+export type TaskKey = 'holdForMe' | 'doctorAppointment' | 'cancelSubscription' | 'restaurantReservation' | 'customerService' | 'negotiateBills';
 
 export interface TaskPost {
   slug: string;
@@ -38,7 +38,7 @@ const examples = (...slugs: string[]) => slugs.map((slug) => {
   return example;
 });
 const holds = (...slugs: string[]) => slugs.map((slug) => {
-  const row = HOLD_TIMES.find((r) => r.slug === slug);
+  const row = HOLD_TIMES.find((r) => r.id === slug);
   if (!row) throw new Error(`task hold time ${slug} is missing`);
   return row;
 });
@@ -165,5 +165,30 @@ export const TASKS: Task[] = [
       { slug: 'priceline-customer-service', label: 'Priceline customer service', fact: 'saying we had no trip number, again and again, reached a live representative 25 minutes 9 seconds into the call.' },
     ],
     ask: 'Ask me which company to call, what I need from them, the account details they will ask for, and whether I want to join when a person picks up.',
+  },
+  {
+    key: 'negotiateBills',
+    title: 'An AI that calls to negotiate your bills',
+    answer: (perMinute) => [
+      `call4me is an AI that calls to negotiate your bills. ask your AI assistant (ChatGPT, Claude or Codex) to call your hospital, internet, TV or phone company, and call4me gets through the phone tree and the hold, asks for the discounts, promotions and payment plans they offer, and rings your phone when they want the account holder on the line. ${costs(perMinute)}`,
+      'on our recorded calls, the savings came from asking for specific things, not from haggling. Spectrum\'s retention team cut a call4me user\'s internet from $85 to $55 a month for a year. Advocate Health quoted a 50% discount for uninsured patients. and two of the three hospital billing offices we called said they don\'t settle balances.',
+    ],
+    how: [
+      'give it what the company will ask for: the account or guarantor number and the name on the account, and for a hospital bill, your household size and income if you want it to ask about financial assistance. then say what it may accept: a promotion under a price you set, an interest-free payment plan, or nothing until you decide.',
+      `most companies only change a bill for the account holder. Verizon, DIRECTV and Spectrum all said so on our calls. when they ask for you, ${joinWhenAnswered}`,
+      'name the reason instead of asking for a person. "a billing question. My bill is too high." got AT&T\'s voice system to a representative in 1 minute 59 seconds, and asking for a "representative" with no reason got us hung up on.',
+    ],
+    examples: examples('spectrum-retention'),
+    holdHeading: 'How long the billing lines took to reach a person',
+    holds: holds('cleveland-clinic', 'advocate-health', 'hca-florida-northside-hospital', 'how-to-lower-att-bill', 'how-to-lower-xfinity-bill', 'spectrum-retention-department'),
+    posts: [
+      { slug: 'how-to-negotiate-a-hospital-bill', label: 'How to negotiate a hospital bill', fact: 'we called Cleveland Clinic, Advocate Health and HCA Florida Northside. Advocate quoted 50% off for uninsured patients and HCA a 20% prompt-pay discount offered by email in the first 72 hours. asked about settling a balance after insurance, Cleveland Clinic said "that\'s going to be the payment plan" and Advocate said "we don\'t do any settlement options."' },
+      { slug: 'how-to-lower-spectrum-bill', label: 'How to lower a Spectrum bill', fact: 'saying "cancel my account," then "disconnect," reached Spectrum\'s retention team, and the call took a call4me user\'s internet bill from $85 a month to $55 a month for a year, with no contract.' },
+      { slug: 'how-to-lower-verizon-bill', label: 'How to lower a Verizon bill', fact: 'on our own family account, a live agent said switching 3 lines to Unlimited Welcome would take the bill from $219.08 to $170.58 a month, surcharges and taxes included.' },
+      { slug: 'how-to-lower-att-bill', label: 'How to lower an AT&T bill', fact: '"a billing question. My bill is too high." reached a representative 1 minute 59 seconds in, who described the "converged discount" for bundling internet and wireless and $5 off per line on four lines.' },
+      { slug: 'how-to-lower-xfinity-bill', label: 'How to lower an Xfinity bill', fact: 'a billing representative said new promotions come from the billing department, gave 500 Mbps promotions of $65, $70 and $75 as examples depending on area and term, and a $10 AutoPay and paperless discount.' },
+      { slug: 'how-to-lower-directv-bill', label: 'How to lower a DIRECTV bill', fact: 'a representative said there is no retention option in the phone menu: ask customer service or billing to speak with retention, and the account holder has to make the call.' },
+    ],
+    ask: 'Ask me which bill to call about, the account details they will ask for, what I would accept (a promotion under a price, a payment plan, financial assistance), and whether I want to join when they ask for the account holder.',
   },
 ];

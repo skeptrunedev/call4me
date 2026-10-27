@@ -194,7 +194,7 @@ call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) t
 
 One thing our caller did badly. When Advocate's representative asked for its name, it said "I'm his assistant. I don't have a name." That's true (it had no name set for this call) but it made the conversation awkward. You can give your call4me caller a first name to use. We kept the audio as it happened.
 
-Need to call your hospital about a bill? See [how to have your agent call customer service](/call-customer-service), or let it [wait on hold for you](/hold-for-me).
+Need to call your hospital about a bill? See [an AI that calls to negotiate your bills](/negotiate-bills), or let it [wait on hold for you](/hold-for-me).
 
 ## Have your agent make this call
 

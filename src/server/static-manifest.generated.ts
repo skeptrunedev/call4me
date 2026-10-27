@@ -55,6 +55,11 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
     "markdown": "/__pages/83c8be2160d0ee48.md",
     "tokens": 2058
   },
+  "/negotiate-bills": {
+    "html": "/__pages/71a04d205e1d6891.html",
+    "markdown": "/__pages/71a04d205e1d6891.md",
+    "tokens": 2141
+  },
   "/hold-times": {
     "html": "/__pages/0adb6fe5d87ff479.html",
     "markdown": "/__pages/0adb6fe5d87ff479.md",
@@ -193,7 +198,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-to-negotiate-a-hospital-bill": {
     "html": "/__pages/b88beca37c93cea2.html",
     "markdown": "/__pages/b88beca37c93cea2.md",
-    "tokens": 12245
+    "tokens": 12242
   },
   "/blog/phone-anxiety": {
     "html": "/__pages/613a99d49cf748b0.html",
@@ -518,7 +523,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/justworks-customer-service": {
     "html": "/__pages/ecea2dccd467201b.html",
     "markdown": "/__pages/ecea2dccd467201b.md",
-    "tokens": 7009
+    "tokens": 6844
   },
   "/blog/town-fair-tire-manchester-ct": {
     "html": "/__pages/d25e218c7665add4.html",
@@ -608,7 +613,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/progressive-customer-service": {
     "html": "/__pages/7ef6426a09eb45df.html",
     "markdown": "/__pages/7ef6426a09eb45df.md",
-    "tokens": 4778
+    "tokens": 4789
   },
   "/blog/airbnb-customer-service-number": {
     "html": "/__pages/e392dafb7481d910.html",
@@ -683,12 +688,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/chatgpt-phone-calls": {
     "html": "/__pages/82112ee792a1287d.html",
     "markdown": "/__pages/82112ee792a1287d.md",
-    "tokens": 4587
+    "tokens": 4592
   },
   "/blog/claude-phone-calls": {
     "html": "/__pages/2bca3a76156714dc.html",
     "markdown": "/__pages/2bca3a76156714dc.md",
-    "tokens": 4166
+    "tokens": 4207
   },
   "/blog/cursor-phone-calls": {
     "html": "/__pages/78808eaa7cd9eba5.html",
@@ -833,7 +838,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/everything-we-have-improved-since-launch": {
     "html": "/__pages/ee53e230a99841c0.html",
     "markdown": "/__pages/ee53e230a99841c0.md",
-    "tokens": 2505
+    "tokens": 2658
   },
   "/blog/delta-customer-service": {
     "html": "/__pages/61e1d8ba2e5289ea.html",
@@ -853,7 +858,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/aaa-insurance-customer-service": {
     "html": "/__pages/40f19e9468e5378f.html",
     "markdown": "/__pages/40f19e9468e5378f.md",
-    "tokens": 4210
+    "tokens": 4218
   },
   "/blog/directv-customer-service": {
     "html": "/__pages/3ae0ffa568610e73.html",
@@ -1073,7 +1078,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/instinct-ai-phone-calls": {
     "html": "/__pages/7d8b01a75a9d6b95.html",
     "markdown": "/__pages/7d8b01a75a9d6b95.md",
-    "tokens": 4009
+    "tokens": 4040
   },
   "/blog/claude-code-phone-calls": {
     "html": "/__pages/b4a4a35039232bdd.html",
@@ -1223,7 +1228,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/unitedhealthcare-phone-number": {
     "html": "/__pages/8f9029f0cf73d4f9.html",
     "markdown": "/__pages/8f9029f0cf73d4f9.md",
-    "tokens": 5111
+    "tokens": 5108
   },
   "/blog/need-dress-shoes-today": {
     "html": "/__pages/18c64c271fefb021.html",
@@ -1253,7 +1258,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/costco-tire-appointment-cancel-refund": {
     "html": "/__pages/ca5f5983d7127c65.html",
     "markdown": "/__pages/ca5f5983d7127c65.md",
-    "tokens": 4429
+    "tokens": 4679
   },
   "/blog/reschedule-dentist-appointment": {
     "html": "/__pages/1b1129e38f43b43f.html",

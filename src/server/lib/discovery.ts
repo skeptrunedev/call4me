@@ -45,6 +45,7 @@ export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: stri
   { page: 'cancelSubscription', changefreq: 'monthly', priority: '0.8' },
   { page: 'restaurantReservation', changefreq: 'monthly', priority: '0.8' },
   { page: 'customerService', changefreq: 'monthly', priority: '0.8' },
+  { page: 'negotiateBills', changefreq: 'monthly', priority: '0.8' },
   { page: 'mcp', changefreq: 'monthly', priority: '0.9' },
   { page: 'companies', changefreq: 'weekly', priority: '0.8' },
   { page: 'holdTimes', changefreq: 'weekly', priority: '0.8' },
