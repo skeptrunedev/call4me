@@ -7,7 +7,7 @@ import { HOLD_TIMES, holdSummary, type HoldTime } from './hold-times';
  * Every fact here is stated by the linked post, the example call, or the hold-time data, and
  * the price comes from the live per-minute rate. Keep each sentence true to its source.
  */
-export type TaskKey = 'holdForMe' | 'doctorAppointment' | 'cancelSubscription' | 'restaurantReservation' | 'customerService' | 'negotiateBills';
+export type TaskKey = 'holdForMe' | 'doctorAppointment' | 'cancelSubscription' | 'restaurantReservation' | 'customerService' | 'negotiateBills' | 'disputeCharge';
 
 export interface TaskPost {
   slug: string;
@@ -190,5 +190,30 @@ export const TASKS: Task[] = [
       { slug: 'how-to-lower-directv-bill', label: 'How to lower a DIRECTV bill', fact: 'a representative said there is no retention option in the phone menu: ask customer service or billing to speak with retention, and the account holder has to make the call.' },
     ],
     ask: 'Ask me which bill to call about, the account details they will ask for, what I would accept (a promotion under a price, a payment plan, financial assistance), and whether I want to join when they ask for the account holder.',
+  },
+  {
+    key: 'disputeCharge',
+    title: 'An AI that calls your bank to dispute a charge',
+    answer: (perMinute) => [
+      `call4me is an AI that calls your bank or card company to dispute a charge for you. tell your AI assistant (ChatGPT, Claude or Codex) the merchant, the date, the amount and what went wrong, and call4me dials the number on your card, gets through the phone tree to the disputes team, and rings your phone when they need the cardholder to verify. ${costs(perMinute)}`,
+      'we called the card lines at Chase, Capital One, Discover, PNC and Wells Fargo on the same evening, and all five put us through to a person. the thing three of them left out matters most: for a credit card, federal law gives you 60 days from the statement that first showed the charge to send a written dispute, and a phone call alone may not protect you.',
+    ],
+    how: [
+      'the bank will verify you before it opens a dispute: Chase asked for the card number and then the full Social Security number, Discover for the last four of the Social Security number, and PNC and Wells Fargo for the card or account number. the caller calls for you and never claims to be you, and it never reads out card numbers, bank details or passwords, so when the bank needs the cardholder, ' + joinWhenAnswered,
+      'say "dispute" at the menu instead of asking for a representative. Chase has a "press three" option for disputes, PNC confirms "you\'d like to dispute a transaction," and Discover sends you to its billing disputes team.',
+      'after the call, follow up in writing for a credit card dispute, at the card company\'s billing error address or web form, and keep the reference number. Discover\'s own cardmember agreement says: "You may call us, but if you do we are not necessarily required to investigate any potential errors."',
+    ],
+    examples: [],
+    holdHeading: 'How long the dispute lines took to reach a person',
+    holds: holds('chase-dispute-charge', 'discover-dispute-charge', 'pnc-dispute-charge'),
+    posts: [
+      { slug: 'how-to-dispute-a-charge', label: 'How to dispute a charge by phone: credit card vs debit card', fact: 'all five banks put us through to a person, Capital One fastest at 0:47 and Wells Fargo at 2:52. asked about a deadline, Wells Fargo said there was no time limit and Chase said "as long as it\'s not pending," while their own websites and federal law say 60 days.' },
+      { slug: 'chase-dispute-charge', label: 'Disputing a Chase credit card charge', fact: 'after the card number, the menu offers "for an unrecognized purchase, or to file a dispute, press three." a specialist answered 2 minutes 14 seconds in and said the line is open 24/7.' },
+      { slug: 'capital-one-dispute-charge', label: 'Disputing a Capital One charge', fact: 'saying "I don\'t have a Capital One card" got "let\'s get you to someone who can help," and a live representative 47 seconds in, who confirmed 1-800-CAPITAL is the right number for disputes.' },
+      { slug: 'discover-dispute-charge', label: 'Disputing a Discover charge', fact: 'saying we wanted to dispute a charge got a request for the last four of the Social Security number, then a person in billing disputes 2 minutes 3 seconds in, who wouldn\'t give any information without an account.' },
+      { slug: 'pnc-dispute-charge', label: 'Disputing a PNC credit card charge', fact: 'saying we wanted to dispute a charge reached a person 2 minutes 16 seconds in, who said a dispute takes "two to three billing cycles."' },
+      { slug: 'wells-fargo-dispute-charge', label: 'Disputing a Wells Fargo credit card charge', fact: 'saying "I don\'t have it" at the card number prompt, then a short reason, reached a person 2 minutes 52 seconds in, who said a dispute takes "60 days." debit card claims use separate Wells Fargo numbers.' },
+    ],
+    ask: 'Ask me which card and bank, the merchant, date and amount of the charge, what went wrong, and whether I want to join when the bank needs the cardholder.',
   },
 ];

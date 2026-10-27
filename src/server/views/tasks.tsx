@@ -32,15 +32,19 @@ export const TaskPage: FC<{ task: Task; signedIn: boolean; pricePerMinuteCents: 
       <h2>How the call works</h2>
       {task.how.map((p) => <p>{p}</p>)}
 
-      <h2>Real calls call4me made</h2>
-      <p>recorded calls, each with what was asked, what happened and a transcript:</p>
-      <ul>
-        {task.examples.map((e) => (
-          <li>
-            <a href={`/examples#${e.slug}`}>{e.title}</a> ({e.business}): {e.outcome}
-          </li>
-        ))}
-      </ul>
+      {task.examples.length > 0 && (
+        <>
+          <h2>Real calls call4me made</h2>
+          <p>recorded calls, each with what was asked, what happened and a transcript:</p>
+          <ul>
+            {task.examples.map((e) => (
+              <li>
+                <a href={`/examples#${e.slug}`}>{e.title}</a> ({e.business}): {e.outcome}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
 
       {task.holds.length > 0 && (
         <>

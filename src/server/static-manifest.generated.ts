@@ -60,6 +60,11 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
     "markdown": "/__pages/71a04d205e1d6891.md",
     "tokens": 2141
   },
+  "/dispute-a-charge": {
+    "html": "/__pages/92ecfc917ddafeee.html",
+    "markdown": "/__pages/92ecfc917ddafeee.md",
+    "tokens": 1931
+  },
   "/hold-times": {
     "html": "/__pages/0adb6fe5d87ff479.html",
     "markdown": "/__pages/0adb6fe5d87ff479.md",

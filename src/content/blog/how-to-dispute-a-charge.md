@@ -109,7 +109,7 @@ If the bank doesn't follow the rules, you can [submit a complaint to the CFPB](h
 
 ## How call4me can make the call for you
 
-call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) tells it what to get done and it makes the call. It works the phone menu and waits on hold, and when the bank needs the cardholder, it rings your phone: you press 1 to join, enter your card number or answer their questions yourself, and press * or hang up to hand the call back. call4me's instructions to agents say never to ask for or save a Social Security number, card number or password, so you give those to the bank yourself. See [an AI that calls customer service for you](/call-customer-service), or the [other companies we've called](/companies).
+call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) tells it what to get done and it makes the call. It works the phone menu and waits on hold, and when the bank needs the cardholder, it rings your phone: you press 1 to join, enter your card number or answer their questions yourself, and press * or hang up to hand the call back. call4me's instructions to agents say never to ask for or save a Social Security number, card number or password, so you give those to the bank yourself. See [an AI that calls your bank to dispute a charge](/dispute-a-charge), or the [other companies we've called](/companies).
 
 ## Have your agent make this call
 
