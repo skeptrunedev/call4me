@@ -1,9 +1,10 @@
 ---
 title: "Progressive customer service: how to reach a person"
-seoTitle: "Progressive customer service: 1-888-671-4405"
+seoTitle: "Progressive number: 1-888-671-4405, open 24/7"
 subtitle: "We called Progressive's general customer service line with general questions and no policy. Saying we wanted a quote on a new policy got a live agent on the line 1 minute 30 seconds in. Here is the phone tree, what the agent said about callbacks, hours and getting a quote by phone, and the full recording."
-description: "The Progressive customer service number is 1-888-671-4405, open 24/7. Ask for a quote on a new policy to reach a person. Recorded call and phone tree."
+description: "The Progressive phone number is 1-888-671-4405, open 24/7 for customer service, claims and quotes. Ask for a new policy quote to reach a person in 1:30."
 date: 2026-10-16
+updated: 2026-10-27
 verified: 2026-10-16
 tags: progressive, insurance, car insurance, customer service, phone numbers, phone trees
 authors: nick

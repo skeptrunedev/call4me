@@ -608,7 +608,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/progressive-customer-service": {
     "html": "/__pages/7ef6426a09eb45df.html",
     "markdown": "/__pages/7ef6426a09eb45df.md",
-    "tokens": 4771
+    "tokens": 4778
   },
   "/blog/airbnb-customer-service-number": {
     "html": "/__pages/e392dafb7481d910.html",

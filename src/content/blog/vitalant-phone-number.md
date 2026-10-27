@@ -1,10 +1,10 @@
 ---
 title: "How to get off the Vitalant donor call list"
-seoTitle: "How to get off the Vitalant call list"
+seoTitle: "How to get Vitalant to stop calling you"
 subtitle: "A call4me customer's assistant called Vitalant's donor line to stop blood donation recruitment calls. A person took the number off the call list and said it takes 10 to 12 days to fully clear. Here is the path, what was said, and the full 7 minute recording."
-description: "The Vitalant phone number is 877-258-4825. How to get off the Vitalant call list, from a real call: a person removed the number, allow 10 to 12 days."
+description: "To stop Vitalant calls, call 877-258-4825 and ask to be taken off the call list (allow 10 to 12 days), or turn off phone calls in your donor account."
 date: 2026-10-16
-updated: 2026-10-17
+updated: 2026-10-27
 verified: 2026-10-13
 tags: vitalant, vitalant blood donation, blood services, donor calls, opt out, phone numbers, phone trees
 authors: nick
