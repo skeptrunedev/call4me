@@ -208,7 +208,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-to-negotiate-a-hospital-bill": {
     "html": "/__pages/b88beca37c93cea2.html",
     "markdown": "/__pages/b88beca37c93cea2.md",
-    "tokens": 12242
+    "tokens": 12266
   },
   "/blog/phone-anxiety": {
     "html": "/__pages/613a99d49cf748b0.html",

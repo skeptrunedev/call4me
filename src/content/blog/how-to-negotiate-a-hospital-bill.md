@@ -192,7 +192,7 @@ Every representative wanted an account first: Cleveland Clinic asked for a medic
 
 call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) tells it what to get done and it makes the call. For these, the brief was general questions only: we said we had no account and gave no personal details.
 
-One thing our caller did badly. When Advocate's representative asked for its name, it said "I'm his assistant. I don't have a name." That's true (it had no name set for this call) but it made the conversation awkward. You can give your call4me caller a first name to use. We kept the audio as it happened.
+One thing our caller did badly. When Advocate's representative asked for its name, it said "I'm his assistant. I don't have a name." That's true (it had no name set for this call) but it made the conversation awkward. We've since changed it: asked again, it now says "You can put me down as Nick's assistant." You can also give your call4me caller a first name to use. We kept the audio as it happened.
 
 Need to call your hospital about a bill? See [an AI that calls to negotiate your bills](/negotiate-bills), or let it [wait on hold for you](/hold-for-me).
 
