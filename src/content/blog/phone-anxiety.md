@@ -36,7 +36,7 @@ Two things stand out. Feeling anxious about calls is far more common than the cl
 
 ## Why phone calls give you anxiety
 
-Some of the dread is reasonable. A phone call to a business is often a bad experience. We've timed 127 of our own calls to 74 customer service lines, and [38 of them never reached a person](/blog/how-long-to-reach-a-human) at all. The slowest that did took 25 minutes 9 seconds. Phone menus mishear you, holds don't say how long they'll be, and when someone finally answers, they ask for an account number you don't have in front of you. Not wanting to do that is a sensible reaction to a bad system, not a personal failing.
+Some of the dread is reasonable. A phone call to a business is often a bad experience. We've timed 138 of our own calls to 77 customer service lines, and [42 of them never reached a person](/blog/how-long-to-reach-a-human) at all. The slowest that did took 25 minutes 9 seconds. Phone menus mishear you, holds don't say how long they'll be, and when someone finally answers, they ask for an account number you don't have in front of you. Not wanting to do that is a sensible reaction to a bad system, not a personal failing.
 
 Unknown calls are a different, also reasonable, worry. In the Uswitch survey, 63% of the people who said they're likely to ignore a call said nuisance calls made them likely to avoid answering.
 
@@ -207,7 +207,7 @@ Every number and quote on this page comes from the source linked here, read on O
 - Centre for Clinical Interventions, [Stepping Out of Social Anxiety](https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself/Social-Anxiety), modules 3 and 5.
 - Mind, [Anxiety and panic attacks](https://www.mind.org.uk/media/7089/anxiety-and-panic-attacks-2021-pdf-version.pdf) (PDF), 2021.
 - Samaritans, [little tips for listening](https://www.samaritans.org/how-we-can-help/if-youre-worried-about-someone-else/little-tips/).
-- call4me, [how long it takes to reach a human at 74 companies](/blog/how-long-to-reach-a-human), our own recorded calls.
+- call4me, [how long it takes to reach a human at 77 companies](/blog/how-long-to-reach-a-human), our own recorded calls.
 
 ## Have your agent make the call
 

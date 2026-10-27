@@ -19,6 +19,12 @@ export const HOLD_KEYWORDS = ['customer service hold times', 'customer service h
  * verbatim from the "What got us through" column in the data post's table.
  */
 const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
+  'att-customer-service-number': { evidence: '44:30 Representative: Thank you for calling AT&T. My name is [name removed]. Who am I speaking with today?', path: '"A billing question", "explanation of charges", then asking for a representative' },
+  'costco-customer-service': { evidence: '14:09 Representative: Good evening. Thank you for calling Costco. My name\'s [name removed]. Who am I speaking with?', path: 'Pressing nothing; the menu queued us after the membership sub-menu' },
+  'xfinity-customer-service-number': { evidence: '3:27 Representative: Thanks for choosing Xfinity Services. My name is [name removed]. How can I assist you today?', path: 'Internet, "something else", then "billing"' },
+  'amazon-customer-service-number': { evidence: '3:17 Representative: Hi, thank you for calling Amazon. My name is [name removed]. May I have your name?', path: 'Declining the verification text four times, then asking for a representative' },
+  'home-depot-customer-service': { evidence: '1:34 Representative: Welcome to The Home Depot, [name removed] speaking, and how can I take care of you today?', path: 'Online orders line: asking for a representative, then no to texting instead' },
+  'usps-phone-number': { evidence: '8:14 Representative: Thank you for calling. My name is [name removed]. May I have your name, please?', path: 'No to the text link, a ZIP code, then "representative" at the street address prompt' },
   'aaa-insurance-customer-service': { evidence: '1:24 Representative: Thank you for calling AAA Insurance. My name is [name removed]. How can I help you?', path: 'Press 4 (membership or insurance quote), then a ZIP code' },
   'aaa-tow-reimbursement': { evidence: '1:08 Representative: AAA reimbursements, how can I help?', path: 'No menu; staying on the line after the recorded mailing instructions' },
   'afternic-domain-broker-phone-number': { evidence: '0:44 Representative: Hi, you\'re through to [broker\'s first name muted] at GoDaddy. How may I help?', path: 'Staying on the line through the greeting, which played twice' },
@@ -28,7 +34,6 @@ const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
   'amazon-pharmacy-phone-number': { evidence: '3:40 Representative: Clinical customer care. This is [name removed]. How can I help you?', path: 'Stating the request; the system transferred us' },
   'american-airlines-flight-credit': { evidence: '1:40 Representative: Thank you for calling American Airlines. This is [name removed]. I can see that you\'re calling from the United States to book a new reservation. How can I help you?', path: 'Saying "book a held reservation"' },
   'aquasana-return-exception': { evidence: '7:49 Representative: Good morning, customer service. [Name and adjacent words removed.]', path: 'Staying on hold instead of taking a callback' },
-  'how-to-lower-att-bill': { evidence: '1:59 Representative: Thank you for calling AT&T. Who am I speaking with?', path: '"A billing question. My bill is too high.", then "I don\'t have it"' },
   'cancel-audible': { evidence: '2:00 Associate: Hi, thank you for contacting Audible. You are speaking with [name removed]. With who do I have the pleasure to speak to at the moment?', path: 'Typing the digits it reads out, then 2' },
   'bank-of-america-customer-service': { evidence: '2:05 Representative: Hello, thank you for calling Bank of America. This is [name removed] in Scranton, Pennsylvania. This call may be monitored and recorded. May I have your first and last name, please?', path: '"Agent" three times, then "open a new checking account"' },
   'best-buy-return-policy': { evidence: '4:19 Agent: Best Buy Primary Care. My name is [name]. How can I help you today?', path: 'Asking the AI assistant for a live agent about a return' },
@@ -38,7 +43,6 @@ const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
   'chase-dispute-charge': { evidence: '2:14 Specialist: [Name], Chase. Who am I speaking with?', path: 'No account number, "agent", then "0" for a specialist' },
   'chime-customer-service-number': { evidence: '1:21 Representative: We appreciate your business with Chime. This is [name removed]. May I please have your first and last name?', path: 'Press 9 (all other questions), then 0 for an agent' },
   'coinbase-customer-service-number': { evidence: '0:02 Coinbase: Thanks for reaching out to Coinbase. Please refer to our help center at help.coinbase.com for additional support as phone support is currently unavailable.', path: 'Nothing we tried' },
-  'costco-return-policy': { evidence: '8:21 Representative: Thank you for calling Costco. This is [name]. How can I help you?', path: 'Press 3 (Costco.com orders and returns), then 2, 1 and 1' },
   'dell-customer-service-number': { evidence: '4:38 Sales agent: Welcome to Dell Sales Reception Desk. [word removed] How can I assist you?', path: 'Sales line: "make a purchase", then "something else"' },
   'delta-customer-service': { evidence: '16:15 Representative: Thank you for calling Delta. This is [name removed] speaking. How may I assist you today?', path: 'No confirmation number, "I need a representative", then hold' },
   'directv-customer-service': { evidence: '2:47 DIRECTV rep: Good evening, thank you for calling DIRECTV. My name is [name removed], who do I have the pleasure of speaking with today?', path: '"Cancel service", no account number, then satellite' },
@@ -92,7 +96,6 @@ const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
   'wayfair-customer-service': { evidence: '1:12 Agent: This is your sales agent, [name removed]. How can I help you with your purchase?', path: 'Answering the assistant in one sentence' },
   'wells-fargo-customer-service': { evidence: '2:14 Representative: Thank you for calling Wells Fargo. This is [name removed]. May I have your bank account number or debit card number, please?', path: '"I don\'t have it", "agent", then "checking account question"' },
   'windstream-customer-service': { evidence: '0:55 Rep: Hello, thank you so much for calling Kinetic. My name is [name removed]. Who do I have the pleasure to stay with today?', path: 'The sales line, press 1 (new residential deals)' },
-  'how-to-lower-xfinity-bill': { evidence: '6:29 Representative: Hello, thank you for calling Xfinity. My name is [name removed]. How may I assist you today?', path: 'Saying "billing" when the voice assistant asked what the call was about' },
 };
 
 export type HoldStatus = 'measured' | 'not measured' | 'never reached a person';

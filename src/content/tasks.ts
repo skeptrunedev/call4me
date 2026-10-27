@@ -65,7 +65,7 @@ export const TASKS: Task[] = [
     holdHeading: 'The longest holds we sat through',
     holds: HOLD_TIMES.filter((r) => r.status === 'measured').slice(0, 6),
     posts: [
-      { slug: 'how-long-to-reach-a-human', label: 'How long it takes to reach a human at 74 companies', fact: 'we timed 127 calls to 74 customer service lines. the slowest were Priceline at 25:09, United at 19:09, Delta at 16:15 and Alaska Airlines at 12:44, and on all four most of that was hold time after the menu had already put us in the queue.' },
+      { slug: 'how-long-to-reach-a-human', label: 'How long it takes to reach a human at 77 companies', fact: 'we timed 138 calls to 77 customer service lines. the slowest were AT&T at 44:30, Priceline at 25:09, United at 19:09 and Delta at 16:15, and on all four most of that was hold time after the menu had already put us in the queue.' },
       { slug: 'priceline-customer-service', label: 'Priceline customer service', fact: 'a live representative answered 25 minutes 9 seconds into the call, after about 22 minutes on hold, once we kept saying we had no trip number.' },
       { slug: 'united-change-flight', label: 'Changing a United flight by phone', fact: 'saying "flight change fee" got the call into the reservations queue, and an agent picked up 19:09 into the call.' },
       { slug: 'spectrum-retention-department', label: 'Calling Spectrum retention', fact: 'a call4me user\'s assistant got through the phone menu, about 5 minutes on hold and an identity check, then the user joined the call and the rep offered two deals.' },
@@ -159,7 +159,7 @@ export const TASKS: Task[] = [
     holdHeading: 'What got us to a person',
     holds: holds('delta-customer-service', 'paypal-customer-service-number', 'venmo-customer-service-number', 'amazon-pharmacy-phone-number', 'airbnb-customer-service-number', 'bank-of-america-customer-service', 't-mobile-customer-service-number', 'cash-app-customer-service-number'),
     posts: [
-      { slug: 'how-long-to-reach-a-human', label: 'How long it takes to reach a human at 74 companies', fact: 'we timed 127 calls to 74 customer service lines, and 38 of the 127 never reached a person.' },
+      { slug: 'how-long-to-reach-a-human', label: 'How long it takes to reach a human at 77 companies', fact: 'we timed 138 calls to 77 customer service lines, and 42 of the 138 never reached a person.' },
       { slug: 'customer-story-flight-credit', label: 'A $100 JSX voucher by phone', fact: 'Grok Bot and call4me called JSX Reservations about a delayed flight and got Jem a $100 courtesy travel voucher, valid for one year. Jem on X: "literally zero chance i was going to do that myself"' },
       { slug: 'amazon-pharmacy-phone-number', label: 'Amazon Pharmacy customer care', fact: 'the representative said she would mark the stuck prescriptions as important, and the "ready to order" email arrived 48 minutes after we dialed.' },
       { slug: 'priceline-customer-service', label: 'Priceline customer service', fact: 'saying we had no trip number, again and again, reached a live representative 25 minutes 9 seconds into the call.' },
@@ -180,7 +180,7 @@ export const TASKS: Task[] = [
     ],
     examples: examples('spectrum-retention'),
     holdHeading: 'How long the billing lines took to reach a person',
-    holds: holds('cleveland-clinic', 'advocate-health', 'hca-florida-northside-hospital', 'how-to-lower-att-bill', 'how-to-lower-xfinity-bill', 'spectrum-retention-department'),
+    holds: holds('cleveland-clinic', 'advocate-health', 'hca-florida-northside-hospital', 'att-customer-service-number', 'xfinity-customer-service-number', 'spectrum-retention-department'),
     posts: [
       { slug: 'how-to-negotiate-a-hospital-bill', label: 'How to negotiate a hospital bill', fact: 'we called Cleveland Clinic, Advocate Health and HCA Florida Northside. Advocate quoted 50% off for uninsured patients and HCA a 20% prompt-pay discount offered by email in the first 72 hours. asked about settling a balance after insurance, Cleveland Clinic said "that\'s going to be the payment plan" and Advocate said "we don\'t do any settlement options."' },
       { slug: 'how-to-lower-spectrum-bill', label: 'How to lower a Spectrum bill', fact: 'saying "cancel my account," then "disconnect," reached Spectrum\'s retention team, and the call took a call4me user\'s internet bill from $85 a month to $55 a month for a year, with no contract.' },

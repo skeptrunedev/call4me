@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "3b16c82519159932d008d0ee996ac57b70609f50c25639026be6d41cc275d807"
+  "sourceHash": "8907b83091460da045b5178224d76c206932eb1ea1889dd9350a5cf37bd859bb"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -455,6 +455,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "spectrum-retention-department",
       "similarity": 0.61712
+    },
+    {
+      "slug": "how-long-to-reach-a-human",
+      "similarity": 0.608612
     },
     {
       "slug": "xfinity-customer-service-number",
@@ -2303,8 +2307,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "how-long-to-reach-a-human": [
     {
+      "slug": "att-customer-service-number",
+      "similarity": 0.608612
+    },
+    {
       "slug": "usaa-phone-number",
-      "similarity": 0.609214
+      "similarity": 0.603292
     }
   ],
   "how-to-cancel-siriusxm": [
