@@ -3,7 +3,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/": {
     "html": "/__pages/8a5edab282632443.html",
     "markdown": "/__pages/8a5edab282632443.md",
-    "tokens": 3036
+    "tokens": 3059
   },
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
@@ -83,7 +83,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/rules": {
     "html": "/__pages/933053fc294245bb.html",
     "markdown": "/__pages/933053fc294245bb.md",
-    "tokens": 1221
+    "tokens": 1244
   },
   "/privacy": {
     "html": "/__pages/0ece7f7c306b4cf6.html",
@@ -218,27 +218,27 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-to-lower-spectrum-bill": {
     "html": "/__pages/3757bfbc7bfb1d6a.html",
     "markdown": "/__pages/3757bfbc7bfb1d6a.md",
-    "tokens": 3142
+    "tokens": 3177
   },
   "/blog/how-to-lower-verizon-bill": {
     "html": "/__pages/6d3278a6117e42d5.html",
     "markdown": "/__pages/6d3278a6117e42d5.md",
-    "tokens": 3832
+    "tokens": 3867
   },
   "/blog/how-to-lower-xfinity-bill": {
     "html": "/__pages/3e87e3ae29ee9e41.html",
     "markdown": "/__pages/3e87e3ae29ee9e41.md",
-    "tokens": 5899
+    "tokens": 5934
   },
   "/blog/how-to-lower-att-bill": {
     "html": "/__pages/ba7ae6d76a630486.html",
     "markdown": "/__pages/ba7ae6d76a630486.md",
-    "tokens": 4525
+    "tokens": 4561
   },
   "/blog/how-to-lower-directv-bill": {
     "html": "/__pages/0b3cdc5fd14536d3.html",
     "markdown": "/__pages/0b3cdc5fd14536d3.md",
-    "tokens": 4060
+    "tokens": 4096
   },
   "/blog/costco-return-policy": {
     "html": "/__pages/c869c2262ed0adcb.html",

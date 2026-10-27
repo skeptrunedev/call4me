@@ -293,6 +293,7 @@ export const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries
         </p>
         {extra && <p>higher rates: {extra}.</p>}
         <p>monthly reload is on by default. untick it before paying or stop it in <a href={accountPath(signedIn)}>my account</a>.</p>
+        <p>every price, with what real calls cost, is on the <a href="/pricing">pricing page</a>.</p>
       </details>
       <details>
         <summary>can it wait on hold and ring me when someone answers?</summary>

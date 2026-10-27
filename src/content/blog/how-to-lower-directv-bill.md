@@ -73,7 +73,7 @@ DIRECTV wants the account holder on the line for any change, so a phone assistan
 
 > Call DIRECTV at 800-531-5000 between 8 am and 9 pm Central. When the AI agent asks how it can help, say I want a live agent about lowering my bill. My account phone number is [number]. If the AI offers a live agent, say yes. Connect me as soon as a person picks up. Don't change or cancel anything yourself.
 
-More recorded cancel and retention calls are on [an AI that calls to cancel a subscription for you](/cancel-subscription), and more support lines are on [an AI that calls customer service for you](/call-customer-service). For other TV and internet bills, see [how to lower your Spectrum bill](/blog/how-to-lower-spectrum-bill), [how to lower your Xfinity bill](/blog/how-to-lower-xfinity-bill) and [how to lower your AT&T bill](/blog/how-to-lower-att-bill).
+Every bill call we've recorded, hospital bills included, is on [an AI that calls to negotiate your bills](/negotiate-bills). More recorded cancel and retention calls are on [an AI that calls to cancel a subscription for you](/cancel-subscription), and more support lines are on [an AI that calls customer service for you](/call-customer-service). For other TV and internet bills, see [how to lower your Spectrum bill](/blog/how-to-lower-spectrum-bill), [how to lower your Xfinity bill](/blog/how-to-lower-xfinity-bill) and [how to lower your AT&T bill](/blog/how-to-lower-att-bill).
 
 <details>
 <summary>Read the full transcript</summary>

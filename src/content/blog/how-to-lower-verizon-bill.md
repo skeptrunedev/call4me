@@ -68,7 +68,7 @@ Verizon only makes changes with the account owner or an account manager on the l
 
 > Call Verizon at 800-922-0204, 8 am to 7 pm Monday to Saturday. When the AI assistant asks what I'm calling about, say "a question about my bill." The phone number on the account is [number]. When it asks to verify, connect me so I can give the Account PIN myself, then say "An agent, please." Ask about a cheaper plan for [number] lines and whether we have the Auto Pay discount. Don't change or cancel anything without me.
 
-More recorded cancel and retention calls are on [an AI that calls to cancel a subscription for you](/cancel-subscription), and more support lines are on [an AI that calls customer service for you](/call-customer-service). For other phone and internet bills, see [how to lower your AT&T bill](/blog/how-to-lower-att-bill), [how to lower your Xfinity bill](/blog/how-to-lower-xfinity-bill) and [how to lower your Spectrum bill](/blog/how-to-lower-spectrum-bill).
+Every bill call we've recorded, hospital bills included, is on [an AI that calls to negotiate your bills](/negotiate-bills). More recorded cancel and retention calls are on [an AI that calls to cancel a subscription for you](/cancel-subscription), and more support lines are on [an AI that calls customer service for you](/call-customer-service). For other phone and internet bills, see [how to lower your AT&T bill](/blog/how-to-lower-att-bill), [how to lower your Xfinity bill](/blog/how-to-lower-xfinity-bill) and [how to lower your Spectrum bill](/blog/how-to-lower-spectrum-bill).
 
 <details>
 <summary>Read the full transcript</summary>

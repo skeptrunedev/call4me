@@ -90,7 +90,7 @@ Xfinity changes the account only after it verifies the account holder, with a te
 
 > Call Xfinity at 1-800-934-6489. My account number is [number] and my ZIP is [ZIP]. Press 1 for home and 1 for existing customer. When the voice assistant asks what the call is about, say "billing" right away. Don't press 1 for text chat. Connect me as soon as a person picks up. Don't change, cancel or add anything yourself.
 
-More recorded cancel and retention calls are on [an AI that calls to cancel a subscription for you](/cancel-subscription), and more support lines are on [an AI that calls customer service for you](/call-customer-service). For other TV and internet bills, see [how to lower your Spectrum bill](/blog/how-to-lower-spectrum-bill), [how to lower your DIRECTV bill](/blog/how-to-lower-directv-bill) and [how to lower your AT&T bill](/blog/how-to-lower-att-bill).
+Every bill call we've recorded, hospital bills included, is on [an AI that calls to negotiate your bills](/negotiate-bills). More recorded cancel and retention calls are on [an AI that calls to cancel a subscription for you](/cancel-subscription), and more support lines are on [an AI that calls customer service for you](/call-customer-service). For other TV and internet bills, see [how to lower your Spectrum bill](/blog/how-to-lower-spectrum-bill), [how to lower your DIRECTV bill](/blog/how-to-lower-directv-bill) and [how to lower your AT&T bill](/blog/how-to-lower-att-bill).
 
 <details>
 <summary>Read the full transcript</summary>

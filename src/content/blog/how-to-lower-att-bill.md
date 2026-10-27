@@ -79,7 +79,7 @@ AT&T wants the account holder on the call for account changes, so a phone assist
 
 > Call AT&T at 800-288-2020 on a weekday between 8 am and 8 pm Central. When it asks what the call is about, say "a billing question, my bill is too high." Never say "pay." My account phone number is [number]. Turn down the texted link and ask for a representative. Connect me as soon as a person picks up. Don't change or cancel anything yourself.
 
-More recorded cancel and retention calls are on [an AI that calls to cancel a subscription for you](/cancel-subscription), and more support lines are on [an AI that calls customer service for you](/call-customer-service). For other phone and internet bills, see [how to lower your Verizon bill](/blog/how-to-lower-verizon-bill), [how to lower your Spectrum bill](/blog/how-to-lower-spectrum-bill) and [how to lower your Xfinity bill](/blog/how-to-lower-xfinity-bill).
+Every bill call we've recorded, hospital bills included, is on [an AI that calls to negotiate your bills](/negotiate-bills). More recorded cancel and retention calls are on [an AI that calls to cancel a subscription for you](/cancel-subscription), and more support lines are on [an AI that calls customer service for you](/call-customer-service). For other phone and internet bills, see [how to lower your Verizon bill](/blog/how-to-lower-verizon-bill), [how to lower your Spectrum bill](/blog/how-to-lower-spectrum-bill) and [how to lower your Xfinity bill](/blog/how-to-lower-xfinity-bill).
 
 <details>
 <summary>Read the full transcript</summary>

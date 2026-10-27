@@ -94,7 +94,7 @@ A few things to know about our side of the call:
 
 We kept the audio as it happened, apart from the muted name.
 
-If you're the cardholder, call4me can sit through the menu and then ring your phone when Capital One needs you to verify. You press 1 to join, and press * or hang up to hand the call back. See [an AI that calls customer service for you](/call-customer-service). We've also recorded dispute calls to [Chase](/blog/chase-dispute-charge), [Discover](/blog/discover-dispute-charge), [PNC](/blog/pnc-dispute-charge) and [Wells Fargo](/blog/wells-fargo-dispute-charge). For more phone trees, see the [other companies we've called](/companies).
+If you're the cardholder, call4me can sit through the menu and then ring your phone when Capital One needs you to verify. You press 1 to join, and press * or hang up to hand the call back. See [an AI that calls your bank to dispute a charge](/dispute-a-charge). We've also recorded dispute calls to [Chase](/blog/chase-dispute-charge), [Discover](/blog/discover-dispute-charge), [PNC](/blog/pnc-dispute-charge) and [Wells Fargo](/blog/wells-fargo-dispute-charge). For more phone trees, see the [other companies we've called](/companies).
 
 ## Have your agent make this call
 
