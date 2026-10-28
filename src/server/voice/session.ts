@@ -264,6 +264,8 @@ export class VoiceSession extends DurableObject<Env> {
         this.mark('answered');
         this.startWatchdog();
         await this.startLive();
+        // A session opened while it rang has no time limit yet: it counts from pickup.
+        await this.startTimeLimit();
         this.nudgeWhenSilent();
         // place_call's listen_in: they hear the call from the moment the business answers.
         if (this.setup?.person?.listenIn) void this.connectPerson(undefined, 'listen');
@@ -371,6 +373,17 @@ export class VoiceSession extends DurableObject<Env> {
     if (this.phone || this.ended) return; // A new stream may have attached while the transcript saved.
     await this.ctx.storage.put('orphanSince', Date.now());
     await this.scheduleAlarm(Date.now() + 1_000);
+  }
+
+  /** A voice session opened before pickup closed unused: forget it, so pickup opens another. */
+  private dropUnusedLive(): void {
+    this.live = null;
+    this.liveReady = false;
+    this.liveStartedAt = 0;
+    this.nudgeScheduled = false;
+    this.pendingAudio = [];
+    void this.ctx.storage.delete('liveStarted');
+    this.mark('voice session expired before pickup; opening a new one at pickup');
   }
 
   /** Socket state belongs to one phone stream; none of it may leak into its replacement. */
@@ -508,7 +521,14 @@ export class VoiceSession extends DurableObject<Env> {
       if (this.live === ws && !this.ended) void this.onLive(typeof ev.data === 'string' ? ev.data : '');
     });
     // A socket dropped on purpose (phoneLost) is no longer this.live and ends nothing.
-    ws.addEventListener('close', () => void (this.live === ws && this.shutdown('the voice model disconnected')));
+    ws.addEventListener('close', () => {
+      if (this.live !== ws) return;
+      // Opened while it rang, a session nobody has spoken into yet expires after ~30s idle: a
+      // call that rang longer was hung up before anyone could answer (Cody's Flores Brothers
+      // call). Drop it, and pickup opens a fresh one, as before the session opened early.
+      if (!this.answered && !this.ended) return this.dropUnusedLive();
+      void this.shutdown('the voice model disconnected');
+    });
     ws.addEventListener('error', () => void (this.live === ws && this.shutdown('the voice model connection failed')));
     this.sendLive({
       type: 'session.start',
@@ -530,10 +550,18 @@ export class VoiceSession extends DurableObject<Env> {
         },
       },
     });
-    // Hard stop a little before Telnyx's own time limit, with a heads-up to wrap up first. Kept
-    // across resets: it counts from pickup, not from this instance.
-    if (!(await this.ctx.storage.get('wrapAt'))) {
-      await this.ctx.storage.put('wrapAt', (this.answeredAt || Date.now()) + Math.max(30, s.maxSeconds - 45) * 1000);
+    await this.startTimeLimit();
+  }
+
+  /**
+   * Hard stop a little before Telnyx's own time limit, with a heads-up to wrap up first. Kept
+   * across resets: it counts from pickup, not from this instance nor from the ringing (the
+   * session opens while it rings), so it is set once the call is answered. Also arms the heartbeat.
+   */
+  private async startTimeLimit(): Promise<void> {
+    const s = await this.load();
+    if (s && this.answeredAt && !(await this.ctx.storage.get('wrapAt'))) {
+      await this.ctx.storage.put('wrapAt', this.answeredAt + Math.max(30, s.maxSeconds - 45) * 1000);
     }
     await this.scheduleAlarm();
   }
