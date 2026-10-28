@@ -59,7 +59,7 @@ export const listLimitInput = z.number().int().min(1).max(50).default(10);
 
 export const connectInput = z.object({
   phone: z.string().max(40).optional().describe('a different number to ring, e.g. "(415) 555-0123"'),
-  mode: z.enum(['join', 'listen']).default('join').describe('"join" (default): they take the call over by pressing 1. "listen": they listen in while the caller keeps working, and can press 1 anytime to take over'),
+  mode: z.enum(['join', 'listen']).default('join').describe('"join" (default): they take the call over as soon as they answer. "listen": they listen in while the caller keeps working, and can press 1 anytime to take over'),
 });
 
 export const answerInput = z.object({

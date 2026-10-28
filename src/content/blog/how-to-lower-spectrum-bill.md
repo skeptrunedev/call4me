@@ -63,7 +63,7 @@ Spectrum's [account roles page](https://www.spectrum.net/support/account-and-bil
 
 ## How to lower your Spectrum bill without calling
 
-On our call, the offer came from a person on the phone, and only after the account holder verified. If you don't want to sit through the menu and the hold yourself, have an AI phone assistant make the call. [call4me](/) does the menu and the wait, then rings your phone when Spectrum needs you. You answer and press 1 to join, and talk to the rep yourself. When you press * or hang up, the assistant takes the call back.
+On our call, the offer came from a person on the phone, and only after the account holder verified. If you don't want to sit through the menu and the hold yourself, have an AI phone assistant make the call. [call4me](/) does the menu and the wait, then rings your phone when Spectrum needs you. You answer and talk to the rep yourself. When you press * or hang up, the assistant takes the call back.
 
 That's exactly what happened here: the AI got through the menu, the hold and the first round of verification, and when the rep said "We would have to speak with [the account holder]," it said "One sec, getting [name] on the line." The user joined and got the offer. You can also set it to ring you as soon as a person picks up, so you skip the hold entirely. Hold time is still billed, at half the call rate.
 

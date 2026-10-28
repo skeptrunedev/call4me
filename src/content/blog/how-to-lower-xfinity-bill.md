@@ -86,7 +86,7 @@ The whole call, 14 minutes 33 seconds. The representative's first name (about 0.
 
 ## Let an AI make the call, and join when Xfinity needs you
 
-Xfinity changes the account only after it verifies the account holder, with a texted or emailed code or bank details, so a phone assistant can't finish this for you. [call4me](/) can get through the voice assistant and the wait, then ring your phone when the billing representative picks up. You press 1 to join and talk to them yourself; when you press * or hang up, the assistant takes the call back. If you use call4me, paste this into your agent:
+Xfinity changes the account only after it verifies the account holder, with a texted or emailed code or bank details, so a phone assistant can't finish this for you. [call4me](/) can get through the voice assistant and the wait, then ring your phone when the billing representative picks up. You answer and talk to them yourself; when you press * or hang up, the assistant takes the call back. If you use call4me, paste this into your agent:
 
 > Call Xfinity at 1-800-934-6489. My account number is [number] and my ZIP is [ZIP]. Press 1 for home and 1 for existing customer. When the voice assistant asks what the call is about, say "billing" right away. Don't press 1 for text chat. Connect me as soon as a person picks up. Don't change, cancel or add anything yourself.
 

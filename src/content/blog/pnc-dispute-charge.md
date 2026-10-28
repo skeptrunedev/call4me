@@ -95,7 +95,7 @@ A few things to know about our side of the call:
 
 We kept the audio as it happened, apart from the two muted names.
 
-If you're the cardholder, call4me can work the menu and the hold, then ring your phone when PNC needs you to verify. You press 1 to join, and press * or hang up to hand the call back. See [an AI that calls your bank to dispute a charge](/dispute-a-charge). We've also recorded dispute calls to [Chase](/blog/chase-dispute-charge), [Capital One](/blog/capital-one-dispute-charge), [Discover](/blog/discover-dispute-charge) and [Wells Fargo](/blog/wells-fargo-dispute-charge). For more phone trees, see the [other companies we've called](/companies).
+If you're the cardholder, call4me can work the menu and the hold, then ring your phone when PNC needs you to verify. You are on the call as soon as you answer, and press * or hang up to hand the call back. See [an AI that calls your bank to dispute a charge](/dispute-a-charge). We've also recorded dispute calls to [Chase](/blog/chase-dispute-charge), [Capital One](/blog/capital-one-dispute-charge), [Discover](/blog/discover-dispute-charge) and [Wells Fargo](/blog/wells-fargo-dispute-charge). For more phone trees, see the [other companies we've called](/companies).
 
 ## Have your agent make this call
 

@@ -2,26 +2,19 @@ import type { TranscriptLine } from '../services/calls';
 
 /**
  * Patching the person (call4me's user) into a live call. Their phone is rung as a listen-only
- * supervisor and a voicemail answers like a person does, so they only join after pressing 1.
- * In listen mode they stay listen-only for as long as they like and the caller carries on.
- * A ring that ends without that is settled for the call: the caller is told they can't be
- * reached, and doesn't ring again on its own (it used to, patching voicemail in each time).
+ * supervisor. Ringing to join, they are put on the call the moment they pick up: Telnyx refuses
+ * to play a prompt on a supervisor leg, so nothing could tell them to press a key, and people
+ * talked into a call nobody heard. In listen mode they stay listen-only for as long as they like
+ * and the caller carries on. A ring to join that ends unanswered is settled for the call: the
+ * caller is told they can't be reached, and doesn't ring again on its own.
  */
-
-/** How long an answered phone may listen without pressing 1 before it is taken for voicemail and hung up. */
-export const JOIN_WAIT_MS = 30_000;
 
 /**
- * 'join': ring them to take the call over; they press 1 within JOIN_WAIT_MS or the leg is hung up.
- * 'listen': ring them to listen in for as long as they like while the caller keeps working; they
- * can press 1 anytime to take over. (A voicemail could sit on a listening leg; that's accepted.)
+ * 'join': ring them to take the call over as soon as they answer (a voicemail answering is
+ * patched in too; that's accepted). 'listen': ring them to listen in for as long as they like
+ * while the caller keeps working; they can press 1 anytime to take over.
  */
 export type PersonMode = 'join' | 'listen';
-
-/** How long an answered leg may go without pressing 1 before it is hung up; null keeps it. */
-export function joinWaitMs(mode: PersonMode): number | null {
-  return mode === 'join' ? JOIN_WAIT_MS : null;
-}
 
 /** Whether the caller holds back (no forced hand-offs) for the person's leg: ringing to join, or on the call. */
 export function callerHoldsFor(leg: { ringing: boolean; on: boolean; mode: PersonMode }): boolean {

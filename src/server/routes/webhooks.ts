@@ -16,7 +16,6 @@ import { decodeFirstTouch } from '../lib/first-touch';
 import { redditConversions } from '../lib/reddit';
 
 /** Played to the user's own phone when it picks up to join a call (public/static/audio). */
-const JOIN_PROMPT_PATH = '/static/audio/join-prompt.mp3';
 
 export const webhooks = new Hono<AppEnv>();
 
@@ -187,16 +186,12 @@ webhooks.post('/telnyx', async (c) => {
   if (!callId) return c.text('ok'); // not ours, or already gone
 
   // The person's own phone patched into the call: its events move the call between them and
-  // the caller, and never end or bill the call itself. Answering leaves them listening; 1 puts
-  // them on the call, * hands it back, and once they are on, other keys go through to the business
-  // (a supervisor leg carries their voice but not their keypad).
+  // the caller, and never end or bill the call itself. Answering puts them on the call (or leaves
+  // a listener listening, until 1); * hands it back, and once they are on, other keys go through to
+  // the business (a supervisor leg carries their voice but not their keypad).
   if (state?.personLeg) {
     const session = sessionFor(c.env, callId);
-    if (type === 'call.answered') {
-      // Only they hear it, over the call they're listening to: how to join and how to leave.
-      if (p.call_control_id) await telnyx(c.env).playAudio(p.call_control_id, `${origin}${JOIN_PROMPT_PATH}`).catch((err) => console.warn('join prompt', callId, String(err)));
-      await session.fetch('https://session/person-answered', { method: 'POST' });
-    }
+    if (type === 'call.answered') await session.fetch('https://session/person-answered', { method: 'POST' });
     else if (type === 'call.hangup') await session.fetch('https://session/person-left', { method: 'POST', body: JSON.stringify({ cause: p.hangup_cause ?? null }) });
     else if (type === 'call.dtmf.received' && p.digit === '*' && p.call_control_id) await telnyx(c.env).hangup(p.call_control_id);
     else if (type === 'call.dtmf.received' && p.digit) await session.fetch('https://session/person-key', { method: 'POST', body: JSON.stringify({ digit: p.digit }) });

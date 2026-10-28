@@ -180,7 +180,7 @@ export function openApiDocument(site: string, pricePerMinuteCents = 25) {
       [callConnectPath]: {
         post: {
           operationId: 'connectUser',
-          description: 'Ring the user now and patch them into a live call. They join by pressing 1; the caller goes quiet and takes back over when they press * or hang up. Mode "listen" lets them listen in without being heard. Tell the user before calling this.',
+          description: 'Ring the user now and patch them into a live call. They are on the call as soon as they answer; the caller goes quiet and takes back over when they press * or hang up. Mode "listen" lets them listen in without being heard. Tell the user before calling this.',
           security: bearer,
           parameters: [callId],
           requestBody: { required: false, content: { 'application/json': { schema: schema(connectInput) } } },

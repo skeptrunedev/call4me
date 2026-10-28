@@ -75,7 +75,7 @@ Have your account number or the phone number on the account, and your account pa
 
 ## Let an AI make the call, and join when AT&T needs you
 
-AT&T wants the account holder on the call for account changes, so a phone assistant can't finish this for you. [call4me](/) can sit through the voice system and the hold, then ring your phone when a person answers. You press 1 to join and talk to them yourself; when you press * or hang up, the assistant takes the call back. If you use call4me, paste this into your agent:
+AT&T wants the account holder on the call for account changes, so a phone assistant can't finish this for you. [call4me](/) can sit through the voice system and the hold, then ring your phone when a person answers. You answer and talk to them yourself; when you press * or hang up, the assistant takes the call back. If you use call4me, paste this into your agent:
 
 > Call AT&T at 800-288-2020 on a weekday between 8 am and 8 pm Central. When it asks what the call is about, say "a billing question, my bill is too high." Never say "pay." My account phone number is [number]. Turn down the texted link and ask for a representative. Connect me as soon as a person picks up. Don't change or cancel anything yourself.
 

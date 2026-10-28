@@ -19,6 +19,6 @@ export const CallOnboarding: FC<{ numbers?: NumberView[] }> = ({ numbers = [] })
       call4me may ring your personal phone if a business needs you to verify your account, or if you ask to join the call. your personal phone is the number you save
       in your calling profile, separate from your call4me number. your agent should give you a heads up before a call that may need you and before connecting you.
     </p>
-    <p>answer and press 1 to join. press * or hang up to hand the call back to the assistant. voicemail cannot join the call.</p>
+    <p>you're on the call as soon as you answer. press * or hang up to hand the call back to the assistant.</p>
   </section>
 );

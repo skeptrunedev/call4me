@@ -69,7 +69,7 @@ Before you call: sign in and write down your package, your add-ons and premium c
 
 ## Let an AI make the call, and join when DIRECTV needs you
 
-DIRECTV wants the account holder on the line for any change, so a phone assistant can't finish this for you. [call4me](/) can do the waiting and the menu, then ring your phone when a person picks up. You press 1 to join and talk to the representative yourself; when you press * or hang up, the assistant takes the call back. If you use call4me, paste this into your agent:
+DIRECTV wants the account holder on the line for any change, so a phone assistant can't finish this for you. [call4me](/) can do the waiting and the menu, then ring your phone when a person picks up. You answer and talk to the representative yourself; when you press * or hang up, the assistant takes the call back. If you use call4me, paste this into your agent:
 
 > Call DIRECTV at 800-531-5000 between 8 am and 9 pm Central. When the AI agent asks how it can help, say I want a live agent about lowering my bill. My account phone number is [number]. If the AI offers a live agent, say yes. Connect me as soon as a person picks up. Don't change or cancel anything yourself.
 

@@ -41,7 +41,7 @@ The user signs in with Google or X. If they gave you a call4me key instead, use 
 
 Show the user their actual assigned call4me numbers from the returned \`numbers\` list, with their countries, and suggest saving them as a contact named call4me. Those are the numbers call4me calls from and businesses can call back. The user's own \`phone\` saved in their calling profile is where call4me rings them; it is a different number. If \`phone_number\` is null and \`numbers\` is empty, explain that their free US number is assigned on their first call and you will show it then. Never invent a number or promise one has already been assigned. Calls in different countries may use different assigned numbers.
 
-Explain during setup that call4me may ring the user's saved phone if a business needs them to verify their identity or speak directly. They answer and press 1 to join the business call; they press * or hang up to hand the call back to the caller. Give a heads up before arranging to ring them, with the actual call4me number they should recognize.
+Explain during setup that call4me may ring the user's saved phone if a business needs them to verify their identity or speak directly. They are on the business call as soon as they answer; they press * or hang up to hand the call back to the caller. Give a heads up before arranging to ring them, with the actual call4me number they should recognize.
 
 ## Collect details for the call
 

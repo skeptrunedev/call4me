@@ -154,7 +154,7 @@ A few things to know about our side:
 
 ## Have your agent make this call
 
-ServiceOntario wanted the licence holder on the line. So if you set this up with [Claude Code](/blog/claude-code-phone-calls) or [Codex](/blog/codex-phone-calls), have call4me ring you when the representative asks for you. Your phone rings, and you press 1 to join. This is a suggested brief, not the one the customer used:
+ServiceOntario wanted the licence holder on the line. So if you set this up with [Claude Code](/blog/claude-code-phone-calls) or [Codex](/blog/codex-phone-calls), have call4me ring you when the representative asks for you. Your phone rings, and you are on the call as soon as you answer. This is a suggested brief, not the one the customer used:
 
 > Call ServiceOntario at 416-235-2999, weekdays between 8:30 am and 5 pm Eastern. When the voice system asks how it can help, say "representative". When a representative answers, explain that I'm calling about my suspended driver's licence and a licence plate that didn't renew. When they ask to speak to the licence holder, ring me so I can join and confirm my own details. Ask for the suspension number, the total to reinstate (fine plus the $281 reinstatement fee), whether I can pay it online, and whether my plate will renew once it's paid. Don't pay anything or agree to any change.
 

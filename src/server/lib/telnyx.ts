@@ -190,10 +190,10 @@ export function telnyx(env: TelnyxEnv) {
 
     /**
      * Ring the person as a "monitor" supervisor of the call: they hear both ends, but nobody hears
-     * them. A voicemail can pick up in two seconds, so answering proves nothing; they are only put
-     * on the call (switchSupervisorRole to barge) once they press 1, which arrives as
-     * call.dtmf.received. Telnyx refuses every command on a supervisor leg (422 "Supervisor calls
-     * do not support commands"), so there is no spoken prompt: the setup instructions tell them.
+     * them. Ringing to join, they are put on the call (switchSupervisorRole on the call being
+     * supervised, to barge) once they answer; a listener takes over by pressing 1, which arrives
+     * as call.dtmf.received. Telnyx refuses every command on a supervisor leg itself (422
+     * "Supervisor calls do not support commands"), so nothing can be played to them.
      */
     async dialPerson(opts: { to: string; from: string; webhookUrl: string; callId: string; superviseControlId: string; timeLimitSecs: number }): Promise<string> {
       const r = await call<{ data: { call_control_id: string } }>(env, 'POST', '/calls', {

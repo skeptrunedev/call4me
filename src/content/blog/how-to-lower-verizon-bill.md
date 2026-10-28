@@ -64,7 +64,7 @@ On our account call, the agent asked how we use data before pricing a plan, and 
 
 ## Let an AI make the call, and join when Verizon needs you
 
-Verizon only makes changes with the account owner or an account manager on the line, so a phone assistant can't finish this for you. [call4me](/) can get through the AI assistant and the wait, then ring your phone when an agent picks up. You press 1 to join and talk to them yourself; when you press * or hang up, the assistant takes the call back. If you use call4me, paste this into your agent:
+Verizon only makes changes with the account owner or an account manager on the line, so a phone assistant can't finish this for you. [call4me](/) can get through the AI assistant and the wait, then ring your phone when an agent picks up. You answer and talk to them yourself; when you press * or hang up, the assistant takes the call back. If you use call4me, paste this into your agent:
 
 > Call Verizon at 800-922-0204, 8 am to 7 pm Monday to Saturday. When the AI assistant asks what I'm calling about, say "a question about my bill." The phone number on the account is [number]. When it asks to verify, connect me so I can give the Account PIN myself, then say "An agent, please." Ask about a cheaper plan for [number] lines and whether we have the Auto Pay discount. Don't change or cancel anything without me.
 

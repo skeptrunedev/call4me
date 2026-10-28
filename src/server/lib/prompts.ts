@@ -40,7 +40,7 @@ ${clientSteps(origin, null)} If I have no credits yet, I load some at ${origin} 
 
 ${step1}
 
-2. Restart or reload MCP servers if needed, then call call4me_get_balance to check it works. Show me my assigned call4me numbers from the returned numbers list, with their countries, and suggest saving them as a contact named call4me. These are the numbers call4me calls from, separate from my own phone saved in my calling profile. If phone_number is null and the numbers list is empty, explain that my free US number is assigned on my first call and you'll show it to me then. Don't invent a number or claim one has already been assigned. Explain that call4me may ring my saved phone when a business needs me to verify my identity. I answer and press 1 to join; pressing * or hanging up hands the call back to the caller. I can also ask to just listen in on a call (listen_in on call4me_place_call, or mode "listen" on call4me_connect_me): nobody hears me, and I press 1 to take over.
+2. Restart or reload MCP servers if needed, then call call4me_get_balance to check it works. Show me my assigned call4me numbers from the returned numbers list, with their countries, and suggest saving them as a contact named call4me. These are the numbers call4me calls from, separate from my own phone saved in my calling profile. If phone_number is null and the numbers list is empty, explain that my free US number is assigned on my first call and you'll show it to me then. Don't invent a number or claim one has already been assigned. Explain that call4me may ring my saved phone when a business needs me to verify my identity. I am on the call as soon as I answer; pressing * or hanging up hands the call back to the caller. I can also ask to just listen in on a call (listen_in on call4me_place_call, or mode "listen" on call4me_connect_me): nobody hears me, and I press 1 to take over.
 
 3. Ask what I want my first call to accomplish. Don't collect a personal profile during setup. For a specific call, use call4me_get_profile to see what's already saved and call4me_get_requirements for that category. Ask in one message only for missing details that call needs. Ask for sensitive details such as date of birth, home address, insurance IDs or VIN only when that specific call requires them, and explain why. Giving a detail for one call does not mean I want it saved: offer call4me_save_profile for details I want reused and save only with my agreement. Skip anything I decline. Never ask for or save my Social Security number, card numbers, or passwords.
 
@@ -49,7 +49,7 @@ ${step1}
    - Find the number (web search if needed) and make sure it's the right location.
    - Before placing a call with connect_when, give me a heads up that my phone may ring and show the actual call4me number that will ring me. Use the assigned number selected for this call, which can differ by country. If this is my first call and no number is assigned yet, explain that before dialing and show the exact returned calling_number as soon as call4me_place_call returns.
    - Place the call with call4me_place_call. On my first call, or whenever its returned calling_number differs from the one you've already shown me, show me that exact number and suggest saving it as a call4me contact. Then keep calling call4me_get_call until it finishes. If the caller asks a question mid-call, answer it quickly with call4me_answer_question; the business is waiting on the line.
-   - Before using call4me_connect_me, give me a heads up with that call's actual calling_number from call4me_get_call. Remind me to answer and press 1 to join, then press * or hang up to hand the call back. Don't use my saved profile phone as the caller number.
+   - Before using call4me_connect_me, give me a heads up with that call's actual calling_number from call4me_get_call. Remind me that I'm on the call as soon as I answer, and I press * or hang up to hand the call back. Don't use my saved profile phone as the caller number.
    - Tell me the result in one or two lines.`;
 }
 
@@ -70,7 +70,7 @@ export function accountPrompt(origin: string, key: string | null): string {
 
 ${connect(origin, key)}
 
-First call call4me_get_balance. Show me any assigned call4me numbers from its numbers list, with their countries, and suggest saving them as a contact named call4me. They are separate from my own phone in my calling profile. If phone_number is null and the list is empty, explain that my free US number is assigned on my first call. Explain that call4me can ring my saved phone if a business needs me to verify my identity: answer and press 1 to join; press * or hang up to hand the call back. Different calls can use different assigned numbers, depending on the country.
+First call call4me_get_balance. Show me any assigned call4me numbers from its numbers list, with their countries, and suggest saving them as a contact named call4me. They are separate from my own phone in my calling profile. If phone_number is null and the list is empty, explain that my free US number is assigned on my first call. Explain that call4me can ring my saved phone if a business needs me to verify my identity: I am on the call as soon as I answer; press * or hang up to hand the call back. Different calls can use different assigned numbers, depending on the country.
 
 Then, depending on what I ask:
 - Balance, price per minute, and my call4me phone number: call4me_get_balance.
@@ -89,7 +89,7 @@ ${connect(origin, key)}
 1. call4me_get_call with call_id "${callId}" gives the status, outcome, and transcript. If it's still in progress, pass wait_seconds (up to 50) and call again until it finishes. If it lists open_questions, answer each right away with call4me_answer_question; the business is waiting on the line.
 2. Tell me the result in one or two lines, and anything I need to do (a confirmation number to note, a time to show up, a callback to expect).
 3. If it didn't get done, suggest what to change and offer to call again. Before calling again, check call4me_get_requirements for the category and ask me for anything missing in one message, then place it with call4me_place_call. Before using connect_when, give me a heads up with the actual call4me number selected for the call; if none is assigned yet, explain that it is assigned on the first call and show the exact returned calling_number immediately after placing it. On my first call or when the returned calling_number changes, tell me the number and suggest saving it as a call4me contact.
-4. Before call4me_connect_me, give me a heads up with this call's actual calling_number from call4me_get_call. Explain that call4me will ring my own phone so I can speak to the business or verify my identity. I press 1 to join, then press * or hang up to hand the call back.`;
+4. Before call4me_connect_me, give me a heads up with this call's actual calling_number from call4me_get_call. Explain that call4me will ring my own phone so I can speak to the business or verify my identity. I'm on the call as soon as I answer, and I press * or hang up to hand the call back.`;
 }
 
 /** Privacy: what's stored and how to change it. */

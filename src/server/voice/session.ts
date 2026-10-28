@@ -4,7 +4,7 @@ import { ACTIVE, calls, LIMITS, redact, type CallRow, type TranscriptLine } from
 import { telnyx } from '../lib/telnyx';
 import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
 import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft } from './handoff';
-import { alreadyUnreachable, callerHoldsFor, joinWaitMs, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
+import { alreadyUnreachable, callerHoldsFor, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { HoldMeter, type HoldChange } from './hold';
 import { midConversation } from './time-limit';
 import { BACK_OFFICE_TOOLS } from './prompt';
@@ -26,9 +26,9 @@ import { INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, screenerAsk
  *   /answer     call4me_answer_question; the answer goes straight to the voice model
  *   /hang-up    call4me_hang_up; the hangup webhook finishes and bills the call as usual
  *
- * The person's own phone (person.ts): /connect-person rings it, /person-answered starts the wait
- * for their 1, /person-key puts them on the call when they press it and relays their keys to the
- * business after that, /person-left hands the call back.
+ * The person's own phone (person.ts): /connect-person rings it, /person-answered puts them on the
+ * call (or leaves them listening in), /person-key takes a listener over on 1 and relays their keys
+ * to the business once they're on, /person-left hands the call back.
  */
 
 const OPENAI_LIVE_URL = 'https://api.openai.com/v1/live/sessions';
@@ -214,13 +214,13 @@ export class VoiceSession extends DurableObject<Env> {
   private personOn = false;
   /** Whether the business has us waiting; hold time is half price and extends the time limit. */
   private hold = new HoldMeter();
-  /** Why their leg was rung: to join (press 1 or it's hung up) or to listen in for as long as they like. */
+  /** Why their leg was rung: to join (on the call once they answer) or to listen in for as long as they like. */
   private personMode: PersonMode = 'join';
   /** Keys relayed from the person's phone to the business, one after another. */
   private keysOut: Promise<void> = Promise.resolve();
   /** Once they've been rung, the connect condition is settled; lines already checked against it. */
   private personRung = false;
-  /** A ring ended without them pressing 1: the caller stops trying to connect them on this call. */
+  /** A ring to join ended without them on the call: the caller stops trying to connect them on this call. */
   private personUnreachable = false;
   /** Whether this instance holds the whole transcript (it was set up here, or has read the stored one back). */
   private transcriptComplete = false;
@@ -280,7 +280,7 @@ export class VoiceSession extends DurableObject<Env> {
         return Response.json({ message: await this.connectPerson(phone, mode) });
       }
       case '/person-answered':
-        this.personAnswered();
+        await this.personAnswered();
         return new Response('ok');
       case '/person-key': {
         const { digit } = (await req.json()) as { digit: string };
@@ -907,8 +907,8 @@ export class VoiceSession extends DurableObject<Env> {
   }
 
   /**
-   * Ring the person's phone. To join, they answer and press 1; to listen, they hear the call until
-   * they hang up, and can press 1 anytime to take over. Returns what happened.
+   * Ring the person's phone. To join, they're on the call once they answer; to listen, they hear
+   * the call until they hang up, and can press 1 anytime to take over. Returns what happened.
    */
   private async connectPerson(phoneOverride?: string, mode: PersonMode = 'join'): Promise<string> {
     const s = await this.load();
@@ -935,27 +935,14 @@ export class VoiceSession extends DurableObject<Env> {
       return `ringing ${s.person.name} to listen in; nobody on the call hears them, and they take over if they press 1`;
     }
     this.note(`ringing ${s.person.name} to join the call`);
-    return `ringing ${s.person.name}; they join once they pick up and press 1`;
+    return `ringing ${s.person.name}; they're on the call as soon as they pick up`;
   }
 
-  /**
-   * Their phone answered, which a voicemail also does: they stay listen-only until they press 1.
-   * Ringing to join, a leg still listening after JOIN_WAIT_MS is taken for voicemail and hung up;
-   * person-left tells the caller. Ringing to listen, the leg stays for as long as they like.
-   */
-  private personAnswered(): void {
-    const leg = this.personLeg;
-    if (!leg || this.ended) return;
-    const wait = joinWaitMs(this.personMode);
-    if (wait === null) {
-      this.note(`${this.setup?.person?.name ?? 'the person'} is listening in`);
-      return;
-    }
-    setTimeout(() => {
-      if (this.personLeg !== leg || this.personOn || this.ended) return;
-      console.log('person leg never pressed 1', this.setup?.callId);
-      void telnyx(this.env).hangup(leg).catch((err) => console.warn('person hangup', String(err)));
-    }, wait);
+  /** Their phone answered: ringing to join, they're put on the call right away; to listen, they listen in. */
+  private async personAnswered(): Promise<void> {
+    if (!this.personLeg || this.ended) return;
+    if (this.personMode === 'join') return this.personJoin();
+    this.note(`${this.setup?.person?.name ?? 'the person'} is listening in`);
   }
 
   /**
@@ -974,7 +961,7 @@ export class VoiceSession extends DurableObject<Env> {
     await this.keysOut;
   }
 
-  /** They pressed 1: from listening to on the call. */
+  /** From listening (or just answered, ringing to join) to on the call. */
   private async personJoin(): Promise<void> {
     const s = await this.load();
     if (!this.personLeg || this.personOn || this.ended) return;

@@ -298,7 +298,7 @@ export const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries
       <details>
         <summary>can it wait on hold and ring me when someone answers?</summary>
         <p>
-          yes. ask your agent to have call4me ring you as soon as a person picks up. it calls your saved phone, and you press 1 to join.
+          yes. ask your agent to have call4me ring you as soon as a person picks up. it calls your saved phone, and you're on the call as soon as you answer.
           phone menus cost the same per minute as the conversation. whole minutes on hold cost half, and a call still on hold when it reaches its time limit keeps waiting instead of hanging up, as long as your credits cover it.
           ask your agent to set a maximum call length to cap the cost, or schedule the call for a quieter time.
         </p>
@@ -330,7 +330,7 @@ export const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries
         <summary>can i jump on the call myself?</summary>
         <p>
           yes. tell your agent to connect you "as soon as a person picks up" to skip the hold music, or ask during the call. call4me may also ring you if the business needs
-          you to verify your account. your agent should tell you what number to expect. answer and press 1 to join (so your voicemail never ends up on it); press * or hang up to hand it back.
+          you to verify your account. your agent should tell you what number to expect. you're on the call as soon as you answer; press * or hang up to hand it back.
           or ask to just listen in: nobody on the call hears you, the agent keeps working, and you press 1 anytime to take over.
         </p>
       </details>
