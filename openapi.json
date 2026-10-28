@@ -2582,7 +2582,7 @@
     "/api/calls/{call_id}/connect": {
       "post": {
         "operationId": "connectUser",
-        "description": "Ring the user now and patch them into a live call. They join by pressing 1; the caller goes quiet and takes back over when they press * or hang up. Mode \"listen\" lets them listen in without being heard. Tell the user before calling this.",
+        "description": "Ring the user now and patch them into a live call. They are on the call as soon as they answer; the caller goes quiet and takes back over when they press * or hang up. Mode \"listen\" lets them listen in without being heard. Tell the user before calling this.",
         "security": [
           {
             "bearerAuth": []
@@ -2615,7 +2615,7 @@
                   },
                   "mode": {
                     "default": "join",
-                    "description": "\"join\" (default): they take the call over by pressing 1. \"listen\": they listen in while the caller keeps working, and can press 1 anytime to take over",
+                    "description": "\"join\" (default): they take the call over as soon as they answer. \"listen\": they listen in while the caller keeps working, and can press 1 anytime to take over",
                     "type": "string",
                     "enum": [
                       "join",
