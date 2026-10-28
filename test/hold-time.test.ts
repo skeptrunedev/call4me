@@ -74,3 +74,23 @@ test('a call on hold at its limit pays for its extension with the credits its ha
   assert.equal(done!.cost_cents, 2 * 25 + Math.ceil((43 * 25) / 2));
 });
 
+
+test('time the user spends on a call after taking it over is not billed', async () => {
+  const db = d1();
+  await answeredCall(db, 40 * 25);
+  const c = calls(db);
+  // 2 minutes of the caller, then the user takes over for 30, then hands back for 1 more.
+  await c.personJoined('call_1', s(120));
+  await c.personLeft('call_1', s(120 + 1800));
+  const row = await c.finish('call_1', { status: 'completed', pricePerMinuteCents: 25, at: s(120 + 1800 + 60) });
+  assert.equal(row!.cost_cents, 3 * 25);
+  assert.equal(await accounts(db).balanceCents('acct_alice'), 10_000 - 3 * 25);
+});
+
+test('a take-over still going at hangup is free up to the end', async () => {
+  const db = d1();
+  await answeredCall(db, 40 * 25);
+  await calls(db).personJoined('call_1', s(60));
+  const row = await calls(db).finish('call_1', { status: 'completed', pricePerMinuteCents: 25, at: s(60 + 1200) });
+  assert.equal(row!.cost_cents, 25);
+});

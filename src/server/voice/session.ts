@@ -613,7 +613,8 @@ export class VoiceSession extends DurableObject<Env> {
         if (delta) this.menuRecovery.observe(delta, Date.now());
         if (delta && Date.now() - this.keySentAt >= KEY_TRANSCRIPT_LAG_MS) this.keyReplyBy = 0;
         if (this.pendingMachineGuidance === 'screening') void this.queueMachineUpdate(() => this.sendMachineGuidance());
-        this.trackHold(this.hold.them(delta, Date.now()));
+        // While the user has the call, what they hear is theirs to wait on, and their time isn't billed.
+        if (!this.personOn) this.trackHold(this.hold.them(delta, Date.now()));
         this.scheduleHandoffCheck();
         this.scheduleUnansweredCheck();
         this.scheduleHoldingLine();
@@ -991,6 +992,10 @@ export class VoiceSession extends DurableObject<Env> {
   private async personJoined(): Promise<void> {
     const s = await this.load();
     this.personOn = true;
+    // The user's own time on the call is not billed, and is not hold: a hold going now ends here.
+    const now = Date.now();
+    this.trackHold(this.hold.stop(now));
+    if (s) await calls(this.env.DB).personJoined(s.callId, now).catch((err) => console.warn('person join write failed', s.callId, String(err)));
     // Anything the caller had queued would play over the person.
     this.sendPhone({ event: 'clear' });
     this.playbackEndsAt = Date.now();
@@ -1004,6 +1009,8 @@ export class VoiceSession extends DurableObject<Env> {
 
   private personLeft(): void {
     const ended = legEnded(this.personMode, this.personOn);
+    const callId = this.setup?.callId;
+    if (this.personOn && callId) void calls(this.env.DB).personLeft(callId, Date.now()).catch((err) => console.warn('person leave write failed', callId, String(err)));
     this.personOn = false;
     this.personLeg = null;
     this.personMode = 'join';

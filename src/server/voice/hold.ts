@@ -137,6 +137,11 @@ export class HoldMeter {
     return null;
   }
 
+  /** Stop timing a hold at `at` (the user took the call over), returning its end if one was going. */
+  stop(at: number): HoldChange | null {
+    return this.since === null ? null : this.end(at);
+  }
+
   private start(at: number): HoldChange {
     this.since = at;
     this.speechAt = null;

@@ -65,6 +65,9 @@ export interface CallRow {
   /** Seconds on hold already over (billed at half price), and when a hold still going started. */
   hold_seconds: number;
   hold_since: number | null;
+  /** Time the user spent on the call after taking it over, which is not billed (as hold_* above). */
+  person_seconds: number;
+  person_since: number | null;
   hold_cents: number | null;
   outcome: string | null;
   transcript: string | null;
@@ -186,14 +189,30 @@ function billedCents(talkSeconds: number, pricePerMinuteCents: number, holdSecon
 const holdSecondsAt = (row: Pick<CallRow, 'hold_seconds' | 'hold_since'>, at: number) =>
   (row.hold_seconds ?? 0) + (row.hold_since ? Math.max(0, Math.round((at - row.hold_since) / 1000)) : 0);
 
+/** Seconds the user had the call to themselves by `at`, a take-over still going included. */
+const personSecondsAt = (row: Pick<CallRow, 'person_seconds' | 'person_since'>, at: number) =>
+  (row.person_seconds ?? 0) + (row.person_since ? Math.max(0, Math.round((at - row.person_since) / 1000)) : 0);
+
+type Metered = Pick<CallRow, 'answered_at' | 'hold_seconds' | 'hold_since' | 'person_seconds' | 'person_since'>;
+
+/**
+ * What a call has cost by `at`: its answered time less what the user spent on it themselves after
+ * taking it over (call4me is only the bridge then), with hold minutes at half price.
+ */
+function costAt(row: Metered, at: number, pricePerMinuteCents: number): { cents: number; seconds: number; holdSeconds: number } {
+  const talkSeconds = row.answered_at ? Math.max(0, Math.round((at - row.answered_at) / 1000)) : 0;
+  const seconds = Math.max(0, talkSeconds - personSecondsAt(row, at));
+  const holdSeconds = Math.min(holdSecondsAt(row, at), seconds);
+  return { cents: seconds > 0 ? billedCents(seconds, pricePerMinuteCents, holdSeconds) : 0, seconds, holdSeconds };
+}
+
 /**
  * Credits held for a call that its time up to `at` hasn't used. They are held at full price, so a
  * call that spent its time on hold has about half its credits left when its limit comes up.
  */
-function unusedHoldCents(row: Pick<CallRow, 'hold_cents' | 'answered_at' | 'hold_seconds' | 'hold_since'>, at: number, pricePerMinuteCents: number): number {
+function unusedHoldCents(row: Pick<CallRow, 'hold_cents'> & Metered, at: number, pricePerMinuteCents: number): number {
   if (!row.hold_cents || !row.answered_at) return 0;
-  const talkSeconds = Math.max(0, Math.round((at - row.answered_at) / 1000));
-  return Math.max(0, row.hold_cents - billedCents(talkSeconds, pricePerMinuteCents, holdSecondsAt(row, at)));
+  return Math.max(0, row.hold_cents - costAt(row, at, pricePerMinuteCents).cents);
 }
 
 /** A call recorded and ready to dial, with its per-call secrets (account PINs), which are never stored. */
@@ -422,7 +441,8 @@ export function calls(db: D1Database) {
       const status: CallStatus = opts.status === 'completed' && !row.answered_at ? 'no_answer' : opts.status;
       // Only calls that connected and ran normally are billed; our own failures are free. A call
       // never costs more than the credits held for it, even if it ran past its limit.
-      const billed = status === 'completed' && talkSeconds > 0 ? billedCents(talkSeconds, opts.pricePerMinuteCents, holdSecondsAt(row, endedAt)) : 0;
+      const metered = costAt(row, endedAt, opts.pricePerMinuteCents);
+      const billed = status === 'completed' && talkSeconds > 0 ? metered.cents : 0;
       const cost = row.hold_cents ? Math.min(billed, row.hold_cents) : billed;
       const r = await db
         .prepare(
@@ -434,8 +454,16 @@ export function calls(db: D1Database) {
       if ((r.meta.changes ?? 0) > 0) {
         const ledger = accounts(db);
         if (row.hold_cents) await ledger.post(row.account_id, row.hold_cents, 'release', `release:${id}`, 'hold released');
-        const holdMinutes = Math.min(Math.ceil(talkSeconds / 60), Math.floor(Math.min(holdSecondsAt(row, endedAt), talkSeconds) / 60));
-        if (cost > 0) await ledger.post(row.account_id, -cost, 'call', `call:${id}`, `${Math.ceil(talkSeconds / 60)} min to ${row.business}${holdMinutes ? `, ${holdMinutes} on hold at half price` : ''}`);
+        const holdMinutes = Math.floor(metered.holdSeconds / 60);
+        const ownMinutes = Math.floor(personSecondsAt(row, endedAt) / 60);
+        if (cost > 0)
+          await ledger.post(
+            row.account_id,
+            -cost,
+            'call',
+            `call:${id}`,
+            `${Math.ceil(talkSeconds / 60)} min to ${row.business}${holdMinutes ? `, ${holdMinutes} on hold at half price` : ''}${ownMinutes ? `, ${ownMinutes} you took over (free)` : ''}`,
+          );
       }
       return this.byId(id);
     },
@@ -443,6 +471,19 @@ export function calls(db: D1Database) {
     /** The business put the call on hold at `at`. */
     async holdStarted(id: string, at: number): Promise<void> {
       await db.prepare(`UPDATE calls SET hold_since = ? WHERE id = ? AND hold_since IS NULL`).bind(at, id).run();
+    },
+
+    /** The user took the call over at `at`: not billed until they hand it back. */
+    async personJoined(id: string, at: number): Promise<void> {
+      await db.prepare(`UPDATE calls SET person_since = ? WHERE id = ? AND person_since IS NULL`).bind(at, id).run();
+    },
+
+    /** The take-over that started at person_since ended at `at`. */
+    async personLeft(id: string, at: number): Promise<void> {
+      await db
+        .prepare(`UPDATE calls SET person_seconds = person_seconds + MAX(0, CAST(ROUND((? - person_since) / 1000.0) AS INTEGER)), person_since = NULL WHERE id = ? AND person_since IS NOT NULL`)
+        .bind(at, id)
+        .run();
     },
 
     /** The hold that started at hold_since ended at `at`. */
@@ -459,7 +500,7 @@ export function calls(db: D1Database) {
      * price) pay for them first; only the rest is held from the balance. Returns the minutes
      * granted, 0 when the balance can't cover one.
      */
-    async extend(row: Pick<CallRow, 'id' | 'account_id' | 'business' | 'hold_cents' | 'answered_at' | 'hold_seconds' | 'hold_since'>, want: number, pricePerMinuteCents: number, n: number, at: number): Promise<number> {
+    async extend(row: Pick<CallRow, 'id' | 'account_id' | 'business' | 'hold_cents'> & Metered, want: number, pricePerMinuteCents: number, n: number, at: number): Promise<number> {
       const unused = unusedHoldCents(row, at, pricePerMinuteCents);
       const balance = await accounts(db).balanceCents(row.account_id);
       const minutes = Math.min(want, Math.floor((balance + unused) / pricePerMinuteCents));
