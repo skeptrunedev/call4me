@@ -219,6 +219,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'uber-customer-service-number': ['travel-lodging'],
   'dell-customer-service-number': ['retail-shopping'],
   'roku-customer-service-number': ['media-subscriptions', 'subscription-cancellation'],
+  'ticketmaster-customer-service-number': ['venue-activities', 'retail-shopping'],
   'costco-return-policy': ['retail-shopping'],
   'best-buy-return-policy': ['retail-shopping'],
   'how-to-dispute-a-charge': ['personal-finance'],

@@ -208,6 +208,7 @@ import lyftCustomerServiceNumber from './lyft-customer-service-number.md';
 import uberCustomerServiceNumber from './uber-customer-service-number.md';
 import dellCustomerServiceNumber from './dell-customer-service-number.md';
 import rokuCustomerServiceNumber from './roku-customer-service-number.md';
+import ticketmasterCustomerServiceNumber from './ticketmaster-customer-service-number.md';
 import costcoReturnPolicy from './costco-return-policy.md';
 import bestBuyReturnPolicy from './best-buy-return-policy.md';
 import howToDisputeACharge from './how-to-dispute-a-charge.md';
@@ -435,6 +436,7 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'uber-customer-service-number', markdown: uberCustomerServiceNumber },
   { slug: 'dell-customer-service-number', markdown: dellCustomerServiceNumber },
   { slug: 'roku-customer-service-number', markdown: rokuCustomerServiceNumber },
+  { slug: 'ticketmaster-customer-service-number', markdown: ticketmasterCustomerServiceNumber },
   { slug: 'costco-return-policy', markdown: costcoReturnPolicy },
   { slug: 'best-buy-return-policy', markdown: bestBuyReturnPolicy },
   { slug: 'how-to-dispute-a-charge', markdown: howToDisputeACharge },
