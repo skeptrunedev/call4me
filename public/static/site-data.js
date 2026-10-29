@@ -20,9 +20,13 @@
     });
   }
 
+  function count(n, one, many) {
+    return n.toLocaleString('en-US') + ' ' + (n === 1 ? one : many);
+  }
+
   function apply(data) {
     each('[data-site-call-count]', function (element) {
-      element.textContent = ' / ' + data.callCount.toLocaleString('en-US') + (data.callCount === 1 ? ' call placed' : ' calls placed');
+      element.textContent = ' / ' + count(data.callCount, 'call', 'calls') + ' / ' + count(data.minutes, 'minute', 'minutes');
     });
     each('[data-site-countries]', function (element) {
       element.textContent = data.availableCountries > 0 ? ' (numbers available in ' + data.availableCountries + ' countries)' : '';
@@ -87,7 +91,7 @@
       var response = await fetch(endpoint, { credentials: 'same-origin', cache: 'no-store', headers: { accept: 'application/json' }, signal: controller.signal });
       if (!response.ok) throw new Error('Live information unavailable');
       var data = await response.json();
-      if (typeof data.signedIn !== 'boolean' || !Number.isSafeInteger(data.callCount) || data.callCount < 0) throw new Error('Invalid live information');
+      if (typeof data.signedIn !== 'boolean' || !Number.isSafeInteger(data.callCount) || data.callCount < 0 || !Number.isSafeInteger(data.minutes) || data.minutes < 0) throw new Error('Invalid live information');
       apply(data);
     } catch (error) {
       console.error('site data failed', error);

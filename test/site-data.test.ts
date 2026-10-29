@@ -54,7 +54,7 @@ test('general live data reads country availability and does not query blog table
   await db.prepare('INSERT INTO number_offers(country,available,checked_at) VALUES (?,?,?)').bind('US', 1, 0).run();
   await db.prepare('INSERT INTO number_offers(country,available,checked_at) VALUES (?,?,?)').bind('CA', 0, 0).run();
   const response = await app.request('https://call4.me/api/site-data', {}, env);
-  assert.deepEqual(await response.json(), { signedIn: false, callCount: 0, availableCountries: 1 });
+  assert.deepEqual(await response.json(), { signedIn: false, callCount: 0, minutes: 0, availableCountries: 1 });
 });
 
 test('signed in supporters expose only viewer booleans, never account or billing details', async () => {

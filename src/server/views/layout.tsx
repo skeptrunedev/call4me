@@ -6,7 +6,7 @@ import { GA_MEASUREMENT_ID } from '../lib/ga';
 import type { RedditPixelEvent } from '../lib/reddit';
 import { PAGES, SITE, SITE_TITLE, type PageKey, type PageOverride } from '../lib/pages';
 import { OG_CARD_VERSION } from '../lib/og-card';
-import { placedCallCount } from '../services/stats';
+import { usageText, usageTotals } from '../services/stats';
 import { useStaticRender } from '../lib/static-render';
 
 export { SITE_DESCRIPTION } from '../lib/pages';
@@ -22,8 +22,8 @@ export const CallCount: FC<{ separator?: string }> = ({ separator = ' · ' }) =>
 
 async function renderCallCount(db: D1Database, separator: string) {
   try {
-    const count = await placedCallCount(db.withSession('first-unconstrained'));
-    return <span>{separator}{count.toLocaleString('en-US')} {count === 1 ? 'call' : 'calls'} placed</span>;
+    const totals = await usageTotals(db.withSession('first-unconstrained'));
+    return <span>{separator}{usageText(totals, separator)}</span>;
   } catch (error) {
     console.error('footer call count failed', error);
     return <span>{separator}call count unavailable</span>;

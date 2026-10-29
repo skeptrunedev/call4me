@@ -3,7 +3,7 @@ import { getCookie } from 'hono/cookie';
 import { origin, stripeFor, type AppEnv } from '../lib/context';
 import { messengerFor } from '../lib/messaging';
 import { blog as blogService } from '../services/blog';
-import { placedCallCount } from '../services/stats';
+import { usageTotals } from '../services/stats';
 import { supporters } from '../services/supporters';
 import { BlogComments } from '../views/blog';
 import { posts } from './blog';
@@ -23,16 +23,16 @@ siteData.get('/', async (c) => {
   try {
     const db = c.env.DB.withSession(bookmark && /^[0-9a-f-]{8,200}$/i.test(bookmark) ? bookmark : 'first-unconstrained');
     if (!blogRequested) {
-      const [callCount, countries] = await Promise.all([
-        placedCallCount(db),
+      const [usage, countries] = await Promise.all([
+        usageTotals(db),
         db.prepare('SELECT COUNT(*) AS total FROM number_offers WHERE available = 1').first<{ total: number }>(),
       ]);
-      return c.json({ signedIn: Boolean(account), callCount, availableCountries: countries?.total ?? 0 });
+      return c.json({ signedIn: Boolean(account), callCount: usage.calls, minutes: usage.minutes, availableCountries: countries?.total ?? 0 });
     }
     const service = blogService(db, messengerFor(c.env), c.env.APP_NAME, origin(c));
     const reader = getCookie(c, 'cb_reader');
-    const [count, engagement, subscribers, comments, liked, supporter] = await Promise.all([
-      placedCallCount(db),
+    const [usage, engagement, subscribers, comments, liked, supporter] = await Promise.all([
+      usageTotals(db),
       service.engagement(all.map((p) => p.slug)),
       service.subscriberCount(),
       slug ? service.comments(slug) : [],
@@ -41,7 +41,8 @@ siteData.get('/', async (c) => {
     ]);
     return c.json({
       signedIn: Boolean(account),
-      callCount: count,
+      callCount: usage.calls,
+      minutes: usage.minutes,
       subscribers,
       engagement: Object.fromEntries(engagement),
       ...(slug ? { post: { slug, liked, supporter, commentsHtml: String(<BlogComments comments={comments} />) } } : {}),
