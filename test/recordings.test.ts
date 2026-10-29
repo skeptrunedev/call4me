@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test, { type TestContext } from 'node:test';
-import { TelnyxError, type TelnyxRecording } from '../src/server/lib/telnyx';
+import { telnyx, TelnyxError, type TelnyxRecording } from '../src/server/lib/telnyx';
 import { ACTIVE, CallError, type CallRow } from '../src/server/services/calls';
 import { getCallRecordings, recordingUrl } from '../src/server/services/recordings';
 
@@ -287,3 +287,18 @@ test('an unknown recording or a missing format resolves to null', async (t) => {
   assert.equal(await recordingUrl(env, accountId, callId, 'recording_one', 'wav'), null);
 });
 
+
+test('inbound calls are recorded from answer like outbound ones, which the outbound voice profile records', async (t: TestContext) => {
+  const bodies: Record<string, unknown>[] = [];
+  t.mock.method(globalThis, 'fetch', async (url: string, init: RequestInit) => {
+    assert.match(url, /\/calls\/.+\/actions\/answer$/);
+    bodies.push(JSON.parse(String(init.body)));
+    return Response.json({ data: { result: 'ok', recording_id: 'rec_1' } });
+  });
+  await telnyx(environment()).answer(controlId, { webhookUrl: 'https://call4.me/webhooks/telnyx', streamUrl: 'wss://voice.call4.me/stream', callId, timeLimitSecs: 1800 });
+  assert.equal(bodies.length, 1);
+  assert.equal(bodies[0]!.record, 'record-from-answer');
+  assert.equal(bodies[0]!.record_channels, 'single');
+  assert.equal(bodies[0]!.record_format, 'wav');
+  assert.equal(bodies[0]!.stream_url, 'wss://voice.call4.me/stream');
+});

@@ -83,6 +83,13 @@ const STREAM = {
   stream_bidirectional_codec: 'PCMU',
 } as const;
 
+/**
+ * Inbound calls are recorded like outbound ones. Outbound recording comes from the outbound voice
+ * profile (record all, single channel, wav), which never applies to a call we answer, so the
+ * answer command asks for the same recording itself.
+ */
+export const INBOUND_RECORDING = { record: 'record-from-answer', record_channels: 'single', record_format: 'wav' } as const;
+
 const PERSON_LEG = '|person';
 export const clientState = (callId: string) => btoa(callId);
 /** The person's own phone, patched into a call: same call id, marked so its hang-up doesn't end the call. */
@@ -142,7 +149,7 @@ export function telnyx(env: TelnyxEnv) {
       throw new TelnyxError('too many recording pages', 502);
     },
 
-    /** Place an outbound call. Recording stays off (it is only on when `record` is passed). */
+    /** Place an outbound call. The outbound voice profile records it. */
     async dial(opts: { to: string; from: string; webhookUrl: string; streamUrl: string; callId: string; timeLimitSecs: number }): Promise<string> {
       const r = await call<{ data: { call_control_id: string } }>(env, 'POST', '/calls', {
         connection_id: env.TELNYX_CONNECTION_ID,
@@ -159,7 +166,7 @@ export function telnyx(env: TelnyxEnv) {
       return r.data.call_control_id;
     },
 
-    /** Answer an inbound call and stream it the same way. */
+    /** Answer an inbound call, record it, and stream it the same way. */
     async answer(callControlId: string, opts: { webhookUrl: string; streamUrl: string; callId: string; timeLimitSecs: number }): Promise<void> {
       await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/answer`, {
         webhook_url: opts.webhookUrl,
@@ -167,6 +174,7 @@ export function telnyx(env: TelnyxEnv) {
         time_limit_secs: opts.timeLimitSecs,
         stream_url: opts.streamUrl,
         ...STREAM,
+        ...INBOUND_RECORDING,
       });
     },
 
