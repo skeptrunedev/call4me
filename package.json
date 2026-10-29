@@ -14,6 +14,7 @@
     "db:migrate:local": "wrangler d1 migrations apply callbay --local",
     "db:migrate:remote": "wrangler d1 migrations apply callbay --remote",
     "deploy": "scripts/deploy-voice.sh && wrangler deploy",
+    "delete-account": "node scripts/delete-account.mjs",
     "grant": "node scripts/grant-credits.mjs",
     "fernand": "node scripts/fernand-sync.mjs",
     "number": "tsx scripts/number.ts",
