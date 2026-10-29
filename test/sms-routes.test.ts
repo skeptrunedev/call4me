@@ -7,6 +7,9 @@ import type { Account } from '../src/server/services/accounts';
 import { sms } from '../src/server/routes/sms';
 import { smsConsent } from '../src/server/services/sms-consent';
 import { d1 } from './sqlite-d1';
+import { executionCtx, installEdgeCache } from './edge-cache';
+
+installEdgeCache();
 
 function setup(signedIn = true) {
   const sqlite = d1();
@@ -22,7 +25,7 @@ function setup(signedIn = true) {
     method,
     headers: { ...(origin === null ? {} : { origin }), 'content-type': 'application/x-www-form-urlencoded' },
     ...(body === undefined ? {} : { body }),
-  }, { DB: db } as Env);
+  }, { DB: db } as Env, executionCtx);
   return { db, request };
 }
 

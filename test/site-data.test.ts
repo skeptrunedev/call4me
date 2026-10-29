@@ -6,6 +6,9 @@ import { Hono } from 'hono';
 import type { AppEnv } from '../src/server/lib/context';
 import type { Account } from '../src/server/services/accounts';
 import { d1 } from './sqlite-d1';
+import { executionCtx, installEdgeCache } from './edge-cache';
+
+installEdgeCache();
 
 registerHooks({
   load(url, context, next) {
@@ -35,7 +38,7 @@ test('live blog fragments escape comments and never expose private database fiel
     .bind('comment_test', slug, '<img src=x onerror=alert(1)>', 'secret@example.com', '<script>alert(1)</script>', 'live', '192.0.2.1', 0).run();
   await db.prepare('INSERT INTO blog_comments (id,post_slug,name,email,body,status,created_at) VALUES (?,?,?,?,?,?,?)')
     .bind('removed_test', slug, 'removed', 'removed@example.com', 'removed body', 'removed', 0).run();
-  const response = await app.request(`https://call4.me/blog/site-data?post=${slug}`, { headers: { cookie: `cb_reader=${reader}; cb_d1=12345678-abcd` } }, env);
+  const response = await app.request(`https://call4.me/blog/site-data?post=${slug}`, { headers: { cookie: `cb_reader=${reader}; cb_d1=12345678-abcd` } }, env, executionCtx);
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('cache-control'), 'private, no-store');
   const body = await response.json();
@@ -53,7 +56,7 @@ test('general live data reads country availability and does not query blog table
   const { app, db, env } = fixture();
   await db.prepare('INSERT INTO number_offers(country,available,checked_at) VALUES (?,?,?)').bind('US', 1, 0).run();
   await db.prepare('INSERT INTO number_offers(country,available,checked_at) VALUES (?,?,?)').bind('CA', 0, 0).run();
-  const response = await app.request('https://call4.me/api/site-data', {}, env);
+  const response = await app.request('https://call4.me/api/site-data', {}, env, executionCtx);
   assert.deepEqual(await response.json(), { signedIn: false, callCount: 0, minutes: 0, availableCountries: 1 });
 });
 
@@ -61,7 +64,7 @@ test('signed in supporters expose only viewer booleans, never account or billing
   const { app, db, env } = fixture({ id: 'acct_alice', email: 'alice@example.com', key_prefix: 'cb_live_private' } as Account);
   const time = Date.now();
   await db.prepare('INSERT INTO supporters VALUES (?,?,?,?,?,?,?,?)').bind('acct_alice', 'cus_private', 'sub_private', 'active', time + 86400000, time, time, time).run();
-  const response = await app.request(`https://call4.me/blog/site-data?post=${slug}`, {}, env);
+  const response = await app.request(`https://call4.me/blog/site-data?post=${slug}`, {}, env, executionCtx);
   const body = await response.json();
   assert.equal(body.signedIn, true);
   assert.equal(body.post.supporter, true);
@@ -70,12 +73,12 @@ test('signed in supporters expose only viewer booleans, never account or billing
 
 test('unknown posts and database failures return explicit uncached errors', async (t) => {
   const { app, env } = fixture();
-  const unknown = await app.request('https://call4.me/blog/site-data?post=not-a-post', {}, env);
+  const unknown = await app.request('https://call4.me/blog/site-data?post=not-a-post', {}, env, executionCtx);
   assert.equal(unknown.status, 404);
   assert.equal(unknown.headers.get('cache-control'), 'private, no-store');
   t.mock.method(console, 'error', () => {});
   env.DB.withSession = () => { throw new Error('database offline'); };
-  const failed = await app.request('https://call4.me/api/site-data', {}, env);
+  const failed = await app.request('https://call4.me/api/site-data', {}, env, executionCtx);
   assert.equal(failed.status, 503);
   assert.equal(failed.headers.get('cache-control'), 'private, no-store');
   assert.deepEqual(await failed.json(), { error: 'Live information could not be loaded. Please retry.' });

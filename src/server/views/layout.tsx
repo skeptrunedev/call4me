@@ -6,7 +6,8 @@ import { GA_MEASUREMENT_ID } from '../lib/ga';
 import type { RedditPixelEvent } from '../lib/reddit';
 import { PAGES, SITE, SITE_TITLE, type PageKey, type PageOverride } from '../lib/pages';
 import { OG_CARD_VERSION } from '../lib/og-card';
-import { usageText, usageTotals } from '../services/stats';
+import { usageText } from '../services/stats';
+import { usage } from '../lib/usage-cache';
 import { useStaticRender } from '../lib/static-render';
 
 export { SITE_DESCRIPTION } from '../lib/pages';
@@ -17,12 +18,12 @@ export const CallCount: FC<{ separator?: string }> = ({ separator = ' · ' }) =>
   if (staticConfig) return <span data-site-call-count aria-live="polite">{separator}loading call count</span>;
   const ctx = tryGetContext<AppEnv>();
   // Standalone rendering (for previews and tests) has no database binding.
-  return ctx ? renderCallCount(ctx.env.DB, separator) : null;
+  return ctx ? renderCallCount(ctx.env.DB, ctx.req.url, ctx.executionCtx, separator) : null;
 };
 
-async function renderCallCount(db: D1Database, separator: string) {
+async function renderCallCount(db: D1Database, url: string, waiter: Pick<ExecutionContext, 'waitUntil'>, separator: string) {
   try {
-    const totals = await usageTotals(db.withSession('first-unconstrained'));
+    const totals = await usage(db.withSession('first-unconstrained'), url, waiter);
     return <span>{separator}{usageText(totals, separator)}</span>;
   } catch (error) {
     console.error('footer call count failed', error);

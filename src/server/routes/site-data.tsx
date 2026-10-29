@@ -3,7 +3,7 @@ import { getCookie } from 'hono/cookie';
 import { origin, stripeFor, type AppEnv } from '../lib/context';
 import { messengerFor } from '../lib/messaging';
 import { blog as blogService } from '../services/blog';
-import { usageTotals } from '../services/stats';
+import { usage as usageTotals } from '../lib/usage-cache';
 import { supporters } from '../services/supporters';
 import { BlogComments } from '../views/blog';
 import { posts } from './blog';
@@ -24,7 +24,7 @@ siteData.get('/', async (c) => {
     const db = c.env.DB.withSession(bookmark && /^[0-9a-f-]{8,200}$/i.test(bookmark) ? bookmark : 'first-unconstrained');
     if (!blogRequested) {
       const [usage, countries] = await Promise.all([
-        usageTotals(db),
+        usageTotals(db, c.req.url, c.executionCtx),
         db.prepare('SELECT COUNT(*) AS total FROM number_offers WHERE available = 1').first<{ total: number }>(),
       ]);
       return c.json({ signedIn: Boolean(account), callCount: usage.calls, minutes: usage.minutes, availableCountries: countries?.total ?? 0 });
@@ -32,7 +32,7 @@ siteData.get('/', async (c) => {
     const service = blogService(db, messengerFor(c.env), c.env.APP_NAME, origin(c));
     const reader = getCookie(c, 'cb_reader');
     const [usage, engagement, subscribers, comments, liked, supporter] = await Promise.all([
-      usageTotals(db),
+      usageTotals(db, c.req.url, c.executionCtx),
       service.engagement(all.map((p) => p.slug)),
       service.subscriberCount(),
       slug ? service.comments(slug) : [],

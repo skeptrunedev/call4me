@@ -6,6 +6,7 @@ import { exampleAudio } from './lib/example-audio';
 import { hasCredentials } from './lib/session-credentials';
 import { redditCookies, redditVisitOf, saveRedditVisit } from './lib/reddit-visit';
 import { STATIC_PAGES } from './static-manifest.generated';
+import { cachedUsage, fillUsage } from './lib/usage-cache';
 
 /** Null delegates to the existing authenticated server. No response cache contains user data. */
 export async function staticResponse(request: Request, env: Env): Promise<Response | null> {
@@ -74,10 +75,24 @@ export async function staticResponse(request: Request, env: Env): Promise<Respon
   return response;
 }
 
+/**
+ * A prebuilt page with the footer's usage totals filled in from the edge cache (never D1), so it
+ * shows them on first paint. The ETag stays the build's: a revalidated copy shows the totals it
+ * was served with until site-data.js brings them up to date, as it does on every page.
+ */
+export async function withUsage(response: Response, url: string): Promise<Response> {
+  if (response.status !== 200 || !response.body || !response.headers.get('content-type')?.startsWith('text/html')) return response;
+  const totals = await cachedUsage(url).catch(() => null);
+  if (!totals) return response;
+  const filled = new Response(fillUsage(await response.text(), totals), response);
+  filled.headers.delete('content-length');
+  return filled;
+}
+
 export default {
   async fetch(request, env, ctx) {
     const response = await staticResponse(request, env);
-    if (response) return response;
+    if (response) return withUsage(response, request.url);
     const { default: app } = await import('./index');
     return app.fetch(request, env, ctx);
   },

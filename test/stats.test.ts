@@ -7,6 +7,7 @@ import type { AppEnv } from '../src/server/lib/context';
 import { usageTotals } from '../src/server/services/stats';
 import { Layout } from '../src/server/views/layout';
 import { d1 } from './sqlite-d1';
+import { installEdgeCache } from './edge-cache';
 
 test('aggregate usage counts every connected call in either direction and their whole minutes, excluding never dialed requests', async () => {
   const db = d1();
@@ -25,7 +26,8 @@ test('aggregate usage counts every connected call in either direction and their 
   assert.deepEqual(await usageTotals(db), { calls: 5, minutes: 3 });
 });
 
-test('the shared footer resolves live counts before sending HTML and reports database errors without breaking the page', async () => {
+test('the shared footer resolves live counts before sending HTML, keeps them in the edge cache, and reports database errors without breaking the page', async () => {
+  const cache = installEdgeCache();
   let total = 1234;
   const minutes = 5678;
   let fail = false;
@@ -41,12 +43,21 @@ test('the shared footer resolves live counts before sending HTML and reports dat
   const app = new Hono<AppEnv>();
   app.use('*', contextStorage());
   app.get('/', (c) => c.html(jsx(Layout, { children: 'page content' })));
-  const page = () => app.request('/', {}, { DB: db } as Env).then((response) => response.text());
+  const background: Promise<unknown>[] = [];
+  const ctx = { waitUntil: (p: Promise<unknown>) => background.push(p), passThroughOnException() {}, props: {} } as unknown as ExecutionContext;
+  const page = async () => {
+    const html = await app.request('/', {}, { DB: db } as Env, ctx).then((response) => response.text());
+    await Promise.all(background);
+    return html;
+  };
   const initial = await page();
   assert.match(initial, /operated by Skeptrune LLC/);
   assert.match(initial, /1,234 calls \/ 5,678 minutes/);
   total = 1235;
+  assert.match(await page(), /1,234 calls \/ 5,678 minutes/, 'a fresh cached copy is served without D1');
+  cache.clear();
   assert.match(await page(), /1,235 calls \/ 5,678 minutes/);
+  cache.clear();
   fail = true;
   const originalError = console.error;
   const errors: unknown[][] = [];

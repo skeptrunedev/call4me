@@ -7,6 +7,9 @@ import type { Account } from '../src/server/services/accounts';
 import { profiles } from '../src/server/services/profiles';
 import { pub } from '../src/server/routes/public';
 import { d1 } from './sqlite-d1';
+import { executionCtx, installEdgeCache } from './edge-cache';
+
+installEdgeCache();
 
 function setup(signedIn = true) {
   const sqlite = d1();
@@ -20,7 +23,7 @@ function setup(signedIn = true) {
   app.route('/', pub);
   const env = { DB: db, BETTER_AUTH_SECRET: 'test-secret', PRICE_PER_MINUTE_CENTS: '25' } as unknown as Env;
   const request = (path: string, method = 'GET', body?: string, origin: string | null = 'https://call4.me') =>
-    app.request(`https://call4.me${path}`, { method, headers: { ...(origin === null ? {} : { origin }), 'content-type': 'application/x-www-form-urlencoded' }, ...(body === undefined ? {} : { body }) }, env);
+    app.request(`https://call4.me${path}`, { method, headers: { ...(origin === null ? {} : { origin }), 'content-type': 'application/x-www-form-urlencoded' }, ...(body === undefined ? {} : { body }) }, env, executionCtx);
   return { db, request };
 }
 
