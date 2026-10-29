@@ -40,6 +40,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'openai-agents-sdk-phone-calls': ['agent-software'],
   'opencode-phone-calls': ['agent-software'],
   'expedia-customer-service-number': ['airlines', 'travel-lodging'],
+  'booking-com-customer-service-number': ['travel-lodging'],
   'airbnb-customer-service-number': ['travel-lodging'],
   'progressive-customer-service': ['insurance'],
   'jetblue-customer-service': ['airlines'],

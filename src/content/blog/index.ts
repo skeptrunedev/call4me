@@ -194,6 +194,7 @@ import jetblueCustomerService from './jetblue-customer-service.md';
 import progressiveCustomerService from './progressive-customer-service.md';
 import airbnbCustomerServiceNumber from './airbnb-customer-service-number.md';
 import expediaCustomerServiceNumber from './expedia-customer-service-number.md';
+import bookingComCustomerServiceNumber from './booking-com-customer-service-number.md';
 import opencodePhoneCalls from './opencode-phone-calls.md';
 import openaiAgentsSdkPhoneCalls from './openai-agents-sdk-phone-calls.md';
 import mastraMcpPhoneCalls from './mastra-mcp-phone-calls.md';
@@ -418,6 +419,7 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'progressive-customer-service', markdown: progressiveCustomerService },
   { slug: 'airbnb-customer-service-number', markdown: airbnbCustomerServiceNumber },
   { slug: 'expedia-customer-service-number', markdown: expediaCustomerServiceNumber },
+  { slug: 'booking-com-customer-service-number', markdown: bookingComCustomerServiceNumber },
   { slug: 'opencode-phone-calls', markdown: opencodePhoneCalls },
   { slug: 'openai-agents-sdk-phone-calls', markdown: openaiAgentsSdkPhoneCalls },
   { slug: 'mastra-mcp-phone-calls', markdown: mastraMcpPhoneCalls },
