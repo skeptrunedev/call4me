@@ -7,13 +7,13 @@ export const CallOnboarding: FC<{ numbers?: NumberView[] }> = ({ numbers = [] })
     <h2>when call4me calls you</h2>
     {numbers.length ? (
       <>
-        <p>save {numbers.length === 1 ? 'this number' : 'these numbers'} as a contact named call4me so you recognize a call:</p>
+        <p>save {numbers.length === 1 ? 'this number' : 'these numbers'} as a contact named call4me. if your phone screens unknown callers (pixel call screen, silence unknown callers, a carrier spam filter), the screener answers in your place and gets put on the business call. a saved contact rings straight through:</p>
         <ul>
           {numbers.map((n) => <li><strong>{n.number}</strong>{numbers.length > 1 && <> ({n.country_name})</>}</li>)}
         </ul>
       </>
     ) : (
-      <p>your free us number is assigned on your first call. your agent will show you the number to save as a contact named call4me once the call starts.</p>
+      <p>your free us number is assigned on your first call. your agent will show you the number to save as a contact named call4me once the call starts. save it before a call that may ring you: phones that screen unknown callers answer in your place.</p>
     )}
     <p>
       call4me may ring your personal phone if a business needs you to verify your account, or if you ask to join the call. your personal phone is the number you save
