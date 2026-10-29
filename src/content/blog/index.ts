@@ -216,6 +216,7 @@ import discoverDisputeCharge from './discover-dispute-charge.md';
 import capitalOneDisputeCharge from './capital-one-dispute-charge.md';
 import pncDisputeCharge from './pnc-dispute-charge.md';
 import wellsFargoDisputeCharge from './wells-fargo-dispute-charge.md';
+import netflixCustomerServiceNumber from './netflix-customer-service-number.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -441,4 +442,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'capital-one-dispute-charge', markdown: capitalOneDisputeCharge },
   { slug: 'pnc-dispute-charge', markdown: pncDisputeCharge },
   { slug: 'wells-fargo-dispute-charge', markdown: wellsFargoDisputeCharge },
+  { slug: 'netflix-customer-service-number', markdown: netflixCustomerServiceNumber },
 ];
