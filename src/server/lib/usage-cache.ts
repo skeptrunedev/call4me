@@ -1,4 +1,4 @@
-import { usageText, usageTotals, type UsageTotals } from '../services/stats';
+import { usageParts, usageTotals, type UsageTotals } from '../services/stats';
 
 /**
  * The footer's usage totals, kept in the edge cache so pages show them without waiting on D1.
@@ -31,9 +31,10 @@ export async function usage(db: D1Database | D1DatabaseSession, url: string, ctx
   return { calls: cached.calls, minutes: cached.minutes };
 }
 
-const PLACEHOLDER = /(<span data-site-call-count[^>]*>)([^<]*?)loading call count</;
+const PLACEHOLDER = /(<span [^>]*data-site-call-count[^>]*>)loading call count</;
 
 /** A prebuilt page's footer with the cached totals filled in, so it doesn't render "loading" first. */
 export function fillUsage(html: string, totals: UsageTotals): string {
-  return html.replace(PLACEHOLDER, (_, open: string, separator: string) => `${open}${separator}${usageText(totals, separator)}<`);
+  const [calls, minutes] = usageParts(totals);
+  return html.replace(PLACEHOLDER, (_, open: string) => `${open}<span>${calls}</span> <span>${minutes}</span><`);
 }

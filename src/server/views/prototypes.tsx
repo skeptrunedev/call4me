@@ -116,7 +116,7 @@ export const PrototypePage: FC<HomePageProps & { style: PrototypeStyle }> = (
             <a href="/blog/rss.xml">RSS</a>
           </nav>
           <span>
-            © call4me <CallCount separator=" / " />
+            © call4me <CallCount />
           </span>
         </footer>
         <nav class="prototype-picker" aria-label="choose a prototype">

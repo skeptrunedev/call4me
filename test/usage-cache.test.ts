@@ -33,8 +33,8 @@ test('usage reads D1 once, serves the cached copy while fresh, and refreshes a s
 
 test('prebuilt pages get the cached totals in place of the loading placeholder, and are untouched without them', async () => {
   installEdgeCache();
-  const html = '<footer><span>© call4me</span><span data-site-call-count aria-live="polite"> / loading call count</span></footer>';
-  assert.equal(fillUsage(html, { calls: 2703, minutes: 1 }), '<footer><span>© call4me</span><span data-site-call-count aria-live="polite"> / 2,703 calls / 1 minute</span></footer>');
+  const html = '<footer><span>© call4me</span><span class="footer-usage" data-site-call-count aria-live="polite">loading call count</span></footer>';
+  assert.equal(fillUsage(html, { calls: 2703, minutes: 1 }), '<footer><span>© call4me</span><span class="footer-usage" data-site-call-count aria-live="polite"><span>2,703 calls</span> <span>1 minute</span></span></footer>');
 
   const page = () => new Response(html, { headers: { 'content-type': 'text/html; charset=utf-8', 'content-length': String(html.length), etag: '"build-42"' } });
   assert.equal(await (await withUsage(page(), url)).text(), html, 'nothing cached yet: the page loads the totals itself');
@@ -43,7 +43,7 @@ test('prebuilt pages get the cached totals in place of the loading placeholder, 
   await usage(h.db, url, h.ctx);
   await h.settle();
   const filled = await withUsage(page(), url);
-  assert.match(await filled.text(), /> \/ 2,703 calls \/ 7,954 minutes<\/span>/);
+  assert.match(await filled.text(), /><span>2,703 calls<\/span> <span>7,954 minutes<\/span><\/span>/);
   assert.equal(filled.headers.get('content-length'), null);
   assert.equal(filled.headers.get('etag'), '"build-42"');
 

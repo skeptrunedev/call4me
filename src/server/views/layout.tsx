@@ -6,28 +6,32 @@ import { GA_MEASUREMENT_ID } from '../lib/ga';
 import type { RedditPixelEvent } from '../lib/reddit';
 import { PAGES, SITE, SITE_TITLE, type PageKey, type PageOverride } from '../lib/pages';
 import { OG_CARD_VERSION } from '../lib/og-card';
-import { usageText } from '../services/stats';
+import { usageParts } from '../services/stats';
 import { usage } from '../lib/usage-cache';
 import { useStaticRender } from '../lib/static-render';
 
 export { SITE_DESCRIPTION } from '../lib/pages';
 
-/** Read fresh aggregate usage from the nearest D1 replica, like the blog's social counts. */
-export const CallCount: FC<{ separator?: string }> = ({ separator = ' · ' }) => {
+/**
+ * The footer's usage figures, read through the edge cache (lib/usage-cache.ts). The wrapper is
+ * display: contents, so each figure sits in the footer's own spacing like its other items (the
+ * space between them only shows where the footer isn't a flex row).
+ */
+export const CallCount: FC = () => {
   const staticConfig = useStaticRender();
-  if (staticConfig) return <span data-site-call-count aria-live="polite">{separator}loading call count</span>;
+  if (staticConfig) return <span class="footer-usage" data-site-call-count aria-live="polite">loading call count</span>;
   const ctx = tryGetContext<AppEnv>();
   // Standalone rendering (for previews and tests) has no database binding.
-  return ctx ? renderCallCount(ctx.env.DB, ctx.req.url, ctx.executionCtx, separator) : null;
+  return ctx ? renderCallCount(ctx.env.DB, ctx.req.url, ctx.executionCtx) : null;
 };
 
-async function renderCallCount(db: D1Database, url: string, waiter: Pick<ExecutionContext, 'waitUntil'>, separator: string) {
+async function renderCallCount(db: D1Database, url: string, waiter: Pick<ExecutionContext, 'waitUntil'>) {
   try {
-    const totals = await usage(db.withSession('first-unconstrained'), url, waiter);
-    return <span>{separator}{usageText(totals, separator)}</span>;
+    const [calls, minutes] = usageParts(await usage(db.withSession('first-unconstrained'), url, waiter));
+    return <span class="footer-usage"><span>{calls}</span> <span>{minutes}</span></span>;
   } catch (error) {
     console.error('footer call count failed', error);
-    return <span>{separator}call count unavailable</span>;
+    return <span class="footer-usage">call count unavailable</span>;
   }
 }
 
@@ -278,7 +282,7 @@ export const Layout: FC<{
               <a class="rss-link" href="/blog/rss.xml" type="application/rss+xml" aria-label="Subscribe to the RSS feed" title="RSS feed">RSS</a>
             </nav>
             <div class="footer-meta">
-              <span>© call4me / operated by Skeptrune LLC</span><CallCount separator=" / " />
+              <span>© call4me</span><span>operated by Skeptrune LLC</span><CallCount />
               <nav class="footer-socials" aria-label="follow Nick Khami">
                 <a href="https://x.com/skeptrune" aria-label="Nick Khami on X" title="Nick Khami on X">
                   <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="m4 3 12 18h4L8 3H4Zm1 18L19 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /></svg>

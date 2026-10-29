@@ -20,13 +20,19 @@
     });
   }
 
+  function figure(text) {
+    var span = document.createElement('span');
+    span.textContent = text;
+    return span;
+  }
+
   function count(n, one, many) {
     return n.toLocaleString('en-US') + ' ' + (n === 1 ? one : many);
   }
 
   function apply(data) {
     each('[data-site-call-count]', function (element) {
-      element.textContent = ' / ' + count(data.callCount, 'call', 'calls') + ' / ' + count(data.minutes, 'minute', 'minutes');
+      element.replaceChildren(figure(count(data.callCount, 'call', 'calls')), ' ', figure(count(data.minutes, 'minute', 'minutes')));
     });
     each('[data-site-countries]', function (element) {
       element.textContent = data.availableCountries > 0 ? ' (numbers available in ' + data.availableCountries + ' countries)' : '';
@@ -62,7 +68,7 @@
   }
 
   function failed() {
-    each('[data-site-call-count]', function (element) { element.textContent = ' / call count unavailable'; });
+    each('[data-site-call-count]', function (element) { element.textContent = 'call count unavailable'; });
     each('[data-site-countries]', function (element) { element.textContent = ' (country availability could not be loaded)'; });
     each('[data-site-engagement]', function (element) { element.textContent = 'counts unavailable'; });
     each('[data-site-subscribers]', function (element) { element.textContent = ' / reader count unavailable'; });

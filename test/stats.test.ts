@@ -52,11 +52,11 @@ test('the shared footer resolves live counts before sending HTML, keeps them in 
   };
   const initial = await page();
   assert.match(initial, /operated by Skeptrune LLC/);
-  assert.match(initial, /1,234 calls \/ 5,678 minutes/);
+  assert.match(initial, /1,234 calls<\/span> <span>5,678 minutes/);
   total = 1235;
-  assert.match(await page(), /1,234 calls \/ 5,678 minutes/, 'a fresh cached copy is served without D1');
+  assert.match(await page(), /1,234 calls<\/span> <span>5,678 minutes/, 'a fresh cached copy is served without D1');
   cache.clear();
-  assert.match(await page(), /1,235 calls \/ 5,678 minutes/);
+  assert.match(await page(), /1,235 calls<\/span> <span>5,678 minutes/);
   cache.clear();
   fail = true;
   const originalError = console.error;

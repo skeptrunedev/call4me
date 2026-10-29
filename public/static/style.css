@@ -101,6 +101,7 @@ footer { border-top: 1px solid var(--line); background: var(--paper); padding: 4
 .footer-links a { text-decoration: none; }
 .footer-links a:hover { text-decoration: underline; }
 .footer-meta { grid-column: 1 / -1; display: flex; gap: 20px; flex-wrap: wrap; padding-top: 28px; border-top: 1px solid var(--line); }
+.footer-usage { display: contents; }
 .footer-socials { display: flex; align-items: center; gap: 22px; margin-left: auto; }
 .footer-socials a { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); text-decoration: none; }
 .footer-socials a:hover { text-decoration: underline; }
