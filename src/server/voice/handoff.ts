@@ -274,7 +274,7 @@ export function asksForMessage(text: string): boolean {
 }
 
 /** A greeting asking for a message: where a voicemail starts recording when the carrier hears no beep. */
-const VOICEMAIL_PROMPT = /\b(?:leave (?:me )?(?:a|your) (?:brief |short |quick )?(?:message|name and number)|(?:after|at) the (?:tone|beep)|record your message|d[eé]ja(?:r|me)? (?:un|su) mensaje|d[eé]je(?:me)? (?:un|su) mensaje|despu[eé]s del tono|nach dem (?:signalton|piepton|ton)|hinterlass(?:en sie|e) (?:mir )?(?:eine|ihre) nachricht)\b/i;
+const VOICEMAIL_PROMPT = /\b(?:leave (?:me |us )?(?:a|your) (?:brief |short |quick |detailed )?(?:message|name,? (?:and |& )?(?:your )?(?:(?:phone|telephone|contact|callback|call ?back) )?number)|(?:after|at) the (?:tone|beep)|record your message|d[eé]ja(?:r|me)? (?:un|su) mensaje|d[eé]je(?:me)? (?:un|su) mensaje|despu[eé]s del tono|nach dem (?:signalton|piepton|ton)|hinterlass(?:en sie|e) (?:mir )?(?:eine|ihre) nachricht)\b/i;
 
 /**
  * The caller asked to be called, texted or emailed back and nobody answered: a voicemail the carrier
