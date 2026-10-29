@@ -213,7 +213,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/ticketmaster-customer-service-number": {
     "html": "/__pages/18bbc469ba31f4a5.html",
     "markdown": "/__pages/18bbc469ba31f4a5.md",
-    "tokens": 6273
+    "tokens": 6277
   },
   "/blog/how-to-negotiate-a-hospital-bill": {
     "html": "/__pages/b88beca37c93cea2.html",

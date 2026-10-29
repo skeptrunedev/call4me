@@ -45,7 +45,7 @@ The whole call, 7 minutes 7 seconds. Eight short silences, about 6 seconds in to
 
 <audio controls preload="metadata" src="/static/blog/ticketmaster-customer-service-number.mp3" style="width:100%"><a href="/static/blog/ticketmaster-customer-service-number.mp3">listen to the recording</a></audio>
 
-No keys were pressed on this call. Everything went through the voice assistant.
+There was no keypad menu on this call. Everything went through the voice assistant by speaking.
 
 Jump to a moment:
 
