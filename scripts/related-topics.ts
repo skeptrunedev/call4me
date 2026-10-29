@@ -215,6 +215,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'instacart-customer-service-number': ['meal-delivery'],
   'lyft-customer-service-number': ['travel-lodging'],
   'uber-customer-service-number': ['travel-lodging'],
+  'uber-eats-customer-service-number': ['meal-delivery'],
   'dell-customer-service-number': ['retail-shopping'],
   'costco-return-policy': ['retail-shopping'],
   'best-buy-return-policy': ['retail-shopping'],
