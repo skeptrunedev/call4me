@@ -280,7 +280,17 @@ export const CATEGORIES: Category[] = [
     slug: 'general',
     name: 'Questions for a business',
     examples: 'hours, stock checks, quotes, "do you do X", order status',
-    fields: [req('questions', 'what to find out', 'What exactly should the caller find out?'), fromProfile('full_name', false, { ask: 'What name should the caller give if asked?' }), fromProfile('phone', false), opt('order_number', 'order or account number', 'Is there an order or account number?')],
+    fields: [
+      req('questions', 'what to find out', 'What exactly should the caller find out?'),
+      fromProfile('full_name', false, { ask: 'What name should the caller give if asked?' }),
+      fromProfile('phone', false),
+      // Account and billing questions land here too, and their reps verify identity: saved
+      // details come along so the caller has them when asked (Kaiser wanted a date of birth).
+      fromProfile('date_of_birth', false),
+      fromProfile('address', false),
+      fromProfile('email', false),
+      opt('order_number', 'order or account number', 'Is there an order or account number?'),
+    ],
   },
 ];
 
