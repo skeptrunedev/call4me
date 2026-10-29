@@ -36,7 +36,7 @@ const WAIT_REQUEST = new RegExp(
       String.raw`(?:may|will) be (?:monitored|recorded)|is being recorded|recorded for quality`,
       String.raw`someone (?:who|that) can help|right person|right department`,
       String.raw`(?:will|'ll) be with you|(?:still )?(?:helping|assisting|serving|with|on the phone with) other (?:callers|patients|customers|guests|clients|members|people)|hold your place|place in (?:line|the queue)|(?:sorry|apologi[sz]e) (?:about |for )?(?:the|your) wait|thanks? (?:you )?(?:so much |kindly )?for (?:your )?(?:patience|holding|waiting)`,
-      String.raw`take a (?:quick |little )?look|(?:^|[\s,]+)(?:moment|hold|sec|second|minute)[\s.!]*$`,
+      String.raw`(?:let me|lemme|allow me to|i'?ll|i will|i'?m going to|i'?m gonna|i'?m just going to) (?:just |quickly |go ahead and )?take a (?:quick |little )?look|(?:^|[\s,]+)(?:moment|hold|sec|second|minute)[\s.!]*$`,
     ]
       .map((p) => `(?:${p})`)
       .join('|') +

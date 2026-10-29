@@ -43,3 +43,15 @@ test('a message left after a greeting asking for name, number and address is a v
   ];
   assert.equal(voicemailLeft(lines, null, new Set())?.reason, 'voicemail_left');
 });
+
+test('a person asking for an address so they can come take a look is not putting us on hold', () => {
+  // Angel Landscaping's owner, mid-conversation: the false hold kept our caller quiet until they hung up.
+  const meter = new HoldMeter();
+  meter.them('Sure, Montclair, okay. Is it the first time? ', 1_000);
+  meter.caller('First time, thanks.', 2_000);
+  assert.equal(meter.them('Do me a favor. Can you text me name and address so I can swing by later today and take a look', 3_000), null);
+  assert.equal(meter.them("So text me name and address and then I'll pass by later, take a look, and I'll get back to you", 4_000), null);
+  assert.equal(meter.holding(), false);
+  const rep = new HoldMeter();
+  assert.equal(rep.them('Okay, let me take a quick look at that.', 5_000)?.type, 'start');
+});
