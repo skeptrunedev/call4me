@@ -107,6 +107,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'how-to-find-a-new-primary-care-doctor': ['healthcare', 'insurance'],
   'how-to-transfer-a-prescription': ['pharmacy'],
   'hulu-customer-service-number': ['subscription-cancellation', 'media-subscriptions'],
+  'netflix-customer-service-number': ['subscription-cancellation', 'media-subscriptions'],
   'instinct-ai-phone-calls': ['agent-software'],
   'irs-phone-number': ['personal-finance'],
   'junk-removal-cost': ['furniture-home-services'],
