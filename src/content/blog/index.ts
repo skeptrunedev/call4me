@@ -206,6 +206,7 @@ import coinbaseCustomerServiceNumber from './coinbase-customer-service-number.md
 import instacartCustomerServiceNumber from './instacart-customer-service-number.md';
 import lyftCustomerServiceNumber from './lyft-customer-service-number.md';
 import uberCustomerServiceNumber from './uber-customer-service-number.md';
+import uberEatsCustomerServiceNumber from './uber-eats-customer-service-number.md';
 import dellCustomerServiceNumber from './dell-customer-service-number.md';
 import rokuCustomerServiceNumber from './roku-customer-service-number.md';
 import ticketmasterCustomerServiceNumber from './ticketmaster-customer-service-number.md';
@@ -434,6 +435,7 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'instacart-customer-service-number', markdown: instacartCustomerServiceNumber },
   { slug: 'lyft-customer-service-number', markdown: lyftCustomerServiceNumber },
   { slug: 'uber-customer-service-number', markdown: uberCustomerServiceNumber },
+  { slug: 'uber-eats-customer-service-number', markdown: uberEatsCustomerServiceNumber },
   { slug: 'dell-customer-service-number', markdown: dellCustomerServiceNumber },
   { slug: 'roku-customer-service-number', markdown: rokuCustomerServiceNumber },
   { slug: 'ticketmaster-customer-service-number', markdown: ticketmasterCustomerServiceNumber },
