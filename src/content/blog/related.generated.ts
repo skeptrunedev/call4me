@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "eb96e2aa15f064e81254ed741b41caa55518495252cf89f7462eb1d25914f7fc"
+  "sourceHash": "4bce66be8d13ea6f7241bdc42996caff0f259f2f20941d5e6be0106545ec59fa"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -465,12 +465,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.61712
     },
     {
-      "slug": "how-long-to-reach-a-human",
-      "similarity": 0.608612
-    },
-    {
       "slug": "xfinity-customer-service-number",
       "similarity": 0.607503
+    },
+    {
+      "slug": "how-long-to-reach-a-human",
+      "similarity": 0.601651
     }
   ],
   "bank-of-america-customer-service": [
@@ -1615,6 +1615,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "etihad-customer-service",
       "similarity": 0.61605
+    },
+    {
+      "slug": "how-long-to-reach-a-human",
+      "similarity": 0.602806
     }
   ],
   "directv-customer-service": [
@@ -2362,12 +2366,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "how-long-to-reach-a-human": [
     {
-      "slug": "att-customer-service-number",
-      "similarity": 0.608612
+      "slug": "usaa-phone-number",
+      "similarity": 0.605971
     },
     {
-      "slug": "usaa-phone-number",
-      "similarity": 0.603292
+      "slug": "delta-customer-service",
+      "similarity": 0.602806
+    },
+    {
+      "slug": "att-customer-service-number",
+      "similarity": 0.601651
     }
   ],
   "how-to-cancel-siriusxm": [
