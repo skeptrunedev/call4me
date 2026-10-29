@@ -4,7 +4,7 @@ import { dollars } from '../services/accounts';
 import type { CountryOffer, NumberView } from '../services/numbers';
 import { MAX_TOPUP_CENTS, MIN_TOPUP_CENTS } from '../services/topups';
 import { MonthlyBox } from './account';
-import { accountPath, SITE, SITE_DESCRIPTION } from '../lib/pages';
+import { accountPath, CHATGPT_PLUGIN_URL, SITE, SITE_DESCRIPTION } from '../lib/pages';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { CopyBlock, Layout } from './layout';
 import { STUDENT_CREDIT_DOLLARS } from './students';
@@ -129,7 +129,7 @@ export const GET_STARTED = '/login?next=/account';
 
 export const HomeActions: FC = () => (
   <>
-    <p class="hero-links"><a href={GET_STARTED}>get started</a> <a href="/examples">more real calls</a> <a href="/mcp">works with chatgpt, claude, grok bot, muse, and all other agents</a></p>
+    <p class="hero-links"><a href={GET_STARTED}>get started</a> <a href={CHATGPT_PLUGIN_URL}>add it to chatgpt</a> <a href="/examples">more real calls</a> <a href="/mcp">works with chatgpt, claude, grok bot, muse, and all other agents</a></p>
   </>
 );
 
@@ -166,7 +166,7 @@ export const HomeCredits: FC<HomePageProps> = (p) => (
               <path d="m174 138 4 4 8-9" fill="none" stroke="#52864e" stroke-width="1.8" />
               <text x="194" y="143" font-size="11" fill="#52864e">connected</text>
             </svg>
-            connect call4me to ChatGPT and sign in. tell ChatGPT what you need, and it can make the call for you.
+            install the <a href={CHATGPT_PLUGIN_URL}>call4me plugin in ChatGPT</a> and sign in. tell ChatGPT what you need, and it can make the call for you.
           </li>
           <li>
             <svg class="step-graphic" viewBox="0 0 320 190" width="320" height="190" aria-hidden="true" focusable="false">
@@ -664,7 +664,7 @@ export const SupportPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ si
     <ul>
       <li>a call went wrong: open it in <a href={accountPath(signedIn)}>my account</a> for the outcome and the full transcript, and send us the call id. time from pickup, including phone menus and hold time (at half price), is billed; unanswered, busy and failed calls are free.</li>
       <li>credits and the monthly reload: your balance and reload are in <a href={accountPath(signedIn)}>my account</a>, where you can stop the reload anytime. credits already loaded stay and don't expire.</li>
-      <li>connecting your agent: the <a href="/mcp">install page</a> has the steps for each app. in chatgpt, add call4me from the plugins directory and sign in when it asks.</li>
+      <li>connecting your agent: the <a href="/mcp">install page</a> has the steps for each app. in chatgpt, install the <a href={CHATGPT_PLUGIN_URL}>call4me plugin</a> and sign in when it asks.</li>
       <li>someone you don't know called from a call4me number: tell us the number and we stop calls to yours.</li>
       <li>deleting your account: email us from the address you signed in with, and we delete the account, its calling profile and its call history.</li>
     </ul>

@@ -7,6 +7,9 @@ import type { OgCard } from './og-card';
 
 export const SITE = 'https://call4.me';
 
+/** call4me's listing in ChatGPT's plugin directory: install and sign in, no server URL to type. */
+export const CHATGPT_PLUGIN_URL = 'https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8';
+
 /** Go straight to the page an anonymous visitor can open, keeping the destination after sign-in. */
 export const accountPath = (signedIn: boolean) => signedIn ? '/account' : '/login?next=/account';
 export const SITE_TITLE = 'Call for me: an AI that makes phone calls for you | call4me';

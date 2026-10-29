@@ -1,6 +1,7 @@
 import type { FC } from 'hono/jsx';
 import type { z } from 'zod';
 import { mcpUrl } from '../lib/prompts';
+import { CHATGPT_PLUGIN_URL } from '../lib/pages';
 import type { recordingOutput } from '../lib/recording-schema';
 import type { callView } from '../services/call-ops';
 import { dollars, type Account } from '../services/accounts';
@@ -467,11 +468,13 @@ export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: str
       {apiKey
         ? `claude code:     claude mcp add --scope user --transport http call4me ${mcpUrl(origin, apiKey)}
 codex:           codex mcp add call4me --url ${mcpUrl(origin, apiKey)}
-claude desktop / claude.ai / chatgpt:  settings → connectors → add custom connector → ${mcpUrl(origin, apiKey)}
+chatgpt:         install the call4me plugin at ${CHATGPT_PLUGIN_URL} and sign in
+claude desktop / claude.ai:  settings → connectors → add custom connector → ${mcpUrl(origin, apiKey)}
 or send "Authorization: Bearer ${apiKey}" to ${origin}/mcp`
         : `claude code:     claude mcp add --scope user --transport http call4me ${origin}/mcp   then /mcp → call4me → authenticate
 codex:           codex mcp add call4me --url ${origin}/mcp   then   codex mcp login call4me
-claude desktop / claude.ai / chatgpt:  settings → connectors → add custom connector → ${origin}/mcp
+chatgpt:         install the call4me plugin at ${CHATGPT_PLUGIN_URL} and sign in
+claude desktop / claude.ai:  settings → connectors → add custom connector → ${origin}/mcp
 can't sign in?   create a key at ${origin}/account and use ${origin}/mcp/<key>, or send "Authorization: Bearer <key>" to /mcp`}
     </pre>
     <h3>tools</h3>

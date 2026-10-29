@@ -1,26 +1,29 @@
 ---
-title: "Can ChatGPT make phone calls? Add a calling MCP server as a plugin"
-seoTitle: "Can ChatGPT make phone calls? MCP plugin setup"
-subtitle: ChatGPT's custom MCP servers now live under Plugins. Here is how to add call4me as one, sign in with OAuth, confirm the call, and follow it to a transcript.
-description: "Yes, with a custom MCP plugin. Add call4me at chatgpt.com/plugins, sign in with OAuth, confirm the call, then get the outcome, transcript and recording."
+title: "Can ChatGPT make phone calls? Yes, with the call4me plugin"
+seoTitle: "Can ChatGPT make phone calls? Yes, with a plugin"
+subtitle: call4me is in ChatGPT's plugin directory. Install it, sign in, confirm the call, and follow it to a transcript. Custom MCP setup is covered too.
+description: "Yes. Install the call4me plugin from ChatGPT's plugin directory, sign in, and ask ChatGPT to call a business. You get the outcome, transcript and recording."
 date: 2026-10-13
+updated: 2026-10-28
 tags: chatgpt, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: ChatGPT adds call4me as a custom MCP plugin, signs in with OAuth, and asks before placing a phone call
 ---
 
-**Yes, ChatGPT can make phone calls once you add a calling MCP server as a custom plugin.** ChatGPT doesn't dial on its own. You connect [call4me](/mcp) at chatgpt.com/plugins, sign in, and then ask ChatGPT to call a business with a goal and clear limits. A voice caller handles the conversation, and ChatGPT reads the status, transcript and outcome through tools.
+**Yes, ChatGPT can make phone calls with a calling plugin.** ChatGPT doesn't dial on its own, but [call4me is listed in ChatGPT's plugin directory](https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8). Install it, sign in, and ask ChatGPT to call a business with a goal and clear limits. A voice caller handles the conversation, and ChatGPT reads the status, transcript and outcome through tools.
 
 The short version:
 
-1. Open [ChatGPT Plugins](https://chatgpt.com/plugins) on the web, select the plus button, then **Add custom MCP server**.
-2. Name it `call4me` and enter `https://call4.me/mcp` as the **Server URL**.
-3. Choose **OAuth** for authentication, select **I understand and want to continue**, then **Create as a plugin**.
-4. Install it from your personal plugins, sign in to call4me, and type `@` in a new chat to pick it.
+1. Open the [call4me plugin in ChatGPT](https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8) and select **Install plugin**.
+2. Sign in to call4me with Google or X when ChatGPT asks.
+3. In a new chat, type `@`, pick call4me, and say what you need, like "call Nopa and book a table for 4 this Saturday around 7."
+4. Approve the call when ChatGPT asks. It follows the call and reports back with the outcome and a transcript.
+
+The directory plugin doesn't take medical or dental appointments. For those, add call4me as a [custom MCP server](#add-call4me-as-a-custom-mcp-plugin) instead, or use it from [Claude Code](/blog/claude-code-phone-calls) or [Codex](/blog/codex-phone-calls).
 
 ## How we checked this
 
-The ChatGPT steps on this page come from OpenAI's own documentation, linked where each one is used: [Add custom MCP server](https://developers.openai.com/api/docs/guides/custom-mcp-server), the [plugins quickstart](https://developers.openai.com/plugins/quickstart), [Connect and test your plugin](https://developers.openai.com/plugins/deploy/connect-chatgpt), [plugin authentication](https://developers.openai.com/plugins/build/auth), [Plugins](https://learn.chatgpt.com/docs/plugins) and [dots](https://learn.chatgpt.com/docs/dots). None of those pages shows a date. We read them on October 13, 2026.
+The plugin listing is live at [chatgpt.com/plugins](https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8); we checked it on October 28, 2026. The custom MCP steps further down come from OpenAI's own documentation, linked where each one is used: [Add custom MCP server](https://developers.openai.com/api/docs/guides/custom-mcp-server), the [plugins quickstart](https://developers.openai.com/plugins/quickstart), [Connect and test your plugin](https://developers.openai.com/plugins/deploy/connect-chatgpt), [plugin authentication](https://developers.openai.com/plugins/build/auth), [Plugins](https://learn.chatgpt.com/docs/plugins) and [dots](https://learn.chatgpt.com/docs/dots). None of those pages shows a date. We read them on October 13, 2026.
 
 The call4me side is tested. ChatGPT connects to the same endpoint, OAuth sign in and tools we used in our [Codex](/blog/codex-phone-calls), [Claude Code](/blog/claude-code-phone-calls), [GitHub Copilot CLI](/blog/github-copilot-phone-calls) and [LangChain](/blog/langchain-mcp-phone-calls) guides.
 
@@ -42,7 +45,7 @@ You need:
 
 ## Add call4me as a custom MCP plugin
 
-These steps follow OpenAI's [Add custom MCP server](https://developers.openai.com/api/docs/guides/custom-mcp-server) guide:
+The directory plugin above is the quick way. Add call4me as your own custom MCP server instead if your workspace only allows custom servers, or you need medical and dental calls. These steps follow OpenAI's [Add custom MCP server](https://developers.openai.com/api/docs/guides/custom-mcp-server) guide:
 
 1. Go to [ChatGPT Plugins](https://chatgpt.com/plugins).
 2. Select the plus button, then **Add custom MCP server**.
@@ -63,7 +66,7 @@ You don't need to create OAuth client credentials. OpenAI's guide says that if y
 
 ## Install the plugin and sign in
 
-Creating the plugin doesn't install it. From OpenAI's [quickstart](https://developers.openai.com/plugins/quickstart):
+If you installed call4me from the directory, skip to the sign in paragraph below. A custom plugin you created isn't installed yet. From OpenAI's [quickstart](https://developers.openai.com/plugins/quickstart):
 
 1. Go to [your personal plugins](https://chatgpt.com/plugins?view=personal). The plugin you created should be there.
 2. Open it and select the plus button to install it.
@@ -133,6 +136,8 @@ Dots are rolling out gradually. The same page lists them for Pro 100, Pro 200 an
 ## Troubleshooting
 
 These come from OpenAI's documentation and the forum post above, not from a ChatGPT session of ours.
+
+**You'd rather not set up a custom server.** Install the [call4me plugin](https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8) from the directory instead. It needs no server URL or authentication settings.
 
 **You don't see Add custom MCP server.** Check whether your plan or workspace allows custom MCP servers. In a workspace, admins control MCP server access from Workspace apps and Permissions & roles, per OpenAI's [plugin controls page](https://learn.chatgpt.com/docs/enterprise/apps-and-connectors), and the permission formerly called "Developer mode" is now "Create custom MCP servers." Lockdown and other workspace security restrictions also apply.
 
