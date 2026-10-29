@@ -12,7 +12,7 @@ imageAlt: "Roku customer service 816-272-8106, where a live agent answered in 1 
 
 **The short answer:** Roku's US customer service number is **816-272-8106**. It's the only US number on Roku's own website: the contact data built into [support.roku.com](https://support.roku.com/) lists "+1-816-272-8106" as US technical support, in English and Spanish. It's a regular 816 number, not a toll-free 800 number. Roku's help articles don't print a phone number on the page; they point you to chat ("Get help from our support bot or connect to an advisor"). **The agent we reached said phone support is open 8 am to 10 pm Eastern, and it's not 24/7.**
 
-**A live Roku agent answered 1 minute 26 seconds into our call.** The menu played twice. The second time, it said "An agent will be with you shortly", and a person picked up 7 seconds later. There was no voice assistant and no account prompt on our call.
+**A live Roku agent answered 1 minute 26 seconds into our call.** We **pressed 4** ("purchases or products on roku.com and all other questions") at the end of the menu. The first press came as the menu finished and didn't register, so the menu played again; the second time, it said "An agent will be with you shortly", and a person picked up 7 seconds later. There was no voice assistant and no account prompt on our call.
 
 **Roku never charges to activate a device.** Roku's [scam warning page](https://support.roku.com/article/protect-yourself-from-scams) says "Roku has never charged money to activate a device" and "Creating a Roku account is 100% free." The agent said the same thing: "No, it's free, okay? Roku is free." If a website or a "Roku" number asks you to pay for activation, setup or support, it's a scam. More on that below.
 
@@ -36,13 +36,15 @@ The whole call, 5 minutes 46 seconds. One short silence covers the agent's first
 
 <audio controls preload="metadata" src="/static/blog/roku-customer-service-number.mp3" style="width:100%"><a href="/static/blog/roku-customer-service-number.mp3">listen to the recording</a></audio>
 
-Key presses don't show up in the recording, and our call logs don't record whether our caller pressed one here. All we can say is what you hear: the menu played, said "I didn't detect a selection", played again, and then said an agent would be with us shortly.
+Key presses don't show up in the recording. Our call logs show our caller pressed 4 at about 0:39, right as the first menu finished, and the system answered "I didn't detect a selection" a second later. It pressed 4 again at about 1:17, at the end of the second menu, and "An agent will be with you shortly" followed. It also pressed 2 at about 1:21, during the wait, with no prompt; the agent picked up a few seconds after that.
 
 Jump to a moment:
 
 - **0:00** "Hi. You've reached Roku customer support"
 - **0:13** The menu: press 1 for devices, 2 for subscriptions, billing or your account, 3 for Smart Home, 4 for everything else
+- **0:39** Our caller presses 4 as the menu ends
 - **0:40** "I'm sorry, I didn't detect a selection", and the menu again
+- **1:17** Our caller presses 4 again
 - **1:18** "An agent will be with you shortly"
 - **1:25** A live agent: "Thank you for calling Roku"
 - **1:31** We ask about hours
@@ -70,10 +72,10 @@ This is the menu as it played on October 29, 2026, calling 816-272-8106.
    - **Press 3** for help with Roku Smart Home products and services.
    - **Press 4** for questions about purchases or products on roku.com, and all other questions.
    - **Press #** to hear the options again.
-3. **On our call:** "I'm sorry. I didn't detect a selection. Please choose an option." The same menu played a second time.
+3. **We pressed 4.** Our first press came just as the menu finished, and it said "I'm sorry. I didn't detect a selection. Please choose an option." The same menu played a second time, and at its end we pressed 4 again.
 4. **"An agent will be with you shortly."** About 7 seconds later: "Thank you for calling Roku. My name is [name removed]. How can I help you?" That was 1 minute 26 seconds into the call.
 
-We don't know which branch we landed in, so we can't tell you whether another option gets you to a person faster. If you're calling about a charge or a subscription, option 2 is the one the menu names for that. Option 1 is for device problems.
+We only tried option 4, so we can't tell you whether another option gets you to a person faster. If you're calling about a charge or a subscription, option 2 is the one the menu names for that, and option 1 is for device problems. Press your choice while the menu is still playing or right after it: a press at the very end didn't register for us.
 
 If you have a Roku TV made by another company (TCL, Hisense, onn. and others), Roku's [Roku TV support page](https://support.roku.com/article/get-manufacturer-support-for-your-roku-tv) says to contact that manufacturer for help. Roku handles its own TVs (Roku Select, Plus and Pro Series, and Hiro).
 
@@ -119,7 +121,8 @@ call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) t
 
 A few things to know about our side of the call:
 
-- **Our caller made a couple of small sounds during the menu** ("Huh", "Hmm"), and the first pass ended with "I didn't detect a selection." We don't know whether that changed where we were routed.
+- **Our caller made a couple of small sounds during the menu** ("Huh", "Hmm"), and its first press of 4 came as the menu ended and didn't register.
+- **It pressed 2 while we waited for the agent,** with no prompt asking for it. Nothing in the recording shows that it changed anything.
 - **It suggested an answer.** When it asked what to have ready, our caller offered "the serial number or Roku account email." The agent picked the email.
 - **The agent asked whether we had an account or a TV to activate.** We said no and kept to general questions.
 - **The agent asked who he was speaking with** after our caller said goodbye. Our caller had already ended the call.
@@ -133,18 +136,24 @@ For more phone trees and recorded calls, see [how long it takes to reach a human
 
 If you use call4me, paste this into your agent:
 
-> Call Roku customer support at 816-272-8106, between 8 am and 10 pm Eastern. At the menu, press 2 for subscriptions, billing or my Roku account. When a person answers, tell them the email on my Roku account is [your email] and ask them to cancel my [subscription name] subscription billed through Roku, then confirm the date access ends. Don't pay any fee, don't agree to remote access, and don't make any other changes to my account.
+> Call Roku customer support at 816-272-8106, between 8 am and 10 pm Eastern. At the menu, press 2 for subscriptions, billing or my Roku account (if that doesn't reach a person, call back and press 4 for all other questions). When a person answers, tell them the email on my Roku account is [your email] and ask them to cancel my [subscription name] subscription billed through Roku, then confirm the date access ends. Don't pay any fee, don't agree to remote access, and don't make any other changes to my account.
 
 <details>
 <summary>Read the full transcript</summary>
 
-Thursday, October 29, 2026, 2:47 pm Eastern. "Roku" is Roku's automated phone system. "Agent" is the live person. "Caller" is the call4me agent. The agent's first name is muted in the audio and shown in brackets here. Short acknowledgments ("okay", "mm-hmm") are omitted.
+Thursday, October 29, 2026, 2:47 pm Eastern. "Roku" is Roku's automated phone system. "Agent" is the live person. "Caller" is the call4me agent. The agent's first name is muted in the audio and shown in brackets here. Short acknowledgments ("okay", "mm-hmm") are omitted. Key presses aren't in the audio; they're noted in brackets from our call logs.
 
 **0:00 Roku:** Hi. You've reached Roku customer support. You can find many answers on support.roku.com. If you still have questions, we can help connect you to the right person, please. Press 1 for help with your streaming device, audio device, Roku TV, or Hiro TV. Press 2 for help with subscriptions, billing, or your Roku account. Press 3 for help with Roku Smart Home products and services. Press 4 with questions about purchases or products on roku.com and all other questions. To hear these options again, press pound.
 
+[0:39 Caller presses 4.]
+
 **0:40 Roku:** I'm sorry, I didn't detect a selection. Please choose an option. You can find many answers on support.roku.com. If you still have questions, we can help connect you to the right person, please. Press 1 for help with your streaming device, audio device, Roku TV, or Hiro TV. Press 2 for help with subscriptions, billing, or your Roku account. Press 3 for help with Roku Smart Home products and services. Press 4 with questions about purchases or products on roku.com and all other questions. To hear these options again, press pound.
 
+[1:17 Caller presses 4.]
+
 **1:18 Roku:** An agent will be with you shortly.
+
+[1:21 Caller presses 2.]
 
 **1:25 Agent:** Thank you for calling Roku. My name is [name removed]. How can I help you?
 
