@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "a9e2da0f588807da85ee4a82d86863d26d7d794f026d1b405b0ea74152fb3bdc"
+  "sourceHash": "eb96e2aa15f064e81254ed741b41caa55518495252cf89f7462eb1d25914f7fc"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -339,6 +339,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "suitsupply-customer-service",
       "similarity": 0.654632
+    },
+    {
+      "slug": "ticketmaster-customer-service-number",
+      "similarity": 0.616947
     }
   ],
   "amazon-pharmacy-phone-number": [
@@ -1587,12 +1591,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.666878
     },
     {
-      "slug": "costco-customer-service",
-      "similarity": 0.630126
+      "slug": "ticketmaster-customer-service-number",
+      "similarity": 0.643968
     },
     {
-      "slug": "fabletics-customer-service",
-      "similarity": 0.610272
+      "slug": "costco-customer-service",
+      "similarity": 0.630126
     }
   ],
   "delta-customer-service": [
@@ -1639,12 +1643,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.640604
     },
     {
-      "slug": "how-to-lower-directv-bill",
-      "similarity": 0.635668
+      "slug": "netflix-customer-service-number",
+      "similarity": 0.637011
     },
     {
-      "slug": "cancel-hellofresh",
-      "similarity": 0.630825
+      "slug": "how-to-lower-directv-bill",
+      "similarity": 0.635668
     }
   ],
   "discover-dispute-charge": [
@@ -1697,6 +1701,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "doordash-customer-service-number": [
     {
+      "slug": "uber-eats-customer-service-number",
+      "similarity": 0.757025
+    },
+    {
       "slug": "instacart-customer-service-number",
       "similarity": 0.719039
     },
@@ -1734,7 +1742,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "pin-on-grand-reservations",
-      "similarity": 0.690524
+      "similarity": 0.690525
     },
     {
       "slug": "book-dinner-reservation-by-phone",
@@ -1845,6 +1853,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.674841
     },
     {
+      "slug": "netflix-customer-service-number",
+      "similarity": 0.672088
+    },
+    {
       "slug": "how-to-cancel-siriusxm",
       "similarity": 0.65601
     },
@@ -1855,10 +1867,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "cancel-audible",
       "similarity": 0.64699
-    },
-    {
-      "slug": "cancel-factor",
-      "similarity": 0.643839
     }
   ],
   "farmacia-luma-viejo-san-juan": [
@@ -2567,7 +2575,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "xfinity-customer-service-number",
-      "similarity": 0.66988
+      "similarity": 0.669881
     },
     {
       "slug": "spectrum-retention-department",
@@ -2602,6 +2610,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "fabletics-customer-service",
       "similarity": 0.723351
+    },
+    {
+      "slug": "netflix-customer-service-number",
+      "similarity": 0.702501
     },
     {
       "slug": "directv-customer-service",
@@ -2664,6 +2676,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "doordash-customer-service-number",
       "similarity": 0.719039
+    },
+    {
+      "slug": "uber-eats-customer-service-number",
+      "similarity": 0.709864
     },
     {
       "slug": "cancel-hellofresh",
@@ -3014,7 +3030,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.748737
+      "similarity": 0.748738
     },
     {
       "slug": "mastra-mcp-phone-calls",
@@ -3227,6 +3243,24 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "victorias-secret-georgetown",
       "similarity": 0.663257
+    }
+  ],
+  "netflix-customer-service-number": [
+    {
+      "slug": "hulu-customer-service-number",
+      "similarity": 0.702501
+    },
+    {
+      "slug": "fabletics-customer-service",
+      "similarity": 0.672088
+    },
+    {
+      "slug": "directv-customer-service",
+      "similarity": 0.637011
+    },
+    {
+      "slug": "spectrum-retention-department",
+      "similarity": 0.605621
     }
   ],
   "ny-tolls-by-mail-phone-number": [
@@ -3588,7 +3622,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "equal-parts-sf-reservations",
-      "similarity": 0.690524
+      "similarity": 0.690525
     },
     {
       "slug": "customer-story-rick-dinner-reservation",
@@ -3839,6 +3873,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "moxy-st-petersburg-downtown",
       "similarity": 0.62983
+    }
+  ],
+  "roku-customer-service-number": [
+    {
+      "slug": "directv-customer-service",
+      "similarity": 0.612063
     }
   ],
   "running-late-to-appointment": [
@@ -4210,7 +4250,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "xfinity-customer-service-number",
-      "similarity": 0.663879
+      "similarity": 0.663878
     },
     {
       "slug": "windstream-customer-service",
@@ -4277,6 +4317,24 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.613732
     }
   ],
+  "ticketmaster-customer-service-number": [
+    {
+      "slug": "wayfair-customer-service",
+      "similarity": 0.660304
+    },
+    {
+      "slug": "dell-customer-service-number",
+      "similarity": 0.643968
+    },
+    {
+      "slug": "walmart-customer-service-number",
+      "similarity": 0.619735
+    },
+    {
+      "slug": "amazon-customer-service-number",
+      "similarity": 0.616947
+    }
+  ],
   "town-fair-tire-manchester-ct": [
     {
       "slug": "americas-tire-fremont",
@@ -4341,6 +4399,20 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "booking-com-customer-service-number",
       "similarity": 0.60115
+    }
+  ],
+  "uber-eats-customer-service-number": [
+    {
+      "slug": "doordash-customer-service-number",
+      "similarity": 0.757025
+    },
+    {
+      "slug": "instacart-customer-service-number",
+      "similarity": 0.709864
+    },
+    {
+      "slug": "cancel-hellofresh",
+      "similarity": 0.612302
     }
   ],
   "ugly-baby-brooklyn-reservations": [
@@ -4686,12 +4758,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.635299
     },
     {
-      "slug": "costco-return-policy",
-      "similarity": 0.611386
+      "slug": "ticketmaster-customer-service-number",
+      "similarity": 0.619735
     },
     {
-      "slug": "pottery-barn-customer-service",
-      "similarity": 0.601851
+      "slug": "costco-return-policy",
+      "similarity": 0.611386
     }
   ],
   "walmart-oil-change-prices": [
@@ -4728,6 +4800,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "home-depot-customer-service",
       "similarity": 0.676832
+    },
+    {
+      "slug": "ticketmaster-customer-service-number",
+      "similarity": 0.660304
     },
     {
       "slug": "amazon-customer-service-number",
@@ -4858,7 +4934,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "xfinity-customer-service-number": [
     {
       "slug": "how-to-lower-xfinity-bill",
-      "similarity": 0.66988
+      "similarity": 0.669881
     },
     {
       "slug": "windstream-customer-service",
@@ -4866,7 +4942,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "t-mobile-customer-service-number",
-      "similarity": 0.663879
+      "similarity": 0.663878
     },
     {
       "slug": "verizon-customer-service",

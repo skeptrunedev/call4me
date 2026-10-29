@@ -113,107 +113,127 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2162
+    "tokens": 2254
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2260
+    "tokens": 2255
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2299
+    "tokens": 2197
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2122
+    "tokens": 2285
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2113
+    "tokens": 2009
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2205
+    "tokens": 2265
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2278
+    "tokens": 2235
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2207
+    "tokens": 2247
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2128
+    "tokens": 2107
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2028
+    "tokens": 2183
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 1992
+    "tokens": 1863
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 2090
+    "tokens": 2137
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 1798
+    "tokens": 1838
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 1785
+    "tokens": 1782
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1964
+    "tokens": 1899
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 1868
+    "tokens": 1911
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 2060
+    "tokens": 2052
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 2080
+    "tokens": 2049
   },
   "/blog?page=19": {
     "html": "/__pages/bcb642deee219a0c.html",
     "markdown": "/__pages/bcb642deee219a0c.md",
-    "tokens": 488
+    "tokens": 1052
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 20266
+    "tokens": 20728
+  },
+  "/blog/booking-com-customer-service-number": {
+    "html": "/__pages/2a784f6bea54241d.html",
+    "markdown": "/__pages/2a784f6bea54241d.md",
+    "tokens": 4535
+  },
+  "/blog/uber-eats-customer-service-number": {
+    "html": "/__pages/82fa56011ab9fbce.html",
+    "markdown": "/__pages/82fa56011ab9fbce.md",
+    "tokens": 5767
+  },
+  "/blog/roku-customer-service-number": {
+    "html": "/__pages/fd01b2a173eb551f.html",
+    "markdown": "/__pages/fd01b2a173eb551f.md",
+    "tokens": 5605
+  },
+  "/blog/ticketmaster-customer-service-number": {
+    "html": "/__pages/18bbc469ba31f4a5.html",
+    "markdown": "/__pages/18bbc469ba31f4a5.md",
+    "tokens": 6315
   },
   "/blog/netflix-customer-service-number": {
     "html": "/__pages/dc6c63a0647d9e6c.html",
     "markdown": "/__pages/dc6c63a0647d9e6c.md",
-    "tokens": 5381
+    "tokens": 5416
   },
   "/blog/how-to-negotiate-a-hospital-bill": {
     "html": "/__pages/b88beca37c93cea2.html",
@@ -308,17 +328,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/instacart-customer-service-number": {
     "html": "/__pages/5cba68eafa16e436.html",
     "markdown": "/__pages/5cba68eafa16e436.md",
-    "tokens": 4767
+    "tokens": 4937
   },
   "/blog/lyft-customer-service-number": {
     "html": "/__pages/6630584635f01c15.html",
     "markdown": "/__pages/6630584635f01c15.md",
-    "tokens": 2967
+    "tokens": 3145
   },
   "/blog/uber-customer-service-number": {
     "html": "/__pages/6fa0d71023f29e00.html",
     "markdown": "/__pages/6fa0d71023f29e00.md",
-    "tokens": 3753
+    "tokens": 3930
   },
   "/blog/dell-customer-service-number": {
     "html": "/__pages/bfb05298120f7769.html",
@@ -373,7 +393,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/global-blue-customer-service-number": {
     "html": "/__pages/467e523e914349f5.html",
     "markdown": "/__pages/467e523e914349f5.md",
-    "tokens": 3269
+    "tokens": 3450
   },
   "/blog/mount-sinai-doctors-phone-number": {
     "html": "/__pages/98ecb1a0ba10cff1.html",
@@ -508,7 +528,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/inn-at-jim-thorpe-reservations": {
     "html": "/__pages/a284502577683584.html",
     "markdown": "/__pages/a284502577683584.md",
-    "tokens": 3698
+    "tokens": 3730
   },
   "/blog/virgin-hotels-new-york-parking": {
     "html": "/__pages/fff4dd4a906f9d0d.html",
@@ -638,12 +658,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/airbnb-customer-service-number": {
     "html": "/__pages/e392dafb7481d910.html",
     "markdown": "/__pages/e392dafb7481d910.md",
-    "tokens": 5889
+    "tokens": 5913
   },
   "/blog/expedia-customer-service-number": {
     "html": "/__pages/adc39c755249459c.html",
     "markdown": "/__pages/adc39c755249459c.md",
-    "tokens": 4072
+    "tokens": 4249
   },
   "/blog/opencode-phone-calls": {
     "html": "/__pages/f643b874d5d5cfd4.html",
@@ -843,7 +863,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/doordash-customer-service-number": {
     "html": "/__pages/ff70cf03e5b76586.html",
     "markdown": "/__pages/ff70cf03e5b76586.md",
-    "tokens": 4694
+    "tokens": 4864
   },
   "/blog/priceline-customer-service": {
     "html": "/__pages/2a91c0a6d3a54c7c.html",
