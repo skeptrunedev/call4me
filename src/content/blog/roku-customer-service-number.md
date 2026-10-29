@@ -1,18 +1,18 @@
 ---
 title: "Roku customer service number: reaching a live person, and avoiding fake Roku numbers"
 seoTitle: "Roku customer service number: 816-272-8106"
-subtitle: "We called the US support number on Roku's own website with general questions for this guide. A live agent answered 1 minute 26 seconds in. Here's the phone menu, what he said about hours, activation fees and cancelling subscriptions, and the full 6 minute recording."
-description: "Roku's US support number is 816-272-8106, open 8 am to 10 pm Eastern. A live agent answered in 1:26 and said Roku never charges to activate. From a real call."
+subtitle: "We called the US support number on Roku's own website with general questions for this guide. A live agent answered 1 minute 25 seconds in. Here's the phone menu, what he said about hours, activation fees and cancelling subscriptions, and the full 6 minute recording."
+description: "Roku's US support number is 816-272-8106, open 8 am to 10 pm Eastern. A live agent answered in 1:25 and said Roku never charges to activate. From a real call."
 date: 2026-10-29
 verified: 2026-10-29
 tags: roku, streaming, customer service, subscriptions, scams, phone trees, phone numbers
 authors: nick
-imageAlt: "Roku customer service 816-272-8106, where a live agent answered in 1 minute 26 seconds"
+imageAlt: "Roku customer service 816-272-8106, where a live agent answered in 1 minute 25 seconds"
 ---
 
 **The short answer:** Roku's US customer service number is **816-272-8106**. It's the only US number on Roku's own website: the contact data built into [support.roku.com](https://support.roku.com/) lists "+1-816-272-8106" as US technical support, in English and Spanish. It's a regular 816 number, not a toll-free 800 number. Roku's help articles don't print a phone number on the page; they point you to chat ("Get help from our support bot or connect to an advisor"). **The agent we reached said phone support is open 8 am to 10 pm Eastern, and it's not 24/7.**
 
-**A live Roku agent answered 1 minute 26 seconds into our call.** We **pressed 4** ("purchases or products on roku.com and all other questions") at the end of the menu. The first press came as the menu finished and didn't register, so the menu played again; the second time, it said "An agent will be with you shortly", and a person picked up 7 seconds later. There was no voice assistant and no account prompt on our call.
+**A live Roku agent answered 1 minute 25 seconds into our call.** We **pressed 4** ("purchases or products on roku.com and all other questions") at the end of the menu. The first press came as the menu finished and didn't register, so the menu played again; the second time, it said "An agent will be with you shortly", and a person picked up 7 seconds later. There was no voice assistant and no account prompt on our call.
 
 **Roku never charges to activate a device.** Roku's [scam warning page](https://support.roku.com/article/protect-yourself-from-scams) says "Roku has never charged money to activate a device" and "Creating a Roku account is 100% free." The agent said the same thing: "No, it's free, okay? Roku is free." If a website or a "Roku" number asks you to pay for activation, setup or support, it's a scam. More on that below.
 
@@ -73,7 +73,7 @@ This is the menu as it played on October 29, 2026, calling 816-272-8106.
    - **Press 4** for questions about purchases or products on roku.com, and all other questions.
    - **Press #** to hear the options again.
 3. **We pressed 4.** Our first press came just as the menu finished, and it said "I'm sorry. I didn't detect a selection. Please choose an option." The same menu played a second time, and at its end we pressed 4 again.
-4. **"An agent will be with you shortly."** About 7 seconds later: "Thank you for calling Roku. My name is [name removed]. How can I help you?" That was 1 minute 26 seconds into the call.
+4. **"An agent will be with you shortly."** About 7 seconds later: "Thank you for calling Roku. My name is [name removed]. How can I help you?" That was 1 minute 25 seconds into the call.
 
 We only tried option 4, so we can't tell you whether another option gets you to a person faster. If you're calling about a charge or a subscription, option 2 is the one the menu names for that, and option 1 is for device problems. Press your choice while the menu is still playing or right after it: a press at the very end didn't register for us.
 
