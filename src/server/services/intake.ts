@@ -284,11 +284,6 @@ export const CATEGORIES: Category[] = [
       req('questions', 'what to find out', 'What exactly should the caller find out?'),
       fromProfile('full_name', false, { ask: 'What name should the caller give if asked?' }),
       fromProfile('phone', false),
-      // Account and billing questions land here too, and their reps verify identity: saved
-      // details come along so the caller has them when asked (Kaiser wanted a date of birth).
-      fromProfile('date_of_birth', false),
-      fromProfile('address', false),
-      fromProfile('email', false),
       opt('order_number', 'order or account number', 'Is there an order or account number?'),
     ],
   },
@@ -348,12 +343,30 @@ export const namePronunciationOf = (profile: Profile) => profile.name_pronunciat
 
 export interface Resolved {
   /** Every known field, labelled, in intake order: what the caller may share. */
-  known: { key: string; label: string; value: string; sensitive?: boolean; grants?: boolean }[];
+  known: { key: string; label: string; value: string; profile?: ProfileKey; sensitive?: boolean; grants?: boolean }[];
   missing: IntakeField[];
   invalid: { field: IntakeField; problem: string }[];
 }
 
 const isSelfPay = (v: string | undefined) => Boolean(v && /self[\s-]?pay|no insurance|uninsured|cash/i.test(v));
+
+/** Profile fields about how the caller speaks and answers: the call carries them itself, not as facts. */
+const CALL_STYLE: ReadonlySet<ProfileKey> = new Set(['name_pronunciation', 'assistant_name', 'accent', 'answering_instructions']);
+
+/**
+ * The rest of the owner's saved profile, for a call they make for themselves. A category asks only
+ * for what it needs, but reps verify identity with whatever they like: David Aviles's Kaiser billing
+ * call (a general call) was asked for the date of birth he had saved, and the caller didn't have it.
+ * Only the keys this surface may share (catalog), and only values that still pass their check.
+ */
+export function savedContext(profile: Profile, keys: readonly ProfileKey[], intake: Resolved): Resolved['known'] {
+  const used = new Set(intake.known.map((k) => k.profile ?? k.key));
+  return keys
+    .filter((key) => !CALL_STYLE.has(key) && !used.has(key))
+    .map((key) => ({ key, value: profile[key]?.trim() ?? '' }))
+    .filter(({ key, value }) => value && !PROFILE_FIELDS[key].check?.(value))
+    .map(({ key, value }) => ({ key, label: PROFILE_FIELDS[key].label, value, profile: key }));
+}
 
 /** Fill a category's fields from the call's details, then the profile; report what is missing or malformed. */
 export function resolveIntake(category: Category, details: Record<string, string>, profile: Profile): Resolved {
@@ -375,7 +388,7 @@ export function resolveIntake(category: Category, details: Record<string, string
     }
     const problem = f.check?.(value) ?? (f.profile ? PROFILE_FIELDS[f.profile].check?.(value) : null);
     if (problem) out.invalid.push({ field: f, problem });
-    else out.known.push({ key: f.key, label: f.label, value, ...(f.sensitive ? { sensitive: true } : {}), ...(f.grants ? { grants: true } : {}) });
+    else out.known.push({ key: f.key, label: f.label, value, ...(f.profile ? { profile: f.profile } : {}), ...(f.sensitive ? { sensitive: true } : {}), ...(f.grants ? { grants: true } : {}) });
   }
   return out;
 }

@@ -2,7 +2,7 @@ import { newId, now } from '../lib/ids';
 import { replayOf, type Idempotency } from '../lib/idempotency';
 import { checkDialable, type PhoneCheck } from '../lib/phone';
 import { accounts, type Account } from './accounts';
-import { catalog, missingMessage, PROFILE_FIELDS, resolveIntake, type Surface } from './intake';
+import { catalog, missingMessage, PROFILE_FIELDS, resolveIntake, savedContext, type Surface } from './intake';
 import { mayCall, ownNumberRefusal, ringablePhone } from './numbers';
 import { profiles } from './profiles';
 
@@ -231,7 +231,7 @@ export function calls(db: D1Database) {
      * checks it again when it dials.
      */
     async validate(account: Account, input: PlaceCallInput, surface: Surface = 'agents', tool = 'call4me_place_call') {
-      const { bySlug, slugs } = catalog(surface);
+      const { bySlug, slugs, profileKeys } = catalog(surface);
       const category = bySlug(input.category);
       if (!category) throw new CallError(`category must be one of: ${slugs.join(', ')}`);
       const profile = await profiles(db).get(account.id);
@@ -240,6 +240,7 @@ export function calls(db: D1Database) {
       const forSomeoneElse = isSomeoneElse(input.on_behalf_of, profile.full_name);
       const intake = resolveIntake(category, input.details ?? {}, forSomeoneElse ? {} : profile);
       if (intake.missing.length || intake.invalid.length) throw new CallError(missingMessage(category, intake, forSomeoneElse ? input.on_behalf_of!.trim() : null, tool), 422);
+      if (!forSomeoneElse) intake.known.push(...savedContext(profile, profileKeys, intake));
       const onBehalfOf = input.on_behalf_of?.trim() || profile.full_name || account.display_name;
       if (!onBehalfOf) throw new CallError('on_behalf_of: who is this call for? Pass their name, or save full_name with call4me_save_profile.', 422);
 
