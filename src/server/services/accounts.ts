@@ -19,10 +19,12 @@ export interface Account {
   /** Our recorded paid Reddit visits, distinct from Reddit's own click/view attribution. */
   reddit_first_visit_id: string | null;
   reddit_last_visit_id: string | null;
+  /** Approved for business-to-business sales and outreach calls (migrations/0036); 0 for everyone else. */
+  sales_calls: number;
 }
 
 /** The columns every Account is read with. */
-export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc, first_touch, reddit_first_visit_id, reddit_last_visit_id`;
+export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc, first_touch, reddit_first_visit_id, reddit_last_visit_id, sales_calls`;
 
 export type LedgerKind = 'topup' | 'reload' | 'hold' | 'release' | 'call' | 'refund' | 'adjustment' | 'number';
 

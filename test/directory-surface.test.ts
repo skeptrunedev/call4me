@@ -132,3 +132,16 @@ test('the Claude server books doctor and dentist appointments, with the insuranc
   const profileKeys = Object.keys((await tools('claude')).find((t) => t.name === 'call4me_save_profile')!.inputSchema.properties!);
   assert.ok(profileKeys.includes('insurance_member_id'));
 });
+
+test('only accounts approved for sales calls are told they may pitch businesses', async () => {
+  const instructionsFor = async (who: Account) => {
+    const handler = (await import('@modelcontextprotocol/server')).createMcpHandler(() => createCall4meServer({ env: {} as Env, origin: 'https://call4.me', account: who, stripe: () => { throw new Error('no stripe'); } }), { legacy: 'stateless' });
+    const res = await handler.fetch(new Request('https://call4.me/mcp', { method: 'POST', headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 't', version: '1' } } }) }));
+    const text = await res.text();
+    return (JSON.parse(text.startsWith('{') ? text : text.split('\n').find((l) => l.startsWith('data: '))!.slice(6)) as { result: { instructions: string } }).result.instructions;
+  };
+  assert.doesNotMatch(await instructionsFor(account), /sales and outreach/);
+  const approved = await instructionsFor({ ...account, sales_calls: 1 });
+  assert.match(approved, /approved for business-to-business sales and outreach calls/);
+  assert.match(approved, /never consumers or personal phones/);
+});

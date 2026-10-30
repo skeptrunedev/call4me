@@ -78,7 +78,7 @@ export interface McpDeps {
   surface?: Surface;
 }
 
-function instructions(surface: Surface): string {
+function instructions(surface: Surface, salesCalls: boolean): string {
   const agents = surface === 'agents';
   const health = surface !== 'chatgpt';
   return `call4me places real phone calls for the user: ${health ? 'doctor/dentist/vet appointments' : 'vet appointments'}, restaurant bookings, car service and dealership questions, home services, salons, and questions for any business.
@@ -104,7 +104,9 @@ ${agents ? `The user can also call from their own phone number: verify it once w
 ` : ''}Every call leaves the number the business saw as the callback, unless callback_number names another one (the user's mobile, an assistant's line): then callbacks ring that phone and call4me can't pick them up. If a call ends in voicemail or "we'll call you back", call4me remembers the task for 14 days: when the business calls a call4me number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (call4me_get_call lists its callbacks) and in call4me_list_calls.
 
 The caller sounds like a normal person calling for the user. It keeps turns short and does not read the booking back at the end; the recap comes back to you.
-Only call businesses and services the user wants to reach, never personal numbers they don't expect a call from.`;
+Only call businesses and services the user wants to reach, never personal numbers they don't expect a call from.${salesCalls ? `
+
+This account is approved for business-to-business sales and outreach calls: the user may have the caller introduce their company and pitch its product or service to businesses. Pass calling_as with the company, and give the caller what it may say (the offer, pricing, the next step to propose) in goal and facts. Only call businesses at their published business numbers, never consumers or personal phones. If a business asks not to be called again, the caller says sorry and blocks its number, and call4me never dials it again.` : ''}`;
 }
 
 /**
@@ -154,7 +156,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
   const agents = surface === 'agents';
   const health = surface !== 'chatgpt';
   const intake = catalog(surface);
-  const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION, title: 'call4me', websiteUrl: deps.origin }, { instructions: instructions(surface), jsonSchemaValidator: new CfWorkerJsonSchemaValidator() });
+  const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION, title: 'call4me', websiteUrl: deps.origin }, { instructions: instructions(surface, account.sales_calls === 1), jsonSchemaValidator: new CfWorkerJsonSchemaValidator() });
   const sched = scheduledCalls(env.DB);
 
   const guard = (fn: () => Promise<CallToolResult>) => async (): Promise<CallToolResult> => {
