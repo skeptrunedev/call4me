@@ -199,7 +199,7 @@ export function openApiDocument(site: string, pricePerMinuteCents = 25) {
       [scheduledCallsPath]: {
         post: {
           operationId: 'scheduleCall',
-          description: 'Place a call later (the business is closed, or the user wants it at a set time). Takes everything POST /api/calls takes, plus call_at, and checks it now. Nobody may be following the call when it runs, so give every fact and all the flexibility it needs up front. Credits are held when it dials.',
+          description: 'Place a call later, when the user wants it at a set time (calls can go out at any hour, so a closed business is no reason to wait). Takes everything POST /api/calls takes, plus call_at, and checks it now. Nobody may be following the call when it runs, so give every fact and all the flexibility it needs up front. Credits are held when it dials.',
           security: bearer,
           parameters: [idempotencyKey('scheduled call')],
           requestBody: body(scheduleCallInput('agents')),

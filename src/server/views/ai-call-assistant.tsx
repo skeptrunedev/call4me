@@ -140,7 +140,7 @@ export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: n
 
         <h2>schedule calls for when the business is open</h2>
         <p>
-          if the business is closed, or you want the call made at a set time, your assistant can schedule it up to 60 days ahead, and call4me dials
+          calls go out any time of day. if you want one made at a set time instead, your assistant can schedule it up to 60 days ahead, and call4me dials
           within a minute of that time. the brief is checked when you schedule it, so anything missing gets asked while you're still there, and
           credits are held only when it dials. nobody may be following a scheduled call, so give it every fact and everything it may accept up front:
           if a question comes up that nobody answers, the caller says you'll call back. you can check on a scheduled call or cancel it before it
