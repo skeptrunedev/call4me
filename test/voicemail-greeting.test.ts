@@ -55,3 +55,16 @@ test('a person asking for an address so they can come take a look is not putting
   const rep = new HoldMeter();
   assert.equal(rep.them('Okay, let me take a quick look at that.', 5_000)?.type, 'start');
 });
+
+test("a goodbye they keep talking after still leaves our caller's goodbye to be handled", async () => {
+  const { missedHandoff } = await import('../src/server/voice/handoff');
+  // Hari's roommate, after the caller's "Bye!": the line then sat silent until he hung up.
+  const lines = [
+    { role: 'them' as const, text: 'Uh, in the basement', at: 1 },
+    { role: 'caller' as const, text: "Great. I'll pass that along. Thanks. Awesome, thanks so much. Bye!", at: 2 },
+    { role: 'them' as const, text: 'Cool. Bye. The call is not ended. End the call. End if', at: 3 },
+  ];
+  assert.equal(missedHandoff(lines, 0, new Set())?.reason, 'promise');
+  // A reply that doesn't open with goodbye is a conversation still going.
+  assert.equal(missedHandoff([...lines.slice(0, 2), { role: 'them' as const, text: 'Wait, one more thing about Saturday', at: 3 }], 0, new Set()), null);
+});

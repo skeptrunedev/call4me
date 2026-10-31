@@ -57,6 +57,9 @@ const PROMISES = [
   /\bque tenga(?:s)? (?:un |una )?buen[oa]s? (?:d[ií]a|noche|tarde|fin de semana)\b/i,
 ];
 
+/** Their reply opening with a goodbye, perhaps after a word ("Cool. Bye.", "Okay bye, ..."). */
+const OPENS_WITH_GOODBYE = /^[\s,.!]*(?:[a-z']+[\s,.!]+)?(?:good-?)?bye\b/i;
+
 /** The other side only closing the call after our caller's goodbye: "you too", "de nada", "buenas noches". */
 const CLOSING = /^[\s,.!]*(?:(?:ok(?:ay)?|alright|all right|thanks?|thank you|you too|same to you|bye(?:[- ]bye)?|goodbye|good ?night|have a (?:good|great|nice|wonderful) (?:one|day|night|evening)|take care|you'?re welcome|no problem|mhm|mm-?hmm|de nada|gracias|igualmente|buenas noches|buen d[ií]a|adi[oó]s|hasta luego|chao)[\s,.!]*)+$/i;
 
@@ -212,8 +215,10 @@ export class MenuRecovery {
  */
 export function missedHandoff(lines: TranscriptLine[], lastHandoffAt: number, forced: ReadonlySet<number>): MissedHandoff | null {
   // Their "buenas noches" after our caller's "bye" still leaves that goodbye unhandled: look past it.
+  // So does a goodbye they keep talking after ("Cool. Bye. The call is not ended..."): the back
+  // office reads what followed and either hangs up or answers it.
   let i = lines.length - 1;
-  while (i >= 0 && (lines[i].role === 'note' || (lines[i].role === 'them' && CLOSING.test(lines[i].text.trim())))) i--;
+  while (i >= 0 && (lines[i].role === 'note' || (lines[i].role === 'them' && (CLOSING.test(lines[i].text.trim()) || OPENS_WITH_GOODBYE.test(lines[i].text))))) i--;
   const last = lines[i];
   if (!last) return null;
   if (last.role === 'caller' && promisesAction(last.text) && last.at > lastHandoffAt && !forced.has(last.at)) return { reason: 'promise', line: last };
