@@ -27,3 +27,15 @@ test('an asked-for accent is held on placed and answered calls, over the voice\'
   assert.match(inboundInstructions({ ...answered, accent: 'Austrian German' }), /natural Austrian German accent/);
   assert.doesNotMatch(inboundInstructions(answered), /accent/);
 });
+
+test('with no phone to ring the owner, the caller never promises to get them on the line', async () => {
+  const { backOfficeInstructions } = await import('../src/server/voice/prompt');
+  const reachable = { ...call, voice: 'marin' as const };
+  assert.match(callInstructions(reachable), /getting Lorenz on the line/);
+  assert.match(backOfficeInstructions(reachable), /connect_person\./);
+  // John Costa's Capital One call: no phone saved, and the rep asked for him.
+  const unreachable = { ...reachable, ownerReachable: false };
+  assert.doesNotMatch(callInstructions(unreachable), /getting Lorenz on the line/);
+  assert.match(callInstructions(unreachable), /Lorenz can't join right now/);
+  assert.match(backOfficeInstructions(unreachable), /Never use connect_person/);
+});

@@ -73,6 +73,8 @@ export interface CallBrief extends Who {
   owner: string;
   /** When to patch them in without being asked, e.g. "as soon as a person picks up". */
   connectWhen: string | null;
+  /** Whether there is a phone to ring the owner on; without one they can't join the call. */
+  ownerReachable?: boolean;
   /** The call was scheduled; the user may not be available for live questions. */
   unattended?: boolean;
   /** The GPT-Live voice on the call (voices.ts). */
@@ -94,11 +96,16 @@ function accentRule(voice: Voice, asked?: string | null): string {
  * prompting guide asks for (these three labels). The voice model only decides *when*; the back
  * office picks the tool. Concrete triggers matter: a spoken "2" never reaches a phone menu.
  */
-function delegationPolicy(person: string, owner: string, connectWhen: string | null = null): string {
+function delegationPolicy(person: string, owner: string, connectWhen: string | null = null, reachable = true): string {
+  // With no phone to ring, promising "getting them on the line" left John Costa's Capital One rep
+  // waiting in silence, until the voice model filled it with a made-up call.
+  const join = reachable
+    ? `- ${connectWhen ? `${connectWhen} (then ${owner} gets patched in), or they` : 'They'} insist on speaking to ${owner} directly. Tell them "one sec, getting ${owner} on the line", then stay quiet until they join.`
+    : `- Never delegate to bring ${owner} onto the call: there is no phone to ring them on. If they insist on speaking to ${owner} directly, say ${owner} can't join right now, then ask what ${owner} should do to reach them (a number, a time, the department) or what they can still help with.`;
   return `# Delegation policy
-Backend tools: press keys on the phone keypad; ask ${person} a question and get the answer back; ring ${owner} and patch them into this call; hang up the call.
+Backend tools: press keys on the phone keypad; ask ${person} a question and get the answer back;${reachable ? ` ring ${owner} and patch them into this call;` : ''} hang up the call.
 Delegate to the backend when:
-- ${connectWhen ? `${connectWhen} (then ${owner} gets patched in), or they` : 'They'} insist on speaking to ${owner} directly. Tell them "one sec, getting ${owner} on the line", then stay quiet until they join.
+${join}
 - A recording finishes listing options with keys ("press 1 for...", "for appointments, press 2") or asks you to enter something on the keypad. Stay silent until all options are heard, then delegate at once: after the last option, menus wait only two or three seconds before repeating or hanging up. Never say digits out loud to a menu; only the keypad works.
 - A phone menu repeats, rejects input, says no input was received, or sends you to recorded instructions without doing the task. Delegate again to recover the route; don't just acknowledge it or hang up.
 - A recording asks you to choose a language, or speaks a language other than English. Act within a few seconds; menus like this often hang up on silence. If it offers English (a key, or saying "English"), take it. If it only offers its own language, say "English" once right after it finishes, and if nothing changes take the option it offers and carry on in that language.
@@ -130,7 +137,7 @@ ${b.flexibility.trim() || '(only exactly what the task says)'}
 
 The callback number is ${spokenPhone(b.callbackNumber)}${b.callbackRingsOwner ? `, ${b.owner}'s own phone: a callback reaches ${b.owner} directly` : ''}. Whenever they want a number to call back or text, a contact number for a booking, order or hold, and on any voicemail, give this one and only this one. A phone number among the facts above is for finding or verifying an account: when a person or a phone menu asks for the phone number on file, give that one, never the callback number. When the task or facts say there's no account or not to give out a phone number, that wins: give no number, and say there's no account.
 ${b.localTime ? `It's ${b.localTime} for them right now.\n` : ''}
-${delegationPolicy(b.onBehalfOf, b.owner, b.connectWhen)}
+${delegationPolicy(b.onBehalfOf, b.owner, b.connectWhen, b.ownerReachable ?? true)}
 
 # Sound like a person making a quick call
 ${accentRule(b.voice, b.accent)}- Wait for them to answer ("Hi, thanks for calling..."), then get to the point in one sentence, without saying who you are: "Hi! I was hoping to get a table for four tonight, around seven?"
@@ -246,7 +253,7 @@ Pick exactly the tool the hand-off needs:
 - The caller said goodbye, left a voicemail, or the call can't go anywhere: end_call (set do_not_call if they asked not to be called again). The written recap is made from the transcript afterwards.
 - The other side needs a new detail that cannot be handled with known facts or an alternative lookup, or offered something outside what's allowed: ask_user with a short self-contained question. If the brief already says the detail is unknown, do not ask it again; let the caller acknowledge that and try an alternative. The answer or unavailable outcome goes straight to the caller, so when it returns write nothing, unless it needs another tool (press_digits to key in a code a phone menu asked for). Never repeat an unanswered question or invent an answer.
 - A phone menu needs a choice or an extension: press_digits.
-- The other side insists on speaking to the person directly, or the connect condition is met: connect_person.${b.connectWhen ? `\nConnect condition: ${b.connectWhen}` : ''}
+${b.ownerReachable ?? true ? `- The other side insists on speaking to the person directly, or the connect condition is met: connect_person.${b.connectWhen ? `\nConnect condition: ${b.connectWhen}` : ''}` : '- Never use connect_person: there is no phone to ring the person on.'}
 Sometimes the hand-off arrives as a note with the latest conversation, because the caller said it would act but didn't hand off. Treat it the same way.
 
 The caller's task: ${b.goal}

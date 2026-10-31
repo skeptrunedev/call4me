@@ -166,6 +166,7 @@ export async function placeCall(
       ownerPronunciation: namePronunciationOf(profile),
       callingAs: brief.calling_as ?? null,
       connectWhen: brief.connect_when ?? null,
+      ownerReachable: Boolean(person.phone),
       unattended: execution.unattended,
       voice: input.voice ?? 'marin',
     };
