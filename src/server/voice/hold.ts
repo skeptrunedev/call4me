@@ -12,7 +12,7 @@
  * for a message, the hold ends. Nobody comes back to a voicemail to end it otherwise, so it kept a
  * silent line billing past its limit (Fiola's events line, 12 minutes after the message was left).
  */
-import { asksForMessage, asksUsToWait, isPhoneMenu } from './handoff';
+import { asksForMessage, asksUsToWait, isPhoneMenu, JA_KEYPAD, JA_WAIT, SENTENCE_END } from './handoff';
 
 const QUEUE_RECORDING = /\b(?:please hold|on (?:a )?(?:(?:brief|short|quick|little|small) )?hold|(?:put|putting|place|placing) you on (?:a )?(?:\w+ )?hold|(?:let me|i'?ll|i will|i'?m going to|i'?m gonna|while i|as i|i'?m|i am) (?:connect|transfer)(?:ing)? you|stay on the line|remain on the line|(?:all )?(?:of )?our (?:agents|representatives|operators|associates|team members)(?: are)? (?:currently )?(?:busy|assisting|helping)|all (?:agents|representatives|operators|associates|lines) are (?:currently )?(?:busy|in use)|your call is (?:very )?important|(?:answered|taken) in the order (?:it was|they were) received|(?:estimated|expected|approximate) wait time|next available|in (?:the )?queue|being transferred|transferring (?:you|your call)|(?:i'?ll )?be right back|be right with you|(?:have|need|got) to (?:check|ask)|check with (?:the|my|our) (?:manager|supervisor|team|kitchen|doctor)|(?:keep|hold) me (?:one|a) (?:sec(?:ond)?|moment|minute)|por favor espere|permanezca en (?:la )?l[ií]nea|todos nuestros (?:representantes|agentes|operadores|asociados) (?:est[aá]n )?(?:ocupados|atendiendo)|su llamada es (?:muy )?importante|en el orden (?:en )?(?:que|en que) (?:fue|fueron) recibidas?|tiempo (?:estimado |aproximado )?de espera|siendo transferida|le (?:estamos )?transfiriendo)\b/i;
 /**
@@ -51,7 +51,7 @@ const PERSON_BACK = /\b(?:my name is|how (?:can|may) i (?:help|assist)|(?:are yo
 
 /** A line from the other side that is part of the wait: a hold request or a queue recording. */
 function isHoldLine(text: string): boolean {
-  return QUEUE_RECORDING.test(text) || WAIT_REQUEST.test(text) || asksUsToWait(text);
+  return QUEUE_RECORDING.test(text) || WAIT_REQUEST.test(text) || JA_WAIT.test(text) || asksUsToWait(text);
 }
 
 export type HoldChange = { type: 'start'; at: number } | { type: 'end'; at: number; seconds: number };
@@ -88,7 +88,7 @@ export class HoldMeter {
       return answered;
     }
     this.theirs += delta;
-    const all = this.theirs.trim().split(/[.?!]+\s+/);
+    const all = this.theirs.trim().split(SENTENCE_END).filter(Boolean);
     const sentence = all[all.length - 1] ?? '';
     if (all.length !== this.sentences) {
       this.sentences = all.length;
@@ -100,7 +100,7 @@ export class HoldMeter {
     // Judged once the sentence is finished: "To leave a message," may still end "press two".
     if (/[.?!]\s*$/.test(sentence) && asksForMessage(sentence)) return this.end(this.sentenceAt);
     // A phone menu inside the queue ("press two for general inquiries") is part of the wait, not a person.
-    if (isHoldLine(sentence) || isPhoneMenu(sentence)) {
+    if (isHoldLine(sentence) || isPhoneMenu(sentence) || JA_KEYPAD.test(sentence)) {
       this.speechAt = null;
       return null;
     }

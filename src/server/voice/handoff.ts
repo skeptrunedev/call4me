@@ -38,12 +38,24 @@ export function isPhoneMenu(text: string): boolean {
 const HOLD_REQUEST = /\b(?:please hold|on hold|hold on|hold time|wait time|next available|in (?:the )?queue|caller number|hang on|bear with me|stay on the line|remain on the line|(?:one|just a|give me a) (?:sec(?:ond)?|moment|minute)|let me (?:check|see|look|pull)|(?:being )?transferr?(?:ed|ing)|un moment(?:o|ito)|espere|perm[ií]tame|d[eé]jeme (?:verificar|ver|revisar|buscar)|en espera|permanezca en (?:la )?l[ií]nea|le (?:transfiero|comunico|estamos transfiriendo))\b/i;
 
 /**
+ * Japanese queue and transfer recordings ("しばらくお待ちください", "オペレーターにおつなぎいたします",
+ * "お電話が大変混み合っております"). No \b: word boundaries don't exist between Japanese characters.
+ */
+export const JA_WAIT = /(?:お待ちください|お待ち下さい|しばらくお待ち|少々お待ち|おつなぎ(?:いた)?します|おつなぎするまで|お繋ぎ(?:いた)?します|混み合って|込み合って)/;
+/** A Japanese recording offering keys ("2、を押してください"). */
+export const JA_KEYPAD = /押してください/;
+
+/** Sentence ends: English punctuation followed by a space, or Japanese full stops, which have none. */
+export const SENTENCE_END = /[.?!]+\s+|[。？！]+/;
+
+/**
  * The other side's latest sentence asked us to wait (a hold, a transfer, "let me check"), so any
  * quiet that follows is theirs to break, not ours.
  */
 export function asksUsToWait(text: string): boolean {
-  const sentences = text.trim().split(/[.?!]+\s+/);
-  return HOLD_REQUEST.test(sentences[sentences.length - 1] ?? '');
+  const sentences = text.trim().split(SENTENCE_END).filter(Boolean);
+  const last = sentences[sentences.length - 1] ?? '';
+  return HOLD_REQUEST.test(last) || JA_WAIT.test(last);
 }
 
 const PROMISES = [

@@ -68,3 +68,14 @@ test("a goodbye they keep talking after still leaves our caller's goodbye to be 
   // A reply that doesn't open with goodbye is a conversation still going.
   assert.equal(missedHandoff([...lines.slice(0, 2), { role: 'them' as const, text: 'Wait, one more thing about Saturday', at: 3 }], 0, new Set()), null);
 });
+
+test("a Japanese queue recording counts as hold, and its keypad offers don't end it", () => {
+  // Rakuten Mobile, Pedro's call: over 100 people waiting, billed at the full rate as no hold.
+  const meter = new HoldMeter();
+  const start = meter.them('ご希望の方は、ゼロ、を押してください。それ以外の方は、しばらくお待ちください。オペレーターに、おつなぎいたします。', 1_000);
+  assert.equal(start?.type, 'start');
+  meter.them('現在、お電話が大変混み合っております。', 5_000);
+  meter.them('トラブルシューティングについてのご案内は、ウェブページのリンクを、ショートメッセージでお送りいたします。ご希望の方は、ゼロ、を押してください。', 20_000);
+  meter.them('それ以外の方は、しばらくお待ちください。', 30_000);
+  assert.equal(meter.holding(), true);
+});
