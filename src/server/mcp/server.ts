@@ -4,7 +4,7 @@ import type Stripe from 'stripe';
 import { z } from 'zod';
 import { accounts, dollars, type Account } from '../services/accounts';
 import { CallError } from '../services/calls';
-import { answerQuestion, balanceView, categoriesView, connectPerson, followCall, followedView, hangUp, listCalls, profileView, requirementsView, saveProfile, callView, type CallView } from '../services/call-ops';
+import { answerQuestion, balanceView, usageView, categoriesView, connectPerson, followCall, followedView, hangUp, listCalls, profileView, requirementsView, saveProfile, callView, type CallView } from '../services/call-ops';
 import { placeCall, pricePerMinute, pricePerMinuteTo } from '../services/dialer';
 import { DESTINATION_PRICE_CENTS, ABROAD_CALLING } from '../lib/rates';
 import { parseAmountCents, topups, TopupError } from '../services/topups';
@@ -310,6 +310,29 @@ export function createCall4meServer(deps: McpDeps): McpServer {
           ...views.map((v) => `${v.id} · ${v.created_at.slice(0, 16).replace('T', ' ')} · ${v.direction} · ${v.status} · ${v.business} ${v.number}${v.callback_for ? ` · callback for ${v.callback_for}` : ''}${v.outcome ? ` · ${v.outcome.summary}` : ''}`),
         ];
         return ok(lines.join('\n') || 'no calls yet', { calls: views.map((v) => ({ ...v, transcript: undefined })), ...(scheduled.length ? { scheduled } : {}) });
+      })()) as never,
+  );
+
+  server.registerTool(
+    'call4me_get_usage',
+    titled({
+      title: 'Spending summary',
+      description: 'What the account spent over the last N days (default 30): total spent on calls, talk and hold minutes, spending on numbers, credits added, the current balance, and the spend by day and by business. Use it when the user asks where their balance went or how much they spend; call4me_list_calls has each call.',
+      inputSchema: z.object({
+        days: z.number().int().min(1).max(90).default(30).describe('how many days back, 1 to 90'),
+        timezone: z.string().max(60).optional().describe('the user\'s IANA time zone for the daily totals, e.g. "America/New_York" (default UTC)'),
+      }),
+      annotations: RO,
+    }),
+    (async (args: { days: number; timezone?: string }) =>
+      guard(async () => {
+        const u = await usageView(env, account.id, args.days, args.timezone);
+        const lines = [
+          `last ${u.days} days: ${u.calls_spent} on ${u.calls} ${u.calls === 1 ? 'call' : 'calls'} (${u.talk_minutes} min, ${u.hold_minutes} on hold at half price)${u.numbers_spent !== '$0.00' ? `, ${u.numbers_spent} on numbers` : ''}; credits added ${u.credits_added}; balance now ${u.balance}`,
+          ...u.by_day.map((d) => `${d.date}: ${d.spent} (${d.calls})`),
+          ...(u.by_business.length ? ['top businesses:', ...u.by_business.map((b) => `${b.business}: ${b.spent} (${b.calls})`)] : []),
+        ];
+        return ok(lines.join('\n'), u);
       })()) as never,
   );
 

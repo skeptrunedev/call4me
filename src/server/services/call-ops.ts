@@ -131,6 +131,60 @@ export async function balanceView(env: Env, account: Account) {
   };
 }
 
+/**
+ * What the account spent over the last `days` days: totals, then by day (in the user's time zone)
+ * and by business, so an agent can answer "where did my balance go?" (Perry asked for this after
+ * $14 went on 13 calls he didn't remember adding up).
+ */
+export async function usageView(env: Env, accountId: string, days: number, timezone = 'UTC') {
+  let dayOf: Intl.DateTimeFormat;
+  try {
+    dayOf = new Intl.DateTimeFormat('en-CA', { timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit' });
+  } catch {
+    throw new CallError(`timezone: "${timezone}" is not an IANA time zone like "America/New_York"`);
+  }
+  const since = Date.now() - days * 86_400_000;
+  const [{ results: rows }, ledger, balance] = await Promise.all([
+    env.DB.prepare(`SELECT business, created_at, cost_cents, billed_seconds, hold_seconds FROM calls WHERE account_id = ? AND created_at >= ? AND cost_cents > 0 ORDER BY created_at`)
+      .bind(accountId, since)
+      .all<{ business: string; created_at: number; cost_cents: number; billed_seconds: number | null; hold_seconds: number }>(),
+    env.DB.prepare(
+      `SELECT COALESCE(SUM(CASE WHEN kind = 'number' THEN -amount_cents ELSE 0 END), 0) AS numbers_cents,
+              COALESCE(SUM(CASE WHEN kind IN ('topup', 'reload', 'adjustment', 'refund') AND amount_cents > 0 THEN amount_cents ELSE 0 END), 0) AS added_cents
+       FROM ledger WHERE account_id = ? AND created_at >= ?`,
+    ).bind(accountId, since).first<{ numbers_cents: number; added_cents: number }>(),
+    accounts(env.DB).balanceCents(accountId),
+  ]);
+  const byDay = new Map<string, { calls: number; cents: number }>();
+  const byBusiness = new Map<string, { calls: number; cents: number }>();
+  let spent = 0, talkSeconds = 0, holdSeconds = 0;
+  for (const r of rows) {
+    spent += r.cost_cents;
+    talkSeconds += r.billed_seconds ?? 0;
+    holdSeconds += r.hold_seconds;
+    for (const [map, key] of [[byDay, dayOf.format(r.created_at)], [byBusiness, r.business]] as const) {
+      const entry = map.get(key) ?? { calls: 0, cents: 0 };
+      entry.calls++;
+      entry.cents += r.cost_cents;
+      map.set(key, entry);
+    }
+  }
+  return {
+    days,
+    timezone,
+    calls: rows.length,
+    calls_spent: dollars(spent),
+    calls_spent_cents: spent,
+    talk_minutes: Math.round(talkSeconds / 60),
+    hold_minutes: Math.round(holdSeconds / 60),
+    numbers_spent: dollars(ledger?.numbers_cents ?? 0),
+    credits_added: dollars(ledger?.added_cents ?? 0),
+    balance: dollars(balance),
+    by_day: [...byDay].map(([date, d]) => ({ date, calls: d.calls, spent: dollars(d.cents) })),
+    by_business: [...byBusiness].sort((a, b) => b[1].cents - a[1].cents).slice(0, 10).map(([business, d]) => ({ business, calls: d.calls, spent: dollars(d.cents) })),
+  };
+}
+
 export const categoriesView = (intake: Catalog) => ({ categories: intake.categories.map((c) => ({ slug: c.slug, name: c.name, examples: c.examples })) });
 
 /** What a kind of call needs before dialing, and which of that the saved profile already has. */
