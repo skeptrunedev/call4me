@@ -136,6 +136,8 @@ export const AccountPage: FC<{
   profileError?: string;
   /** The last 30 days of spending, for the spending summary. */
   usage: UsageView;
+  /** Credits set aside for calls still going; whatever they don't use comes back when they end. */
+  heldCents: number;
 }> = (p) => (
   <Layout title="my account" page="account" signedIn>
     <h1>
@@ -144,6 +146,11 @@ export const AccountPage: FC<{
     <p class="small">
       {p.account.email} / {dollars(p.pricePerMinuteCents)}/min / about {Math.floor(p.balanceCents / p.pricePerMinuteCents)} minutes left
     </p>
+    {p.heldCents > 0 && (
+      <p class="small">
+        {dollars(p.heldCents)} is set aside for a call in progress and isn't in this balance yet. what the call doesn't use comes back when it ends.
+      </p>
+    )}
     {p.calls.length === 0 ? <FirstCall email={p.account.email} installPrompt={p.installPrompt} /> : <CopyBlock id="agent-prompt" text={p.agentPrompt} rows={12} hidden />}
     {p.reload ? (
       <form method="post" action="/account/reload/stop" class="inline">

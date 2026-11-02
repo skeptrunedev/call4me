@@ -116,7 +116,7 @@ pub.get('/welcome', async (c) => {
 
 async function accountPage(c: AppContext, account: Account, errors: { error?: string; numberError?: string; ownNumberError?: string; profileError?: string } = {}) {
   const n = numbers(c.env);
-  const [balance, rows, owned, pending, own, offers, reload, key, profile, usage] = await Promise.all([
+  const [balance, rows, owned, pending, own, offers, reload, key, profile, usage, held] = await Promise.all([
     accounts(c.env.DB).balanceCents(account.id),
     calls(c.env.DB).list(account.id, 50),
     n.views(account.id),
@@ -127,6 +127,8 @@ async function accountPage(c: AppContext, account: Account, errors: { error?: st
     ownerKey(c, account),
     profiles(c.env.DB).get(account.id),
     usageView(c.env, account.id, 30),
+    // Dawid asked why $7.50 was missing: it was held for a call still going.
+    c.env.DB.prepare(`SELECT COALESCE(SUM(hold_cents), 0) AS cents FROM calls WHERE account_id = ? AND status IN ('queued', 'dialing', 'in_progress')`).bind(account.id).first<{ cents: number }>(),
   ]);
   return c.html(
     <AccountPage
@@ -144,6 +146,7 @@ async function accountPage(c: AppContext, account: Account, errors: { error?: st
       installPrompt={installPrompt(origin(c), key)}
       profile={profile}
       usage={usage}
+      heldCents={held?.cents ?? 0}
       {...errors}
     />,
     errors.error || errors.numberError || errors.ownNumberError || errors.profileError ? 400 : 200,
