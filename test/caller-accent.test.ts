@@ -39,3 +39,12 @@ test('with no phone to ring the owner, the caller never promises to get them on 
   assert.match(callInstructions(unreachable), /Lorenz can't join right now/);
   assert.match(backOfficeInstructions(unreachable), /Never use connect_person/);
 });
+
+test('the owner calling their own line is greeted as the owner, never as a business calling back', () => {
+  // David Aviles called his call4me number from his phone and was answered as Kaiser.
+  const owner = inboundInstructions({ ...answered, owner: 'David Aviles', ownerCalling: true });
+  assert.match(owner, /# The caller is David Aviles/);
+  assert.match(owner, /"Hey David!"/);
+  assert.match(owner, /not a business calling back/);
+  assert.doesNotMatch(inboundInstructions({ ...answered, owner: 'David Aviles' }), /# The caller is/);
+});

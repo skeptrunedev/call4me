@@ -296,6 +296,8 @@ interface InboundBrief extends Who {
   tasks: OpenTask[];
   /** True when the first task is known to be this call's (the caller's number matches, or it's the only one). */
   likely: boolean;
+  /** The owner is calling from their own phone (their profile's or a verified one), not a business. */
+  ownerCalling?: boolean;
   recent: { business: string; goal: string; summary: string | null; when: string }[];
   localTime: string | null;
   /** The owner's standing instructions for answered calls (answering_instructions), or null. */
@@ -366,12 +368,22 @@ ${o.tasks.map(taskBlock).join('\n\n')}
 - Once it's settled (booked, answered, or clearly not possible), say a quick thanks and bye and hand off to hang up (end_call). Don't read the details back; the recap is written from the call afterwards.
 `
     : '';
+  const ownerBlock = o.ownerCalling
+    ? `# The caller is ${o.owner}
+${o.owner} is calling their own call4me line from their own phone. They are the person you work for, not a business calling back: never treat them as one, and never take a message for them.
+- Greet them by first name: "Hey ${o.owner.split(' ')[0]}!" and ask what they need.
+- If they ask how a call went, answer from the recent calls below, plainly. If it isn't there, say you don't have it.
+- You can't place or redo calls from here: if they want one made, tell them to ask their AI assistant (it has call4me connected), and you can note what they want.
+- When they're done, say bye and hand off to hang up (end_call).
+
+`
+    : '';
   return `${answererRules(o)}
 - If they ask for a number to call back or text, read out the digits: ${spokenPhone(o.callbackNumber)}. Never just say "this number".
 ${o.localTime ? `\nIt's ${o.localTime} right now.\n` : ''}
 ${delegationPolicy(o.owner, o.owner)}
 
-${standingBlock(o.standing)}${tasks}
+${ownerBlock}${standingBlock(o.standing)}${tasks}
 # Recent calls made from this number
 ${recent}
 
