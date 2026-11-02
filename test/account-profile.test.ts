@@ -78,3 +78,12 @@ test('profile forms refuse cross-site posts and signed-out visitors', async () =
   const out = setup(false);
   assert.equal((await out.request('/account/profile', 'POST', 'full_name=x')).headers.get('location'), '/login?next=/account');
 });
+
+test('before the first call the account page leads with connecting an app, chatgpt plugin included', async () => {
+  const { request } = setup();
+  const html = await (await request('/account')).text();
+  assert.match(html, /<section class="box" id="first-call"/);
+  assert.match(html, /href="https:\/\/chatgpt\.com\/plugins\/plugin_asdk_app_[^"]+">add the call4me plugin<\/a>/);
+  assert.match(html, /use this account \(alice@example\.com\)/);
+  assert.match(html, /<textarea id="agent-prompt" readonly="" rows="12" aria-label="prompt for your agent">Set up call4me/);
+});

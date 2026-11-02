@@ -127,6 +127,8 @@ export const AccountPage: FC<{
   calls: CallView[];
   apiKey: string;
   agentPrompt: string;
+  /** Shown until the first call: the prompt that connects an agent and makes that call. */
+  installPrompt: string;
   error?: string;
   numberError?: string;
   ownNumberError?: string;
@@ -140,7 +142,7 @@ export const AccountPage: FC<{
     <p class="small">
       {p.account.email} / {dollars(p.pricePerMinuteCents)}/min / about {Math.floor(p.balanceCents / p.pricePerMinuteCents)} minutes left
     </p>
-    <CopyBlock id="agent-prompt" text={p.agentPrompt} rows={12} hidden />
+    {p.calls.length === 0 ? <FirstCall email={p.account.email} installPrompt={p.installPrompt} /> : <CopyBlock id="agent-prompt" text={p.agentPrompt} rows={12} hidden />}
     {p.reload ? (
       <form method="post" action="/account/reload/stop" class="inline">
         reloads <span class="price">{dollars(p.reload.cents)}</span> every month
@@ -292,7 +294,9 @@ export const AccountPage: FC<{
     <h2>calls</h2>
     <p class="small">calls are recorded by our phone carrier (Telnyx). open a call to play or save its recording.</p>
     {p.calls.length === 0 ? (
-      <p class="muted">no calls yet. ask your agent to call somewhere.</p>
+      <p class="muted">
+        no calls yet. <a href="#first-call">connect your ai app</a>, then ask it to call somewhere.
+      </p>
     ) : (
       <table class="rows">
         <thead>
@@ -323,6 +327,9 @@ export const AccountPage: FC<{
     )}
     <h2>connect your agent</h2>
     <p class="small">
+      in chatgpt, <a href={CHATGPT_PLUGIN_URL}>add the call4me plugin</a> and sign in with {p.account.email} when it asks.
+    </p>
+    <p class="small">
       your key is <span class="key">{p.apiKey}</span>. the copy prompts on every page include it while you're signed in, so your agent connects without signing in.
       clients that sign in through the browser (claude desktop, claude.ai, claude code via /mcp) can use plain <code>/mcp</code> instead.
     </p>
@@ -333,6 +340,30 @@ export const AccountPage: FC<{
       <button type="submit" class="linkbutton">sign out</button>
     </form>
   </Layout>
+);
+
+/**
+ * A new account's first step. Signing up on the site does nothing on its own: calls are placed
+ * from an AI app, so until the first call the page leads with connecting one. ChatGPT gets its
+ * own line because its plugin is the only way in there (no key URLs), and it signs in by OAuth,
+ * so the person must sign in as this same account to see these credits.
+ */
+const FirstCall: FC<{ email: string; installPrompt: string }> = ({ email, installPrompt }) => (
+  <section class="box" id="first-call" aria-label="make your first call">
+    <h2>make your first call</h2>
+    <p>call4me makes calls from inside your ai app. connect it once, then ask it to call somewhere.</p>
+    <ul>
+      <li>
+        <b>chatgpt:</b> <a href={CHATGPT_PLUGIN_URL}>add the call4me plugin</a>, and when chatgpt asks you to sign in, use this account ({email}). then ask
+        something like <span class="sample">"call the hardware store near me and ask if they have a 20 amp gfci outlet in stock."</span> the chatgpt plugin
+        doesn't make medical or dental calls; use one of the apps below for those.
+      </li>
+      <li>
+        <b>claude, codex, grok or another agent:</b> paste this prompt into it. it connects call4me with your key and asks what to call about.
+      </li>
+    </ul>
+    <CopyBlock id="agent-prompt" text={installPrompt} rows={12} />
+  </section>
 );
 
 /** Monthly reload is the default: whatever you load comes back every month until you stop it. */
