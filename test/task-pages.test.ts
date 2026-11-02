@@ -15,7 +15,7 @@ test('every task page cites posts that exist and is in the sitemap', () => {
 
 test('task page copy states the live price and has no em dashes', () => {
   for (const task of TASKS) {
-    const text = [task.title, PAGES[task.key].description, ...task.answer('$9.99/min'), ...task.how, ...task.posts.map((p) => `${p.label} ${p.fact}`)].join('\n');
+    const text = [task.title, PAGES[task.key].description, ...task.answer('$9.99/min'), ...(task.steps ?? []), ...task.how, ...(task.others ? [task.others.heading, task.others.after, ...task.others.items.map((o) => o.fact)] : []), ...task.posts.map((p) => `${p.label} ${p.fact}`)].join('\n');
     assert.ok(!text.includes('—'), task.key);
     assert.ok(task.answer('$9.99/min')[0]!.includes('$9.99/min'), task.key);
   }

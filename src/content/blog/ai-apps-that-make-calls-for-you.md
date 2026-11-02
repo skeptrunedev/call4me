@@ -120,7 +120,7 @@ Simple AI launched as a consumer app that waited on hold and worked through phon
 
 call4me is an [AI call assistant](/ai-call-assistant) that adds phone calls to an AI assistant you already use. It connects over MCP to [Claude Code](/blog/claude-code-phone-calls), [Codex](/blog/codex-phone-calls), Claude, ChatGPT, [Grok Bot](/blog/grok-connectors-mcp-phone-calls) and other MCP clients. Muse can build its own connector. Your assistant researches the business, sends the brief, and can answer the caller's questions while the call is still going.
 
-Each common errand has a page with the recorded calls behind it: [waiting on hold](/hold-for-me), [doctor and dentist appointments](/book-doctor-appointment), [cancelling a subscription](/cancel-subscription), [restaurant reservations](/book-restaurant-reservation) and [customer service](/call-customer-service).
+[An AI app that calls businesses for you](/app-that-calls-businesses-for-you) shows how a call works with recorded examples. Each common errand also has a page with the recorded calls behind it: [waiting on hold](/hold-for-me), [doctor and dentist appointments](/book-doctor-appointment), [cancelling a subscription](/cancel-subscription), [restaurant reservations](/book-restaurant-reservation), [customer service](/call-customer-service), [negotiating bills](/negotiate-bills) and [disputing a charge](/dispute-a-charge).
 
 You can ask to be connected when a person picks up, join mid-call, or listen silently and press 1 to take over. Calls can be scheduled for business hours, and several can run at once. Results include the outcome, transcript and available recording.
 

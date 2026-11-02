@@ -266,6 +266,7 @@ export const Layout: FC<{
               <a href="/about">about</a>
               <a href="/pricing">pricing</a>
               <a href="/ai-call-assistant">ai call assistant</a>
+              <a href="/app-that-calls-businesses-for-you">app that calls businesses for you</a>
               <a href="/hold-for-me">ai that waits on hold</a>
               <a href="/book-doctor-appointment">ai that books doctor appointments</a>
               <a href="/cancel-subscription">ai that cancels subscriptions</a>
