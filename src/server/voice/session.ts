@@ -91,6 +91,8 @@ const HEARTBEAT_MS = 20_000;
 const REATTACH_WAIT_MS = 15_000;
 /** Between the wrap-up heads-up and the hard stop. */
 const WRAP_UP_MS = 40_000;
+/** While the user is patched in past the time limit, how often to look again. */
+const PERSON_RECHECK_MS = 60_000;
 
 export interface SessionSetup {
   callId: string;
@@ -1356,6 +1358,16 @@ export class VoiceSession extends DurableObject<Env> {
       return;
     }
     const [wrapAt, stopAt] = await Promise.all([this.ctx.storage.get<number>('wrapAt'), this.ctx.storage.get<number>('stopAt')]);
+    // The user patched in talks on their own time, which is free: the limit counts the caller's.
+    // Blake Dixon was cut off mid-booking with Chase Travel 14 minutes after taking over, because
+    // the advisor went quiet for 30s at the hard stop. Check again in a minute; once they hand the
+    // call back, the usual wrap-up runs. Telnyx's own ceiling still ends the call.
+    if (this.personOn && ((stopAt && now >= stopAt) || (!stopAt && wrapAt && now >= wrapAt))) {
+      await this.ctx.storage.delete('stopAt');
+      await this.ctx.storage.put('wrapAt', now + PERSON_RECHECK_MS);
+      await this.scheduleAlarm();
+      return;
+    }
     if (stopAt && now >= stopAt) {
       // Put on hold during the wrap-up: keep waiting instead of hanging up on the queue.
       if (this.hold.holding() && (await this.extendOnHold(s, now))) {

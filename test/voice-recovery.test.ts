@@ -302,3 +302,23 @@ test('a fresh durable object restores the ongoing call and relays audio using it
   assert.deepEqual(live.sent.at(-1), { type: 'session.input_audio.append', audio: 'new-phone-audio' });
   assert.deepEqual(phone.sent.at(-1), { event: 'media', media: { payload: 'AAAA' } });
 });
+
+test('the time limit never hangs up on the user while they are on the call, and wraps up once they hand it back', async (t) => {
+  const h = harness(t);
+  const hangups: string[] = [];
+  h.session.hangup = async (why: string) => { hangups.push(why); };
+  h.session.heardThem = true;
+  h.session.personOn = true;
+  h.values.set('stopAt', Date.now() - 1);
+  await h.session.alarm();
+  assert.deepEqual(hangups, []);
+  assert.equal(h.values.get('stopAt'), undefined);
+  assert.equal(h.values.get('wrapAt'), Date.now() + 60_000);
+
+  // Handed back: the next check starts the usual wrap-up instead of waiting again.
+  h.session.personOn = false;
+  t.mock.timers.tick(60_000);
+  await h.session.alarm();
+  assert.equal(h.values.get('stopAt'), Date.now() + 40_000);
+  assert.deepEqual(hangups, []);
+});
