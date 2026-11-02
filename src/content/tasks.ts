@@ -21,6 +21,8 @@ export interface Task {
   key: TaskKey;
   /** The page's h1 and title: the question, answered. */
   title: string;
+  /** When this page's copy last changed (YYYY-MM-DD). It is the sitemap lastmod, which is what sends an edit to IndexNow; bump it with every edit. */
+  updated: string;
   /** The opening paragraphs: what call4me does for this errand, how, and what it costs. */
   answer: (perMinute: string) => string[];
   how: string[];
@@ -52,6 +54,7 @@ export const TASKS: Task[] = [
   {
     key: 'holdForMe',
     title: 'An AI that waits on hold for you',
+    updated: '2026-10-29',
     answer: (perMinute) => [
       `call4me is an AI that waits on hold for you. ask your AI assistant (ChatGPT, Claude or Codex) to call a company, and call4me dials it, gets through the phone menu, sits in the queue, and when a person picks up it either handles your request or rings your phone so you join right then. ${costs(perMinute)}`,
       `the waits are real: on our own recorded calls, the longest hold before a person answered was ${summary.longest.company} at ${summary.longest.timeToHuman}, and across the ${summary.measured} companies we timed, ${summary.overFive} took more than 5 minutes.`,
@@ -75,6 +78,7 @@ export const TASKS: Task[] = [
   {
     key: 'doctorAppointment',
     title: 'An AI that calls your doctor or dentist to book an appointment',
+    updated: '2026-10-24',
     answer: (perMinute) => [
       `call4me is an AI that calls your doctor's or dentist's office and books the appointment for you. ask your AI assistant (ChatGPT, Claude or Codex) for a visit, it collects the patient details the office will ask for, and call4me phones the office, talks to the front desk and brings back the confirmed day and time with a transcript. ${costs(perMinute)}`,
     ],
@@ -99,6 +103,7 @@ export const TASKS: Task[] = [
   {
     key: 'cancelSubscription',
     title: 'An AI that calls to cancel a subscription for you',
+    updated: '2026-10-28',
     answer: (perMinute) => [
       `call4me is an AI that calls a company to cancel a subscription for you. tell your AI assistant (ChatGPT, Claude or Codex) what to cancel and what it may accept instead, and call4me phones the company, gets through the menu and the hold, asks for the cancellation, and rings your phone if the company will only deal with the account holder. ${costs(perMinute)}`,
     ],
@@ -125,6 +130,7 @@ export const TASKS: Task[] = [
   {
     key: 'restaurantReservation',
     title: 'An AI that calls a restaurant to book a reservation for you',
+    updated: '2026-10-24',
     answer: (perMinute) => [
       `call4me is an AI that calls the restaurant and books the table for you. tell your AI assistant (ChatGPT, Claude or Codex) the restaurant, the date, the party size, the name and the times you would accept, and call4me phones the restaurant, talks to the host and brings back the confirmed booking with a transcript. ${costs(perMinute)}`,
     ],
@@ -147,6 +153,7 @@ export const TASKS: Task[] = [
   {
     key: 'customerService',
     title: 'An AI that calls customer service for you',
+    updated: '2026-10-29',
     answer: (perMinute) => [
       `call4me is an AI that calls customer service for you. ask your AI assistant (ChatGPT, Claude or Codex) to call a company about a refund, a bill, a booking or a stuck order, and call4me dials, gets through the phone tree and the hold, talks to the rep and brings back what they said with a transcript, or patches you in when they want the account holder. ${costs(perMinute)}`,
       `we have called the customer service lines of ${summary.companies} companies and published the recordings. across the ${summary.measured} where we timed the wait, the median time to a person was ${summary.median}. an AI or virtual assistant answered first at ${summary.aiFirst} of the ${summary.companies}, and no call we placed reached a person at ${list(summary.neverReached.map((r) => r.company))}.`,
@@ -168,9 +175,10 @@ export const TASKS: Task[] = [
   },
   {
     key: 'negotiateBills',
-    title: 'An AI that calls to negotiate your bills',
+    title: 'AI bill negotiation that calls to lower your bills',
+    updated: '2026-11-01',
     answer: (perMinute) => [
-      `call4me is an AI that calls to negotiate your bills. ask your AI assistant (ChatGPT, Claude or Codex) to call your hospital, internet, TV or phone company, and call4me gets through the phone tree and the hold, asks for the discounts, promotions and payment plans they offer, and rings your phone when they want the account holder on the line. ${costs(perMinute)}`,
+      `call4me is an AI bill negotiator: it calls your internet, TV, phone or hospital billing line for you and asks for a lower bill. ask your AI assistant (ChatGPT, Claude or Codex) which bill to lower, and call4me gets through the phone tree and the hold, asks for the discounts, promotions and payment plans they offer, and rings your phone when they want the account holder on the line. ${costs(perMinute)} there is no subscription and no share of what you save.`,
       'on our recorded calls, the savings came from asking for specific things, not from haggling. Spectrum\'s retention team cut a call4me user\'s internet from $85 to $55 a month for a year. Advocate Health quoted a 50% discount for uninsured patients. and two of the three hospital billing offices we called said they don\'t settle balances.',
     ],
     how: [
@@ -194,6 +202,7 @@ export const TASKS: Task[] = [
   {
     key: 'disputeCharge',
     title: 'An AI that calls your bank to dispute a charge',
+    updated: '2026-10-28',
     answer: (perMinute) => [
       `call4me is an AI that calls your bank or card company to dispute a charge for you. tell your AI assistant (ChatGPT, Claude or Codex) the merchant, the date, the amount and what went wrong, and call4me dials the number on your card, gets through the phone tree to the disputes team, and rings your phone when they need the cardholder to verify. ${costs(perMinute)}`,
       'we called the card lines at Chase, Capital One, Discover, PNC and Wells Fargo on the same evening, and all five put us through to a person. the thing three of them left out matters most: for a credit card, federal law gives you 60 days from the statement that first showed the charge to send a written dispute, and a phone call alone may not protect you.',

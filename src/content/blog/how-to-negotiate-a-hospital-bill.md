@@ -4,6 +4,7 @@ seoTitle: "How to negotiate a hospital bill, from real calls"
 subtitle: We called the billing lines at Cleveland Clinic, Advocate Health and an HCA hospital and asked about discounts, charity care, itemized bills and payment plans. All three put us through to a person. Here is what they said, the full recordings, and the federal rules behind it.
 description: "How to negotiate a hospital bill: we called three hospital billing offices about discounts, charity care, itemized bills and payment plans."
 date: 2026-10-26
+updated: 2026-11-01
 verified: 2026-10-26
 tags: hospital bills, medical bills, financial assistance, charity care, no surprises act
 authors: nick
@@ -12,7 +13,7 @@ imageAlt: How to negotiate a hospital bill, from recorded calls to three hospita
 
 **The short answer:** to negotiate a hospital bill, start by asking for an **itemized bill** and the hospital's **financial assistance policy**, then ask the billing office three questions: is there a **self-pay or prompt-pay discount**, do I qualify for **financial assistance (charity care)**, and can I get an **interest-free payment plan**. Every nonprofit hospital has to have a written financial assistance policy and post it online, and in most cases it cannot sue you, garnish wages or report you to credit bureaus for at least 120 days after the first bill. On our calls, the discounts were real but the "negotiation" wasn't: Advocate quoted a **50% uninsured discount**, HCA Florida Northside a **20% prompt-pay discount**, and when we asked about settling a balance after insurance, Cleveland Clinic said "That's going to be the payment plan" and Advocate said "We don't do any settlement options."
 
-We called three hospital systems on Monday, October 26, 2026, with [call4me](/) asking the questions:
+We called three hospital systems on Monday, October 26, 2026, with [call4me](/negotiate-bills), an AI that calls hospital billing offices for you, asking the questions:
 
 - **Cleveland Clinic** (nonprofit academic medical center, Ohio and Florida): **866-621-6385**
 - **Advocate Health** (large nonprofit system, Illinois hospitals): **847-795-2300**
@@ -194,7 +195,7 @@ call4me is a phone for your AI agent: your agent (Claude Code, Codex, ChatGPT) t
 
 One thing our caller did badly. When Advocate's representative asked for its name, it said "I'm his assistant. I don't have a name." That's true (it had no name set for this call) but it made the conversation awkward. We've since changed it: asked again, it now says "You can put me down as Nick's assistant." You can also give your call4me caller a first name to use. We kept the audio as it happened.
 
-Need to call your hospital about a bill? See [an AI that calls to negotiate your bills](/negotiate-bills), or let it [wait on hold for you](/hold-for-me).
+Want an AI to call the hospital about your own bill? call4me calls the billing office for you, asks for the itemized bill, the discounts, financial assistance and an interest-free payment plan, and rings your phone when they need the patient or guarantor on the line. Give it your guarantor or account number, and your household size and income if you want it to ask about financial assistance. See [AI bill negotiation that calls to lower your bills](/negotiate-bills), or let it [wait on hold for you](/hold-for-me).
 
 ## Have your agent make this call
 
