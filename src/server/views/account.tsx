@@ -3,7 +3,7 @@ import type { z } from 'zod';
 import { mcpUrl } from '../lib/prompts';
 import { CHATGPT_PLUGIN_URL } from '../lib/pages';
 import type { recordingOutput } from '../lib/recording-schema';
-import type { callView } from '../services/call-ops';
+import type { callView, UsageView } from '../services/call-ops';
 import { dollars, type Account } from '../services/accounts';
 import type { CountryOffer, NumberView, OwnNumberView, PendingNumberView } from '../services/numbers';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
@@ -134,6 +134,8 @@ export const AccountPage: FC<{
   ownNumberError?: string;
   profile: Profile;
   profileError?: string;
+  /** The last 30 days of spending, for the spending summary. */
+  usage: UsageView;
 }> = (p) => (
   <Layout title="my account" page="account" signedIn>
     <h1>
@@ -291,6 +293,7 @@ export const AccountPage: FC<{
     )}
     <h2>text alerts</h2>
     <p class="small"><a href="/sms">Manage optional text alerts</a> for call questions and phone number renewals.</p>
+    <SpendingBox usage={p.usage} />
     <h2>calls</h2>
     <p class="small">calls are recorded by our phone carrier (Telnyx). open a call to play or save its recording.</p>
     {p.calls.length === 0 ? (
@@ -367,6 +370,60 @@ const FirstCall: FC<{ email: string; installPrompt: string }> = ({ email, instal
 );
 
 /** Monthly reload is the default: whatever you load comes back every month until you stop it. */
+/** The UTC dates of the last `n` days, oldest first. */
+function lastDays(n: number, now = Date.now()): string[] {
+  return Array.from({ length: n }, (_, i) => new Date(now - (n - 1 - i) * 86_400_000).toISOString().slice(0, 10));
+}
+
+/**
+ * Where the balance went: the month's total, spend by day, and the businesses it went on. Perry
+ * asked after 13 calls took $14 he hadn't added up; the call list alone doesn't show it.
+ */
+export const SpendingBox: FC<{ usage: UsageView }> = ({ usage: u }) => {
+  if (!u.calls) return null;
+  const days = lastDays(14);
+  const byDay = new Map(u.by_day.map((d) => [d.date, d]));
+  const max = Math.max(1, ...days.map((d) => byDay.get(d)?.spent_cents ?? 0));
+  return (
+    <>
+      <h2 id="spending">spending</h2>
+      <p class="small">
+        last {u.days} days: <strong>{u.calls_spent}</strong> on {u.calls} {u.calls === 1 ? 'call' : 'calls'} ({u.talk_minutes} min, {u.hold_minutes} of them on hold at half
+        price){u.numbers_spent !== '$0.00' && <>, plus {u.numbers_spent} on numbers</>}. credits added: {u.credits_added}.
+      </p>
+      <div class="spend" role="img" aria-label={`spending per day over the last 14 days, up to ${dollars(max)} a day`}>
+        {days.map((date) => {
+          const d = byDay.get(date);
+          return (
+            <div class="spend-day" title={`${date}: ${d ? `${d.spent} on ${d.calls} ${d.calls === 1 ? 'call' : 'calls'}` : 'no calls'}`}>
+              <span style={`height:${Math.round(((d?.spent_cents ?? 0) / max) * 100)}%`} />
+              <small>{date.slice(8)}</small>
+            </div>
+          );
+        })}
+      </div>
+      <table class="rows">
+        <thead>
+          <tr>
+            <th>where it went</th>
+            <th class="n">calls</th>
+            <th class="n">spent</th>
+          </tr>
+        </thead>
+        <tbody>
+          {u.by_business.map((b) => (
+            <tr>
+              <td>{b.business}</td>
+              <td class="n">{b.calls}</td>
+              <td class="n">{b.spent}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  );
+};
+
 export const MonthlyBox: FC<{ replacing?: boolean }> = ({ replacing }) => (
   <label class="check">
     <input type="checkbox" name="monthly" checked /> reload this amount every month{replacing ? ' (replaces your current reload)' : ''}. stop anytime.

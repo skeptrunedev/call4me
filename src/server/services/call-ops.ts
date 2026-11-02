@@ -136,6 +136,8 @@ export async function balanceView(env: Env, account: Account) {
  * and by business, so an agent can answer "where did my balance go?" (Perry asked for this after
  * $14 went on 13 calls he didn't remember adding up).
  */
+export type UsageView = Awaited<ReturnType<typeof usageView>>;
+
 export async function usageView(env: Env, accountId: string, days: number, timezone = 'UTC') {
   let dayOf: Intl.DateTimeFormat;
   try {
@@ -180,8 +182,8 @@ export async function usageView(env: Env, accountId: string, days: number, timez
     numbers_spent: dollars(ledger?.numbers_cents ?? 0),
     credits_added: dollars(ledger?.added_cents ?? 0),
     balance: dollars(balance),
-    by_day: [...byDay].map(([date, d]) => ({ date, calls: d.calls, spent: dollars(d.cents) })),
-    by_business: [...byBusiness].sort((a, b) => b[1].cents - a[1].cents).slice(0, 10).map(([business, d]) => ({ business, calls: d.calls, spent: dollars(d.cents) })),
+    by_day: [...byDay].map(([date, d]) => ({ date, calls: d.calls, spent: dollars(d.cents), spent_cents: d.cents })),
+    by_business: [...byBusiness].sort((a, b) => b[1].cents - a[1].cents).slice(0, 10).map(([business, d]) => ({ business, calls: d.calls, spent: dollars(d.cents), spent_cents: d.cents })),
   };
 }
 
