@@ -128,13 +128,15 @@ test('the welcome email shows the link without a scheme and the HTML links it', 
   const welcome = STEPS.find((s) => s.id === 'welcome')!;
   const addCredits = `call4.me${await addCreditsPath(secret, account.id)}`;
   const email = fill(welcome.template, { host: 'call4.me', addCredits });
-  assert.ok(email.body.includes(`add credits at ${addCredits} and paste the prompt from call4.me into your agent.`));
+  assert.ok(email.body.includes(`you can add credits anytime at ${addCredits}.`));
+  assert.ok(email.body.includes('add the call4me plugin at https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8 and sign in with this email.'));
+  assert.ok(email.body.includes('paste the prompt from call4.me/#install-prompt.'));
   assert.ok(email.body.includes('7379832612'));
-  assert.ok(!email.body.includes('https://'));
   const { text, html } = render(email, 'https://call4.me/unsubscribe?a=x&s=y');
   assert.ok(text.startsWith(email.body));
   assert.ok(html.includes(`<a href="https://${addCredits}">${addCredits}</a>`));
-  assert.ok(html.includes('<a href="https://call4.me">call4.me</a> into your agent.'));
+  assert.ok(html.includes('<a href="https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8">https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8</a>'));
+  assert.ok(html.includes('<a href="https://call4.me/#install-prompt">call4.me/#install-prompt</a>.'));
 });
 
 test('opening an emailed discount link preserves its code and creates nothing', async () => {

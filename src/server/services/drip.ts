@@ -45,7 +45,7 @@ export const STEPS: Step[] = [
     after: 0,
     template: {
       subject: 'welcome to Call for Me',
-      body: `hey, I'm Nick, the creator of call4me. thank you so much for signing up! to get started, add credits at {addCredits} and paste the prompt from {host} into your agent.
+      body: `hey, I'm Nick, the creator of call4me. thank you so much for signing up! to make your first call: in chatgpt, add the call4me plugin at https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8 and sign in with this email. in claude, codex or another agent, paste the prompt from {host}/#install-prompt. you can add credits anytime at {addCredits}.
 
 If you reply with feedback, I'm happy to give you $25 in credits. Anything helps, including how you found it and why you signed up.
 
@@ -63,7 +63,7 @@ Here's my cell # for imessage or whatsapp - 7379832612 .
       subject: 'did you get to try call4me?',
       body: `hey, nick here. I noticed you signed up for call4me but haven't made a call yet.
 
-the easiest way to try it: copy the prompt at {host}/#install-prompt and paste it into chatgpt, claude or whatever agent you use, then ask it to call somewhere you've been putting off, like canceling a subscription, checking a store's hours, or getting a quote. you can even have it call your own phone first to hear what it sounds like.
+the easiest way to try it: in chatgpt, add the call4me plugin at https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8 and sign in with this email. in claude, codex or another agent, paste the prompt from {host}/#install-prompt. then ask it to call somewhere you've been putting off, like canceling a subscription, checking a store's hours, or getting a quote. you can even have it call your own phone first to hear what it sounds like.
 
 if something got in the way or it wasn't clear how to start, just reply and tell me. I read every one.
 
