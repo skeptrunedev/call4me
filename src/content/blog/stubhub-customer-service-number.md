@@ -24,10 +24,10 @@ The recording is about 20 seconds long. Nothing has been muted or cut. It contai
 
 Approximate moments in the audio:
 
-1. **0:00:** The recording identifies StubHub and says its support contact process has changed.
-2. **0:06:** It directs callers to **stubhub.com/help** for chat, phone contact and common questions.
-3. **0:15:** It also points to the StubHub mobile app.
-4. **0:18:** The closing sentence plays, then the call ends.
+1. **0:00**: The recording identifies StubHub and says its support contact process has changed.
+2. **0:06**: It directs callers to **stubhub.com/help** for chat, phone contact and common questions.
+3. **0:15**: It also points to the StubHub mobile app.
+4. **0:18**: The closing sentence plays, then the call ends.
 
 We made this call with [call4me](/) on November 2, 2026. We did not reach a live agent, test the contact options inside an account, or measure an agent wait time. There was no buyer or seller menu in this recording.
 

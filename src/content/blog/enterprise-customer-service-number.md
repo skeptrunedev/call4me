@@ -51,15 +51,15 @@ Approximate moments in the recording:
 
 | Time | What happened |
 | :--- | :--- |
-| 0:31 | The first yes or no question, about reserving a vehicle |
-| 0:37 | The menu asked about updating a reservation |
-| 0:45 | It asked about Enterprise Plus membership |
-| 0:54 | It asked about an accident or mechanical problem |
-| 1:15 | The system announced the transfer |
-| 1:24 | A representative answered |
-| 3:40 | The representative answered the billing and deposit routing question |
-| 3:54 | They explained what number to have ready and who could help with extensions |
-| 4:18 | They gave the phone hours, without specifying days |
+| **0:31** | The first yes or no question, about reserving a vehicle |
+| **0:37** | The menu asked about updating a reservation |
+| **0:45** | It asked about Enterprise Plus membership |
+| **0:54** | It asked about an accident or mechanical problem |
+| **1:15** | The system announced the transfer |
+| **1:24** | A representative answered |
+| **3:40** | The representative answered the billing and deposit routing question |
+| **3:54** | They explained what number to have ready and who could help with extensions |
+| **4:18** | They gave the phone hours, without specifying days |
 
 This was one call. The time to a person includes the menu and transfer; it is not an average wait or a prediction for your call.
 

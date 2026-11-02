@@ -218,17 +218,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/best-buy-customer-service-number": {
     "html": "/__pages/e0fe2662ad1805ba.html",
     "markdown": "/__pages/e0fe2662ad1805ba.md",
-    "tokens": 3192
+    "tokens": 3317
   },
   "/blog/enterprise-customer-service-number": {
     "html": "/__pages/bb97ccc609646727.html",
     "markdown": "/__pages/bb97ccc609646727.md",
-    "tokens": 3270
+    "tokens": 3451
   },
   "/blog/stubhub-customer-service-number": {
     "html": "/__pages/115dc7ed057d6429.html",
     "markdown": "/__pages/115dc7ed057d6429.md",
-    "tokens": 2272
+    "tokens": 2344
   },
   "/blog/monkeybrains-customer-service-number": {
     "html": "/__pages/57b6ae779ce46540.html",

@@ -36,20 +36,20 @@ This is the second October 24 call, about a return outside the normal window. A 
 
 | Time in recording | What happened |
 | :--- | :--- |
-| 0:03 | Best Buy's AI customer care assistant greeted the caller |
-| 0:21 | The caller asked for a live agent about a return exception |
-| 0:50 | The assistant asked which kind of issue needed help |
-| 0:59 | The caller said it was about a return |
-| 1:01 | The assistant gave general return information and offered a text link |
-| 1:30 | The caller declined the text and asked again for a live agent |
-| 1:41 | The transfer announcement began, followed by a product notice and hold |
-| 3:15 | A person answered |
+| **0:03** | Best Buy's AI customer care assistant greeted the caller |
+| **0:21** | The caller asked for a live agent about a return exception |
+| **0:50** | The assistant asked which kind of issue needed help |
+| **0:59** | The caller said it was about a return |
+| **1:01** | The assistant gave general return information and offered a text link |
+| **1:30** | The caller declined the text and asked again for a live agent |
+| **1:41** | The transfer announcement began, followed by a product notice and hold |
+| **3:15** | A person answered |
 
 The representative said a store manager would have to consider the exception in person. Reaching a person by phone did not mean the phone team could approve the request. No return was started and no exception was granted.
 
 ## Listen to the other support call
 
-The first call reached a person at **4:19**. Its full recording is about **6 minutes 28 seconds**. The representative's first name is silenced in two places in the existing public audio.
+The first call reached a person after **4 minutes 19 seconds**. Its full recording is about **6 minutes 28 seconds**. The representative's first name is silenced in two places in the existing public audio.
 
 <audio controls preload="metadata" src="/static/blog/best-buy-return-policy-lookup.mp3" style="width:100%"><a href="/static/blog/best-buy-return-policy-lookup.mp3">Listen to the Best Buy call with a person at 4:19</a></audio>
 
