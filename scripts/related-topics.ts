@@ -8,6 +8,11 @@
  * Add subjects for every new article without selecting individual related links.
  */
 export const RELATED_TOPICS: Record<string, string[]> = {
+  'mediacom-customer-service-number': ['telecom'],
+  'straight-talk-customer-service-number': ['telecom'],
+  'vivid-seats-customer-service-number': ['venue-activities', 'retail-shopping'],
+  'united-airlines-customer-service-number': ['airlines'],
+  'chase-credit-card-customer-service-number': ['personal-finance'],
   'devin-phone-calls': ['agent-software'],
   'best-buy-customer-service-number': ['retail-shopping'],
   'enterprise-customer-service-number': ['car-rental'],
@@ -113,7 +118,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'how-to-cancel-siriusxm': ['subscription-cancellation', 'media-subscriptions'],
   'how-to-find-a-new-primary-care-doctor': ['healthcare', 'insurance'],
   'how-to-transfer-a-prescription': ['pharmacy'],
-  'hulu-customer-service-number': ['subscription-cancellation', 'media-subscriptions'],
+  'hulu-customer-service-number': ['media-subscriptions'],
   'netflix-customer-service-number': ['subscription-cancellation', 'media-subscriptions'],
   'instinct-ai-phone-calls': ['agent-software'],
   'irs-phone-number': ['personal-finance'],

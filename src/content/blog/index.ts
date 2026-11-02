@@ -1,3 +1,8 @@
+import mediacomCustomerServiceNumber from './mediacom-customer-service-number.md';
+import straightTalkCustomerServiceNumber from './straight-talk-customer-service-number.md';
+import vividSeatsCustomerServiceNumber from './vivid-seats-customer-service-number.md';
+import unitedAirlinesCustomerServiceNumber from './united-airlines-customer-service-number.md';
+import chaseCreditCardCustomerServiceNumber from './chase-credit-card-customer-service-number.md';
 import devinPhoneCalls from './devin-phone-calls.md';
 import bestBuyCustomerServiceNumber from './best-buy-customer-service-number.md';
 import enterpriseCustomerServiceNumber from './enterprise-customer-service-number.md';
@@ -233,6 +238,11 @@ import netflixCustomerServiceNumber from './netflix-customer-service-number.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'mediacom-customer-service-number', markdown: mediacomCustomerServiceNumber },
+  { slug: 'straight-talk-customer-service-number', markdown: straightTalkCustomerServiceNumber },
+  { slug: 'vivid-seats-customer-service-number', markdown: vividSeatsCustomerServiceNumber },
+  { slug: 'united-airlines-customer-service-number', markdown: unitedAirlinesCustomerServiceNumber },
+  { slug: 'chase-credit-card-customer-service-number', markdown: chaseCreditCardCustomerServiceNumber },
   { slug: 'devin-phone-calls', markdown: devinPhoneCalls },
   { slug: 'best-buy-customer-service-number', markdown: bestBuyCustomerServiceNumber },
   { slug: 'enterprise-customer-service-number', markdown: enterpriseCustomerServiceNumber },

@@ -27,3 +27,15 @@ The fresh overview matches the earlier November 2 snapshot: 96 estimated organic
 4. Review new audio for identifiers using the existing review CLI.
 5. Run the repository checks and browser verification, push to main, then verify the deployed pages and assets.
 6. Do not publish an untested Augment success claim if sign in prevents verification.
+
+## Source refresh and scope decisions
+
+Hulu's signed out billing flow still reveals 877 824 4858 after selecting Call Hulu. Its help article now renders as Hulu corporate information, whose footer still lists live support around the clock. The zero minute wait shown in the contact flow is a changing estimate and is not the measured October 8 call time.
+
+Alaska's official contact page confirms the existing reservation and guest care numbers and their different hours. The October 22 recording remains unchanged.
+
+Hertz's current official reservations information page confirms 1 800 654 3131. Current hours for the recorded past rental number could not be independently reconfirmed. The article now labels the October 8 hours observation explicitly and keeps the unsuccessful calls visible.
+
+The user declined paying for Augment. The installed official Auggie CLI required authentication, and the current pricing page did not establish usable free CLI access. No paid plan or trial was activated. The prepared Augment draft remains outside published content and the comparison table.
+
+Browser verification uses Browser Use CLI, as requested by the user. The previous browser tool was removed from the machine and its automatic skill and MCP registrations.

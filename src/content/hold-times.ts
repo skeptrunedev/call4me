@@ -19,6 +19,9 @@ export const HOLD_KEYWORDS = ['customer service hold times', 'customer service h
  * verbatim from the "What got us through" column in the data post's table.
  */
 const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
+  'mediacom-customer-service-number': { evidence: '1:44, Representative: Thank you for calling Mediacom, where I can help you save money on mobile phone service. My name is [name]. How can I help you?', path: 'Answering Internet when the voice menu asked which service, then staying on the line' },
+  'straight-talk-customer-service-number': { evidence: '2:45, Representative: Thanks for calling Straight Talk Sales.', path: 'Phone number and IMEI prompts, then a repeated menu and transfer to Sales' },
+  'vivid-seats-customer-service-number': { evidence: 'We did not reach a person.', path: 'No route to a person; the order lookup menu directed us to support email' },
   'att-customer-service-number': { evidence: '44:30 Representative: Thank you for calling AT&T. My name is [name removed]. Who am I speaking with today?', path: '"A billing question", "explanation of charges", then asking for a representative' },
   'costco-customer-service': { evidence: '14:09 Representative: Good evening. Thank you for calling Costco. My name\'s [name removed]. Who am I speaking with?', path: 'Pressing nothing; the menu queued us after the membership sub-menu' },
   'xfinity-customer-service-number': { evidence: '3:27 Representative: Thanks for choosing Xfinity Services. My name is [name removed]. How can I assist you today?', path: 'Internet, "something else", then "billing"' },

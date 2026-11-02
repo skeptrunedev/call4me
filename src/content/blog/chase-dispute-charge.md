@@ -26,6 +26,8 @@ How a dispute by phone goes, from our call and Chase's page:
 
 We called on Saturday, October 24, 2026, at 6:27 pm Eastern, with [call4me](/) asking the questions. We don't have a Chase account, said so, and gave no card or personal details. This page is what we heard.
 
+For the contact number, route to a person and distinction between credit card support and personal banking, see [Chase credit card customer service](/blog/chase-credit-card-customer-service-number). It uses this same October 24 recording.
+
 ## Listen to the call
 
 The whole call, 4 minutes 31 seconds. Three short silences cover the specialist's name (said twice) and my last name. Nothing else is muted or cut.

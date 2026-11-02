@@ -1,16 +1,21 @@
 ---
 title: "Alaska Airlines customer service: how to reach a person"
-seoTitle: "Alaska Airlines customer service: 1-800-252-7522"
-subtitle: "We called Alaska Airlines reservations with general questions and no booking. A virtual assistant answered first, offered to connect us, and a live agent picked up 12 minutes 44 seconds in. Here's the phone tree, what we were told about hours, callbacks, change fees and the 24-hour rule, and the full 17 minute recording."
-description: "Alaska Airlines customer service is 1-800-252-7522, open 24/7. A virtual assistant answers first; a live agent picked up 12:44 into our recorded call."
+seoTitle: "Alaska Airlines customer service: 800 252 7522"
+subtitle: "Call 1 800 252 7522 for Alaska Airlines reservations. We reached a person at 12:44 after its virtual assistant offered a transfer. Hear the call and find the right contact for your trip."
+description: "Alaska Airlines reservations: 1 800 252 7522, open 24/7. Hear our route to a person at 12:44 and find the separate number for complaints after a trip."
 date: 2026-10-22
+updated: 2026-11-02
 verified: 2026-10-22
 tags: alaska airlines, airlines, customer service, phone trees, phone numbers
 authors: nick
 imageAlt: "Alaska Airlines 1-800-252-7522, a live agent on the line in 12 minutes 44 seconds"
 ---
 
-**The short answer:** the Alaska Airlines customer service number for reservations in the United States and Canada is **1-800-252-7522** (1-800-ALASKAAIR). Alaska's [Contact us page](https://www.alaskaair.com/content/about-us/help-contact/contact-us) lists it as the "Reservations / pre-flight questions department" with "Service hours: Available 24/7". **A virtual assistant answers, not a person.** Tell it what you need, and when it offers to connect you to reservations, say yes. **A live agent answered 12 minutes 44 seconds into our call**, after about 9 minutes 20 seconds on hold. The hold announcement had said about 9 minutes.
+**The Alaska Airlines customer service number for reservations in the United States and Canada is 1 800 252 7522.** Alaska's [official contact page](https://www.alaskaair.com/content/about-us/help-contact/contact-us) lists reservations as available **24/7**. For questions or complaints after a flight, it lists a separate guest care number, **1 800 654 5669**, with different hours.
+
+We reached a reservations agent **12 minutes 44 seconds** into our October 22, 2026 call, after the virtual assistant offered a transfer. About 9 minutes 20 seconds of that time was hold. We checked the official numbers and hours again on **November 2**; the recording and measured wait remain from October 22.
+
+## How we reached an Alaska reservations agent
 
 This got us to a person, with no booking and no Atmos Rewards account:
 
@@ -80,15 +85,15 @@ If you're flying on Hawaiian Airlines, Alaska's Contact us page says: "For assis
 
 ## Other Alaska Airlines phone numbers
 
-All from the same [Contact us page](https://www.alaskaair.com/content/about-us/help-contact/contact-us), for the United States and Canada. We only called the first one.
+These numbers and hours were checked on Alaska's [official contact page](https://www.alaskaair.com/content/about-us/help-contact/contact-us) on November 2, 2026. They apply to the United States and Canada. We only called reservations.
 
 | Line | Number | Hours (Pacific) |
 |---|---|---|
-| Reservations / pre-flight questions | 1-800-252-7522 | 24/7 |
-| Accessible services help | 1-800-503-0101 | not listed |
-| Group reservations (ten or more) | 1-800-445-4435 | 6am to 6pm Mon to Fri, 7:30am to 6pm Sat |
-| Guest care (post-flight questions and complaints) | 1-800-654-5669 | 7am to 7pm Mon to Fri, 8am to 5pm Sat |
-| Atmos Rewards account | 1-833-902-8667 | 7am to 7pm Mon to Fri, 8am to 5pm Sat |
+| Reservations and questions before a flight | 1 800 252 7522 | 24/7 |
+| Accessible services help | 1 800 503 0101 | not listed |
+| Group reservations (ten or more) | 1 800 445 4435 | 6 am to 6 pm Monday to Friday, 7:30 am to 6 pm Saturday |
+| Guest care for questions and complaints after a flight | 1 800 654 5669 | 7 am to 7 pm Monday to Friday, 8 am to 5 pm Saturday |
+| Atmos Rewards account | 1 833 902 8667 | 7 am to 7 pm Monday to Friday, 8 am to 5 pm Saturday |
 
 The page says TTY access is available and to "Dial 711 for relay services." From outside the listed countries, it gives 001-206-485-4390, which "is not a toll free number."
 
@@ -130,7 +135,7 @@ A few things to know about our side of the call:
 - **It asked about a "main cabin" ticket,** and its first try came out as "cabin change or cancellation fees." The assistant answered for Main and First Class fares.
 - **It didn't follow up on an unclear phrase.** The agent's answer on change fees started "If you don't, to change it," before saying a change could cost the fare difference.
 
-We kept the audio as it happened, apart from the three muted names. For other airlines, we've also called [JetBlue customer service](/blog/jetblue-customer-service), [Delta customer service](/blog/delta-customer-service) and [Southwest Airlines](/blog/southwest-airlines-phone-number). For more phone trees and recorded calls, see the [other companies we've called](/companies).
+We kept the audio as it happened, apart from the three muted names. For other airlines, see our recorded routes for [United customer service](/blog/united-airlines-customer-service-number), [JetBlue](/blog/jetblue-customer-service), [Delta](/blog/delta-customer-service) and [Southwest](/blog/southwest-airlines-phone-number). For more phone trees and recorded calls, see the [company phone directory](/companies).
 
 ## Have your agent make this call
 

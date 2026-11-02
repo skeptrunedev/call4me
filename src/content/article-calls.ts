@@ -7,6 +7,36 @@ export interface ArticleCall {
 }
 
 export const ARTICLE_CALLS: Record<string, ArticleCall> = {
+  'mediacom-customer-service-number': {
+    business: 'Mediacom',
+    chatgpt: false,
+    description: 'Have your assistant explain your internet question and wait for a representative. You can join if Mediacom needs to verify the account holder.',
+    ask: 'Ask what I need Mediacom to resolve and which service is affected. Use my actual issue and account information when choosing the menu route. Never claim I have no account because the recorded research call had none. Arrange for me to join if Mediacom needs to verify my identity. Ask before changing my plan, accepting a charge or scheduling a technician.',
+  },
+  'united-airlines-customer-service-number': {
+    business: 'United Airlines',
+    chatgpt: true,
+    description: 'Have your assistant explain your flight question and wait for reservations. You can join if United needs the traveler to verify the booking.',
+    ask: 'Ask what I need United to resolve and whether I have a booking. Use my actual issue and travel region when answering the menu. Never reuse the recorded research caller\'s lack of a trip as mine. Ask before changing or canceling a flight, buying a ticket, paying a fee or spending travel credit. Arrange for me to join if United needs the traveler.',
+  },
+  'hertz-customer-service-number': {
+    business: 'Hertz',
+    chatgpt: true,
+    description: 'Have your assistant ask about your rental and bring back the answer. The right line depends on whether you need reservations or help with a completed rental.',
+    ask: 'Ask what I need Hertz to resolve and whether the rental is booked, active or already returned. Check the current official contact route for that situation. Supply only my actual rental details and answer if the phone assistant speaks again after promising a transfer. Ask before making a booking, changing the rental or accepting a charge. Arrange for me to join if Hertz needs the renter.',
+  },
+  'hulu-customer-service-number': {
+    business: 'Hulu',
+    chatgpt: true,
+    description: 'Have your assistant explain your Hulu question and ask for a person when needed. You can join if Hulu needs to verify the account holder.',
+    ask: 'Ask what I need Hulu to resolve, which plan I use and how I pay for it. Choose the current menu route for my actual issue; do not assume I want to cancel because the recording asks about cancellation. Ask before canceling or pausing a subscription, changing a plan or accepting a charge. Arrange for me to join for account verification and never ask me to paste passwords or verification codes into chat.',
+  },
+  'alaska-airlines-customer-service': {
+    business: 'Alaska Airlines',
+    chatgpt: true,
+    description: 'Have your assistant ask about your Alaska trip and wait for the right team. Reservations and questions after a trip use different contacts.',
+    ask: 'Ask what I need Alaska Airlines to resolve and whether the issue concerns an upcoming trip or a completed flight. Verify the current official contact for that issue. Explain my actual request and accept a transfer to the right team when offered. Ask before changing or canceling a booking, paying a fare difference or accepting a credit. Arrange for me to join if Alaska needs the traveler.',
+  },
   'best-buy-customer-service-number': {
     business: 'Best Buy',
     chatgpt: true,

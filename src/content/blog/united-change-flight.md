@@ -31,6 +31,8 @@ The menu estimated "approximately 10 to 15 minutes". A person picked up **19 min
 
 We called on Thursday, October 1, 2026, at about 4:09 pm Eastern, with [call4me](/) asking the questions. This page is what we heard.
 
+For a guide focused on reaching reservations, the actual time to a person and choosing the right support route, see [United Airlines customer service](/blog/united-airlines-customer-service-number). It uses this same October 1 recording.
+
 ## Listen to the call
 
 The recording is 23 minutes 3 seconds, from a call of 23 minutes 21 seconds. The full hold is in the recording, hold music included, so the agent picks up at 19:09. Use the links below to skip ahead. Three stretches of dead air (about 18 seconds in all) are shortened to about a second, and each is marked in the transcript. Every menu prompt, hold message and the ad are left in. Two short silences cover the agent's first name and my last name.
