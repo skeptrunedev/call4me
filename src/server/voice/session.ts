@@ -91,6 +91,8 @@ const HEARTBEAT_MS = 20_000;
 const REATTACH_WAIT_MS = 15_000;
 /** Between the wrap-up heads-up and the hard stop. */
 const WRAP_UP_MS = 40_000;
+/** How long a call screener may stay quiet after its prompt before the caller introduces itself anyway. */
+const SCREENER_QUIET_MS = 6_000;
 /** While the user is patched in past the time limit, how often to look again. */
 const PERSON_RECHECK_MS = 60_000;
 
@@ -1088,7 +1090,20 @@ export class VoiceSession extends DurableObject<Env> {
       await this.saveMachineState();
       return;
     }
-    if (this.pendingMachineGuidance === 'screening' && !this.screenerAsked()) return;
+    // A screener whose question we don't recognize still waits on us: once the line has been quiet
+    // for a while after it, introduce anyway rather than sit silent until the time limit (Tom's call
+    // to Google Call Assist waited 10 minutes).
+    if (this.pendingMachineGuidance === 'screening' && !this.screenerAsked()) {
+      if (this.ended || this.endingCall) return;
+      // Quiet counts from the screener's last words: before it has said anything, keep waiting.
+      const spokeAt = this.lastTranscriptAt;
+      const quietFor = spokeAt ? Date.now() - Math.max(spokeAt, this.speechEndsAt) : 0;
+      if (quietFor < SCREENER_QUIET_MS) {
+        setTimeout(() => void this.sendMachineGuidance(), SCREENER_QUIET_MS - quietFor + 100);
+        return;
+      }
+      this.mark('screener went quiet without a recognized question; introducing anyway');
+    }
     if (!this.liveReady || this.live?.readyState !== WebSocket.OPEN || this.ended || this.endingCall || this.personHolds() || !this.pendingMachineGuidance) return;
     this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: MACHINE_GUIDANCE[this.pendingMachineGuidance] });
     this.pendingMachineGuidance = null;

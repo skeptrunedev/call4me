@@ -322,3 +322,18 @@ test('the time limit never hangs up on the user while they are on the call, and 
   assert.equal(h.values.get('stopAt'), Date.now() + 40_000);
   assert.deepEqual(hangups, []);
 });
+
+test("a screener whose question isn't recognized still gets an introduction once it goes quiet", async (t) => {
+  const h = harness(t);
+  h.session.live = new Socket();
+  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'screened' } }));
+  const before = h.session.live.sent.length;
+  h.session.transcript.push({ role: 'them', text: 'Hi, this is an assistant answering for the person you called. Go ahead.', at: Date.now() });
+  h.session.lastTranscriptAt = Date.now();
+  await h.session.machineDetected('screening_prompt_ended', '2026-10-06T18:43:01Z');
+  assert.equal(h.session.live.sent.length, before, 'waits while the screener may still be talking');
+  t.mock.timers.tick(6_200);
+  await new Promise((r) => setImmediate(r));
+  for (let i = 0; i < 20; i++) await Promise.resolve();
+  assert.ok(h.session.live.sent.slice(before).some((m: any) => /call screener is ready/.test(m.content ?? '')), 'introduces after the quiet');
+});
