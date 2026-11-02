@@ -159,6 +159,19 @@ export function createCall4meServer(deps: McpDeps): McpServer {
   const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION, title: 'call4me', websiteUrl: deps.origin }, { instructions: instructions(surface, account.sales_calls === 1), jsonSchemaValidator: new CfWorkerJsonSchemaValidator() });
   const sched = scheduledCalls(env.DB);
 
+  // Each tool call logs one line: the tool, the account, how long it took and how it came out. Never
+  // its arguments, which carry personal details. A refused or failed call attempt shows up there
+  // instead of only in the agent's chat.
+  const register = server.registerTool.bind(server) as (name: string, config: unknown, handler: (...args: unknown[]) => Promise<CallToolResult>) => unknown;
+  server.registerTool = ((name: string, config: unknown, handler: (...args: unknown[]) => Promise<CallToolResult>) =>
+    register(name, config, async (...args: unknown[]) => {
+      const started = Date.now();
+      const result = await handler(...args);
+      const text = result.content?.find((c) => c.type === 'text')?.text ?? '';
+      console.log(`mcp tool ${name} account=${account.id} surface=${surface} ${Date.now() - started}ms ${result.isError ? `error: ${text.replace(/\s+/g, ' ').slice(0, 200)}` : 'ok'}`);
+      return result;
+    })) as typeof server.registerTool;
+
   const guard = (fn: () => Promise<CallToolResult>) => async (): Promise<CallToolResult> => {
     try {
       return await fn();

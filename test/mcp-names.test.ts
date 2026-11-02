@@ -52,3 +52,22 @@ test('requests that are not a tools/call pass through untouched', async () => {
   const req = new Request('https://call4.me/mcp', { method: 'POST', body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/list' }) });
   assert.equal(await withCurrentToolNames(req), req);
 });
+
+test('each tool call logs its tool, account and outcome, never its arguments', async (t) => {
+  const lines: string[] = [];
+  t.mock.method(console, 'log', (...args: unknown[]) => { lines.push(args.join(' ')); });
+  await rpc('tools/call', { name: 'call4me_get_requirements', arguments: {} });
+  // No database in this test, so looking a call up fails: an error result, logged as one.
+  const original = console.error;
+  console.error = () => {};
+  try {
+    await rpc('tools/call', { name: 'call4me_list_calls', arguments: { limit: 3 } });
+  } finally {
+    console.error = original;
+  }
+  const ok = lines.find((l) => l.startsWith('mcp tool call4me_get_requirements'));
+  const failed = lines.find((l) => l.startsWith('mcp tool call4me_list_calls'));
+  assert.match(ok!, /account=acct_test surface=agents \d+ms ok$/);
+  assert.match(failed!, /account=acct_test surface=agents \d+ms error: something broke/);
+  assert.ok(!failed!.includes('limit'), 'arguments are never logged');
+});
