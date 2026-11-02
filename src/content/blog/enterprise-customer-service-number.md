@@ -63,6 +63,10 @@ Approximate moments in the recording:
 
 This was one call. The time to a person includes the menu and transfer; it is not an average wait or a prediction for your call.
 
+The first live greeting, with the silenced name marked, was:
+
+> **1:24** Representative: Thank you for calling Enterprise. [Name removed]. How can I help you today?
+
 | Question we asked | What the representative said |
 | :--- | :--- |
 | Should customers contact the branch or central support about charges or a deposit after a rental? | The customer service line |

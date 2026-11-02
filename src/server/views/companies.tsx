@@ -30,8 +30,8 @@ export const CompaniesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ 
       <h1>customer service numbers we called</h1>
       <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
       <p>
-        every company here has a post with a real recorded call to its customer service line: the phone tree, what got us to a person, the full
-        recording and transcript. times are from the start of the published recording to the first live person, on one call (or the call that got
+        every company here has a post with a real recorded call to a customer service number: the route we tried, whether we reached a person,
+        and the recording with timestamps. times are from the start of the published recording to the first live person, on one call (or the call that got
         through). <a href={DATA_POST}>how long it takes to reach a human</a> compares them all, and the{' '}
         <a href="/static/blog/how-long-to-reach-a-human.csv">raw data is a csv</a>. the same companies, ranked by hold time with the transcript
         line behind each time, are on <a href="/hold-times">customer service hold times by company</a>. to have one of them called for you, see{' '}

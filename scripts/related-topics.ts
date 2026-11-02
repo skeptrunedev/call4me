@@ -8,6 +8,7 @@
  * Add subjects for every new article without selecting individual related links.
  */
 export const RELATED_TOPICS: Record<string, string[]> = {
+  'devin-phone-calls': ['agent-software'],
   'best-buy-customer-service-number': ['retail-shopping'],
   'enterprise-customer-service-number': ['car-rental'],
   'stubhub-customer-service-number': ['venue-activities', 'retail-shopping'],

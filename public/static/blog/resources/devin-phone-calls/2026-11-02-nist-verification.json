@@ -1,0 +1,131 @@
+{
+  "verifiedAt": "2026-11-02",
+  "client": {
+    "name": "Devin CLI",
+    "version": "3000.11.234",
+    "modelArgument": "gpt-6.1-sol",
+    "modelReported": "GPT-6.1 Sol Low Thinking"
+  },
+  "endpoint": "https://call4.me/mcp",
+  "authentication": {
+    "devin": "Manual CLI browser sign in completed.",
+    "call4me": "Existing account API key provided through the CALL4ME_API_KEY environment variable and a native MCP Authorization header reference. Call4me OAuth signup was not tested."
+  },
+  "connectionChecks": [
+    {
+      "tool": "call4me_get_balance",
+      "succeeded": true,
+      "privateAccountFieldsOmitted": true
+    },
+    {
+      "tool": "call4me_get_requirements",
+      "input": {
+        "category": "general"
+      },
+      "succeeded": true
+    }
+  ],
+  "target": {
+    "name": "NIST WWV automated telephone time announcement",
+    "officialSource": "https://www.nist.gov/pml/time-and-frequency-division/time-distribution/radio-station-wwv/telephone-time-day-service",
+    "phone": "+13034997111"
+  },
+  "callCount": 1,
+  "sameCallFollowed": true,
+  "initialMaxMinutes": 2,
+  "promptStopAfterSeconds": 90,
+  "trace": [
+    {
+      "tool": "call4me_get_requirements",
+      "input": {
+        "category": "general"
+      },
+      "result": {
+        "requirementsReturned": true
+      }
+    },
+    {
+      "tool": "call4me_place_call",
+      "input": {
+        "to": "+13034997111",
+        "business": "NIST WWV automated time announcement",
+        "category": "general",
+        "on_behalf_of": "call4me",
+        "calling_as": "call4me",
+        "max_minutes": 2,
+        "goal": "Listen silently to this automated broadcast. Do not speak at all, including a greeting or acknowledgement. Capture one complete spoken UTC time announcement and hang up immediately. If none arrives, hang up within 90 seconds of pickup. If a human answers, hang up immediately. No human conversation, personal information, callback, text, voicemail, booking, purchase or account change is authorized. Do not ask for anything else.",
+        "facts": "Listen silently to this automated broadcast. Do not speak at all, including a greeting or acknowledgement. Capture one complete spoken UTC time announcement and hang up immediately. If none arrives, hang up within 90 seconds of pickup. If a human answers, hang up immediately. No human conversation, personal information, callback, text, voicemail, booking, purchase or account change is authorized. Do not ask for anything else.",
+        "details": {
+          "questions": "Listen for one complete spoken UTC time announcement and report it; do not ask anyone questions."
+        }
+      },
+      "result": {
+        "callSubmitted": true,
+        "callIdReturned": true
+      }
+    },
+    {
+      "tool": "call4me_get_call",
+      "input": {
+        "call": "same authorized call",
+        "wait_seconds": 10
+      },
+      "result": {
+        "status": "in_progress",
+        "finished": false
+      }
+    },
+    {
+      "tool": "call4me_get_call",
+      "input": {
+        "call": "same authorized call",
+        "wait_seconds": 10
+      },
+      "result": {
+        "status": "in_progress",
+        "finished": false
+      }
+    },
+    {
+      "tool": "call4me_hang_up",
+      "input": {
+        "call": "same authorized call"
+      },
+      "result": {
+        "message": "hung up"
+      }
+    },
+    {
+      "tool": "call4me_get_call",
+      "input": {
+        "call": "same authorized call",
+        "wait_seconds": 10
+      },
+      "result": {
+        "status": "completed",
+        "finished": true
+      }
+    }
+  ],
+  "transcript": [
+    "them: At the tone, eighteen hours, nineteen minutes, coordinated universal time",
+    "note: the call was ended by the user"
+  ],
+  "outcome": {
+    "status": "completed",
+    "finished": true,
+    "result": "done",
+    "announcedTime": "18:19 UTC",
+    "ended": "call4me hung up: the user hung up from their agent (call4me_hang_up)",
+    "callerUtterancesInReturnedTranscript": 0,
+    "independentMonitorIntervened": false
+  },
+  "limitations": [
+    "The transcript is text returned by call4me through native Devin tools. No new audio is published with this test.",
+    "No caller speech appears in that transcript. We did not independently verify silence from audio.",
+    "The announcement is what the automated line said, not an independent clock accuracy measurement.",
+    "This one call does not establish a human conversation, a successful booking or reliability across repeated calls.",
+    "The max_minutes value allocates initial credits and can extend. Devin actively hung up this call.",
+    "Account, call and session identifiers, caller numbers, account balances, private paths and personal details are omitted."
+  ]
+}

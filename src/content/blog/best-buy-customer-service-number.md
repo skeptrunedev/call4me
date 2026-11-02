@@ -55,6 +55,10 @@ The first call reached a person after **4 minutes 19 seconds**. Its full recordi
 
 The assistant first answered the general return question. When the caller asked who could approve an exception, it said it could not confirm that and offered a live agent. The caller accepted at **1:47**, and the transfer announcement began at **1:54**.
 
+The first live greeting in that recording was:
+
+> **4:19** Agent: Best Buy Primary Care. My name is [name]. How can I help you today?
+
 Once a person answered, our caller asked about looking up purchases, refunds and starting an online return. It did not ask the representative the exception question that prompted the transfer. That gap led to the second call above. Both complete redacted transcripts are in the [return policy article](/blog/best-buy-return-policy).
 
 ## What should you have ready?

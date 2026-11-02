@@ -6,7 +6,7 @@ import { COMPANIES, type Company } from './companies';
  * published transcript that shows the first live person and the route that got us there, in
  * the words of the data post's table. Keep both quotes matching the post and its table.
  */
-export const HOLD_UPDATED = '2026-10-29';
+export const HOLD_UPDATED = '2026-11-02';
 export const HOLD_PATH = '/hold-times';
 export const HOLD_DATA_PATH = '/static/data/customer-service-hold-times';
 export const HOLD_LICENSE = 'https://creativecommons.org/licenses/by/4.0/';
@@ -49,6 +49,7 @@ const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
   'directv-customer-service': { evidence: '2:47 DIRECTV rep: Good evening, thank you for calling DIRECTV. My name is [name removed], who do I have the pleasure of speaking with today?', path: '"Cancel service", no account number, then satellite' },
   'discover-dispute-charge': { evidence: '2:03 Representative: Thank you for calling Discover. My name is [name removed]. I\'m in billing disputes. May I have your name?', path: 'Saying we didn\'t have the Social Security number digits' },
   'doordash-customer-service-number': { evidence: '2:08 Representative: Thank you for calling DoorDash. This is [name removed]. How can I assist?', path: 'Naming the problem ("missing item", then "refund") instead of asking for a representative' },
+  'enterprise-customer-service-number': { evidence: '1:24 Representative: Thank you for calling Enterprise. [Name removed]. How can I help you today?', path: 'Answering no to four routing questions that did not apply to our general inquiry' },
   'etihad-customer-service': { evidence: '2:21 Agent: Thank you for calling Etihad. My name is [name removed]. How may I assist you today? May I get your name, please?', path: 'Press 1, your cabin class, then 2' },
   'expedia-customer-service-number': { evidence: '3:24 Agent: Hi, thank you for calling. This is [name removed]. How can I help you today?', path: 'Press 1, 6, 2, then 0 at the itinerary prompt' },
   'cleveland-clinic': { evidence: '4:57 Representative: Good morning. Thank you for calling customer service at Cleveland Clinic. My name is [name removed], can I have your first and last name?', path: 'Staying on the line after the billing menu' },
@@ -84,6 +85,7 @@ const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
   'how-to-cancel-siriusxm': { evidence: 'Our caller explained that this was a general policy inquiry and asked for a person twice. The system then transferred the call to a human.', path: 'Calling it a general policy question and asking twice for a person' },
   'southwest-airlines-phone-number': { evidence: '4:10 Agent: Thank you for calling Southwest Airlines, [name removed]. Who [do] I have the pleasure of speaking with?', path: 'Saying "representative", then hold; or "existing reservation"' },
   'spectrum-retention-department': { evidence: '7:49 Rep: Thank you for calling Spectrum here in Austin, Texas. My name is [name removed]. Who do I have the pleasure of speaking with today?', path: '"Cancel my account", then "disconnect"' },
+  'stubhub-customer-service-number': { evidence: 'We did not reach a person or hear a menu of options to press.', path: 'No route to a person; the recording directed us to Help and the app' },
   't-mobile-customer-service-number': { evidence: '1:49 Representative: Hi, thank you for calling T-Mobile. This is [name removed]. How can I help?', path: '"I don\'t have one" twice, "representative", then "something else"' },
   'ticketmaster-customer-service-number': { evidence: '1:48 Representative: Hi, thank you for calling Ticketmaster. This is [name removed] speaking. And before we continue, just in case this line got disconnected, is it okay to call you back on this number?', path: 'Asking for a representative, then "something else"' },
   'uber-customer-service-number': { evidence: '0:52 Uber: There have been too many invalid entries. For security reasons, we\'ll unfortunately need to end this call.', path: 'Nothing we tried' },
@@ -103,7 +105,7 @@ const HOLD_EVIDENCE: Record<string, { evidence: string; path: string }> = {
 };
 
 export type HoldStatus = 'measured' | 'not measured' | 'never reached a person';
-export type FirstAnswer = 'AI or virtual assistant' | 'phone menu' | 'not stated';
+export type FirstAnswer = 'AI or virtual assistant' | 'phone menu' | 'recorded message' | 'not stated';
 
 export interface HoldTime {
   /** 1 is the longest measured hold; tied times share a rank. Null when there is no time to rank. */
@@ -144,7 +146,7 @@ export const HOLD_TIMES: HoldTime[] = (() => {
       id, slug: c.slug, company: c.name, industry: c.industry, number: c.number, called: c.called,
       timeToHuman: c.timeToHuman, seconds: c.timeToHuman ? toSeconds(c.timeToHuman) : null,
       status: c.timeToHuman ? 'measured' : c.reached ? 'not measured' : 'never reached a person',
-      firstAnswer: c.aiFirst === null ? 'not stated' : c.aiFirst ? 'AI or virtual assistant' : 'phone menu',
+      firstAnswer: c.recordedMessageOnly ? 'recorded message' : c.aiFirst === null ? 'not stated' : c.aiFirst ? 'AI or virtual assistant' : 'phone menu',
       calls: c.calls, ...quoted, source: `https://call4.me/blog/${c.slug}`,
     };
   });

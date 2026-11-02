@@ -1,7 +1,7 @@
 import { lastModified, type Post } from './blog';
 import { PAGES, type PageKey } from './pages';
 import { SI_UPDATED } from '../../content/superintelligence-calling';
-import { HOLD_DATA_PATH, HOLD_PATH, HOLD_UPDATED } from '../../content/hold-times';
+import { HOLD_DATA_PATH, HOLD_PATH, HOLD_TIMES, HOLD_UPDATED } from '../../content/hold-times';
 import { TASKS } from '../../content/tasks';
 
 /** What the sitemap and llms.txt need from a blog post. */
@@ -72,6 +72,7 @@ export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: stri
  */
 const LASTMOD: Partial<Record<PageKey, string>> = {
   superintelligenceCalling: SI_UPDATED,
+  companies: HOLD_UPDATED,
   holdTimes: HOLD_UPDATED,
   ...Object.fromEntries(TASKS.map((t) => [t.key, t.holds.length > 0 && HOLD_UPDATED > t.updated ? HOLD_UPDATED : t.updated])),
 };
@@ -132,8 +133,8 @@ export function llmsTxt(site: string, pricePerMinuteCents: number, posts: PostEn
     `- [About](${site}/about): what call4me is, who builds it (Nick Khami, founder), source code, MCP registry listing, and press`,
     `- [AI call assistant](${site}/ai-call-assistant): what the AI phone agent does on a call, listening in and taking over, voices, the free US number, pricing, and how to start`,
     `- [Examples](${site}/examples): real call recordings with edited excerpts, outcomes, and transcripts`,
-    `- [Customer service numbers](${site}/companies): customer service phone numbers for airlines, banks, telecom, insurance and subscriptions, each with a real recorded call, the phone tree, and how long it took to reach a person`,
-    `- [Customer service hold times by company](${site}${HOLD_PATH}): time to a live person at 81 companies, measured on real recorded calls and ranked, with the transcript line behind each time. Download the dataset as [CSV](${site}${HOLD_DATA_PATH}.csv) or [JSON](${site}${HOLD_DATA_PATH}.json).`,
+    `- [Customer service numbers](${site}/companies): customer service phone numbers for airlines, banks, telecom, insurance and subscriptions, each with a real recorded call, the route we tried and the outcome`,
+    `- [Customer service hold times by company](${site}${HOLD_PATH}): recorded call results from ${HOLD_TIMES.length} companies, with measured times ranked and the source evidence behind each result. Download the dataset as [CSV](${site}${HOLD_DATA_PATH}.csv) or [JSON](${site}${HOLD_DATA_PATH}.json).`,
     `- [Students](${site}/students): free call4me credits for students, approved by hand`,
     `- [Superintelligence Calling Index](${site}/superintelligence-calling-index): personal superintelligence phone calling tools, dated evidence and recordings. Download the evidence dataset as [CSV](${site}/static/data/superintelligence-calling-index.csv) or [JSON](${site}/static/data/superintelligence-calling-index.json).`,
     `- [Voices](${site}/voices): a phone-quality sample of each caller voice, and how to pick one`,

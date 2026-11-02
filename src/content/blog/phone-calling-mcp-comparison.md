@@ -26,6 +26,7 @@ Each guide covers setup in that app and says what we actually tested, and when.
 |---|---|
 | Claude Code | [Claude Code phone calls](/blog/claude-code-phone-calls), with a restaurant call from a real session |
 | Codex CLI | [Codex phone calls](/blog/codex-phone-calls), including OAuth and bearer key setup |
+| Devin CLI | [Devin CLI phone calls](/blog/devin-phone-calls), with a verified connection and a completed NIST time announcement call |
 | T3 Code | [T3 Code phone calls](/blog/t3-code-phone-calls), configured on the provider behind the thread |
 | GitHub Copilot CLI | [GitHub Copilot phone calls](/blog/github-copilot-phone-calls), with a real T-Mobile call placed from the CLI |
 | Grok, Grok Bot and the xAI API | [Grok MCP setup](/blog/grok-connectors-mcp-phone-calls), with a recorded Grok Bot call |
@@ -105,7 +106,7 @@ The task was general Waterbar private dining research. It allowed one informatio
 
 Waterbar's **virtual concierge** said Bridge Tower was fully enclosed and private, while Looking Glass was not fully enclosed and could share sound with the main dining area. It described the posted capacities as recommended maxima, with possible flexibility depending on layout. These are **concierge assertions, without staff confirmation**, rather than a capacity guarantee for an event. The concierge could not provide current minimums or mandatory fees. It offered to pass a message to the events team; the caller declined and ended. The concierge had also announced that it was taking notes to share with the team. Whether it relayed those notes is not established by our call log. The transcript shows a generic AI introduction and no invented date or guest count. It also contains brief conversational overlap and an interrupted fee question that the caller restated. We did not measure latency. Voicemail handling was configured but not exercised, because the concierge answered.
 
-Our [call4me harness sessions](/blog/agent-web-research-phone-calls-sf-private-dining) used **six minute caps**; the Codex Waterbar recording lasts **3:12**. Those call4me callers also used a saved profile name despite the brief asking them not to share it. The linked walkthrough discloses that failure, and the public audio mutes the name. The Bland run used a shorter cap and a different instruction payload. These examples show each workflow and its evidence. They do not establish matched timing, relative quality, or reliability rankings.
+Our [call4me harness sessions](/blog/agent-web-research-phone-calls-sf-private-dining) used **six minute initial allocations**; the Codex Waterbar recording lasts **3:12**. Those call4me callers also used a saved profile name despite the brief asking them not to share it. The linked walkthrough discloses that failure, and the public audio mutes the name. The Bland run used a shorter cap and a different instruction payload. These examples show each workflow and its evidence. They do not establish matched timing, relative quality, or reliability rankings.
 
 ### Listen to the Bland Waterbar call
 
@@ -154,7 +155,7 @@ At **0:31**, the concierge describes room privacy. At **1:07**, it suggests poss
 
 We also reused browser OAuth for Agent Phone in a fresh **Codex CLI 0.160.0** session on October 3. The live connection exposed `phone` and `phone_status`. Codex submitted **one** request with a stable `requestKey`, the published Waterbar number, the general research goal, and separate context and instructions. It sent `voicemail: "off"` with no caller name or callback contact. The tool accepted that input.
 
-There was no account allowance read tool. The submission returned `remainingCalls: 9`; this was an observed remaining allowance after the attempt, rather than a balance checked beforehand. The live schema also had **no duration parameter**. We instructed the caller to finish within three minutes, so this run had an instructional limit, unlike Bland's enforced three minute cap and the call4me runs' six minute caps.
+There was no account allowance read tool. The submission returned `remainingCalls: 9`; this was an observed remaining allowance after the attempt, rather than a balance checked beforehand. The live schema also had **no duration parameter**. We instructed the caller to finish within three minutes, so this run had an instructional limit. Bland used an enforced three minute cap. The call4me runs began with six minute allocations that could extend.
 
 Codex kept reading the same call ID at the returned `pollAfterSeconds` interval. Active reads had no transcript or recording. The final result returned `ended`, `assistant-ended-call`, a transcript, and a recording. It also returned `cost: 0`; we report that field without assigning an undocumented currency or treating it as a general pricing guarantee.
 

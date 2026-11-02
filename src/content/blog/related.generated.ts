@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "e6dcdfe736ea64e84ae2af4af637c5dc4828c2f6355625b5378601e86c8a3271"
+  "sourceHash": "e1eca78e7f7acf7e09ec8cc6b042ad37f5add6f920fed9a0ed385b90ecc8a6e3"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -286,7 +286,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "etihad-customer-service",
-      "similarity": 0.616295
+      "similarity": 0.616296
     }
   ],
   "allstate-customer-service-number": [
@@ -471,10 +471,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "xfinity-customer-service-number",
       "similarity": 0.607503
-    },
-    {
-      "slug": "how-long-to-reach-a-human",
-      "similarity": 0.601651
     }
   ],
   "bank-of-america-customer-service": [
@@ -1175,7 +1171,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "chime-customer-service-number": [
     {
       "slug": "venmo-customer-service-number",
-      "similarity": 0.690259
+      "similarity": 0.690258
     },
     {
       "slug": "bank-of-america-customer-service",
@@ -1216,6 +1212,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.848387
     },
     {
+      "slug": "devin-phone-calls",
+      "similarity": 0.837184
+    },
+    {
       "slug": "cline-phone-calls",
       "similarity": 0.835012
     },
@@ -1234,10 +1234,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "twilio-mcp-phone-calls",
       "similarity": 0.800805
-    },
-    {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.798169
     }
   ],
   "claude-code-phone-calls": [
@@ -1310,6 +1306,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "cline-phone-calls": [
     {
+      "slug": "devin-phone-calls",
+      "similarity": 0.858843
+    },
+    {
       "slug": "claude-agent-sdk-phone-calls",
       "similarity": 0.835012
     },
@@ -1336,10 +1336,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "gemini-phone-calls",
       "similarity": 0.778475
-    },
-    {
-      "slug": "github-copilot-phone-calls",
-      "similarity": 0.776472
     }
   ],
   "co2-tank-exchange-san-juan": [],
@@ -1661,10 +1657,40 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "etihad-customer-service",
       "similarity": 0.616051
+    }
+  ],
+  "devin-phone-calls": [
+    {
+      "slug": "cline-phone-calls",
+      "similarity": 0.858843
     },
     {
-      "slug": "how-long-to-reach-a-human",
-      "similarity": 0.602806
+      "slug": "opencode-phone-calls",
+      "similarity": 0.854886
+    },
+    {
+      "slug": "claude-agent-sdk-phone-calls",
+      "similarity": 0.837184
+    },
+    {
+      "slug": "mastra-mcp-phone-calls",
+      "similarity": 0.835367
+    },
+    {
+      "slug": "t3-code-phone-calls",
+      "similarity": 0.799122
+    },
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.796703
+    },
+    {
+      "slug": "goose-mcp-phone-calls",
+      "similarity": 0.759228
+    },
+    {
+      "slug": "langchain-mcp-phone-calls",
+      "similarity": 0.756145
     }
   ],
   "directv-customer-service": [
@@ -1798,7 +1824,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "zessan-otemachi-private-room",
-      "similarity": 0.695845
+      "similarity": 0.695846
     },
     {
       "slug": "pin-on-grand-reservations",
@@ -1836,7 +1862,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "alaska-airlines-customer-service",
-      "similarity": 0.616295
+      "similarity": 0.616296
     },
     {
       "slug": "delta-customer-service",
@@ -2091,6 +2117,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.760057
     },
     {
+      "slug": "devin-phone-calls",
+      "similarity": 0.753093
+    },
+    {
       "slug": "github-copilot-phone-calls",
       "similarity": 0.753029
     },
@@ -2105,10 +2135,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "claude-agent-sdk-phone-calls",
       "similarity": 0.734386
-    },
-    {
-      "slug": "claude-code-phone-calls",
-      "similarity": 0.733937
     }
   ],
   "github-copilot-phone-calls": [
@@ -2134,15 +2160,15 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.733995
+      "similarity": 0.733996
     },
     {
       "slug": "n8n-mcp-phone-calls",
       "similarity": 0.712676
     },
     {
-      "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.709436
+      "slug": "devin-phone-calls",
+      "similarity": 0.711912
     }
   ],
   "global-blue-customer-service-number": [
@@ -2173,16 +2199,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.760153
     },
     {
+      "slug": "devin-phone-calls",
+      "similarity": 0.759228
+    },
+    {
       "slug": "t3-code-phone-calls",
       "similarity": 0.751085
     },
     {
       "slug": "cline-phone-calls",
       "similarity": 0.74496
-    },
-    {
-      "slug": "grok-connectors-mcp-phone-calls",
-      "similarity": 0.731781
     }
   ],
   "grok-bot-reusable-skills": [
@@ -2358,7 +2384,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "gym-day-pass": [
     {
       "slug": "gyms-with-sauna-near-me",
-      "similarity": 0.810295
+      "similarity": 0.810296
     },
     {
       "slug": "bonner-springs-ymca-swim-lessons",
@@ -2376,7 +2402,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "gyms-with-sauna-near-me": [
     {
       "slug": "gym-day-pass",
-      "similarity": 0.810295
+      "similarity": 0.810296
     }
   ],
   "hertz-customer-service-number": [
@@ -2425,20 +2451,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.663956
     }
   ],
-  "how-long-to-reach-a-human": [
-    {
-      "slug": "usaa-phone-number",
-      "similarity": 0.605971
-    },
-    {
-      "slug": "delta-customer-service",
-      "similarity": 0.602806
-    },
-    {
-      "slug": "att-customer-service-number",
-      "similarity": 0.601651
-    }
-  ],
+  "how-long-to-reach-a-human": [],
   "how-to-cancel-siriusxm": [
     {
       "slug": "cancel-audible",
@@ -2718,7 +2731,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "inn-at-jim-thorpe-reservations": [
     {
       "slug": "ritz-carlton-bachelor-gulch-reservations",
-      "similarity": 0.670148
+      "similarity": 0.670147
     },
     {
       "slug": "booking-com-customer-service-number",
@@ -3056,6 +3069,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.868195
     },
     {
+      "slug": "devin-phone-calls",
+      "similarity": 0.835367
+    },
+    {
       "slug": "claude-agent-sdk-phone-calls",
       "similarity": 0.828316
     },
@@ -3078,10 +3095,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "langchain-mcp-phone-calls",
       "similarity": 0.793708
-    },
-    {
-      "slug": "openai-agents-sdk-phone-calls",
-      "similarity": 0.773704
     }
   ],
   "meta-muse-ai-agent-phone-calls": [
@@ -3303,7 +3316,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.766654
+      "similarity": 0.766655
     },
     {
       "slug": "openclaw-phone-calls",
@@ -3436,6 +3449,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.798169
     },
     {
+      "slug": "devin-phone-calls",
+      "similarity": 0.796703
+    },
+    {
       "slug": "t3-code-phone-calls",
       "similarity": 0.795453
     },
@@ -3450,10 +3467,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "gemini-phone-calls",
       "similarity": 0.780778
-    },
-    {
-      "slug": "codex-phone-calls",
-      "similarity": 0.778345
     }
   ],
   "opencode-phone-calls": [
@@ -3470,6 +3483,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.857173
     },
     {
+      "slug": "devin-phone-calls",
+      "similarity": 0.854886
+    },
+    {
       "slug": "openclaw-phone-calls",
       "similarity": 0.845741
     },
@@ -3484,10 +3501,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "openai-agents-sdk-phone-calls",
       "similarity": 0.819213
-    },
-    {
-      "slug": "codex-phone-calls",
-      "similarity": 0.798706
     }
   ],
   "palmeri-brentwood-private-dining": [
@@ -3641,7 +3654,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "t3-code-phone-calls",
-      "similarity": 0.810589
+      "similarity": 0.81059
     },
     {
       "slug": "schedule-phone-calls-claude-code-codex",
@@ -3935,7 +3948,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "inn-at-jim-thorpe-reservations",
-      "similarity": 0.670148
+      "similarity": 0.670147
     },
     {
       "slug": "posada-real-los-condestables",
@@ -4317,7 +4330,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -4365,19 +4378,19 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.810589
+      "similarity": 0.81059
     },
     {
       "slug": "mastra-mcp-phone-calls",
       "similarity": 0.805819
     },
     {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.795453
+      "slug": "devin-phone-calls",
+      "similarity": 0.799122
     },
     {
-      "slug": "schedule-phone-calls-claude-code-codex",
-      "similarity": 0.787753
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.795453
     }
   ],
   "the-base-glamping-yugawara": [
@@ -4665,7 +4678,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "venmo-customer-service-number": [
     {
       "slug": "chime-customer-service-number",
-      "similarity": 0.690259
+      "similarity": 0.690258
     },
     {
       "slug": "paypal-customer-service-number",
@@ -4840,7 +4853,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5087,7 +5100,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "equal-parts-sf-reservations",
-      "similarity": 0.695845
+      "similarity": 0.695846
     },
     {
       "slug": "posada-real-los-condestables",

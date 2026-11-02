@@ -1,3 +1,4 @@
+import devinPhoneCalls from './devin-phone-calls.md';
 import bestBuyCustomerServiceNumber from './best-buy-customer-service-number.md';
 import enterpriseCustomerServiceNumber from './enterprise-customer-service-number.md';
 import stubhubCustomerServiceNumber from './stubhub-customer-service-number.md';
@@ -232,6 +233,7 @@ import netflixCustomerServiceNumber from './netflix-customer-service-number.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'devin-phone-calls', markdown: devinPhoneCalls },
   { slug: 'best-buy-customer-service-number', markdown: bestBuyCustomerServiceNumber },
   { slug: 'enterprise-customer-service-number', markdown: enterpriseCustomerServiceNumber },
   { slug: 'stubhub-customer-service-number', markdown: stubhubCustomerServiceNumber },

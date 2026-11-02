@@ -5,7 +5,7 @@ import { Layout } from './layout';
 
 const url = `${SITE}${HOLD_PATH}`;
 const summary = holdSummary();
-const description = `Customer service hold times at ${summary.companies} companies, timed on real recorded calls. Longest: ${summary.longest.company} at ${summary.longest.timeToHuman}. Free CSV and JSON.`;
+const description = `Customer service calls to ${summary.companies} companies, with ${summary.measured} measured times to a person. Longest: ${summary.longest.company} at ${summary.longest.timeToHuman}. Free CSV and JSON.`;
 const longDate = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 const shortDate = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 const measured = HOLD_TIMES.filter(r => r.status === 'measured');
@@ -49,8 +49,8 @@ export const HoldTimesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
         {' '}No call we placed reached a person at {summary.neverReached.map(r => r.company).join(' or ')}.
       </p>
       <p>
-        Every time below comes from a real call placed by call4me's AI phone agent, recorded and published on our blog with the full transcript.
-        Each company below links to the transcript line where the first person speaks, and to the post with the recording.
+        Every time below comes from a real call placed by call4me's AI phone agent, recorded and published on our blog with timestamps.
+        Each company below links to the quoted evidence of the result and to the post with the recording.
       </p>
 
       <h2 id="ranking">Hold times by company, longest first</h2>
@@ -93,12 +93,12 @@ export const HoldTimesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
       <p class="small">FedEx's agent only came on when FedEx called us back, after we gave a tracking number. That callback is not a hold on FedEx's line, so it is not ranked.</p>
 
       <h2 id="evidence">The recorded line behind each time</h2>
-      <p>For each company: the number we dialed, and the line in the published transcript where the first live person speaks, quoted as it appears in the post. Where no time was measured, the sentence from the post that says so.</p>
+      <p>For each company: the number we dialed, and the first live greeting, quoted as it appears in the post. Where no time was measured, the sentence from the post that says so.</p>
       <ul>
         {HOLD_TIMES.map(r => (
           <li id={`evidence-${r.id}`}>
             <strong>{r.company}{r.timeToHuman ? `, ${r.timeToHuman}` : ''}</strong>, called {r.number ? `${r.number} ` : ''}on {longDate(r.called)}{r.number ? '' : ' (the post does not state the number)'}.
-            {' '}"{r.evidence}" <a href={`/blog/${r.slug}`}>Recording and transcript</a>
+            {' '}"{r.evidence}" <a href={`/blog/${r.slug}`}>Recording and call details</a>
           </li>
         ))}
       </ul>
@@ -108,7 +108,7 @@ export const HoldTimesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
         <li><strong>Who called:</strong> call4me, an AI phone agent, placed every call between {longDate(summary.firstCall)} and {longDate(summary.lastCall)}. Most were our own general questions with no account. A few were call4me users' own errands or our own accounts, as each post says.</li>
         <li><strong>What the time measures:</strong> minutes and seconds from the start of the published recording to the first moment a live person speaks, read from the timestamped transcript in each post. It covers the phone menu and the hold. Some recordings shorten long silences, so on those the real wait was slightly longer.</li>
         <li><strong>Which call counts:</strong> one row per company. Where we called a company more than once, the time is from the first call that reached a person, and the table shows how many calls we placed.</li>
-        <li><strong>What answered first:</strong> "AI or virtual assistant" when the post calls what answered an AI, virtual, voice or automated assistant. A speech or keypad menu counts as a phone menu.</li>
+        <li><strong>What answered first:</strong> "AI or virtual assistant" when the post calls what answered an AI, virtual, voice or automated assistant. A speech or keypad menu counts as a phone menu. A recorded notice with no interactive choices is a recorded message.</li>
         <li><strong>What this is not:</strong> a ranking of service quality, or of typical wait times. Each company was called on a single day, mostly once, at whatever time we happened to call. A fast pickup says nothing about whether the person could help, and several fast answers were sales teams.</li>
       </ul>
       <p>
