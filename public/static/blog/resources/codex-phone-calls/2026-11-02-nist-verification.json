@@ -1,0 +1,103 @@
+{
+  "verifiedAt": "2026-11-02",
+  "client": {
+    "name": "Codex CLI",
+    "version": "0.163.0",
+    "modelSelection": "CLI default, no model override"
+  },
+  "endpoint": "https://call4.me/mcp",
+  "authentication": "Existing account API key, supplied by bearer_token_env_var; fresh session. No OAuth signup tested.",
+  "target": {
+    "name": "NIST WWV automated telephone time announcement",
+    "officialSource": "https://www.nist.gov/pml/time-and-frequency-division/time-distribution/radio-station-wwv/telephone-time-day-service",
+    "phone": "+13034997111"
+  },
+  "connectionCheck": {
+    "tool": "call4me_get_balance",
+    "succeeded": true,
+    "privateAccountFieldsOmitted": true
+  },
+  "callCount": 1,
+  "maxMinutes": 2,
+  "trace": [
+    {
+      "tool": "call4me_get_requirements",
+      "transportStatus": "completed",
+      "input": {
+        "category": "general"
+      }
+    },
+    {
+      "tool": "call4me_place_call",
+      "transportStatus": "completed",
+      "input": {
+        "business": "NIST WWV automated telephone time announcement",
+        "category": "general",
+        "max_minutes": 2,
+        "timezone": "America/Los_Angeles",
+        "goal": "Listen silently for one complete spoken UTC time announcement, capture exactly what was heard, then hang up.",
+        "details": {
+          "questions": "This is the public NIST WWV automated listening service. Remain silent, listen for one complete spoken UTC time announcement, record the exact spoken words and UTC time, and hang up immediately after that announcement. Do not mistake the recorded time announcement for voicemail. Do not leave any message. Do not share personal details or names, book anything, change any account, or buy anything. Do not request a callback or connect the user. If a real person unexpectedly answers, politely end without asking anything. End within two minutes. Exactly one call is authorized, with no redial."
+        }
+      },
+      "result": {
+        "status": "dialing",
+        "finished": false,
+        "created_at": "2026-11-02T15:55:13.624Z",
+        "hangup_cause": null,
+        "error": null
+      }
+    },
+    {
+      "tool": "call4me_get_call",
+      "transportStatus": "completed",
+      "input": {
+        "call": "same authorized call",
+        "wait_seconds": 30
+      },
+      "result": {
+        "status": "in_progress",
+        "finished": false,
+        "created_at": "2026-11-02T15:55:13.624Z",
+        "hangup_cause": null,
+        "error": null
+      }
+    },
+    {
+      "tool": "call4me_get_call",
+      "transportStatus": "completed",
+      "input": {
+        "call": "same authorized call",
+        "wait_seconds": 30
+      },
+      "result": {
+        "status": "completed",
+        "finished": true,
+        "created_at": "2026-11-02T15:55:13.624Z",
+        "hangup_cause": "normal_clearing",
+        "error": null
+      }
+    }
+  ],
+  "transcript": [
+    "note: carrier detected an automated greeting",
+    "caller: Okay.",
+    "note: carrier detected a call screening prompt",
+    "them: At the tone ,15 hours, 56 minutes, Coordinated Universal Time",
+    "caller: Okay, I've got"
+  ],
+  "outcome": {
+    "status": "completed",
+    "finished": true,
+    "result": "done",
+    "announcedTime": "15:56 UTC",
+    "source": "Automated announcement captured in the MCP transcript, not a human answer"
+  },
+  "limitations": [
+    "The caller was asked to stay silent but spoke two short acknowledgements. That instruction was not fully followed.",
+    "The timestamp is what the automated line announced, not an independent clock accuracy measurement.",
+    "This single call does not test a booking, a human conversation, OAuth signup, or reliability across repeated calls.",
+    "Account, call and session identifiers, caller numbers, account balance and personal details are omitted.",
+    "No audio is published with this verification; the transcript is the tool returned text."
+  ]
+}

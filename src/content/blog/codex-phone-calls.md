@@ -4,7 +4,7 @@ seoTitle: "Codex MCP server setup for phone calls"
 subtitle: Give Codex a calling tool, keep your credentials out of the prompt, and bring phone answers back into the research it is already doing.
 description: "Connect Codex to call4me through MCP, follow our verified CLI setup, and fix 'MCP tool call requires approval, but approval policy is never' in codex exec."
 date: 2026-10-03
-updated: 2026-10-17
+updated: 2026-11-02
 tags: codex, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: Codex researching online, calling a business through MCP, and returning the answer to the task
@@ -17,6 +17,8 @@ If Codex is your personal assistant, that task might be reviewing subscriptions,
 For business paperwork, see our [Wyoming registered agent consent example](/blog/wyoming-registered-agent-consent-form). It includes a real call that got the document emailed and a suggested Codex brief for requesting your own missing document.
 
 We verified this with **Codex CLI 0.160.0 on October 3, 2026**. The practical test was private dining research: read the restaurants' official websites, identify missing or contradictory information, and call to clarify it. It was research only, with no invented event, reservation, or payment.
+
+On **November 2, 2026**, we also verified a fresh **Codex CLI 0.163.0** session against the current `https://call4.me/mcp` endpoint. Codex checked the connection, called NIST's public time announcement line once, and followed the same call until it ended. It captured the spoken **15:56 UTC** announcement. The [tool trace and its limits](#a-fresh-call-through-the-current-endpoint) are below.
 
 If `codex exec` stopped with `MCP tool call requires approval, but approval policy is never`, jump to [the fix](#fix-mcp-tool-call-requires-approval-but-approval-policy-is-never).
 
@@ -91,11 +93,36 @@ These are call4me's [documented calling tools](https://call4.me/llms.txt). A cal
 
 The final answer should distinguish what a website says, what the phone conversation established, and what remains unknown. A recording can be pending or unavailable; a missing recording does not justify inventing a transcript.
 
-## What the CLI test established
+## A fresh call through the current endpoint
+
+Our November 2 test used Codex CLI 0.163.0 on Linux, the CLI's default model selection, and an existing call4me account key supplied through `bearer_token_env_var`. The key was kept out of the prompt and command arguments. A fresh session successfully ran `call4me_get_balance` before dialing. This tests existing account authentication, not a new signup or browser OAuth flow.
+
+The destination was **NIST WWV's public telephone time announcement**, at **+1 303 499 7111**, verified against [NIST's service page](https://www.nist.gov/pml/time-and-frequency-division/time-distribution/radio-station-wwv/telephone-time-day-service). It is an automated listening service. We authorized one call, capped at two minutes, to hear a spoken UTC announcement and hang up. The brief prohibited sharing personal details, leaving a message, making a purchase, or placing another call.
+
+Only the requirements, placement, status and hangup tools were enabled for the calling session. Placement and hangup received the scoped approvals described [below](#fix-1-approve-only-the-tool-you-need). The tool sequence was:
+
+| Tool | Observed result |
+|---|---|
+| `call4me_get_requirements` | Read the requirements for category `general` |
+| `call4me_place_call` | Submitted exactly one call with `max_minutes: 2`; returned `dialing` |
+| `call4me_get_call` | Returned `in_progress` while following that call |
+| `call4me_get_call` | Returned `completed`, `finished: true` and the announcement transcript |
+
+The returned transcript contains:
+
+> At the tone ,15 hours, 56 minutes, Coordinated Universal Time
+
+Codex waited for the finished result and reported the announcement. **The caller did not fully follow the instruction to remain silent:** the transcript also contains “Okay.” and “Okay, I've got” from the caller. The final record says the caller ended the call itself. There was no second placement.
+
+The [sanitized verification record](/static/blog/resources/codex-phone-calls/2026-11-02-nist-verification.json) includes the tool sequence, submitted limits and complete returned transcript. Account identifiers, caller numbers and private account fields are omitted. This is tool returned text; no new audio is published with this check.
+
+This establishes a fresh authenticated connection, an actual call through the current endpoint, and status polling through completion. It does not establish a human conversation, a successful booking, precise clock accuracy, or reliability across repeated calls.
+
+## What the October 3 CLI test established
 
 We used a fresh session and kept the MCP connection separate from our normal configuration. A first run successfully checked the account but stopped before dialing because the call required approval and that run could not obtain it ([why, and the fix](#fix-mcp-tool-call-requires-approval-but-approval-policy-is-never)). The next run used the CLI's automatic approval review for the two explicitly authorized research calls.
 
-The current endpoint at `https://call4.me/mcp` passed separate authenticated balance checks with both an existing account API key and fresh browser OAuth. The research calls ran through an existing connection on our older hostname. That establishes CLI calling through that connection and current endpoint authentication checks separately. We have not tested these steps in the Codex desktop app or IDE extension.
+In October, the current endpoint at `https://call4.me/mcp` passed separate authenticated balance checks with both an existing account API key and fresh browser OAuth. The restaurant research calls ran through an existing connection on our older hostname. The November test above adds a completed call through the current endpoint; it does not change the evidence from these earlier calls. We have not tested these steps in the Codex desktop app or IDE extension.
 
 | Restaurant | Actual call result |
 |---|---|

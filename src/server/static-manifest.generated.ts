@@ -1143,7 +1143,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/codex-phone-calls": {
     "html": "/__pages/3348257799ac3891.html",
     "markdown": "/__pages/3348257799ac3891.md",
-    "tokens": 4729
+    "tokens": 5502
   },
   "/blog/agent-web-research-phone-calls-sf-private-dining": {
     "html": "/__pages/5d9174de815b6805.html",
