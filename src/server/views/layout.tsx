@@ -271,7 +271,7 @@ export const Layout: FC<{
               <a href="/cancel-subscription">ai that cancels subscriptions</a>
               <a href="/book-restaurant-reservation">ai that books restaurants</a>
               <a href="/call-customer-service">ai that calls customer service</a>
-              <a href="/negotiate-bills">ai that negotiates bills</a>
+              <a href="/negotiate-bills">ai bill negotiation</a>
               <a href="/dispute-a-charge">ai that disputes charges</a>
               <a href="/blog">blog</a>
               <a href="/companies">customer service numbers</a>

@@ -2,6 +2,7 @@ import { lastModified, type Post } from './blog';
 import { PAGES, type PageKey } from './pages';
 import { SI_UPDATED } from '../../content/superintelligence-calling';
 import { HOLD_DATA_PATH, HOLD_PATH, HOLD_UPDATED } from '../../content/hold-times';
+import { TASKS } from '../../content/tasks';
 
 /** What the sitemap and llms.txt need from a blog post. */
 export type PostEntry = Pick<Post, 'slug' | 'title' | 'description' | 'date' | 'updated' | 'verified'>;
@@ -63,8 +64,16 @@ export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: stri
   { page: 'terms', changefreq: 'yearly' },
 ];
 
-/** Dataset pages carry their own version date as lastmod. */
-const LASTMOD: Partial<Record<PageKey, string>> = { superintelligenceCalling: SI_UPDATED, holdTimes: HOLD_UPDATED };
+/**
+ * Dataset pages carry their own version date as lastmod, and task pages the date their copy last
+ * changed, or the hold-time dataset's when they show its rows. A page with no lastmod is sent to
+ * IndexNow once and never again, so an edit to it would not reach Bing until a recrawl.
+ */
+const LASTMOD: Partial<Record<PageKey, string>> = {
+  superintelligenceCalling: SI_UPDATED,
+  holdTimes: HOLD_UPDATED,
+  ...Object.fromEntries(TASKS.map((t) => [t.key, t.holds.length > 0 && HOLD_UPDATED > t.updated ? HOLD_UPDATED : t.updated])),
+};
 
 const xml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
