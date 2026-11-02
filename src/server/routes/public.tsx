@@ -3,7 +3,7 @@ import { field, origin, ownerKey, stripeFor, viewerKey, visitor, type AppContext
 import { accountPrompt, aiCallAssistantPrompt, callPrompt, companiesPrompt, studentsPrompt, examplesPrompt, voicesPrompt, installPrompt, privacyPrompt, rulesPrompt, supportPrompt, taskPrompt, termsPrompt } from '../lib/prompts';
 import { PAGES } from '../lib/pages';
 import { confirmVerificationInput } from '../lib/number-schema';
-import { callView } from '../services/call-ops';
+import { callView, usageView } from '../services/call-ops';
 import { accounts, type Account } from '../services/accounts';
 import { ACTIVE, calls, CallError } from '../services/calls';
 import { pricePerMinute } from '../services/dialer';
@@ -116,7 +116,7 @@ pub.get('/welcome', async (c) => {
 
 async function accountPage(c: AppContext, account: Account, errors: { error?: string; numberError?: string; ownNumberError?: string; profileError?: string } = {}) {
   const n = numbers(c.env);
-  const [balance, rows, owned, pending, own, offers, reload, key, profile] = await Promise.all([
+  const [balance, rows, owned, pending, own, offers, reload, key, profile, usage] = await Promise.all([
     accounts(c.env.DB).balanceCents(account.id),
     calls(c.env.DB).list(account.id, 50),
     n.views(account.id),
@@ -126,6 +126,7 @@ async function accountPage(c: AppContext, account: Account, errors: { error?: st
     reloadOf(c.env.DB, account.id),
     ownerKey(c, account),
     profiles(c.env.DB).get(account.id),
+    usageView(c.env, account.id, 30),
   ]);
   return c.html(
     <AccountPage
@@ -142,6 +143,7 @@ async function accountPage(c: AppContext, account: Account, errors: { error?: st
       agentPrompt={accountPrompt(origin(c), key)}
       installPrompt={installPrompt(origin(c), key)}
       profile={profile}
+      usage={usage}
       {...errors}
     />,
     errors.error || errors.numberError || errors.ownNumberError || errors.profileError ? 400 : 200,

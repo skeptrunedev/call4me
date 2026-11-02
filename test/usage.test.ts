@@ -33,7 +33,26 @@ test('usage totals the calls in the window by day and by business, with credits 
   assert.equal(u.credits_added, '$10.00');
   assert.equal(u.balance, '$39.09');
   assert.equal(u.by_day.length, 2);
-  assert.deepEqual(u.by_business[0], { business: 'Stop & Shop', calls: 2, spent: '$3.38' });
+  assert.deepEqual(u.by_business[0], { business: 'Stop & Shop', calls: 2, spent: '$3.38', spent_cents: 338 });
 
   await assert.rejects(usageView(env, 'acct_alice', 30, 'Not/AZone'), CallError);
+});
+
+test('the account page shows where the balance went: the total, a bar per day and the top businesses', async () => {
+  const { SpendingBox } = await import('../src/server/views/account');
+  const { jsx } = await import('hono/jsx');
+  const today = new Date().toISOString().slice(0, 10);
+  const usage = {
+    days: 30, timezone: 'UTC', calls: 2, calls_spent: '$3.38', calls_spent_cents: 338, talk_minutes: 18, hold_minutes: 9,
+    numbers_spent: '$0.00', credits_added: '$10.00', balance: '$24.95',
+    by_day: [{ date: today, calls: 2, spent: '$3.38', spent_cents: 338 }],
+    by_business: [{ business: 'Stop & Shop', calls: 2, spent: '$3.38', spent_cents: 338 }],
+  };
+  const html = String(await jsx(SpendingBox, { usage }).toString());
+  assert.match(html, /<strong>\$3\.38<\/strong> on 2 calls/);
+  assert.match(html, /9 of them on hold at half\s+price/);
+  assert.equal((html.match(/class="spend-day"/g) ?? []).length, 14);
+  assert.match(html, /height:100%/);
+  assert.match(html, /Stop &amp; Shop/);
+  assert.equal(String(await jsx(SpendingBox, { usage: { ...usage, calls: 0 } }).toString()), '');
 });

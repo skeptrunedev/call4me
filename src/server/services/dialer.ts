@@ -249,8 +249,16 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     .bind(account.id, opts.to, opts.from)
     .all<{ business: string; goal: string; outcome: string | null; created_at: number }>();
   const earlier = await env.DB.prepare(`SELECT business FROM calls WHERE account_id = ? AND to_number = ? ORDER BY created_at DESC LIMIT 1`).bind(account.id, opts.from).first<{ business: string }>();
+  const profile = await profiles(env.DB).get(account.id);
+  // The owner ringing their own call4me number from their own phone is not a business calling
+  // back: David Aviles called his to ask about his Kaiser call and was answered as Kaiser, its one
+  // open task. Their phone is the one in their profile, or one they verified on the account.
+  const savedPhone = profile.phone?.trim() ? checkDialable(profile.phone) : null;
+  const ownerCalling =
+    (savedPhone?.ok && savedPhone.e164 === opts.from) ||
+    Boolean(await env.DB.prepare(`SELECT 1 FROM verified_numbers WHERE account_id = ? AND phone_number = ? AND status = 'verified'`).bind(account.id, opts.from).first());
   // A business calling back after a voicemail gets the original task finished, not a message taken.
-  const tasks = openTasks((await db.unfinished(account.id)).filter((r) => r.from_number === opts.to), opts.from).slice(0, 3);
+  const tasks = ownerCalling ? [] : openTasks((await db.unfinished(account.id)).filter((r) => r.from_number === opts.to), opts.from).slice(0, 3);
   const likely = likelyTask(tasks, opts.from);
   const openTask = (r: CallRow): OpenTask => {
     const b = JSON.parse(r.brief) as Brief;
@@ -293,8 +301,8 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
       account.id,
       opts.from,
       opts.to,
-      likely?.business ?? earlier?.business ?? 'incoming call',
-      likely?.goal ?? (tasks.length ? 'finish an unfinished task, or take a message' : 'take the call and a message'),
+      ownerCalling ? `${owner} (your own phone)` : likely?.business ?? earlier?.business ?? 'incoming call',
+      ownerCalling ? 'answer the owner calling from their own phone' : likely?.goal ?? (tasks.length ? 'finish an unfinished task, or take a message' : 'take the call and a message'),
       JSON.stringify(brief),
       opts.controlId,
       holdCents,
@@ -312,7 +320,6 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     return;
   }
   const ordered = likely ? [likely, ...tasks.filter((t) => t !== likely)] : tasks;
-  const profile = await profiles(env.DB).get(account.id);
   // Asked for a number, the line gives the one the returned call named, else the owner's own phone
   // (a company line keeps its own number), else the number they rang.
   const ownPhone = profile.phone?.trim() && !identity.calling_as ? checkDialable(profile.phone) : null;
@@ -328,6 +335,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
       callbackNumber,
       tasks: ordered.map(openTask),
       likely: Boolean(likely),
+      ownerCalling,
       localTime: localTimeIn(likelyBrief?.timezone ?? null),
       standing: answeringInstructionsOf(profile),
       recent: recent.map((r) => ({
