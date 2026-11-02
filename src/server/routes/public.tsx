@@ -140,6 +140,7 @@ async function accountPage(c: AppContext, account: Account, errors: { error?: st
       calls={rows.map((r) => callView(r, []))}
       apiKey={key}
       agentPrompt={accountPrompt(origin(c), key)}
+      installPrompt={installPrompt(origin(c), key)}
       profile={profile}
       {...errors}
     />,
