@@ -34,6 +34,10 @@ test('a hold still open at hangup is billed at half price up to the end', async 
   await calls(db).holdStarted('call_1', s(0));
   const row = await calls(db).finish('call_1', { status: 'completed', pricePerMinuteCents: 25, at: s(600) });
   assert.equal(row!.cost_cents, 125);
+  // The open hold is closed on the row too, so usage and the account page count it.
+  const after = await calls(db).byId('call_1');
+  assert.equal(after!.hold_since, null);
+  assert.ok(after!.hold_seconds > 0, 'the hold still open at hangup is saved');
 });
 
 test('extending a call on hold holds more credits, all released when it ends, and the bill never passes what was held', async () => {

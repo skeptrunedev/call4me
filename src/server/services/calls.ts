@@ -447,10 +447,13 @@ export function calls(db: D1Database) {
       const cost = row.hold_cents ? Math.min(billed, row.hold_cents) : billed;
       const r = await db
         .prepare(
-          `UPDATE calls SET status = ?, ended_at = ?, billed_seconds = ?, cost_cents = ?, hangup_cause = COALESCE(?, hangup_cause), hangup_source = COALESCE(?, hangup_source), error = COALESCE(?, error)
+          // A hold or take-over still open at hangup is billed above; it is closed here too, so the
+          // row's totals match the bill (Cody's 37 minutes on hold read as 0 on the account page).
+          `UPDATE calls SET status = ?, ended_at = ?, billed_seconds = ?, cost_cents = ?, hangup_cause = COALESCE(?, hangup_cause), hangup_source = COALESCE(?, hangup_source), error = COALESCE(?, error),
+             hold_seconds = ?, hold_since = NULL, person_seconds = ?, person_since = NULL
            WHERE id = ? AND status IN ('queued','dialing','in_progress')`,
         )
-        .bind(status, endedAt, talkSeconds, cost, opts.hangupCause ?? null, opts.hangupSource ?? null, opts.error ?? null, id)
+        .bind(status, endedAt, talkSeconds, cost, opts.hangupCause ?? null, opts.hangupSource ?? null, opts.error ?? null, holdSecondsAt(row, endedAt), personSecondsAt(row, endedAt), id)
         .run();
       if ((r.meta.changes ?? 0) > 0) {
         const ledger = accounts(db);
