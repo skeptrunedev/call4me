@@ -3,7 +3,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/": {
     "html": "/__pages/8a5edab282632443.html",
     "markdown": "/__pages/8a5edab282632443.md",
-    "tokens": 3157
+    "tokens": 3232
   },
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
@@ -28,7 +28,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/ai-call-assistant": {
     "html": "/__pages/9c2cf5350f943d84.html",
     "markdown": "/__pages/9c2cf5350f943d84.md",
-    "tokens": 2878
+    "tokens": 2880
   },
   "/hold-for-me": {
     "html": "/__pages/ba822c49c148d1be.html",
@@ -78,12 +78,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/mcp": {
     "html": "/__pages/88fe637beab867e2.html",
     "markdown": "/__pages/88fe637beab867e2.md",
-    "tokens": 1726
+    "tokens": 2377
   },
   "/rules": {
     "html": "/__pages/933053fc294245bb.html",
     "markdown": "/__pages/933053fc294245bb.md",
-    "tokens": 1243
+    "tokens": 1282
   },
   "/privacy": {
     "html": "/__pages/0ece7f7c306b4cf6.html",
@@ -728,12 +728,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/chatgpt-phone-calls": {
     "html": "/__pages/82112ee792a1287d.html",
     "markdown": "/__pages/82112ee792a1287d.md",
-    "tokens": 4818
+    "tokens": 5023
   },
   "/blog/claude-phone-calls": {
     "html": "/__pages/2bca3a76156714dc.html",
     "markdown": "/__pages/2bca3a76156714dc.md",
-    "tokens": 4205
+    "tokens": 4292
   },
   "/blog/cursor-phone-calls": {
     "html": "/__pages/78808eaa7cd9eba5.html",
@@ -928,7 +928,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-long-to-reach-a-human": {
     "html": "/__pages/1624f2222bb89bf3.html",
     "markdown": "/__pages/1624f2222bb89bf3.md",
-    "tokens": 13426
+    "tokens": 13675
   },
   "/blog/vercel-ai-sdk-phone-calls": {
     "html": "/__pages/ff098db0a2035f3b.html",

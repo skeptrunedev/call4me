@@ -101,7 +101,7 @@ for (const task of TASKS) {
 }
 await page(HOLD_PATH, <HoldTimesPage {...common} />);
 await page('/students', <StudentsPage {...common} agentPrompt={prompts.studentsPrompt(origin, null)} />);
-await page('/mcp', <McpPage {...common} origin={origin} installPrompt={installPrompt} apiKey={null} />);
+await page('/mcp', <McpPage {...common} origin={origin} pricePerMinuteCents={price} installPrompt={installPrompt} apiKey={null} />);
 await page('/rules', <RulesPage {...common} pricePerMinuteCents={price} countries={[]} agentPrompt={prompts.rulesPrompt(origin, null)} />);
 await page('/privacy', <PrivacyPage {...common} agentPrompt={prompts.privacyPrompt(origin, null)} />);
 await page('/terms', <TermsPage {...common} agentPrompt={prompts.termsPrompt(origin, null)} />);

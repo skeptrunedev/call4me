@@ -8,6 +8,7 @@ import { accounts, type Account } from '../services/accounts';
 import type { Surface } from '../services/intake';
 import { createCall4meServer, withCurrentToolNames } from '../mcp/server';
 import { numbers } from '../services/numbers';
+import { pricePerMinute } from '../services/dialer';
 import { McpPage } from '../views/account';
 
 /**
@@ -42,7 +43,7 @@ mcp.get('/', async (c) => {
   if (!wantsHtml(c)) return authorized(c, '/mcp', 'agents');
   const account = await sessionAccount(c);
   const [key, owned] = await Promise.all([viewerKey(c, account), account ? numbers(c.env).views(account.id) : []]);
-  return c.html(<McpPage signedIn={Boolean(account)} installPrompt={installPrompt(origin(c), key)} origin={origin(c)} apiKey={key} numbers={owned} />);
+  return c.html(<McpPage signedIn={Boolean(account)} pricePerMinuteCents={pricePerMinute(c.env)} installPrompt={installPrompt(origin(c), key)} origin={origin(c)} apiKey={key} numbers={owned} />);
 });
 
 /**

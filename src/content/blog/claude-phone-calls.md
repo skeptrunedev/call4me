@@ -2,17 +2,19 @@
 title: "Can Claude make phone calls? Add call4me as a custom connector"
 seoTitle: "Can Claude make phone calls? Connector setup"
 subtitle: Claude on the web, in Claude Desktop and in the mobile apps can place phone calls once you add a calling MCP server as a custom connector. Here are the steps from Anthropic's docs, the plan limits, and a first prompt that checks the connection before anything dials.
-description: "Yes, Claude can make phone calls. Add call4me as a custom connector, sign in, turn it on in a chat, and give Claude a bounded call brief."
+description: "Claude can't dial a phone number on its own. Add call4me as a custom connector at https://call4.me/mcp and Claude can place real phone calls from a chat."
 date: 2026-10-13
-updated: 2026-10-27
+updated: 2026-11-01
 tags: claude, mcp, custom connector, ai phone assistant
 authors: nick
 imageAlt: Claude adds call4me as a custom connector, places a phone call, and reports the outcome in the chat
 ---
 
-**Yes. Add call4me as a custom connector, and Claude can place phone calls from a chat.** In Claude, go to **Customize > Connectors**, click **+ Add**, then **Add custom connector**. Name it call4me, enter `https://call4.me/mcp`, and click **Continue** through the authentication review, then **Add**. Sign in to call4me in your browser, turn the connector on in your chat, and ask Claude to call a business with a goal and clear limits. A voice caller handles the conversation; Claude follows the status and transcript through tools and tells you what happened.
+**Claude can't dial a phone number on its own, but it can place real phone calls once you add call4me as a custom connector.** Claude's [voice mode](https://support.claude.com/en/articles/11101966-use-voice-mode) is a spoken conversation with Claude, not a call to someone else. To have Claude call a business, go to **Customize > Connectors**, click **+ Add**, then **Add custom connector**. Name it call4me, enter `https://call4.me/mcp`, and click **Continue** through the authentication review, then **Add**. Sign in to call4me in your browser, turn the connector on in your chat, and ask Claude to call a business with a goal and clear limits. A voice caller handles the conversation; Claude follows the status and transcript through tools and tells you what happened.
 
-This guide is for the Claude chat apps: claude.ai, Claude Desktop and the mobile apps. **If you use Claude in the terminal**, follow our tested [Claude Code phone calls guide](/blog/claude-code-phone-calls) instead. It uses `claude mcp add`, not the Connectors screen.
+In Claude Code, it's one command: `claude mcp add --scope user --transport http call4me https://call4.me/mcp`, then run `/mcp`, pick call4me, and choose authenticate.
+
+This guide is for the Claude chat apps: claude.ai, Claude Desktop and the mobile apps. **If you use Claude in the terminal**, the rest of the Claude Code setup is in our tested [Claude Code phone calls guide](/blog/claude-code-phone-calls).
 
 ## How we checked this
 

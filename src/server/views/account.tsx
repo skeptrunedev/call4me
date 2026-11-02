@@ -449,21 +449,13 @@ export const CallPage: FC<{ call: CallView; recordings: CallRecordings; agentPro
   </Layout>
 );
 
-export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: string; apiKey: string | null; numbers?: NumberView[] }> = ({ signedIn, installPrompt, origin, apiKey, numbers }) => (
+export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: string; apiKey: string | null; pricePerMinuteCents: number; numbers?: NumberView[] }> = ({ signedIn, installPrompt, origin, apiKey, pricePerMinuteCents, numbers }) => (
   <Layout title="MCP server for phone calls" page="mcp" signedIn={signedIn}>
     <h1>call4me: the MCP server that makes phone calls</h1>
-    {apiKey ? (
-      <p>
-        your server URL is <code class="server-url">{mcpUrl(origin, apiKey)}</code>. it carries your key, so your agent needs no sign-in. the easiest way is to paste this prompt into your agent:
-      </p>
-    ) : (
-      <p>
-        the server is <code class="server-url">{origin}/mcp</code>. your agent signs you in through the browser (google or x). the easiest way is to paste this prompt into your agent:
-      </p>
-    )}
-    <CopyBlock id="install-prompt" text={installPrompt} rows={14} />
-    <CallOnboarding numbers={numbers} />
-    <h3>by hand</h3>
+    <p>
+      call4me is a hosted remote MCP server that places real phone calls for your AI agent. add <code class="server-url">{apiKey ? mcpUrl(origin, apiKey) : `${origin}/mcp`}</code> to your agent{apiKey ? ' (the URL carries your key, so no sign-in)' : ' (Streamable HTTP, sign in with Google or X)'}, and <code>call4me_place_call</code> dials the business, a voice caller has the conversation, and <code>call4me_get_call</code> returns the live transcript and the outcome. calls cost {dollars(pricePerMinuteCents)} a minute from pickup, hold time half that, unanswered calls are free, and prepaid credits start at {dollars(MIN_TOPUP_CENTS)}.
+    </p>
+    <h2>add it to your agent</h2>
     <pre class="wrap">
       {apiKey
         ? `claude code:     claude mcp add --scope user --transport http call4me ${mcpUrl(origin, apiKey)}
@@ -477,8 +469,14 @@ chatgpt:         install the call4me plugin at ${CHATGPT_PLUGIN_URL} and sign in
 claude desktop / claude.ai:  settings → connectors → add custom connector → ${origin}/mcp
 can't sign in?   create a key at ${origin}/account and use ${origin}/mcp/<key>, or send "Authorization: Bearer <key>" to /mcp`}
     </pre>
-    <h3>tools</h3>
+    <p>or paste this prompt into your agent: it adds the server, checks the connection, and asks what your first call should do.</p>
+    <CopyBlock id="install-prompt" text={installPrompt} rows={14} />
+    <CallOnboarding numbers={numbers} />
+    <h2>tools</h2>
     <ul>
+      <li>
+        <code>call4me_get_requirements</code> what a kind of call needs before it dials (a restaurant booking, a dentist visit, a question for a business...)
+      </li>
       <li>
         <code>call4me_place_call</code> call a business with a goal, the facts it may share, and what it may accept
       </li>
@@ -489,7 +487,19 @@ can't sign in?   create a key at ${origin}/account and use ${origin}/mcp/<key>, 
         <code>call4me_answer_question</code> answer something the business asked mid-call
       </li>
       <li>
-        <code>call4me_list_calls</code> recent calls, including callbacks your number answered
+        <code>call4me_connect_me</code> ring your phone and put you on the call, or let you listen in
+      </li>
+      <li>
+        <code>call4me_hang_up</code> end a call early
+      </li>
+      <li>
+        <code>call4me_schedule_call</code> dial at a set time; <code>call4me_cancel_scheduled_call</code> calls it off
+      </li>
+      <li>
+        <code>call4me_list_calls</code> scheduled and recent calls, including callbacks your number answered
+      </li>
+      <li>
+        <code>call4me_get_recordings</code> the recording of a finished call
       </li>
       <li>
         <code>call4me_get_balance</code> balance, price per minute, and your call4me phone numbers
@@ -498,5 +508,25 @@ can't sign in?   create a key at ${origin}/account and use ${origin}/mcp/<key>, 
         <code>call4me_add_funds</code> a checkout link that adds credits now and reloads the same amount every month
       </li>
     </ul>
+    <p>
+      plus <code>call4me_get_profile</code> and <code>call4me_save_profile</code> for details you reuse, <code>call4me_get_usage</code>, and number tools (<code>call4me_list_numbers</code>, <code>call4me_buy_number</code>, <code>call4me_release_number</code>, <code>call4me_verify_number</code>).
+    </p>
+    <h2>from your own code</h2>
+    <p>
+      the same calls are a REST API, for an agent you wrote yourself. send your key from <a href="/account">my account</a> as a Bearer token, then follow the call until <code>finished</code> is true. a <code>422</code> "Not calling yet" lists what the call still needs. the full spec is <a href="/openapi.json">/openapi.json</a>.
+    </p>
+    <pre class="wrap">
+      {`curl ${origin}/api/calls \
+  -H "Authorization: Bearer $CALL4ME_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"to": "+14155550123", "business": "Nopa", "category": "general",
+       "goal": "Ask whether they take walk-ins for 2 tonight",
+       "details": {"questions": "Do you take walk-ins for 2 tonight? How long is the wait?"}}'
+
+curl "${origin}/api/calls/<id>?wait_seconds=30" -H "Authorization: Bearer $CALL4ME_API_KEY"`}
+    </pre>
+    <p>
+      tested guides for agent frameworks: <a href="/blog/openai-agents-sdk-phone-calls">OpenAI Agents SDK</a>, <a href="/blog/claude-agent-sdk-phone-calls">Claude Agent SDK</a>, <a href="/blog/vercel-ai-sdk-phone-calls">Vercel AI SDK</a>, <a href="/blog/langchain-mcp-phone-calls">LangChain</a> and <a href="/blog/mastra-mcp-phone-calls">Mastra</a>. to compare calling MCP servers, read the <a href="/blog/phone-calling-mcp-comparison">phone calling MCP comparison</a>.
+    </p>
   </Layout>
 );

@@ -2,15 +2,15 @@
 title: "Can ChatGPT make phone calls? Yes, with the call4me plugin"
 seoTitle: "Can ChatGPT make phone calls? Yes, with a plugin"
 subtitle: call4me is in ChatGPT's plugin directory. Install it, sign in, confirm the call, and follow it to a transcript. Custom MCP setup is covered too.
-description: "Yes. Install the call4me plugin from ChatGPT's plugin directory, sign in, and ask ChatGPT to call a business. You get the outcome, transcript and recording."
+description: "ChatGPT can't dial a phone number on its own. With the call4me plugin it can call a business for you and bring back the outcome and transcript."
 date: 2026-10-13
-updated: 2026-10-28
+updated: 2026-11-01
 tags: chatgpt, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: ChatGPT adds call4me as a custom MCP plugin, signs in with OAuth, and asks before placing a phone call
 ---
 
-**Yes, ChatGPT can make phone calls with a calling plugin.** ChatGPT doesn't dial on its own, but [call4me is listed in ChatGPT's plugin directory](https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8). Install it, sign in, and ask ChatGPT to call a business with a goal and clear limits. A voice caller handles the conversation, and ChatGPT reads the status, transcript and outcome through tools.
+**ChatGPT can't dial a phone number on its own, but it can call a business for you once you install the [call4me plugin](https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8).** OpenAI's [1-800-ChatGPT](https://help.openai.com/en/articles/10193193-1-800-chatgpt-calling-and-messaging-chatgpt-with-your-phone) line works the other way: you call 1-800-242-8478 from a US or Canadian number to talk to ChatGPT. To have ChatGPT make the call, install call4me from ChatGPT's plugin directory, sign in, and ask it to call a business with a goal and clear limits. ChatGPT asks you to confirm, a voice caller has the conversation, and ChatGPT reads the status, transcript and outcome back to you through tools.
 
 The short version:
 
@@ -23,7 +23,7 @@ The directory plugin doesn't take medical or dental appointments. For those, add
 
 ## How we checked this
 
-The plugin listing is live at [chatgpt.com/plugins](https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8); we checked it on October 28, 2026. The custom MCP steps further down come from OpenAI's own documentation, linked where each one is used: [Add custom MCP server](https://developers.openai.com/api/docs/guides/custom-mcp-server), the [plugins quickstart](https://developers.openai.com/plugins/quickstart), [Connect and test your plugin](https://developers.openai.com/plugins/deploy/connect-chatgpt), [plugin authentication](https://developers.openai.com/plugins/build/auth), [Plugins](https://learn.chatgpt.com/docs/plugins) and [dots](https://learn.chatgpt.com/docs/dots). None of those pages shows a date. We read them on October 13, 2026.
+The plugin listing is live at [chatgpt.com/plugins](https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8); we checked it on October 28, 2026. The custom MCP steps further down come from OpenAI's own documentation, linked where each one is used: [Add custom MCP server](https://developers.openai.com/api/docs/guides/custom-mcp-server), the [plugins quickstart](https://developers.openai.com/plugins/quickstart), [Connect and test your plugin](https://developers.openai.com/plugins/deploy/connect-chatgpt), [plugin authentication](https://developers.openai.com/plugins/build/auth), [Plugins](https://learn.chatgpt.com/docs/plugins) and [dots](https://learn.chatgpt.com/docs/dots). None of those pages shows a date. We read them on October 13, 2026. OpenAI's help articles on [1-800-ChatGPT](https://help.openai.com/en/articles/10193193-1-800-chatgpt-calling-and-messaging-chatgpt-with-your-phone) and [dots](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot) were read on November 1, 2026.
 
 The call4me side is tested. ChatGPT connects to the same endpoint, OAuth sign in and tools we used in our [Codex](/blog/codex-phone-calls), [Claude Code](/blog/claude-code-phone-calls), [GitHub Copilot CLI](/blog/github-copilot-phone-calls) and [LangChain](/blog/langchain-mcp-phone-calls) guides.
 
@@ -131,7 +131,9 @@ If the business is closed, ask for a scheduled call instead. Our [scheduling gui
 
 Possibly. OpenAI's [dots page](https://learn.chatgpt.com/docs/dots) says "Your dot can use supported plugins installed and enabled for your account," and that "Each plugin must be connected and permitted to perform the actions you request." So once call4me is installed and signed in, a dot should be able to use it, if custom MCP plugins count as supported there. That page doesn't say, and we haven't tried it.
 
-Dots are rolling out gradually. The same page lists them for Pro 100, Pro 200 and Pro 500 users over 18 outside the EEA, the UK and Switzerland, with Business Premium and Enterprise being made available worldwide; Enterprise is off by default until an admin turns it on.
+OpenAI's [getting started with your dot](https://help.openai.com/en/articles/20001530-getting-started-with-your-dot) page also says "Your dot cannot initiate calls to you at launch." A dot calling a business would go through a plugin like call4me, not a phone feature of its own.
+
+Dots are rolling out gradually. The same page lists them for Pro users aged 18 and older outside the European Economic Area, Switzerland and the UK, and for Business Premium users; Enterprise can try the beta once an admin turns it on.
 
 ## Troubleshooting
 
