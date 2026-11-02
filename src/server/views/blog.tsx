@@ -1,9 +1,10 @@
 import type { FC } from 'hono/jsx';
 import { raw } from 'hono/html';
 import { RECOMMENDATIONS } from '../../content/blog/recommendations';
+import { ARTICLE_CALLS } from '../../content/article-calls';
 import { lastModified, longDate, postDate, shortPostDate, type Post } from '../lib/blog';
 import { blogIndexPath } from '../lib/blog-pagination';
-import { SITE } from '../lib/pages';
+import { CHATGPT_PLUGIN_URL, SITE } from '../lib/pages';
 import { ORG_LD, personLd } from '../lib/entity';
 import { useStaticRender } from '../lib/static-render';
 import type { CommentRow, Engagement } from '../services/blog';
@@ -295,6 +296,7 @@ export const BlogPost: FC<{
   const v = (k: string) => commentValues[k] ?? '';
   const [introduction, sections] = splitIntroduction(post.html);
   const here = `/blog/${post.slug}`;
+  const call = ARTICLE_CALLS[post.slug];
   // Call posts lead with the recording; search engines read it as the article's audio.
   const recording = /<audio[^>]*\ssrc="(\/[^"]+\.mp3)"/.exec(post.html)?.[1];
   return (
@@ -370,7 +372,19 @@ export const BlogPost: FC<{
           </span>
         </div>
         {raw(introduction)}
-        <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
+        {call ? (
+          <aside class="box" aria-label={`Have your AI call ${call.business}`} data-article-call={post.slug}>
+            <b>have your AI call {call.business}</b>
+            <p>{call.description}</p>
+            <p>
+              first, {call.chatgpt && <><a href={CHATGPT_PLUGIN_URL}>add call4me to ChatGPT</a> or </>}<a href="/mcp">connect Claude or another assistant</a>.
+              then copy this brief into your assistant and tell it what you need. calls use your call4me credits.
+            </p>
+            {!call.chatgpt && <p class="small">the ChatGPT directory plugin does not support existing internet account calls. use Claude or another assistant connected through MCP.</p>}
+            <CopyBlock id="agent-prompt" text={agentPrompt} label={`copy my ${call.business} call brief`} rows={10} hidden />
+            <p class="small muted">copying the brief does not place a call. your assistant asks for the details first.</p>
+          </aside>
+        ) : <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />}
         <figure class="hero">
           <img src={post.image} alt={post.imageAlt} width={1200} height={630} />
           {post.imageCaption && <figcaption>{post.imageCaption}</figcaption>}

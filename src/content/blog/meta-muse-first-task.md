@@ -4,7 +4,7 @@ seoTitle: "How to use Meta Muse for a first phone call"
 subtitle: Hear Muse use call4me to ask a library about laptop seating, outlets and guest WiFi. Includes the actual recording, a bounded call brief and the limits of the answers.
 description: "Use Meta Muse to place a first phone call through a saved call4me connector. Hear our library call, read the transcript and copy a reusable call brief."
 date: 2026-10-05
-updated: 2026-10-17
+updated: 2026-11-02
 tags: meta muse, ai agents, phone calls, muse use cases
 authors: nick
 imageAlt: A first Muse phone task moves from a verified branch number through one approved call to sourced answers
@@ -19,6 +19,8 @@ This establishes the tested Muse conversation's calling workflow. It does not te
 Use the [one call brief](/static/blog/resources/meta-muse-first-task/call-brief.md) to choose a branch and record its answers. It contains the exact questions, approval boundary and empty outcome fields.
 
 ## What the actual Muse call established
+
+For the current contact details, regular hours and the menu from this recording, see our [Main Library phone number guide](/blog/sfpl-main-library-phone-number).
 
 We checked the Main Library's [published number and Tuesday hours](https://sfpl.org/locations/main-library), then approved one informational call to (415) 557 4400 with a four minute limit. It began at 4:22 pm Pacific on October 6. No visit date, reservation, purchase, voicemail or callback was requested.
 

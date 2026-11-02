@@ -665,6 +665,7 @@ export const EXAMPLES: CallExample[] = [
     request: "check if they can serve my apartment (address and unit given), the plan, and the soonest installation. don't sign up.",
     outcome: 'the representative confirmed service was available, explained the plan and installation openings, and said property manager approval was needed. no installation was booked.',
     audio: '/static/examples/internet-availability.mp3',
+    guide: { href: '/blog/monkeybrains-customer-service-number', label: 'Monkeybrains phone number and service questions' },
     duration: '5 minutes 20 seconds',
     transcript: [
       { speaker: 'phone system', text: 'Welcome to Monkeybrains. For new residential service and scheduling, press one. For new commercial and event services, press five. For technical support, press two. For billing and account information, press three. For all other inquiries, press one.' },

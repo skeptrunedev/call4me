@@ -8,7 +8,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
     "markdown": "/__pages/1a130cabaa8a47b0.md",
-    "tokens": 124979
+    "tokens": 125007
   },
   "/voices": {
     "html": "/__pages/3c1d9b7cb97eed20.html",
@@ -118,107 +118,117 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2254
+    "tokens": 2269
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2255
+    "tokens": 2206
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2197
+    "tokens": 2194
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2285
+    "tokens": 2304
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2009
+    "tokens": 2044
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2265
+    "tokens": 2185
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2235
+    "tokens": 2243
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2247
+    "tokens": 2263
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2107
+    "tokens": 2148
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2183
+    "tokens": 2222
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 1863
+    "tokens": 1806
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 2137
+    "tokens": 2140
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 1838
+    "tokens": 1906
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 1782
+    "tokens": 1779
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1899
+    "tokens": 1850
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 1911
+    "tokens": 1958
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 2052
+    "tokens": 1985
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 2049
+    "tokens": 2118
   },
   "/blog?page=19": {
     "html": "/__pages/bcb642deee219a0c.html",
     "markdown": "/__pages/bcb642deee219a0c.md",
-    "tokens": 1052
+    "tokens": 1295
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 20728
+    "tokens": 20919
+  },
+  "/blog/monkeybrains-customer-service-number": {
+    "html": "/__pages/57b6ae779ce46540.html",
+    "markdown": "/__pages/57b6ae779ce46540.md",
+    "tokens": 2560
+  },
+  "/blog/sfpl-main-library-phone-number": {
+    "html": "/__pages/2a61c8872e0b67bf.html",
+    "markdown": "/__pages/2a61c8872e0b67bf.md",
+    "tokens": 2434
   },
   "/blog/booking-com-customer-service-number": {
     "html": "/__pages/2a784f6bea54241d.html",
     "markdown": "/__pages/2a784f6bea54241d.md",
-    "tokens": 4535
+    "tokens": 4700
   },
   "/blog/uber-eats-customer-service-number": {
     "html": "/__pages/82fa56011ab9fbce.html",
@@ -668,7 +678,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/expedia-customer-service-number": {
     "html": "/__pages/adc39c755249459c.html",
     "markdown": "/__pages/adc39c755249459c.md",
-    "tokens": 4249
+    "tokens": 4384
   },
   "/blog/opencode-phone-calls": {
     "html": "/__pages/f643b874d5d5cfd4.html",
@@ -733,12 +743,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/chatgpt-phone-calls": {
     "html": "/__pages/82112ee792a1287d.html",
     "markdown": "/__pages/82112ee792a1287d.md",
-    "tokens": 5023
+    "tokens": 5017
   },
   "/blog/claude-phone-calls": {
     "html": "/__pages/2bca3a76156714dc.html",
     "markdown": "/__pages/2bca3a76156714dc.md",
-    "tokens": 4292
+    "tokens": 4275
   },
   "/blog/cursor-phone-calls": {
     "html": "/__pages/78808eaa7cd9eba5.html",
@@ -873,7 +883,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/priceline-customer-service": {
     "html": "/__pages/2a91c0a6d3a54c7c.html",
     "markdown": "/__pages/2a91c0a6d3a54c7c.md",
-    "tokens": 5512
+    "tokens": 5642
   },
   "/blog/venmo-customer-service-number": {
     "html": "/__pages/8ddc0d8e5d387de7.html",
@@ -1058,7 +1068,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/meta-muse-first-task": {
     "html": "/__pages/d49d86d498c31650.html",
     "markdown": "/__pages/d49d86d498c31650.md",
-    "tokens": 5309
+    "tokens": 5353
   },
   "/blog/muse-code-mcp-phone-calls": {
     "html": "/__pages/7400f73313c5b6b1.html",
@@ -1143,7 +1153,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/phone-calling-mcp-comparison": {
     "html": "/__pages/59a59e92f1223e3d.html",
     "markdown": "/__pages/59a59e92f1223e3d.md",
-    "tokens": 10363
+    "tokens": 10372
   },
   "/blog/cascaded-voice-stack-vs-gpt-live": {
     "html": "/__pages/aeae359d4c5c3e33.html",
@@ -1283,7 +1293,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/spectrum-retention-department": {
     "html": "/__pages/cad6a590d97a2bfd.html",
     "markdown": "/__pages/cad6a590d97a2bfd.md",
-    "tokens": 6847
+    "tokens": 6988
   },
   "/blog/experian-phone-number": {
     "html": "/__pages/a1897270700e714d.html",

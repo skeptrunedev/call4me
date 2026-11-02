@@ -4,7 +4,7 @@ seoTitle: "Can ChatGPT make phone calls? Yes, with a plugin"
 subtitle: call4me is in ChatGPT's plugin directory. Install it, sign in, confirm the call, and follow it to a transcript. Custom MCP setup is covered too.
 description: "ChatGPT can't dial a phone number on its own. With the call4me plugin it can call a business for you and bring back the outcome and transcript."
 date: 2026-10-13
-updated: 2026-11-01
+updated: 2026-11-02
 tags: chatgpt, mcp, ai agents, ai phone assistant
 authors: nick
 imageAlt: ChatGPT adds call4me as a custom MCP plugin, signs in with OAuth, and asks before placing a phone call
@@ -39,7 +39,7 @@ You need:
 
 - ChatGPT on the web. OpenAI's guide says to "Use ChatGPT on the web" to add the server, and that "Workspace permissions and security restrictions, including Lockdown, apply to adding and using custom MCP servers."
 - A [call4me account](/login?next=/account). You sign in with Google or X during setup.
-- Calling credits for the phone part. Calls cost $0.25 a minute from pickup, including phone menus and hold time, and prepaid credits start at $10. A free US number is assigned on your first call.
+- Calling credits for the phone part. Check the [current call and hold rates](/pricing) before loading credits. A free US number is assigned on your first call.
 
 **Which ChatGPT plans can do this?** We couldn't confirm it from an OpenAI page we could load. Check whether your plan or workspace allows custom MCP servers; Business and Enterprise admins control this.
 

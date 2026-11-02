@@ -47,6 +47,8 @@ const COPY_SCRIPT = `
     function done(ok) {
       b.textContent = ok ? '[ copied. paste it into your agent ]' : '[ could not copy: select the text below ]';
       if (!ok) { t.hidden = false; t.focus(); t.select(); }
+      var article = b.closest('[data-article-call]');
+      if (ok && article && typeof window.gtag === 'function') window.gtag('event', 'article_call_brief_copied', { article_slug: article.getAttribute('data-article-call') });
       setTimeout(function () { b.textContent = idle; }, 3000);
     }
     b.addEventListener('click', function () {

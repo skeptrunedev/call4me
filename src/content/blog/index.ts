@@ -1,3 +1,5 @@
+import monkeybrainsCustomerServiceNumber from './monkeybrains-customer-service-number.md';
+import sfplMainLibraryPhoneNumber from './sfpl-main-library-phone-number.md';
 import victoriasSecretGeorgetown from './victorias-secret-georgetown.md';
 import freshBladesBarbershopDivisadero from './fresh-blades-barbershop-divisadero.md';
 import springhillSuitesPhoenixGilbert from './springhill-suites-phoenix-gilbert.md';
@@ -227,6 +229,8 @@ import netflixCustomerServiceNumber from './netflix-customer-service-number.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'monkeybrains-customer-service-number', markdown: monkeybrainsCustomerServiceNumber },
+  { slug: 'sfpl-main-library-phone-number', markdown: sfplMainLibraryPhoneNumber },
   { slug: 'phone-anxiety', markdown: phoneAnxiety },
   { slug: 'how-to-lower-spectrum-bill', markdown: howToLowerSpectrumBill },
   { slug: 'how-to-lower-verizon-bill', markdown: howToLowerVerizonBill },

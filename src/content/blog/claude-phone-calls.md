@@ -4,7 +4,7 @@ seoTitle: "Can Claude make phone calls? Connector setup"
 subtitle: Claude on the web, in Claude Desktop and in the mobile apps can place phone calls once you add a calling MCP server as a custom connector. Here are the steps from Anthropic's docs, the plan limits, and a first prompt that checks the connection before anything dials.
 description: "Claude can't dial a phone number on its own. Add call4me as a custom connector at https://call4.me/mcp and Claude can place real phone calls from a chat."
 date: 2026-10-13
-updated: 2026-11-01
+updated: 2026-11-02
 tags: claude, mcp, custom connector, ai phone assistant
 authors: nick
 imageAlt: Claude adds call4me as a custom connector, places a phone call, and reports the outcome in the chat
@@ -24,7 +24,7 @@ This guide is for the Claude chat apps: claude.ai, Claude Desktop and the mobile
 ## What you need
 
 - A Claude account. Anthropic's Help Center says custom connectors using remote MCP are available on Claude, Cowork and Claude Desktop for **Free, Pro, Max, Team and Enterprise** plans. **Free users are limited to one custom connector.**
-- A [call4me account](/login?next=/account) and calling credits for the phone part. Calls cost $0.25 per minute from pickup, including phone menus and hold time. Prepaid credits start at $10. A free US number is assigned to your account on your first call. Current rates are on [call4.me](/).
+- A [call4me account](/login?next=/account) and calling credits for the phone part. Check the [current call and hold rates](/pricing) before loading credits. A free US number is assigned to your account on your first call.
 
 Your Claude account and your call4me connection are separate sign ins.
 

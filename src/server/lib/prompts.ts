@@ -1,4 +1,5 @@
 import { CHATGPT_PLUGIN_URL } from './pages';
+import { ARTICLE_CALLS } from '../../content/article-calls';
 
 /**
  * The text a person pastes into their coding agent. With a key it installs call4me;
@@ -223,9 +224,12 @@ Ask me what I need called for. If a post covers it, use its tips. Then call call
 
 /** One blog post: do what it describes, for me. */
 export function postPrompt(origin: string, key: string | null, slug: string, title: string): string {
-  return `Read "${title}" (${origin}/blog/${slug}, send Accept: text/markdown for the markdown) and do what it describes for me with call4me.
+  const call = ARTICLE_CALLS[slug];
+  return `Read "${title}" (${origin}/blog/${slug}, send Accept: text/markdown for the markdown) and help me with ${call ? `my own ${call.business} call` : 'my own task'} using call4me.
 
 ${connect(origin, key)}
 
-Ask me for my own details for the call (the business, what I want, which times or prices work for me). Call call4me_get_requirements for the category and ask me in one message for anything it needs that you don't have. Then place the call with call4me_place_call, follow it with call4me_get_call until it finishes (answer open questions right away with call4me_answer_question), and tell me the result in one or two lines.`;
+${call && !call.chatgpt ? 'This task is not supported by the ChatGPT directory plugin. Use Claude or another assistant connected to the general call4me MCP server. Do not try to bypass the plugin category restrictions.\n\n' : ''}${call?.ask ?? 'Ask what I want done. Check whether the article establishes a suitable phone route for my situation. If it says phone support is unavailable or restricted to people I do not qualify as, explain the documented alternative instead of placing a call. Never copy the recorded caller\'s personal details or assume their outcome applies to me.'}
+
+Before dialing, call call4me_get_requirements for the category and ask me in one message for anything it needs that you don't have. Check the current business number and hours. Place only the call I asked for with call4me_place_call, follow it with call4me_get_call until it finishes (answer open questions right away with call4me_answer_question), and tell me the result in one or two lines. If I need to join, explain first that my phone will ring and show the actual calling number.`;
 }

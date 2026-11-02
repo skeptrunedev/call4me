@@ -18,14 +18,19 @@ and a transcript. It can also ring you to join the call. Calls are paid from pre
 
 ## Use it
 
-The hosted MCP server is `https://call4.me/mcp` (streamable HTTP). Your agent signs you in through the
-browser with Google or X. The easiest setup is to paste the prompt from [call4.me/mcp](https://call4.me/mcp)
-into your agent. To add it by hand:
+In **ChatGPT**, [install the call4me plugin](https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8)
+and sign in to call4me. ChatGPT cannot install the plugin from a conversation; open the link yourself.
+The plugin supports tasks such as restaurant bookings, flight changes and business questions. It does
+not handle medical or dental appointments, health insurance, government ID numbers or account passwords.
+
+For **Claude, Codex and other MCP clients**, the hosted server is `https://call4.me/mcp` (streamable HTTP).
+Your agent signs you in through the browser with Google or X. Paste the prompt from
+[call4.me/mcp](https://call4.me/mcp) into your agent, or add it by hand:
 
 ```
 claude code:     claude mcp add --scope user --transport http call4me https://call4.me/mcp   then /mcp, call4me, authenticate
 codex:           codex mcp add call4me --url https://call4.me/mcp   then   codex mcp login call4me
-claude desktop / claude.ai / chatgpt:  settings, connectors, add custom connector: https://call4.me/mcp
+claude desktop / claude.ai:  settings, connectors, add custom connector: https://call4.me/mcp
 can't sign in?   create a key at https://call4.me/account and use https://call4.me/mcp/<key>, or send "Authorization: Bearer <key>" to /mcp
 ```
 

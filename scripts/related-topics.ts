@@ -8,6 +8,8 @@
  * Add subjects for every new article without selecting individual related links.
  */
 export const RELATED_TOPICS: Record<string, string[]> = {
+  'monkeybrains-customer-service-number': ['telecom'],
+  'sfpl-main-library-phone-number': ['libraries'],
   'phone-anxiety': ['agent-software', 'appointment-management', 'healthcare', 'subscription-cancellation'],
   'amazon-seller-distributor-calls': ['agent-software', 'business-procurement'],
   'att-customer-service-number': ['telecom'],
@@ -116,7 +118,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'les-schwab-oil-change': ['car-maintenance'],
   'mandarin-phone-call-scheduling': ['appointment-management'],
   'meta-muse-ai-agent-phone-calls': ['agent-software'],
-  'meta-muse-first-task': ['agent-software'],
+  'meta-muse-first-task': ['agent-software', 'libraries'],
   'meta-muse-supplier-quotes': ['agent-software', 'business-procurement'],
   'muse-code-mcp-phone-calls': ['agent-software'],
   'need-dress-shoes-today': ['retail-shopping'],

@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "4bce66be8d13ea6f7241bdc42996caff0f259f2f20941d5e6be0106545ec59fa"
+  "sourceHash": "50a9494f4fc4fa1afd998891e6825b3615a3d3183dcd2657c8d2f01e7e7f385c"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -1746,7 +1746,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "pin-on-grand-reservations",
-      "similarity": 0.690525
+      "similarity": 0.690524
     },
     {
       "slug": "book-dinner-reservation-by-phone",
@@ -2457,7 +2457,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "san-francisco-oral-surgeon-consultation",
-      "similarity": 0.623343
+      "similarity": 0.623342
     },
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
@@ -2583,7 +2583,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "xfinity-customer-service-number",
-      "similarity": 0.669881
+      "similarity": 0.66988
     },
     {
       "slug": "spectrum-retention-department",
@@ -3038,7 +3038,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.748738
+      "similarity": 0.748737
     },
     {
       "slug": "mastra-mcp-phone-calls",
@@ -3133,6 +3133,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "usaa-phone-number",
       "similarity": 0.600838
+    }
+  ],
+  "monkeybrains-customer-service-number": [
+    {
+      "slug": "windstream-customer-service",
+      "similarity": 0.614165
+    },
+    {
+      "slug": "xfinity-customer-service-number",
+      "similarity": 0.609758
     }
   ],
   "mount-sinai-doctors-phone-number": [
@@ -3630,7 +3640,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "equal-parts-sf-reservations",
-      "similarity": 0.690525
+      "similarity": 0.690524
     },
     {
       "slug": "customer-story-rick-dinner-reservation",
@@ -4034,7 +4044,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-find-a-new-primary-care-doctor",
-      "similarity": 0.623343
+      "similarity": 0.623342
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -4121,6 +4131,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.633683
     }
   ],
+  "sfpl-main-library-phone-number": [],
   "simonmed-imaging-phone-number": [
     {
       "slug": "colonoscopy-screening-san-juan",
@@ -4240,7 +4251,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "zan-atelier-chicago-alterations",
@@ -4759,7 +4770,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "wayfair-customer-service",
@@ -4934,6 +4945,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.618653
     },
     {
+      "slug": "monkeybrains-customer-service-number",
+      "similarity": 0.614165
+    },
+    {
       "slug": "verizon-customer-service",
       "similarity": 0.605582
     }
@@ -4942,7 +4957,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "xfinity-customer-service-number": [
     {
       "slug": "how-to-lower-xfinity-bill",
-      "similarity": 0.669881
+      "similarity": 0.66988
     },
     {
       "slug": "windstream-customer-service",
@@ -4955,6 +4970,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "verizon-customer-service",
       "similarity": 0.613902
+    },
+    {
+      "slug": "monkeybrains-customer-service-number",
+      "similarity": 0.609758
     },
     {
       "slug": "spectrum-retention-department",

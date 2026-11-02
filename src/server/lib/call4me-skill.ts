@@ -1,5 +1,6 @@
 import { CATEGORIES } from '../services/intake';
 import { DESTINATION_PRICE_CENTS, ABROAD_CALLING } from './rates';
+import { CHATGPT_PLUGIN_URL } from './pages';
 
 /**
  * call4me's own skill: how an agent sets call4me up and places calls with it. Served from the
@@ -32,7 +33,8 @@ call4me is an MCP server at ${site}/mcp (Streamable HTTP). Every tool acts for a
 
 - Claude Code: \`claude mcp add --scope user --transport http call4me ${site}/mcp\`, then \`/mcp\`, pick call4me, and authenticate.
 - Codex: \`codex mcp add call4me --url ${site}/mcp\`, then \`codex mcp login call4me\`.
-- Claude Desktop, claude.ai, or ChatGPT: add a custom connector with the URL ${site}/mcp and sign in when it asks.
+- ChatGPT: give the user the [call4me plugin install link](${CHATGPT_PLUGIN_URL}), then have them install it and sign in. You cannot install a plugin from the conversation. The ChatGPT plugin does not handle medical or dental appointments, health insurance, government ID numbers or account passwords; only offer tasks its tools support.
+- Claude Desktop or claude.ai: add a custom connector with the URL ${site}/mcp and sign in when it asks.
 - Muse: it has no form for adding MCP servers, so build a custom integration to ${site}/mcp (streamable HTTP) with the official MCP SDK. Ask the user for their call4me API key (at ${site}/account) through your secure credential flow, never in chat, store it in your Secure Credentials Store, and send it as \`Authorization: Bearer <key>\`. Test \`call4me_get_balance\` and save it as a reusable skill.
 - Grok Bot: add a custom MCP server called call4me at the user's personal server URL \`${site}/mcp/<key>\` (remote HTTPS, no headers, no auth), or \`${site}/mcp\` with sign-in; you add it from the chat, with no separate approval step.
 - grok.com: the chat can't add connectors, so the user does it at grok.com/connectors, New Connector, Custom, with ${site}/mcp, and signs in.

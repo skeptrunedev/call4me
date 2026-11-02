@@ -4,7 +4,7 @@ seoTitle: "Phone calling MCP: Claude Code and Codex compared"
 subtitle: Compare call4me, Vapi Agent Phone, Bland, ClawCall, Cocall, and Patter by account setup, calling workflow, and the evidence your agent gets back.
 description: "Compare phone calling MCP servers for Claude Code and Codex. Real call4me, Vapi and Bland calls, recordings, transcripts, setup and observed limits."
 date: 2026-10-03
-updated: 2026-10-13
+updated: 2026-11-02
 tags: mcp, claude code, codex, ai agents, ai phone assistant
 authors: nick
 imageAlt: Phone calling MCP services compared by setup and calling workflow
@@ -31,7 +31,7 @@ Each guide covers setup in that app and says what we actually tested, and when.
 | Grok, Grok Bot and the xAI API | [Grok MCP setup](/blog/grok-connectors-mcp-phone-calls), with a recorded Grok Bot call |
 | Meta Muse | [Muse MCP setup](/blog/meta-muse-ai-agent-phone-calls) and the [Muse Code terminal client](/blog/muse-code-mcp-phone-calls) |
 | Instinct | [Instinct Concierge or your own agent](/blog/instinct-ai-phone-calls) |
-| ChatGPT | [ChatGPT phone calls](/blog/chatgpt-phone-calls), as a custom MCP plugin |
+| ChatGPT | [ChatGPT phone calls](/blog/chatgpt-phone-calls), with the call4me directory plugin or a custom MCP server |
 | Claude.ai, Claude Desktop and mobile | [Claude phone calls](/blog/claude-phone-calls), as a custom connector |
 | Cursor | [Cursor phone calls](/blog/cursor-phone-calls), in mcp.json for the editor and CLI |
 | Gemini | [Gemini phone calls](/blog/gemini-phone-calls), as a custom app, and Google's own calling feature |
