@@ -789,7 +789,7 @@ export class VoiceSession extends DurableObject<Env> {
     setTimeout(() => {
       const personOrUnknown = !this.machineState || this.machineState.phase === 'unknown' || this.machineState.phase === 'human';
       if (this.live === live && personOrUnknown && !this.heardThem && !this.ended) {
-        const content = answering ? 'You just picked up their call. Answer it now, the way your instructions say.' : 'Nobody has spoken since the call connected. Say a short "Hi, hello?" and then wait.';
+        const content = answering ? 'You just picked up their call. Answer it now, the way your instructions say.' : 'Nobody has spoken since the call connected. Say a short hello in the language your instructions say to speak ("Hi, hello?" in English, "Bonjour ?" in French) and then wait.';
         this.sendLive({ type: 'session.instructions.append', delegation_id: null, content });
       }
     }, answering ? 0 : SILENT_PICKUP_MS);

@@ -48,3 +48,10 @@ test('the owner calling their own line is greeted as the owner, never as a busin
   assert.match(owner, /not a business calling back/);
   assert.doesNotMatch(inboundInstructions({ ...answered, owner: 'David Aviles' }), /# The caller is/);
 });
+
+test('the opener carries no example task the caller could borrow', () => {
+  // Leonardo's optician call in French opened with a table for four from the old example.
+  const prompt = callInstructions({ ...call, voice: 'marin', accent: 'French' });
+  assert.doesNotMatch(prompt, /table for four/i);
+  assert.match(prompt, /never a reservation, an order or a request it doesn't mention/);
+});
