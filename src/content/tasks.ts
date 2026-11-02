@@ -64,6 +64,7 @@ const joinWhenAnswered = 'ask your assistant to connect you "as soon as a person
 export const TASKS: Task[] = [
   {
     key: 'callBusinesses',
+    updated: '2026-11-01',
     title: 'An AI app that calls businesses for you',
     answer: (perMinute) => [
       `yes: call4me is an AI that calls businesses for you. ask ChatGPT, Claude or Codex to call a restaurant, a doctor's office, a repair shop or a customer service line, and call4me dials it, gets through the phone menu and the hold, talks to whoever answers, and brings back what they said with a transcript. if they want you on the line, it rings your phone. ${costs(perMinute)}`,
@@ -106,7 +107,7 @@ export const TASKS: Task[] = [
   {
     key: 'holdForMe',
     title: 'An AI that waits on hold for you',
-    updated: '2026-10-29',
+    updated: '2026-11-01',
     answer: (perMinute) => [
       `call4me is an AI that calls the company and waits on hold for you. it dials, gets through the phone menu, sits in the queue, and when a person picks up it rings your phone so you join right then, or talks to them itself and brings back the outcome. you ask for the call in ChatGPT, Claude or Codex, so you never dial or hold the phone yourself. ${costs(perMinute)}`,
       `the waits are real: on our own recorded calls, the longest hold before a person answered was ${summary.longest.company} at ${summary.longest.timeToHuman}, and across the ${summary.measured} companies we timed, ${summary.overFive} took more than 5 minutes.`,

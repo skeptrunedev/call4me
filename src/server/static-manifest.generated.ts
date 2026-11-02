@@ -30,40 +30,45 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
     "markdown": "/__pages/9c2cf5350f943d84.md",
     "tokens": 2880
   },
+  "/app-that-calls-businesses-for-you": {
+    "html": "/__pages/1d754aa507f67b2f.html",
+    "markdown": "/__pages/1d754aa507f67b2f.md",
+    "tokens": 2980
+  },
   "/hold-for-me": {
     "html": "/__pages/ba822c49c148d1be.html",
     "markdown": "/__pages/ba822c49c148d1be.md",
-    "tokens": 2118
+    "tokens": 2789
   },
   "/book-doctor-appointment": {
     "html": "/__pages/c75d5c79ab7b63e3.html",
     "markdown": "/__pages/c75d5c79ab7b63e3.md",
-    "tokens": 2097
+    "tokens": 2264
   },
   "/cancel-subscription": {
     "html": "/__pages/25b27c4f152aa217.html",
     "markdown": "/__pages/25b27c4f152aa217.md",
-    "tokens": 2234
+    "tokens": 2404
   },
   "/book-restaurant-reservation": {
     "html": "/__pages/3dba287a8c818da2.html",
     "markdown": "/__pages/3dba287a8c818da2.md",
-    "tokens": 1842
+    "tokens": 2009
   },
   "/call-customer-service": {
     "html": "/__pages/83c8be2160d0ee48.html",
     "markdown": "/__pages/83c8be2160d0ee48.md",
-    "tokens": 2111
+    "tokens": 2283
   },
   "/negotiate-bills": {
     "html": "/__pages/71a04d205e1d6891.html",
     "markdown": "/__pages/71a04d205e1d6891.md",
-    "tokens": 2193
+    "tokens": 2392
   },
   "/dispute-a-charge": {
     "html": "/__pages/92ecfc917ddafeee.html",
     "markdown": "/__pages/92ecfc917ddafeee.md",
-    "tokens": 1984
+    "tokens": 2156
   },
   "/hold-times": {
     "html": "/__pages/0adb6fe5d87ff479.html",
@@ -238,7 +243,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-to-negotiate-a-hospital-bill": {
     "html": "/__pages/b88beca37c93cea2.html",
     "markdown": "/__pages/b88beca37c93cea2.md",
-    "tokens": 12301
+    "tokens": 12416
   },
   "/blog/phone-anxiety": {
     "html": "/__pages/613a99d49cf748b0.html",
@@ -803,7 +808,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/ai-apps-that-make-calls-for-you": {
     "html": "/__pages/427c0a40de2bba10.html",
     "markdown": "/__pages/427c0a40de2bba10.md",
-    "tokens": 6878
+    "tokens": 6942
   },
   "/blog/hijinx-hotel-irvine": {
     "html": "/__pages/acb492544467c9de.html",
