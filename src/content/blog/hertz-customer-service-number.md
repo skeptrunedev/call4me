@@ -34,6 +34,8 @@ What the live representative told us about charges on a finished rental:
 
 We made all three calls on Thursday, October 8, 2026: the reservations line at about 3:24 pm Central, then the past rentals line at 4:05 pm and 4:15 pm Central, inside its listed hours. [call4me](/) placed them. This page is what we heard.
 
+For another car rental company, our [Enterprise customer service guide](/blog/enterprise-customer-service-number) includes a recorded call, its voice menu and the situations where Enterprise directs customers to their rental branch.
+
 ## The call that reached a person
 
 The past rentals line, 1-800-654-4173, at 4:15 pm Central. 5 minutes 49 seconds. We muted the representative's first name each of the three times it was said. Nothing else is muted or cut. Our caller didn't say my name or any number.

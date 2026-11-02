@@ -63,7 +63,7 @@ Our [voice architecture](/blog/cascaded-voice-stack-vs-gpt-live) separates the a
 
 These benefits form a reason to choose the complete workflow. They are not all exclusive features: Cocall also documents questions returned to Claude, and other products support transfers, scheduling or custom tools. For a specific switch, read [Vapi alternatives for Claude Code and Codex](/blog/vapi-alternatives) or [Bland AI alternatives for personal assistant calls](/blog/bland-ai-alternatives).
 
-One concrete difference today: [Vapi Agent Phone's published limits](https://phone.vapi.ai/discovery.json), checked October 7, allow one concurrent call per user. Its [call schema](https://phone.vapi.ai/openapi.json) does not expose a duration parameter. call4me exposes concurrent calling and an enforced `max_minutes` cap directly to your assistant. Those are useful reasons to choose it for comparing several options. Bland supports concurrency and duration controls too, so this distinction applies to Agent Phone's current interface.
+One concrete difference today: [Vapi Agent Phone's published limits](https://phone.vapi.ai/discovery.json), checked October 7, allow one concurrent call per user. Its [call schema](https://phone.vapi.ai/openapi.json) does not expose a duration parameter. call4me exposes concurrent calling and `max_minutes` to set the initial duration and credit reservation. Calls still on hold or in conversation can extend beyond that setting while credits remain; use `call4me_hang_up` if you need to enforce a firm deadline. The [current tool reference](/llms.txt) describes these controls. Bland supports concurrency and duration controls too, so those features are not exclusive to call4me.
 
 ## Which Claude Code MCP servers can make phone calls?
 

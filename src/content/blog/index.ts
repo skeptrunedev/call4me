@@ -1,3 +1,6 @@
+import bestBuyCustomerServiceNumber from './best-buy-customer-service-number.md';
+import enterpriseCustomerServiceNumber from './enterprise-customer-service-number.md';
+import stubhubCustomerServiceNumber from './stubhub-customer-service-number.md';
 import monkeybrainsCustomerServiceNumber from './monkeybrains-customer-service-number.md';
 import sfplMainLibraryPhoneNumber from './sfpl-main-library-phone-number.md';
 import victoriasSecretGeorgetown from './victorias-secret-georgetown.md';
@@ -229,6 +232,9 @@ import netflixCustomerServiceNumber from './netflix-customer-service-number.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'best-buy-customer-service-number', markdown: bestBuyCustomerServiceNumber },
+  { slug: 'enterprise-customer-service-number', markdown: enterpriseCustomerServiceNumber },
+  { slug: 'stubhub-customer-service-number', markdown: stubhubCustomerServiceNumber },
   { slug: 'monkeybrains-customer-service-number', markdown: monkeybrainsCustomerServiceNumber },
   { slug: 'sfpl-main-library-phone-number', markdown: sfplMainLibraryPhoneNumber },
   { slug: 'phone-anxiety', markdown: phoneAnxiety },

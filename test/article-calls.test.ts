@@ -25,8 +25,8 @@ const page = async (slug: string) => {
   return response.text();
 };
 
-test('travel articles offer the published plugin and a task brief without placing a call', async () => {
-  for (const [slug, business] of [['expedia-customer-service-number', 'Expedia'], ['priceline-customer-service', 'Priceline'], ['booking-com-customer-service-number', 'Booking.com']]) {
+test('supported articles offer the published plugin and a task brief without placing a call', async () => {
+  for (const [slug, business] of [['expedia-customer-service-number', 'Expedia'], ['priceline-customer-service', 'Priceline'], ['booking-com-customer-service-number', 'Booking.com'], ['best-buy-customer-service-number', 'Best Buy'], ['enterprise-customer-service-number', 'Enterprise']]) {
     const html = await page(slug!);
     const action = /<aside class="box"[^>]*>([\s\S]*?)<\/aside>/.exec(html)?.[1];
     assert.ok(action, slug);
@@ -51,10 +51,11 @@ test('a restricted account task does not send visitors to the ChatGPT directory 
 });
 
 test('support restrictions and reservation secrets are retained in the generated task briefs', async () => {
-  for (const slug of ['uber-customer-service-number', 'lyft-customer-service-number']) {
+  for (const slug of ['uber-customer-service-number', 'lyft-customer-service-number', 'stubhub-customer-service-number']) {
     assert.doesNotMatch(await page(slug), /<aside class="box"/);
     const prompt = postPrompt('https://call4.me', null, slug, 'Support');
     assert.match(prompt, /explain the documented alternative instead of placing a call/);
+    assert.match(prompt, /tested number only directs callers to another support channel/);
   }
   const booking = postPrompt('https://call4.me', null, 'booking-com-customer-service-number', 'Booking.com');
   assert.match(booking, /Never ask for a reservation PIN, password or account secret in chat/);

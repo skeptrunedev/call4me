@@ -118,107 +118,122 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2269
+    "tokens": 2233
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2206
+    "tokens": 2159
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2194
+    "tokens": 2253
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2304
+    "tokens": 2303
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2044
+    "tokens": 2041
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2185
+    "tokens": 2170
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2243
+    "tokens": 2153
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2263
+    "tokens": 2334
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2148
+    "tokens": 2230
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2222
+    "tokens": 2133
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 1806
+    "tokens": 1883
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 2140
+    "tokens": 2106
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 1906
+    "tokens": 1991
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 1779
+    "tokens": 1791
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1850
+    "tokens": 1833
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 1958
+    "tokens": 1965
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 1985
+    "tokens": 1901
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 2118
+    "tokens": 2064
   },
   "/blog?page=19": {
     "html": "/__pages/bcb642deee219a0c.html",
     "markdown": "/__pages/bcb642deee219a0c.md",
-    "tokens": 1295
+    "tokens": 1791
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 20919
+    "tokens": 21178
+  },
+  "/blog/best-buy-customer-service-number": {
+    "html": "/__pages/e0fe2662ad1805ba.html",
+    "markdown": "/__pages/e0fe2662ad1805ba.md",
+    "tokens": 3192
+  },
+  "/blog/enterprise-customer-service-number": {
+    "html": "/__pages/bb97ccc609646727.html",
+    "markdown": "/__pages/bb97ccc609646727.md",
+    "tokens": 3270
+  },
+  "/blog/stubhub-customer-service-number": {
+    "html": "/__pages/115dc7ed057d6429.html",
+    "markdown": "/__pages/115dc7ed057d6429.md",
+    "tokens": 2272
   },
   "/blog/monkeybrains-customer-service-number": {
     "html": "/__pages/57b6ae779ce46540.html",
     "markdown": "/__pages/57b6ae779ce46540.md",
-    "tokens": 2560
+    "tokens": 2589
   },
   "/blog/sfpl-main-library-phone-number": {
     "html": "/__pages/2a61c8872e0b67bf.html",
@@ -243,7 +258,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/ticketmaster-customer-service-number": {
     "html": "/__pages/18bbc469ba31f4a5.html",
     "markdown": "/__pages/18bbc469ba31f4a5.md",
-    "tokens": 6315
+    "tokens": 6298
   },
   "/blog/netflix-customer-service-number": {
     "html": "/__pages/dc6c63a0647d9e6c.html",
@@ -293,7 +308,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/best-buy-return-policy": {
     "html": "/__pages/bc0a2254204b3439.html",
     "markdown": "/__pages/bc0a2254204b3439.md",
-    "tokens": 6579
+    "tokens": 6760
   },
   "/blog/how-to-dispute-a-charge": {
     "html": "/__pages/b68e60a4c403ef68.html",
@@ -358,7 +373,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/dell-customer-service-number": {
     "html": "/__pages/bfb05298120f7769.html",
     "markdown": "/__pages/bfb05298120f7769.md",
-    "tokens": 7528
+    "tokens": 7500
   },
   "/blog/victorias-secret-georgetown": {
     "html": "/__pages/d529bbf9b8194852.html",
@@ -883,7 +898,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/priceline-customer-service": {
     "html": "/__pages/2a91c0a6d3a54c7c.html",
     "markdown": "/__pages/2a91c0a6d3a54c7c.md",
-    "tokens": 5642
+    "tokens": 5786
   },
   "/blog/venmo-customer-service-number": {
     "html": "/__pages/8ddc0d8e5d387de7.html",
@@ -923,12 +938,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/pottery-barn-customer-service": {
     "html": "/__pages/7d519b6ada502c05.html",
     "markdown": "/__pages/7d519b6ada502c05.md",
-    "tokens": 3768
+    "tokens": 3748
   },
   "/blog/hertz-customer-service-number": {
     "html": "/__pages/e3ebefa55d525ccc.html",
     "markdown": "/__pages/e3ebefa55d525ccc.md",
-    "tokens": 9326
+    "tokens": 9536
   },
   "/blog/hulu-customer-service-number": {
     "html": "/__pages/4f5cdd1adcfe8559.html",
@@ -1153,7 +1168,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/phone-calling-mcp-comparison": {
     "html": "/__pages/59a59e92f1223e3d.html",
     "markdown": "/__pages/59a59e92f1223e3d.md",
-    "tokens": 10372
+    "tokens": 10412
   },
   "/blog/cascaded-voice-stack-vs-gpt-live": {
     "html": "/__pages/aeae359d4c5c3e33.html",
@@ -1308,7 +1323,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/wayfair-customer-service": {
     "html": "/__pages/3ce73872b4d7c2b7.html",
     "markdown": "/__pages/3ce73872b4d7c2b7.md",
-    "tokens": 4723
+    "tokens": 4720
   },
   "/blog/costco-tire-appointment-cancel-refund": {
     "html": "/__pages/ca5f5983d7127c65.html",

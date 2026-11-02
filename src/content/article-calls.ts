@@ -7,6 +7,18 @@ export interface ArticleCall {
 }
 
 export const ARTICLE_CALLS: Record<string, ArticleCall> = {
+  'best-buy-customer-service-number': {
+    business: 'Best Buy',
+    chatgpt: true,
+    description: 'Have your assistant ask about your purchase and request a person when needed. You can join if Best Buy needs the account holder.',
+    ask: 'Ask what I need Best Buy to resolve before calling. The guide tested return questions; choose the route for my actual issue. Do not promise an exception or assume the recorded wait applies to me. Ask before changing an order, starting a return, accepting store credit, buying a service or scheduling a repair.',
+  },
+  'enterprise-customer-service-number': {
+    business: 'Enterprise',
+    chatgpt: true,
+    description: 'Have your assistant ask about your rental and bring back the next step. The right contact may be your rental branch or central customer service.',
+    ask: 'Ask what I need Enterprise to resolve, whether I have picked up or returned the vehicle, and which location handled it. Follow the current official instructions for choosing the rental branch or central support. Never reuse the recorded call\'s hypothetical location as mine. Ask before extending the rental, changing the return location, accepting a charge or making a new reservation. Arrange for me to join if Enterprise needs the renter.',
+  },
   'expedia-customer-service-number': {
     business: 'Expedia',
     chatgpt: true,

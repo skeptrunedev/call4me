@@ -16,6 +16,8 @@ imageAlt: "Best Buy return policy, past the return window and without a receipt,
 
 We called Best Buy customer service at **1-888-237-8289** (1-888-BEST BUY) twice on Saturday, October 24, 2026, at about 5:24 and 5:31 pm Central, with [call4me](/) placing the calls. They were general questions for this guide, with no order or account involved. **An AI assistant answers first.** Ask it for a live agent and it transfers you: **a person answered at 3:15** on the second call and at 4:19 on the first.
 
+For the phone number, route to a person and limits of these calls, see our [Best Buy customer service guide](/blog/best-buy-customer-service-number).
+
 ## What Best Buy's return policy says
 
 From Best Buy's [return and exchange policy](https://www.bestbuy.com/site/help-topics/return-exchange-policy/pcmcat260800050014.c), checked October 24, 2026 (the page shows "Effective date: February 23, 2026"):
