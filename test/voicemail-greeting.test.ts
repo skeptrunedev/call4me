@@ -79,3 +79,12 @@ test("a Japanese queue recording counts as hold, and its keypad offers don't end
   meter.them('それ以外の方は、しばらくお待ちください。', 30_000);
   assert.equal(meter.holding(), true);
 });
+
+test("Google Call Assist's question releases the caller's introduction", async () => {
+  const { screenerAsked } = await import('../src/server/voice/voicemail');
+  // Tom's call to Sam: the caller waited silently for 10 minutes after this.
+  assert.ok(screenerAsked("Hi, I'm Call Assist by Google, recording this call for the person you're trying to reach . Can you say what you're calling about"));
+  assert.ok(screenerAsked('Please say your name and the purpose of your call.'));
+  assert.ok(screenerAsked("Who's calling?"));
+  assert.ok(!screenerAsked('Thank you for calling La Pizzetta. To place an order, dial zero.'));
+});
