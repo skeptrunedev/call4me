@@ -3,7 +3,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/": {
     "html": "/__pages/8a5edab282632443.html",
     "markdown": "/__pages/8a5edab282632443.md",
-    "tokens": 3157
+    "tokens": 3232
   },
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
@@ -28,42 +28,47 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/ai-call-assistant": {
     "html": "/__pages/9c2cf5350f943d84.html",
     "markdown": "/__pages/9c2cf5350f943d84.md",
-    "tokens": 2878
+    "tokens": 2880
+  },
+  "/app-that-calls-businesses-for-you": {
+    "html": "/__pages/1d754aa507f67b2f.html",
+    "markdown": "/__pages/1d754aa507f67b2f.md",
+    "tokens": 2978
   },
   "/hold-for-me": {
     "html": "/__pages/ba822c49c148d1be.html",
     "markdown": "/__pages/ba822c49c148d1be.md",
-    "tokens": 2118
+    "tokens": 2787
   },
   "/book-doctor-appointment": {
     "html": "/__pages/c75d5c79ab7b63e3.html",
     "markdown": "/__pages/c75d5c79ab7b63e3.md",
-    "tokens": 2097
+    "tokens": 2261
   },
   "/cancel-subscription": {
     "html": "/__pages/25b27c4f152aa217.html",
     "markdown": "/__pages/25b27c4f152aa217.md",
-    "tokens": 2234
+    "tokens": 2402
   },
   "/book-restaurant-reservation": {
     "html": "/__pages/3dba287a8c818da2.html",
     "markdown": "/__pages/3dba287a8c818da2.md",
-    "tokens": 1842
+    "tokens": 2006
   },
   "/call-customer-service": {
     "html": "/__pages/83c8be2160d0ee48.html",
     "markdown": "/__pages/83c8be2160d0ee48.md",
-    "tokens": 2111
+    "tokens": 2281
   },
   "/negotiate-bills": {
     "html": "/__pages/71a04d205e1d6891.html",
     "markdown": "/__pages/71a04d205e1d6891.md",
-    "tokens": 2193
+    "tokens": 2365
   },
   "/dispute-a-charge": {
     "html": "/__pages/92ecfc917ddafeee.html",
     "markdown": "/__pages/92ecfc917ddafeee.md",
-    "tokens": 1984
+    "tokens": 2153
   },
   "/hold-times": {
     "html": "/__pages/0adb6fe5d87ff479.html",
@@ -78,12 +83,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/mcp": {
     "html": "/__pages/88fe637beab867e2.html",
     "markdown": "/__pages/88fe637beab867e2.md",
-    "tokens": 1726
+    "tokens": 1787
   },
   "/rules": {
     "html": "/__pages/933053fc294245bb.html",
     "markdown": "/__pages/933053fc294245bb.md",
-    "tokens": 1243
+    "tokens": 1282
   },
   "/privacy": {
     "html": "/__pages/0ece7f7c306b4cf6.html",
@@ -803,7 +808,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/ai-apps-that-make-calls-for-you": {
     "html": "/__pages/427c0a40de2bba10.html",
     "markdown": "/__pages/427c0a40de2bba10.md",
-    "tokens": 6878
+    "tokens": 6942
   },
   "/blog/hijinx-hotel-irvine": {
     "html": "/__pages/acb492544467c9de.html",
@@ -928,7 +933,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-long-to-reach-a-human": {
     "html": "/__pages/1624f2222bb89bf3.html",
     "markdown": "/__pages/1624f2222bb89bf3.md",
-    "tokens": 13426
+    "tokens": 13675
   },
   "/blog/vercel-ai-sdk-phone-calls": {
     "html": "/__pages/ff098db0a2035f3b.html",

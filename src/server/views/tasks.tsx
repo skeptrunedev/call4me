@@ -4,7 +4,7 @@ import { MIN_TOPUP_CENTS } from '../services/topups';
 import { PAGES, SITE } from '../lib/pages';
 import { ORG_ID } from '../lib/entity';
 import { HOLD_PATH } from '../../content/hold-times';
-import type { Task } from '../../content/tasks';
+import { TASKS, type Task } from '../../content/tasks';
 import { CopyBlock, Layout } from './layout';
 import { assistantApp } from './ai-call-assistant';
 
@@ -30,7 +30,29 @@ export const TaskPage: FC<{ task: Task; signedIn: boolean; pricePerMinuteCents: 
       {task.answer(`${dollars(pricePerMinuteCents)}/min`).map((p) => <p>{p}</p>)}
 
       <h2>How the call works</h2>
+      {task.steps && (
+        <ol class="steps">
+          {task.steps.map((s) => <li>{s}</li>)}
+        </ol>
+      )}
       {task.how.map((p) => <p>{p}</p>)}
+
+      {task.others && (
+        <>
+          <h2>{task.others.heading}</h2>
+          <ul>
+            {task.others.items.map((o) => (
+              <li>
+                <a href={o.url}>{o.name}</a>: {o.fact}
+              </li>
+            ))}
+          </ul>
+          <p>
+            {task.others.after} more apps that call for you, compared from their own pages, are in{' '}
+            <a href="/blog/ai-apps-that-make-calls-for-you">AI apps that make phone calls for you</a>.
+          </p>
+        </>
+      )}
 
       {task.examples.length > 0 && (
         <>
@@ -76,6 +98,12 @@ export const TaskPage: FC<{ task: Task; signedIn: boolean; pricePerMinuteCents: 
           <li>
             <a href={`/blog/${p.slug}`}>{p.label}</a>: {p.fact}
           </li>
+        ))}
+      </ul>
+      <h2>Other calls it makes for you</h2>
+      <ul>
+        {TASKS.filter((t) => t.key !== task.key).map((t) => (
+          <li><a href={PAGES[t.key].path}>{t.title}</a></li>
         ))}
       </ul>
       <p>

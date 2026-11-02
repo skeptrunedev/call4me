@@ -7,7 +7,7 @@ import { HOLD_TIMES, holdSummary, type HoldTime } from './hold-times';
  * Every fact here is stated by the linked post, the example call, or the hold-time data, and
  * the price comes from the live per-minute rate. Keep each sentence true to its source.
  */
-export type TaskKey = 'holdForMe' | 'doctorAppointment' | 'cancelSubscription' | 'restaurantReservation' | 'customerService' | 'negotiateBills' | 'disputeCharge';
+export type TaskKey = 'callBusinesses' | 'holdForMe' | 'doctorAppointment' | 'cancelSubscription' | 'restaurantReservation' | 'customerService' | 'negotiateBills' | 'disputeCharge';
 
 export interface TaskPost {
   slug: string;
@@ -17,13 +17,24 @@ export interface TaskPost {
   fact: string;
 }
 
+/** Another way to get the errand done, described only from that product's own page. */
+export interface TaskOther {
+  name: string;
+  url: string;
+  fact: string;
+}
+
 export interface Task {
   key: TaskKey;
   /** The page's h1 and title: the question, answered. */
   title: string;
   /** The opening paragraphs: what call4me does for this errand, how, and what it costs. */
   answer: (perMinute: string) => string[];
+  /** The call in short numbered steps, shown before the details in `how`. */
+  steps?: string[];
   how: string[];
+  /** Other ways to get it done, each from its own help or product page, and where call4me differs. */
+  others?: { heading: string; items: TaskOther[]; after: string };
   examples: CallExample[];
   holdHeading?: string;
   holds: HoldTime[];
@@ -50,17 +61,74 @@ const joinWhenAnswered = 'ask your assistant to connect you "as soon as a person
 
 export const TASKS: Task[] = [
   {
+    key: 'callBusinesses',
+    title: 'An AI app that calls businesses for you',
+    answer: (perMinute) => [
+      `yes: call4me is an AI that calls businesses for you. ask ChatGPT, Claude or Codex to call a restaurant, a doctor's office, a repair shop or a customer service line, and call4me dials it, gets through the phone menu and the hold, talks to whoever answers, and brings back what they said with a transcript. if they want you on the line, it rings your phone. ${costs(perMinute)}`,
+      'there is no separate call4me phone app. in ChatGPT it is a plugin you install and sign in to, and in Claude, Codex and other assistants it connects over MCP. so the assistant you already ask for help looks up the business, places the call, and answers the caller\'s questions while the call is still going.',
+      `the calls are real and published: below are recorded calls that booked a dinner table, moved a dentist appointment, got a junk removal quote and booked the pickup, and took a Spectrum internet bill from $85 to $55 a month for a year. we have also called the customer service lines of ${summary.companies} companies and published the recordings.`,
+    ],
+    steps: [
+      'tell your assistant what you need in plain words, like "move my thursday 3:30 dentist appointment to friday after 3."',
+      'call4me checks it has everything that kind of call needs, and your assistant asks you for anything missing in one message.',
+      'it calls the business from your call4me number, gets through the phone menu and the hold, and talks to whoever answers.',
+      'if the business asks something only you know, the question comes back to your assistant mid-call. if they want the account holder, your phone rings and you join.',
+      'you get the outcome and the full transcript, and the recording is in your account.',
+    ],
+    how: [
+      'if you hate calling businesses, this is the part you hand off: the menu, the hold and the conversation. you can still listen in without anyone hearing you, and press 1 anytime to take over.',
+      'the caller calls for you and never claims to be you, and it never reads out card numbers, bank details or passwords. it makes the calls a person would make for their own errands: bookings, appointments, quotes and questions for a business, not sales or telemarketing.',
+      'calls go out from a free US number, assigned on your first call, to businesses in the US, Canada, Europe, the UAE and Japan.',
+    ],
+    others: {
+      heading: 'Other apps that call businesses for you',
+      items: [
+        { name: 'Gemini Call for Me', url: 'https://support.google.com/gemini/answer/18336420?hl=en', fact: 'Google\'s Gemini app can get business hours, product availability and quotes, book or manage appointments and reservations, and navigate phone menus and wait on hold. it needs a Pixel 11 with a US SIM card, a Google AI subscription, the Phone by Google public beta and English as the device language. it calls US numbers only, from your own phone number, and you can follow a live transcript or live audio and take over. Google is rolling it out gradually.' },
+        { name: 'Google Search calling', url: 'https://support.google.com/websearch/answer/17104441', fact: 'AI Mode calls businesses for information they don\'t list online, like the earliest appointment or what is in stock, and only for what you asked. it is available in English to signed-in users over 18, and call results can take up to 30 minutes, in your AI Mode history or by email.' },
+        { name: 'Callio', url: 'https://callio-app.com/', fact: 'an iPhone and Android app that calls US businesses you pick, often shared from Google Maps, for reservations, availability, hours and prices. you approve what it will ask, and the answer comes back with a transcript afterward.' },
+      ],
+      after: 'if you have a Pixel 11 and a Google AI subscription and the call is to a US business, try Gemini first. call4me fits when you already use ChatGPT, Claude or Codex, want to call from any phone or computer, want to join or listen live, or need to call outside the US.',
+    },
+    examples: examples('dinner-reservation', 'dentist-reschedule', 'junk-removal-booking', 'wheel-alignment-cost', 'spectrum-retention', 'prescription-transfer-out'),
+    holds: [],
+    posts: [
+      { slug: 'ai-apps-that-make-calls-for-you', label: 'AI apps that make phone calls for you, compared', fact: 'Google Search, Gemini, Meta Muse, Instinct, Pine, Mitra, Voyp, Callio, Phony, Genspark and call4me, compared from each product\'s own pages by what they call for, who can use them, price and whether you can join the call.' },
+      { slug: 'customer-story-rick-dinner-reservation', label: 'How Rick booked dinner with one prompt', fact: 'Rick Manelius\'s assistant used call4me to call Farmer\'s Grain, and staff confirmed a table for two on Saturday, October 3 at 5 pm. the call record shows 56 billed seconds and a charge of 25 cents. Rick on X: "Booked a dinner reservation in one prompt. Only cost me 25 cents."' },
+      { slug: 'reschedule-dentist-appointment', label: 'Rescheduling a dentist appointment', fact: 'a call4me user\'s assistant asked to move a Thursday 3:30 appointment to "Friday after three or anytime Monday" and got Monday, October 5 at noon with the same dentist, in a call under two minutes.' },
+      { slug: 'dog-teeth-cleaning-cost', label: 'Dog teeth cleaning quotes from three vets', fact: 'an assistant asked three Houston area clinics the same questions, and the quotes ran from $250 to $755 before extras, with bloodwork and X rays included at one clinic and not at the others.' },
+      { slug: 'customer-story-flight-credit', label: 'A $100 JSX voucher by phone', fact: 'Grok Bot and call4me called JSX Reservations about a delayed flight and got Jem a $100 courtesy travel voucher, valid for one year. Jem on X: "literally zero chance i was going to do that myself"' },
+      { slug: 'phone-anxiety', label: 'Phone anxiety: what actually helps', fact: 'in a 2025 Research Co. poll of 1,000 US adults, 50% said they feel anxious calling someone they don\'t know. the guide covers which calls are worth practicing and which to hand off.' },
+    ],
+    ask: 'Ask me which business to call, what I need from them, and what you may agree to for me.',
+  },
+  {
     key: 'holdForMe',
     title: 'An AI that waits on hold for you',
     answer: (perMinute) => [
-      `call4me is an AI that waits on hold for you. ask your AI assistant (ChatGPT, Claude or Codex) to call a company, and call4me dials it, gets through the phone menu, sits in the queue, and when a person picks up it either handles your request or rings your phone so you join right then. ${costs(perMinute)}`,
+      `call4me is an AI that calls the company and waits on hold for you. it dials, gets through the phone menu, sits in the queue, and when a person picks up it rings your phone so you join right then, or talks to them itself and brings back the outcome. you ask for the call in ChatGPT, Claude or Codex, so you never dial or hold the phone yourself. ${costs(perMinute)}`,
       `the waits are real: on our own recorded calls, the longest hold before a person answered was ${summary.longest.company} at ${summary.longest.timeToHuman}, and across the ${summary.measured} companies we timed, ${summary.overFive} took more than 5 minutes.`,
     ],
+    steps: [
+      'tell your assistant the company, what you need, and whether to ring you when a person picks up.',
+      'call4me dials from your call4me number and gets through the phone menu.',
+      'it waits in the queue. hold time is billed at half the call rate.',
+      'when a person picks up, your phone rings and you are on the call as soon as you answer. or, if you gave it everything the call needs, it talks to the rep itself.',
+      'you get the outcome and the transcript, and the recording is in your account.',
+    ],
     how: [
-      `tell your assistant who to call and what you need. to skip the hold music, ${joinWhenAnswered} hold time is still billed, at half the call rate.`,
-      'if you would rather not join at all, give it everything the call needs and it talks to the person itself, then brings back the outcome and the transcript. a call still on hold when it reaches its time limit keeps waiting instead of hanging up, as long as your credits cover it.',
+      `to skip the hold music, ${joinWhenAnswered}`,
+      'a call still on hold when it reaches its time limit keeps waiting instead of hanging up, as long as your credits cover it. if you would rather not join at all, give it everything the call needs up front and it talks to the person itself.',
       'the route through the phone menu matters too. next to each hold time below is the route that got our call to a person, and your assistant can put that route in the call\'s brief.',
     ],
+    others: {
+      heading: 'Hold for Me, Hold Assist and Gemini',
+      items: [
+        { name: 'Pixel Hold for Me', url: 'https://support.google.com/pixelphone/answer/10071878?hl=en', fact: 'on a Pixel 3 or newer in Australia, Canada, Japan, the UK or the US, you place the call and get through the menu yourself, then tap Hold for me when you are put on hold. the phone says "Someone\'s waiting to talk to you" when a representative is ready.' },
+        { name: 'iPhone Hold Assist', url: 'https://support.apple.com/en-us/127521', fact: 'on an iPhone 12, iPhone SE (3rd generation) or later, you place the call, then tap More and Hold Assist once you are on hold. the phone alerts you when a live agent is available. Apple says it is not available in all countries or regions.' },
+        { name: 'Gemini Call for Me', url: 'https://support.google.com/gemini/answer/18336420?hl=en', fact: 'Gemini places the call itself, navigates phone menus and waits on hold. it needs a Pixel 11 with a US SIM card, a Google AI subscription and the Phone by Google public beta, it calls US numbers only from your own phone number, and Google is rolling it out gradually.' },
+      ],
+      after: 'Hold for Me and Hold Assist start after you have dialed and worked through the menu, and they alert you on the phone that placed the call. call4me places the call and gets through the menu too, from its own number, and you start it from ChatGPT, Claude or Codex on whatever device you use them on. it can also talk to the rep for you instead of handing the call over.',
+    },
     examples: examples('spectrum-retention', 'sabai-eugene-reservations', 'wheel-alignment-cost'),
     holdHeading: 'The longest holds we sat through',
     holds: HOLD_TIMES.filter((r) => r.status === 'measured').slice(0, 6),
