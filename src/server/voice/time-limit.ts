@@ -8,8 +8,17 @@
 /** Both sides spoke at most this long before the hard stop. */
 const TALK_RECENT_MS = 30_000;
 
+/**
+ * How long a person may go quiet after we answered them, looking something up, before the call
+ * counts as over. Raghav Pillai's T-Mobile rep was checking his number 55s after he gave it when the
+ * hard stop hung up on her, after an 8-minute hold.
+ */
+const LOOKUP_QUIET_MS = 120_000;
+
 export function midConversation(o: { theirsAt: number; oursAt: number; personOn: boolean; now: number }): boolean {
-  const recent = (at: number) => at > 0 && o.now - at < TALK_RECENT_MS;
+  const within = (at: number, ms: number) => at > 0 && o.now - at < ms;
   // Patched in, the user does the talking and the caller stays quiet.
-  return recent(o.theirsAt) && (o.personOn || recent(o.oursAt));
+  if (within(o.theirsAt, TALK_RECENT_MS) && (o.personOn || within(o.oursAt, TALK_RECENT_MS))) return true;
+  // We spoke last, answering them: they're working on it, and the next word is theirs.
+  return !o.personOn && within(o.theirsAt, LOOKUP_QUIET_MS) && o.oursAt > o.theirsAt;
 }
