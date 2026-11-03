@@ -315,7 +315,7 @@
                     "maxLength": 40
                   },
                   "from": {
-                    "description": "which of the account's numbers to call from (default: a call4me number in the callee's country). May be one of the user's own verified numbers (call4me_verify_number), for businesses in its country: they see it and call back the user directly",
+                    "description": "which of the account's numbers to call from (default: a call4me number in the callee's country). May be one of the user's own verified numbers (call4me_verify_number): the business sees it and calls back the user directly. A carrier may still refuse an own number as caller ID on some international calls",
                     "type": "string",
                     "maxLength": 40
                   }
@@ -1690,7 +1690,7 @@
                     "maxLength": 40
                   },
                   "from": {
-                    "description": "which of the account's numbers to call from (default: a call4me number in the callee's country). May be one of the user's own verified numbers (call4me_verify_number), for businesses in its country: they see it and call back the user directly",
+                    "description": "which of the account's numbers to call from (default: a call4me number in the callee's country). May be one of the user's own verified numbers (call4me_verify_number): the business sees it and calls back the user directly. A carrier may still refuse an own number as caller ID on some international calls",
                     "type": "string",
                     "maxLength": 40
                   }
@@ -2982,7 +2982,7 @@
                     "maxLength": 40
                   },
                   "from": {
-                    "description": "which of the account's numbers to call from (default: a call4me number in the callee's country). May be one of the user's own verified numbers (call4me_verify_number), for businesses in its country: they see it and call back the user directly",
+                    "description": "which of the account's numbers to call from (default: a call4me number in the callee's country). May be one of the user's own verified numbers (call4me_verify_number): the business sees it and calls back the user directly. A carrier may still refuse an own number as caller ID on some international calls",
                     "type": "string",
                     "maxLength": 40
                   },
@@ -4257,7 +4257,7 @@
     "/api/numbers/own/{number}/verify": {
       "post": {
         "operationId": "confirmNumberVerification",
-        "description": "Submit the code the user's own number received. Once accepted, calls can go out from it (from in call4me_place_call), to businesses in its own country.",
+        "description": "Submit the code the user's own number received. Once accepted, calls can go out from it (from in call4me_place_call).",
         "security": [
           {
             "bearerAuth": []

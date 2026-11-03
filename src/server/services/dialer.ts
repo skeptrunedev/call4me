@@ -1,7 +1,7 @@
 import { newId, now } from '../lib/ids';
 import type { Idempotency } from '../lib/idempotency';
 import { hmacHex } from '../lib/keys';
-import { checkDialable } from '../lib/phone';
+import { checkDialable, formatPhone } from '../lib/phone';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { telnyx, TelnyxError } from '../lib/telnyx';
 import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions, inboundInstructions, type OpenTask } from '../voice/prompt';
@@ -138,11 +138,13 @@ export async function placeCall(
   const brief = JSON.parse(call.brief) as Brief;
   if (!account.display_name) await accounts(env.DB).setDisplayName(account.id, brief.on_behalf_of);
 
+  let ownFrom: string | null = null;
   try {
     await assertVoiceUnlocked(env.DB);
     const n = numbers(env);
     const caller = await n.callerId(account, to, input.from);
     const from = caller.number;
+    if (caller.own) ownFrom = from;
     // The user's phone always rings from a call4me number, never from their own.
     const ring = caller.own ? (await n.callerId(account, to)).number : from;
     await env.DB.prepare(`UPDATE calls SET from_number = ?, ring_number = ? WHERE id = ?`).bind(from, caller.own ? ring : null, call.id).run();
@@ -209,6 +211,12 @@ export async function placeCall(
     // Refusals for the destination itself never clear on a retry; agents kept retrying Swiss mobiles.
     if (err instanceof TelnyxError && /\b(?:D11)\b|destination number is invalid/i.test(err.detail)) {
       throw new CallError(`could not place the call (${call.id}): the carrier says ${call.to_number} isn't a valid number. nothing was charged; check the number before trying again.`, 422, call.id);
+    }
+    // An own number may be refused as caller ID where a call4me number isn't: international routes
+    // reject a caller ID they take for spoofed, and some won't route a foreign one (Tassos's Greek
+    // number got PE5 calling a Greek mobile that his call4me number reached).
+    if (ownFrom && err instanceof TelnyxError && (err.status === 503 || /\b(?:PE5|D35|D51)\b|no routes found|origination number/i.test(err.detail))) {
+      throw new CallError(`could not place the call (${call.id}): the carrier refused your own number ${formatPhone(ownFrom)} as caller ID for ${call.to_number}. nothing was charged; place it again without from to call from a call4me number.`, 422, call.id);
     }
     if (err instanceof TelnyxError && /\b(?:D13|D24|PE5)\b|no routes found|destination rate limit|whitelisted countries/i.test(err.detail)) {
       throw new CallError(`could not place the call (${call.id}): call4me can't reach ${call.to_number} yet; calls to that country or network aren't supported. nothing was charged, and trying again won't change it.`, 422, call.id);

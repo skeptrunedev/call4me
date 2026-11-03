@@ -3,7 +3,7 @@ import { replayOf, type Idempotency } from '../lib/idempotency';
 import { checkDialable, type PhoneCheck } from '../lib/phone';
 import { accounts, type Account } from './accounts';
 import { catalog, missingMessage, PROFILE_FIELDS, resolveIntake, savedContext, type Surface } from './intake';
-import { mayCall, ownNumberRefusal, ringablePhone } from './numbers';
+import { mayCall, ringablePhone } from './numbers';
 import { profiles } from './profiles';
 
 type Dialable = Extract<PhoneCheck, { ok: true }>;
@@ -254,10 +254,8 @@ export function calls(db: D1Database) {
         const from = checkDialable(input.from);
         const ours = from.ok && (await db.prepare(`SELECT 1 FROM numbers WHERE account_id = ? AND phone_number = ? AND status = 'active'`).bind(account.id, from.e164).first());
         // Or the user's own number, verified on this account.
-        const own = from.ok && !ours ? await db.prepare(`SELECT phone_number, country FROM verified_numbers WHERE account_id = ? AND phone_number = ? AND status = 'verified'`).bind(account.id, from.e164).first<{ phone_number: string; country: string }>() : null;
+        const own = from.ok && !ours ? await db.prepare(`SELECT 1 FROM verified_numbers WHERE account_id = ? AND phone_number = ? AND status = 'verified'`).bind(account.id, from.e164).first() : null;
         if (!ours && !own) throw new CallError(`from: ${input.from} is not one of this account's numbers (see call4me_list_numbers)`);
-        const refusal = own && ownNumberRefusal(own, to);
-        if (refusal) throw new CallError(refusal, 422);
       }
       const callerName = input.caller_name?.trim() || null;
       const nameProblem = callerName && PROFILE_FIELDS.assistant_name.check?.(callerName);

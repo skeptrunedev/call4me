@@ -233,16 +233,6 @@ export function ownNumberView(r: VerifiedNumberRow): OwnNumberView {
 }
 
 /**
- * Why the user's own number can't be the caller ID on a call to `to`, or null when it can. Telnyx
- * refuses a caller ID it doesn't own on international calls (support.telnyx.com/en/articles/3546251),
- * so an own number only calls its own country, or any +1 number when it is a +1 number.
- */
-export function ownNumberRefusal(own: Pick<VerifiedNumberRow, 'phone_number' | 'country'>, to: Extract<PhoneCheck, { ok: true }>): string | null {
-  if (isHome(own.phone_number) ? to.home : own.country === to.country) return null;
-  return `from: your own number ${formatPhone(own.phone_number)} can only call ${isHome(own.phone_number) ? 'US and Canadian' : `${COUNTRIES[own.country]?.name ?? own.country}`} numbers; the carrier refuses it as caller ID on international calls`;
-}
-
-/**
  * Europe, where any account may call businesses from any of its numbers: from a European number
  * when it holds one, else from its US number. EU and EEA countries, the UK and Switzerland; calls
  * there cost the carrier a few cents a minute at most.
@@ -709,11 +699,7 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
         const match = p.ok && owned.find((n) => n.phone_number === p.e164);
         if (match) return { number: match.phone_number, own: false };
         const verified = p.ok ? await verifiedFor(p.e164) : null;
-        if (verified?.account_id === account.id) {
-          const refusal = ownNumberRefusal(verified, to);
-          if (refusal) throw new NumberError(refusal, 422);
-          return { number: verified.phone_number, own: true };
-        }
+        if (verified?.account_id === account.id) return { number: verified.phone_number, own: true };
         const choices = [...owned.map((n) => n.phone_number), ...(await own(account.id)).filter((n) => n.status === 'verified').map((n) => n.phone_number)];
         throw new NumberError(`from: ${requested} is not one of this account's numbers (${choices.map(formatPhone).join(', ') || 'none yet'})`);
       }

@@ -113,7 +113,7 @@ test('call4me numbers and numbers in countries call4me does not call from cannot
   await refusal(numbers(env).startVerification(alice, { number: '911', method: 'sms' }), 400, /number:/);
 });
 
-test('an own number is the caller ID only when requested, and only within its country', async () => {
+test('an own number is the caller ID only when requested, to any country', async () => {
   await env.DB.prepare(`INSERT INTO numbers (id, account_id, phone_number, country, number_type, included, monthly_cents, status, created_at) VALUES ('n1', 'acct_alice', '+12025550111', 'US', 'local', 1, 0, 'active', 0)`).run();
   await verify(alice);
   const n = numbers(env);
@@ -122,7 +122,7 @@ test('an own number is the caller ID only when requested, and only within its co
   assert.ok(business.ok && london.ok);
   assert.deepEqual(await n.callerId(alice, business), { number: '+12025550111', own: false });
   assert.deepEqual(await n.callerId(alice, business, '(202) 555-0123'), { number: mine, own: true });
-  await refusal(n.callerId(alice, london, mine), 422, /can only call US and Canadian numbers/);
+  assert.deepEqual(await n.callerId(alice, london, mine), { number: mine, own: true });
   await refusal(n.callerId(bob, business, mine), 400, /not one of this account's numbers/);
 });
 

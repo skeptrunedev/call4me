@@ -106,7 +106,7 @@ export const releaseNumberDescription =
 export const verifyNumberDescription =
   `Let calls show the user's own phone number instead of a call4me number. Without code: the carrier texts the number a code (or with method "call", calls it and reads the code out). Ask the user for the code they got, then call again with the same number and code. Free for the user; at most ${VERIFICATIONS_PER_DAY} codes a day, ${CODE_ATTEMPTS} tries per code. Once verified, call4me_place_call uses the number only when its from names it, and only to call businesses in the number's own country (any US or Canadian number for a +1 number). Businesses then see the user's number and call back their phone directly, so call4me cannot finish a task on a callback. Only verify a number the user asked to call from.`;
 export const sendVerificationDescription = `Send a verification code to the user's own phone number: a text, or a call that reads the code out. Submit the code with POST /api/numbers/own/{number}/verify. At most ${VERIFICATIONS_PER_DAY} codes a day.`;
-export const confirmVerificationDescription = 'Submit the code the user\'s own number received. Once accepted, calls can go out from it (from in call4me_place_call), to businesses in its own country.';
+export const confirmVerificationDescription = 'Submit the code the user\'s own number received. Once accepted, calls can go out from it (from in call4me_place_call).';
 export const removeOwnNumberDescription = 'Stop calling from one of the user\'s own numbers, or drop one still waiting on its code. Verifying it again needs a new code. Only do this when the user asks.';
 
 export const numbersPath = '/api/numbers';
