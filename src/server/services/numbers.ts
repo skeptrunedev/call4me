@@ -256,8 +256,8 @@ export const EUROPE = new Set([
  * the UAE, where no carrier sells numbers to a company outside the country, and Japan, where the
  * carrier sells none and refuses a Japanese caller ID it didn't issue (so the user's own number
  * can't be verified there either), so a US caller ID is the only way in. Thailand too, so a user
- * needn't buy a number there for one call (Claudia, 2026-11-03). Calls to all three cost more
- * (lib/rates.ts).
+ * needn't buy a number there for one call (Claudia, 2026-11-03). Calls to the UAE and Japan cost
+ * more (lib/rates.ts).
  */
 /** The reason a country isn't sold yet while its regulatory paperwork is pending. */
 const awaitingApproval = (name: string) => `${name} numbers are waiting on regulatory approval`;

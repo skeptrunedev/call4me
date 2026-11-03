@@ -106,11 +106,12 @@ export const readClientState = (s: string | undefined | null): { callId: string;
 
 /**
  * The highest carrier rate per minute (USD) our outbound profile accepts. Destinations above
- * the standard price (the UAE, Ukraine mobiles at $0.393/min) are billed at their own higher
- * price (lib/rates.ts); this leaves room for them. Everything else on the whitelist costs
- * $0.10/min or less (checked 2026-10-01), so the cap opens nothing billed at a loss.
+ * the standard price (the UAE, Ukraine mobiles at $0.393/min, Greece from a US caller ID) are
+ * billed at their own higher price (lib/rates.ts); this leaves room for them. Everything else on
+ * the whitelist costs $0.10/min or less (checked 2026-10-01), and premium-rate numbers are refused
+ * before dialing (lib/phone.ts), so the cap opens nothing billed at a loss.
  */
-const MAX_DESTINATION_RATE = 0.45;
+const MAX_DESTINATION_RATE = 0.8;
 
 export function telnyx(env: TelnyxEnv) {
   return {
