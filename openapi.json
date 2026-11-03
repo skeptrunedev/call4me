@@ -336,7 +336,7 @@
             "mode": "dynamic",
             "currency": "USD",
             "min": "0.25",
-            "max": "60.00"
+            "max": "45.00"
           },
           "protocols": [
             {
