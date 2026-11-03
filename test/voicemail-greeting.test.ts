@@ -88,3 +88,23 @@ test("Google Call Assist's question releases the caller's introduction", async (
   assert.ok(screenerAsked("Who's calling?"));
   assert.ok(!screenerAsked('Thank you for calling La Pizzetta. To place an order, dial zero.'));
 });
+
+test('a person answering after the screener cancels its introduction', async () => {
+  const { answeredAfterScreener, SCREENING_NOTE } = await import('../src/server/voice/voicemail');
+  // Raghav's call to GEIM: the owner picked up and was mid-conversation when the fallback fired.
+  const geim = [
+    { role: 'caller', text: 'Hello?' },
+    { role: 'note', text: SCREENING_NOTE },
+    { role: 'caller', text: 'Hi?' },
+    { role: 'them', text: "Hello, hi, it's Mahmood Global Exports, how can I help" },
+    { role: 'caller', text: "Hi, I'm calling to check if you can handle customs clearance for a shipment coming into the UK." },
+  ];
+  assert.ok(answeredAfterScreener(geim));
+  // Tom's call to Google Call Assist: the screener spoke and the caller is still waiting to introduce itself.
+  const callAssist = [
+    { role: 'note', text: SCREENING_NOTE },
+    { role: 'them', text: "Hi, I'm Call Assist by Google, recording this call for the person you're trying to reach." },
+  ];
+  assert.ok(!answeredAfterScreener(callAssist));
+  assert.ok(!answeredAfterScreener([{ role: 'them', text: 'Hello?' }, { role: 'caller', text: 'Hi.' }]));
+});

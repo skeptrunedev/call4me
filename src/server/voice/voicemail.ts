@@ -82,6 +82,28 @@ export function machineTransition(previous: MachineState, event: MachineEvent, o
 const SCREENER_ASK = /\b(?:(?:record|state|say|tell (?:me|us))\b[^.?!]{0,20}\byour name\b|reason for (?:your )?call(?:ing)?|who(?:'s| is) calling|what (?:you(?:'re| are)|are you) calling (?:about|for)|(?:purpose|reason) of (?:your|the|this) call|what (?:this|the|your) call is (?:about|regarding)|call assist|screening service|see if (?:this|the) person is available|qui[eé]n (?:llama|habla)|(?:diga|grabe) su nombre)/i;
 export const screenerAsked = (heard: string) => SCREENER_ASK.test(heard);
 
+/** The transcript note marking a call screener's prompt. */
+export const SCREENING_NOTE = 'carrier detected a call screening prompt';
+
+/**
+ * Whether someone answered in person after the screener: since its note they spoke and the caller
+ * answered them. The introduction it waited for is moot then, and sending it mid-conversation
+ * makes the caller introduce itself again with a made-up name and task (Raghav's call to GEIM:
+ * "this is Avery calling for Noel Hanna about a job application").
+ */
+export function answeredAfterScreener(lines: readonly { role: string; text: string }[]): boolean {
+  let at = -1;
+  for (let i = lines.length - 1; i >= 0; i--) {
+    if (lines[i].role === 'note' && lines[i].text === SCREENING_NOTE) {
+      at = i;
+      break;
+    }
+  }
+  if (at < 0) return false;
+  const theirs = lines.findIndex((line, i) => i > at && line.role === 'them');
+  return theirs >= 0 && lines.some((line, i) => i > theirs && line.role === 'caller');
+}
+
 export const MACHINE_GUIDANCE: Record<MachineGuidance, string> = {
   machine:
     'The carrier detected an automated greeting, which may be voicemail or a call screener. Stay silent while the greeting plays. If a live person speaks to you, respond normally. Do not leave a message or hang up unless the audio confirms voicemail is recording.',

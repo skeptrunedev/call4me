@@ -8,7 +8,7 @@ import { alreadyUnreachable, callerHoldsFor, legEnded, listeningMessage, mergeTr
 import { HoldMeter, type HoldChange } from './hold';
 import { midConversation } from './time-limit';
 import { BACK_OFFICE_TOOLS } from './prompt';
-import { INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, screenerAsked, type MachineEvent, type MachineGuidance, type MachineState } from './voicemail';
+import { answeredAfterScreener, INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, screenerAsked, SCREENING_NOTE, type MachineEvent, type MachineGuidance, type MachineState } from './voicemail';
 
 /**
  * One live phone call: Telnyx's media stream on one side, a GPT-Live session on the other.
@@ -1053,7 +1053,7 @@ export class VoiceSession extends DurableObject<Env> {
           machine: 'carrier detected an automated greeting',
           greeting_ended: 'carrier detected a possible voicemail beep',
           greeting_timeout: 'carrier greeting detection timed out without a beep',
-          screening: 'carrier detected a call screening prompt',
+          screening: SCREENING_NOTE,
           human: 'carrier detected a live person',
         };
         this.note(notes[guidance]);
@@ -1086,6 +1086,12 @@ export class VoiceSession extends DurableObject<Env> {
     await this.loadMachineState();
     if (this.pendingMachineGuidance === 'screening' && this.menuRecovery.heardMenu()) {
       this.mark('screening detection was a phone menu; no introduction');
+      this.pendingMachineGuidance = null;
+      await this.saveMachineState();
+      return;
+    }
+    if (this.pendingMachineGuidance === 'screening' && answeredAfterScreener(this.transcript)) {
+      this.mark('a person answered after the screener; no introduction');
       this.pendingMachineGuidance = null;
       await this.saveMachineState();
       return;
