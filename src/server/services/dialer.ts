@@ -224,6 +224,14 @@ export async function placeCall(
 }
 
 /**
+ * The minutes a callback holds credits for up front: an outbound call's default, not the whole
+ * balance, which left nothing for the account's other calls (Raghav's $50 top-up was all held by
+ * one callback while his agent placed more). Holds and a live conversation extend it as they do
+ * an outbound call's.
+ */
+export const callbackMinutes = (balanceCents: number, priceCents: number) => Math.min(LIMITS.defaultMinutes, Math.floor(balanceCents / priceCents));
+
+/**
  * Someone called an account's number, usually a business calling back. Answer with a
  * message-taking brief that knows what this number called about recently.
  */
@@ -275,7 +283,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
 
   const id = `call_${newId()}`;
   // Credits up front here too: the callback holds what it may cost before it is answered.
-  const maxMinutes = Math.min(LIMITS.maxMinutes, Math.floor(balance / price));
+  const maxMinutes = callbackMinutes(balance, price);
   const holdCents = maxMinutes * price;
   if (!(await accounts(env.DB).hold(account.id, holdCents, `hold:${id}`, `up to ${maxMinutes} min callback`))) {
     await telnyx(env).reject(opts.controlId);
