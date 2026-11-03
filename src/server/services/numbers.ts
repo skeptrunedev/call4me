@@ -255,7 +255,8 @@ export const EUROPE = new Set([
  * Countries any account may call from its free US number without holding a number there: Europe,
  * the UAE, where no carrier sells numbers to a company outside the country, and Japan, where the
  * carrier sells none and refuses a Japanese caller ID it didn't issue (so the user's own number
- * can't be verified there either), so a US caller ID is the only way in. Calls to both cost more
+ * can't be verified there either), so a US caller ID is the only way in. Thailand too, so a user
+ * needn't buy a number there for one call (Claudia, 2026-11-03). Calls to all three cost more
  * (lib/rates.ts).
  */
 /** The reason a country isn't sold yet while its regulatory paperwork is pending. */
@@ -264,7 +265,7 @@ const awaitingApproval = (name: string) => `${name} numbers are waiting on regul
 /** Whether an unavailable offer is held back by regulator paperwork, as opposed to the carrier having none in stock. */
 export const isAwaitingApproval = (offer: CountryOffer) => !offer.available && offer.reason === awaitingApproval(offer.name);
 
-export const FROM_HOME = new Set([...EUROPE, 'AE', 'JP']);
+export const FROM_HOME = new Set([...EUROPE, 'AE', 'JP', 'TH']);
 
 /** Every country some account may call: the telephone carrier must allow each of them. */
 const CALLABLE = [...new Set(['US', 'CA', ...FROM_HOME, ...Object.keys(COUNTRIES)])];

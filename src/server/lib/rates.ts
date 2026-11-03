@@ -5,7 +5,9 @@
  * (telnyx.com/pricing/elastic-sip/<cc>, checked 2026-10-01: AE 0.22, PH 0.192, PA 0.295,
  * GH 0.335, BO 0.357, UA 0.393, JP 0.207 $/min) plus $0.002 Call Control and $0.05 GPT-Live.
  */
-export const DESTINATION_PRICE_CENTS: Readonly<Record<string, number>> = { AE: 40, JP: 40, PH: 40, PA: 50, GH: 60, BO: 60, UA: 65 };
+// TH (2026-11-03) is priced at the PA tier before its rate was checked: the page renders it client
+// side and it couldn't be read. The profile's MAX_DESTINATION_RATE cap still blocks anything dearer.
+export const DESTINATION_PRICE_CENTS: Readonly<Record<string, number>> = { AE: 40, JP: 40, PH: 40, PA: 50, TH: 50, GH: 60, BO: 60, UA: 65 };
 
 /** Calling coverage for descriptions; current prices are returned by the account tools. */
 export const ABROAD_CALLING = "UAE and Japanese businesses too, from the account's US number (the business sees a US caller ID)";
