@@ -82,7 +82,7 @@ agent ──MCP──▶ worker ──POST /v2/calls──▶ Telnyx ──PSTN�
   verified to call from. Telnyx keeps one verified-number list for our whole carrier account, so
   `verified_numbers` ties each to the one call4me account that submitted a fresh code for it; a
   number Telnyx already lists as verified is never handed to another account. A call from an own
-  number (`from`) only reaches businesses in its country, and still rings the user from a call4me number.
+  number (`from`) can call any country (the carrier may refuse it on some international routes), and still rings the user from a call4me number.
 - `src/server/mcp/server.ts`: the MCP tools.
 
 The app does not request recording when dialing or answering. Existing recordings stored by Telnyx

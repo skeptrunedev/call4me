@@ -234,7 +234,7 @@ export const AccountPage: FC<{
     </form>
     <h2>your own number</h2>
     <p class="small">
-      calls can show your own phone number instead of a call4me number, to businesses in its country. we text it a code (or call and read it out) to check it's
+      calls can show your own phone number instead of a call4me number. we text it a code (or call and read it out) to check it's
       yours. a call goes out from it only when you or your agent pick it; businesses call it back, so callbacks ring you instead of call4me.
     </p>
     {p.ownNumbers.length > 0 && (
