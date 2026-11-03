@@ -9,7 +9,7 @@ import type { SessionSetup } from '../voice/session';
 import { sessionFor } from '../voice/stub';
 import type { Voice } from '../voice/voices';
 import { accounts, type Account } from './accounts';
-import { answeringAccountId, numbers, ringablePhone } from './numbers';
+import { answeringAccountId, EEA, numbers, ringablePhone } from './numbers';
 import { profiles } from './profiles';
 import { accentOf, answeringInstructionsOf, assistantNameOf, namePronunciationOf, type Profile, type Surface } from './intake';
 import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
@@ -19,14 +19,22 @@ export { VOICES, type Voice } from '../voice/voices';
 
 export const pricePerMinute = (env: Env) => Number(env.PRICE_PER_MINUTE_CENTS || 25);
 
-/** What a call to `to` costs per minute: its destination's own price (lib/rates.ts), else the standard one. */
-export function pricePerMinuteTo(env: Env, to: string): number {
+/**
+ * What a call to `to` costs per minute: its destination's own price (lib/rates.ts), else the
+ * standard one. A dearer EEA destination is the standard price from an EEA caller ID (`from`),
+ * which the carrier charges at the local rate.
+ */
+export function pricePerMinuteTo(env: Env, to: string, from?: string | null): number {
   const p = checkDialable(to);
-  return (p.ok && DESTINATION_PRICE_CENTS[p.country]) || pricePerMinute(env);
+  if (!p.ok) return pricePerMinute(env);
+  const origin = from ? checkDialable(from) : null;
+  if (EEA.has(p.country) && origin?.ok && EEA.has(origin.country)) return pricePerMinute(env);
+  return DESTINATION_PRICE_CENTS[p.country] || pricePerMinute(env);
 }
 
-/** The per-minute price a call is billed at: by destination when we placed it, the standard one for a call that came in. */
-export const callPrice = (env: Env, row: Pick<CallRow, 'direction' | 'to_number'>) => (row.direction === 'outbound' ? pricePerMinuteTo(env, row.to_number) : pricePerMinute(env));
+/** The per-minute price a call is billed at: by destination and caller ID when we placed it, the standard one for a call that came in. */
+export const callPrice = (env: Env, row: Pick<CallRow, 'direction' | 'to_number' | 'from_number'>) =>
+  row.direction === 'outbound' ? pricePerMinuteTo(env, row.to_number, row.from_number) : pricePerMinute(env);
 
 /**
  * Whether keypad presses on a call with `other` should be tones in the audio: anywhere but a +1
@@ -72,10 +80,10 @@ export const NEVER_DIALED_MS = 5 * 60_000;
  */
 export async function failNeverDialed(env: Env, at = Date.now()): Promise<number> {
   const { results } = await env.DB.prepare(
-    `SELECT id, direction, to_number FROM calls WHERE status = 'queued' AND telnyx_call_control_id IS NULL AND created_at < ?`,
+    `SELECT id, direction, to_number, from_number FROM calls WHERE status = 'queued' AND telnyx_call_control_id IS NULL AND created_at < ?`,
   )
     .bind(at - NEVER_DIALED_MS)
-    .all<Pick<CallRow, 'id' | 'direction' | 'to_number'>>();
+    .all<Pick<CallRow, 'id' | 'direction' | 'to_number' | 'from_number'>>();
   const db = calls(env.DB);
   for (const row of results) {
     await db.finish(row.id, { status: 'failed', error: 'never dialed: the request placing it ended before it dialed', pricePerMinuteCents: callPrice(env, row), at });
@@ -94,10 +102,10 @@ export const LOST_AFTER_MS = 10 * 60_000;
  */
 export async function settleLost(env: Env, at = Date.now()): Promise<number> {
   const { results } = await env.DB.prepare(
-    `SELECT id, direction, to_number, telnyx_call_control_id FROM calls WHERE status IN ('dialing', 'in_progress') AND telnyx_call_control_id IS NOT NULL AND created_at < ?`,
+    `SELECT id, direction, to_number, from_number, telnyx_call_control_id FROM calls WHERE status IN ('dialing', 'in_progress') AND telnyx_call_control_id IS NOT NULL AND created_at < ?`,
   )
     .bind(at - LOST_AFTER_MS)
-    .all<Pick<CallRow, 'id' | 'direction' | 'to_number' | 'telnyx_call_control_id'>>();
+    .all<Pick<CallRow, 'id' | 'direction' | 'to_number' | 'from_number' | 'telnyx_call_control_id'>>();
   const db = calls(env.DB);
   const carrier = telnyx(env);
   let settled = 0;
@@ -131,7 +139,8 @@ export async function placeCall(
   surface: Surface = 'agents',
   execution: { unattended?: boolean; idempotency?: Idempotency } = {},
 ): Promise<CallRow> {
-  const price = pricePerMinuteTo(env, input.to);
+  // Held at the destination's price; billed by the caller ID the call goes out from (callPrice).
+  let price = pricePerMinuteTo(env, input.to, input.from);
   const db = calls(env.DB);
   const { call, secrets, to, ownerPhone } = await db.create(account, input, price, surface, execution.idempotency);
   let controlId: string | null = null;
@@ -145,6 +154,7 @@ export async function placeCall(
     const caller = await n.callerId(account, to, input.from);
     const from = caller.number;
     if (caller.own) ownFrom = from;
+    price = pricePerMinuteTo(env, call.to_number, from);
     // The user's phone always rings from a call4me number, never from their own.
     const ring = caller.own ? (await n.callerId(account, to)).number : from;
     await env.DB.prepare(`UPDATE calls SET from_number = ?, ring_number = ? WHERE id = ?`).bind(from, caller.own ? ring : null, call.id).run();

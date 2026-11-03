@@ -242,6 +242,13 @@ export const EUROPE = new Set([
 ]);
 
 /**
+ * The EEA (Europe less the UK and Switzerland). A call into it from an EEA caller ID is charged the
+ * carrier's local rate; from anywhere else some carriers add a surcharge: Greek mobiles cost
+ * $0.0325/min from an EEA number and $0.4611/min from a US one (lib/rates.ts).
+ */
+export const EEA = new Set([...EUROPE].filter((c) => c !== 'GB' && c !== 'CH'));
+
+/**
  * Countries any account may call from its free US number without holding a number there: Europe,
  * the UAE, where no carrier sells numbers to a company outside the country, and Japan, where the
  * carrier sells none and refuses a Japanese caller ID it didn't issue (so the user's own number
@@ -708,7 +715,8 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
       const shared = await sharedNumber(db, to.country);
       if (shared) return { number: shared, own: false };
       if (EUROPE.has(to.country)) {
-        const european = owned.find((n) => EUROPE.has(n.country));
+        // An EEA number first for an EEA destination: it reaches it at the local rate.
+        const european = (EEA.has(to.country) && owned.find((n) => EEA.has(n.country))) || owned.find((n) => EUROPE.has(n.country));
         if (european) return { number: european.phone_number, own: false };
       }
       if (to.home || FROM_HOME.has(to.country)) return { number: owned.find((n) => isHome(n.phone_number))?.phone_number ?? (await this.ensureIncluded(account, to.e164)), own: false };

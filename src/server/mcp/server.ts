@@ -207,7 +207,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       guard(async () => {
         const row = await placeCall(env, deps.origin, account, args, surface);
         const v = callView(row, []);
-        return ok(`calling ${v.business} at ${v.number} (${v.id}), ${dollars(pricePerMinuteTo(env, row.to_number))}/min from pickup, including phone menus; hold time is half price.${v.own_number ? ` It shows the user's own number ${v.own_number}, so callbacks go straight to their phone.` : ''} Your call4me number is ${v.calling_number}; show it to the user and ask them to save it as a contact if they haven't, so call screening doesn't answer in their place if they need to join. Poll call4me_get_call with wait_seconds: 30 until finished, and answer any open question immediately.`, v);
+        return ok(`calling ${v.business} at ${v.number} (${v.id}), ${dollars(pricePerMinuteTo(env, row.to_number, row.from_number))}/min from pickup, including phone menus; hold time is half price.${v.own_number ? ` It shows the user's own number ${v.own_number}, so callbacks go straight to their phone.` : ''} Your call4me number is ${v.calling_number}; show it to the user and ask them to save it as a contact if they haven't, so call screening doesn't answer in their place if they need to join. Poll call4me_get_call with wait_seconds: 30 until finished, and answer any open question immediately.`, v);
       })()) as never,
   );
 
@@ -462,7 +462,7 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
           owned.length ? `your numbers:\n${owned.map((v) => `- ${numberText(v)}`).join('\n')}` : 'no numbers yet: the free US number is bought on the first call.',
           ...(pending.length ? [`paid for, waiting on the carrier's approval (they activate by themselves and can't place calls until then):\n${pending.map((v) => `- ${pendingText(v)}`).join('\n')}`] : []),
           ...(own.length ? [`the user's own numbers (calls use one only when from names it):\n${own.map((v) => `- ${ownNumberText(v)}`).join('\n')}`] : []),
-          `calling rates: ${dollars(pricePerMinute(env))}/min unless noted; ${Object.entries(DESTINATION_PRICE_CENTS).map(([country, cents]) => `${country} ${dollars(cents)}/min`).join(', ')}.`,
+          `calling rates: ${dollars(pricePerMinute(env))}/min unless noted; ${Object.entries(DESTINATION_PRICE_CENTS).map(([country, cents]) => `${country} ${dollars(cents)}/min`).join(', ')}. Calls to an EEA country (such as GR) from an EEA number on the account (such as NL; not GB) are ${dollars(pricePerMinute(env))}/min.`,
           `countries (number price today, then monthly; calls there cost ${dollars(pricePerMinute(env))}/min unless noted):\n${countries.map((c) => `- ${c.country} ${c.name} (${c.type}): ${c.available ? `${c.price}, then ${c.monthly}/month${DESTINATION_PRICE_CENTS[c.country] ? `; calls ${dollars(DESTINATION_PRICE_CENTS[c.country]!)}/min` : ''}` : c.reason}`).join('\n')}`,
         ].join('\n\n');
         // Without own or pending numbers, exactly the shape clients cached before either existed.
