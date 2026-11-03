@@ -59,3 +59,15 @@ test('a fully discounted paid invoice still grants purchased credits', async () 
   await service.invoicePaid({ ...invoice, id: 'in_free_renewal', billing_reason: 'subscription_cycle' });
   assert.equal(await ledger.balanceCents('acct_alice'), 6000);
 });
+
+test('an account can hold two monthly reloads: each renewal lands on it and the page shows their total', async () => {
+  const { db, service, ledger } = await setup(true);
+  await service.fulfill('cs_discount');
+  // A second paying account merged in brings its own subscription along.
+  await db.prepare(`INSERT INTO reloads (subscription_id, account_id, cents, status, renews_at) VALUES ('sub_merged', 'acct_alice', 2000, 'active', 1700000000000)`).run();
+  const { reloadOf } = await import('../src/server/services/topups');
+  assert.deepEqual(await reloadOf(db, 'acct_alice'), { cents: 5000, status: 'active', renewsAt: 1700000000000, count: 2 });
+  const merged = { id: 'in_merged', status: 'paid', subtotal: 2000, amount_paid: 2000, billing_reason: 'subscription_cycle', parent: { subscription_details: { subscription: 'sub_merged' } } } as Stripe.Invoice;
+  assert.deepEqual(await service.invoicePaid(merged), { accountId: 'acct_alice', cents: 2000 });
+  assert.equal(await ledger.balanceCents('acct_alice'), 5000);
+});

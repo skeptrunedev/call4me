@@ -45,10 +45,18 @@ interface TopupRow {
 }
 
 export interface Reload {
+  /** What all of the account's live monthly reloads add each month. */
   cents: number;
+  /** The least healthy of their statuses ('past_due' over 'active'). */
   status: string;
+  /** The next one to renew. */
   renewsAt: number | null;
+  /** How many subscriptions make it up: one, unless two paying accounts were merged. */
+  count: number;
 }
+
+/** Reloads still billing: not cancelled and not expired before their first payment. */
+const LIVE_RELOAD = `status NOT IN ('canceled', 'incomplete_expired')`;
 
 const PRODUCT = { name: 'call4me credits', description: 'Prepaid credits for phone calls your AI agent places.' };
 const PROMOTION_ERROR = 'this discount code cannot be used for this purchase. you can add credits at call4.me.';
@@ -59,14 +67,19 @@ const subscriptionOf = (invoice: Stripe.Invoice): string | null => {
   return typeof sub === 'string' ? sub : (sub?.id ?? null);
 };
 
-/** The account's live monthly reload, from our own records (no Stripe call). */
+/** The account's live monthly reloads together, from our own records (no Stripe call). */
 export async function reloadOf(db: D1Database, accountId: string): Promise<Reload | null> {
-  const r = await db
-    .prepare(`SELECT reload_cents, reload_status, reload_renews_at FROM accounts WHERE id = ? AND reload_subscription_id IS NOT NULL`)
+  const { results } = await db
+    .prepare(`SELECT cents, status, renews_at FROM reloads WHERE account_id = ? AND cents > 0 AND status IS NOT NULL AND ${LIVE_RELOAD} ORDER BY renews_at`)
     .bind(accountId)
-    .first<{ reload_cents: number | null; reload_status: string | null; reload_renews_at: number | null }>();
-  if (!r || !r.reload_cents || !r.reload_status || r.reload_status === 'canceled' || r.reload_status === 'incomplete_expired') return null;
-  return { cents: r.reload_cents, status: r.reload_status, renewsAt: r.reload_renews_at };
+    .all<{ cents: number; status: string; renews_at: number | null }>();
+  if (!results.length) return null;
+  return {
+    cents: results.reduce((sum, r) => sum + r.cents, 0),
+    status: results.find((r) => r.status !== 'active')?.status ?? 'active',
+    renewsAt: results.find((r) => r.renews_at)?.renews_at ?? null,
+    count: results.length,
+  };
 }
 
 export function topups(db: D1Database, stripe: Stripe) {
@@ -76,12 +89,25 @@ export function topups(db: D1Database, stripe: Stripe) {
     if (customerId) await db.prepare(`UPDATE accounts SET stripe_customer_id = COALESCE(stripe_customer_id, ?) WHERE id = ?`).bind(customerId, account.id).run();
   }
 
-  /** Make `sub` the account's one monthly reload, cancelling any reload it replaces. */
-  async function adoptSubscription(account: Account, sub: Stripe.Subscription, cents: number): Promise<void> {
-    const prev = await db.prepare(`SELECT reload_subscription_id FROM accounts WHERE id = ?`).bind(account.id).first<{ reload_subscription_id: string | null }>();
-    if (prev?.reload_subscription_id && prev.reload_subscription_id !== sub.id) {
-      await stripe.subscriptions.cancel(prev.reload_subscription_id).catch((err) => console.warn('cancel replaced reload', String(err)));
+  /**
+   * Cancel the account's live reloads other than `keep`. Replacing a reload (a new monthly
+   * purchase) carries on past a failed cancel; the user stopping their reloads sees the failure.
+   */
+  async function cancelReloads(accountId: string, keep: string | null = null, strict = false): Promise<void> {
+    const { results } = await db
+      .prepare(`SELECT subscription_id FROM reloads WHERE account_id = ? AND ${LIVE_RELOAD} AND subscription_id IS NOT ?`)
+      .bind(accountId, keep)
+      .all<{ subscription_id: string }>();
+    for (const r of results) {
+      const cancel = stripe.subscriptions.cancel(r.subscription_id);
+      const sub = strict ? await cancel : await cancel.catch((err) => void console.warn('cancel replaced reload', String(err)));
+      if (sub) await syncSubscription(sub);
     }
+  }
+
+  /** Make `sub` the account's monthly reload, cancelling any it replaces. */
+  async function adoptSubscription(account: Account, sub: Stripe.Subscription, cents: number): Promise<void> {
+    await cancelReloads(account.id, sub.id);
     await syncSubscription(sub, account.id, cents);
   }
 
@@ -91,12 +117,15 @@ export function topups(db: D1Database, stripe: Stripe) {
     const live = sub.status === 'active' || sub.status === 'trialing' || sub.status === 'past_due';
     if (accountId) {
       await db
-        .prepare(`UPDATE accounts SET reload_subscription_id = ?, reload_cents = ?, reload_status = ?, reload_renews_at = ? WHERE id = ?`)
-        .bind(sub.id, amount, sub.status, renews ? renews * 1000 : null, accountId)
+        .prepare(
+          `INSERT INTO reloads (subscription_id, account_id, cents, status, renews_at) VALUES (?, ?, ?, ?, ?)
+           ON CONFLICT (subscription_id) DO UPDATE SET account_id = excluded.account_id, cents = excluded.cents, status = excluded.status, renews_at = excluded.renews_at`,
+        )
+        .bind(sub.id, accountId, amount, sub.status, renews ? renews * 1000 : null)
         .run();
     } else {
       await db
-        .prepare(`UPDATE accounts SET reload_status = ?, reload_renews_at = ?, reload_cents = COALESCE(?, reload_cents) WHERE reload_subscription_id = ?`)
+        .prepare(`UPDATE reloads SET status = ?, renews_at = ?, cents = COALESCE(?, cents) WHERE subscription_id = ?`)
         .bind(sub.status, live && renews ? renews * 1000 : null, amount, sub.id)
         .run();
     }
@@ -227,7 +256,7 @@ export function topups(db: D1Database, stripe: Stripe) {
     async invoicePaid(invoice: Stripe.Invoice): Promise<{ accountId: string; cents: number } | null> {
       const subId = subscriptionOf(invoice);
       if (!subId || invoice.status !== 'paid' || invoice.subtotal <= 0) return null;
-      const row = await db.prepare(`SELECT id FROM accounts WHERE reload_subscription_id = ?`).bind(subId).first<{ id: string }>();
+      const row = await db.prepare(`SELECT account_id AS id FROM reloads WHERE subscription_id = ?`).bind(subId).first<{ id: string }>();
       if (!row) return null; // the first invoice can beat checkout.session.completed; fulfill credits it
       const kind = invoice.billing_reason === 'subscription_cycle' ? 'reload' : 'topup';
       await ledger.post(row.id, invoice.subtotal, kind, `invoice:${invoice.id}`, kind === 'reload' ? 'monthly reload' : 'card, reloads monthly');
@@ -244,46 +273,31 @@ export function topups(db: D1Database, stripe: Stripe) {
      */
     async claim(fromId: string, to: Account): Promise<boolean> {
       const from = await db
-        .prepare(
-          `SELECT reload_subscription_id, reload_cents, reload_status, reload_renews_at, stripe_customer_id FROM accounts
-           WHERE id = ? AND user_id IS NULL AND key_hash IS NULL AND NOT EXISTS (SELECT 1 FROM calls WHERE account_id = accounts.id)`,
-        )
+        .prepare(`SELECT stripe_customer_id FROM accounts WHERE id = ? AND user_id IS NULL AND key_hash IS NULL AND NOT EXISTS (SELECT 1 FROM calls WHERE account_id = accounts.id)`)
         .bind(fromId)
-        .first<{ reload_subscription_id: string | null; reload_cents: number | null; reload_status: string | null; reload_renews_at: number | null; stripe_customer_id: string | null }>();
+        .first<{ stripe_customer_id: string | null }>();
       if (!from || fromId === to.id) return false;
       // The claimed purchase is the newest, so its monthly reload replaces any the account had.
-      if (from.reload_subscription_id) {
-        const prev = await db.prepare(`SELECT reload_subscription_id FROM accounts WHERE id = ?`).bind(to.id).first<{ reload_subscription_id: string | null }>();
-        if (prev?.reload_subscription_id && prev.reload_subscription_id !== from.reload_subscription_id) {
-          await stripe.subscriptions.cancel(prev.reload_subscription_id).catch((err) => console.warn('cancel replaced reload', String(err)));
-        }
-      }
+      const claimed = await db.prepare(`SELECT 1 FROM reloads WHERE account_id = ? AND ${LIVE_RELOAD}`).bind(fromId).first();
+      if (claimed) await cancelReloads(to.id);
       await db.batch([
         db.prepare(`UPDATE ledger SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
         db.prepare(`UPDATE topups SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
+        db.prepare(`UPDATE reloads SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
         db.prepare(`UPDATE reddit_visits SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
         db.prepare(`UPDATE reddit_conversions SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
         db.prepare(`UPDATE OR IGNORE drip_sends SET account_id = ?1 WHERE account_id = ?2`).bind(to.id, fromId),
         db.prepare(`DELETE FROM drip_sends WHERE account_id = ?`).bind(fromId),
         db.prepare(`DELETE FROM key_resets WHERE account_id = ?`).bind(fromId),
         db.prepare(`DELETE FROM profiles WHERE account_id = ?`).bind(fromId),
-        from.reload_subscription_id
-          ? db
-              .prepare(`UPDATE accounts SET reload_subscription_id = ?, reload_cents = ?, reload_status = ?, reload_renews_at = ?, stripe_customer_id = COALESCE(stripe_customer_id, ?), reddit_first_visit_id = COALESCE(reddit_first_visit_id, (SELECT reddit_first_visit_id FROM accounts WHERE id = ?)), reddit_last_visit_id = COALESCE((SELECT reddit_last_visit_id FROM accounts WHERE id = ?), reddit_last_visit_id) WHERE id = ?`)
-              .bind(from.reload_subscription_id, from.reload_cents, from.reload_status, from.reload_renews_at, from.stripe_customer_id, fromId, fromId, to.id)
-          : db.prepare(`UPDATE accounts SET stripe_customer_id = COALESCE(stripe_customer_id, ?), reddit_first_visit_id = COALESCE(reddit_first_visit_id, (SELECT reddit_first_visit_id FROM accounts WHERE id = ?)), reddit_last_visit_id = COALESCE((SELECT reddit_last_visit_id FROM accounts WHERE id = ?), reddit_last_visit_id) WHERE id = ?`).bind(from.stripe_customer_id, fromId, fromId, to.id),
+        db.prepare(`UPDATE accounts SET stripe_customer_id = COALESCE(stripe_customer_id, ?), reddit_first_visit_id = COALESCE(reddit_first_visit_id, (SELECT reddit_first_visit_id FROM accounts WHERE id = ?)), reddit_last_visit_id = COALESCE((SELECT reddit_last_visit_id FROM accounts WHERE id = ?), reddit_last_visit_id) WHERE id = ?`).bind(from.stripe_customer_id, fromId, fromId, to.id),
         db.prepare(`DELETE FROM accounts WHERE id = ?`).bind(fromId),
       ]);
       return true;
     },
 
-    /** Stop the monthly reload now. Credits already loaded stay. */
-    async stopReload(accountId: string): Promise<void> {
-      const r = await db.prepare(`SELECT reload_subscription_id FROM accounts WHERE id = ?`).bind(accountId).first<{ reload_subscription_id: string | null }>();
-      if (!r?.reload_subscription_id) return;
-      const sub = await stripe.subscriptions.cancel(r.reload_subscription_id);
-      await syncSubscription(sub);
-    },
+    /** Stop every monthly reload now. Credits already loaded stay. */
+    stopReload: (accountId: string) => cancelReloads(accountId, null, true),
 
     /** A refunded one-time top-up (card, or USDC over x402) takes its credits back out. */
     async refunded(paymentIntentId: string): Promise<void> {

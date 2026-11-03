@@ -154,7 +154,7 @@ export const AccountPage: FC<{
     {p.calls.length === 0 ? <FirstCall email={p.account.email} installPrompt={p.installPrompt} /> : <CopyBlock id="agent-prompt" text={p.agentPrompt} rows={12} hidden />}
     {p.reload ? (
       <form method="post" action="/account/reload/stop" class="inline">
-        reloads <span class="price">{dollars(p.reload.cents)}</span> every month
+        reloads <span class="price">{dollars(p.reload.cents)}</span> every month{p.reload.count > 1 && <> ({p.reload.count} subscriptions)</>}
         {p.reload.renewsAt && <> (next {new Date(p.reload.renewsAt).toISOString().slice(0, 10)})</>}
         {p.reload.status !== 'active' && <span class="err"> / {p.reload.status.replace('_', ' ')}</span>} / <button type="submit" class="linkbutton">stop reloading</button>
       </form>

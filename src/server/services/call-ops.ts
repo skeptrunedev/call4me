@@ -127,7 +127,7 @@ export async function balanceView(env: Env, account: Account) {
     phone_number: owned[0]?.number ?? null,
     numbers: owned,
     email: account.email,
-    monthly_reload: reload ? { amount: dollars(reload.cents), status: reload.status, next: reload.renewsAt ? new Date(reload.renewsAt).toISOString().slice(0, 10) : null } : null,
+    monthly_reload: reload ? { amount: dollars(reload.cents), status: reload.status, next: reload.renewsAt ? new Date(reload.renewsAt).toISOString().slice(0, 10) : null, subscriptions: reload.count } : null,
   };
 }
 
