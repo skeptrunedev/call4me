@@ -8,6 +8,8 @@
 // TH needs no price of its own: $0.084/min to fixed and mobile lines (checked 2026-11-03), inside the
 // standard rate. GR's published rate ($0.0325/min to mobiles) is for calls from a European caller ID;
 // from a US one a Greek mobile costs $0.4611/min (the carrier's record of a call on 2026-11-03).
+// BR's published rate ($0.015/min to mobiles) may likewise be for local caller IDs; until a call's
+// record shows the rate from a US one, the standard price stands and MAX_DESTINATION_RATE caps it.
 export const DESTINATION_PRICE_CENTS: Readonly<Record<string, number>> = { AE: 40, JP: 40, PH: 40, PA: 50, GH: 60, BO: 60, UA: 65, GR: 75 };
 
 /** Calling coverage for descriptions; current prices are returned by the account tools. */
