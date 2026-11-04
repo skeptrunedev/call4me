@@ -27,6 +27,8 @@ interface Step {
   after: number;
   /** Only for accounts that have never placed a call: a nudge to try it, not news for a regular. */
   onlyWithoutCalls?: boolean;
+  /** Only for accounts at most this old, in ms: past it a later step takes over. */
+  until?: number;
   /** The copy used when the email_templates table has no valid row for this step. */
   template: EmailTemplate;
 }
@@ -50,6 +52,27 @@ export const STEPS: Step[] = [
 If you reply with feedback, I'm happy to give you $25 in credits. Anything helps, including how you found it and why you signed up.
 
 Here's my cell # for imessage or whatsapp - 7379832612 .
+
+- Nick`,
+    },
+  },
+  {
+    // Most first calls come within an hour of signing up, and the 2-day nudge brought back 8 of 171:
+    // a same-day nudge while they still remember signing up, with one thing to say to their agent.
+    id: 'first-call-soon',
+    after: 3 * 60 * 60 * 1000,
+    until: 2 * 24 * 60 * 60 * 1000,
+    onlyWithoutCalls: true,
+    template: {
+      subject: 'your first call takes 30 seconds',
+      body: `hey, nick here. you've got credits waiting on call4me and haven't made a call yet, so here's the fastest way.
+
+in chatgpt: open https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8, add call4me, and sign in with this email.
+in claude, codex or anything else: paste the prompt from {host}/#install-prompt.
+
+then just say: "use call4me to call my phone and tell me what you can do." you'll hear it in about 30 seconds. after that, try something real you've been putting off, like a refund, a reservation or a quote.
+
+stuck on any of that? reply and i'll help.
 
 - Nick`,
     },
@@ -181,7 +204,7 @@ export async function runDrip(opts: {
            AND (?5 = 0 OR NOT EXISTS (SELECT 1 FROM calls c WHERE c.account_id = accounts.id))
          ORDER BY created_at LIMIT ?4`,
       )
-      .bind(opts.start, t - step.after, step.id, opts.limit ?? 50, step.onlyWithoutCalls ? 1 : 0)
+      .bind(Math.max(opts.start, step.until ? t - step.until : 0), t - step.after, step.id, opts.limit ?? 50, step.onlyWithoutCalls ? 1 : 0)
       .all<Candidate>();
     for (const a of results) {
       const claim = await opts.db.prepare(`INSERT OR IGNORE INTO drip_sends (account_id, step, sent_at) VALUES (?, ?, ?)`).bind(a.id, step.id, t).run();

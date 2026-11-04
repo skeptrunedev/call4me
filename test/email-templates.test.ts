@@ -4,6 +4,8 @@ import { runDrip, STEPS, templateFor, unknownPlaceholders } from '../src/server/
 import { d1 } from './sqlite-d1';
 
 const welcome = STEPS.find((s) => s.id === 'welcome')!;
+/** The steps an account created long ago still gets: those with an age limit are past it. */
+const forOld = STEPS.filter((s) => !s.until);
 
 /** Every email the drip would send, captured instead of sent. */
 function capture() {
@@ -61,10 +63,10 @@ const userUnknown = 'Invalid RCPT TO: <alice@example.com> 550 5.1.1 <alice@examp
 test('an address the mail server rejects outright is not retried, and gets no more email', async () => {
   const db = d1();
   const { sent, messenger } = rejecting('alice@example.com', userUnknown);
-  // Bob gets both steps (welcome, and first-call since neither has called); Alice is dropped after the first.
-  assert.deepEqual(await drip(db, messenger), { sent: STEPS.length, failed: 1 });
+  // Bob gets every step for an old account (welcome, and first-call since neither has called); Alice is dropped after the first.
+  assert.deepEqual(await drip(db, messenger), { sent: forOld.length, failed: 1 });
   assert.deepEqual(await drip(db, messenger), { sent: 0, failed: 0 });
-  assert.deepEqual(sent.map((m) => m.to), STEPS.map(() => 'bob@example.com'));
+  assert.deepEqual(sent.map((m) => m.to), forOld.map(() => 'bob@example.com'));
   const alice = await db.prepare(`SELECT email_opt_out FROM accounts WHERE id = 'acct_alice'`).first<{ email_opt_out: number }>();
   assert.equal(alice!.email_opt_out, 1);
 });
@@ -73,11 +75,11 @@ test('a temporary failure is retried on the next run', async () => {
   const db = d1();
   const { sent, messenger } = rejecting('alice@example.com', 'Invalid RCPT TO: <alice@example.com> 451 4.3.0 try again later');
   // Every step is tried for Alice on every run; Bob gets each step once.
-  assert.deepEqual(await drip(db, messenger), { sent: STEPS.length, failed: STEPS.length });
-  assert.deepEqual(await drip(db, messenger), { sent: 0, failed: STEPS.length });
+  assert.deepEqual(await drip(db, messenger), { sent: forOld.length, failed: forOld.length });
+  assert.deepEqual(await drip(db, messenger), { sent: 0, failed: forOld.length });
   const alice = await db.prepare(`SELECT email_opt_out FROM accounts WHERE id = 'acct_alice'`).first<{ email_opt_out: number }>();
   assert.equal(alice!.email_opt_out, 0);
-  assert.deepEqual(sent.map((m) => m.to), STEPS.map(() => 'bob@example.com'));
+  assert.deepEqual(sent.map((m) => m.to), forOld.map(() => 'bob@example.com'));
 });
 
 test('the first-call nudge skips accounts that have placed a call', async () => {
@@ -87,4 +89,19 @@ test('the first-call nudge skips accounts that have placed a call', async () => 
   await drip(db, messenger);
   const nudges = sent.filter((m) => m.subject === STEPS.find((s) => s.id === 'first-call')!.template.subject).map((m) => m.to);
   assert.deepEqual(nudges, ['bob@example.com']);
+});
+
+test('the same-day nudge goes 3 hours after signup to accounts under 2 days old that have not called', async () => {
+  const db = d1();
+  const hour = 60 * 60 * 1000;
+  const t = Date.now();
+  await db.prepare(`UPDATE accounts SET created_at = ? WHERE id = 'acct_alice'`).bind(t - 5 * hour).run();
+  await db.prepare(`UPDATE accounts SET created_at = ? WHERE id = 'acct_bob'`).bind(t - 5 * hour).run();
+  await db.prepare(`INSERT INTO accounts (id, email, created_at) VALUES ('acct_new', 'new@example.com', ?), ('acct_old', 'old@example.com', ?)`).bind(t - hour, t - 3 * 24 * hour).run();
+  await db.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at) VALUES ('call_1', 'acct_bob', '+15555550100', 'x', 'x', '{}', 'completed', ?)`).bind(t - 4 * hour).run();
+  const { sent, messenger } = capture();
+  await drip(db, messenger);
+  const soon = sent.filter((m) => m.subject === 'your first call takes 30 seconds').map((m) => m.to);
+  // Alice: 5 hours in, no call. Bob called; new is under 3 hours; old is past 2 days.
+  assert.deepEqual(soon, ['alice@example.com']);
 });
