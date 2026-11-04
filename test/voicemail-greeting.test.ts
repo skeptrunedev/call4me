@@ -108,3 +108,20 @@ test('a person answering after the screener cancels its introduction', async () 
   assert.ok(!answeredAfterScreener(callAssist));
   assert.ok(!answeredAfterScreener([{ role: 'them', text: 'Hello?' }, { role: 'caller', text: 'Hi.' }]));
 });
+
+test("a voicemail's request for a message ends the hold even when another sentence finishes in the same breath", () => {
+  // Integra Realty, Grant's call: "at the moment" started a hold, and the request for a name and
+  // number arrived together with "Thank you and have a great day", so the silent line stayed on hold.
+  const meter = new HoldMeter();
+  meter.them("For a company directory, please press nine, or press zero for an operator Hello, you've reached the desk of Susan Kennedy. ", 1_000);
+  meter.them('I am unable to take your call at the moment', 2_000);
+  assert.equal(meter.holding(), false, '"at the moment" is not a hold request');
+  meter.them(', but if you leave your name and number, I will return it as soon as possible. Thank you and have a great day', 3_000);
+  assert.equal(meter.holding(), false);
+});
+
+test('a hold request and a request for a message in one delta leave no hold', () => {
+  const meter = new HoldMeter();
+  assert.equal(meter.them('Please hold. Leave your name and number after the tone. Goodbye', 1_000), null);
+  assert.equal(meter.holding(), false);
+});

@@ -36,7 +36,7 @@ const WAIT_REQUEST = new RegExp(
       String.raw`(?:may|will) be (?:monitored|recorded)|is being recorded|recorded for quality`,
       String.raw`someone (?:who|that) can help|right person|right department`,
       String.raw`(?:will|'ll) be with you|(?:still )?(?:helping|assisting|serving|with|on the phone with) other (?:callers|patients|customers|guests|clients|members|people)|hold your place|place in (?:line|the queue)|(?:sorry|apologi[sz]e) (?:about |for )?(?:the|your) wait|thanks? (?:you )?(?:so much |kindly )?for (?:your )?(?:patience|holding|waiting)`,
-      String.raw`(?:let me|lemme|allow me to|i'?ll|i will|i'?m going to|i'?m gonna|i'?m just going to) (?:just |quickly |go ahead and )?take a (?:quick |little )?look|(?:^|[\s,]+)(?:moment|hold|sec|second|minute)[\s.!]*$`,
+      String.raw`(?:let me|lemme|allow me to|i'?ll|i will|i'?m going to|i'?m gonna|i'?m just going to) (?:just |quickly |go ahead and )?take a (?:quick |little )?look|(?:^|[\s,]+)(?<!at the )(?:moment|hold|sec|second|minute)[\s.!]*$`,
     ]
       .map((p) => `(?:${p})`)
       .join('|') +
@@ -87,18 +87,34 @@ export class HoldMeter {
       this.sentences = 0;
       return answered;
     }
+    // The sentence that was still open before this delta may have grown or finished.
+    const from = Math.max(0, this.sentences - 1);
     this.theirs += delta;
     const all = this.theirs.trim().split(SENTENCE_END).filter(Boolean);
-    const sentence = all[all.length - 1] ?? '';
     if (all.length !== this.sentences) {
       this.sentences = all.length;
       this.sentenceAt = at;
     }
+    // Every sentence this delta touched, in order, not only the last: Grant's call reached a
+    // voicemail whose "if you leave your name and number, I will return it." finished in the same
+    // delta as "Thank you and have a great day", so its request for a message went unseen and the
+    // silent line was held open as a hold for 10 minutes.
+    let change: HoldChange | null = null;
+    all.slice(from).forEach((sentence, i) => {
+      const next = this.judge(sentence, from + i < all.length - 1, at);
+      // A hold that starts and ends within one delta never was one.
+      if (next) change = change?.type === 'start' && next.type === 'end' ? null : next;
+    });
+    return change;
+  }
+
+  /** One sentence of theirs, heard by `at`; `finished` when more followed it. */
+  private judge(sentence: string, finished: boolean, at: number): HoldChange | null {
     // A person greeting us outranks hold words in the same breath ("thanks for holding, how can I help?").
     if (this.since === null) return isHoldLine(sentence) && !PERSON_BACK.test(sentence) && !asksForMessage(sentence) ? this.start(at) : null;
     if (PERSON_BACK.test(sentence)) return this.end(this.speechAt ?? at);
     // Judged once the sentence is finished: "To leave a message," may still end "press two".
-    if (/[.?!]\s*$/.test(sentence) && asksForMessage(sentence)) return this.end(this.sentenceAt);
+    if ((finished || /[.?!]\s*$/.test(sentence)) && asksForMessage(sentence)) return this.end(this.sentenceAt);
     // A phone menu inside the queue ("press two for general inquiries") is part of the wait, not a person.
     if (isHoldLine(sentence) || isPhoneMenu(sentence) || JA_KEYPAD.test(sentence)) {
       this.speechAt = null;
