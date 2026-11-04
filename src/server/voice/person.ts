@@ -1,4 +1,4 @@
-import type { TranscriptLine } from '../services/calls';
+import type { TranscriptLine } from '../services/call-store';
 
 /**
  * Patching the person (call4me's user) into a live call. Their phone is rung as a listen-only

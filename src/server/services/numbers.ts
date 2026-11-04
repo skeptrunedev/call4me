@@ -3,7 +3,7 @@ import { CODE_ATTEMPTS, VERIFICATIONS_PER_DAY } from '../lib/number-schema';
 import { checkDialable, formatPhone, type PhoneCheck } from '../lib/phone';
 import { telnyx, TelnyxError, type AvailableNumber, type NumberOrderStatus } from '../lib/telnyx';
 import { accounts, dollars, type Account } from './accounts';
-import { CALLBACK_WINDOW_MS } from './calls';
+import { CALLBACK_WINDOW_MS } from './call-store';
 import { addCreditsPath } from './drip';
 import { isRecipientRejected, makeMessenger, type Messenger } from '../lib/messaging';
 

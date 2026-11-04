@@ -1,6 +1,6 @@
 import { DurableObject } from 'cloudflare:workers';
 import { Raindrop, type Interaction } from 'raindrop-ai';
-import { ACTIVE, calls, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/calls';
+import { ACTIVE, callStore, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/call-store';
 import { telnyx } from '../lib/telnyx';
 import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
 import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft } from './handoff';
@@ -357,7 +357,7 @@ export class VoiceSession extends DurableObject<Env> {
   private async resumeIfLive(): Promise<void> {
     const s = await this.load();
     if (!s || !(await this.ctx.storage.get('liveStarted'))) return;
-    const row = await calls(this.env.DB).byId(s.callId);
+    const row = await callStore(this.env.DB).byId(s.callId);
     if (!row?.answered_at || !ACTIVE.includes(row.status)) return;
     this.answered = true;
     this.answeredAt = row.answered_at;
@@ -456,7 +456,7 @@ export class VoiceSession extends DurableObject<Env> {
     if (!s || this.live || this.ended || !phone || phone.readyState !== WebSocket.OPEN) return;
     let instructions = s.instructions;
     if (this.resumed) {
-      const row = this.transcriptComplete ? null : await calls(this.env.DB).byId(s.callId);
+      const row = this.transcriptComplete ? null : await callStore(this.env.DB).byId(s.callId);
       const sofar = this.transcriptComplete ? this.transcript : row?.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [];
       instructions = `${s.instructions}\n\n${resumeNote(sofar)}`;
     }
@@ -464,7 +464,7 @@ export class VoiceSession extends DurableObject<Env> {
     // Start monitoring alongside the connection, so telemetry never delays live audio.
     if (this.env.RAINDROP_WRITE_KEY && !this.monitoringReady) {
       this.monitoringReady = (async () => {
-        const row = await calls(this.env.DB).byId(s.callId);
+        const row = await callStore(this.env.DB).byId(s.callId);
         if (!row) return;
         this.raindrop = new Raindrop({
           writeKey: this.env.RAINDROP_WRITE_KEY,
@@ -986,7 +986,7 @@ export class VoiceSession extends DurableObject<Env> {
     // The user's own time on the call is not billed, and is not hold: a hold going now ends here.
     const now = Date.now();
     this.trackHold(this.hold.stop(now));
-    if (s) await calls(this.env.DB).personJoined(s.callId, now).catch((err) => console.warn('person join write failed', s.callId, String(err)));
+    if (s) await callStore(this.env.DB).personJoined(s.callId, now).catch((err) => console.warn('person join write failed', s.callId, String(err)));
     // Anything the caller had queued would play over the person.
     this.sendPhone({ event: 'clear' });
     this.playbackEndsAt = Date.now();
@@ -1001,7 +1001,7 @@ export class VoiceSession extends DurableObject<Env> {
   private personLeft(): void {
     const ended = legEnded(this.personMode, this.personOn);
     const callId = this.setup?.callId;
-    if (this.personOn && callId) void calls(this.env.DB).personLeft(callId, Date.now()).catch((err) => console.warn('person leave write failed', callId, String(err)));
+    if (this.personOn && callId) void callStore(this.env.DB).personLeft(callId, Date.now()).catch((err) => console.warn('person leave write failed', callId, String(err)));
     this.personOn = false;
     this.personLeg = null;
     this.personMode = 'join';
@@ -1213,7 +1213,7 @@ export class VoiceSession extends DurableObject<Env> {
     if (this.endingCall) return 'already hanging up';
     this.endingCall = true;
     if (args.do_not_call === true) {
-      const db = calls(this.env.DB);
+      const db = callStore(this.env.DB);
       const row = await db.byId(s.callId);
       if (row) await db.block(row.to_number, `asked not to be called (${s.callId})`);
     }
@@ -1226,7 +1226,7 @@ export class VoiceSession extends DurableObject<Env> {
   private async askUser(s: Stored, question: string): Promise<string> {
     if (!question) return 'no question given';
     const live = this.live;
-    const db = calls(this.env.DB);
+    const db = callStore(this.env.DB);
     const qid = await db.ask(s.callId, question);
     if (this.ended) return 'the call has ended';
     if (s.unattended || this.userUnavailable) return this.questionUnanswered(question, live);
@@ -1326,7 +1326,7 @@ export class VoiceSession extends DurableObject<Env> {
     this.flushTimer = null;
     const s = await this.load();
     if (!s || !this.transcript.length) return;
-    const db = calls(this.env.DB);
+    const db = callStore(this.env.DB);
     if (!this.transcriptComplete) {
       // This instance restarted mid-call: keep what the previous one stored instead of overwriting it.
       const row = await db.byId(s.callId);
@@ -1351,7 +1351,7 @@ export class VoiceSession extends DurableObject<Env> {
     const now = Date.now();
     if (!this.phone) {
       // The instance holding the stream was reset and nothing has reconnected it here.
-      const row = await calls(this.env.DB).byId(s.callId);
+      const row = await callStore(this.env.DB).byId(s.callId);
       if (!row || !ACTIVE.includes(row.status)) {
         await this.ctx.storage.deleteAlarm();
         return;
@@ -1422,7 +1422,7 @@ export class VoiceSession extends DurableObject<Env> {
   private trackHold(change: HoldChange | null): void {
     const callId = this.setup?.callId;
     if (!change || !callId) return;
-    const db = calls(this.env.DB);
+    const db = callStore(this.env.DB);
     const write = change.type === 'start' ? db.holdStarted(callId, change.at) : db.holdEnded(callId, change.at);
     write.catch((err) => console.warn('hold write failed', callId, String(err)));
     this.mark(change.type === 'start' ? 'on hold' : `off hold after ${change.seconds}s`);
@@ -1461,14 +1461,14 @@ export class VoiceSession extends DurableObject<Env> {
    * granted, 0 when the balance or the ceiling leaves no room.
    */
   private async extendLimit(s: Stored, from: number, want: number): Promise<number> {
-    const row = await calls(this.env.DB).byId(s.callId);
+    const row = await callStore(this.env.DB).byId(s.callId);
     if (!row?.answered_at) return 0;
     const ceilingAt = row.answered_at + (LIMITS.maxMinutes * 60 - 45) * 1000;
     const room = Math.min(want, Math.floor((ceilingAt - from) / 60_000));
     if (room < 1) return 0;
     // Hold and talk extensions share one count: each is its own ledger hold (hold:<call>:<n>).
     const n = ((await this.ctx.storage.get<number>('holdExtensions')) ?? 0) + 1;
-    const minutes = await calls(this.env.DB).extend(row, room, s.pricePerMinuteCents, n, Date.now());
+    const minutes = await callStore(this.env.DB).extend(row, room, s.pricePerMinuteCents, n, Date.now());
     if (!minutes) return 0;
     await this.ctx.storage.put('holdExtensions', n);
     return minutes;
@@ -1479,7 +1479,7 @@ export class VoiceSession extends DurableObject<Env> {
   private async fail(error: string): Promise<void> {
     this.monitoringError = redact(error, this.setup?.redact ?? []);
     const s = await this.load();
-    if (s) await calls(this.env.DB).finish(s.callId, { status: 'failed', error, pricePerMinuteCents: s.pricePerMinuteCents });
+    if (s) await callStore(this.env.DB).finish(s.callId, { status: 'failed', error, pricePerMinuteCents: s.pricePerMinuteCents });
     await this.shutdown(error);
   }
 
@@ -1500,7 +1500,7 @@ export class VoiceSession extends DurableObject<Env> {
     const s = await this.load();
     if (s?.controlId && reason !== 'hangup webhook') {
       // Our side is ending the call: say why before the hangup webhook finishes the row.
-      await calls(this.env.DB).hangingUp(s.callId, reason).catch((err) => console.warn('end reason', String(err)));
+      await callStore(this.env.DB).hangingUp(s.callId, reason).catch((err) => console.warn('end reason', String(err)));
       await telnyx(this.env).hangup(s.controlId).catch((err) => console.warn('hangup', String(err)));
     }
     if (this.personLeg) await telnyx(this.env).hangup(this.personLeg).catch((err) => console.warn('person hangup', String(err)));

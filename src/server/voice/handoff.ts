@@ -1,4 +1,4 @@
-import type { TranscriptLine } from '../services/calls';
+import type { TranscriptLine } from '../services/call-store';
 
 /**
  * GPT-Live decides on its own when to hand work to the back office, and sometimes it says the
