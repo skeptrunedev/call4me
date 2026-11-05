@@ -14,6 +14,11 @@ const FOREIGN_NANP = new Set([
   '242', '246', '264', '268', '284', '345', '441', '473', '649', '658', '664', '721', '758', '767', '784', '809', '829', '849', '868', '869', '876',
 ]);
 const PREMIUM = new Set(['900', '976']);
+/**
+ * Toll-free area codes. Their exchanges may be N11 (1-800-411-xxxx is a real number, and businesses
+ * use them): only a geographic exchange of 211-911 is a service code, never issued to anyone.
+ */
+const TOLL_FREE = new Set(['800', '833', '844', '855', '866', '877', '888']);
 /** Number types that cost the caller extra or reach no business. */
 const UNCALLABLE: Set<NumberType> = new Set(['PREMIUM_RATE', 'SHARED_COST', 'PERSONAL_NUMBER', 'PAGER', 'VOICEMAIL']);
 
@@ -34,7 +39,7 @@ function checkHome(trimmed: string): PhoneCheck {
   const area = digits.slice(0, 3);
   const exchange = digits.slice(3, 6);
   if (!/^[2-9]\d\d$/.test(area) || !/^[2-9]\d\d$/.test(exchange)) return { ok: false, reason: 'not a valid North American phone number' };
-  if (/^[2-9]11$/.test(area) || /^[2-9]11$/.test(exchange)) return { ok: false, reason: 'N11 service codes cannot be called' };
+  if (/^[2-9]11$/.test(area) || (!TOLL_FREE.has(area) && /^[2-9]11$/.test(exchange))) return { ok: false, reason: 'N11 service codes cannot be called' };
   if (PREMIUM.has(area)) return { ok: false, reason: 'premium-rate numbers cannot be called' };
   if (FOREIGN_NANP.has(area)) return { ok: false, reason: 'Caribbean and Atlantic +1 numbers cannot be called' };
   const e164 = `+1${digits}`;
