@@ -36,6 +36,8 @@ const OPENAI_LIVE_URL = 'https://api.openai.com/v1/live/sessions';
 const QUESTION_WAIT_MS = 120_000;
 /** The other side usually speaks first ("Hi, thanks for calling..."). If they don't, nudge. */
 const SILENT_PICKUP_MS = 5_000;
+/** Longest an incoming call waits to be answered while its voice session opens (prewarmLive). */
+const PREWARM_WAIT_MS = 2_500;
 const TRANSCRIPT_FLUSH_MS = 2_000;
 /** Pickup-to-session-start budget, and how long a call may stay silent both ways before it is abandoned. */
 const SESSION_START_LIMIT_MS = 10_000;
@@ -162,6 +164,10 @@ export class VoiceSession extends DurableObject<Env> {
   /** This instance took over a call already in progress (the previous one was reset). */
   private resumed = false;
   private liveStarting: Promise<void> | null = null;
+  /** An answering call's voice session opening before pickup (prewarmLive), which startLive waits on. */
+  private prewarming: Promise<void> | null = null;
+  /** Resolved when the voice session reports it has started. */
+  private liveStartedWaiters: (() => void)[] = [];
   private liveConnectAbort: AbortController | null = null;
   /** When each milestone happened, logged as one line per step so a broken call shows where it stopped. */
   private answeredAt = 0;
@@ -260,6 +266,9 @@ export class VoiceSession extends DurableObject<Env> {
         }
         return new Response('ok');
       }
+      case '/prewarm':
+        await this.prewarmLive(PREWARM_WAIT_MS);
+        return new Response(this.liveReady ? 'ready' : 'not ready');
       case '/stream':
         return this.acceptStream(req);
       case '/answered': {
@@ -351,6 +360,7 @@ export class VoiceSession extends DurableObject<Env> {
     // pickup, it took 1.2-1.7s, and whoever said "hello" waited that long on top of our reply.
     // Nothing reaches either side before pickup (onPhoneFrame and the output audio check answered).
     if (this.phone === socket && !this.ended) await this.startLive();
+    if (this.phone === socket) this.nudgeWhenSilent();
   }
 
   /** A stream reaching a fresh instance of a call whose voice session already ran: pick the call back up. */
@@ -435,10 +445,30 @@ export class VoiceSession extends DurableObject<Env> {
 
   /** One voice session at a time: the answered webhook and a stream attaching can both ask for it. */
   private startLive(): Promise<void> {
-    this.liveStarting ??= this.openCurrentPhone().finally(() => {
+    this.liveStarting ??= (async () => {
+      await this.prewarming;
+      await this.openCurrentPhone();
+    })().finally(() => {
       this.liveStarting = null;
     });
     return this.liveStarting;
+  }
+
+  /**
+   * Answering a call, open the voice session before picking up, so it can speak the moment the
+   * call connects: opened once the phone stream attached after pickup, it took about 1.7s, and
+   * callers heard silence before the greeting (Rubin's callbacks). Waits up to `waitMs` for the
+   * session to start. A failed or slow open is not the call's failure: the phone stream opens one
+   * after pickup as before.
+   */
+  private async prewarmLive(waitMs: number): Promise<void> {
+    const s = await this.load();
+    if (!s?.answering || this.live || this.ended || this.answered) return;
+    this.prewarming ??= this.openLive({ prewarm: true }).finally(() => {
+      this.prewarming = null;
+    });
+    const started = new Promise<void>((resolve) => this.liveStartedWaiters.push(resolve));
+    await Promise.race([started, new Promise((resolve) => setTimeout(resolve, waitMs))]);
   }
 
   /** If the phone changes during an open, finish discarding that open, then serve the new phone. */
@@ -450,17 +480,21 @@ export class VoiceSession extends DurableObject<Env> {
     }
   }
 
-  private async openLive(): Promise<void> {
+  private async openLive(opts: { prewarm?: boolean } = {}): Promise<void> {
     const s = await this.load();
     const phone = this.phone;
-    if (!s || this.live || this.ended || !phone || phone.readyState !== WebSocket.OPEN) return;
+    const prewarm = Boolean(opts.prewarm);
+    if (!s || this.live || this.ended) return;
+    if (!prewarm && (!phone || phone.readyState !== WebSocket.OPEN)) return;
+    // Still current: the phone stream it was opened for, or, opened before pickup, the call itself.
+    const current = () => !this.ended && !this.live && (prewarm || (this.phone === phone && phone!.readyState === WebSocket.OPEN));
     let instructions = s.instructions;
     if (this.resumed) {
       const row = this.transcriptComplete ? null : await callStore(this.env.DB).byId(s.callId);
       const sofar = this.transcriptComplete ? this.transcript : row?.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [];
       instructions = `${s.instructions}\n\n${resumeNote(sofar)}`;
     }
-    if (this.phone !== phone || this.ended) return;
+    if (!current()) return;
     // Start monitoring alongside the connection, so telemetry never delays live audio.
     if (this.env.RAINDROP_WRITE_KEY && !this.monitoringReady) {
       this.monitoringReady = (async () => {
@@ -489,13 +523,14 @@ export class VoiceSession extends DurableObject<Env> {
       })().catch(() => console.warn('raindrop voice initialization failed', s.callId));
       this.ctx.waitUntil(this.monitoringReady);
     }
-    this.mark('live connecting');
+    this.mark(prewarm ? 'live connecting (prewarm)' : 'live connecting');
     const connecting = new AbortController();
     this.liveConnectAbort = connecting;
     let res: Response;
     try {
       res = await fetch(OPENAI_LIVE_URL, { headers: { upgrade: 'websocket', authorization: `Bearer ${this.env.OPENAI_API_KEY}` }, signal: connecting.signal });
     } catch (err) {
+      if (prewarm) return console.warn('prewarm could not open GPT-Live', String(err));
       if (this.phone === phone && !this.ended) await this.fail(`could not open GPT-Live: ${String(err)}`);
       return;
     } finally {
@@ -505,7 +540,7 @@ export class VoiceSession extends DurableObject<Env> {
     const ws = res.webSocket;
     // The network await can outlive the phone stream or the entire call. Never install its
     // result on a different phone, and never let its errors end that phone's call.
-    if (this.phone !== phone || this.ended || phone.readyState !== WebSocket.OPEN) {
+    if (!current()) {
       if (ws) {
         ws.accept();
         ws.close(1000, 'phone stream no longer current');
@@ -514,6 +549,7 @@ export class VoiceSession extends DurableObject<Env> {
     }
     if (!ws) {
       const why = `could not open GPT-Live: ${res.status} ${(await res.text()).slice(0, 300)}`;
+      if (prewarm) return console.warn('prewarm', why);
       if (this.phone !== phone || this.ended) return;
       console.error(why);
       await this.fail(why);
@@ -588,6 +624,7 @@ export class VoiceSession extends DurableObject<Env> {
         this.liveStartedAt = Date.now();
         void this.ctx.storage.put('liveStarted', true);
         this.mark(`live session started, flushing ${this.pendingAudio.length} buffered frames`);
+        for (const resolve of this.liveStartedWaiters.splice(0)) resolve();
         for (const a of this.pendingAudio) this.sendLive({ type: 'session.input_audio.append', audio: a });
         this.pendingAudio = [];
         await this.queueMachineUpdate(() => this.sendMachineGuidance());
@@ -784,7 +821,9 @@ export class VoiceSession extends DurableObject<Env> {
    * waits on our hello, and after 9 silent seconds MaxProMow asked "are you…" and hung up.
    */
   private nudgeWhenSilent(): void {
-    if (!this.answered || !this.liveReady || this.nudgeScheduled) return;
+    // Answering with a session opened before pickup, the greeting must wait for the phone stream:
+    // spoken before it attaches, it reaches nobody. streamAttached nudges again once it does.
+    if (!this.answered || !this.liveReady || this.nudgeScheduled || (this.setup?.answering && !this.phone)) return;
     this.nudgeScheduled = true;
     const live = this.live;
     const answering = Boolean(this.setup?.answering);

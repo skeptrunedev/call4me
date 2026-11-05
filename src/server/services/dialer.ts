@@ -384,7 +384,11 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     streamUrl: await streamUrl(env, id),
   };
   try {
-    await sessionFor(env, id).fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
+    const session = sessionFor(env, id);
+    await session.fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
+    // Open the voice session while it still rings (up to a couple of seconds), so whoever called
+    // hears the greeting as soon as we pick up instead of silence. A failed open just answers.
+    await session.fetch('https://session/prewarm', { method: 'POST' }).catch((err) => console.warn('prewarm failed', id, String(err)));
     await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: setup.streamUrl!, callId: id, timeLimitSecs: LIMITS.maxMinutes * 60 });
   } catch (err) {
     // Most often the caller hung up while this was setting up: answering fails, and their hangup
