@@ -20,3 +20,13 @@ test('answered calls carry the standing instructions to the answerer and its bac
   assert.doesNotMatch(inboundInstructions({ ...brief, standing: null }), /Standing instructions/);
   assert.doesNotMatch(inboundBackOfficeInstructions('Stephanie'), /standing instructions/);
 });
+
+test("the owner's saved opening wins over the callback's default greeting", () => {
+  // Rubin's callback answered "Hi, this is a personal assistant checking for a customer", from his
+  // last outbound call's calling_as, over the opening he had saved.
+  const opening = 'Open: "Hello, you\'ve reached M. Rubin\'s assistant. Are you calling back about an inquiry we made?"';
+  const withOpening = inboundInstructions({ ...brief, callingAs: 'a personal assistant checking for a customer', standing: opening });
+  assert.match(withOpening, /Answer the way the standing instructions above say, word for word/);
+  assert.doesNotMatch(withOpening, /- Answer with "Hi, this is a personal assistant/);
+  assert.match(inboundInstructions({ ...brief, standing: null }), /- Answer with a simple "Hello\?"/);
+});

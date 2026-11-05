@@ -347,6 +347,18 @@ ${nameRule(o)}`;
 - If they ask who this is or your name: "I'm ${name}." Give just the first name. If they ask for ${o.owner}, say they can't come to the phone right now and you can help or take a message.${said}`;
 }
 
+/**
+ * How the answerer opens. The owner's standing instructions come first: Rubin saved "Hello, you've
+ * reached M. Rubin's assistant...", but the fixed opening below them, built from his latest
+ * outbound call's calling_as, had it answer "Hi, this is a personal assistant checking for a customer".
+ */
+function answerLine(o: InboundBrief): string {
+  const fallback = o.callingAs ? `"Hi, this is ${o.assistantName ? whoIAm(o) : o.callingAs}."` : 'a simple "Hello?"';
+  return o.standing
+    ? `Answer the way the standing instructions above say, word for word if they give an opening line; only if they give none, answer with ${fallback} Then let them say why they're calling.`
+    : `Answer with ${fallback} and let them say why they're calling.`;
+}
+
 /** Callbacks: someone rings the account's own number, usually a business we called earlier. */
 export function inboundInstructions(o: InboundBrief): string {
   // Who follows up when the call can't settle something: the owner speaking says "I", anyone else names them.
@@ -388,7 +400,7 @@ ${ownerBlock}${standingBlock(o.standing)}${tasks}
 ${recent}
 
 # What to do
-${accentRule('marin', o.accent)}- Answer with ${o.callingAs ? `"Hi, this is ${o.assistantName ? whoIAm(o) : o.callingAs}."` : 'a simple "Hello?"'} and let them say why they're calling.
+${accentRule('marin', o.accent)}- ${answerLine(o)}
 ${o.tasks.length ? '- If it\'s about one of the unfinished tasks, finish it (see above).\n' : ''}- If it's about one of the recent calls, note any new time or detail and answer only with what those calls say; if they need a decision, hand off a question (ask_user) or say ${followUp}.
 - Otherwise take a message: who's calling, what it's about, and a good number to reach them.
 - Never agree to anything beyond what a task allows or what the recent calls already agreed to.
