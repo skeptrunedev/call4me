@@ -1,5 +1,5 @@
 import { now } from '../lib/ids';
-import { PROFILE_FIELDS, type Profile, type ProfileKey } from './intake';
+import { normalizeAccent, PROFILE_FIELDS, type Profile, type ProfileKey } from './intake';
 
 export class ProfileError extends Error {}
 
@@ -16,7 +16,8 @@ export function profiles(db: D1Database) {
       for (const [key, raw] of Object.entries(changes)) {
         if (!(key in PROFILE_FIELDS)) throw new ProfileError(`unknown profile field "${key}"; fields are ${Object.keys(PROFILE_FIELDS).join(', ')}`);
         const k = key as ProfileKey;
-        const value = (raw ?? '').trim().slice(0, 500);
+        const trimmed = (raw ?? '').trim().slice(0, 500);
+        const value = k === 'accent' ? normalizeAccent(trimmed) : trimmed;
         if (!value) {
           delete current[k];
           continue;

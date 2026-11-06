@@ -55,3 +55,13 @@ test('the opener carries no example task the caller could borrow', () => {
   assert.doesNotMatch(prompt, /table for four/i);
   assert.match(prompt, /never a reservation, an order or a request it doesn't mention/);
 });
+
+test('an accent with punctuation is reduced to letters instead of refused', async () => {
+  // Tassos's agent was refused three times for how it wrote the accent.
+  const { normalizeAccent, PROFILE_FIELDS } = await import('../src/server/services/intake');
+  assert.equal(normalizeAccent('Greek (Athens)'), 'Greek Athens');
+  assert.equal(normalizeAccent('Athenian Greek.'), 'Athenian Greek');
+  assert.equal(normalizeAccent('  Austrian German '), 'Austrian German');
+  assert.equal(PROFILE_FIELDS.accent.check?.(normalizeAccent('Greek, Athens / modern')), null);
+  assert.match(PROFILE_FIELDS.accent.check?.('123') ?? '', /got "123"/);
+});

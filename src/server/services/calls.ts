@@ -2,7 +2,7 @@ import { newId, now } from '../lib/ids';
 import { replayOf, type Idempotency } from '../lib/idempotency';
 import { checkDialable, type PhoneCheck } from '../lib/phone';
 import { accounts, type Account } from './accounts';
-import { catalog, missingMessage, PROFILE_FIELDS, resolveIntake, savedContext, type Surface } from './intake';
+import { catalog, missingMessage, normalizeAccent, PROFILE_FIELDS, resolveIntake, savedContext, type Surface } from './intake';
 import { mayCall, ringablePhone } from './numbers';
 import { profiles } from './profiles';
 
@@ -91,7 +91,7 @@ export function calls(db: D1Database) {
       const callerName = input.caller_name?.trim() || null;
       const nameProblem = callerName && PROFILE_FIELDS.assistant_name.check?.(callerName);
       if (nameProblem) throw new CallError(`caller_name: ${nameProblem}`);
-      const accent = input.accent?.trim() || null;
+      const accent = input.accent ? normalizeAccent(input.accent) || null : null;
       const accentProblem = accent && PROFILE_FIELDS.accent.check?.(accent);
       if (accentProblem) throw new CallError(`accent: ${accentProblem}`);
       const callingAs = input.calling_as?.trim() || null;
