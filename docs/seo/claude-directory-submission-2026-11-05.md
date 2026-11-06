@@ -57,7 +57,7 @@ Calls use prepaid credits from your call4me account, at $0.25 a minute from pick
 ## Decisions only Nick can make
 
 1. **Health data: answer yes.** The Claude surface allows doctor and dentist calls and insurance profile fields (`health = surface !== 'chatgpt'` in `src/server/mcp/server.ts`). The ChatGPT surface excludes them. Either declare it, or restrict the Claude surface the way ChatGPT's is, and accept the loss of those calls there.
-2. **The seven compliance acknowledgments** cover directory guidelines, first-party API use, financial transactions, AI media generation, prompt injection, conversation data and public documentation. They are legal statements, so read them yourself. The financial one matters: confirm how the add-funds tool behaves on this surface against what the plugin README says, "Credits are bought on the call4me website, never in the chat."
+2. **The seven compliance acknowledgments** cover directory guidelines, first-party API use, financial transactions, AI media generation, prompt injection, conversation data and public documentation. They are legal statements, so read them yourself. On the financial one: the purchase tools, including add funds, are not registered on directory servers (`registerPurchaseTools` runs only on the agents surface), so credits are bought on the website, never in the chat. Calls do spend credits.
 3. **Anthropic's directory terms** bind Skeptrune LLC, including keeping the connector secure and working.
 
 ## Test account for reviewers
