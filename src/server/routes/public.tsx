@@ -109,7 +109,7 @@ pub.get('/welcome', async (c) => {
   if (!owner) return c.html(<MessagePage title="already claimed" message={`these credits belong to the account for ${done.account.email}. sign in with that email to use them.`} signedIn />, 409);
   const key = await ownerKey(c, owner);
   const [balance, owned] = await Promise.all([accounts(c.env.DB).balanceCents(owner.id), numbers(c.env).views(owner.id)]);
-  return c.html(<WelcomePage apiKey={key} installPrompt={installPrompt(origin(c), key)} balanceCents={balance} email={owner.email} numbers={owned} redditEvents={redditEvents} />);
+  return c.html(<WelcomePage apiKey={key} installPrompt={installPrompt(origin(c), key)} balanceCents={balance} email={owner.email} numbers={owned} redditEvents={redditEvents} askFoundVia={!owner.found_via} />);
 });
 
 // ---- account
@@ -263,6 +263,15 @@ pub.post('/account/profile/clear', async (c) => {
   if (!account) return c.redirect('/login?next=/account', 303);
   await profiles(c.env.DB).clear(account.id);
   return c.redirect('/account#profile', 303);
+});
+
+pub.post('/account/found-via', async (c) => {
+  if (!sameOrigin(c)) return c.text('request origin is not allowed', 403);
+  const account = c.get('account');
+  if (!account) return c.redirect('/login?next=/account', 303);
+  const answer = field(await c.req.formData(), 'found_via', 300);
+  if (answer) await accounts(c.env.DB).saveFoundVia(account.id, answer);
+  return c.redirect('/account', 303);
 });
 
 pub.post('/account/reload/stop', async (c) => {

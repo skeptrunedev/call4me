@@ -21,10 +21,12 @@ export interface Account {
   reddit_last_visit_id: string | null;
   /** Approved for business-to-business sales and outreach calls (migrations/0036); 0 for everyone else. */
   sales_calls: number;
+  /** What they say they asked their AI or searched for when they found call4me (migrations/0040); null until answered. */
+  found_via: string | null;
 }
 
 /** The columns every Account is read with. */
-export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc, first_touch, reddit_first_visit_id, reddit_last_visit_id, sales_calls`;
+export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc, first_touch, reddit_first_visit_id, reddit_last_visit_id, sales_calls, found_via`;
 
 export type LedgerKind = 'topup' | 'reload' | 'hold' | 'release' | 'call' | 'refund' | 'adjustment' | 'number';
 
@@ -48,6 +50,10 @@ export function accounts(db: D1Database) {
       const normalized = email.trim().toLowerCase();
       await db.prepare(`INSERT OR IGNORE INTO accounts (id, email, created_at) VALUES (?, ?, ?)`).bind(newId(), normalized, now()).run();
       return (await this.byEmail(normalized))!;
+    },
+
+    async saveFoundVia(accountId: string, text: string): Promise<void> {
+      await db.prepare(`UPDATE accounts SET found_via = ? WHERE id = ?`).bind(text, accountId).run();
     },
 
     /** Replace the account's API key; the old one stops working. `secret` seals the stored copy. */

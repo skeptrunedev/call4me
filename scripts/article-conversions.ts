@@ -16,6 +16,8 @@ export interface ConversionRow {
   fundedCheckoutAccounts: number;
   firstCompletedCallAccounts: number;
 }
+export interface ConnectorRow { connector: string; signups: number; calledAccounts: number; fundedCheckoutAccounts: number; paidCents: number }
+export interface FoundViaRow { source: string; connector: string; answer: string }
 export interface SearchRow { keys: string[]; clicks: number; impressions: number; ctr: number; position: number }
 export interface SearchResponse { rows?: SearchRow[]; metadata?: { firstIncompleteDate?: string }; lastAvailableDate?: string }
 
@@ -62,6 +64,29 @@ export async function articleConversions(db: D1Database, from: number, until: nu
     FROM attributed a LEFT JOIN first_calls c ON c.account_id = a.id LEFT JOIN first_payments p ON p.account_id = a.id
     GROUP BY 1, 2, 3, 4 ORDER BY signups DESC
   `).bind(from, Math.min(until, asOf), ...internalEmails.map(email => email.toLowerCase()), asOf, asOf, asOf).all<ConversionRow>()).results;
+}
+
+/** The same cohort by the first AI app each account connected: "direct" hides most of these, since an OAuth install sends no referrer. */
+export async function connectorConversions(db: D1Database, from: number, until: number, internalEmails: string[], asOf = until) {
+  const exclusions = internalEmails.length ? `AND lower(a.email) NOT IN (${internalEmails.map(() => '?').join(', ')})` : '';
+  const emails = internalEmails.map(email => email.toLowerCase());
+  const cohort = `
+    WITH cohort AS (
+      SELECT a.id, a.found_via, CASE WHEN json_valid(a.first_touch) THEN json_extract(a.first_touch, '$.source') END AS source,
+        COALESCE((SELECT cl.name FROM oauthConsent oc JOIN oauthClient cl ON cl.clientId = oc.clientId WHERE oc.userId = a.user_id ORDER BY oc.createdAt LIMIT 1), '(no connector)') AS connector
+      FROM accounts a WHERE a.created_at >= ? AND a.created_at < ? ${exclusions}
+    )`;
+  const connectors = (await db.prepare(`${cohort}
+    SELECT connector, COUNT(*) AS signups,
+      SUM(EXISTS (SELECT 1 FROM calls c WHERE c.account_id = cohort.id AND c.direction = 'outbound' AND c.status = 'completed' AND c.ended_at < ?)) AS calledAccounts,
+      SUM(EXISTS (SELECT 1 FROM topups t WHERE t.account_id = cohort.id AND t.status = 'paid' AND t.paid_at < ?)) AS fundedCheckoutAccounts,
+      COALESCE(SUM((SELECT SUM(t.amount_cents) FROM topups t WHERE t.account_id = cohort.id AND t.status = 'paid' AND t.paid_at < ?)), 0) AS paidCents
+    FROM cohort GROUP BY connector ORDER BY paidCents DESC, signups DESC
+  `).bind(from, Math.min(until, asOf), ...emails, asOf, asOf, asOf).all<ConnectorRow>()).results;
+  const foundVia = (await db.prepare(`${cohort}
+    SELECT COALESCE(source, '(unknown)') AS source, connector, found_via AS answer FROM cohort WHERE found_via IS NOT NULL
+  `).bind(from, Math.min(until, asOf), ...emails).all<FoundViaRow>()).results;
+  return { connectors, foundVia };
 }
 
 /** Include every current article, even when Search Console has no reported row for it. */
@@ -111,7 +136,10 @@ async function main() {
   const index = readFileSync(new URL('src/content/blog/index.ts', root), 'utf8');
   const slugs = [...index.matchAll(/slug: '([^']+)'/g)].map(match => match[1]);
   if (!slugs.length) throw new Error('No published articles found in the blog registry');
-  const conversions = await articleConversions(cliD1(values.local ? '--local' : '--remote'), from, until, internal.split(',').map(email => email.trim()), asOf);
+  const db = cliD1(values.local ? '--local' : '--remote');
+  const internalEmails = internal.split(',').map(email => email.trim());
+  const conversions = await articleConversions(db, from, until, internalEmails, asOf);
+  const { connectors, foundVia } = await connectorConversions(db, from, until, internalEmails, asOf);
   let search: SearchResponse | null = null;
   let searchError: string | null = null;
   try { search = readSearchConsole(values.start, values.end, values['data-state'] as 'all' | 'final'); }
@@ -123,11 +151,13 @@ async function main() {
       fundedCheckoutAccounts: 'Distinct accounts with a successful checkout topup currently marked paid and paid_at before conversionsAsOf, matching the dashboard. Refunds excluded. May include discounted or zero-charge checkouts; net cash received is not stored here. Not purchase events or revenue.',
       firstCompletedCallAccounts: 'Distinct accounts with their first completed outbound call ended before conversionsAsOf. Completion is not task success.',
       search: 'Google web search page metrics, Pacific dates. Not joined to individual visitors. Missing rows are null, not proof of zero exposure. Click to signup rates are deliberately not computed.',
+      connectors: 'The same cohort by the first AI app the account connected over OAuth. Key based installs have no consent row and count as no connector. calledAccounts is any completed outbound call before conversionsAsOf. paidCents is the sum of paid topups before conversionsAsOf, gross of later refunds.',
+      foundVia: 'Answers to the optional how-you-found-us question, as written. Free text: read it, do not publish it.',
       scope: 'First touch only; no internal touch or client identity inferred. Cookie loss and earlier anonymous visits remain unknown.' },
     searchConsole: { status: search ? 'ok' : 'unavailable', dataState: values['data-state'], metadata: search?.metadata ?? null, lastAvailableDate: search?.lastAvailableDate ?? null, error: searchError },
     coverage: { excludedInternalEmails: internal.split(',').length, cohortAccounts: conversions.reduce((n, row) => n + row.signups, 0),
       unknownAttributionAccounts: conversions.filter(row => row.attribution === 'unknown').reduce((n, row) => n + row.signups, 0),
-      laterObservedAccounts: conversions.filter(row => row.attribution === 'recorded after signup').reduce((n, row) => n + row.signups, 0) }, articles }, null, 2));
+      laterObservedAccounts: conversions.filter(row => row.attribution === 'recorded after signup').reduce((n, row) => n + row.signups, 0) }, connectors, foundVia, articles }, null, 2));
   if (searchError) process.exitCode = 1;
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch(error => { console.error(error.message); process.exitCode = 1; });

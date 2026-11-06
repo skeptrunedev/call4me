@@ -152,6 +152,7 @@ export const AccountPage: FC<{
       </p>
     )}
     {p.calls.length === 0 ? <FirstCall email={p.account.email} installPrompt={p.installPrompt} /> : <CopyBlock id="agent-prompt" text={p.agentPrompt} rows={12} hidden />}
+    {!p.account.found_via && <FoundViaForm />}
     {p.reload ? (
       <form method="post" action="/account/reload/stop" class="inline">
         reloads <span class="price">{dollars(p.reload.cents)}</span> every month{p.reload.count > 1 && <> ({p.reload.count} subscriptions)</>}
@@ -350,6 +351,20 @@ export const AccountPage: FC<{
       <button type="submit" class="linkbutton">sign out</button>
     </form>
   </Layout>
+);
+
+/** Referrers show which AI sent someone, never what they asked it, so we ask once. Optional. */
+export const FoundViaForm: FC = () => (
+  <form method="post" action="/account/found-via" class="buy form" aria-label="how you found call4me">
+    <div class="row">
+      <label for="found-via">what did you ask your ai, or search for, when you found call4me? (optional)</label>
+      <input type="text" id="found-via" name="found_via" maxlength={300} placeholder={'like "is there an ai that can wait on hold for me"'} />
+    </div>
+    <div class="actions">
+      <button type="submit">send</button>
+    </div>
+    <p class="small">it helps us learn how people find us. please leave out anything personal.</p>
+  </form>
 );
 
 /**
