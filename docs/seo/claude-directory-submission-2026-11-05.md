@@ -68,7 +68,7 @@ Calls use prepaid credits from your call4me account, at $0.25 a minute from pick
 
 The portal asks for credentials to a fully populated account, entered there and shown only to reviewers.
 
-`directory-review@call4.me` exists with password sign-in, but it has 0 calls, so it isn't populated yet. Before submitting: make sure it has credits, place a few real calls so history, transcripts and recordings exist, and put the password in the portal only, never in this repo.
+`directory-review@call4.me` has password sign-in, $15 in credits and real calls in its history (populated November 5). Don't rerun `npm run password-user` for this email: it sets a new password and would break the credentials already given to reviewers. Keep the password in the portal only, never in this repo.
 
 Reviewer steps to paste:
 

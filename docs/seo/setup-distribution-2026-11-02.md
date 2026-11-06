@@ -94,3 +94,7 @@ After push, verify the README on GitHub and the generated Agent Skill on the
 live site, then check whether Glama has synchronized the README. AllMCPs and
 Electra corrections remain proposed text until an authorized listing edit or
 message is submitted and the resulting public page is checked.
+
+## Update, November 5
+
+Glama and AllMCPs picked up the corrected README without any request, so neither needs an edit. Electra still showed the wrong tasks, so its "Info is outdated" report was filed with the proposed summary. It re-checks the official source itself, so check the page again later.
