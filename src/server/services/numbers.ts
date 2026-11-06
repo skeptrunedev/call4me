@@ -579,6 +579,10 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
     return out;
   }
 
+  /** How long a first call whose number order was throttled waits for a concurrent one's number. */
+  const CONCURRENT_ORDER_WAIT_MS = 1_000;
+  const CONCURRENT_ORDER_TRIES = 15;
+
   /** The free first number: no one has paid for it, so this waits as long as a US order can take. */
   async function order(found: AvailableNumber, country: string): Promise<void> {
     const placed = await provider.orderNumber(found.phoneNumber, { requirementGroupId: COUNTRIES[country].requirementGroup ?? null, waitMs: INCLUDED_WAIT_MS });
@@ -730,7 +734,20 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
       if (existing) return existing.phone_number;
       const found = await provider.availableNumber({ country: 'US', type: 'local', areaCode: isHome(nearE164) ? nearE164.slice(2, 5) : null });
       if (!found) throw new NumberError('no US numbers are for sale right now; try again shortly', 503);
-      await order(found, 'US');
+      try {
+        await order(found, 'US');
+      } catch (err) {
+        // Several first calls at once each order a number: the carrier throttles them (429) or
+        // finds the one another just bought taken (409). Tom's agent placed five at once and four
+        // failed. Wait for the order that got through, and call from its number.
+        if (!(err instanceof TelnyxError && (err.status === 429 || err.status === 409))) throw err;
+        for (let i = 0; i < CONCURRENT_ORDER_TRIES; i++) {
+          await new Promise((resolve) => setTimeout(resolve, CONCURRENT_ORDER_WAIT_MS));
+          const bought = await db.prepare(`SELECT phone_number FROM numbers WHERE account_id = ? AND included = 1 AND status = 'active'`).bind(account.id).first<{ phone_number: string }>();
+          if (bought) return bought.phone_number;
+        }
+        throw err;
+      }
       const r = await db
         .prepare(`INSERT OR IGNORE INTO numbers (id, account_id, phone_number, country, number_type, included, monthly_cents, paid_through, status, created_at) VALUES (?, ?, ?, 'US', 'local', 1, 0, NULL, 'active', ?)`)
         .bind(newId(), account.id, found.phoneNumber, now())
