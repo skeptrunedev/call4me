@@ -16,11 +16,11 @@ Other outreach rules:
 
 ## Content
 
-**New `/blog` posts are paused.** Every blog tier lost most of its Google impressions from November 1, 2026, cause unknown, while root pages held. Keep placing recorded calls and add the results to `/companies` and `/hold-times`. Don't delete, noindex or rewrite posts until the drop is diagnosed.
+**New `/blog` posts are paused.** Every blog tier lost most of its Google impressions by November 1, 2026 (sliding from a 719 a day peak on October 26), cause unknown, while root pages held and Bing rose. It is Google-specific. Keep placing recorded calls and add the results to `/companies` and `/hold-times`. Don't delete, noindex or rewrite posts until the drop is diagnosed.
 
 Write for the questions where call4me is the answer, not where someone else is the authority:
 
-- We win "an AI that does X for me": a root task page in `src/content/tasks.ts`, using the words people search, backed by real calls. In the November 5 geo check ChatGPT cited an exact-match task page every time it retrieved one, and never cited a blog post.
-- We lose questions about another company or product. Their own site or docs win "what is Progressive's number" and "can ChatGPT make a call". ChatGPT searches `site:help.openai.com` and GitHub for those, so reach them through listings, not new pages.
+- We win "an AI that does X for me": a root task page in `src/content/tasks.ts`, using the words people search, backed by real calls. In the November 5 geo check ChatGPT cited an exact-match task page every time it retrieved one, and never cited a blog post. That is ChatGPT only: Bing's AI Performance report shows Copilot citing `/blog/cancel-factor` 99 times, so check each engine before generalizing.
+- We mostly lose questions about another company or product. Their own site or docs win "what is Progressive's number" and "can ChatGPT make a call". ChatGPT searches `site:help.openai.com` and GitHub for those, so reach them through listings, not new pages.
 - Measure with `npm run geo:check -- --runs 2` and `npm run seo:conversions`, which splits signups by connected AI app and lists how-you-found-us answers.
-- Don't start new cost posts ("how much does X cost") or "cancel X" posts. Put subscription cancellation details in that company's entry.
+- Don't start new cost posts ("how much does X cost"). "Cancel X" posts rank badly on Google (50 to 70) but earned the Copilot citations above, with no signups traced to them yet, so weigh that before writing more.
