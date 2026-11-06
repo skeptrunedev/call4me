@@ -73,6 +73,6 @@ ${CATEGORIES.map((c) => `- \`${c.slug}\`: ${c.name} (${c.examples})`).join('\n')
 
 ## Rules
 
-Only call businesses and services the user wants to reach, never personal numbers that don't expect the call. No telemarketing, surveys, collections, or pretending to be the user: the caller calls for them. US, Canadian and European numbers, ${ABROAD_CALLING}, plus numbers in other countries the account holds a call4me number in (call4me_list_numbers, call4me_buy_number); no emergency or premium-rate numbers. Full rules: ${site}/rules
+Call businesses and services the user wants to reach, or people who know the call is coming (the user's friends and family). Never call someone who isn't expecting it. No telemarketing, surveys, collections, or pretending to be the user: the caller calls for them. US, Canadian and European numbers, ${ABROAD_CALLING}, plus numbers in other countries the account holds a call4me number in (call4me_list_numbers, call4me_buy_number); no emergency or premium-rate numbers. Full rules: ${site}/rules
 `;
 }

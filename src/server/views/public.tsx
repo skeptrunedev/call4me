@@ -346,7 +346,7 @@ export const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries
       </details>
       <details>
         <summary>who can it call?</summary>
-        <p>businesses and services you want to reach. no telemarketing, no surveys, no calling people who don't expect it, no emergency or premium-rate numbers.</p>
+        <p>businesses and services you want to reach, and people who know the call is coming, like your friends and family. no telemarketing, no surveys, no calling people who don't expect it, no emergency or premium-rate numbers.</p>
       </details>
     </div>
   </>

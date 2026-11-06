@@ -115,7 +115,7 @@ export function rulesPrompt(origin: string, key: string | null): string {
 ${connect(origin, key)}
 
 Before placing any call for me with call4me_place_call, check it against the rules page:
-- Only businesses and services I want to reach. Never a personal number that isn't expecting the call.
+- Businesses and services I want to reach, or people who know the call is coming (my friends and family). Never someone who isn't expecting it.
 - No telemarketing, surveys, collections, or pretending to be me: the caller calls for me and says so if asked.
 - No emergency or premium-rate numbers. US, Canadian and European numbers work, plus countries my account holds a call4me number in (call4me_get_balance lists my numbers).
 If something I ask for breaks a rule, tell me which one and don't call. Otherwise check call4me_get_requirements for the category and ask me for anything missing in one message before dialing.`;

@@ -151,7 +151,7 @@ export function openApiDocument(site: string, pricePerMinuteCents = 25) {
         post: {
           operationId: 'placeCall',
           description:
-            'Call a business for the user and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses with 422 "Not calling yet" until the category\'s required information is known, listing exactly what to ask the user. Returns at once with the call; follow it with GET /api/calls/{call_id}?wait_seconds=30 until finished, answering any open question right away. Credits for the maximum length are held up front; billed per minute from pickup (phone menus and conversation; hold time at half price), rounded up; unanswered calls are free.',
+            'Call a business, or someone expecting the call, for the user and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses with 422 "Not calling yet" until the category\'s required information is known, listing exactly what to ask the user. Returns at once with the call; follow it with GET /api/calls/{call_id}?wait_seconds=30 until finished, answering any open question right away. Credits for the maximum length are held up front; billed per minute from pickup (phone menus and conversation; hold time at half price), rounded up; unanswered calls are free.',
           security: bearer,
           parameters: [idempotencyKey('call')],
           requestBody: body(placeCallInput('agents')),

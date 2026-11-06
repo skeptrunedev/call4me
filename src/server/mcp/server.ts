@@ -104,7 +104,7 @@ ${agents ? `The user can also call from their own phone number: verify it once w
 ` : ''}Every call leaves the number the business saw as the callback, unless callback_number names another one (the user's mobile, an assistant's line): then callbacks ring that phone and call4me can't pick them up. If a call ends in voicemail or "we'll call you back", call4me remembers the task for 14 days: when the business calls a call4me number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (call4me_get_call lists its callbacks) and in call4me_list_calls.
 
 The caller sounds like a normal person calling for the user. It keeps turns short and does not read the booking back at the end; the recap comes back to you.
-Only call businesses and services the user wants to reach, never personal numbers they don't expect a call from.${salesCalls ? `
+Call businesses and services the user wants to reach, or people who know the call is coming (the user's friends and family, someone who asked to be called). Never call someone who isn't expecting it.${salesCalls ? `
 
 This account is approved for business-to-business sales and outreach calls: the user may have the caller introduce their company and pitch its product or service to businesses. Pass calling_as with the company, and give the caller what it may say (the offer, pricing, the next step to propose) in goal and facts. Only call businesses at their published business numbers, never consumers or personal phones. If a business asks not to be called again, the caller says sorry and blocks its number, and call4me never dials it again.` : ''}`;
 }
@@ -199,7 +199,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     titled({
       title: 'Place a phone call',
       description:
-        `Call a business for the user (US, Canada, Europe, the UAE and Japan, or any other country the account holds a number in, prices vary by destination; see ${agents ? 'call4me_list_numbers' : 'call4me_get_balance'} for current calling rates) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category's required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with call4me_get_call. Credits for the maximum length are held up front; billed from pickup by a person or automated system, including phone menus, hold time, and conversation at the same rate, rounded up to the minute; unanswered calls are free.`,
+        `Call a business, or someone expecting the call, for the user (US, Canada, Europe, the UAE and Japan, or any other country the account holds a number in, prices vary by destination; see ${agents ? 'call4me_list_numbers' : 'call4me_get_balance'} for current calling rates) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category's required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with call4me_get_call. Credits for the maximum length are held up front; billed from pickup by a person or automated system, including phone menus, hold time, and conversation at the same rate, rounded up to the minute; unanswered calls are free.`,
       inputSchema: placeInput,
       annotations: DIALS,
     }),
