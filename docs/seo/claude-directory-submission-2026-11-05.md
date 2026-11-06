@@ -1,7 +1,11 @@
 # Claude directory submission pack
 
 Prepared November 5, 2026 from [Submit a connector](https://claude.com/docs/connectors/building/submission.md)
-and [Submit your plugin](https://claude.com/docs/plugins/submit.md). Nothing here has been submitted.
+and [Submit your plugin](https://claude.com/docs/plugins/submit.md).
+
+**Status:** Nick has already submitted one listing and has had no reply, so use this pack only for whichever of the two
+submissions is still missing. Check [the portal status](https://claude.com/docs/directory/submission-status.md) first.
+The earlier Claude Console form is no longer supported: a submission made there has to be withdrawn and resubmitted in the portal.
 
 Why it matters: when ChatGPT answers "how can Claude make phone calls", it searches Anthropic's sites and
 cites `claude.com/marketplace/connectors/twilio`. call4me has no page there.
