@@ -1,7 +1,7 @@
 import { newId, now } from '../lib/ids';
 import type { Idempotency } from '../lib/idempotency';
 import { hmacHex } from '../lib/keys';
-import { checkDialable, formatPhone } from '../lib/phone';
+import { checkDialable } from '../lib/phone';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { telnyx, TelnyxError } from '../lib/telnyx';
 import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions, inboundInstructions, type OpenTask } from '../voice/prompt';
@@ -16,6 +16,9 @@ import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MA
 import { analytics } from './analytics';
 
 export { VOICES, type Voice } from '../voice/voices';
+
+/** The carrier refusing an own number as caller ID: a 503 (international spoofing), no route for it, or an invalid or unverified origination number. */
+const ownNumberRefused = (err: unknown) => err instanceof TelnyxError && (err.status === 503 || /\b(?:PE5|D35|D51)\b|no routes found|origination number/i.test(err.detail));
 
 export const pricePerMinute = (env: Env) => Number(env.PRICE_PER_MINUTE_CENTS || 25);
 
@@ -147,68 +150,81 @@ export async function placeCall(
   const brief = JSON.parse(call.brief) as Brief;
   if (!account.display_name) await accounts(env.DB).setDisplayName(account.id, brief.on_behalf_of);
 
-  let ownFrom: string | null = null;
   try {
     await assertVoiceUnlocked(env.DB);
     const n = numbers(env);
-    const caller = await n.callerId(account, to, input.from);
-    const from = caller.number;
-    if (caller.own) ownFrom = from;
-    price = pricePerMinuteTo(env, call.to_number, from);
-    // The user's phone always rings from a call4me number, never from their own.
-    const ring = caller.own ? (await n.callerId(account, to)).number : from;
-    await env.DB.prepare(`UPDATE calls SET from_number = ?, ring_number = ? WHERE id = ?`).bind(from, caller.own ? ring : null, call.id).run();
-    const profile = await profiles(env.DB).get(account.id);
-    const person = personFor(origin, account, profile, ownerPhone, ring, brief.connect_when ?? null, brief.listen_in ?? false);
-    const cb = {
-      onBehalfOf: brief.on_behalf_of,
-      business: call.business,
-      goal: call.goal,
-      // Secrets were masked in the stored brief; the caller gets the real values.
-      facts: secrets.reduce((f, sec) => f.replace(`${sec.label}: ${SECRET_MASK}`, `${sec.label}: ${sec.value} (share only when they ask to verify the account)`), brief.facts),
-      flexibility: brief.flexibility,
-      // Callbacks come to the number the user named, else to the number the business saw: a
-      // call4me number answers and takes a message, the user's own number rings the user.
-      callbackNumber: brief.callback_number ?? from,
-      callbackRingsOwner: !brief.callback_number && caller.own,
-      localTime: localTimeIn(brief.timezone),
-      owner: person.name,
-      assistantName: brief.caller_name || assistantNameOf(profile),
-      accent: brief.accent || accentOf(profile),
-      ownerPronunciation: namePronunciationOf(profile),
-      callingAs: brief.calling_as ?? null,
-      connectWhen: brief.connect_when ?? null,
-      ownerReachable: Boolean(person.phone),
-      unattended: execution.unattended,
-      voice: input.voice ?? 'marin',
+    // Sets the call up for one caller ID and dials: who callbacks reach and the price depend on it.
+    const dialFrom = async (caller: { number: string; own: boolean }): Promise<string> => {
+      const from = caller.number;
+      price = pricePerMinuteTo(env, call.to_number, from);
+      // The user's phone always rings from a call4me number, never from their own.
+      const ring = caller.own ? (await n.callerId(account, to)).number : from;
+      await env.DB.prepare(`UPDATE calls SET from_number = ?, ring_number = ? WHERE id = ?`).bind(from, caller.own ? ring : null, call.id).run();
+      const profile = await profiles(env.DB).get(account.id);
+      const person = personFor(origin, account, profile, ownerPhone, ring, brief.connect_when ?? null, brief.listen_in ?? false);
+      const cb = {
+        onBehalfOf: brief.on_behalf_of,
+        business: call.business,
+        goal: call.goal,
+        // Secrets were masked in the stored brief; the caller gets the real values.
+        facts: secrets.reduce((f, sec) => f.replace(`${sec.label}: ${SECRET_MASK}`, `${sec.label}: ${sec.value} (share only when they ask to verify the account)`), brief.facts),
+        flexibility: brief.flexibility,
+        // Callbacks come to the number the user named, else to the number the business saw: a
+        // call4me number answers and takes a message, the user's own number rings the user.
+        callbackNumber: brief.callback_number ?? from,
+        callbackRingsOwner: !brief.callback_number && caller.own,
+        localTime: localTimeIn(brief.timezone),
+        owner: person.name,
+        assistantName: brief.caller_name || assistantNameOf(profile),
+        accent: brief.accent || accentOf(profile),
+        ownerPronunciation: namePronunciationOf(profile),
+        callingAs: brief.calling_as ?? null,
+        connectWhen: brief.connect_when ?? null,
+        ownerReachable: Boolean(person.phone),
+        unattended: execution.unattended,
+        voice: input.voice ?? 'marin',
+      };
+      const stream = await streamUrl(env, call.id);
+      const setup: SessionSetup = {
+        callId: call.id,
+        streamUrl: stream,
+        person,
+        unattended: execution.unattended,
+        instructions: callInstructions(cb),
+        backOffice: backOfficeInstructions(cb),
+        voice: cb.voice,
+        maxSeconds: brief.max_minutes * 60,
+        pricePerMinuteCents: price,
+        redact: secrets.map((sec) => sec.value),
+        inbandKeys: inbandKeysFor(call.to_number),
+      };
+      const session = sessionFor(env, call.id);
+      await session.fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
+      const placed = await telnyx(env).dial({
+        to: call.to_number,
+        from,
+        webhookUrl: `${origin}/webhooks/telnyx`,
+        streamUrl: stream,
+        callId: call.id,
+        // The session enforces the call's own limit, which a hold can extend; Telnyx's is the ceiling.
+        timeLimitSecs: LIMITS.maxMinutes * 60,
+      });
+      await db.dialing(call.id, placed);
+      await session.fetch('https://session/control', { method: 'POST', body: JSON.stringify({ controlId: placed }) });
+      return placed;
     };
-    const stream = await streamUrl(env, call.id);
-    const setup: SessionSetup = {
-      callId: call.id,
-      streamUrl: stream,
-      person,
-      unattended: execution.unattended,
-      instructions: callInstructions(cb),
-      backOffice: backOfficeInstructions(cb),
-      voice: cb.voice,
-      maxSeconds: brief.max_minutes * 60,
-      pricePerMinuteCents: price,
-      redact: secrets.map((sec) => sec.value),
-      inbandKeys: inbandKeysFor(call.to_number),
-    };
-    const session = sessionFor(env, call.id);
-    await session.fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
-    controlId = await telnyx(env).dial({
-      to: call.to_number,
-      from,
-      webhookUrl: `${origin}/webhooks/telnyx`,
-      streamUrl: stream,
-      callId: call.id,
-      // The session enforces the call's own limit, which a hold can extend; Telnyx's is the ceiling.
-      timeLimitSecs: LIMITS.maxMinutes * 60,
-    });
-    await db.dialing(call.id, controlId);
-    await session.fetch('https://session/control', { method: 'POST', body: JSON.stringify({ controlId }) });
+    const requested = await n.callerId(account, to, input.from);
+    try {
+      controlId = await dialFrom(requested);
+    } catch (err) {
+      // The carrier may refuse the user's own number as caller ID where a call4me number goes
+      // through: Telnyx presents verified numbers to some European destinations only on a best
+      // effort (Tassos's Greek and Leonardo's Belgian numbers, calling in their own countries,
+      // got PE5). Place the call from a call4me number instead of failing it.
+      if (!(requested.own && ownNumberRefused(err))) throw err;
+      console.warn('own number refused as caller ID; calling from a call4me number', call.id, requested.number, String(err));
+      controlId = await dialFrom(await n.callerId(account, to));
+    }
   } catch (err) {
     // The full carrier error stays on the call row for debugging; the agent gets the short version.
     console.error('place call failed', call.id, err);
@@ -221,12 +237,6 @@ export async function placeCall(
     // Refusals for the destination itself never clear on a retry; agents kept retrying Swiss mobiles.
     if (err instanceof TelnyxError && /\b(?:D11)\b|destination number is invalid/i.test(err.detail)) {
       throw new CallError(`could not place the call (${call.id}): the carrier says ${call.to_number} isn't a valid number. nothing was charged; check the number before trying again.`, 422, call.id);
-    }
-    // An own number may be refused as caller ID where a call4me number isn't: international routes
-    // reject a caller ID they take for spoofed, and some won't route a foreign one (Tassos's Greek
-    // number got PE5 calling a Greek mobile that his call4me number reached).
-    if (ownFrom && err instanceof TelnyxError && (err.status === 503 || /\b(?:PE5|D35|D51)\b|no routes found|origination number/i.test(err.detail))) {
-      throw new CallError(`could not place the call (${call.id}): the carrier refused your own number ${formatPhone(ownFrom)} as caller ID for ${call.to_number}. nothing was charged; place it again without from to call from a call4me number.`, 422, call.id);
     }
     if (err instanceof TelnyxError && /\b(?:D13|D24|PE5)\b|no routes found|destination rate limit|whitelisted countries/i.test(err.detail)) {
       throw new CallError(`could not place the call (${call.id}): call4me can't reach ${call.to_number} yet; calls to that country or network aren't supported. nothing was charged, and trying again won't change it.`, 422, call.id);
