@@ -276,6 +276,7 @@ export const Layout: FC<{
               <a href="/call-customer-service">ai that calls customer service</a>
               <a href="/negotiate-bills">ai bill negotiation</a>
               <a href="/dispute-a-charge">ai that disputes charges</a>
+              <a href="/phone-anxiety">phone anxiety</a>
               <a href="/blog">blog</a>
               <a href="/companies">customer service numbers</a>
               <a href="/students">students</a>

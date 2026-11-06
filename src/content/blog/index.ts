@@ -71,7 +71,6 @@ import pinOnGrandReservations from './pin-on-grand-reservations.md';
 import salonPerSeBellaire from './salon-per-se-bellaire.md';
 import sabaiEugeneReservations from './sabai-eugene-reservations.md';
 import icebarOrlandoTickets from './icebar-orlando-tickets.md';
-import phoneAnxiety from './phone-anxiety.md';
 import howToLowerSpectrumBill from './how-to-lower-spectrum-bill.md';
 import howToLowerVerizonBill from './how-to-lower-verizon-bill.md';
 import howToLowerXfinityBill from './how-to-lower-xfinity-bill.md';
@@ -249,7 +248,6 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'stubhub-customer-service-number', markdown: stubhubCustomerServiceNumber },
   { slug: 'monkeybrains-customer-service-number', markdown: monkeybrainsCustomerServiceNumber },
   { slug: 'sfpl-main-library-phone-number', markdown: sfplMainLibraryPhoneNumber },
-  { slug: 'phone-anxiety', markdown: phoneAnxiety },
   { slug: 'how-to-lower-spectrum-bill', markdown: howToLowerSpectrumBill },
   { slug: 'how-to-lower-verizon-bill', markdown: howToLowerVerizonBill },
   { slug: 'how-to-lower-xfinity-bill', markdown: howToLowerXfinityBill },

@@ -3,7 +3,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/": {
     "html": "/__pages/8a5edab282632443.html",
     "markdown": "/__pages/8a5edab282632443.md",
-    "tokens": 3232
+    "tokens": 3237
   },
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
@@ -28,47 +28,52 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/ai-call-assistant": {
     "html": "/__pages/9c2cf5350f943d84.html",
     "markdown": "/__pages/9c2cf5350f943d84.md",
-    "tokens": 2880
+    "tokens": 2967
   },
   "/app-that-calls-businesses-for-you": {
     "html": "/__pages/1d754aa507f67b2f.html",
     "markdown": "/__pages/1d754aa507f67b2f.md",
-    "tokens": 2980
+    "tokens": 2945
   },
   "/hold-for-me": {
     "html": "/__pages/ba822c49c148d1be.html",
     "markdown": "/__pages/ba822c49c148d1be.md",
-    "tokens": 2794
+    "tokens": 2814
   },
   "/book-doctor-appointment": {
     "html": "/__pages/c75d5c79ab7b63e3.html",
     "markdown": "/__pages/c75d5c79ab7b63e3.md",
-    "tokens": 2264
+    "tokens": 2284
   },
   "/cancel-subscription": {
     "html": "/__pages/25b27c4f152aa217.html",
     "markdown": "/__pages/25b27c4f152aa217.md",
-    "tokens": 2404
+    "tokens": 2424
   },
   "/book-restaurant-reservation": {
     "html": "/__pages/3dba287a8c818da2.html",
     "markdown": "/__pages/3dba287a8c818da2.md",
-    "tokens": 2009
+    "tokens": 2028
   },
   "/call-customer-service": {
     "html": "/__pages/83c8be2160d0ee48.html",
     "markdown": "/__pages/83c8be2160d0ee48.md",
-    "tokens": 2289
+    "tokens": 2309
   },
   "/negotiate-bills": {
     "html": "/__pages/71a04d205e1d6891.html",
     "markdown": "/__pages/71a04d205e1d6891.md",
-    "tokens": 2392
+    "tokens": 2412
   },
   "/dispute-a-charge": {
     "html": "/__pages/92ecfc917ddafeee.html",
     "markdown": "/__pages/92ecfc917ddafeee.md",
-    "tokens": 2165
+    "tokens": 2185
+  },
+  "/phone-anxiety": {
+    "html": "/__pages/4278e6ad77a870a4.html",
+    "markdown": "/__pages/4278e6ad77a870a4.md",
+    "tokens": 7564
   },
   "/hold-times": {
     "html": "/__pages/0adb6fe5d87ff479.html",
@@ -78,7 +83,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/students": {
     "html": "/__pages/9a3f77bd97426a79.html",
     "markdown": "/__pages/9a3f77bd97426a79.md",
-    "tokens": 910
+    "tokens": 909
   },
   "/mcp": {
     "html": "/__pages/88fe637beab867e2.html",
@@ -88,12 +93,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/rules": {
     "html": "/__pages/933053fc294245bb.html",
     "markdown": "/__pages/933053fc294245bb.md",
-    "tokens": 1282
+    "tokens": 1287
   },
   "/privacy": {
     "html": "/__pages/0ece7f7c306b4cf6.html",
     "markdown": "/__pages/0ece7f7c306b4cf6.md",
-    "tokens": 3157
+    "tokens": 3194
   },
   "/terms": {
     "html": "/__pages/2dda5c6b8eee51aa.html",
@@ -108,7 +113,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/pricing": {
     "html": "/__pages/7394a2bb766646ca.html",
     "markdown": "/__pages/7394a2bb766646ca.md",
-    "tokens": 677
+    "tokens": 1099
   },
   "/support": {
     "html": "/__pages/0b9f34c92865bdd1.html",
@@ -123,102 +128,102 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2215
+    "tokens": 2212
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2240
+    "tokens": 2255
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2198
+    "tokens": 2206
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2271
+    "tokens": 2229
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2036
+    "tokens": 2064
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2242
+    "tokens": 2231
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2261
+    "tokens": 2270
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2220
+    "tokens": 2219
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2112
+    "tokens": 2121
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 2150
+    "tokens": 2099
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 1920
+    "tokens": 1925
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 2043
+    "tokens": 2054
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 1810
+    "tokens": 1831
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1795
+    "tokens": 1779
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 1926
+    "tokens": 1939
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 1871
+    "tokens": 1864
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 2114
+    "tokens": 2101
   },
   "/blog?page=19": {
     "html": "/__pages/bcb642deee219a0c.html",
     "markdown": "/__pages/bcb642deee219a0c.md",
-    "tokens": 2004
+    "tokens": 2037
   },
   "/blog?page=20": {
     "html": "/__pages/cdbb74b6d785b988.html",
     "markdown": "/__pages/cdbb74b6d785b988.md",
-    "tokens": 919
+    "tokens": 761
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 21600
+    "tokens": 21485
   },
   "/blog/mediacom-customer-service-number": {
     "html": "/__pages/5f37898813236fe9.html",
@@ -303,17 +308,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-to-negotiate-a-hospital-bill": {
     "html": "/__pages/b88beca37c93cea2.html",
     "markdown": "/__pages/b88beca37c93cea2.md",
-    "tokens": 12416
-  },
-  "/blog/phone-anxiety": {
-    "html": "/__pages/613a99d49cf748b0.html",
-    "markdown": "/__pages/613a99d49cf748b0.md",
-    "tokens": 7241
+    "tokens": 12418
   },
   "/blog/how-to-lower-spectrum-bill": {
     "html": "/__pages/3757bfbc7bfb1d6a.html",
     "markdown": "/__pages/3757bfbc7bfb1d6a.md",
-    "tokens": 3172
+    "tokens": 3178
   },
   "/blog/how-to-lower-verizon-bill": {
     "html": "/__pages/6d3278a6117e42d5.html",
@@ -868,7 +868,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/ai-apps-that-make-calls-for-you": {
     "html": "/__pages/427c0a40de2bba10.html",
     "markdown": "/__pages/427c0a40de2bba10.md",
-    "tokens": 6942
+    "tokens": 6941
   },
   "/blog/hijinx-hotel-irvine": {
     "html": "/__pages/acb492544467c9de.html",
@@ -903,7 +903,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/customer-story-flight-credit": {
     "html": "/__pages/4d462d33064c5ddf.html",
     "markdown": "/__pages/4d462d33064c5ddf.md",
-    "tokens": 1409
+    "tokens": 1407
   },
   "/blog/customer-story-rick-dinner-reservation": {
     "html": "/__pages/5023fc4d4837d0ba.html",
@@ -993,7 +993,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/how-long-to-reach-a-human": {
     "html": "/__pages/1624f2222bb89bf3.html",
     "markdown": "/__pages/1624f2222bb89bf3.md",
-    "tokens": 14144
+    "tokens": 14142
   },
   "/blog/vercel-ai-sdk-phone-calls": {
     "html": "/__pages/ff098db0a2035f3b.html",
@@ -1083,7 +1083,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/mandarin-phone-call-scheduling": {
     "html": "/__pages/573dcb48f1d75341.html",
     "markdown": "/__pages/573dcb48f1d75341.md",
-    "tokens": 2800
+    "tokens": 2649
   },
   "/blog/veterinary-behavior-consultation-call": {
     "html": "/__pages/041c2f0b9be1ffa4.html",

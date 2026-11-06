@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "69c99752afc3b0ffe4f95338a35e6c3ef06099572c271f4af0198b008658abe9"
+  "sourceHash": "ea71810b6d401a6ff551df0d60117a41a321b2ddd04dbda3458c3ecd5352540f"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -2585,7 +2585,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "san-francisco-oral-surgeon-consultation",
-      "similarity": 0.623342
+      "similarity": 0.623343
     },
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
@@ -3089,10 +3089,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "ai-personal-assistant-appointment-booking",
       "similarity": 0.749489
-    },
-    {
-      "slug": "phone-anxiety",
-      "similarity": 0.622781
     }
   ],
   "marina-traffic-court-phone-number": [
@@ -3717,24 +3713,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "phoenician-golf-club-tee-times": [],
-  "phone-anxiety": [
-    {
-      "slug": "perplexity-phone-calls",
-      "similarity": 0.634139
-    },
-    {
-      "slug": "meta-muse-first-task",
-      "similarity": 0.625478
-    },
-    {
-      "slug": "mandarin-phone-call-scheduling",
-      "similarity": 0.622781
-    },
-    {
-      "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.609141
-    }
-  ],
   "phone-calling-mcp-comparison": [
     {
       "slug": "twilio-mcp-phone-calls",
@@ -4214,7 +4192,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-find-a-new-primary-care-doctor",
-      "similarity": 0.623342
+      "similarity": 0.623343
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -4465,7 +4443,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -4561,7 +4539,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "ticketmaster-customer-service-number": [
     {
       "slug": "vivid-seats-customer-service-number",
-      "similarity": 0.697516
+      "similarity": 0.697515
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5011,7 +4989,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ticketmaster-customer-service-number",
-      "similarity": 0.697516
+      "similarity": 0.697515
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5073,7 +5051,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",

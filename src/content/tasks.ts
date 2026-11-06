@@ -1,5 +1,6 @@
 import { EXAMPLES, type CallExample } from './examples';
 import { HOLD_TIMES, holdSummary, type HoldTime } from './hold-times';
+import { PHONE_ANXIETY_GUIDE } from './guides/phone-anxiety';
 
 /**
  * One page per errand people ask an AI to phone for ("an AI that waits on hold for me"),
@@ -7,7 +8,7 @@ import { HOLD_TIMES, holdSummary, type HoldTime } from './hold-times';
  * Every fact here is stated by the linked post, the example call, or the hold-time data, and
  * the price comes from the live per-minute rate. Keep each sentence true to its source.
  */
-export type TaskKey = 'callBusinesses' | 'holdForMe' | 'doctorAppointment' | 'cancelSubscription' | 'restaurantReservation' | 'customerService' | 'negotiateBills' | 'disputeCharge';
+export type TaskKey = 'callBusinesses' | 'holdForMe' | 'doctorAppointment' | 'cancelSubscription' | 'restaurantReservation' | 'customerService' | 'negotiateBills' | 'disputeCharge' | 'phoneAnxiety';
 
 export interface TaskPost {
   slug: string;
@@ -35,6 +36,8 @@ export interface Task {
   /** The call in short numbered steps, shown before the details in `how`. */
   steps?: string[];
   how: string[];
+  /** A full guide in markdown, shown after `how`, for an errand that needs more than the call. */
+  guide?: string;
   /** Other ways to get it done, each from its own help or product page, and where call4me differs. */
   others?: { heading: string; items: TaskOther[]; after: string };
   examples: CallExample[];
@@ -64,11 +67,11 @@ const joinWhenAnswered = 'ask your assistant to connect you "as soon as a person
 export const TASKS: Task[] = [
   {
     key: 'callBusinesses',
-    updated: '2026-11-01',
-    title: 'An AI app that calls businesses for you',
+    updated: '2026-11-05',
+    title: 'An app that makes phone calls for you',
     answer: (perMinute) => [
-      `yes: call4me is an AI that calls businesses for you. ask ChatGPT, Claude or Codex to call a restaurant, a doctor's office, a repair shop or a customer service line, and call4me dials it, gets through the phone menu and the hold, talks to whoever answers, and brings back what they said with a transcript. if they want you on the line, it rings your phone. ${costs(perMinute)}`,
-      'there is no separate call4me phone app. in ChatGPT it is a plugin you install and sign in to, and in Claude, Codex and other assistants it connects over MCP. so the assistant you already ask for help looks up the business, places the call, and answers the caller\'s questions while the call is still going.',
+      `yes, there are apps that make phone calls for you, and call4me is one. ask ChatGPT, Claude or Codex to call a restaurant, a doctor's office, a repair shop or a customer service line, and call4me dials it, gets through the phone menu and the hold, talks to whoever answers, and brings back what they said with a transcript. if they want you on the line, it rings your phone. ${costs(perMinute)}`,
+      'call4me works inside the assistant you already use, so there is nothing new to download: in ChatGPT it is a plugin you install and sign in to, and in Claude, Codex and other assistants it connects over MCP. the assistant looks up the business, places the call, and answers the caller\'s questions while the call is still going.',
       `the calls are real and published: below are recorded calls that booked a dinner table, moved a dentist appointment, got a junk removal quote and booked the pickup, and took a Spectrum internet bill from $85 to $55 a month for a year. we have also called the customer service lines of ${summary.companies} companies and published the recordings.`,
     ],
     steps: [
@@ -100,7 +103,6 @@ export const TASKS: Task[] = [
       { slug: 'reschedule-dentist-appointment', label: 'Rescheduling a dentist appointment', fact: 'a call4me user\'s assistant asked to move a Thursday 3:30 appointment to "Friday after three or anytime Monday" and got Monday, October 5 at noon with the same dentist, in a call under two minutes.' },
       { slug: 'dog-teeth-cleaning-cost', label: 'Dog teeth cleaning quotes from three vets', fact: 'an assistant asked three Houston area clinics the same questions, and the quotes ran from $250 to $755 before extras, with bloodwork and X rays included at one clinic and not at the others.' },
       { slug: 'customer-story-flight-credit', label: 'A $100 JSX voucher by phone', fact: 'Grok Bot and call4me called JSX Reservations about a delayed flight and got Jem a $100 courtesy travel voucher, valid for one year. Jem on X: "literally zero chance i was going to do that myself"' },
-      { slug: 'phone-anxiety', label: 'Phone anxiety: what actually helps', fact: 'in a 2025 Research Co. poll of 1,000 US adults, 50% said they feel anxious calling someone they don\'t know. the guide covers which calls are worth practicing and which to hand off.' },
     ],
     ask: 'Ask me which business to call, what I need from them, and what you may agree to for me.',
   },
@@ -293,5 +295,34 @@ export const TASKS: Task[] = [
       { slug: 'wells-fargo-dispute-charge', label: 'Disputing a Wells Fargo credit card charge', fact: 'saying "I don\'t have it" at the card number prompt, then a short reason, reached a person 2 minutes 52 seconds in, who said a dispute takes "60 days." debit card claims use separate Wells Fargo numbers.' },
     ],
     ask: 'Ask me which card and bank, the merchant, date and amount of the charge, what went wrong, and whether I want to join when the bank needs the cardholder.',
+  },
+  {
+    key: 'phoneAnxiety',
+    title: 'Phone anxiety: an AI can make the calls you hate',
+    updated: '2026-11-05',
+    answer: (perMinute) => [
+      `yes: if you hate calling businesses, an AI can do it for you. call4me is an AI that makes the phone call. tell ChatGPT, Claude or Codex what you need, and it dials, gets through the phone menu and the hold, talks to whoever answers, and brings back the outcome with a transcript. ${costs(perMinute)}`,
+      'you choose how much of the call is yours. it can make the whole call, you can listen in without anyone hearing you, or it can wait through the hold and ring you only when a person picks up.',
+      'you are not unusual: in a 2025 Research Co. poll of 1,000 US adults, 50% said they feel anxious calling someone they don\'t know. call4me is not therapy or a treatment for anything, and the guide below says which calls are worth practicing yourself and which are fine to hand off.',
+    ],
+    steps: [
+      'tell your assistant the call you have been putting off, in plain words.',
+      'it asks you for anything that call needs, in one message, before it dials.',
+      'it calls from your call4me number, gets through the menu and the hold, and talks to whoever answers.',
+      'if the business asks something only you know, the question comes back to your assistant mid-call, and the caller relays your answer on the line.',
+      'you get the outcome and the full transcript, and the recording is in your account.',
+    ],
+    how: [
+      `listening in is the gentlest way to start: ask your assistant to let you listen in, nobody on the call hears you, and you press 1 only if you want to step in. to skip the hold instead, ${joinWhenAnswered}`,
+      'the caller calls for you and never claims to be you, and it never reads out card numbers, bank details or passwords.',
+    ],
+    guide: PHONE_ANXIETY_GUIDE,
+    examples: examples('dentist-reschedule', 'dinner-reservation', 'spectrum-retention'),
+    holds: [],
+    posts: [
+      { slug: 'customer-story-flight-credit', label: 'A $100 JSX voucher by phone', fact: 'Grok Bot and call4me called JSX Reservations about a delayed flight and got Jem a $100 courtesy travel voucher, valid for one year. Jem on X: "literally zero chance i was going to do that myself"' },
+      { slug: 'reschedule-dentist-appointment', label: 'Rescheduling a dentist appointment', fact: 'a call4me user\'s assistant asked to move a Thursday 3:30 appointment to "Friday after three or anytime Monday" and got Monday, October 5 at noon with the same dentist, in a call under two minutes.' },
+    ],
+    ask: 'Ask me which call I have been putting off, what I need from it, and whether I want to listen in or be rung when a person picks up.',
   },
 ];

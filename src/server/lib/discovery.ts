@@ -49,6 +49,7 @@ export const SITEMAP_PAGES: { page: PageKey; changefreq: string; priority?: stri
   { page: 'customerService', changefreq: 'monthly', priority: '0.8' },
   { page: 'negotiateBills', changefreq: 'monthly', priority: '0.8' },
   { page: 'disputeCharge', changefreq: 'monthly', priority: '0.8' },
+  { page: 'phoneAnxiety', changefreq: 'monthly', priority: '0.8' },
   { page: 'mcp', changefreq: 'monthly', priority: '0.9' },
   { page: 'pricing', changefreq: 'monthly', priority: '0.8' },
   { page: 'companies', changefreq: 'weekly', priority: '0.8' },
@@ -74,6 +75,8 @@ const LASTMOD: Partial<Record<PageKey, string>> = {
   superintelligenceCalling: SI_UPDATED,
   companies: HOLD_UPDATED,
   holdTimes: HOLD_UPDATED,
+  aiCallAssistant: '2026-11-05',
+  pricing: '2026-11-05',
   ...Object.fromEntries(TASKS.map((t) => [t.key, t.holds.length > 0 && HOLD_UPDATED > t.updated ? HOLD_UPDATED : t.updated])),
 };
 

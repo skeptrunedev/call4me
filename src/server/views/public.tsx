@@ -3,7 +3,7 @@ import { raw } from 'hono/html';
 import { dollars } from '../services/accounts';
 import type { CountryOffer, NumberView } from '../services/numbers';
 import { MAX_TOPUP_CENTS, MIN_TOPUP_CENTS } from '../services/topups';
-import { MonthlyBox } from './account';
+import { FoundViaForm, MonthlyBox } from './account';
 import { accountPath, CHATGPT_PLUGIN_URL, SITE, SITE_DESCRIPTION } from '../lib/pages';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { CopyBlock, Layout } from './layout';
@@ -353,7 +353,7 @@ export const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries
   );
 };
 
-export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; balanceCents: number; email: string; pending?: boolean; signedOut?: boolean; next?: string; numbers?: NumberView[]; redditEvents?: RedditPixelEvent[] }> = (p) => (
+export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; balanceCents: number; email: string; pending?: boolean; signedOut?: boolean; next?: string; numbers?: NumberView[]; redditEvents?: RedditPixelEvent[]; askFoundVia?: boolean }> = (p) => (
   <Layout title="you're in" page="welcome" signedIn={!p.signedOut && !p.pending} redditEvents={p.redditEvents}>
     {p.pending ? (
       <>
@@ -382,6 +382,7 @@ export const WelcomePage: FC<{ apiKey: string | null; installPrompt: string; bal
           paid. balance: <span class="price">{dollars(p.balanceCents)}</span>
         </h1>
         <CallOnboarding numbers={p.numbers} />
+        {p.askFoundVia && <FoundViaForm />}
         {p.apiKey ? (
           <>
             <p>
@@ -473,7 +474,7 @@ export const PrivacyPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ si
       <li><strong>Call requests and history.</strong> We store the destination number, business and task details you or your agent provide, scheduling information, answers you give during a call, call status, timing and charges, outcomes, text transcripts, and recording references. If you join a call or receive a callback, we also process your phone number and your part of the conversation. We use this information to make and manage the requested calls, return results, maintain your history, resolve problems, and prevent abuse.</li>
       <li><strong>Saved calling profile.</strong> If you choose to save details, we store fields such as your name, date of birth, phone number, address, and vehicle details so they can be reused for relevant calls. Some integrations outside the ChatGPT plugin also support health or dental insurance fields. Saving a profile is separate from giving details for one call; you can remove saved fields.</li>
       <li><strong>Payments.</strong> We store your balance, purchases, charges, and payment-provider references for billing and reconciliation. Stripe handles card payments; call4me does not receive your full card number or security code.</li>
-      <li><strong>Support and email.</strong> We process the messages and contact details you send us to answer requests, plus delivery and subscription records for account emails and newsletters. Blog comments store the name, email, comment, IP address and posting time; your name and comment are public, but your email is not displayed. Blog likes use a browser identifier.</li>
+      <li><strong>Support and email.</strong> We process the messages and contact details you send us to answer requests, plus delivery and subscription records for account emails and newsletters. Blog comments store the name, email, comment, IP address and posting time; your name and comment are public, but your email is not displayed. Blog likes use a browser identifier. If you answer the optional question about how you found call4me, we store your answer with your account and use it to understand how people find us.</li>
       <li><strong>Website and usage information.</strong> We process browser and device information, IP addresses, referring sites, landing pages, campaign and click identifiers, cookie identifiers, and account-linked usage events for site analytics and advertising measurement. The recipients and limits are described below.</li>
     </ul>
 
@@ -592,15 +593,47 @@ export const AboutPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
   </Layout>
 );
 
+/** Other apps' prices, each read from that app's own page or store listing on PRICES_CHECKED. Re-check before changing the date. */
+const PRICES_CHECKED = 'November 5, 2026';
+const CALLIO_MONTHLY_CENTS = 999;
+const OTHER_APP_PRICES = [
+  { name: 'Callio', url: 'https://apps.apple.com/us/app/callio-ai-phone-concierge/id6756395481', price: '$5.99 a week or $9.99 a month', note: 'unlimited calls to US businesses, in English. summary and transcript afterward; you can\'t join the call.' },
+  { name: 'Voyp', url: 'https://voyp.app/', price: 'free plan with credits, or $2.99 a month', note: '100 credits cost $1.49. calls spend credits per minute at a rate that depends on the number and country, and the site doesn\'t state it in dollars.' },
+  { name: 'Mitra', url: 'https://www.getmitra.com/pricing', price: 'from $30 a month', note: 'includes 5 call hours, so $0.10 a minute if you use them all.' },
+  { name: 'Pine', url: 'https://www.19pine.ai/pricing', price: 'from $99.9 a month, billed annually', note: 'PINE Plus. no percentage fee on bills it negotiates.' },
+];
+
 /** Every price in one place, from the same constants the dialer bills with, so the page can't drift from the charge. */
 export const PricingPage: FC<{ signedIn: boolean; pricePerMinuteCents: number }> = ({ signedIn, pricePerMinuteCents }) => {
   const extra = pricierDestinations();
   return (
-    <Layout title={`pricing: ${dollars(pricePerMinuteCents)} a minute`} page="pricing" signedIn={signedIn}>
-      <h1>call4me pricing</h1>
+    <Layout title={`AI phone call app pricing: ${dollars(pricePerMinuteCents)} a minute`} page="pricing" signedIn={signedIn}>
+      <h1>AI phone call app pricing</h1>
       <p>
         calls cost <b>{dollars(pricePerMinuteCents)} a minute</b> from pickup, and half that on hold. there is no subscription and no per-seat fee: you load
         prepaid credits, from {dollars(MIN_TOPUP_CENTS)}, and each call is paid from them. unanswered, busy and failed calls are free, and so is your US number.
+      </p>
+
+      <h2 id="cheapest">the cheapest AI phone call app for you</h2>
+      <p>
+        it depends on how much you call. a 5 minute call on call4me costs {dollars(pricePerMinuteCents * 5)}, and with the monthly reload off, a month with no calls costs nothing, so paying
+        by the minute is cheap if you make a few calls a month. a flat plan wins once you call a lot: Callio's {dollars(CALLIO_MONTHLY_CENTS)} a month equals about {Math.floor(CALLIO_MONTHLY_CENTS / pricePerMinuteCents)} minutes
+        of call4me, and Mitra's included hours work out cheaper per minute if you use them all.
+      </p>
+      <table class="rows stats">
+        <thead>
+          <tr><th>app</th><th>price</th><th>what you get</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>call4me</td><td data-label="price">{dollars(pricePerMinuteCents)}/min, credits from {dollars(MIN_TOPUP_CENTS)}</td><td data-label="what you get">no subscription required. listen in or join any call, from ChatGPT, Claude, Codex or another AI app.</td></tr>
+          {OTHER_APP_PRICES.map((a) => (
+            <tr><td><a href={a.url}>{a.name}</a></td><td data-label="price">{a.price}</td><td data-label="what you get">{a.note}</td></tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="small">
+        other apps' prices are from their own pages on {PRICES_CHECKED}. more of them are compared in <a href="/blog/ai-apps-that-make-calls-for-you">AI apps that make phone calls for you</a>.
+        voice agent platforms like Bland, Vapi and Retell price by the minute too, but they are for companies building their own phone agents.
       </p>
 
       <h2 id="calls">what a call costs</h2>

@@ -121,6 +121,9 @@ function linkTimestamps(html: string): string {
   });
 }
 
+/** Markdown with no frontmatter, rendered like a post body: for guides that live on their own pages. */
+export const renderMarkdown = (markdown: string) => linkTimestamps(renderer([]).parse(markdown, { async: false }) as string);
+
 function renderPost(src: PostSource): Post {
   const { meta, body: full } = parseFrontmatter(src.markdown);
   if (!meta.title || !meta.date) throw new Error(`blog post ${src.slug}: frontmatter needs title and date`);

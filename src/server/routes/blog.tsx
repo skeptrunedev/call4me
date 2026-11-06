@@ -206,6 +206,8 @@ async function render(c: AppContext, slug: string, extra: { commentValues?: Reco
   );
 }
 
+// Moved to a root page; the blog no longer carries this post.
+blog.get('/phone-anxiety', (c) => c.redirect('/phone-anxiety', 301));
 blog.get('/:slug', (c) => render(c, c.req.param('slug')));
 
 blog.post('/:slug/like', async (c) => {

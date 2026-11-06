@@ -14,10 +14,13 @@ Other outreach rules:
 - Lowercase casual voice, no em dashes, signed "nick".
 - Only state numbers Nick gave or that our published posts and data support.
 
-## Blog content
+## Content
 
-Search Console on October 13, 2026 (data through October 11) showed where the blog ranks. Pick new posts accordingly:
+**New `/blog` posts are paused.** Every blog tier lost most of its Google impressions from November 1, 2026, cause unknown, while root pages held. Keep placing recorded calls and add the results to `/companies` and `/hold-times`. Don't delete, noindex or rewrite posts until the drop is diagnosed.
 
-- Write: "[AI app] + phone calls" setup guides tested in that app, and "[company] customer service number" guides built on a recorded call that reached a person. These are the only non-brand pages averaging a top 10 position.
-- Don't start new cost posts ("how much does X cost") or "cancel X" posts. Cost posts average positions 85 to 100 and cancel posts 50 to 70 against established sites. Put subscription cancellation details in that company's customer service guide instead.
-- Link every new AI app guide from the table in `phone-calling-mcp-comparison.md`, and link back to it.
+Write for the questions where call4me is the answer, not where someone else is the authority:
+
+- We win "an AI that does X for me": a root task page in `src/content/tasks.ts`, using the words people search, backed by real calls. In the November 5 geo check ChatGPT cited an exact-match task page every time it retrieved one, and never cited a blog post.
+- We lose questions about another company or product. Their own site or docs win "what is Progressive's number" and "can ChatGPT make a call". ChatGPT searches `site:help.openai.com` and GitHub for those, so reach them through listings, not new pages.
+- Measure with `npm run geo:check -- --runs 2` and `npm run seo:conversions`, which splits signups by connected AI app and lists how-you-found-us answers.
+- Don't start new cost posts ("how much does X cost") or "cancel X" posts. Put subscription cancellation details in that company's entry.

@@ -19,7 +19,6 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'stubhub-customer-service-number': ['venue-activities', 'retail-shopping'],
   'monkeybrains-customer-service-number': ['telecom'],
   'sfpl-main-library-phone-number': ['libraries'],
-  'phone-anxiety': ['agent-software', 'appointment-management', 'healthcare', 'subscription-cancellation'],
   'amazon-seller-distributor-calls': ['agent-software', 'business-procurement'],
   'att-customer-service-number': ['telecom'],
   'how-to-lower-spectrum-bill': ['telecom'],

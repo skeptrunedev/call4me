@@ -49,6 +49,10 @@ export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: n
       <main>
         <h1>an AI call assistant that makes phone calls for you</h1>
         <p>
+          to have an AI call businesses for you, use an assistant built for people, not a business phone system. voice agent platforms like Bland, Vapi and Retell
+          are for companies building their own phone agents. <a href="/app-that-calls-businesses-for-you">apps for people</a> include Google's Gemini on a Pixel 11, Callio and call4me.
+        </p>
+        <p>
           call4me is an AI call assistant: an AI agent that places real phone calls to businesses for you. it books and reschedules appointments,
           makes reservations, asks businesses the questions a website can't answer, gets through phone menus and waits on hold. when a person
           picks up, it can ring your phone and patch you in. you get back the outcome, the transcript and the recording.
@@ -75,7 +79,7 @@ export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: n
           still billed, at half the normal rate. you're on the call as soon as you answer. the AI caller goes quiet while you
           talk, and when you press * or hang up, it takes the call back and carries on with the task. if you'd rather just hear how it's going, ask to
           listen in: nobody on the call hears you, the caller keeps working, and you can press 1 anytime to take over. if calls make you anxious, our
-          guide to <a href="/blog/phone-anxiety">phone anxiety</a> has scripts for the common ones and is honest about when to hand a call off.
+          guide to <a href="/phone-anxiety">phone anxiety</a> has scripts for the common ones and is honest about when to hand a call off.
         </p>
         <p>
           this matters when a business wants the account holder. on a <a href="/examples#spectrum-retention">call to spectrum</a>, the caller got through

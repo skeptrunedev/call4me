@@ -1,7 +1,9 @@
+import { raw } from 'hono/html';
 import type { FC } from 'hono/jsx';
 import { dollars } from '../services/accounts';
 import { MIN_TOPUP_CENTS } from '../services/topups';
 import { PAGES, SITE } from '../lib/pages';
+import { renderMarkdown } from '../lib/blog';
 import { ORG_ID } from '../lib/entity';
 import { HOLD_PATH } from '../../content/hold-times';
 import { TASKS, type Task } from '../../content/tasks';
@@ -36,6 +38,8 @@ export const TaskPage: FC<{ task: Task; signedIn: boolean; pricePerMinuteCents: 
         </ol>
       )}
       {task.how.map((p) => <p>{p}</p>)}
+
+      {task.guide && <div class="post">{raw(renderMarkdown(task.guide))}</div>}
 
       {task.others && (
         <>
@@ -108,8 +112,8 @@ export const TaskPage: FC<{ task: Task; signedIn: boolean; pricePerMinuteCents: 
       </ul>
       <p>
         everything else the <a href="/ai-call-assistant">AI call assistant</a> does on a call, from voices to the free US number, is on its own page.
-        if you keep putting calls off because they make you anxious, our guide to <a href="/blog/phone-anxiety">phone anxiety</a> covers which calls
-        are worth practicing and which are fine to hand off.
+        {!task.guide && <> if you keep putting calls off because they make you anxious, our guide to <a href="/phone-anxiety">phone anxiety</a> covers which calls
+        are worth practicing and which are fine to hand off.</>}
       </p>
 
       <h2>How to start</h2>
