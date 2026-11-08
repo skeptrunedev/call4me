@@ -65,3 +65,13 @@ test('an accent with punctuation is reduced to letters instead of refused', asyn
   assert.equal(PROFILE_FIELDS.accent.check?.(normalizeAccent('Greek, Athens / modern')), null);
   assert.match(PROFILE_FIELDS.accent.check?.('123') ?? '', /got "123"/);
 });
+
+test('a caller name with punctuation is reduced to letters instead of refused', async () => {
+  // Joe's agent was refused ('use a first name, letters only') on his first call.
+  const { normalizeName, PROFILE_FIELDS } = await import('../src/server/services/intake');
+  assert.equal(normalizeName('Ava.'), 'Ava');
+  assert.equal(normalizeName("Joe's assistant (AI)"), "Joe's assistant AI");
+  assert.equal(normalizeName('Alexandra Catherine Montgomery-Smythe the Third'), 'Alexandra');
+  assert.equal(PROFILE_FIELDS.assistant_name.check?.(normalizeName('Sam, 2nd')), null);
+  assert.match(PROFILE_FIELDS.assistant_name.check?.('42') ?? '', /got "42"/);
+});

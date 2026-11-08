@@ -2,7 +2,7 @@ import { newId, now } from '../lib/ids';
 import { replayOf, type Idempotency } from '../lib/idempotency';
 import { checkDialable, type PhoneCheck } from '../lib/phone';
 import { accounts, type Account } from './accounts';
-import { catalog, missingMessage, normalizeAccent, PROFILE_FIELDS, resolveIntake, savedContext, type Surface } from './intake';
+import { catalog, missingMessage, normalizeAccent, normalizeName, PROFILE_FIELDS, resolveIntake, savedContext, type Surface } from './intake';
 import { mayCall, ringablePhone } from './numbers';
 import { profiles } from './profiles';
 
@@ -88,7 +88,7 @@ export function calls(db: D1Database) {
         const own = from.ok && !ours ? await db.prepare(`SELECT 1 FROM verified_numbers WHERE account_id = ? AND phone_number = ? AND status = 'verified'`).bind(account.id, from.e164).first() : null;
         if (!ours && !own) throw new CallError(`from: ${input.from} is not one of this account's numbers (see call4me_list_numbers)`);
       }
-      const callerName = input.caller_name?.trim() || null;
+      const callerName = input.caller_name ? normalizeName(input.caller_name) || null : null;
       const nameProblem = callerName && PROFILE_FIELDS.assistant_name.check?.(callerName);
       if (nameProblem) throw new CallError(`caller_name: ${nameProblem}`);
       const accent = input.accent ? normalizeAccent(input.accent) || null : null;

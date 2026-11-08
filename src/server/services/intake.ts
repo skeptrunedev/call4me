@@ -41,7 +41,7 @@ export interface ProfileField {
 export const PROFILE_FIELDS: Record<ProfileKey, ProfileField> = {
   full_name: { label: 'full name', ask: "What's your full legal name (as it appears on your ID/insurance card)?" },
   name_pronunciation: { label: 'name pronunciation', ask: 'Only if the user asks for it, or their name is easy to say wrong: how to say their name, written the way it sounds, stressed syllable in capitals (e.g. "ah-MEER tah-ree-GAHT"). The caller says it exactly this way.', optional: true },
-  assistant_name: { label: 'assistant name', ask: 'Only if the user asks for it: a first name the caller introduces itself with ("Hi, I\'m Sam, Alex\'s assistant"). Unset, it is just "Alex\'s assistant".', check: (v) => (/^[\p{L}][\p{L}' -]{0,29}$/u.test(v) ? null : 'use a first name, letters only'), optional: true },
+  assistant_name: { label: 'assistant name', ask: 'Only if the user asks for it: a first name the caller introduces itself with ("Hi, I\'m Sam, Alex\'s assistant"). Unset, it is just "Alex\'s assistant".', check: (v) => (/^[\p{L}][\p{L}' -]{0,29}$/u.test(v) ? null : `use a first name, letters only (got "${v}")`), optional: true },
   accent: { label: 'caller accent', ask: 'Only if the user asks for it: the accent or dialect the caller speaks with on every call, e.g. "Austrian German" or "Scottish". Unset, it uses its voice\'s own.', check: (v) => (/^[\p{L}][\p{L}' -]{0,39}$/u.test(v) ? null : `name an accent, letters only, e.g. "Austrian German" (got "${v}")`), optional: true },
   answering_instructions: { label: 'answering instructions', ask: 'Only if the user asks for it: standing instructions for calls their call4me number answers, and what it may accept on them without asking (e.g. "Accept collect calls from jails and prisons by pressing 1, then take the inmate\'s name, facility and message").', optional: true },
   date_of_birth: { label: 'date of birth', ask: "What's your date of birth?", check: (v) => (parseDate(v) ? null : 'use a full date like 1990-03-14') },
@@ -341,6 +341,12 @@ export const accentOf = (profile: Profile) => profile.accent?.trim() || null;
  * "Greek Athens" or "Athenian Greek". Tassos's agent was refused three times for punctuation.
  */
 export const normalizeAccent = (v: string) => v.replace(/[^\p{L}' -]+/gu, ' ').replace(/\s+/g, ' ').trim();
+
+/** A caller name as agents write it, reduced to letters ("Ava." is "Ava"); past 30 characters, its first word. */
+export const normalizeName = (v: string) => {
+  const letters = normalizeAccent(v);
+  return letters.length > 30 ? letters.split(' ')[0] : letters;
+};
 
 export const answeringInstructionsOf = (profile: Profile) => profile.answering_instructions?.trim() || null;
 
