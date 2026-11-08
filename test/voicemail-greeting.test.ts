@@ -125,3 +125,19 @@ test('a hold request and a request for a message in one delta leave no hold', ()
   assert.equal(meter.them('Please hold. Leave your name and number after the tone. Goodbye', 1_000), null);
   assert.equal(meter.holding(), false);
 });
+
+test('a screener question split across transcript fragments still counts', async () => {
+  // Joe's iPhone screener: three fragments, then the caller filled the gap with "Sure thing." instead of introducing itself.
+  const { screenerAskedRecently } = await import('../src/server/voice/voicemail');
+  const t = 1_000_000;
+  const lines = [
+    { role: 'them', text: "If you record your name and reason for calling, I'll", at: t },
+    { role: 'note', text: 'carrier detected an automated greeting', at: t + 2600 },
+    { role: 'them', text: 'see if', at: t + 3100 },
+    { role: 'caller', text: 'Hmm.', at: t + 3100 },
+    { role: 'them', text: "this person's available", at: t + 3300 },
+  ];
+  assert.ok(screenerAskedRecently(lines, t + 6000));
+  assert.ok(!screenerAskedRecently(lines, t + 60_000));
+  assert.ok(screenerAskedRecently([{ role: 'them', text: "I'll see if this person's available", at: t }], t));
+});

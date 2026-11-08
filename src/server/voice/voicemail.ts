@@ -79,8 +79,21 @@ export function machineTransition(previous: MachineState, event: MachineEvent, o
  * Pixel ("who's calling?"), Google Call Assist ("can you say what you're calling about?"). Telnyx's screening detection also fires on menu greetings, voicemail
  * greetings and people mid-sentence, so the introduction waits for one of these.
  */
-const SCREENER_ASK = /\b(?:(?:record|state|say|tell (?:me|us))\b[^.?!]{0,20}\byour name\b|reason for (?:your )?call(?:ing)?|who(?:'s| is) calling|what (?:you(?:'re| are)|are you) calling (?:about|for)|(?:purpose|reason) of (?:your|the|this) call|what (?:this|the|your) call is (?:about|regarding)|call assist|screening service|see if (?:this|the) person is available|qui[eé]n (?:llama|habla)|(?:diga|grabe) su nombre)/i;
+const SCREENER_ASK = /\b(?:(?:record|state|say|tell (?:me|us))\b[^.?!]{0,20}\byour name\b|reason for (?:your )?call(?:ing)?|who(?:'s| is) calling|what (?:you(?:'re| are)|are you) calling (?:about|for)|(?:purpose|reason) of (?:your|the|this) call|what (?:this|the|your) call is (?:about|regarding)|call assist|screening service|see if (?:this|the) person(?:'s| is) available|qui[eé]n (?:llama|habla)|(?:diga|grabe) su nombre)/i;
 export const screenerAsked = (heard: string) => SCREENER_ASK.test(heard);
+
+/** How far back a screener's question counts: transcription splits it into fragments, and the caller may fill the gap. */
+const SCREENER_ASK_WINDOW_MS = 20_000;
+
+/**
+ * Whether the other side asked for an introduction in the last few seconds, reading every fragment
+ * they said. Reading only the last two lines missed Joe's iPhone screener, transcribed as "If you
+ * record your name and reason for calling, I'll" / "see if" / "this person's available".
+ */
+export function screenerAskedRecently(lines: readonly { role: string; text: string; at: number }[], now: number): boolean {
+  const heard = lines.filter((line) => line.role === 'them' && line.at >= now - SCREENER_ASK_WINDOW_MS).map((line) => line.text).join(' ');
+  return screenerAsked(heard.slice(-400));
+}
 
 /** The transcript note marking a call screener's prompt. */
 export const SCREENING_NOTE = 'carrier detected a call screening prompt';

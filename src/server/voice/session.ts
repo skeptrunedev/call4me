@@ -8,7 +8,7 @@ import { alreadyUnreachable, callerHoldsFor, legEnded, listeningMessage, mergeTr
 import { HoldMeter, type HoldChange } from './hold';
 import { midConversation } from './time-limit';
 import { BACK_OFFICE_TOOLS } from './prompt';
-import { answeredAfterScreener, INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, screenerAsked, SCREENING_NOTE, type MachineEvent, type MachineGuidance, type MachineState } from './voicemail';
+import { answeredAfterScreener, INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, screenerAskedRecently, SCREENING_NOTE, type MachineEvent, type MachineGuidance, type MachineState } from './voicemail';
 
 /**
  * One live phone call: Telnyx's media stream on one side, a GPT-Live session on the other.
@@ -1157,8 +1157,7 @@ export class VoiceSession extends DurableObject<Env> {
 
   /** Whether the other side's latest words ask for the caller's name or reason, as a call screener does. */
   private screenerAsked(): boolean {
-    const heard = this.transcript.filter((line) => line.role === 'them').slice(-2).map((line) => line.text).join(' ');
-    return screenerAsked(heard.slice(-400));
+    return screenerAskedRecently(this.transcript, Date.now());
   }
 
   private note(text: string): void {
