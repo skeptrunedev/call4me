@@ -98,3 +98,12 @@ test('a take-over still going at hangup is free up to the end', async () => {
   const row = await calls(db).finish('call_1', { status: 'completed', pricePerMinuteCents: 25, at: s(60 + 1200) });
   assert.equal(row!.cost_cents, 25);
 });
+
+test('an Italian or French hold request starts a hold', async () => {
+  const { HoldMeter } = await import('../src/server/voice/hold');
+  const it = new HoldMeter();
+  assert.equal(it.them("Eh... aspetti un attimo eh, signora, la metto un attimino in, in, in attesa un attimino solo eh", s(0))?.type, 'start');
+  const fr = new HoldMeter();
+  assert.equal(fr.them('Ne quittez pas, je vous mets en attente.', s(0))?.type, 'start');
+  assert.equal(new HoldMeter().them('Allora, ho trovato un bilocale al terzo piano.', s(0)), null);
+});

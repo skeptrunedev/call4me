@@ -35,7 +35,9 @@ export function isPhoneMenu(text: string): boolean {
   return MENU.some((re) => re.test(text));
 }
 
-const HOLD_REQUEST = /\b(?:please hold|on hold|hold on|hold time|wait time|next available|in (?:the )?queue|caller number|hang on|bear with me|stay on the line|remain on the line|(?:one|just a|give me a) (?:sec(?:ond)?|moment|minute)|let me (?:check|see|look|pull)|(?:being )?transferr?(?:ed|ing)|un moment(?:o|ito)|espere|perm[ií]tame|d[eé]jeme (?:verificar|ver|revisar|buscar)|en espera|permanezca en (?:la )?l[ií]nea|le (?:transfiero|comunico|estamos transfiriendo))\b/i;
+// Italian and French too: Besfid & Pianca's "la metto un attimino in attesa" went unheard as a hold, and the
+// time limit hung up on James's call to Lugano mid-wait.
+const HOLD_REQUEST = /\b(?:please hold|on hold|hold on|hold time|wait time|next available|in (?:the )?queue|caller number|hang on|bear with me|stay on the line|remain on the line|(?:one|just a|give me a) (?:sec(?:ond)?|moment|minute)|let me (?:check|see|look|pull)|(?:being )?transferr?(?:ed|ing)|un moment(?:o|ito)|espere|perm[ií]tame|d[eé]jeme (?:verificar|ver|revisar|buscar)|en espera|permanezca en (?:la )?l[ií]nea|le (?:transfiero|comunico|estamos transfiriendo)|in attesa|(?:un )?attim(?:o|ino)|aspett[ia]|resti in linea|rimanga in linea|attenda in linea|ne quittez pas|patientez|un (?:petit )?instant|je vous mets en attente)\b/i;
 
 /**
  * Japanese queue and transfer recordings ("しばらくお待ちください", "オペレーターにおつなぎいたします",
