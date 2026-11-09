@@ -72,8 +72,12 @@ const PROMISES = [
 /** Their reply opening with a goodbye, perhaps after a word ("Cool. Bye.", "Okay bye, ..."). */
 const OPENS_WITH_GOODBYE = /^[\s,.!]*(?:[a-z']+[\s,.!]+)?(?:good-?)?bye\b/i;
 
-/** The other side only closing the call after our caller's goodbye: "you too", "de nada", "buenas noches". */
-const CLOSING = /^[\s,.!]*(?:(?:ok(?:ay)?|alright|all right|thanks?|thank you|you too|same to you|bye(?:[- ]bye)?|goodbye|good ?night|have a (?:good|great|nice|wonderful) (?:one|day|night|evening)|take care|you'?re welcome|no problem|mhm|mm-?hmm|de nada|gracias|igualmente|buenas noches|buen d[ií]a|adi[oó]s|hasta luego|chao)[\s,.!]*)+$/i;
+/**
+ * The other side only closing the call after our caller's goodbye: "you too", "de nada", "buenas noches",
+ * "Yeah, you're welcome. Thank you for calling Penn State Health" (that one left Juan's booked call
+ * silent for 47s until the time limit).
+ */
+const CLOSING = /^[\s,.!]*(?:(?:ok(?:ay)?|alright|all right|yeah|yep|yes|sure|thank(?:s| you) for calling(?: [\w'&-]+){0,6}|thanks?|thank you|you too|same to you|bye(?:[- ]bye)?|goodbye|good ?night|have a (?:good|great|nice|wonderful) (?:one|day|night|evening)|take care|you'?re welcome|no problem|mhm|mm-?hmm|de nada|gracias|igualmente|buenas noches|buen d[ií]a|adi[oó]s|hasta luego|chao)[\s,.!]*)+$/i;
 
 /** The caller said it would go do something (look something up, hang up) that needs the back office. */
 export function promisesAction(text: string): boolean {
