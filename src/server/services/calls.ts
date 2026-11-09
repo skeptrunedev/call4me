@@ -148,7 +148,16 @@ export function calls(db: D1Database) {
 
       // Credits up front: the call holds its maximum cost now and settles when it ends.
       const balance = await accounts(db).balanceCents(account.id);
-      if (balance < pricePerMinuteCents) throw new CallError(`balance is $${(balance / 100).toFixed(2)}; ${surface === 'agents' ? 'add credits with call4me_add_funds' : 'the user can add credits on the call4me website'}`, 402);
+      if (balance < pricePerMinuteCents) {
+        // Calls in progress hold their maximum cost until they end: say so, or a third parallel call
+        // reads "$0.00" while two live calls hold the account's last $4 (wjbono's ChatGPT).
+        const live = await db
+          .prepare(`SELECT COUNT(*) AS n, COALESCE(SUM(hold_cents), 0) AS cents FROM calls WHERE account_id = ? AND status IN ('queued','dialing','in_progress') AND hold_cents > 0`)
+          .bind(account.id)
+          .first<{ n: number; cents: number }>();
+        const held = live?.n ? `, with $${(live.cents / 100).toFixed(2)} held for ${live.n} call${live.n === 1 ? '' : 's'} in progress until ${live.n === 1 ? 'it ends' : 'they end'}; wait for ${live.n === 1 ? 'it' : 'them'} to finish, or ` : '; '
+        throw new CallError(`balance is $${(balance / 100).toFixed(2)}${held}${surface === 'agents' ? 'add credits with call4me_add_funds' : 'the user can add credits on the call4me website'}`, 402);
+      }
       const affordable = Math.floor(balance / pricePerMinuteCents);
       const maxMinutes = Math.max(1, Math.min(input.max_minutes ?? LIMITS.defaultMinutes, LIMITS.maxMinutes, affordable));
       const holdCents = maxMinutes * pricePerMinuteCents;

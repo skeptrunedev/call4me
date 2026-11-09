@@ -58,3 +58,12 @@ test('less than one minute of credits refuses a call without recording a hold', 
   assert.equal(await accounts(db).balanceCents(alice.id), 24);
   assert.deepEqual(await calls(db).list(alice.id), []);
 });
+
+test('a short balance says how much calls in progress are holding', async () => {
+  // wjbono's ChatGPT placed a third call while two live calls held the last $4: it read "balance is $0.00".
+  const db = await setup(400);
+  const service = calls(db);
+  await service.create(alice, { ...input, max_minutes: 8 }, 25);
+  await service.create(alice, { ...input, max_minutes: 8 }, 25);
+  await assert.rejects(service.create(alice, input, 25), (err: unknown) => err instanceof CallError && err.status === 402 && /balance is \$0\.00, with \$4\.00 held for 2 calls in progress until they end; wait for them to finish, or /.test(err.message));
+});
