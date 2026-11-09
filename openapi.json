@@ -315,7 +315,7 @@
                     "maxLength": 40
                   },
                   "from": {
-                    "description": "which of the account's numbers to call from (default: a call4me number in the callee's country). May be one of the user's own verified numbers (call4me_verify_number): the business sees it and calls back the user directly. A carrier may still refuse an own number as caller ID on some international calls",
+                    "description": "the phone number to call from, in E.164 like +14155550123 (not a place): one of the account's numbers from call4me_list_numbers (default: a call4me number in the callee's country). May be one of the user's own verified numbers (call4me_verify_number): the business sees it and calls back the user directly. A carrier may still refuse an own number as caller ID on some international calls",
                     "type": "string",
                     "maxLength": 40
                   }
@@ -1690,7 +1690,7 @@
                     "maxLength": 40
                   },
                   "from": {
-                    "description": "which of the account's numbers to call from (default: a call4me number in the callee's country). May be one of the user's own verified numbers (call4me_verify_number): the business sees it and calls back the user directly. A carrier may still refuse an own number as caller ID on some international calls",
+                    "description": "the phone number to call from, in E.164 like +14155550123 (not a place): one of the account's numbers from call4me_list_numbers (default: a call4me number in the callee's country). May be one of the user's own verified numbers (call4me_verify_number): the business sees it and calls back the user directly. A carrier may still refuse an own number as caller ID on some international calls",
                     "type": "string",
                     "maxLength": 40
                   }
@@ -2982,7 +2982,7 @@
                     "maxLength": 40
                   },
                   "from": {
-                    "description": "which of the account's numbers to call from (default: a call4me number in the callee's country). May be one of the user's own verified numbers (call4me_verify_number): the business sees it and calls back the user directly. A carrier may still refuse an own number as caller ID on some international calls",
+                    "description": "the phone number to call from, in E.164 like +14155550123 (not a place): one of the account's numbers from call4me_list_numbers (default: a call4me number in the callee's country). May be one of the user's own verified numbers (call4me_verify_number): the business sees it and calls back the user directly. A carrier may still refuse an own number as caller ID on some international calls",
                     "type": "string",
                     "maxLength": 40
                   },
