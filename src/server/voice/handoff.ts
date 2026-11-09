@@ -353,10 +353,12 @@ ${recent}`;
 /**
  * A question is out to the person and the line has gone quiet with someone waiting on us. GPT-Live
  * only speaks when it hears something, so without this it sits silent until the answer lands
- * (Spectrum heard 41s of nothing after "Already sent" while a one-time code came back).
+ * (Spectrum heard 41s of nothing after "Already sent" while a one-time code came back). The line has to
+ * fit the question: told to say "Is there another way to look it up?", the caller said it twice to a
+ * rep waiting for Jeremy to rescan a QR code, the second time a minute later.
  */
 export function holdingLineMessage(question: string, owner: string): string {
-  return `You're waiting on ${owner}'s answer to: "${question.slice(0, 300)}". The line has gone quiet and they're waiting on you. Say one short casual line like "I don't have that detail yet. Is there another way to look it up?" Only ask this once. Carry on with anything else you can accomplish using the facts you have. Don't make up the answer or repeat that you're waiting.`;
+  return `You're waiting on ${owner}'s answer to: "${question.slice(0, 300)}". The line has gone quiet and they're waiting on you. Right now, say one short casual line that fits what you're waiting for: if it's a detail they could find another way, say you don't have it yet and ask if there's another way to look it up; if ${owner} is trying something or checking something, say you're still waiting on them. This is for this moment only: after you've said it, don't say it again. Carry on with anything else you can accomplish using the facts you have. Don't make up the answer.`;
 }
 
 /**
