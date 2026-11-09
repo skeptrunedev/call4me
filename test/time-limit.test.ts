@@ -25,3 +25,14 @@ test('a long silence after our answer ends it', () => {
 test('patched in, the user talking with them counts', () => {
   assert.equal(midConversation({ theirsAt: s(890), oursAt: 0, personOn: true, now: s(896) }), true);
 });
+
+test('a rep waiting on our answer while we wait on the user is mid-conversation', async () => {
+  const { midConversation } = await import('../src/server/voice/time-limit');
+  const now = 1_000_000;
+  // Jeremy's SONIFI call: we said "still waiting on Jeremy" 30s before the stop, the rep asked a question 22s before it.
+  assert.ok(midConversation({ theirsAt: now - 22_000, oursAt: now - 30_000, personOn: false, now }));
+  // Nobody has said anything in a while: over.
+  assert.ok(!midConversation({ theirsAt: now - 40_000, oursAt: now - 150_000, personOn: false, now }));
+  // A recording long after we last spoke: over.
+  assert.ok(!midConversation({ theirsAt: now - 5_000, oursAt: now - 200_000, personOn: false, now }));
+});
