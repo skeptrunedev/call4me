@@ -129,7 +129,15 @@ function spokenKeypadDigits(text: string): string | null {
 
 export type MissedHandoff = { reason: 'menu' | 'menu_recovery' | 'keypad' | 'promise' | 'voicemail_left' | 'signed_off'; line: TranscriptLine; menuContext?: string };
 type MenuSnapshot = { text: string; end: number; at: number; callerEnd: number };
-type KeypadAttempt = { digits: string; prompt: string; inputEnd: number };
+type KeypadAttempt = { digits: string; prompt: string; inputEnd: number; at: number };
+
+/**
+ * How far the other side's transcript runs behind their audio. Words transcribed this soon after a key
+ * press were spoken before it: the rest of the menu it answered, not a reply to it. Taking them for a
+ * new menu pressed the same key again into whatever came next (Structure Properties got 4 twice,
+ * Klingbeil 0 three times, Gordon-Clifford 2 twice, 2026-11-09).
+ */
+export const KEY_TRANSCRIPT_LAG_MS = 2_000;
 
 /** Fresh IVR input is tracked separately: a transcript line can span several menus. */
 export class MenuRecovery {
@@ -157,6 +165,13 @@ export class MenuRecovery {
       this.menuContext = '';
       this.boundary = this.input.length;
       this.callerBoundary = this.callerInput.length;
+      return;
+    }
+    // Still the prompt the last key answered: it belongs to that press, not to a new menu.
+    const last = this.attempts.at(-1);
+    if (last && at - last.at < KEY_TRANSCRIPT_LAG_MS && last.inputEnd >= this.boundary) {
+      last.inputEnd = this.input.length;
+      this.boundary = this.input.length;
     }
   }
 
@@ -216,8 +231,8 @@ export class MenuRecovery {
   }
 
   /** Call only after the carrier accepts DTMF, consuming input from before submission. */
-  submitted(digits: string, snapshot: MenuSnapshot): void {
-    this.attempts.push({ digits, prompt: snapshot.text || this.menuContext, inputEnd: snapshot.end });
+  submitted(digits: string, snapshot: MenuSnapshot, at: number): void {
+    this.attempts.push({ digits, prompt: snapshot.text || this.menuContext, inputEnd: snapshot.end, at });
     this.checked(snapshot);
     if (spokenKeypadDigits(this.callerInput.slice(this.callerBoundary)) === digits) this.callerBoundary = this.callerInput.length;
   }

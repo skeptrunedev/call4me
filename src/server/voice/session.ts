@@ -3,7 +3,7 @@ import { Raindrop, type Interaction } from 'raindrop-ai';
 import { ACTIVE, callStore, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/call-store';
 import { telnyx } from '../lib/telnyx';
 import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
-import { asksUsToWait, connectCheckMessage, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft } from './handoff';
+import { asksUsToWait, connectCheckMessage, KEY_TRANSCRIPT_LAG_MS, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { HoldMeter, type HoldChange } from './hold';
 import { midConversation } from './time-limit';
@@ -80,7 +80,6 @@ const MAX_MENU_CHECKS = 40;
  */
 const KEY_REPLY_HOLD_MS = 8_000;
 /** Words transcribed this soon after a key are the tail of the prompt before it, not the menu's answer. */
-const KEY_TRANSCRIPT_LAG_MS = 500;
 /** One brief acknowledgment while an attended question is pending. */
 const HOLDING_LINE_QUIET_MS = 8_000;
 const MAX_HOLDING_LINES = 1;
@@ -704,7 +703,8 @@ export class VoiceSession extends DurableObject<Env> {
           this.keyReplyBy = 0;
         }
         if (e.event.type === 'response.output_item.done' && e.event.item?.type === 'function_call') {
-          console.log('back office call', e.event.item.name, e.event.item.arguments);
+          // With the call's id: on a busy account, an id-less line can't be tied to the menu it answered.
+          console.log('back office call', this.setup?.callId ?? '', e.event.item.name, e.event.item.arguments);
           this.toolsRunning++;
           const item = e.event.item;
           this.observe(() => {
@@ -1205,7 +1205,7 @@ export class VoiceSession extends DurableObject<Env> {
           const snapshot = this.menuRecovery.snapshot();
           await this.pressKeys(s, s.controlId, digits);
           if (s.keyBeep && !s.inbandKeys) this.playInCall(beepFrames(), `played the key beep for ${digits}`);
-          this.menuRecovery.submitted(digits, snapshot);
+          this.menuRecovery.submitted(digits, snapshot, Date.now());
           this.keySentAt = Date.now();
           this.keyReplyBy = this.keySentAt + KEY_REPLY_HOLD_MS;
           output = `keypad submitted: ${digits}; wait for the next prompt to confirm it worked`;

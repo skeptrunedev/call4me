@@ -119,6 +119,7 @@ test('a repeated menu on the same transcript line is a fresh recovery opportunit
   assert.match(h.forced()[0].item.content[0].text, /For all other questions press five/);
   await h.keypress('1');
   await h.response('response.completed');
+  t.mock.timers.tick(2_000);
   await h.input(' For an immediate refund, please return your order to any warehouse.');
   t.mock.timers.tick(3_000);
   assert.equal(h.forced().length, 2);
@@ -241,6 +242,7 @@ test('the same key twice with nothing heard in between goes in once', async (t) 
   await h.keypress('1');
   await h.keypress('1');
   assert.equal(presses(), 1);
+  t.mock.timers.tick(3_000); // the menu's reply comes after the key, past the transcript's lag
   await h.input(' To accept this call, press 1.');
   await h.keypress('1');
   assert.equal(presses(), 2);
@@ -277,7 +279,7 @@ test('the caller makes no sound on a keypad menu until its key is chosen', async
   await h.output('Hmm.');
   assert.equal(heard(), 0, 'nor right after the key, before the menu answers it');
   assert.ok(!h.session.transcript.some((l: any) => l.role === 'caller'), 'what never played is not in the transcript');
-  t.mock.timers.tick(1_000);
+  t.mock.timers.tick(2_000);
   await h.input(' Hello, my name is Dana, how can I help?');
   await speak();
   assert.equal(heard(), 1, 'the caller speaks again once a person answers');
