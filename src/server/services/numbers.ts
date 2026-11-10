@@ -263,7 +263,7 @@ const awaitingApproval = (name: string) => `${name} numbers are waiting on regul
 /** Whether an unavailable offer is held back by regulator paperwork, as opposed to the carrier having none in stock. */
 export const isAwaitingApproval = (offer: CountryOffer) => !offer.available && offer.reason === awaitingApproval(offer.name);
 
-export const FROM_HOME = new Set([...EUROPE, 'AE', 'JP', 'TH', 'BR', 'NP', 'UZ']);
+export const FROM_HOME = new Set([...EUROPE, 'AE', 'JP', 'TH', 'BR', 'NP', 'UZ', 'ID']);
 
 /** Every country some account may call: the telephone carrier must allow each of them. */
 const CALLABLE = [...new Set(['US', 'CA', ...FROM_HOME, ...Object.keys(COUNTRIES)])];
