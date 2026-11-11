@@ -19,7 +19,8 @@ test('connecting the user with no phone to ring them is refused before any hold 
   for (const ask of [{ connect_when: 'as soon as a person picks up' }, { listen_in: true }]) {
     await assert.rejects(
       calls(db).create(alice, { ...call, ...ask }, 25),
-      (e) => e instanceof CallError && e.status === 422 && /details\.phone/.test(e.message),
+      // Asking for the phone comes first: dropping the connect is only for a user who won't join.
+      (e) => e instanceof CallError && e.status === 422 && /Ask the user for the number.*details\.phone/.test(e.message) && /only if the user says they won't join/.test(e.message),
     );
   }
   assert.equal((await db.prepare(`SELECT count(*) AS n FROM calls`).first<{ n: number }>())!.n, 0);

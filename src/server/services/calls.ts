@@ -113,7 +113,7 @@ export function calls(db: D1Database) {
       if ((input.connect_when?.trim() || input.listen_in) && !ownerPhone) {
         const option = input.listen_in ? 'listen_in' : 'connect_when';
         throw new CallError(
-          `${option} rings the user's own phone, and there's no phone number for them we can ring. Ask for it and pass it as details.phone (or save it with call4me_save_profile if they want it reused), or place the call without ${option}.`,
+          `${option} rings the user's own phone, and there's no phone number for them we can ring. Ask the user for the number to ring them on and pass it as details.phone (or save it with call4me_save_profile if they want it reused). Place the call without ${option} only if the user says they won't join: businesses often make changes only with the account holder on the line, and with no phone the caller can't bring them on.`,
           422,
         );
       }
