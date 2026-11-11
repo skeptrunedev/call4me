@@ -69,7 +69,22 @@ const PROMISES = [
   /\bhave a (?:good|great|nice|wonderful) (?:one|day|night|evening|afternoon|weekend)\b/i,
   /\b(?:adi[oó]s|hasta luego|hasta pronto|chao|chau|buenas noches)\b/i,
   /\bque tenga(?:s)? (?:un |una )?buen[oa]s? (?:d[ií]a|noche|tarde|fin de semana)\b/i,
+  // \b only knows ASCII letters, so Greek words are bounded by \p{L} instead.
+  /(?:^|\P{L})(?:αντ[ιί]ο|καλην[υύ]χτα|καλ[οό] (?:βρ[αά]δυ|απ[οό]γευμα|σαββατοκ[υύ]ριακο)|καλ[ηή] συν[εέ]χεια|να ?['’]?(?:στε|ε[ιί]στε) καλ[αά])(?!\p{L})/iu,
 ];
+
+/**
+ * "Γεια σας" is hello as much as goodbye. It ends the caller's line as a goodbye only once the caller
+ * has said what it called about: an opening "Γεια σας!" answered "Γεια σας" isn't the call ending.
+ */
+const GREEK_HELLO_OR_BYE = /(?:^|\P{L})γ[εέ]ι[αά] σ(?:[αά]ς|ου)[\s,.!]*$/iu;
+const OPENING_CHARS = 60;
+
+function greekGoodbye(lines: TranscriptLine[], i: number): boolean {
+  if (!GREEK_HELLO_OR_BYE.test(lines[i].text)) return false;
+  const before = lines.slice(0, i).filter((l) => l.role === 'caller').reduce((n, l) => n + l.text.trim().length, 0);
+  return before >= OPENING_CHARS;
+}
 
 /** Their reply opening with a goodbye, perhaps after a word ("Cool. Bye.", "Okay bye, ..."). */
 const OPENS_WITH_GOODBYE = /^[\s,.!]*(?:[a-z']+[\s,.!]+)?(?:good-?)?bye\b/i;
@@ -79,7 +94,7 @@ const OPENS_WITH_GOODBYE = /^[\s,.!]*(?:[a-z']+[\s,.!]+)?(?:good-?)?bye\b/i;
  * "Yeah, you're welcome. Thank you for calling Penn State Health" (that one left Juan's booked call
  * silent for 47s until the time limit).
  */
-const CLOSING = /^[\s,.!]*(?:(?:ok(?:ay)?|alright|all right|yeah|yep|yes|sure|thank(?:s| you) for calling(?: [\w'&-]+){0,6}|thanks?|thank you|you too|same to you|bye(?:[- ]bye)?|goodbye|good ?night|have a (?:good|great|nice|wonderful) (?:one|day|night|evening)|take care|you'?re welcome|no problem|mhm|mm-?hmm|de nada|gracias|igualmente|buenas noches|buen d[ií]a|adi[oó]s|hasta luego|chao)[\s,.!]*)+$/i;
+const CLOSING = /^[\s,.!]*(?:(?:ok(?:ay)?|alright|all right|yeah|yep|yes|sure|thank(?:s| you) for calling(?: [\w'&-]+){0,6}|thanks?|thank you|you too|same to you|bye(?:[- ]bye)?|goodbye|good ?night|have a (?:good|great|nice|wonderful) (?:one|day|night|evening)|take care|you'?re welcome|no problem|mhm|mm-?hmm|de nada|gracias|igualmente|buenas noches|buen d[ií]a|adi[oó]s|hasta luego|chao|γ[εέ]ι[αά](?: σ(?:[αά]ς|ου))?|(?:σας )?ευχαριστ(?:[ωώ]|ο[υύ]με)(?: (?:π[αά]ρα )?πολ[υύ])?|κι εγ[ωώ]|κι εσ[εέ]ις|επ[ιί]σης|αντ[ιί]ο|χα[ιί]ρετε|καλην[υύ]χτα|καλημ[εέ]ρα|καλ[οό] (?:βρ[αά]δυ|απ[οό]γευμα)|καλ[ηή] (?:συν[εέ]χεια|μ[εέ]ρα|βραδι[αά])|να ?['’]?(?:στε|ε[ιί]στε) καλ[αά]|εντ[αά]ξει|ν[αά]ι|παρακαλ[ωώ]|οκ[εέ]ι?|μχμ)[\s,.!]*)+$/i;
 
 /** The caller said it would go do something (look something up, hang up) that needs the back office. */
 export function promisesAction(text: string): boolean {
@@ -254,7 +269,7 @@ export function missedHandoff(lines: TranscriptLine[], lastHandoffAt: number, fo
   while (i >= 0 && (lines[i].role === 'note' || (lines[i].role === 'them' && (CLOSING.test(lines[i].text.trim()) || OPENS_WITH_GOODBYE.test(lines[i].text))))) i--;
   const last = lines[i];
   if (!last) return null;
-  if (last.role === 'caller' && promisesAction(last.text) && last.at > lastHandoffAt && !forced.has(last.at)) return { reason: 'promise', line: last };
+  if (last.role === 'caller' && (promisesAction(last.text) || greekGoodbye(lines, i)) && last.at > lastHandoffAt && !forced.has(last.at)) return { reason: 'promise', line: last };
   return null;
 }
 

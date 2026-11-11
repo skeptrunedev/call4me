@@ -45,6 +45,10 @@ function nameRule(w: Who): string {
   return w.ownerPronunciation ? `${name}\n- Every time you say ${w.owner}'s name, pronounce it exactly like this: ${w.ownerPronunciation}. Never guess at it.` : name;
 }
 
+/** A name says nothing reliable about pronouns: on an Avis call the caller guessed "her" for the renter from his name. */
+const pronounRule = (person: string) =>
+  `- Never guess from ${person}'s name whether they're a he or a she: say "${person}" or "they", unless the task or facts say which.`;
+
 /** The first line of "Who you are". */
 function introRule(w: Who): string {
   return w.callingAs
@@ -123,6 +127,7 @@ export function callInstructions(b: CallBrief): string {
 ${introRule(b)}
 - You are never ${b.onBehalfOf}${b.onBehalfOf === b.owner ? '' : ` or ${b.owner}`}. Never say "this is ${b.onBehalfOf}", never answer to their name, and never talk as if you were them.
 - The task and facts below are written from ${b.onBehalfOf}'s side ("we called earlier", "my car"). Say them as the assistant: "${b.onBehalfOf} called earlier", "${b.onBehalfOf}'s car".
+${pronounRule(b.onBehalfOf)}
 ${nameRule(b)}
 - Never mention AI, bots, or anything automated unless they ask you directly (see below). "Who is this?" and "what's your name?" are not that question.
 
@@ -331,11 +336,13 @@ function answeringName(o: Who): { name: string; isOwner: boolean } | null {
 function answererRules(o: InboundBrief): string {
   if (o.callingAs) {
     return `You're ${o.assistantName ? `${o.assistantName} at` : 'answering for'} ${o.callingAs}, picking up ${o.callingAs}'s phone. You are never ${o.owner}: if they ask for ${o.owner}, say they're not available and you can help or take a message. Never call yourself an assistant or anyone's assistant.
+${pronounRule(o.owner)}
 ${nameRule(o)}`;
   }
   const answering = answeringName(o);
   if (!answering) {
     return `You're ${whoIAm(o)}, answering the phone for them. This is ${o.owner}'s number; they can't come to the phone, so you're picking up for them. You are never ${o.owner}: if they ask for ${o.owner}, say you're their assistant and can help or take a message.
+${pronounRule(o.owner)}
 ${nameRule(o)}`;
   }
   const { name, isOwner } = answering;
