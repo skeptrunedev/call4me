@@ -62,7 +62,7 @@ const holds = (...slugs: string[]) => slugs.map((slug) => {
 const summary = holdSummary();
 const list = (items: readonly string[]) => `${items.slice(0, -1).join(', ')} or ${items.at(-1)}`;
 const costs = (perMinute: string) => `calls cost ${perMinute} from pickup and half that on hold, and unanswered calls are free.`;
-const joinWhenAnswered = 'ask your assistant to connect you "as soon as a person picks up": your phone rings from your call4me number, you are on the call as soon as you answer, and the AI caller goes quiet. press * or hang up to hand the call back to it.';
+const joinWhenAnswered = 'ask your assistant to connect you "as soon as a person picks up": your phone rings from your call4me number, you are on the call as soon as you answer, and the AI caller keeps working with you on the line. press * or hang up to leave.';
 
 export const TASKS: Task[] = [
   {
@@ -82,7 +82,7 @@ export const TASKS: Task[] = [
       'you get the outcome and the full transcript, and the recording is in your account.',
     ],
     how: [
-      'if you hate calling businesses, this is the part you hand off: the menu, the hold and the conversation. you can still listen in without anyone hearing you, and press 1 anytime to take over.',
+      'if you hate calling businesses, this is the part you hand off: the menu, the hold and the conversation. you can still listen in without anyone hearing you, and press 1 anytime to join.',
       'the caller calls for you and never claims to be you, and it never reads out card numbers, bank details or passwords. it makes the calls a person would make for their own errands: bookings, appointments, quotes and questions for a business, not sales or telemarketing.',
       'calls go out from a free US number, assigned on your first call, to businesses in the US, Canada, Europe, the UAE and Japan.',
     ],

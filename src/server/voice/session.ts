@@ -4,7 +4,7 @@ import { ACTIVE, callStore, LIMITS, redact, type CallRow, type TranscriptLine } 
 import { telnyx } from '../lib/telnyx';
 import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
 import { asksUsToWait, connectCheckMessage, KEY_TRANSCRIPT_LAG_MS, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft } from './handoff';
-import { alreadyUnreachable, callerHoldsFor, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
+import { alreadyUnreachable, callerHoldsFor, joinedMessage, leftMessage, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { HoldMeter, type HoldChange } from './hold';
 import { midConversation } from './time-limit';
 import { BACK_OFFICE_TOOLS } from './prompt';
@@ -27,8 +27,8 @@ import { answeredAfterScreener, INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machine
  *   /hang-up    call4me_hang_up; the hangup webhook finishes and bills the call as usual
  *
  * The person's own phone (person.ts): /connect-person rings it, /person-answered puts them on the
- * call (or leaves them listening in), /person-key takes a listener over on 1 and relays their keys
- * to the business once they're on, /person-left hands the call back.
+ * call (or leaves them listening in), /person-key puts a listener on the call on 1 and relays their
+ * keys to the business once they're on, /person-left takes them off it.
  */
 
 const OPENAI_LIVE_URL = 'https://api.openai.com/v1/live/sessions';
@@ -108,8 +108,6 @@ const REATTACH_WAIT_MS = 15_000;
 const WRAP_UP_MS = 40_000;
 /** How long a call screener may stay quiet after its prompt before the caller introduces itself anyway. */
 const SCREENER_QUIET_MS = 6_000;
-/** While the user is patched in past the time limit, how often to look again. */
-const PERSON_RECHECK_MS = 60_000;
 
 export interface SessionSetup {
   callId: string;
@@ -684,7 +682,7 @@ export class VoiceSession extends DurableObject<Env> {
         // After the hang-up hand-off the goodbye has already been said; anything more is
         // the model filling the silence before the line drops, so it never reaches the phone.
         // Before pickup the session is only warming up: nothing it says is heard.
-        if (!this.answered || this.endingCall || this.personOn || Date.now() < this.keysPlayingUntil || this.menuHoldsCaller()) break;
+        if (!this.answered || this.endingCall || Date.now() < this.keysPlayingUntil || this.menuHoldsCaller()) break;
         const e = ev as { delta: string };
         if (this.framesOut++ === 0) this.mark('first caller audio');
         this.sendPhone({ event: 'media', media: { payload: e.delta } });
@@ -703,8 +701,7 @@ export class VoiceSession extends DurableObject<Env> {
         if (delta) this.menuRecovery.observe(delta, Date.now());
         if (delta && Date.now() - this.keySentAt >= KEY_TRANSCRIPT_LAG_MS) this.keyReplyBy = 0;
         if (this.pendingMachineGuidance === 'screening') void this.queueMachineUpdate(() => this.sendMachineGuidance());
-        // While the user has the call, what they hear is theirs to wait on, and their time isn't billed.
-        if (!this.personOn) this.trackHold(this.hold.them(delta, Date.now()));
+        this.trackHold(this.hold.them(delta, Date.now()));
         this.scheduleHandoffCheck();
         this.scheduleUnansweredCheck();
         this.scheduleHoldingLine();
@@ -719,7 +716,7 @@ export class VoiceSession extends DurableObject<Env> {
         break;
       }
       case 'session.output_transcript.delta':
-        if (this.answered && !this.endingCall && !this.personOn) {
+        if (this.answered && !this.endingCall) {
           const delta = (ev as { delta: string }).delta;
           // Kept off a menu's line, a key the caller announces ("pressing 3") still needs pressing.
           const offLine = this.menuHoldsCaller();
@@ -1004,7 +1001,7 @@ export class VoiceSession extends DurableObject<Env> {
 
   /**
    * Ring the person's phone. To join, they're on the call once they answer; to listen, they hear
-   * the call until they hang up, and can press 1 anytime to take over. Returns what happened.
+   * the call until they hang up, and can press 1 anytime to join. Returns what happened.
    */
   private async connectPerson(phoneOverride?: string, mode: PersonMode = 'join'): Promise<string> {
     const s = await this.load();
@@ -1028,7 +1025,7 @@ export class VoiceSession extends DurableObject<Env> {
     this.personMode = mode;
     if (mode === 'listen') {
       this.note(`ringing ${s.person.name} to listen in`);
-      return `ringing ${s.person.name} to listen in; nobody on the call hears them, and they take over if they press 1`;
+      return `ringing ${s.person.name} to listen in; nobody on the call hears them until they press 1 to join`;
     }
     this.note(`ringing ${s.person.name} to join the call`);
     return `ringing ${s.person.name}; they're on the call as soon as they pick up`;
@@ -1072,48 +1069,29 @@ export class VoiceSession extends DurableObject<Env> {
     await this.personJoined();
   }
 
+  /** They're on the call: the business hears them, they hear both sides, and the caller works on. */
   private async personJoined(): Promise<void> {
     const s = await this.load();
     this.personOn = true;
-    // The user's own time on the call is not billed, and is not hold: a hold going now ends here.
-    const now = Date.now();
-    this.trackHold(this.hold.stop(now));
-    if (s) await callStore(this.env.DB).personJoined(s.callId, now).catch((err) => console.warn('person join write failed', s.callId, String(err)));
-    // Anything the caller had queued would play over the person.
-    this.sendPhone({ event: 'clear' });
-    this.playbackEndsAt = Date.now();
     this.note(`${s?.person?.name ?? 'the person'} joined the call`);
-    this.sendLive({
-      type: 'session.instructions.append',
-      delegation_id: null,
-      content: `${s?.person?.name ?? 'The person'} has joined the call and is talking to them directly. Stay completely silent and don't delegate anything. Keep listening; you'll be told when they hand the call back to you.`,
-    });
+    this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: joinedMessage(s?.person?.name ?? 'The person') });
   }
 
   private personLeft(): void {
     const ended = legEnded(this.personMode, this.personOn);
-    const callId = this.setup?.callId;
-    if (this.personOn && callId) void callStore(this.env.DB).personLeft(callId, Date.now()).catch((err) => console.warn('person leave write failed', callId, String(err)));
     this.personOn = false;
     this.personLeg = null;
     this.personMode = 'join';
     if (ended === 'unreachable') this.personUnreachable = true;
     if (this.ended || this.endingCall) return;
     const name = this.setup?.person?.name ?? 'the person';
-    // The caller never stopped for a listener, so there's nothing to hand back.
+    // A listener was never on the call, so there's nothing to tell the caller.
     if (ended === 'stopped-listening') {
       this.note(`${name} stopped listening`);
       return;
     }
-    this.note(ended === 'handed-back' ? `${name} handed the call back` : `${name} didn't join (no answer or voicemail)`);
-    this.sendLive({
-      type: 'session.instructions.append',
-      delegation_id: null,
-      content:
-        ended === 'handed-back'
-          ? `${name} has left the call and handed it back to you. Pick up where they left off: say something short like "Hi, I'm back on for ${name}", then keep working on the task. If it's already done, say bye and hand off to hang up.`
-          : unreachableMessage(name),
-    });
+    this.note(ended === 'left' ? `${name} left the call` : `${name} didn't join (no answer or voicemail)`);
+    this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: ended === 'left' ? leftMessage(name) : unreachableMessage(name) });
   }
 
   /** call4me_hang_up: the user ends the call from their agent. */
@@ -1232,8 +1210,9 @@ export class VoiceSession extends DurableObject<Env> {
       // leave empty; each tool validates what it needs
     }
     let output: string;
-    if (this.personOn && item.name !== 'ask_user') {
-      const output = 'the person is on the call; do nothing until they hand it back';
+    // The caller works on with the person on the line, but never hangs up on them.
+    if (this.personOn && item.name === 'end_call') {
+      const output = `${s.person?.name ?? 'The person'} is still on the call, so it stays up: they hang up when they're done. Keep helping, or wait quietly if nothing is left to do.`;
       this.observe(() => this.toolMonitoring.get(item.call_id)?.monitoring.output.push(output));
       this.sendLive({ type: 'response.item.create', item: { type: 'function_call_output', call_id: item.call_id, output } });
       return;
@@ -1350,7 +1329,7 @@ export class VoiceSession extends DurableObject<Env> {
    */
   private questionUnanswered(question: string): string {
     this.unanswered = question;
-    if (!this.ended && !this.personOn) this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: noAnswer(question) });
+    if (!this.ended) this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: noAnswer(question) });
     return 'No answer is available. The caller has been told to acknowledge the missing detail and proceed using known facts or an alternative lookup. Do not ask the same question again or wait again. A later answer still reaches the caller. Write nothing unless another tool is needed.';
   }
 
@@ -1363,9 +1342,7 @@ export class VoiceSession extends DurableObject<Env> {
   private answerCameIn(id: string, question: string, answer: string): void {
     if (this.ended) return;
     this.unanswered = null;
-    if (!this.personOn) {
-      this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: `The answer came back for "${question.slice(0, 300)}": ${answer}. Say it to them now.` });
-    }
+    this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: `The answer came back for "${question.slice(0, 300)}": ${answer}. Say it to them now.` });
     this.waiting.get(id)?.(answer);
   }
 
@@ -1472,16 +1449,6 @@ export class VoiceSession extends DurableObject<Env> {
       return;
     }
     const [wrapAt, stopAt] = await Promise.all([this.ctx.storage.get<number>('wrapAt'), this.ctx.storage.get<number>('stopAt')]);
-    // The user patched in talks on their own time, which is free: the limit counts the caller's.
-    // Blake Dixon was cut off mid-booking with Chase Travel 14 minutes after taking over, because
-    // the advisor went quiet for 30s at the hard stop. Check again in a minute; once they hand the
-    // call back, the usual wrap-up runs. Telnyx's own ceiling still ends the call.
-    if (this.personOn && ((stopAt && now >= stopAt) || (!stopAt && wrapAt && now >= wrapAt))) {
-      await this.ctx.storage.delete('stopAt');
-      await this.ctx.storage.put('wrapAt', now + PERSON_RECHECK_MS);
-      await this.scheduleAlarm();
-      return;
-    }
     if (stopAt && now >= stopAt) {
       // Put on hold during the wrap-up: keep waiting instead of hanging up on the queue.
       if (this.hold.holding() && (await this.extendOnHold(s, now))) {
@@ -1490,7 +1457,7 @@ export class VoiceSession extends DurableObject<Env> {
         await this.scheduleAlarm();
         return;
       }
-      // Still talking with them: a couple more minutes to finish rather than hang up mid-sentence.
+      // Still talking with them, or the user is on: a couple more minutes rather than hang up mid-sentence.
       if (midConversation({ theirsAt: this.lastSpokeAt.them, oursAt: this.lastSpokeAt.caller, personOn: this.personOn, now }) && (await this.extendTalk(s, now))) {
         await this.scheduleAlarm();
         return;
@@ -1505,7 +1472,7 @@ export class VoiceSession extends DurableObject<Env> {
         return;
       }
       await this.ctx.storage.put('stopAt', now + WRAP_UP_MS);
-      // While the person is talking the caller stays quiet; the hard stop still comes.
+      // With the user on, the caller isn't told to say goodbye over them; at the hard stop they get more time while credits last.
       if (!this.personOn) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'Time is almost up. Wrap up now: get the one thing you still need, say a quick goodbye, and hand off to hang up (end_call).' });
     }
     await this.scheduleAlarm();

@@ -63,9 +63,6 @@ export interface CallRow {
   /** Seconds on hold already over (billed at half price), and when a hold still going started. */
   hold_seconds: number;
   hold_since: number | null;
-  /** Time the user spent on the call after taking it over, which is not billed (as hold_* above). */
-  person_seconds: number;
-  person_since: number | null;
   hold_cents: number | null;
   outcome: string | null;
   transcript: string | null;
@@ -156,19 +153,14 @@ function billedCents(talkSeconds: number, pricePerMinuteCents: number, holdSecon
 const holdSecondsAt = (row: Pick<CallRow, 'hold_seconds' | 'hold_since'>, at: number) =>
   (row.hold_seconds ?? 0) + (row.hold_since ? Math.max(0, Math.round((at - row.hold_since) / 1000)) : 0);
 
-/** Seconds the user had the call to themselves by `at`, a take-over still going included. */
-const personSecondsAt = (row: Pick<CallRow, 'person_seconds' | 'person_since'>, at: number) =>
-  (row.person_seconds ?? 0) + (row.person_since ? Math.max(0, Math.round((at - row.person_since) / 1000)) : 0);
-
-type Metered = Pick<CallRow, 'answered_at' | 'hold_seconds' | 'hold_since' | 'person_seconds' | 'person_since'>;
+type Metered = Pick<CallRow, 'answered_at' | 'hold_seconds' | 'hold_since'>;
 
 /**
- * What a call has cost by `at`: its answered time less what the user spent on it themselves after
- * taking it over (call4me is only the bridge then), with hold minutes at half price.
+ * What a call has cost by `at`: its answered time, with hold minutes at half price. Time the user
+ * spends on the call themselves counts like the rest: the caller keeps working while they're on.
  */
 function costAt(row: Metered, at: number, pricePerMinuteCents: number): { cents: number; seconds: number; holdSeconds: number } {
-  const talkSeconds = row.answered_at ? Math.max(0, Math.round((at - row.answered_at) / 1000)) : 0;
-  const seconds = Math.max(0, talkSeconds - personSecondsAt(row, at));
+  const seconds = row.answered_at ? Math.max(0, Math.round((at - row.answered_at) / 1000)) : 0;
   const holdSeconds = Math.min(holdSecondsAt(row, at), seconds);
   return { cents: seconds > 0 ? billedCents(seconds, pricePerMinuteCents, holdSeconds) : 0, seconds, holdSeconds };
 }
@@ -275,26 +267,25 @@ export function callStore(db: D1Database) {
       const cost = row.hold_cents ? Math.min(billed, row.hold_cents) : billed;
       const r = await db
         .prepare(
-          // A hold or take-over still open at hangup is billed above; it is closed here too, so the
-          // row's totals match the bill (Cody's 37 minutes on hold read as 0 on the account page).
+          // A hold still open at hangup is billed above; it is closed here too, so the row's totals
+          // match the bill (Cody's 37 minutes on hold read as 0 on the account page).
           `UPDATE calls SET status = ?, ended_at = ?, billed_seconds = ?, cost_cents = ?, hangup_cause = COALESCE(?, hangup_cause), sip_hangup_cause = COALESCE(?, sip_hangup_cause), hangup_source = COALESCE(?, hangup_source), error = COALESCE(?, error),
-             hold_seconds = ?, hold_since = NULL, person_seconds = ?, person_since = NULL
+             hold_seconds = ?, hold_since = NULL
            WHERE id = ? AND status IN ('queued','dialing','in_progress')`,
         )
-        .bind(status, endedAt, talkSeconds, cost, opts.hangupCause ?? null, opts.sipHangupCause ?? null, opts.hangupSource ?? null, opts.error ?? null, holdSecondsAt(row, endedAt), personSecondsAt(row, endedAt), id)
+        .bind(status, endedAt, talkSeconds, cost, opts.hangupCause ?? null, opts.sipHangupCause ?? null, opts.hangupSource ?? null, opts.error ?? null, holdSecondsAt(row, endedAt), id)
         .run();
       if ((r.meta.changes ?? 0) > 0) {
         const ledger = accounts(db);
         if (row.hold_cents) await ledger.post(row.account_id, row.hold_cents, 'release', `release:${id}`, 'hold released');
         const holdMinutes = Math.floor(metered.holdSeconds / 60);
-        const ownMinutes = Math.floor(personSecondsAt(row, endedAt) / 60);
         if (cost > 0)
           await ledger.post(
             row.account_id,
             -cost,
             'call',
             `call:${id}`,
-            `${Math.ceil(talkSeconds / 60)} min to ${row.business}${holdMinutes ? `, ${holdMinutes} on hold at half price` : ''}${ownMinutes ? `, ${ownMinutes} you took over (free)` : ''}`,
+            `${Math.ceil(talkSeconds / 60)} min to ${row.business}${holdMinutes ? `, ${holdMinutes} on hold at half price` : ''}`,
           );
       }
       return this.byId(id);
@@ -303,19 +294,6 @@ export function callStore(db: D1Database) {
     /** The business put the call on hold at `at`. */
     async holdStarted(id: string, at: number): Promise<void> {
       await db.prepare(`UPDATE calls SET hold_since = ? WHERE id = ? AND hold_since IS NULL`).bind(at, id).run();
-    },
-
-    /** The user took the call over at `at`: not billed until they hand it back. */
-    async personJoined(id: string, at: number): Promise<void> {
-      await db.prepare(`UPDATE calls SET person_since = ? WHERE id = ? AND person_since IS NULL`).bind(at, id).run();
-    },
-
-    /** The take-over that started at person_since ended at `at`. */
-    async personLeft(id: string, at: number): Promise<void> {
-      await db
-        .prepare(`UPDATE calls SET person_seconds = person_seconds + MAX(0, CAST(ROUND((? - person_since) / 1000.0) AS INTEGER)), person_since = NULL WHERE id = ? AND person_since IS NOT NULL`)
-        .bind(at, id)
-        .run();
     },
 
     /** The hold that started at hold_since ended at `at`. */

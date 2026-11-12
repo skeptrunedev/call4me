@@ -153,7 +153,7 @@ call4me connects to an AI assistant you already use, like ChatGPT, Claude or Cod
 
 1. **The AI makes the whole call.** It gets through the phone menu, waits on hold, talks to whoever answers, and sends back the outcome and a transcript. If the business asks something only you know, the question comes back to your assistant mid-call, and the caller relays your answer on the line. The caller calls *for* you and never claims to be you.
 2. **You listen in silently.** Ask your assistant to let you listen in, and call4me rings your phone as soon as the business answers. Nobody on the call can hear you, and the AI keeps talking. If you want to step in, press 1 and you're on the call. If you'd rather not, just hang up.
-3. **It skips the hold and rings you when a person picks up.** Ask to be connected "as soon as a person picks up." The AI gets through the menu and the hold, then rings your phone. Press 1 to join and the AI goes quiet. Press * or hang up and it takes the call back and carries on.
+3. **It skips the hold and rings you when a person picks up.** Ask to be connected "as soon as a person picks up." The AI gets through the menu and the hold, then rings your phone. You're on the call as soon as you answer, and the AI stays on with you, so you can jump in or let it keep talking. Press * or hang up to leave and it carries on.
 
 Option 2 is the gentlest if calls make you anxious: you hear exactly what happened, with no pressure to speak. Be honest with yourself about it, though. For the calls on your practice list, listening in is still a way of not making the call. It's a fine step on a ladder, as long as you keep climbing.
 

@@ -200,7 +200,7 @@ export function telnyx(env: TelnyxEnv) {
     /**
      * Ring the person as a "monitor" supervisor of the call: they hear both ends, but nobody hears
      * them. Ringing to join, they are put on the call (switchSupervisorRole on the call being
-     * supervised, to barge) once they answer; a listener takes over by pressing 1, which arrives
+     * supervised, to barge) once they answer; a listener joins by pressing 1, which arrives
      * as call.dtmf.received. Telnyx refuses every command on a supervisor leg itself (422
      * "Supervisor calls do not support commands"), so nothing can be played to them.
      */

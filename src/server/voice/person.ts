@@ -4,15 +4,16 @@ import type { TranscriptLine } from '../services/call-store';
  * Patching the person (call4me's user) into a live call. Their phone is rung as a listen-only
  * supervisor. Ringing to join, they are put on the call the moment they pick up: Telnyx refuses
  * to play a prompt on a supervisor leg, so nothing could tell them to press a key, and people
- * talked into a call nobody heard. In listen mode they stay listen-only for as long as they like
- * and the caller carries on. A ring to join that ends unanswered is settled for the call: the
- * caller is told they can't be reached, and doesn't ring again on its own.
+ * talked into a call nobody heard. Once they're on, the caller keeps working with them on the
+ * line. In listen mode they stay listen-only for as long as they like and the caller carries on.
+ * A ring to join that ends unanswered is settled for the call: the caller is told they can't be
+ * reached, and doesn't ring again on its own.
  */
 
 /**
- * 'join': ring them to take the call over as soon as they answer (a voicemail answering is
- * patched in too; that's accepted). 'listen': ring them to listen in for as long as they like
- * while the caller keeps working; they can press 1 anytime to take over.
+ * 'join': ring them onto the call, where the other side hears them as soon as they answer (a
+ * voicemail answering is patched in too; that's accepted). 'listen': ring them to listen in for as
+ * long as they like; they can press 1 anytime to join. Either way the caller keeps working.
  */
 export type PersonMode = 'join' | 'listen';
 
@@ -22,17 +23,30 @@ export function callerHoldsFor(leg: { ringing: boolean; on: boolean; mode: Perso
 }
 
 /**
- * What the person's leg ending means for the caller: they handed the call back, a ring to join
- * went unanswered (or voicemail), or they just stopped listening, which the caller needn't hear about.
+ * What the person's leg ending means for the caller: they left the call, a ring to join went
+ * unanswered (or voicemail), or they just stopped listening, which the caller needn't hear about.
  */
-export function legEnded(mode: PersonMode, wasOn: boolean): 'handed-back' | 'unreachable' | 'stopped-listening' {
-  if (wasOn) return 'handed-back';
+export function legEnded(mode: PersonMode, wasOn: boolean): 'left' | 'unreachable' | 'stopped-listening' {
+  if (wasOn) return 'left';
   return mode === 'listen' ? 'stopped-listening' : 'unreachable';
 }
 
-/** What connect_person returns while they're already listening: they take over by pressing 1. */
+/** What connect_person returns while they're already listening: they join by pressing 1. */
 export function listeningMessage(owner: string): string {
-  return `${owner} is listening in on this call. They take over if they press 1; until then keep handling it yourself.`;
+  return `${owner} is listening in on this call. If they press 1 they join it and the other side hears them too. Either way, keep handling it yourself.`;
+}
+
+/**
+ * What the caller is told when the person comes on the call. It used to go silent here, so people
+ * who joined heard only the business and took the caller for gone. It keeps working instead, but
+ * never hangs up on them.
+ */
+export function joinedMessage(owner: string): string {
+  return `${owner} has joined the call. ${owner}, you and the other side can all hear each other now. Keep working on the task as before. When ${owner} speaks, let them finish, and follow their lead if they answer something or tell you what to do. Don't hang up while ${owner} is on the call: they hang up when they're done.`;
+}
+
+export function leftMessage(owner: string): string {
+  return `${owner} has left the call. Keep working on the task. If it's already done, say bye and hand off to hang up.`;
 }
 
 export function unreachableMessage(owner: string): string {

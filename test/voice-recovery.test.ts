@@ -303,24 +303,47 @@ test('a fresh durable object restores the ongoing call and relays audio using it
   assert.deepEqual(phone.sent.at(-1), { event: 'media', media: { payload: 'AAAA' } });
 });
 
-test('the time limit never hangs up on the user while they are on the call, and wraps up once they hand it back', async (t) => {
+test('once the user joins, the caller keeps talking and working, but never hangs up on them', async (t) => {
   const h = harness(t);
+  const live = new Socket();
+  h.session.live = live;
+  h.session.liveReady = true;
+  h.session.setup.person = { name: 'Alex Kim' };
+  h.session.personLeg = 'person-leg';
+  await h.session.personJoined();
+  assert.match(JSON.stringify(live.sent.at(-1)), /Alex Kim has joined the call\..*Keep working on the task as before/);
+  assert.ok(!h.phone.sent.some((m: any) => m.event === 'clear'), 'what the caller was saying is not cut off');
+  await h.session.onLive(JSON.stringify({ type: 'session.output_audio.delta', delta: 'AAAA' }));
+  assert.deepEqual(h.phone.sent.at(-1), { event: 'media', media: { payload: 'AAAA' } });
+
+  const hangups: string[] = [];
+  h.session.hangup = async (why: string) => { hangups.push(why); };
+  await h.session.runTool({ call_id: 'bye', name: 'end_call', arguments: '{}' });
+  assert.deepEqual(hangups, []);
+  assert.match(JSON.stringify(live.sent.at(-1)), /Alex Kim is still on the call/);
+});
+
+test('at the time limit the user on the call gets more time while credits last, then it ends', async (t) => {
+  const { accounts } = await import('../src/server/services/accounts');
+  const h = harness(t);
+  const db = h.session.env.DB;
   const hangups: string[] = [];
   h.session.hangup = async (why: string) => { hangups.push(why); };
   h.session.heardThem = true;
   h.session.personOn = true;
+  h.session.setup.pricePerMinuteCents = 25;
+  await accounts(db).post('acct_alice', 50, 'adjustment', 'seed', 'credits');
+  await db.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at, answered_at) VALUES ('recovery_test', 'acct_alice', '+14155550100', 'Test store', 'Reorder food', '{}', 'in_progress', 0, ?)`).bind(Date.now()).run();
+  // Nobody has said anything for a while, but the user is on: two more minutes, held from the balance.
   h.values.set('stopAt', Date.now() - 1);
   await h.session.alarm();
   assert.deepEqual(hangups, []);
-  assert.equal(h.values.get('stopAt'), undefined);
-  assert.equal(h.values.get('wrapAt'), Date.now() + 60_000);
+  assert.equal(h.values.get('stopAt'), Date.now() + 2 * 60_000);
+  assert.equal(await accounts(db).balanceCents('acct_alice'), 0);
 
-  // Handed back: the next check starts the usual wrap-up instead of waiting again.
-  h.session.personOn = false;
-  t.mock.timers.tick(60_000);
+  t.mock.timers.tick(2 * 60_000);
   await h.session.alarm();
-  assert.equal(h.values.get('stopAt'), Date.now() + 40_000);
-  assert.deepEqual(hangups, []);
+  assert.deepEqual(hangups, ['the call reached its time limit']);
 });
 
 test("a screener whose question isn't recognized still gets an introduction once it goes quiet", async (t) => {

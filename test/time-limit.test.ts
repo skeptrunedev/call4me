@@ -22,8 +22,9 @@ test('a long silence after our answer ends it', () => {
   assert.equal(midConversation({ theirsAt: s(700), oursAt: s(705), personOn: false, now: s(896) }), false);
 });
 
-test('patched in, the user talking with them counts', () => {
+test('with the user on the call it counts, even after a long silence', () => {
   assert.equal(midConversation({ theirsAt: s(890), oursAt: 0, personOn: true, now: s(896) }), true);
+  assert.equal(midConversation({ theirsAt: s(700), oursAt: s(705), personOn: true, now: s(896) }), true);
 });
 
 test('a rep waiting on our answer while we wait on the user is mid-conversation', async () => {

@@ -322,7 +322,7 @@ export const Faq: FC<{ signedIn: boolean; pricePerMinuteCents: number; countries
         <p>
           yes. tell your agent to connect you "as soon as a person picks up" to skip the hold music, or ask during the call. call4me may also ring you if the business needs
           you to verify your account. your agent should tell you what number to expect; save it as a contact so call screening lets it ring through. you're on the call as soon as you answer; press * or hang up to hand it back.
-          or ask to just listen in: nobody on the call hears you, the agent keeps working, and you press 1 anytime to take over.
+          or ask to just listen in: nobody on the call hears you, the agent keeps working, and you press 1 anytime to join.
         </p>
       </details>
       <details>

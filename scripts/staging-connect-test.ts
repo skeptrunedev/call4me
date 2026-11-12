@@ -9,8 +9,8 @@
  * a call from the business account to its own number, waits for the two assistants to talk, joins
  * the person's number the way call4me_connect_me does, then hangs up and reads both assistants'
  * transcripts: what each one heard is what came through the call. It passes when the business
- * heard the person and the person heard the business (with --listen, when the person heard the
- * business and the business did not hear them).
+ * heard the person, the person heard the business, and our caller kept talking once they joined
+ * (with --listen, when the person heard the business and the business did not hear them).
  *
  * --person joins a real phone instead of staging's person number, to check a customer's own line:
  * it rings from staging-test@call4.me's number, and the test passes when the business heard
@@ -117,10 +117,13 @@ const businessHeardPerson = realPhone
   : heardAfterJoin(businessSide).some((t) => /this is the person|staging person|person joining|one,? two,? three/i.test(t));
 const personHeard = heardAfterJoin(personSide).length > 0;
 const joined = lines(outbound).some((l) => l.role === 'note' && /joined the call|is listening in/.test(l.text));
+const joinedAt = lines(outbound).find((l) => l.role === 'note' && /joined the call|is listening in/.test(l.text))?.at ?? Infinity;
+const callerKeptTalking = lines(outbound).some((l) => l.role === 'caller' && l.at > joinedAt);
 const verdict = [
   [`the person's phone ${listen ? 'started listening' : 'joined'}`, joined],
   ...(realPhone ? [] : [['the person heard the business', personHeard] as const]),
   [listen ? 'the business did not hear the person' : 'the business heard the person', listen ? !businessHeardPerson : businessHeardPerson],
+  ['our caller kept talking after they came on', callerKeptTalking],
 ] as const;
 console.log('');
 for (const [check, ok] of verdict) console.log(`${ok ? 'PASS' : 'FAIL'}  ${check}`);
