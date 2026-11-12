@@ -367,3 +367,39 @@ test("a voice session that expires while the phone rings doesn't hang up the cal
   for (let i = 0; i < 5; i++) await Promise.resolve();
   assert.equal(shutdown.mock.callCount(), 1);
 });
+
+// The Academe at 198: the carrier's detection said a person answered, 4s into the greeting.
+const academe = (msgAt: number) => [
+  { role: 'them' as const, text: 'Thank you, and we look forward to welcoming you. Please leave a message after the tone. When you have finished, please hang up or press the pound key for more options', at: msgAt - 17_000 },
+  { role: 'caller' as const, text: "Hi, this is Alex Kim's assistant, calling to ask about studio availability and parking. You can reach us at four one five, five five five, zero one two three. Thanks!", at: msgAt },
+];
+
+test('a message left after a greeting that asked for one ends the call even when the carrier said a person answered', async (t) => {
+  const h = harness(t);
+  h.session.live = new Socket();
+  await h.session.machineDetected('human', new Date(Date.now()).toISOString());
+  assert.equal(h.session.machineState.phase, 'human');
+  t.mock.timers.tick(100_000);
+  const msgAt = Date.now() - 60_000;
+  h.session.transcript.push(...academe(msgAt));
+  h.session.lastTranscriptAt = msgAt;
+  h.session.speechEndsAt = msgAt + 14_000; // 46s of quiet since the message ended
+  h.session.checkMissedHandoff();
+  assert.ok(h.session.live.sent.some((m: any) => /left its voicemail message/.test(m.item?.content?.[0]?.text ?? '')), 'hands off end_call');
+});
+
+test('a callback request a person heard is not taken for a voicemail, however long they go quiet', async (t) => {
+  const h = harness(t);
+  h.session.live = new Socket();
+  await h.session.machineDetected('human', new Date(Date.now()).toISOString());
+  t.mock.timers.tick(100_000);
+  const msgAt = Date.now() - 60_000;
+  h.session.transcript.push(
+    { role: 'them', text: "Leasing office, this is Dana. We don't have any studios open right now, let me check what's coming up.", at: msgAt - 10_000 },
+    { role: 'caller', text: 'Sure, and if anything opens up, please call us back at four one five, five five five, zero one two three. Thanks!', at: msgAt },
+  );
+  h.session.lastTranscriptAt = msgAt;
+  h.session.speechEndsAt = msgAt + 8_000;
+  h.session.checkMissedHandoff();
+  assert.ok(!h.session.live.sent.some((m: any) => /left its voicemail message/.test(m.item?.content?.[0]?.text ?? '')));
+});

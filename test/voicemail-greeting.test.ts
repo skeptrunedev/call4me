@@ -151,6 +151,7 @@ test('greetings asking for a voicemail, a name, or in Korean are voicemail promp
     'Hi, you\'ve reached Ganim Tree Farm. Please leave us a voicemail or a text message. Thank you',
     "I'm sorry, this person is not available. If you would like to leave an additional message, please reply after the tone",
     'Please leave your name, date of birth, and reason for your call and we\'ll return it as soon as possible.',
+    "Thank you for choosing Gastro Health. We apologize we missed your call. Please leave full name, date of birth, best contact number, and we'll call you back as soon as possible",
     '삐 소리후 메시지를 녹음 하고, 녹음이 끝나면 전화를 끊으십시오',
   ]) assert.ok(asksForMessage(greeting), greeting);
   assert.ok(!asksForMessage('To leave a voicemail, press 6.'));

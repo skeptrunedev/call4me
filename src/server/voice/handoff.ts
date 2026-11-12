@@ -372,9 +372,10 @@ const SPOKEN_MESSAGE_OPTION = /\bsay\b[^.?!]{0,40}\bto (?:leave|record)\b|\bto (
 
 /** A greeting asking for a message: where a voicemail starts recording when the carrier hears no beep. */
 // "Leave me a name or a number", "leave us a voicemail", "leave your name, date of birth, and reason
-// for your call": asking for a name is asking for a message. So is an AI receptionist's "please
-// provide your name and a brief message". Hangul has no \b, so Korean sits outside it.
-const VOICEMAIL_PROMPT = /삐\s?소리\s?(?:후|가 나면)|메시지를\s?(?:녹음|남겨)|\b(?:leave (?:me |us )?(?:a |an |your )?(?:brief |short |quick |detailed |additional )?(?:message|voice ?mail|name)|(?:provide|state) your name and (?:a |your )?(?:brief |short )?message|(?:after|at) the (?:tone|beep)|record your message|d[eé]ja(?:r|me)? (?:un|su) mensaje|d[eé]je(?:me)? (?:un|su) mensaje|despu[eé]s del tono|nach dem (?:signalton|piepton|ton)|hinterlass(?:en sie|e) (?:mir )?(?:eine|ihre) nachricht)\b/i;
+// for your call", "leave full name, date of birth, best contact number": asking for a name is
+// asking for a message. So is an AI receptionist's "please provide your name and a brief message".
+// Hangul has no \b, so Korean sits outside it.
+const VOICEMAIL_PROMPT = /삐\s?소리\s?(?:후|가 나면)|메시지를\s?(?:녹음|남겨)|\b(?:leave (?:me |us )?(?:a |an |your )?(?:brief |short |quick |detailed |additional )?(?:message|voice ?mail|(?:full |first and last )?name)|(?:provide|state) your name and (?:a |your )?(?:brief |short )?message|(?:after|at) the (?:tone|beep)|record your message|d[eé]ja(?:r|me)? (?:un|su) mensaje|d[eé]je(?:me)? (?:un|su) mensaje|despu[eé]s del tono|nach dem (?:signalton|piepton|ton)|hinterlass(?:en sie|e) (?:mir )?(?:eine|ihre) nachricht)\b/i;
 
 /**
  * The caller asked to be called, texted or emailed back and nobody answered: a voicemail the carrier

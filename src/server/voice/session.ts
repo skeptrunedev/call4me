@@ -905,8 +905,11 @@ export class VoiceSession extends DurableObject<Env> {
       voicemail = null;
     }
     // After a long silence, flagged or not: a callback request or a message after the greeting's
-    // "leave a message" went to voicemail, and a recording that said goodbye is done.
-    let unanswered = phase !== 'human' ? (messageUnanswered(this.transcript, this.forcedHandoffs) ?? messageAfterGreeting(this.transcript, this.forcedHandoffs) ?? signedOff(this.transcript, this.forcedHandoffs)) : null;
+    // "leave a message" went to voicemail, and a recording that said goodbye is done. The greeting
+    // outweighs the carrier's verdict from its first seconds: detection called 516 Ellis's and the
+    // Academe's voicemails a live person, and both lines stayed open ~3 minutes after the message.
+    // A callback request alone still needs the carrier: a person may be quietly looking something up.
+    let unanswered = (phase !== 'human' ? messageUnanswered(this.transcript, this.forcedHandoffs) : null) ?? messageAfterGreeting(this.transcript, this.forcedHandoffs) ?? signedOff(this.transcript, this.forcedHandoffs);
     // Its transcript lands before its audio finishes playing, so a long message is still being
     // spoken when the first check comes: check again once the line has been quiet long enough.
     if (unanswered && quietFor < UNANSWERED_MS) {
@@ -1088,6 +1091,8 @@ export class VoiceSession extends DurableObject<Env> {
       if (this.ended || this.endingCall) return;
       const previous = await this.loadMachineState();
       const { state, guidance: detected } = machineTransition(previous, event, occurredAt);
+      // Every verdict, guidance or not: a "human" that sets the phase silently turns off the voicemail checks.
+      this.mark(`answering machine detection: ${event} (${previous.phase} -> ${state.phase})`);
       // Screening detection also fires on a phone menu's open prompt ("How can we help?"). A line that
       // has offered keypad options is a menu, not a screener waiting for the caller to introduce itself.
       const guidance = detected === 'screening' && this.menuRecovery.heardMenu() ? null : detected;
@@ -1106,7 +1111,6 @@ export class VoiceSession extends DurableObject<Env> {
           human: 'carrier detected a live person',
         };
         this.note(notes[guidance]);
-        this.mark(`answering machine detection: ${event}`);
       }
       await this.sendMachineGuidance();
     });
