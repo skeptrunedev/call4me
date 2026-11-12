@@ -16,9 +16,14 @@ HOST=voice.call4.me
 LOCK_SECONDS=300        # outlasts deploy + rollout + grace; expires on its own if this dies
 ROLLOUT_SECONDS=120     # longest to wait for the new version to answer /build
 GRACE_SECONDS=60        # Cloudflare can keep running the old version briefly after a deploy
-WAIT_SECONDS=3000       # longest to wait for calls to finish (calls run 30 minutes at most)
-STALE_SECONDS=7200      # active rows older than this are stuck, not live
+WAIT_SECONDS=3000       # longest to wait for calls to finish; a longer one fails this run, rerun it after
 NEVER_DIALED_SECONDS=300 # queued with no carrier call this long never dialed (NEVER_DIALED_MS)
+# Active rows older than the longest a call can last are stuck, not live. Holds stretch a call up
+# to LIMITS.maxMinutes, which every call also gives Telnyx as its time limit; the 15 minutes on
+# top cover queueing and ringing before that clock starts. A fixed 2 hours here once deployed
+# over a call that had been on hold for that long, and the deploy restarted its session.
+max_call_minutes=$(npx tsx -e 'import { LIMITS } from "./src/server/services/call-store"; console.log(LIMITS.maxMinutes)')
+STALE_SECONDS=$(( (max_call_minutes + 15) * 60 ))
 
 out=$(mktemp -d)
 trap 'rm -rf "$out"' EXIT

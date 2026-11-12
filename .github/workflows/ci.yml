@@ -96,7 +96,7 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-  # Deploying the voice Worker drops live calls, so it waits for none to be up (calls run 30 minutes at most).
+  # Deploying the voice Worker drops live calls, so it waits for none to be up (holds can stretch a call to 4 hours).
   deploy-voice:
     needs: migrate
     runs-on: ubuntu-latest
