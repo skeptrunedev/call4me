@@ -54,6 +54,16 @@ const DEAD_AIR_MS = 60_000;
  * leaving a socket that carries nothing; after this long without a frame it is reattached.
  */
 const FIRST_AUDIO_LIMIT_MS = 4_000;
+/**
+ * A phone stream can also die mid-call without closing: Telnyx's end of the socket drops, it
+ * reconnects or gives up (streaming.failed), and no close ever reaches ours. Gaido's Seafood's
+ * caller heard none of the host's minute of talk after one and sat silent until the time limit. A
+ * far end that stops sending audio stops the frames too, so once they stop the session asks Telnyx:
+ * a mark comes back once the audio queued ahead of it has played (61ms on an idle line), and only a
+ * stream that is gone stays quiet.
+ */
+const PHONE_QUIET_MS = 2_000;
+const MARK_REPLY_MS = 3_000;
 /** After end_call, let the goodbye finish playing before hanging up. */
 const HANGUP_GRACE_MS = 700;
 /** Quiet time after the last words before checking for a hand-off the voice model skipped. */
@@ -154,6 +164,7 @@ type TelnyxFrame =
   | { event: 'media'; media: { track?: string; payload: string } }
   | { event: 'dtmf'; dtmf?: { digit: string } }
   | { event: 'stop' }
+  | { event: 'mark'; mark?: { name?: string } }
   | { event: string };
 
 export class VoiceSession extends DurableObject<Env> {
@@ -203,6 +214,9 @@ export class VoiceSession extends DurableObject<Env> {
   /** When a key went in, and until when the caller waits for the menu's answer to it. */
   private keySentAt = 0;
   private keyReplyBy = 0;
+  /** When the current phone stream last sent anything, and the mark asking whether it is still there. */
+  private phoneHeardAt = 0;
+  private phoneProbe: { name: string; dueAt: number } | null = null;
   private lastTranscriptAt = 0;
   /** When each side last said something: the hard stop gives a live conversation time to finish. */
   private lastSpokeAt = { them: 0, caller: 0 };
@@ -349,6 +363,9 @@ export class VoiceSession extends DurableObject<Env> {
     const previous = this.phone;
     if (previous && previous !== server) this.detachLive();
     this.phone = server;
+    this.phoneHeardAt = Date.now();
+    this.phoneProbe = null;
+    this.watchPhone(server);
     if (previous?.readyState === WebSocket.OPEN) previous.close(1000, 'phone stream replaced');
     server.addEventListener('message', (ev) => {
       if (this.phone === server && !this.ended) this.onPhoneFrame(typeof ev.data === 'string' ? ev.data : '');
@@ -446,6 +463,8 @@ export class VoiceSession extends DurableObject<Env> {
     } catch {
       return;
     }
+    this.phoneHeardAt = Date.now();
+    this.phoneProbe = null;
     if (frame.event === 'media') {
       const payload = (frame as { media: { payload: string } }).media.payload;
       if (!this.answered) return; // ringback and early media are not the other person
@@ -456,6 +475,20 @@ export class VoiceSession extends DurableObject<Env> {
     } else if (frame.event === 'stop') {
       void this.shutdown('the phone audio stream stopped');
     }
+  }
+
+  /** Once a second while `socket` is the phone: frames stopped, ask with a mark; no mark back, the stream is gone. */
+  private watchPhone(socket: WebSocket): void {
+    setTimeout(() => {
+      if (this.ended || this.phone !== socket) return;
+      const now = Date.now();
+      if (this.phoneProbe && now >= this.phoneProbe.dueAt) return void this.phoneLost(socket, 'the media stream stopped answering');
+      if (!this.phoneProbe && this.answered && now - this.phoneHeardAt >= PHONE_QUIET_MS) {
+        this.phoneProbe = { name: `alive-${now}`, dueAt: Math.max(now, this.playbackEndsAt) + MARK_REPLY_MS };
+        this.sendPhone({ event: 'mark', mark: { name: this.phoneProbe.name } });
+      }
+      this.watchPhone(socket);
+    }, 1_000);
   }
 
   private sendPhone(msg: unknown): void {
