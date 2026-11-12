@@ -411,6 +411,37 @@ test('a message left after a greeting that asked for one ends the call even when
   assert.ok(h.session.live.sent.some((m: any) => /left its voicemail message/.test(m.item?.content?.[0]?.text ?? '')), 'hands off end_call');
 });
 
+test('a greeting that asked for a message and went quiet gets the message without a beep, only once the line is quiet', async (t) => {
+  const h = harness(t);
+  const live = (h.session.live = new Socket());
+  await h.session.machineDetected('machine', new Date(Date.now()).toISOString());
+  t.mock.timers.tick(100_000);
+  const greetingAt = Date.now() - 3_000;
+  h.session.transcript.push({ role: 'them', text: 'Votre correspondant ne peut recevoir votre appel. Veuillez laisser un message après le signal sonore.', at: greetingAt });
+  h.session.lastTranscriptAt = greetingAt;
+  const forced = () => live.sent.filter((m: any) => /recording now, even though no beep/.test(m.item?.content?.[0]?.text ?? '')).length;
+  h.session.themAudibleAt = Date.now() - 2_000; // its last words played after their transcript landed
+  h.session.checkMissedHandoff();
+  assert.equal(forced(), 0, 'the greeting may still be going');
+  t.mock.timers.tick(2_600);
+  assert.equal(forced(), 1, 'leaves the message once the greeting has been quiet 4s');
+  h.session.backOfficeBusy = false;
+  h.session.checkMissedHandoff();
+  assert.equal(forced(), 1, 'asked once');
+});
+
+test('a greeting asking for a message is left to the caller when the carrier says a person answered', async (t) => {
+  const h = harness(t);
+  h.session.live = new Socket();
+  await h.session.machineDetected('human', new Date(Date.now()).toISOString());
+  t.mock.timers.tick(100_000);
+  const at = Date.now() - 10_000;
+  h.session.transcript.push({ role: 'them', text: "She's out today, do you want to leave a message?", at });
+  h.session.lastTranscriptAt = at;
+  h.session.checkMissedHandoff();
+  assert.ok(!h.session.live.sent.some((m: any) => /recording now/.test(m.item?.content?.[0]?.text ?? '')));
+});
+
 test('a callback request a person heard is not taken for a voicemail, however long they go quiet', async (t) => {
   const h = harness(t);
   h.session.live = new Socket();

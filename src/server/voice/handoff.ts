@@ -147,7 +147,7 @@ function spokenKeypadDigits(text: string): string | null {
   return keys ? [...keys.toLowerCase().matchAll(new RegExp(KEY, 'g'))].map(([key]) => words[key] ?? key).join('') : null;
 }
 
-export type MissedHandoff = { reason: 'menu' | 'menu_recovery' | 'keypad' | 'promise' | 'voicemail_left' | 'signed_off'; line: TranscriptLine; menuContext?: string };
+export type MissedHandoff = { reason: 'menu' | 'menu_recovery' | 'keypad' | 'promise' | 'voicemail_left' | 'greeting_waiting' | 'signed_off'; line: TranscriptLine; menuContext?: string };
 type MenuSnapshot = { text: string; end: number; at: number; callerEnd: number };
 type KeypadAttempt = { digits: string; prompt: string; inputEnd: number; at: number };
 
@@ -296,8 +296,10 @@ export function voicemailLeft(lines: TranscriptLine[], beepAt: number | null, fo
   if (!last || last.role !== 'caller' || last.at < recordingFrom || forced.has(last.at)) return null;
   // A message, not the "Hi!" it starts with; transcripts split it across lines between greeting fragments.
   const words = lines.filter((l) => l.role === 'caller' && l.at >= recordingFrom).reduce((n, l) => n + l.text.trim().split(/\s+/).filter(Boolean).length, 0);
-  return words >= 4 ? { reason: 'voicemail_left', line: last } : null;
+  return words >= MESSAGE_WORDS ? { reason: 'voicemail_left', line: last } : null;
 }
+/** Fewer words than this from our caller are its "Hi!" or "Hmm.", not a message. */
+const MESSAGE_WORDS = 4;
 
 /**
  * A message left after a greeting that asked for one, on a line the carrier never flagged: the
@@ -308,6 +310,20 @@ export function messageAfterGreeting(lines: TranscriptLine[], forced: ReadonlySe
   const theirs = lines.filter((l) => l.role === 'them');
   const last = theirs.length - 1;
   return last >= 0 && (asksForMessage(theirs[last].text) || asksForMessage(greetingUpTo(theirs, last))) ? voicemailLeft(lines, null, forced) : null;
+}
+
+/**
+ * A voicemail greeting asked for a message, went quiet, and our caller has not left one: the
+ * recording has started even though no beep was detected. Gamrat Lalonde's French greeting
+ * ("veuillez laisser un message après le signal sonore") never beeped for the carrier, and the
+ * caller sat silent 50s, said "j'attends le bip", until the voicemail gave up on an empty message.
+ * A few words from our caller ("Hmm.") are not a message. Asked once per greeting.
+ */
+export function greetingWaiting(lines: TranscriptLine[], forced: ReadonlySet<number>): MissedHandoff | null {
+  const prompt = messagePrompt(lines);
+  if (!prompt || forced.has(prompt.at) || pickedUpAfter(lines, prompt)) return null;
+  const words = lines.filter((l) => l.role === 'caller' && l.at >= prompt.at).reduce((n, l) => n + l.text.trim().split(/\s+/).filter(Boolean).length, 0);
+  return words < MESSAGE_WORDS ? { reason: 'greeting_waiting', line: prompt } : null;
 }
 
 /**
@@ -349,7 +365,7 @@ function pickedUpAfter(lines: TranscriptLine[], prompt: TranscriptLine): boolean
 }
 
 /** A person answering the phone, as opposed to a greeting that is still recording. */
-const PICKED_UP = /\b(?:how (?:else )?(?:can|may) (?:i|we) (?:help|assist)|what can (?:i|we) do for you|(?<!have a |a very |enjoy your )good (?:morning|afternoon|evening)|(?:this is|it'?s) \w+(?: \w+)? speaking|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir)|buen(?:os d[ií]as|as tardes|as noches))\b/i;
+const PICKED_UP = /\b(?:how (?:else )?(?:can|may) (?:i|we) (?:help|assist)|what can (?:i|we) do for you|(?<!have a |a very |enjoy your )good (?:morning|afternoon|evening)|(?:this is|it'?s) \w+(?: \w+)? speaking|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir)|comment (?:puis-je|pouvons-nous|est-ce que je peux) vous aider|en quoi (?:puis-je|pouvons-nous) vous aider|buen(?:os d[ií]as|as tardes|as noches))\b/i;
 
 /**
  * A greeting asking for a message, not a menu option for one ("to leave a message, press 3"). Only
@@ -401,8 +417,10 @@ const SPOKEN_MESSAGE_OPTION = /\bsay\b[^.?!]{0,40}\bto (?:leave|record)\b|\bto (
 // "Leave me a name or a number", "leave us a voicemail", "leave your name, date of birth, and reason
 // for your call", "leave full name, date of birth, best contact number": asking for a name is
 // asking for a message. So is an AI receptionist's "please provide your name and a brief message".
-// Hangul has no \b, so Korean sits outside it.
-const VOICEMAIL_PROMPT = /삐\s?소리\s?(?:후|가 나면)|메시지를\s?(?:녹음|남겨)|\b(?:leave (?:me |us )?(?:a |an |your )?(?:brief |short |quick |detailed |additional )?(?:message|voice ?mail|(?:full |first and last )?name)|(?:provide|state) your name and (?:a |your )?(?:brief |short )?message|(?:after|at) the (?:tone|beep)|record your message|d[eé]ja(?:r|me)? (?:un|su) mensaje|d[eé]je(?:me)? (?:un|su) mensaje|despu[eé]s del tono|nach dem (?:signalton|piepton|ton)|hinterlass(?:en sie|e) (?:mir )?(?:eine|ihre) nachricht)\b/i;
+// Hangul has no \b, so Korean sits outside it. French sits outside it too: an accented last letter
+// ("tonalité") is no word character, so \b after it never matches. "Pour laisser un message" and
+// "para dejar un mensaje" lead into a menu option ("..., appuyez sur le 3"), not a request.
+const VOICEMAIL_PROMPT = /삐\s?소리\s?(?:후|가 나면)|메시지를\s?(?:녹음|남겨)|\b(?<!\bpour (?:nous |me )?)(?:laiss(?:er|ez)(?:-(?:nous|moi)| (?:nous|moi))? (?:(?:un |votre )?(?:bref |court |petit )?message|vos coordonn[ée]es|votre nom)|apr[eè]s (?:le (?:signal(?: sonore)?|bip|top(?: sonore)?)|la tonalit[ée])|au (?:signal sonore|bip)|enregistr(?:er|ez) votre message)(?![\wÀ-ÿ])|\b(?:leave (?:me |us )?(?:a |an |your )?(?:brief |short |quick |detailed |additional )?(?:message|voice ?mail|(?:full |first and last )?name)|(?:provide|state) your name and (?:a |your )?(?:brief |short )?message|(?:after|at) the (?:tone|beep)|record your message|(?<!\bpara )d[eé]ja(?:r|me)? (?:un|su) mensaje|d[eé]je(?:me)? (?:un|su) mensaje|despu[eé]s del tono|nach dem (?:signalton|piepton|ton)|hinterlass(?:en sie|e) (?:mir )?(?:eine|ihre) nachricht)\b/i;
 
 /**
  * The caller asked to be called, texted or emailed back and nobody answered: a voicemail the carrier
@@ -450,6 +468,8 @@ export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[
       ? `The caller announced a keypad action but no matching keypad submission followed. Speaking a key does not press it. Use press_digits if the announced action is still needed and supported by the task and the menu. Do not repeat a key already submitted or speak an acknowledgment. Stay silent while a person speaks or during hold.\n\nCaller's unfulfilled keypad action:\n${miss.line.text}\n\nActive menu instructions:\n${miss.menuContext}\n\nKeypad history (carrier accepted these requests; navigation may still have failed):\n${keypadHistory}`
       : miss.reason === 'voicemail_left'
       ? 'The caller has left its voicemail message after the beep. The call is done: hand off end_call now, and write nothing.'
+      : miss.reason === 'greeting_waiting'
+      ? "The voicemail greeting asked for a message and the line has been quiet since, so it is recording now, even though no beep was reported. Leave your message now, in the greeting's language: one or two sentences saying who you are, what it's about, and the callback number. Then hand off end_call."
       : miss.reason === 'signed_off'
       ? 'The other side said goodbye and the line has been silent since. The call is done: hand off end_call now, and write nothing.'
       : miss.reason !== 'promise'

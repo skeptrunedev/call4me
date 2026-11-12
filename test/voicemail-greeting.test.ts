@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { asksForMessage } from '../src/server/voice/handoff';
+import { asksForMessage, forcedHandoffMessage, greetingWaiting, voicemailLeft } from '../src/server/voice/handoff';
 import { HoldMeter } from '../src/server/voice/hold';
 
 test('greetings asking for a name and phone number are voicemail prompts, menu options are not', () => {
@@ -244,4 +244,63 @@ test("a voicemail request run on from the menu before it with no full stop is st
   assert.ok(!asksForMessage('Please hold for the next available agent. You may press the star key at any time to leave a voicemail. To request a callback, press zero.'));
   assert.ok(!asksForMessage('For sales, press 1, or to leave a message for our team press 2.'));
   assert.ok(!asksForMessage('Press 1 to leave a message.'));
+});
+
+test('French greetings asking for a message are voicemail prompts, French and Spanish menu options are not', () => {
+  for (const greeting of [
+    'Votre correspondant ne peut recevoir votre appel. Veuillez laisser un message après le signal sonore.',
+    'Laissez-nous un message et nous vous rappellerons.',
+    'Vous pouvez laisser votre nom et votre numéro de téléphone.',
+    'Laissez vos coordonnées après le bip.',
+    "Veuillez commencer l'enregistrement de votre message après le signal sonore",
+    'Merci de nous laisser un bref message.',
+  ]) assert.ok(asksForMessage(greeting), greeting);
+  assert.ok(!asksForMessage('Pour laisser un message, appuyez sur le 3.'));
+  assert.ok(!asksForMessage('Pour nous laisser un message, faites le 2.'));
+  assert.ok(!asksForMessage('Para dejar un mensaje, oprima el 3.'));
+  assert.ok(!asksForMessage('Votre appel est important pour nous, veuillez patienter.'));
+});
+
+// Shaped like Gamrat Lalonde's voicemail (business renamed): the carrier flagged a machine, no beep
+// was ever reported, and the caller waited 50s for one before the voicemail gave up.
+const frenchGreeting = [
+  { role: 'them' as const, text: 'Bonjour et bienvenue chez Dubois Comptables. Hello and welcome to Dubois Comptables.', at: 2_000 },
+  { role: 'note' as const, text: 'carrier detected an automated greeting', at: 4_800 },
+  { role: 'caller' as const, text: 'Hmm.', at: 5_500 },
+  { role: 'them' as const, text: "Votre correspondant... ne peut recevoir votre appel. Veuillez laisser un message après le signal sonore... Appuyez sur la touche carré à la fin de l'enregistrement", at: 6_000 },
+];
+
+test('a greeting that asked for a message and went quiet is recording, beep or not, until our caller leaves one', () => {
+  const miss = greetingWaiting(frenchGreeting, new Set());
+  assert.equal(miss?.reason, 'greeting_waiting');
+  assert.equal(miss?.line.at, 6_000);
+  assert.match(forcedHandoffMessage(miss!, frenchGreeting), /recording now, even though no beep was reported\. Leave your message now, in the greeting's language/);
+  // "J'attends le bip" is still waiting, not a message.
+  const stalled = [...frenchGreeting, { role: 'caller' as const, text: "J'attends le bip.", at: 56_700 }];
+  assert.equal(greetingWaiting(stalled, new Set())?.reason, 'greeting_waiting');
+  // Asked once per greeting.
+  assert.equal(greetingWaiting(frenchGreeting, new Set([6_000])), null);
+  // Once the message is left, it is a voicemail left, not a greeting waiting.
+  const left = [...frenchGreeting, { role: 'caller' as const, text: "Bonjour, ici l'assistante de Sam Martin. Nous aimerions prendre rendez-vous. Vous pouvez nous rappeler au cinq cinq cinq, zéro un deux trois. Merci, au revoir.", at: 11_000 }];
+  assert.equal(greetingWaiting(left, new Set()), null);
+  assert.equal(voicemailLeft(left, null, new Set())?.reason, 'voicemail_left');
+});
+
+test('a person picking up after the French greeting is not a recording waiting for a message', () => {
+  const lines = [
+    { role: 'them' as const, text: 'Veuillez laisser un message après le signal sonore.', at: 2_000 },
+    { role: 'them' as const, text: 'Allô, cabinet Dubois, comment puis-je vous aider?', at: 6_000 },
+  ];
+  assert.equal(greetingWaiting(lines, new Set()), null);
+});
+
+test('a message left after a French greeting streamed in fragments is a voicemail left', () => {
+  const lines = [
+    { role: 'them' as const, text: "Le correspondant n'est pas joignable pour le moment. Veuillez", at: 1_600 },
+    { role: 'note' as const, text: 'carrier detected an automated greeting', at: 4_400 },
+    { role: 'them' as const, text: 'laisser un', at: 4_800 },
+    { role: 'them' as const, text: 'message après le signal sonore. Après avoir laissé votre message, vous pouvez le modifier en appuyant sur le carré', at: 5_200 },
+    { role: 'caller' as const, text: "Bonjour, je suis l'assistant de Sam Martin. Je vous appelle au sujet du mariage. Vous pouvez me rappeler au cinq cinq cinq, zéro un deux trois. Merci!", at: 12_800 },
+  ];
+  assert.equal(voicemailLeft(lines, null, new Set())?.reason, 'voicemail_left');
 });
