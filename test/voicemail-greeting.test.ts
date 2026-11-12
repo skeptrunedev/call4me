@@ -236,3 +236,12 @@ test("the recording's own controls after a request for a message aren't a menu, 
   ];
   assert.equal(voicemailLeft(receptionist, null, new Set()), null);
 });
+
+test("a voicemail request run on from the menu before it with no full stop is still a request; a key's own option to leave one isn't", () => {
+  // Episcopal Community Services: menu, transfer and voicemail in one unpunctuated run.
+  assert.ok(asksForMessage('To reach housing administration, press nine. To repeat these options, press the star key. To return to the previous menu, press the pound key Please wait while your call is being transferred Please leave a message after the tone. When you have finished, please hang up or press the pound key for more options'));
+  assert.ok(asksForMessage('For our general hours and location, please press 1. For customer service, please press 2 Record your message after the tone. Press any key or stop talking to end the recording'));
+  assert.ok(!asksForMessage('Please hold for the next available agent. You may press the star key at any time to leave a voicemail. To request a callback, press zero.'));
+  assert.ok(!asksForMessage('For sales, press 1, or to leave a message for our team press 2.'));
+  assert.ok(!asksForMessage('Press 1 to leave a message.'));
+});

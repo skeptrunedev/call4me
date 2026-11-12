@@ -358,8 +358,33 @@ const PICKED_UP = /\b(?:how (?:else )?(?:can|may) (?:i|we) (?:help|assist)|what 
  * options"), and reading those as a menu held One Jackson Place's voicemail open 46s.
  */
 export function asksForMessage(text: string): boolean {
-  return sentences(text).some((sentence) => VOICEMAIL_PROMPT.test(sentence) && !isPhoneMenu(sentence) && !SPOKEN_MESSAGE_OPTION.test(sentence));
+  return sentences(text).some((sentence) => {
+    const clause = requestClause(sentence);
+    return clause !== null && !isPhoneMenu(clause) && !SPOKEN_MESSAGE_OPTION.test(clause);
+  });
 }
+
+/**
+ * The part of a sentence that asks for a message, from the menu option before it: a transcript
+ * can run a whole menu and the voicemail it transfers to together with no full stop ("...To
+ * return to the previous menu, press the pound key Please wait while your call is being
+ * transferred Please leave a message after the tone"), and judged whole that read as a menu,
+ * so Episcopal Community Services' voicemail held a silent line 5 minutes. An option's own
+ * "press 1 to leave a message" keeps the option with it.
+ */
+function requestClause(sentence: string): string | null {
+  const ask = sentence.search(VOICEMAIL_PROMPT);
+  if (ask < 0) return null;
+  let from = 0;
+  for (const key of sentence.slice(0, ask).matchAll(KEY_PRESS)) from = key.index! + key[0].length;
+  return from && !OPTION_BOUND.test(sentence.slice(from, ask)) ? sentence.slice(from) : sentence;
+}
+const KEY_PRESS = new RegExp(String.raw`\b(?:press(?:ing)?|dial)\s+(?:the\s+)?${KEY}(?:\s+(?:key|button|sign))?(?!\w)`, 'gi');
+/**
+ * Words between a key and the request that keep the request in its option: "press 1 to leave a
+ * message", "press 2, or if…", "press the star key at any time to leave a voicemail".
+ */
+const OPTION_BOUND = /^[\s,;:–-]*(?:to|for|or|and|if|when|now)\b|\b(?:to|for|or|and)\s*$/i;
 
 /**
  * Its sentences, with one opening "and"/"or" kept on the sentence before: transcripts cut a menu
