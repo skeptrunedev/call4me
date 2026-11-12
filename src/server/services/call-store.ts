@@ -8,6 +8,11 @@ import { accounts } from './accounts';
 
 export type CallStatus = 'queued' | 'dialing' | 'in_progress' | 'completed' | 'no_answer' | 'busy' | 'failed' | 'canceled';
 export const ACTIVE: CallStatus[] = ['queued', 'dialing', 'in_progress'];
+/**
+ * An audio drop this close to the end is the hangup itself (the stream can close a moment before
+ * Telnyx reports it), not a call that went silent: it bills as usual.
+ */
+const AUDIO_LOSS_GRACE_MS = 5_000;
 
 export interface Brief {
   category?: string;
@@ -65,6 +70,8 @@ export interface CallRow {
   hold_since: number | null;
   /** When the call's audio first reached the voice session; null if Telnyx never connected it. */
   audio_at: number | null;
+  /** When its audio stream dropped, while it has not come back; null once audio flows again. */
+  audio_lost_at: number | null;
   hold_cents: number | null;
   outcome: string | null;
   transcript: string | null;
@@ -264,8 +271,11 @@ export function callStore(db: D1Database) {
       // Answered, but its audio never reached us: Telnyx couldn't connect the media stream, so the
       // business heard silence until it hung up. That's our failure, not a call that ran.
       const noAudio = opts.status === 'completed' && !!row.answered_at && !row.audio_at;
-      const status: CallStatus = opts.status === 'completed' && !row.answered_at ? 'no_answer' : noAudio ? 'failed' : opts.status;
-      const error = opts.error ?? (noAudio ? 'the call audio never connected' : null);
+      // Its audio dropped partway and never came back: the business heard silence until it hung up,
+      // or we did. A drop just before a normal hangup is the hangup itself, so it still bills.
+      const lostAudio = opts.status === 'completed' && !!row.answered_at && !!row.audio_lost_at && endedAt - row.audio_lost_at >= AUDIO_LOSS_GRACE_MS;
+      const status: CallStatus = opts.status === 'completed' && !row.answered_at ? 'no_answer' : noAudio || lostAudio ? 'failed' : opts.status;
+      const error = opts.error ?? (noAudio ? 'the call audio never connected' : lostAudio ? 'lost the call audio and could not reconnect it' : null);
       // Only calls that connected and ran normally are billed; our own failures are free. A call
       // never costs more than the credits held for it, even if it ran past its limit.
       const metered = costAt(row, endedAt, opts.pricePerMinuteCents);
@@ -298,8 +308,14 @@ export function callStore(db: D1Database) {
     },
 
     /** The call's audio first reached the voice session at `at`. */
+    /** Audio reached the voice session: the first time, or again after a drop (audioLost). */
     async audioArrived(id: string, at: number): Promise<void> {
-      await db.prepare(`UPDATE calls SET audio_at = ? WHERE id = ? AND audio_at IS NULL`).bind(at, id).run();
+      await db.prepare(`UPDATE calls SET audio_at = COALESCE(audio_at, ?), audio_lost_at = NULL WHERE id = ?`).bind(at, id).run();
+    },
+
+    /** The call's audio stream dropped; kept from the first drop until audio flows again. */
+    async audioLost(id: string, at: number): Promise<void> {
+      await db.prepare(`UPDATE calls SET audio_lost_at = ? WHERE id = ? AND audio_lost_at IS NULL`).bind(at, id).run();
     },
 
     /** The business put the call on hold at `at`. */

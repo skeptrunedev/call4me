@@ -103,6 +103,38 @@ test('audio reaching us makes an answered call billable', async () => {
   assert.equal(row!.cost_cents, 25);
 });
 
+test('a call whose audio drops partway and never comes back fails and is free', async () => {
+  const db = d1();
+  await answeredCall(db, 4 * 25);
+  // Talking for 40s, then the stream dropped; the business hung up on the silence 12s later.
+  await calls(db).audioLost('call_1', s(40));
+  await calls(db).audioLost('call_1', s(45));
+  const row = await calls(db).finish('call_1', { status: 'completed', pricePerMinuteCents: 25, at: s(52) });
+  assert.equal(row!.status, 'failed');
+  assert.equal(row!.cost_cents, 0);
+  assert.equal(row!.error, 'lost the call audio and could not reconnect it');
+  assert.equal(await accounts(db).balanceCents('acct_alice'), 10_000);
+});
+
+test('audio that comes back after a drop, or drops as they hang up, bills the call as usual', async () => {
+  const db = d1();
+  await answeredCall(db, 4 * 25);
+  await calls(db).audioLost('call_1', s(40));
+  await calls(db).audioArrived('call_1', s(48));
+  const back = await calls(db).finish('call_1', { status: 'completed', pricePerMinuteCents: 25, at: s(90) });
+  assert.equal(back!.status, 'completed');
+  assert.equal(back!.audio_lost_at, null);
+  assert.equal(back!.audio_at, s(0));
+  assert.equal(back!.cost_cents, 50);
+
+  const hangup = d1();
+  await answeredCall(hangup, 4 * 25);
+  await calls(hangup).audioLost('call_1', s(89));
+  const row = await calls(hangup).finish('call_1', { status: 'completed', pricePerMinuteCents: 25, at: s(90) });
+  assert.equal(row!.status, 'completed');
+  assert.equal(row!.cost_cents, 50);
+});
+
 test('an Italian or French hold request starts a hold', async () => {
   const { HoldMeter } = await import('../src/server/voice/hold');
   const it = new HoldMeter();

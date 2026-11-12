@@ -3,7 +3,7 @@ import { Raindrop, type Interaction } from 'raindrop-ai';
 import { ACTIVE, callStore, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/call-store';
 import { telnyx } from '../lib/telnyx';
 import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
-import { asksUsToWait, connectCheckMessage, KEY_TRANSCRIPT_LAG_MS, forcedHandoffMessage, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft } from './handoff';
+import { asksUsToWait, connectCheckMessage, KEY_TRANSCRIPT_LAG_MS, forcedHandoffMessage, greetingWaiting, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinedMessage, leftMessage, legEnded, listeningMessage, mergeTranscript, resumeNote, unreachableMessage, type PersonMode } from './person';
 import { HoldMeter, type HoldChange } from './hold';
 import { midConversation } from './time-limit';
@@ -72,6 +72,8 @@ const HANDOFF_QUIET_MS = 1_500;
 const UNANSWERED_MS = 45_000;
 /** Silence after a message on a line the carrier flagged as automated before it counts as left on voicemail. */
 const VOICEMAIL_QUIET_MS = 6_000;
+/** Quiet after a greeting's "leave a message" before its recording counts as started, beep or not (greetingWaiting). */
+const GREETING_QUIET_MS = 4_000;
 /**
  * A menu gets its keypad choice once the recording has paused: its audio quiet this long, and its
  * transcript (which trails the audio by about a second) settled too. Menus take keys while they
@@ -405,6 +407,7 @@ export class VoiceSession extends DurableObject<Env> {
     if (this.phone !== socket || this.ended) return;
     console.warn('call session lost the phone stream:', reason, this.setup?.callId);
     this.phone = null;
+    this.audioRecorded = false; // A reattached stream's first audio marks the call's audio back.
     this.detachLive();
     await this.flushTranscript().catch((err) => console.warn('transcript flush', String(err)));
     if (this.phone || this.ended) return; // A new stream may have attached while the transcript saved.
@@ -963,7 +966,16 @@ export class VoiceSession extends DurableObject<Env> {
       if (!this.unansweredTimer) this.scheduleUnansweredCheck(UNANSWERED_MS - quietFor);
       unanswered = null;
     }
-    const miss = menu ?? voicemail ?? unanswered ?? (this.forcedHandoffs.size < MAX_FORCED_HANDOFFS ? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs) : null);
+    // A recording that asked for a message and went quiet is recording it, beep or not. Not on
+    // hold: a queue can offer voicemail ("leave a message, or stay on the line") and keep playing music.
+    // Its audio has to be quiet too: a greeting's next sentence can still be playing before its transcript lands.
+    let greeting = (phase === 'machine' || phase === 'uncertain') && !this.hold.holding() ? greetingWaiting(this.transcript, this.forcedHandoffs) : null;
+    const greetingQuietFor = Math.min(quietFor, Date.now() - this.themAudibleAt);
+    if (greeting && greetingQuietFor < GREETING_QUIET_MS) {
+      this.scheduleUnansweredCheck(GREETING_QUIET_MS - greetingQuietFor);
+      greeting = null;
+    }
+    const miss = menu ?? voicemail ?? unanswered ?? greeting ?? (this.forcedHandoffs.size < MAX_FORCED_HANDOFFS ? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs) : null);
     if (!miss) {
       this.checkConnectCondition();
       return;
@@ -975,7 +987,7 @@ export class VoiceSession extends DurableObject<Env> {
     } else this.forcedHandoffs.add(miss.line.at);
     this.backOfficeBusy = true;
     this.lastHandoffAt = Date.now();
-    this.mark(`no hand-off after ${miss.reason === 'promise' ? 'a spoken promise' : miss.reason === 'voicemail_left' ? 'a voicemail message' : miss.reason === 'signed_off' ? 'their goodbye' : 'a phone menu'}; starting the back office`);
+    this.mark(`no hand-off after ${miss.reason === 'promise' ? 'a spoken promise' : miss.reason === 'voicemail_left' ? 'a voicemail message' : miss.reason === 'greeting_waiting' ? 'a voicemail greeting with no beep' : miss.reason === 'signed_off' ? 'their goodbye' : 'a phone menu'}; starting the back office`);
     this.sendLive({ type: 'response.item.create', item: { type: 'message', role: 'user', content: [{ type: 'input_text', text: forcedHandoffMessage(miss, this.transcript, this.menuRecovery.history()) }] } });
     this.sendLive({ type: 'response.create' });
   }
@@ -1438,6 +1450,8 @@ export class VoiceSession extends DurableObject<Env> {
       }
       const since = (await this.ctx.storage.get<number>('orphanSince')) ?? now;
       await this.ctx.storage.put('orphanSince', since);
+      // Billed only if the audio comes back (audioArrived clears it): the business may hang up on the silence first.
+      await callStore(this.env.DB).audioLost(s.callId, since);
       if (!(await this.ctx.storage.get('reattached')) && s.controlId && s.streamUrl) {
         await this.ctx.storage.put('reattached', true);
         console.warn('reattaching the media stream', s.callId);
