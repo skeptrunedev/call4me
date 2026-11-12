@@ -346,17 +346,34 @@ function pickedUpAfter(lines: TranscriptLine[], prompt: TranscriptLine): boolean
 }
 
 /** A person answering the phone, as opposed to a greeting that is still recording. */
-const PICKED_UP = /\b(?:how (?:can|may) (?:i|we) (?:help|assist)|what can (?:i|we) do for you|(?<!have a |a very |enjoy your )good (?:morning|afternoon|evening)|(?:this is|it'?s) \w+(?: \w+)? speaking|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir)|buen(?:os d[ií]as|as tardes|as noches))\b/i;
+const PICKED_UP = /\b(?:how (?:else )?(?:can|may) (?:i|we) (?:help|assist)|what can (?:i|we) do for you|(?<!have a |a very |enjoy your )good (?:morning|afternoon|evening)|(?:this is|it'?s) \w+(?: \w+)? speaking|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir)|buen(?:os d[ií]as|as tardes|as noches))\b/i;
 
-/** A greeting asking for a message, not a menu option for one ("to leave a message, press 3"). */
+/**
+ * A greeting asking for a message, not a menu option for one ("to leave a message, press 3"). Only
+ * the sentence asking is judged: the recording's own controls follow it ("At the tone, please
+ * record your message. When you have finished recording, you may hang up or press one for more
+ * options"), and reading those as a menu held One Jackson Place's voicemail open 46s.
+ */
 export function asksForMessage(text: string): boolean {
-  return VOICEMAIL_PROMPT.test(text) && !isPhoneMenu(text);
+  return sentences(text).some((sentence) => VOICEMAIL_PROMPT.test(sentence) && !isPhoneMenu(sentence) && !SPOKEN_MESSAGE_OPTION.test(sentence));
 }
+
+/**
+ * Its sentences, with one opening "and"/"or" kept on the sentence before: transcripts cut a menu
+ * option in two ("…simply press zero. And leave us a message with the best way to reach you.").
+ */
+function sentences(text: string): string[] {
+  return text.trim().split(SENTENCE_END).reduce<string[]>((all, s) => (all.length && /^(?:and|or)\b/i.test(s) ? [...all.slice(0, -1), `${all.at(-1)} ${s}`] : [...all, s]), []);
+}
+
+/** A spoken menu's option for a message: "for anything else, say contact to leave a message for our community team". */
+const SPOKEN_MESSAGE_OPTION = /\bsay\b[^.?!]{0,40}\bto (?:leave|record)\b|\bto (?:leave|record)\b[^.?!]{0,60}\bsay\b/i;
 
 /** A greeting asking for a message: where a voicemail starts recording when the carrier hears no beep. */
 // "Leave me a name or a number", "leave us a voicemail", "leave your name, date of birth, and reason
-// for your call": asking for a name is asking for a message. Hangul has no \b, so Korean sits outside it.
-const VOICEMAIL_PROMPT = /삐\s?소리\s?(?:후|가 나면)|메시지를\s?(?:녹음|남겨)|\b(?:leave (?:me |us )?(?:a |an |your )?(?:brief |short |quick |detailed |additional )?(?:message|voice ?mail|name)|(?:after|at) the (?:tone|beep)|record your message|d[eé]ja(?:r|me)? (?:un|su) mensaje|d[eé]je(?:me)? (?:un|su) mensaje|despu[eé]s del tono|nach dem (?:signalton|piepton|ton)|hinterlass(?:en sie|e) (?:mir )?(?:eine|ihre) nachricht)\b/i;
+// for your call": asking for a name is asking for a message. So is an AI receptionist's "please
+// provide your name and a brief message". Hangul has no \b, so Korean sits outside it.
+const VOICEMAIL_PROMPT = /삐\s?소리\s?(?:후|가 나면)|메시지를\s?(?:녹음|남겨)|\b(?:leave (?:me |us )?(?:a |an |your )?(?:brief |short |quick |detailed |additional )?(?:message|voice ?mail|name)|(?:provide|state) your name and (?:a |your )?(?:brief |short )?message|(?:after|at) the (?:tone|beep)|record your message|d[eé]ja(?:r|me)? (?:un|su) mensaje|d[eé]je(?:me)? (?:un|su) mensaje|despu[eé]s del tono|nach dem (?:signalton|piepton|ton)|hinterlass(?:en sie|e) (?:mir )?(?:eine|ihre) nachricht)\b/i;
 
 /**
  * The caller asked to be called, texted or emailed back and nobody answered: a voicemail the carrier

@@ -203,3 +203,35 @@ test("a request for a message counts from where it is complete, and a menu befor
   ];
   assert.equal(voicemailLeft(menu, null, new Set())?.reason, 'voicemail_left');
 });
+
+test("the recording's own controls after a request for a message aren't a menu, a key or word bound to leaving one is", async () => {
+  const { messageAfterGreeting, voicemailLeft } = await import('../src/server/voice/handoff');
+  // One Jackson Place: a forwarding menu, then the voicemail, all in one line. The line stayed open 46s.
+  const forwarded = [
+    { role: 'them' as const, text: 'Thank you for calling Brandon Management Company. Press', at: 0 },
+    { role: 'note' as const, text: 'carrier detected an automated greeting', at: 3_202 },
+    { role: 'them' as const, text: 'one for Brandon Management. Press two for engineering services. Press pound to repeat the menu. Press star to return to the main menu or hang up to end the call Please hold while I try to connect you Your call has been forwarded to the voicemail for Jessica Teglia. No one is available to take your call. At the tone, please record your message. When you have finished recording, you may hang up or press the pound key for more options', at: 3_517 },
+    { role: 'caller' as const, text: "Hi, this is Nick's assistant calling about studio availability, rent and parking. You can call us back at two four eight, two six two, five two five six. Thanks so much!", at: 73_955 },
+  ];
+  assert.equal(voicemailLeft(forwarded, null, new Set())?.reason, 'voicemail_left');
+  assert.equal(messageAfterGreeting(forwarded, new Set())?.reason, 'voicemail_left');
+  for (const greeting of [
+    'At the tone, please record your message. When you have finished recording, you may hang up or press one for more options',
+    'Please record your message after the tone. Press star to discard the recording, or press any digit to end the recording',
+    'Record your message at the tone. Press any key or stop talking to end the recording',
+    'Please leave your message after the tone. When done, hang up or press the pound key',
+    'Please provide your name and a brief message, and one of our leasing professionals will follow up with you',
+  ]) assert.ok(asksForMessage(greeting), greeting);
+  for (const option of [
+    // A transcript cut the option in two at "press zero".
+    'If you would like one of our leasing specialists to get in touch with you regarding our current pricing and availability, simply press zero. And leave us a message with the best way to reach you.',
+    'You can say, office hours, directions, or for anything else, say contact to leave a message for our community team.',
+    'To review or re-record your message, press one.',
+  ]) assert.ok(!asksForMessage(option), option);
+  // An AI receptionist asking how else it can help is answering, not recording.
+  const receptionist = [
+    { role: 'them' as const, text: "If you'd like a leasing specialist to reach you, leave us a message with the best way to reach you. How else can I help you?", at: 1 },
+    { role: 'caller' as const, text: "Hi, this is Nick's assistant looking for a studio. Can you tell me what's available?", at: 2 },
+  ];
+  assert.equal(voicemailLeft(receptionist, null, new Set()), null);
+});
