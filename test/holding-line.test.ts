@@ -66,6 +66,18 @@ test('the caller never guesses he or she from the name of who it calls for', asy
     /Never guess from Nikhil's name whether they're a he or a she/);
 });
 
+test("the caller checks an email address they read back, letter by letter", async () => {
+  const { callInstructions } = await import('../src/server/voice/prompt');
+  const call = {
+    owner: 'Alex Kim', assistantName: null, callingAs: null, onBehalfOf: 'Alex Kim', business: 'Keens Steakhouse', goal: 'Get the banquet menus emailed.',
+    facts: 'Send menus to dinners@agents.example-quilt.com', flexibility: '', callbackNumber: '+14155550100', callbackRingsOwner: false, localTime: null, connectWhen: null, voice: 'marin',
+  } as const;
+  const rules = callInstructions(call);
+  assert.match(rules, /dinners@agents\.example-quilt\.com: /);
+  assert.match(rules, /When they read an address back, check it letter by letter/);
+  assert.doesNotMatch(callInstructions({ ...call, facts: '' }), /read an address back/);
+});
+
 test('their goodbye split around ours still hangs up', async () => {
   const { missedHandoff } = await import('../src/server/voice/handoff');
   const t = 1_000_000;

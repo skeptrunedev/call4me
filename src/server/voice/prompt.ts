@@ -230,12 +230,14 @@ function spokenEmail(email: string): string {
 
 /**
  * The voice model spells an address from the sound of it and gets letters wrong ("Bhairav" came out
- * "B-A-H-R-A-V", "characterquilt" lost its H), so every address in the task comes pre-spelled.
+ * "B-A-H-R-A-V", "characterquilt" lost its H), so every address in the task comes pre-spelled. It
+ * also agreed to a read-back without checking it: Keens' banquet office read "C H R A C T E R Q I L T"
+ * back, heard "That's it, yeah", and its menus bounced twice.
  */
 function spellingRule(text: string): string {
   const emails = [...new Set(text.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g) ?? [])];
   if (!emails.length) return '';
-  return `\nWhen you spell an email address, read exactly these letters in this order. Never spell one from memory or from how it sounds:\n${emails.map((e) => `- ${e}: ${spokenEmail(e)}`).join('\n')}\n`;
+  return `\nWhen you spell an email address, read exactly these letters in this order. Never spell one from memory or from how it sounds:\n${emails.map((e) => `- ${e}: ${spokenEmail(e)}`).join('\n')}\nWhen they read an address back, check it letter by letter against these. If a letter is missing, extra or different, don't agree: say which part is off and spell that part again. Never say it's right without checking.\n`;
 }
 
 /**
