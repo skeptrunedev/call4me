@@ -303,7 +303,8 @@ export function voicemailLeft(lines: TranscriptLine[], beepAt: number | null, fo
  */
 export function messageAfterGreeting(lines: TranscriptLine[], forced: ReadonlySet<number>): MissedHandoff | null {
   const theirs = lines.filter((l) => l.role === 'them');
-  return theirs.length && asksForMessage(greetingUpTo(theirs, theirs.length - 1)) ? voicemailLeft(lines, null, forced) : null;
+  const last = theirs.length - 1;
+  return last >= 0 && (asksForMessage(theirs[last].text) || asksForMessage(greetingUpTo(theirs, last))) ? voicemailLeft(lines, null, forced) : null;
 }
 
 /**
@@ -315,14 +316,20 @@ function greetingUpTo(theirs: TranscriptLine[], i: number): string {
   return theirs.slice(Math.max(0, i - GREETING_FRAGMENTS + 1), i + 1).map((l) => l.text.trim()).join(' ');
 }
 
-/** Their latest line that finishes a request for a message, carrying the greeting text it finishes. */
+/**
+ * Their line where the latest request for a message is complete, carrying the greeting text it
+ * finishes. A line asking on its own comes first: joining pulls an earlier "press four" in, and a
+ * menu never asks. Recording starts where the request is first complete, not at the greeting's
+ * last fragment: "call you back. Thank" / "you" can land after our message has begun.
+ */
 function messagePrompt(lines: TranscriptLine[]): TranscriptLine | undefined {
   const theirs = lines.filter((l) => l.role === 'them');
-  for (let i = theirs.length - 1; i >= 0; i--) {
-    const text = greetingUpTo(theirs, i);
-    if (asksForMessage(text)) return { ...theirs[i], text };
-  }
-  return undefined;
+  const asks = (i: number) => asksForMessage(theirs[i].text) || asksForMessage(greetingUpTo(theirs, i));
+  let i = theirs.length - 1;
+  while (i >= 0 && !asks(i)) i--;
+  if (i < 0) return undefined;
+  while (i > 0 && asks(i - 1)) i--;
+  return asksForMessage(theirs[i].text) ? theirs[i] : { ...theirs[i], text: greetingUpTo(theirs, i) };
 }
 
 /**

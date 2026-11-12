@@ -181,3 +181,25 @@ test('a message left after a greeting split across fragments, or answered with a
   // Only the "Hmm." came after the greeting began: no message yet.
   assert.equal(voicemailLeft(lucere.slice(0, 5), null, new Set()), null);
 });
+
+test("a request for a message counts from where it is complete, and a menu before it doesn't cancel it", async () => {
+  const { voicemailLeft } = await import('../src/server/voice/handoff');
+  // Dr Uzai's greeting ended "Thank" / "you" after our message had begun: it still counts.
+  const tail = [
+    { role: 'them' as const, text: "This is Dr Uzai. Please leave a message. And I'll", at: 1 },
+    { role: 'note' as const, text: 'carrier detected an automated greeting', at: 2 },
+    { role: 'them' as const, text: 'call you back. Thank', at: 3 },
+    { role: 'caller' as const, text: "Hi Dr. Uzai, this is Alex's assistant asking about a follow-up visit next week. Please call back at four one five, five five five, zero one two three.", at: 4 },
+    { role: 'them' as const, text: 'you', at: 5 },
+    { role: 'caller' as const, text: 'Thanks so much, bye.', at: 6 },
+  ];
+  assert.equal(voicemailLeft(tail, null, new Set())?.reason, 'voicemail_left');
+  // A school's menu ran just before the teacher's own greeting.
+  const menu = [
+    { role: 'them' as const, text: 'For middle school and high school, press four', at: 1 },
+    { role: 'them' as const, text: 'Hello', at: 2 },
+    { role: 'them' as const, text: "You have reached Rocky at extension six two one two. Please leave a message and I'll get back to you as soon as I can. Thank you", at: 3 },
+    { role: 'caller' as const, text: "Hi Rocky, this is Jordan's assistant calling about the parent conference on Friday. Please call back at four one five, five five five, zero one two three.", at: 4 },
+  ];
+  assert.equal(voicemailLeft(menu, null, new Set())?.reason, 'voicemail_left');
+});
