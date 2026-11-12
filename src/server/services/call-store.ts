@@ -63,6 +63,8 @@ export interface CallRow {
   /** Seconds on hold already over (billed at half price), and when a hold still going started. */
   hold_seconds: number;
   hold_since: number | null;
+  /** When the call's audio first reached the voice session; null if Telnyx never connected it. */
+  audio_at: number | null;
   hold_cents: number | null;
   outcome: string | null;
   transcript: string | null;
@@ -259,7 +261,11 @@ export function callStore(db: D1Database) {
       const row = await this.byId(id);
       if (!row || !ACTIVE.includes(row.status)) return row;
       const talkSeconds = row.answered_at ? Math.max(0, Math.round((endedAt - row.answered_at) / 1000)) : 0;
-      const status: CallStatus = opts.status === 'completed' && !row.answered_at ? 'no_answer' : opts.status;
+      // Answered, but its audio never reached us: Telnyx couldn't connect the media stream, so the
+      // business heard silence until it hung up. That's our failure, not a call that ran.
+      const noAudio = opts.status === 'completed' && !!row.answered_at && !row.audio_at;
+      const status: CallStatus = opts.status === 'completed' && !row.answered_at ? 'no_answer' : noAudio ? 'failed' : opts.status;
+      const error = opts.error ?? (noAudio ? 'the call audio never connected' : null);
       // Only calls that connected and ran normally are billed; our own failures are free. A call
       // never costs more than the credits held for it, even if it ran past its limit.
       const metered = costAt(row, endedAt, opts.pricePerMinuteCents);
@@ -273,7 +279,7 @@ export function callStore(db: D1Database) {
              hold_seconds = ?, hold_since = NULL
            WHERE id = ? AND status IN ('queued','dialing','in_progress')`,
         )
-        .bind(status, endedAt, talkSeconds, cost, opts.hangupCause ?? null, opts.sipHangupCause ?? null, opts.hangupSource ?? null, opts.error ?? null, holdSecondsAt(row, endedAt), id)
+        .bind(status, endedAt, talkSeconds, cost, opts.hangupCause ?? null, opts.sipHangupCause ?? null, opts.hangupSource ?? null, error, holdSecondsAt(row, endedAt), id)
         .run();
       if ((r.meta.changes ?? 0) > 0) {
         const ledger = accounts(db);
@@ -289,6 +295,11 @@ export function callStore(db: D1Database) {
           );
       }
       return this.byId(id);
+    },
+
+    /** The call's audio first reached the voice session at `at`. */
+    async audioArrived(id: string, at: number): Promise<void> {
+      await db.prepare(`UPDATE calls SET audio_at = ? WHERE id = ? AND audio_at IS NULL`).bind(at, id).run();
     },
 
     /** The business put the call on hold at `at`. */

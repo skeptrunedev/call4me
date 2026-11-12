@@ -185,6 +185,8 @@ export class VoiceSession extends DurableObject<Env> {
   private answeredAt = 0;
   private liveStartedAt = 0;
   private framesIn = 0;
+  /** The call's audio has reached us and that's recorded (or being recorded): it is billable. */
+  private audioRecorded = false;
   /** When the phone last carried audible sound (their speech, a recording, hold music). */
   private themAudibleAt = 0;
   private framesOut = 0;
@@ -454,6 +456,11 @@ export class VoiceSession extends DurableObject<Env> {
     if (live?.readyState === WebSocket.OPEN) live.close(1000, 'phone stream lost');
   }
 
+  private recordAudio(callId: string): void {
+    this.audioRecorded = true;
+    void callStore(this.env.DB).audioArrived(callId, Date.now()).catch((err) => console.warn('audio arrival write failed', callId, String(err)));
+  }
+
   private onPhoneFrame(raw: string): void {
     let frame: TelnyxFrame;
     try {
@@ -465,6 +472,9 @@ export class VoiceSession extends DurableObject<Env> {
     this.phoneProbe = null;
     if (frame.event === 'media') {
       const payload = (frame as { media: { payload: string } }).media.payload;
+      // Ringback counts too: it shows the stream reaches us. A call answered without any audio
+      // ever arriving is ended as failed and not billed (callStore.finish).
+      if (!this.audioRecorded && this.setup) this.recordAudio(this.setup.callId);
       if (!this.answered) return; // ringback and early media are not the other person
       if (this.framesIn++ === 0) this.mark('first audio from phone');
       if (this.liveReady) this.sendLive({ type: 'session.input_audio.append', audio: payload });

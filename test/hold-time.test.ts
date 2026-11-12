@@ -11,8 +11,8 @@ async function answeredCall(db: D1Database, holdCents: number) {
   await accounts(db).post('acct_alice', 10_000, 'adjustment', 'seed', 'credits');
   await accounts(db).hold('acct_alice', holdCents, 'hold:call_1', 'up to n min');
   await db
-    .prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, hold_cents, answered_at, created_at) VALUES ('call_1', 'acct_alice', '+15555550100', 'Air Serbia', 'seat', '{}', 'in_progress', ?, ?, ?)`)
-    .bind(holdCents, s(0), s(0))
+    .prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, hold_cents, answered_at, audio_at, created_at) VALUES ('call_1', 'acct_alice', '+15555550100', 'Air Serbia', 'seat', '{}', 'in_progress', ?, ?, ?, ?)`)
+    .bind(holdCents, s(0), s(0), s(0))
     .run();
 }
 
@@ -78,6 +78,30 @@ test('a call on hold at its limit pays for its extension with the credits its ha
   assert.equal(done!.cost_cents, 2 * 25 + Math.ceil((43 * 25) / 2));
 });
 
+
+test('a call answered without its audio ever reaching us fails and is free', async () => {
+  const db = d1();
+  await answeredCall(db, 4 * 25);
+  await db.prepare(`UPDATE calls SET audio_at = NULL WHERE id = 'call_1'`).run();
+  // Telnyx couldn't connect the media stream; the business heard silence and hung up after 7s.
+  const row = await calls(db).finish('call_1', { status: 'completed', pricePerMinuteCents: 25, at: s(7) });
+  assert.equal(row!.status, 'failed');
+  assert.equal(row!.cost_cents, 0);
+  assert.equal(row!.error, 'the call audio never connected');
+  assert.equal(await accounts(db).balanceCents('acct_alice'), 10_000);
+});
+
+test('audio reaching us makes an answered call billable', async () => {
+  const db = d1();
+  await answeredCall(db, 4 * 25);
+  await db.prepare(`UPDATE calls SET audio_at = NULL WHERE id = 'call_1'`).run();
+  await calls(db).audioArrived('call_1', s(1));
+  await calls(db).audioArrived('call_1', s(30));
+  const row = await calls(db).finish('call_1', { status: 'completed', pricePerMinuteCents: 25, at: s(7) });
+  assert.equal(row!.status, 'completed');
+  assert.equal(row!.audio_at, s(1));
+  assert.equal(row!.cost_cents, 25);
+});
 
 test('an Italian or French hold request starts a hold', async () => {
   const { HoldMeter } = await import('../src/server/voice/hold');
