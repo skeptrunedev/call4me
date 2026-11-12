@@ -403,3 +403,34 @@ test('a callback request a person heard is not taken for a voicemail, however lo
   h.session.checkMissedHandoff();
   assert.ok(!h.session.live.sent.some((m: any) => /left its voicemail message/.test(m.item?.content?.[0]?.text ?? '')));
 });
+
+test('a question that goes unanswered reaches the voice session that replaced the one asking, and any opened later', async (t) => {
+  const h = harness(t);
+  await h.session.env.DB.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at) VALUES ('recovery_test', 'acct_alice', '+14155550100', 'Example Apartments', 'Studio rent', '{}', 'in_progress', 0)`).run();
+  const first = h.session.startLive();
+  await h.untilOpened(1);
+  h.connected(0);
+  await first;
+  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'asking' } }));
+  const asking = h.session.askUser(h.session.setup, "What is the household's annual income?");
+  for (let i = 0; i < 20 && !h.session.waiting.size; i++) await Promise.resolve();
+  // A new phone stream replaces the voice session while the question is out.
+  const phone = new Socket();
+  h.session.attachPhone(phone);
+  const attached = h.session.streamAttached(phone);
+  await h.untilOpened(2);
+  const replacement = h.connected(1);
+  await attached;
+  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'replacement' } }));
+  t.mock.timers.tick(120_000);
+  assert.match(await asking, /No answer is available/);
+  assert.ok(replacement.sent.some((m: any) => m.type === 'session.commentary.append' && /No answer is available .*household's annual income/.test(m.content)), 'the replacement is told');
+  // And a session opened after that has it in its instructions.
+  const later = new Socket();
+  h.session.attachPhone(later);
+  const reattached = h.session.streamAttached(later);
+  await h.untilOpened(3);
+  const third = h.connected(2);
+  await reattached;
+  assert.match(third.sent[0].session.instructions, /No answer is available .*household's annual income/);
+});

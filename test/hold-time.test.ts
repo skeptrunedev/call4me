@@ -143,3 +143,12 @@ test('a Japanese agent back from a hold ends it, and a hold request in Japanese 
   // Back-dated to the rep's return, which the rest of their sentence ran on from.
   assert.deepEqual(jtb.them('はい', s(80)), { type: 'end', at: s(68), seconds: 68 });
 });
+
+test("someone saying they'll stay on the line until we have the details is waiting on us, not holding us", async () => {
+  const { HoldMeter } = await import('../src/server/voice/hold');
+  // The Coronet's leasing bot, while our caller waited on an unanswered question.
+  assert.equal(new HoldMeter().them("Thank you for the update. I'll stay on the line until you have those details from Nick. Hello? I wanna make sure I haven't lost you", s(0)), null);
+  assert.equal(new HoldMeter().them("We'll stay on the line while you look that up.", s(0)), null);
+  assert.equal(new HoldMeter().them('Please stay on the line, your call will be answered shortly.', s(0))?.type, 'start');
+  assert.equal(new HoldMeter().them('Remain on the line for the next available agent.', s(0))?.type, 'start');
+});

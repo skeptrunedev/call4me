@@ -34,6 +34,10 @@ import { answeredAfterScreener, INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machine
 const OPENAI_LIVE_URL = 'https://api.openai.com/v1/live/sessions';
 /** How long ask_user holds the back office for an answer. One that comes later still reaches the caller. */
 const QUESTION_WAIT_MS = 120_000;
+
+/** What the voice model is told once a question to the person has gone unanswered. */
+const noAnswer = (question: string) =>
+  `No answer is available from the person you work for about "${question.slice(0, 300)}". Stop waiting for it and do not keep saying you are checking or waiting to hear back. When the other person is waiting for your answer, say you don't have that detail and ask whether they can proceed or look it up using facts already supplied. Carry on with anything else you can accomplish. Never guess facts or accept anything outside your permission. If nothing can proceed, ask what is needed for a follow up, then say goodbye and delegate end_call. Do not promise a callback has been arranged. Stay silent during a phone menu, hold, transfer, or while the other person is speaking. A later answer will still be delivered.`;
 /** The other side usually speaks first ("Hi, thanks for calling..."). If they don't, nudge. */
 const SILENT_PICKUP_MS = 5_000;
 /** Longest an incoming call waits to be answered while its voice session opens (prewarmLive). */
@@ -209,8 +213,11 @@ export class VoiceSession extends DurableObject<Env> {
   private toolsRunning = 0;
   /** ask_user calls waiting on the person, by question id. */
   private waiting = new Map<string, (answer: string | null) => void>();
-  /** After an unanswered question, don't put the recipient through another wait unless the user returns. */
-  private userUnavailable = false;
+  /**
+   * The latest question that got no answer: no later question puts the recipient through another
+   * wait until the user returns, and a voice session opened since still hears that it got none.
+   */
+  private unanswered: string | null = null;
   /** The latest question still out to the person, and whether its one acknowledgment was sent. */
   private holding: { question: string; lines: number } | null = null;
   private holdingTimer: ReturnType<typeof setTimeout> | null = null;
@@ -506,7 +513,7 @@ export class VoiceSession extends DurableObject<Env> {
     if (this.resumed) {
       const row = this.transcriptComplete ? null : await callStore(this.env.DB).byId(s.callId);
       const sofar = this.transcriptComplete ? this.transcript : row?.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [];
-      instructions = `${s.instructions}\n\n${resumeNote(sofar)}`;
+      instructions = `${s.instructions}\n\n${resumeNote(sofar)}${this.unanswered ? `\n\n${noAnswer(this.unanswered)}` : ''}`;
     }
     if (!current()) return;
     // Start monitoring alongside the connection, so telemetry never delays live audio.
@@ -1277,11 +1284,10 @@ export class VoiceSession extends DurableObject<Env> {
 
   private async askUser(s: Stored, question: string): Promise<string> {
     if (!question) return 'no question given';
-    const live = this.live;
     const db = callStore(this.env.DB);
     const qid = await db.ask(s.callId, question);
     if (this.ended) return 'the call has ended';
-    if (s.unattended || this.userUnavailable) return this.questionUnanswered(question, live);
+    if (s.unattended || this.unanswered !== null) return this.questionUnanswered(question);
     this.holding = { question, lines: 0 };
     this.scheduleHoldingLine();
     const answer = await new Promise<string | null>((resolve) => {
@@ -1299,17 +1305,19 @@ export class VoiceSession extends DurableObject<Env> {
     }
     if (this.ended) return 'the call has ended';
     return answer === null
-      ? this.questionUnanswered(question, live)
+      ? this.questionUnanswered(question)
       : `Answer: ${answer} (the caller has already been given it to say)`;
   }
 
-  /** The voice must hear the outcome too: back-office tool results are not spoken automatically. */
-  private questionUnanswered(question: string, live: WebSocket | null): string {
-    this.userUnavailable = true;
-    if (this.live === live && !this.ended && !this.personOn) this.sendLive({
-      type: 'session.commentary.append', delegation_id: null,
-      content: `No answer is available from the person you work for about "${question.slice(0, 300)}". Stop waiting for it and do not keep saying you are checking or waiting to hear back. When the other person is waiting for your answer, say you don't have that detail and ask whether they can proceed or look it up using facts already supplied. Carry on with anything else you can accomplish. Never guess facts or accept anything outside your permission. If nothing can proceed, ask what is needed for a follow up, then say goodbye and delegate end_call. Do not promise a callback has been arranged. Stay silent during a phone menu, hold, transfer, or while the other person is speaking. A later answer will still be delivered.`,
-    });
+  /**
+   * The voice must hear the outcome too: back-office tool results are not spoken automatically. It
+   * goes to whichever voice session is up now, not only the one that asked: a new phone stream
+   * replaces that session, and The Coronet's replacement, never told, said "still waiting on Nick"
+   * to a leasing bot for 17 minutes. A session opened later has it in its instructions (openLive).
+   */
+  private questionUnanswered(question: string): string {
+    this.unanswered = question;
+    if (!this.ended && !this.personOn) this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: noAnswer(question) });
     return 'No answer is available. The caller has been told to acknowledge the missing detail and proceed using known facts or an alternative lookup. Do not ask the same question again or wait again. A later answer still reaches the caller. Write nothing unless another tool is needed.';
   }
 
@@ -1321,7 +1329,7 @@ export class VoiceSession extends DurableObject<Env> {
    */
   private answerCameIn(id: string, question: string, answer: string): void {
     if (this.ended) return;
-    this.userUnavailable = false;
+    this.unanswered = null;
     if (!this.personOn) {
       this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: `The answer came back for "${question.slice(0, 300)}": ${answer}. Say it to them now.` });
     }
