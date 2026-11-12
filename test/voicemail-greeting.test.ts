@@ -141,3 +141,43 @@ test('a screener question split across transcript fragments still counts', async
   assert.ok(!screenerAskedRecently(lines, t + 60_000));
   assert.ok(screenerAskedRecently([{ role: 'them', text: "I'll see if this person's available", at: t }], t));
 });
+
+test('greetings asking for a voicemail, a name, or in Korean are voicemail prompts', () => {
+  // Each greeting left our caller on the line 45s to 100s after its message, until the silence timer.
+  for (const greeting of [
+    "Hello, this is Jacob. Leave me a name or a number and I'll get back to you.",
+    'If you could please leave your name and a number, I will return your call as soon as I can.',
+    "I can't get to the phone right now, but leave me a voicemail or shoot me a text and I'll get back to you.",
+    'Hi, you\'ve reached Ganim Tree Farm. Please leave us a voicemail or a text message. Thank you',
+    "I'm sorry, this person is not available. If you would like to leave an additional message, please reply after the tone",
+    'Please leave your name, date of birth, and reason for your call and we\'ll return it as soon as possible.',
+    '삐 소리후 메시지를 녹음 하고, 녹음이 끝나면 전화를 끊으십시오',
+  ]) assert.ok(asksForMessage(greeting), greeting);
+  assert.ok(!asksForMessage('To leave a voicemail, press 6.'));
+  assert.ok(!asksForMessage('Sure, let me grab a pen. What was the name again?'));
+});
+
+test('a message left after a greeting split across fragments, or answered with a "Hmm", is a voicemail left', async () => {
+  const { voicemailLeft } = await import('../src/server/voice/handoff');
+  const fragments = [
+    { role: 'them' as const, text: 'Greetings, you have reached Compass, please leave', at: 1 },
+    { role: 'note' as const, text: 'carrier detected an automated greeting', at: 2 },
+    { role: 'them' as const, text: 'a', at: 3 },
+    { role: 'them' as const, text: 'message after the', at: 4 },
+    { role: 'them' as const, text: 'tone. Thank you', at: 5 },
+    { role: 'caller' as const, text: "Hi, I'm calling about the listing on Pine Street. Please call back at four one five, five five five, zero one two three.", at: 6 },
+  ];
+  assert.equal(voicemailLeft(fragments, null, new Set())?.reason, 'voicemail_left');
+  // Lucere Vision: our caller's "Hmm." fell inside the greeting, before it asked for a message.
+  const lucere = [
+    { role: 'them' as const, text: "Thank you for calling Lucere Vision. We're sorry we missed", at: 1 },
+    { role: 'note' as const, text: 'carrier detected an automated greeting', at: 2 },
+    { role: 'them' as const, text: 'your call', at: 3 },
+    { role: 'caller' as const, text: 'Hmm.', at: 4 },
+    { role: 'them' as const, text: '. Please leave your name, date of birth, and reason for your call and we\'ll return it as soon as possible.', at: 5 },
+    { role: 'caller' as const, text: 'Hi, calling about a self-pay chalazion evaluation. Could someone call back at two four eight, two six two, five two five six? Thanks.', at: 6 },
+  ];
+  assert.equal(voicemailLeft(lucere, null, new Set())?.reason, 'voicemail_left');
+  // Only the "Hmm." came after the greeting began: no message yet.
+  assert.equal(voicemailLeft(lucere.slice(0, 5), null, new Set()), null);
+});

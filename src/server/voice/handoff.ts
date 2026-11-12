@@ -283,7 +283,7 @@ export function missedHandoff(lines: TranscriptLine[], lastHandoffAt: number, fo
 export function voicemailLeft(lines: TranscriptLine[], beepAt: number | null, forced: ReadonlySet<number>): MissedHandoff | null {
   // Recording starts at the carrier's beep or, when it heard none, the greeting's own "leave a message".
   // A menu option ("to leave a message, press 3") is not a recording starting.
-  const prompt = [...lines].reverse().find((l) => l.role === 'them' && asksForMessage(l.text));
+  const prompt = messagePrompt(lines);
   const recordingFrom = beepAt ?? prompt?.at ?? null;
   if (recordingFrom === null) return null;
   if (prompt && pickedUpAfter(lines, prompt)) return null;
@@ -303,8 +303,26 @@ export function voicemailLeft(lines: TranscriptLine[], beepAt: number | null, fo
  */
 export function messageAfterGreeting(lines: TranscriptLine[], forced: ReadonlySet<number>): MissedHandoff | null {
   const theirs = lines.filter((l) => l.role === 'them');
-  const greeting = theirs[theirs.length - 1];
-  return greeting && asksForMessage(greeting.text) ? voicemailLeft(lines, null, forced) : null;
+  return theirs.length && asksForMessage(greetingUpTo(theirs, theirs.length - 1)) ? voicemailLeft(lines, null, forced) : null;
+}
+
+/**
+ * Their words up to line i, with the few lines before it: a greeting streams in fragments
+ * ("please leave" / "a" / "message after the" / "tone"), and no one fragment asks for a message.
+ */
+const GREETING_FRAGMENTS = 4;
+function greetingUpTo(theirs: TranscriptLine[], i: number): string {
+  return theirs.slice(Math.max(0, i - GREETING_FRAGMENTS + 1), i + 1).map((l) => l.text.trim()).join(' ');
+}
+
+/** Their latest line that finishes a request for a message, carrying the greeting text it finishes. */
+function messagePrompt(lines: TranscriptLine[]): TranscriptLine | undefined {
+  const theirs = lines.filter((l) => l.role === 'them');
+  for (let i = theirs.length - 1; i >= 0; i--) {
+    const text = greetingUpTo(theirs, i);
+    if (asksForMessage(text)) return { ...theirs[i], text };
+  }
+  return undefined;
 }
 
 /**
@@ -329,7 +347,9 @@ export function asksForMessage(text: string): boolean {
 }
 
 /** A greeting asking for a message: where a voicemail starts recording when the carrier hears no beep. */
-const VOICEMAIL_PROMPT = /\b(?:leave (?:me |us )?(?:a|your) (?:brief |short |quick |detailed )?(?:message|name,? (?:and |& )?(?:your )?(?:(?:phone|telephone|contact|callback|call ?back) )?number)|(?:after|at) the (?:tone|beep)|record your message|d[eé]ja(?:r|me)? (?:un|su) mensaje|d[eé]je(?:me)? (?:un|su) mensaje|despu[eé]s del tono|nach dem (?:signalton|piepton|ton)|hinterlass(?:en sie|e) (?:mir )?(?:eine|ihre) nachricht)\b/i;
+// "Leave me a name or a number", "leave us a voicemail", "leave your name, date of birth, and reason
+// for your call": asking for a name is asking for a message. Hangul has no \b, so Korean sits outside it.
+const VOICEMAIL_PROMPT = /삐\s?소리\s?(?:후|가 나면)|메시지를\s?(?:녹음|남겨)|\b(?:leave (?:me |us )?(?:a |an |your )?(?:brief |short |quick |detailed |additional )?(?:message|voice ?mail|name)|(?:after|at) the (?:tone|beep)|record your message|d[eé]ja(?:r|me)? (?:un|su) mensaje|d[eé]je(?:me)? (?:un|su) mensaje|despu[eé]s del tono|nach dem (?:signalton|piepton|ton)|hinterlass(?:en sie|e) (?:mir )?(?:eine|ihre) nachricht)\b/i;
 
 /**
  * The caller asked to be called, texted or emailed back and nobody answered: a voicemail the carrier
