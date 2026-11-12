@@ -18,12 +18,28 @@ import { reloadOf } from './topups';
 const callingNumber = (row: CallRow) => row.ring_number ?? row.from_number;
 
 /**
+ * What the far end's SIP response to an unanswered call means for the next step: only a busy line
+ * is worth redialing soon. A line that declines one of our numbers keeps declining it (four or five
+ * 603s in a row from the same lines).
+ */
+const UNANSWERED: Record<string, string> = {
+  '486': 'the line was busy (SIP 486); trying again later may get through',
+  '600': 'the line was busy (SIP 600); trying again later may get through',
+  '603': 'the line declined the call without answering (SIP 603): a person or their call blocking turned it down, so redialing from the same call4me number will most likely be declined again',
+  '607': 'the line rejected the call as unwanted (SIP 607); redialing from the same call4me number will be rejected again',
+  '608': "the carrier rejected the call (SIP 608), usually its spam filtering; redialing from the same call4me number will be rejected again",
+  '404': 'the number does not exist (SIP 404); check the number before calling again',
+  '604': 'the number does not exist (SIP 604); check the number before calling again',
+};
+
+/**
  * Who ended a finished call and why, in words: a drop on the phone network reads differently from
  * the business hanging up or call4me hanging up its side. Telnyx's hangup_source says which leg
  * ended it ('caller' is us on an outbound call); end_reason says why when it was us.
  */
 export function howItEnded(row: CallRow, transcript: TranscriptLine[]): string | null {
-  if (ACTIVE.includes(row.status) || !row.answered_at) return row.hangup_cause;
+  if (ACTIVE.includes(row.status)) return row.hangup_cause;
+  if (!row.answered_at) return UNANSWERED[row.sip_hangup_cause ?? ''] ?? row.hangup_cause;
   const them = row.direction === 'outbound' ? 'the business' : 'the caller';
   const ourLeg = row.direction === 'outbound' ? 'caller' : 'callee';
   let ended: string;

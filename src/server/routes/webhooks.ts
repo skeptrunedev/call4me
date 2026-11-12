@@ -142,12 +142,28 @@ interface TelnyxWebhook {
   data?: {
     event_type?: string;
     occurred_at?: string;
-    payload?: { call_control_id?: string; call_leg_id?: string; client_state?: string | null; direction?: string; from?: string; to?: string; hangup_cause?: string; hangup_source?: string; digit?: string; digits?: string; status?: string; result?: string };
+    payload?: { call_control_id?: string; call_leg_id?: string; client_state?: string | null; direction?: string; from?: string; to?: string; hangup_cause?: string; sip_hangup_cause?: string; hangup_source?: string; digit?: string; digits?: string; status?: string; result?: string };
   };
 }
 
-/** How an unanswered call ended, from Telnyx's hangup_cause. */
-function unansweredStatus(cause: string | undefined): CallStatus {
+/**
+ * How an unanswered call ended. The far end's SIP response comes first: Telnyx reports 486 Busy
+ * Here, 603 Decline and 604 Does Not Exist all as hangup_cause 'user_busy', so a line that
+ * rejects us before it rings (13 of the 19 "busy" calls in one burst) read as busy, and the agent
+ * kept redialing it. 603 is call_rejected and 604 an unallocated number, as below.
+ */
+export function unansweredStatus(cause: string | undefined, sip?: string): CallStatus {
+  switch (sip) {
+    case '486':
+    case '600':
+      return 'busy';
+    case '603':
+    case '607':
+    case '608':
+    case '404':
+    case '604':
+      return 'failed';
+  }
   switch (cause) {
     case 'user_busy':
       return 'busy';
@@ -205,8 +221,8 @@ webhooks.post('/telnyx', async (c) => {
       break;
     case 'call.hangup': {
       const row = await db.byId(callId);
-      const status: CallStatus = row?.answered_at ? 'completed' : unansweredStatus(p.hangup_cause);
-      await db.finish(callId, { status, hangupCause: p.hangup_cause ?? null, hangupSource: p.hangup_source ?? null, pricePerMinuteCents: row ? callPrice(c.env, row) : pricePerMinute(c.env) });
+      const status: CallStatus = row?.answered_at ? 'completed' : unansweredStatus(p.hangup_cause, p.sip_hangup_cause);
+      await db.finish(callId, { status, hangupCause: p.hangup_cause ?? null, sipHangupCause: p.sip_hangup_cause ?? null, hangupSource: p.hangup_source ?? null, pricePerMinuteCents: row ? callPrice(c.env, row) : pricePerMinute(c.env) });
       // Returns once the session has written the final transcript.
       await sessionFor(c.env, callId).fetch('https://session/ended', { method: 'POST' });
       // Store provider identity only after the voice session has ended. Person legs

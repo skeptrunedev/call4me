@@ -70,6 +70,8 @@ export interface CallRow {
   outcome: string | null;
   transcript: string | null;
   hangup_cause: string | null;
+  /** The far end's SIP response at hangup: on an unanswered call, '486' busy, '603' declined, '604' no such number... */
+  sip_hangup_cause: string | null;
   /** Telnyx's hangup_source: 'caller' (our side, on an outbound call), 'callee', or 'unknown'. */
   hangup_source: string | null;
   /** Set when call4me itself hung up: why (the task was done, the user asked, the time limit...). */
@@ -260,7 +262,7 @@ export function callStore(db: D1Database) {
      * Terminal state plus billing, exactly once: the status guard makes a second hangup
      * event a no-op, and the ledger ref is the call id.
      */
-    async finish(id: string, opts: { status: CallStatus; hangupCause?: string | null; hangupSource?: string | null; error?: string | null; pricePerMinuteCents: number; at?: number }): Promise<CallRow | null> {
+    async finish(id: string, opts: { status: CallStatus; hangupCause?: string | null; sipHangupCause?: string | null; hangupSource?: string | null; error?: string | null; pricePerMinuteCents: number; at?: number }): Promise<CallRow | null> {
       const endedAt = opts.at ?? now();
       const row = await this.byId(id);
       if (!row || !ACTIVE.includes(row.status)) return row;
@@ -275,11 +277,11 @@ export function callStore(db: D1Database) {
         .prepare(
           // A hold or take-over still open at hangup is billed above; it is closed here too, so the
           // row's totals match the bill (Cody's 37 minutes on hold read as 0 on the account page).
-          `UPDATE calls SET status = ?, ended_at = ?, billed_seconds = ?, cost_cents = ?, hangup_cause = COALESCE(?, hangup_cause), hangup_source = COALESCE(?, hangup_source), error = COALESCE(?, error),
+          `UPDATE calls SET status = ?, ended_at = ?, billed_seconds = ?, cost_cents = ?, hangup_cause = COALESCE(?, hangup_cause), sip_hangup_cause = COALESCE(?, sip_hangup_cause), hangup_source = COALESCE(?, hangup_source), error = COALESCE(?, error),
              hold_seconds = ?, hold_since = NULL, person_seconds = ?, person_since = NULL
            WHERE id = ? AND status IN ('queued','dialing','in_progress')`,
         )
-        .bind(status, endedAt, talkSeconds, cost, opts.hangupCause ?? null, opts.hangupSource ?? null, opts.error ?? null, holdSecondsAt(row, endedAt), personSecondsAt(row, endedAt), id)
+        .bind(status, endedAt, talkSeconds, cost, opts.hangupCause ?? null, opts.sipHangupCause ?? null, opts.hangupSource ?? null, opts.error ?? null, holdSecondsAt(row, endedAt), personSecondsAt(row, endedAt), id)
         .run();
       if ((r.meta.changes ?? 0) > 0) {
         const ledger = accounts(db);
