@@ -1,7 +1,7 @@
 /**
  * End-to-end test of joining a live call (call4me_connect_me), on staging, with nobody's phone.
  *
- *   npm run staging:connect-test [-- --listen] [--wait <seconds>]
+ *   npm run staging:connect-test [-- --listen] [--wait <seconds>] [--person <+phone>]
  *
  * Staging (wrangler.staging.jsonc) has two numbers, each answered by staging's own assistant:
  * staging-test@call4.me's number plays the business, and staging-person@call4.me's number plays
@@ -11,6 +11,10 @@
  * transcripts: what each one heard is what came through the call. It passes when the business
  * heard the person and the person heard the business (with --listen, when the person heard the
  * business and the business did not hear them).
+ *
+ * --person joins a real phone instead of staging's person number, to check a customer's own line:
+ * it rings from staging-test@call4.me's number, and the test passes when the business heard
+ * anything from that phone after the join. Whether they heard the business, ask them.
  *
  * Mints a fresh API key for the staging business account on each run (staging's D1 only).
  */
@@ -22,6 +26,9 @@ const args = process.argv.slice(2);
 const listen = args.includes('--listen');
 const waitIndex = args.indexOf('--wait');
 const joinedSeconds = waitIndex >= 0 ? Number(args[waitIndex + 1]) : 40;
+const personIndex = args.indexOf('--person');
+const realPhone = personIndex >= 0 ? args[personIndex + 1] : null;
+if (realPhone !== null && !/^\+[1-9]\d{7,14}$/.test(realPhone)) throw new Error(`--person takes a phone number like +14155550123, not ${realPhone}`);
 const BUSINESS = 'staging-test@call4.me';
 const PERSON = 'staging-person@call4.me';
 
@@ -39,7 +46,8 @@ const numberOf = async (email: string) => {
   return row;
 };
 const business = await numberOf(BUSINESS);
-const person = await numberOf(PERSON);
+const person = realPhone ? null : await numberOf(PERSON);
+const personPhone = realPhone ?? person!.phone_number;
 
 // Same key shape and hash as lib/keys.ts newApiKey/sha256Hex.
 const ALPHABET = 'abcdefghjkmnpqrstuvwxyz23456789';
@@ -76,8 +84,8 @@ console.log(`answered at ${at(Date.now())}; letting the two assistants talk`);
 await sleep(12_000);
 
 const joinAt = Date.now();
-const connected = await call('POST', `/calls/${callId}/connect`, { phone: person.phone_number, mode: listen ? 'listen' : 'join' });
-console.log(`${listen ? 'listening' : 'joining'} ${person.phone_number} (person) at ${at(joinAt)}: ${connected.message}`);
+const connected = await call('POST', `/calls/${callId}/connect`, { phone: personPhone, mode: listen ? 'listen' : 'join' });
+console.log(`${listen ? 'listening' : 'joining'} ${personPhone} (person) at ${at(joinAt)}: ${connected.message}`);
 await sleep(joinedSeconds * 1000);
 await call('POST', `/calls/${callId}/hang-up`).catch((err) => console.log(`hang up: ${err.message}`));
 console.log(`hung up at ${at(Date.now())}; reading transcripts`);
@@ -86,28 +94,35 @@ await sleep(8_000);
 interface Row { id: string; account_id: string; direction: string; status: string; end_reason: string | null; answered_at: number | null; transcript: string | null }
 const { results: rows } = await db
   .prepare(`SELECT id, account_id, direction, status, end_reason, answered_at, transcript FROM calls WHERE created_at >= ? AND account_id IN (?, ?) ORDER BY created_at`)
-  .bind(t0 - 5_000, business.id, person.id)
+  .bind(t0 - 5_000, business.id, person?.id ?? business.id)
   .all<Row>();
 const lines = (r?: Row) => (r?.transcript ? (JSON.parse(r.transcript) as { role: string; text: string; at: number }[]) : []);
 const outbound = rows.find((r) => r.id === callId);
 const businessSide = rows.find((r) => r.direction === 'inbound' && r.account_id === business.id);
-const personSide = rows.find((r) => r.direction === 'inbound' && r.account_id === person.id);
+const personSide = person ? rows.find((r) => r.direction === 'inbound' && r.account_id === person.id) : undefined;
 
-for (const [label, r] of [['our caller', outbound], ['business (answering assistant)', businessSide], ['person (answering assistant)', personSide]] as const) {
+const sides: [string, Row | undefined][] = [['our caller', outbound], ['business (answering assistant)', businessSide]];
+if (person) sides.push(['person (answering assistant)', personSide]);
+for (const [label, r] of sides) {
   console.log(`\n${label}: ${r ? `${r.id} ${r.status}${r.end_reason ? `, ${r.end_reason}` : ''}` : 'no call recorded'}`);
   for (const l of lines(r)) console.log(`  ${at(l.at).padStart(7)} ${l.role.padEnd(6)} ${l.text.slice(0, 140)}`);
 }
 
-// What each assistant heard after the join is its "them" lines from then on.
+// What each assistant heard after the join is its "them" lines from then on. Our caller goes
+// quiet once the person joins, so on the business side that is the person. A real phone has no
+// assistant to say a known line, so any speech from it counts.
 const heardAfterJoin = (r?: Row) => lines(r).filter((l) => l.role === 'them' && l.at >= joinAt).map((l) => l.text);
-const businessHeardPerson = heardAfterJoin(businessSide).some((t) => /this is the person|staging person|person joining|one,? two,? three/i.test(t));
+const businessHeardPerson = realPhone
+  ? heardAfterJoin(businessSide).length > 0
+  : heardAfterJoin(businessSide).some((t) => /this is the person|staging person|person joining|one,? two,? three/i.test(t));
 const personHeard = heardAfterJoin(personSide).length > 0;
 const joined = lines(outbound).some((l) => l.role === 'note' && /joined the call|is listening in/.test(l.text));
 const verdict = [
   [`the person's phone ${listen ? 'started listening' : 'joined'}`, joined],
-  ['the person heard the business', personHeard],
+  ...(realPhone ? [] : [['the person heard the business', personHeard] as const]),
   [listen ? 'the business did not hear the person' : 'the business heard the person', listen ? !businessHeardPerson : businessHeardPerson],
 ] as const;
 console.log('');
 for (const [check, ok] of verdict) console.log(`${ok ? 'PASS' : 'FAIL'}  ${check}`);
+if (realPhone) console.log('ASK   whether they heard the business (staging\'s assistant) after picking up');
 process.exit(verdict.every(([, ok]) => ok) ? 0 : 1);
