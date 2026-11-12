@@ -107,3 +107,14 @@ test('an Italian or French hold request starts a hold', async () => {
   assert.equal(fr.them('Ne quittez pas, je vous mets en attente.', s(0))?.type, 'start');
   assert.equal(new HoldMeter().them('Allora, ho trovato un bilocale al terzo piano.', s(0)), null);
 });
+
+test('a queue of busy "reps" is a hold', async () => {
+  const { HoldMeter } = await import('../src/server/voice/hold');
+  // The Glaucoma Center of San Francisco queued the caller after it pressed 1 for appointments; the
+  // hold went unseen, so the call was cut off at its 4 minute limit while waiting for a person.
+  const queue = 'For any billing questions, please press three... to leave a non-urgent message, please press six. All of our reps are currently busy with a call. Please select one to stay on the call queue or select two to be sent to voicemail';
+  assert.equal(new HoldMeter().them(queue, s(0))?.type, 'start');
+  assert.equal(new HoldMeter().them('All reps are currently busy.', s(0))?.type, 'start');
+  assert.equal(new HoldMeter().them('Please stay on the call queue.', s(0))?.type, 'start');
+  assert.equal(new HoldMeter().them('Our reps can help you with billing, press three.', s(0)), null);
+});
