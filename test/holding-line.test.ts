@@ -59,10 +59,10 @@ test('the caller never guesses he or she from the name of who it calls for', asy
   const { callInstructions, inboundInstructions } = await import('../src/server/voice/prompt');
   const call = {
     owner: 'Nikhil Dandavati', assistantName: null, callingAs: null, onBehalfOf: 'Nikhil Dandavati', business: 'Avis', goal: 'Move the pickup an hour later.',
-    facts: '', flexibility: '', callbackNumber: '+14155550100', callbackRingsOwner: false, localTime: null, connectWhen: null, voice: 'marin',
+    facts: '', flexibility: '', callbackNumber: '+14155550100', callbackRingsOwner: false, localTime: null, today: 'Thursday, November 12, 2026', connectWhen: null, voice: 'marin',
   } as const;
   assert.match(callInstructions(call), /Never guess from Nikhil Dandavati's name whether they're a he or a she/);
-  assert.match(inboundInstructions({ owner: 'Nikhil', assistantName: null, callingAs: null, callbackNumber: '+14155550100', tasks: [], likely: false, recent: [], localTime: null, standing: null }),
+  assert.match(inboundInstructions({ owner: 'Nikhil', assistantName: null, callingAs: null, callbackNumber: '+14155550100', tasks: [], likely: false, recent: [], localTime: null, today: 'Thursday, November 12, 2026', standing: null }),
     /Never guess from Nikhil's name whether they're a he or a she/);
 });
 
@@ -70,7 +70,7 @@ test("the caller checks an email address they read back, letter by letter", asyn
   const { callInstructions } = await import('../src/server/voice/prompt');
   const call = {
     owner: 'Alex Kim', assistantName: null, callingAs: null, onBehalfOf: 'Alex Kim', business: 'Keens Steakhouse', goal: 'Get the banquet menus emailed.',
-    facts: 'Send menus to dinners@agents.example-quilt.com', flexibility: '', callbackNumber: '+14155550100', callbackRingsOwner: false, localTime: null, connectWhen: null, voice: 'marin',
+    facts: 'Send menus to dinners@agents.example-quilt.com', flexibility: '', callbackNumber: '+14155550100', callbackRingsOwner: false, localTime: null, today: 'Thursday, November 12, 2026', connectWhen: null, voice: 'marin',
   } as const;
   const rules = callInstructions(call);
   assert.match(rules, /dinners@agents\.example-quilt\.com: /);

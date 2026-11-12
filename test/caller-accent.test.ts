@@ -7,9 +7,9 @@ import { d1 } from './sqlite-d1';
 
 const call = {
   owner: 'Lorenz', assistantName: null, callingAs: null, onBehalfOf: 'Lorenz', business: 'Café Central', goal: 'Book a table for two tonight at 7.',
-  facts: '', flexibility: '', callbackNumber: '+43720000000', callbackRingsOwner: false, localTime: null, connectWhen: null,
+  facts: '', flexibility: '', callbackNumber: '+43720000000', callbackRingsOwner: false, localTime: null, today: 'Thursday, November 12, 2026', connectWhen: null,
 } as const;
-const answered = { owner: 'Lorenz', assistantName: null, callingAs: null, callbackNumber: '+43720000000', tasks: [], likely: false, recent: [], localTime: null, standing: null };
+const answered = { owner: 'Lorenz', assistantName: null, callingAs: null, callbackNumber: '+43720000000', tasks: [], likely: false, recent: [], localTime: null, today: 'Thursday, November 12, 2026', standing: null };
 
 test('an accent saves on the profile, and blank means the voice\'s own', async () => {
   assert.equal(accentOf(await profiles(d1()).update('acct_alice', { accent: 'Austrian German' })), 'Austrian German');

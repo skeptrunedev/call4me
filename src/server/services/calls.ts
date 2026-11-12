@@ -212,6 +212,15 @@ function validTimeZone(tz: string): boolean {
   }
 }
 
+/**
+ * "Thursday, November 12, 2026" in UTC: the date the caller is given when the business's time zone
+ * is unknown. With no date at all the voice model guesses, and once turned an October 7-15 rental
+ * into "last July" on November 12.
+ */
+export function todayUtc(at = new Date()): string {
+  return new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).format(at);
+}
+
 /** "Saturday, September 26, 2026, 3:04 PM" in the business's zone. */
 export function localTimeIn(tz: string | null, at = new Date()): string | null {
   if (!tz) return null;

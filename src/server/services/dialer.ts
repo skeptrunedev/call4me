@@ -12,7 +12,7 @@ import { accounts, type Account } from './accounts';
 import { answeringAccountId, EEA, numbers, ringablePhone } from './numbers';
 import { profiles } from './profiles';
 import { accentOf, answeringInstructionsOf, assistantNameOf, namePronunciationOf, type Profile, type Surface } from './intake';
-import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
+import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, todayUtc, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 import { analytics } from './analytics';
 
 export { VOICES, type Voice } from '../voice/voices';
@@ -174,6 +174,7 @@ export async function placeCall(
         callbackNumber: brief.callback_number ?? from,
         callbackRingsOwner: !brief.callback_number && caller.own,
         localTime: localTimeIn(brief.timezone),
+        today: todayUtc(),
         owner: person.name,
         assistantName: brief.caller_name || assistantNameOf(profile),
         accent: brief.accent || accentOf(profile),
@@ -373,6 +374,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
       likely: Boolean(likely),
       ownerCalling,
       localTime: localTimeIn(likelyBrief?.timezone ?? null),
+      today: todayUtc(),
       standing: answeringInstructionsOf(profile),
       recent: recent.map((r) => ({
         business: r.business,

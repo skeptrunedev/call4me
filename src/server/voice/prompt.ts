@@ -73,6 +73,8 @@ export interface CallBrief extends Who {
   callbackRingsOwner: boolean;
   /** Local date and time at the business, so "tomorrow" means something. Null when the time zone is unknown. */
   localTime: string | null;
+  /** Today's date in UTC ("Thursday, November 12, 2026"), for when the business's time zone is unknown. */
+  today: string;
   /** The person call4me works for, who can be patched into the call. */
   owner: string;
   /** When to patch them in without being asked, e.g. "as soon as a person picks up". */
@@ -141,7 +143,8 @@ What you can agree to without checking:
 ${b.flexibility.trim() || '(only exactly what the task says)'}
 
 The callback number is ${spokenPhone(b.callbackNumber)}${b.callbackRingsOwner ? `, ${b.owner}'s own phone: a callback reaches ${b.owner} directly` : ''}. Whenever they want a number to call back or text, a contact number for a booking, order or hold, and on any voicemail, give this one and only this one. A phone number among the facts above is for finding or verifying an account: when a person or a phone menu asks for the phone number on file, give that one, never the callback number. When the task or facts say there's no account or not to give out a phone number, that wins: give no number, and say there's no account.
-${b.localTime ? `It's ${b.localTime} for them right now.\n` : ''}
+${b.localTime ? `It's ${b.localTime} for them right now.` : `Today is ${b.today} in UTC. Their time zone isn't known, so for them it may still be the day before or already the next day.`}
+
 ${delegationPolicy(b.onBehalfOf, b.owner, b.connectWhen, b.ownerReachable ?? true)}
 
 # Sound like a person making a quick call
@@ -151,6 +154,7 @@ ${accentRule(b.voice, b.accent)}- Wait for them to answer ("Hi, thanks for calli
 - With a person, talk casually, with contractions: "yeah", "gotcha", "perfect", "oh nice", "hmm". Don't pile them up.
 - React to what they actually said instead of restating it.
 - Say numbers the way people do: "seven thirty", "the tenth", "four one five, five five five, oh one two three".
+- Say a date from your task the way the task gives it ("October 7th to the 15th"), never as "last July", "next week" or "a few days ago": a relative date you work out yourself can be wrong.
 - Never talk like a support bot. Never say: "Certainly", "Absolutely!", "I understand", "Great question", "I'd be happy to", "I appreciate that", "Is there anything else I can help with", "How may I assist you".
 - Everything you say is heard on the line, so never think out loud or comment on the call ("it's looping", "let me try that option", "okay, hanging up").
 - If they interrupt you, stop and listen.
@@ -307,6 +311,8 @@ interface InboundBrief extends Who {
   ownerCalling?: boolean;
   recent: { business: string; goal: string; summary: string | null; when: string }[];
   localTime: string | null;
+  /** Today's date in UTC, for when the time zone is unknown. */
+  today: string;
   /** The owner's standing instructions for answered calls (answering_instructions), or null. */
   standing: string | null;
 }
@@ -401,7 +407,9 @@ ${o.owner} is calling their own call4me line from their own phone. They are the 
     : '';
   return `${answererRules(o)}
 - If they ask for a number to call back or text, read out the digits: ${spokenPhone(o.callbackNumber)}. Never just say "this number".
-${o.localTime ? `\nIt's ${o.localTime} right now.\n` : ''}
+
+${o.localTime ? `It's ${o.localTime} right now.` : `Today is ${o.today} in UTC.`}
+
 ${delegationPolicy(o.owner, o.owner)}
 
 ${ownerBlock}${standingBlock(o.standing)}${tasks}

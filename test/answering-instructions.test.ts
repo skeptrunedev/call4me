@@ -6,7 +6,7 @@ import { inboundBackOfficeInstructions, inboundInstructions } from '../src/serve
 import { d1 } from './sqlite-d1';
 
 const collect = 'Accept collect calls from jails and prisons by pressing 1, then take the inmate\'s name, facility and message.';
-const brief = { owner: 'Stephanie', callbackNumber: '+14165550100', tasks: [], likely: false, recent: [], localTime: null };
+const brief = { owner: 'Stephanie', callbackNumber: '+14165550100', tasks: [], likely: false, recent: [], localTime: null, today: 'Thursday, November 12, 2026' };
 
 test('answering instructions save on the profile, and blank means none', async () => {
   const saved = await profiles(d1()).update('acct_alice', { answering_instructions: collect });
