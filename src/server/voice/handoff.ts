@@ -43,7 +43,8 @@ const HOLD_REQUEST = /\b(?:please hold|on hold|hold on|hold time|wait time|next 
  * Japanese queue and transfer recordings ("しばらくお待ちください", "オペレーターにおつなぎいたします",
  * "お電話が大変混み合っております"). No \b: word boundaries don't exist between Japanese characters.
  */
-export const JA_WAIT = /(?:お待ちください|お待ち下さい|しばらくお待ち|少々お待ち|おつなぎ(?:いた)?します|おつなぎするまで|お繋ぎ(?:いた)?します|混み合って|込み合って)/;
+// "少々確認いたしますので、お時間いただいてもよろしいでしょうか": a rep going to check.
+export const JA_WAIT = /(?:お待ちください|お待ち下さい|しばらくお待ち|少々お待ち|おつなぎ(?:いた)?します|おつなぎするまで|お繋ぎ(?:いた)?します|混み合って|込み合って|確認(?:いた)?しますので|お調べ(?:いた)?しますので|少々お時間|お時間(?:を)?いただ(?:いて|け)(?:も)?(?:よろしい|ますか))/;
 /** A Japanese recording offering keys ("2、を押してください"). */
 export const JA_KEYPAD = /押してください/;
 

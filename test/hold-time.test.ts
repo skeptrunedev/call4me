@@ -118,3 +118,28 @@ test('a queue of busy "reps" is a hold', async () => {
   assert.equal(new HoldMeter().them('Please stay on the call queue.', s(0))?.type, 'start');
   assert.equal(new HoldMeter().them('Our reps can help you with billing, press three.', s(0)), null);
 });
+
+test('a Japanese agent back from a hold ends it, and a hold request in Japanese starts one', async () => {
+  const { HoldMeter } = await import('../src/server/voice/hold');
+  // freee's company-setup desk: the opening "しばらくお待ち" started a hold that nothing in Japanese
+  // could end, and 17 minutes of conversation were billed as hold, past the call's time limit.
+  const desk = new HoldMeter();
+  assert.equal(desk.them('順番におつなぎいたしますので、しばらくお待ち', s(0))?.type, 'start');
+  assert.equal(desk.them(' お電話ありがとうございます、フリー会社設立サポート窓口の赤間と申します', s(2))?.type, 'end');
+  // Asked to wait while the rep checks: our caller's polite yes keeps the hold, the rep's return ends it.
+  assert.equal(desk.them('なるほどですね。少々確認いたしますので、お時間いただいてもよろしいでしょうか', s(60))?.type, 'start');
+  assert.equal(desk.caller('はい、大丈夫です、お願いします。'), null);
+  assert.equal(desk.them('ありがとうございます。', s(73)), null);
+  assert.equal(desk.them('お客様お時間いただきありがとうございます', s(250)), null);
+  const back = desk.caller('いえ、こちらこそ。') ?? desk.them('はい、で、こちらですね', s(255));
+  assert.deepEqual(back, { type: 'end', at: s(250), seconds: 190 });
+  // JTB: "確認をいたしますので少々お待ち…" then "お待たせいたしました".
+  const jtb = new HoldMeter();
+  assert.equal(jtb.them('はい。かしこまりました、ちょっと確認をいたしますので少々お待ちいただけますでしょうか', s(0))?.type, 'start');
+  assert.equal(jtb.caller('はい、お願いします。'), null);
+  jtb.them('おそれ入ります、お待たせいたしました', s(68));
+  assert.equal((jtb.caller('はい。') ?? jtb.them('確認したところ、お申し込みについてなんですけれども', s(70))), null);
+  assert.equal(jtb.caller('そうなんですね、他の方法はありますか?'), null);
+  // Back-dated to the rep's return, which the rest of their sentence ran on from.
+  assert.deepEqual(jtb.them('はい', s(80)), { type: 'end', at: s(68), seconds: 68 });
+});

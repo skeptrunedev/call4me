@@ -45,9 +45,10 @@ const WAIT_REQUEST = new RegExp(
 );
 
 /** Our caller only acknowledging ("sure", "okay, no problem"): not an answer to someone back from a hold. */
-const ACKNOWLEDGMENT = /^(?:(?:\[[^\]]*\]?|[^\s[\]]*\]|sure|okay|ok|alright|all right|no problem|no worries|of course|take your time|thanks?|thank you|got it|perfect|great|sounds good|yes|yeah|hmm+|mm-?hmm|uh-?huh|will do|i can wait|i'?ll (?:stay on the line|keep waiting|keep holding|hold|wait|stay on|hang on)|i'?m (?:still )?(?:here|on the line|holding|waiting))[\s,.!]*)+$/i;
+const ACKNOWLEDGMENT = /^(?:(?:\[[^\]]*\]?|[^\s[\]]*\]|sure|okay|ok|alright|all right|no problem|no worries|of course|take your time|thanks?|thank you|got it|perfect|great|sounds good|yes|yeah|hmm+|mm-?hmm|uh-?huh|will do|i can wait|i'?ll (?:stay on the line|keep waiting|keep holding|hold|wait|stay on|hang on)|i'?m (?:still )?(?:here|on the line|holding|waiting)|はい|ええ|うん|(?:よろしく)?お願い(?:いた)?します|わかりました|分かりました|承知(?:いた)?しました|かしこまりました|大丈夫です|ありがとうございます|(?:お)?待ちします|待ちます)[\s,.!、。！]*)+$/i;
 // "Thank you for holding" and "sorry for the wait" are queue recordings as often as people, so they don't count.
-const PERSON_BACK = /\b(?:my name is|how (?:can|may) i (?:help|assist)|(?:are you )?still there|mi nombre es|le habla|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir))\b/i;
+// Japanese has no \b, so its "my name is" (赤間と申します) sits outside it.
+const PERSON_BACK = /\b(?:my name is|how (?:can|may) i (?:help|assist)|(?:are you )?still there|mi nombre es|le habla|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir))\b|と申します/i;
 
 /** A line from the other side that is part of the wait: a hold request or a queue recording. */
 function isHoldLine(text: string): boolean {
@@ -121,8 +122,10 @@ export class HoldMeter {
       return null;
     }
     // Back-dated to their latest sentence, not their first: hold music transcribed as lyrics runs
-    // straight into a person, and the music is still part of the hold.
-    if (/\w{2,}/.test(sentence)) this.speechAt = this.sentenceAt;
+    // straight into a person, and the music is still part of the hold. Letters in any script: \w is
+    // ASCII only, so a Japanese agent back from a hold never counted as speech, and freee's support
+    // desk billed 17 minutes of conversation as hold, running the call past its time limit.
+    if (/[\p{L}\p{N}]{2,}/u.test(sentence)) this.speechAt = this.sentenceAt;
     return null;
   }
 
