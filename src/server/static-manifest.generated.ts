@@ -3,7 +3,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/": {
     "html": "/__pages/8a5edab282632443.html",
     "markdown": "/__pages/8a5edab282632443.md",
-    "tokens": 3237
+    "tokens": 3289
   },
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
@@ -28,7 +28,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/ai-call-assistant": {
     "html": "/__pages/9c2cf5350f943d84.html",
     "markdown": "/__pages/9c2cf5350f943d84.md",
-    "tokens": 2967
+    "tokens": 2974
   },
   "/app-that-calls-businesses-for-you": {
     "html": "/__pages/1d754aa507f67b2f.html",
@@ -93,7 +93,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/rules": {
     "html": "/__pages/933053fc294245bb.html",
     "markdown": "/__pages/933053fc294245bb.md",
-    "tokens": 1287
+    "tokens": 1311
   },
   "/privacy": {
     "html": "/__pages/0ece7f7c306b4cf6.html",
@@ -113,7 +113,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/pricing": {
     "html": "/__pages/7394a2bb766646ca.html",
     "markdown": "/__pages/7394a2bb766646ca.md",
-    "tokens": 1099
+    "tokens": 1106
   },
   "/support": {
     "html": "/__pages/0b9f34c92865bdd1.html",

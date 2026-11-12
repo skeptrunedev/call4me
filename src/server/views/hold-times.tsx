@@ -1,6 +1,7 @@
 import type { FC } from 'hono/jsx';
 import { HOLD_DATA_PATH, HOLD_KEYWORDS, HOLD_LICENSE, HOLD_PATH, HOLD_SOURCE_POST, HOLD_TIMES, HOLD_UPDATED, holdSummary } from '../../content/hold-times';
 import { SITE } from '../lib/pages';
+import { FOUNDER, ORG_ID, personId, ref } from '../lib/entity';
 import { Layout } from './layout';
 
 const url = `${SITE}${HOLD_PATH}`;
@@ -14,13 +15,10 @@ const topThreeAi = measured.slice(0, 3).every(r => r.firstAnswer === 'AI or virt
 
 export const HoldTimesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
   <Layout title="Customer service hold times by company, measured" page="holdTimes" signedIn={signedIn}
-    meta={{ description, jsonLd: {
-      '@context': 'https://schema.org',
-      '@graph': [
-        { '@type': 'WebPage', '@id': url, url, name: 'Customer service hold times by company, measured', description, datePublished: HOLD_UPDATED, dateModified: HOLD_UPDATED,
-          mainEntity: { '@id': `${url}#dataset` }, author: { '@type': 'Person', name: 'Nicholas Khami', url: 'https://x.com/skeptrune' } },
+    meta={{ description, jsonLd: [
+        { '@id': url, datePublished: HOLD_UPDATED, dateModified: HOLD_UPDATED, mainEntity: ref(`${url}#dataset`), author: ref(personId(FOUNDER)) },
         { '@type': 'Dataset', '@id': `${url}#dataset`, name: 'Customer service hold times by company', url, description,
-          creator: { '@type': 'Organization', name: 'call4me', url: SITE }, license: HOLD_LICENSE, version: HOLD_UPDATED,
+          creator: ref(ORG_ID), license: HOLD_LICENSE, version: HOLD_UPDATED,
           datePublished: HOLD_UPDATED, dateModified: HOLD_UPDATED, keywords: HOLD_KEYWORDS, isAccessibleForFree: true,
           temporalCoverage: `${summary.firstCall}/${summary.lastCall}`,
           variableMeasured: ['Company', 'Industry', 'Time to a live person', 'What answered first', 'Number called', 'Call date', 'Calls placed', 'What got us through', 'Transcript evidence', 'Source URL'],
@@ -31,8 +29,7 @@ export const HoldTimesPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
         { '@type': 'ItemList', name: 'Customer service hold times by company, longest first', itemListOrder: 'https://schema.org/ItemListOrderDescending',
           numberOfItems: measured.length, itemListElement: measured.map(r => ({ '@type': 'ListItem', position: r.rank, name: `${r.company}: ${r.timeToHuman}`, url: `${url}#evidence-${r.id}` })),
         },
-      ],
-    } }}>
+    ] }}>
     <main>
       <h1>Customer service hold times by company, measured</h1>
       <p class="small">Last updated <time datetime={HOLD_UPDATED}>{longDate(HOLD_UPDATED)}</time>. {summary.companies} companies, calls placed {longDate(summary.firstCall)} to {longDate(summary.lastCall)}.</p>

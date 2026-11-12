@@ -4,6 +4,7 @@
  * /og route (images), so a page and its card never drift apart.
  */
 import type { OgCard } from './og-card';
+import type { JsonLdNode } from './entity';
 import { COMPANIES } from '../../content/companies';
 
 export const SITE = 'https://call4.me';
@@ -15,6 +16,8 @@ export const CHATGPT_PLUGIN_URL = 'https://chatgpt.com/plugins/plugin_asdk_app_6
 export const accountPath = (signedIn: boolean) => signedIn ? '/account' : '/login?next=/account';
 export const SITE_TITLE = 'Call for me: an AI that makes phone calls for you | call4me';
 export const SITE_DESCRIPTION = 'Let AI call for you: call4me phones businesses, books appointments and waits on hold, then patches you in. Works in ChatGPT, Claude Code and Codex.';
+/** What call4me is, why to pick it and what you get, in one sentence: the home page h1 and the description in its structured data. */
+export const SITE_PITCH = "call4me is an AI assistant that makes phone calls for you from ChatGPT, Claude or Codex, booking appointments and waiting on hold so you don't have to.";
 
 export interface PageMeta {
   /** Sentence shown under the link on Slack, Discord, X, Signal, iMessage, LinkedIn. */
@@ -40,8 +43,8 @@ export interface PageOverride {
   /** ISO timestamps for article:published_time / modified_time. */
   published?: string;
   modified?: string;
-  /** schema.org structured data, serialized as application/ld+json. */
-  jsonLd?: Record<string, unknown>;
+  /** The page's own schema.org nodes; the layout adds the shared ones and serializes the graph (lib/entity.ts pageGraph). */
+  jsonLd?: JsonLdNode[];
 }
 
 export const PAGES = {

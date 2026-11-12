@@ -1,7 +1,53 @@
 import type { FC } from 'hono/jsx';
 import { raw } from 'hono/html';
-import { EXAMPLES } from '../../content/examples';
+import { EXAMPLES, type CallExample } from '../../content/examples';
+import { PAGES, SITE } from '../lib/pages';
+import { ref } from '../lib/entity';
 import { CopyBlock, Layout } from './layout';
+
+/** "4 minutes 10 seconds" -> "PT4M10S" (ISO 8601). */
+const isoDuration = (duration: string) => {
+  const minutes = /(\d+) minutes?/.exec(duration)?.[1];
+  const seconds = /(\d+) seconds?/.exec(duration)?.[1];
+  if (!minutes && !seconds) throw new Error(`example duration "${duration}" has no minutes or seconds`);
+  return `PT${minutes ? `${minutes}M` : ''}${seconds ? `${seconds}S` : ''}`;
+};
+
+/** "October 10, 2026" -> "2026-10-10". */
+const isoDate = (date: string) => {
+  const parsed = new Date(`${date} 12:00 UTC`);
+  if (Number.isNaN(parsed.getTime())) throw new Error(`example date "${date}" does not parse`);
+  return parsed.toISOString().slice(0, 10);
+};
+
+const url = `${SITE}${PAGES.examples.path}`;
+const recorded = EXAMPLES.filter((e): e is CallExample & { audio: string } => e.audio !== null);
+
+/** Every recorded call as audio, with what was asked and what happened (schema.org). */
+const EXAMPLES_LD = [
+  { '@id': url, '@type': 'CollectionPage', mainEntity: ref(`${url}#calls`) },
+  {
+    '@type': 'ItemList',
+    '@id': `${url}#calls`,
+    name: 'Real phone calls made by call4me, recorded',
+    numberOfItems: recorded.length,
+    itemListElement: recorded.map((e, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'AudioObject',
+        '@id': `${url}#${e.slug}`,
+        url: `${url}#${e.slug}`,
+        name: e.title,
+        description: `${e.business}: ${e.outcome}`,
+        contentUrl: `${SITE}${e.audio}`,
+        encodingFormat: 'audio/mpeg',
+        duration: isoDuration(e.duration),
+        uploadDate: isoDate(e.date),
+      },
+    })),
+  },
+];
 
 /** Keep one conversation audible at a time, including playback from native controls. */
 const AUDIO_SCRIPT = `document.addEventListener('play', function (event) {
@@ -24,7 +70,7 @@ document.addEventListener('click', function (event) {
 });`;
 
 export const ExamplesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ signedIn, agentPrompt }) => (
-  <Layout title="examples" page="examples" signedIn={signedIn}>
+  <Layout title="examples" page="examples" signedIn={signedIn} meta={{ jsonLd: EXAMPLES_LD }}>
     <main class="examples">
       <h1>listen to real calls</h1>
       <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />

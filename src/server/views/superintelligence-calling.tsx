@@ -1,6 +1,7 @@
 import type { FC } from 'hono/jsx';
 import { EVIDENCE_LABELS, SI_CALLING, SI_DATA_PATH, SI_KEYWORDS, SI_LICENSE, SI_PATH, SI_SCENARIOS, SI_UPDATED } from '../../content/superintelligence-calling';
 import { SITE } from '../lib/pages';
+import { FOUNDER, ORG_ID, personId, ref } from '../lib/entity';
 import { Layout } from './layout';
 
 const url = `${SITE}${SI_PATH}`;
@@ -8,13 +9,10 @@ const description = 'Compare personal superintelligence phone calling tools: Mus
 
 export const SuperintelligenceCallingPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
   <Layout title="Superintelligence Calling Index: Tools & Evidence" page="superintelligenceCalling" signedIn={signedIn}
-    meta={{ description, jsonLd: {
-      '@context': 'https://schema.org',
-      '@graph': [
-        { '@type': 'WebPage', '@id': url, url, name: 'Superintelligence Calling Index', description, datePublished: SI_UPDATED, dateModified: SI_UPDATED,
-          mainEntity: { '@id': `${url}#dataset` }, author: { '@type': 'Person', name: 'Nicholas Khami', url: 'https://x.com/skeptrune' } },
+    meta={{ description, jsonLd: [
+        { '@id': url, name: 'Superintelligence Calling Index', datePublished: SI_UPDATED, dateModified: SI_UPDATED, mainEntity: ref(`${url}#dataset`), author: ref(personId(FOUNDER)) },
         { '@type': 'Dataset', '@id': `${url}#dataset`, name: 'Superintelligence Calling Index', url, description,
-          creator: { '@type': 'Organization', name: 'call4me', url: SITE }, license: SI_LICENSE, version: SI_UPDATED,
+          creator: ref(ORG_ID), license: SI_LICENSE, version: SI_UPDATED,
           datePublished: SI_UPDATED, dateModified: SI_UPDATED, keywords: SI_KEYWORDS, isAccessibleForFree: true,
           temporalCoverage: '2026-09-16/2026-10-09',
           variableMeasured: ['Assistant', 'Calling configuration', 'Connection route', 'Evidence type', 'Evidence date', 'Verification date', 'Finding', 'Limitation', 'Availability', 'Source URLs'],
@@ -22,10 +20,9 @@ export const SuperintelligenceCallingPage: FC<{ signedIn: boolean }> = ({ signed
           distribution: ['csv', 'json'].map(format => ({ '@type': 'DataDownload', contentUrl: `${SITE}${SI_DATA_PATH}.${format}`, encodingFormat: format === 'csv' ? 'text/csv' : 'application/json' })),
         },
         { '@type': 'ItemList', name: 'Personal superintelligence phone calling configurations', itemListOrder: 'https://schema.org/ItemListUnordered',
-          numberOfItems: SI_CALLING.length, itemListElement: SI_CALLING.map(r => ({ '@type': 'ListItem', name: r.configuration, url: `${url}#${r.id}` })),
+          numberOfItems: SI_CALLING.length, itemListElement: SI_CALLING.map((r, i) => ({ '@type': 'ListItem', position: i + 1, name: r.configuration, url: `${url}#${r.id}` })),
         },
-      ],
-    } }}>
+    ] }}>
     <main class="si-index">
       <header class="si-hero">
         <p class="si-eyebrow">Superintelligence Calling Index / <time datetime={SI_UPDATED}>October 9, 2026</time></p>

@@ -4,25 +4,16 @@ import { dollars } from '../services/accounts';
 import { MIN_TOPUP_CENTS } from '../services/topups';
 import { PAGES, SITE } from '../lib/pages';
 import { renderMarkdown } from '../lib/blog';
-import { ORG_ID } from '../lib/entity';
+import { APP_ID, appLd, ref } from '../lib/entity';
 import { HOLD_PATH } from '../../content/hold-times';
 import { TASKS, type Task } from '../../content/tasks';
 import { CopyBlock, Layout } from './layout';
-import { assistantApp } from './ai-call-assistant';
 
 /** The page, citing the posts it is built on, and the call4me app with its live price (schema.org). */
-const taskLd = (task: Task, pricePerMinuteCents: number) => {
-  const url = `${SITE}${PAGES[task.key].path}`;
-  const app = assistantApp(pricePerMinuteCents);
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      { '@type': 'WebPage', '@id': url, url, name: task.title, description: PAGES[task.key].description, publisher: { '@id': ORG_ID },
-        about: { '@id': app['@id'] }, citation: task.posts.map((p) => `${SITE}/blog/${p.slug}`) },
-      app,
-    ],
-  };
-};
+const taskLd = (task: Task, pricePerMinuteCents: number) => [
+  { '@id': `${SITE}${PAGES[task.key].path}`, about: ref(APP_ID), citation: task.posts.map((p) => `${SITE}/blog/${p.slug}`) },
+  appLd(pricePerMinuteCents),
+];
 
 /** A page answering one "AI that calls X for me" question: what call4me does, then the recorded calls that show it. */
 export const TaskPage: FC<{ task: Task; signedIn: boolean; pricePerMinuteCents: number; agentPrompt: string }> = ({ task, signedIn, pricePerMinuteCents, agentPrompt }) => (

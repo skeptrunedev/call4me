@@ -4,8 +4,9 @@ import { RECOMMENDATIONS } from '../../content/blog/recommendations';
 import { ARTICLE_CALLS } from '../../content/article-calls';
 import { lastModified, longDate, postDate, shortPostDate, type Post } from '../lib/blog';
 import { blogIndexPath } from '../lib/blog-pagination';
-import { CHATGPT_PLUGIN_URL, SITE } from '../lib/pages';
-import { ORG_LD, personLd } from '../lib/entity';
+import { CHATGPT_PLUGIN_URL, PAGES, SITE } from '../lib/pages';
+import { BLOG_ID, ORG_ID, personId, personLd, ref, type JsonLdNode } from '../lib/entity';
+import { COMPANIES, type Company } from '../../content/companies';
 import { useStaticRender } from '../lib/static-render';
 import type { CommentRow, Engagement } from '../services/blog';
 import { CopyBlock, Layout } from './layout';
@@ -18,8 +19,19 @@ import { CopyBlock, Layout } from './layout';
  * Ported from skillbay's views/blog.tsx.
  */
 
-const AUTHOR_LD = (p: Post) => p.authors.map(personLd);
-const PUBLISHER = ORG_LD;
+const authorRefs = (p: Post) => p.authors.map((a) => ref(personId(a)));
+/** Posts reference their authors by id; this puts every author's Person node in the page's graph. */
+const authorNodes = (posts: Post[]) => posts.flatMap((p) => p.authors).map(personLd);
+
+/** The blog itself: the index and archive pages are about it, and every post is part of it. */
+const BLOG_LD: JsonLdNode = { '@type': 'Blog', '@id': BLOG_ID, name: 'call4me blog', url: `${SITE}${PAGES.blog.path}`, publisher: ref(ORG_ID) };
+
+/** A company whose customer service line a post called, with the number we called. */
+const companyLd = (c: Company): JsonLdNode => ({
+  '@type': 'Organization',
+  name: c.name,
+  ...(c.number ? { contactPoint: { '@type': 'ContactPoint', contactType: 'customer service', telephone: c.number } } : {}),
+});
 
 export type Tab = 'latest' | 'top';
 
@@ -115,14 +127,14 @@ export const BlogIndex: FC<{
       signedIn={signedIn}
       noindex={Boolean(q) || tab !== 'latest'}
       meta={{
-        jsonLd: {
-          '@context': 'https://schema.org',
-          '@type': 'Blog',
-          name: 'call4me blog',
-          url: `${SITE}${path}`,
-          publisher: PUBLISHER,
-          blogPost: posts.map((p) => ({ '@type': 'BlogPosting', headline: p.title, url: `${SITE}/blog/${p.slug}`, datePublished: p.date, image: `${SITE}/og/blog/${p.slug}.png`, author: AUTHOR_LD(p) })),
-        },
+        jsonLd: [
+          { '@id': `${SITE}${path}`, '@type': 'CollectionPage', mainEntity: ref(BLOG_ID) },
+          {
+            ...BLOG_LD,
+            blogPost: posts.map((p) => ({ '@type': 'BlogPosting', '@id': `${SITE}/blog/${p.slug}#article`, headline: p.title, url: `${SITE}/blog/${p.slug}`, datePublished: p.date, image: `${SITE}/og/blog/${p.slug}.png`, author: authorRefs(p) })),
+          },
+          ...authorNodes(posts),
+        ],
       }}
     >
       <div class="blog-head">
@@ -196,7 +208,7 @@ export const BlogIndex: FC<{
 };
 
 export const BlogArchive: FC<{ signedIn: boolean; groups: { month: string; posts: Post[] }[]; engagement: Map<string, Engagement>; agentPrompt: string }> = ({ signedIn, groups, engagement, agentPrompt }) => (
-  <Layout title="archive" page="blogArchive" signedIn={signedIn}>
+  <Layout title="archive" page="blogArchive" signedIn={signedIn} meta={{ jsonLd: [{ '@id': `${SITE}${PAGES.blogArchive.path}`, '@type': 'CollectionPage', mainEntity: ref(BLOG_ID) }, BLOG_LD] }}>
     <p class="small">
       <a href="/blog">blog</a> &gt; archive
     </p>
@@ -299,6 +311,8 @@ export const BlogPost: FC<{
   const call = ARTICLE_CALLS[post.slug];
   // Call posts lead with the recording; search engines read it as the article's audio.
   const recording = /<audio[^>]*\ssrc="(\/[^"]+\.mp3)"/.exec(post.html)?.[1];
+  const pageUrl = `${SITE}${here}`;
+  const companies = COMPANIES.filter((c) => c.slug === post.slug);
   return (
     <Layout
       title={post.seoTitle}
@@ -312,33 +326,41 @@ export const BlogPost: FC<{
         imageAlt: post.imageAlt,
         published: `${post.date}T00:00:00Z`,
         modified: `${lastModified(post)}T00:00:00Z`,
-        jsonLd: {
-          '@context': 'https://schema.org',
-          '@type': 'BlogPosting',
-          headline: post.title,
-          alternativeHeadline: post.subtitle,
-          description: post.description,
-          url: `${SITE}${here}`,
-          mainEntityOfPage: `${SITE}${here}`,
-          datePublished: post.date,
-          dateModified: lastModified(post),
-          author: AUTHOR_LD(post),
-          publisher: PUBLISHER,
-          image: [`${SITE}/og/blog/${post.slug}.png`, `${SITE}${post.image}`],
-          keywords: post.tags.join(', '),
-          ...(recording ? { audio: { '@type': 'AudioObject', contentUrl: `${SITE}${recording}`, encodingFormat: 'audio/mpeg', name: `Recording: ${post.title}` } } : {}),
-          wordCount: post.body.split(/\s+/).filter(Boolean).length,
-          inLanguage: 'en',
-          isAccessibleForFree: !post.paid,
-          ...(post.paid ? { hasPart: { '@type': 'WebPageElement', isAccessibleForFree: false, cssSelector: '.paid' } } : {}),
-          ...(!staticPage ? {
-            interactionStatistic: [
-              { '@type': 'InteractionCounter', interactionType: { '@type': 'LikeAction' }, userInteractionCount: engagement.likes },
-              { '@type': 'InteractionCounter', interactionType: { '@type': 'CommentAction' }, userInteractionCount: engagement.comments },
-            ],
-            commentCount: engagement.comments,
-          } : {}),
-        },
+        jsonLd: [
+          { '@id': pageUrl, mainEntity: ref(`${pageUrl}#article`) },
+          BLOG_LD,
+          ...authorNodes([post]),
+          {
+            '@type': 'BlogPosting',
+            '@id': `${pageUrl}#article`,
+            headline: post.title,
+            alternativeHeadline: post.subtitle,
+            description: post.description,
+            url: pageUrl,
+            mainEntityOfPage: ref(pageUrl),
+            isPartOf: ref(BLOG_ID),
+            datePublished: post.date,
+            dateModified: lastModified(post),
+            author: authorRefs(post),
+            publisher: ref(ORG_ID),
+            // Customer service call posts are about the company we called.
+            ...(companies.length > 0 ? { about: companies.map(companyLd) } : {}),
+            image: [`${SITE}/og/blog/${post.slug}.png`, `${SITE}${post.image}`],
+            keywords: post.tags.join(', '),
+            ...(recording ? { audio: { '@type': 'AudioObject', contentUrl: `${SITE}${recording}`, encodingFormat: 'audio/mpeg', name: `Recording: ${post.title}` } } : {}),
+            wordCount: post.body.split(/\s+/).filter(Boolean).length,
+            inLanguage: 'en',
+            isAccessibleForFree: !post.paid,
+            ...(post.paid ? { hasPart: { '@type': 'WebPageElement', isAccessibleForFree: false, cssSelector: '.paid' } } : {}),
+            ...(!staticPage ? {
+              interactionStatistic: [
+                { '@type': 'InteractionCounter', interactionType: { '@type': 'LikeAction' }, userInteractionCount: engagement.likes },
+                { '@type': 'InteractionCounter', interactionType: { '@type': 'CommentAction' }, userInteractionCount: engagement.comments },
+              ],
+              commentCount: engagement.comments,
+            } : {}),
+          },
+        ],
       }}
     >
       <p class="small">

@@ -4,7 +4,7 @@ import { dollars } from '../services/accounts';
 import type { CountryOffer, NumberView } from '../services/numbers';
 import { MAX_TOPUP_CENTS, MIN_TOPUP_CENTS } from '../services/topups';
 import { FoundViaForm, MonthlyBox } from './account';
-import { accountPath, CHATGPT_PLUGIN_URL, SITE, SITE_DESCRIPTION } from '../lib/pages';
+import { accountPath, CHATGPT_PLUGIN_URL, PAGES, SITE, SITE_PITCH } from '../lib/pages';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { CopyBlock, Layout } from './layout';
 import { STUDENT_CREDIT_DOLLARS } from './students';
@@ -12,17 +12,7 @@ import { CallOnboarding } from './onboarding';
 import type { RedditPixelEvent } from '../lib/reddit';
 import { EXAMPLES } from '../../content/examples';
 import { useStaticRender } from '../lib/static-render';
-import { FOUNDER, ORG_ID, ORG_LD, ORG_SAME_AS, personLd } from '../lib/entity';
-
-/** Who runs the site and what it is, for search and answer engines (schema.org). */
-const HOME_LD = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    ORG_LD,
-    personLd(FOUNDER),
-    { '@type': 'WebSite', '@id': `${SITE}/#site`, name: 'call4me', url: SITE, description: SITE_DESCRIPTION, publisher: { '@id': ORG_ID } },
-  ],
-};
+import { APP_ID, appLd, FOUNDER, ORG_ID, ORG_SAME_AS, ref } from '../lib/entity';
 
 /** No sign-in needed: signed out, Stripe asks for an email and the credits wait on that email's account. */
 export const BuyForm: FC<{ signedIn: boolean; error?: string; amount?: string }> = ({ signedIn, error, amount = String(MIN_TOPUP_CENTS / 100) }) => (
@@ -247,11 +237,12 @@ export const HomeStories: FC = () => (
 );
 
 export const HomePage: FC<HomePageProps> = (p) => (
-  <Layout page="home" signedIn={p.signedIn} meta={{ jsonLd: HOME_LD }}>
+  <Layout page="home" signedIn={p.signedIn} meta={{ jsonLd: [appLd(p.pricePerMinuteCents), { '@id': `${SITE}/`, about: ref(APP_ID), mainEntity: ref(APP_ID) }] }}>
     <section class="home-hero" aria-labelledby="home-title">
       <div class="home-hero-copy">
-        <h1 id="home-title">let your agents<br />make phone calls</h1>
-        <p class="home-description">your AI agent makes phone calls for you</p>
+        {/* The big line is the slogan; the h1 is the one sentence that says what call4me is, for search and answer engines. */}
+        <p class="home-title">let your agents<br />make phone calls</p>
+        <h1 id="home-title" class="home-description">{SITE_PITCH}</h1>
         <HomeActions />
       </div>
       <div class="home-hero-media"><HomeRecordings /></div>
@@ -538,18 +529,9 @@ const PRESS = [
   { outlet: 'runtimewire', title: "call4me's customer service call test", url: 'https://runtimewire.com/article/call4me-customer-service-ai-call-test', date: 'October 8, 2026' },
 ];
 
-const ABOUT_LD = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    { '@type': 'AboutPage', '@id': `${SITE}/about#page`, url: `${SITE}/about`, name: 'about call4me', about: { '@id': ORG_ID }, mainEntity: { '@id': ORG_ID } },
-    ORG_LD,
-    personLd(FOUNDER),
-  ],
-};
-
 /** What call4me is and who builds it, so people and answer engines can tell it apart from similarly named apps. */
 export const AboutPage: FC<{ signedIn: boolean }> = ({ signedIn }) => (
-  <Layout title="about" page="about" signedIn={signedIn} meta={{ jsonLd: ABOUT_LD }}>
+  <Layout title="about" page="about" signedIn={signedIn} meta={{ jsonLd: [{ '@id': `${SITE}${PAGES.about.path}`, '@type': 'AboutPage', about: ref(ORG_ID), mainEntity: ref(ORG_ID) }] }}>
     <h1>about call4me</h1>
     <p>
       call4me is the phone for your AI agent. connect it to Claude Code, Codex, Claude Desktop, ChatGPT or another agent over MCP, and your agent can
@@ -607,7 +589,7 @@ const OTHER_APP_PRICES = [
 export const PricingPage: FC<{ signedIn: boolean; pricePerMinuteCents: number }> = ({ signedIn, pricePerMinuteCents }) => {
   const extra = pricierDestinations();
   return (
-    <Layout title={`AI phone call app pricing: ${dollars(pricePerMinuteCents)} a minute`} page="pricing" signedIn={signedIn}>
+    <Layout title={`AI phone call app pricing: ${dollars(pricePerMinuteCents)} a minute`} page="pricing" signedIn={signedIn} meta={{ jsonLd: [appLd(pricePerMinuteCents), { '@id': `${SITE}${PAGES.pricing.path}`, about: ref(APP_ID) }] }}>
       <h1>AI phone call app pricing</h1>
       <p>
         calls cost <b>{dollars(pricePerMinuteCents)} a minute</b> from pickup, and half that on hold. there is no subscription and no per-seat fee: you load

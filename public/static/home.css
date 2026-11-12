@@ -15,7 +15,7 @@
   gap: 86px;
   min-height: 640px;
 }
-.home-hero h1 {
+.home-hero .home-title {
   font-size: clamp(44px, 4vw, 59px);
   font-weight: 750;
   line-height: 1.04;
@@ -25,7 +25,9 @@
 .home-description {
   color: #747474;
   font-size: 20px;
+  font-weight: 400;
   line-height: 1.5;
+  letter-spacing: normal;
   max-width: 440px;
   margin: 0;
 }
@@ -236,7 +238,7 @@
 .home-closing h2 { font-size: clamp(30px, 3vw, 42px); letter-spacing: -1.6px; line-height: 1.1; margin: 0 0 30px; }
 @media (max-width: 1100px) {
   .home-hero { gap: 38px; padding-top: 95px; }
-  .home-hero h1 { font-size: 46px; }
+  .home-hero .home-title { font-size: 46px; }
   .player { padding: 18px 12px; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; }
   .player .play { width: 26px; }
   .player-ask { font-size: 12px; }
@@ -246,7 +248,7 @@
 }
 @media (max-width: 800px) {
   .home-hero { grid-template-columns: 1fr; padding: 62px 24px 36px; gap: 48px; min-height: 0; }
-  .home-hero h1 { font-size: clamp(38px, 7vw, 52px); }
+  .home-hero .home-title { font-size: clamp(38px, 7vw, 52px); }
   .home-hero .hero-links { margin-top: 25px; }
   .home-description { font-size: 18px; }
   .home-hero-media { max-width: 620px; }
@@ -274,7 +276,7 @@
 }
 @media (max-width: 420px) {
   .home-hero { padding-top: 46px; }
-  .home-hero h1 { font-size: 37px; }
+  .home-hero .home-title { font-size: 37px; }
   .players { gap: 10px; }
   .player { padding: 16px 11px; grid-template-columns: 1fr; gap: 9px; }
   .player::before { height: 46px; }

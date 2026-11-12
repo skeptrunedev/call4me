@@ -2,6 +2,7 @@ import type { FC } from 'hono/jsx';
 import { dollars } from '../services/accounts';
 import { MIN_TOPUP_CENTS } from '../services/topups';
 import { accountPath, PAGES, SITE } from '../lib/pages';
+import { APP_ID, appLd, ref } from '../lib/entity';
 import { VOICES } from '../voice/voices';
 import { SAMPLE_LANGUAGES } from '../../content/voices';
 import { EXAMPLES } from '../../content/examples';
@@ -18,28 +19,8 @@ const ASSISTANT_EXAMPLES = ['dinner-reservation', 'dentist-reschedule', 'spectru
 
 const list = (items: readonly string[]) => `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`;
 
-/** What it is and what it costs, for search and answer engines (schema.org). The price is the live per-minute rate. Task pages reference the same node. */
-export const assistantApp = (pricePerMinuteCents: number) => {
-  const url = `${SITE}${PAGES.aiCallAssistant.path}`;
-  const price = (pricePerMinuteCents / 100).toFixed(2);
-  return {
-    '@type': 'SoftwareApplication',
-    '@id': `${url}#app`,
-    name: 'call4me',
-    url,
-    description: PAGES.aiCallAssistant.description,
-    applicationCategory: 'CommunicationApplication',
-    operatingSystem: 'Web',
-    publisher: { '@id': `${SITE}/#org` },
-    offers: {
-      '@type': 'Offer',
-      price,
-      priceCurrency: 'USD',
-      priceSpecification: { '@type': 'UnitPriceSpecification', price, priceCurrency: 'USD', unitCode: 'MIN', referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: 'MIN' } },
-    },
-  };
-};
-const assistantLd = (pricePerMinuteCents: number) => ({ '@context': 'https://schema.org', ...assistantApp(pricePerMinuteCents) });
+/** The app itself, which this page is about. */
+const assistantLd = (pricePerMinuteCents: number) => [appLd(pricePerMinuteCents), { '@id': `${SITE}${PAGES.aiCallAssistant.path}`, about: ref(APP_ID) }];
 
 /** Product page for "AI call assistant" searches: what call4me does on a call, what it costs, and how to start. */
 export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: number; agentPrompt: string }> = ({ signedIn, pricePerMinuteCents, agentPrompt }) => {

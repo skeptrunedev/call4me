@@ -1,7 +1,8 @@
 import type { FC } from 'hono/jsx';
 import type { z } from 'zod';
 import { mcpUrl } from '../lib/prompts';
-import { CHATGPT_PLUGIN_URL } from '../lib/pages';
+import { CHATGPT_PLUGIN_URL, PAGES, SITE } from '../lib/pages';
+import { APP_ID, appLd, ref } from '../lib/entity';
 import type { recordingOutput } from '../lib/recording-schema';
 import type { callView, UsageView } from '../services/call-ops';
 import { dollars, type Account } from '../services/accounts';
@@ -560,7 +561,7 @@ export const CallPage: FC<{ call: CallView; recordings: CallRecordings; agentPro
 );
 
 export const McpPage: FC<{ signedIn: boolean; installPrompt: string; origin: string; apiKey: string | null; pricePerMinuteCents: number; numbers?: NumberView[] }> = ({ signedIn, installPrompt, origin, apiKey, pricePerMinuteCents, numbers }) => (
-  <Layout title="MCP server for phone calls" page="mcp" signedIn={signedIn}>
+  <Layout title="MCP server for phone calls" page="mcp" signedIn={signedIn} meta={{ jsonLd: [appLd(pricePerMinuteCents), { '@id': `${SITE}${PAGES.mcp.path}`, about: ref(APP_ID) }] }}>
     <h1>call4me: the MCP server that makes phone calls</h1>
     <p>
       call4me is a hosted remote MCP server that places real phone calls for your AI agent. add <code class="server-url">{apiKey ? mcpUrl(origin, apiKey) : `${origin}/mcp`}</code> to your agent{apiKey ? ' (the URL carries your key, so no sign-in)' : ' (Streamable HTTP, sign in with Google or X)'}, and <code>call4me_place_call</code> dials the business, a voice caller has the conversation, and <code>call4me_get_call</code> returns the live transcript and the outcome. calls cost {dollars(pricePerMinuteCents)} a minute from pickup, hold time half that, unanswered calls are free, and prepaid credits start at {dollars(MIN_TOPUP_CENTS)}.

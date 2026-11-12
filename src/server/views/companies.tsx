@@ -1,6 +1,6 @@
 import type { FC } from 'hono/jsx';
 import { COMPANIES, INDUSTRIES } from '../../content/companies';
-import { SITE } from '../lib/pages';
+import { PAGES, SITE } from '../lib/pages';
 import { CopyBlock, Layout } from './layout';
 
 const DATA_POST = '/blog/how-long-to-reach-a-human';
@@ -18,12 +18,16 @@ export const CompaniesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ 
     page="companies"
     signedIn={signedIn}
     meta={{
-      jsonLd: {
-        '@context': 'https://schema.org',
-        '@type': 'ItemList',
-        name: 'Customer service numbers call4me called and recorded',
-        itemListElement: COMPANIES.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, url: `${SITE}/blog/${c.slug}` })),
-      },
+      jsonLd: [
+        { '@id': `${SITE}${PAGES.companies.path}`, '@type': 'CollectionPage', mainEntity: { '@id': `${SITE}${PAGES.companies.path}#list` } },
+        {
+          '@type': 'ItemList',
+          '@id': `${SITE}${PAGES.companies.path}#list`,
+          name: 'Customer service numbers call4me called and recorded',
+          numberOfItems: COMPANIES.length,
+          itemListElement: COMPANIES.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, url: `${SITE}/blog/${c.slug}` })),
+        },
+      ],
     }}
   >
     <main>

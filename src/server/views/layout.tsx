@@ -6,6 +6,7 @@ import { GA_MEASUREMENT_ID } from '../lib/ga';
 import type { RedditPixelEvent } from '../lib/reddit';
 import { PAGES, SITE, SITE_TITLE, type PageKey, type PageOverride } from '../lib/pages';
 import { OG_CARD_VERSION } from '../lib/og-card';
+import { pageGraph } from '../lib/entity';
 import { usageParts } from '../services/stats';
 import { usage } from '../lib/usage-cache';
 import { useStaticRender } from '../lib/static-render';
@@ -160,6 +161,18 @@ export const Layout: FC<{
   const url = `${SITE}${path ?? meta.path}`;
   const image = `${SITE}${override?.image ?? `/og/${meta.card}.png?v=${OG_CARD_VERSION}`}`;
   const alt = override?.imageAlt ?? `call4me: ${title ?? 'your AI agent makes phone calls for you'}`;
+  const hidden = noindex || ('noindex' in meta && meta.noindex);
+  // Pages kept out of search carry no structured data; every other page carries the whole graph.
+  const graph = hidden ? null : pageGraph({
+    url,
+    name: title ?? SITE_TITLE,
+    description,
+    image,
+    published: override?.published,
+    modified: override?.modified,
+    trail: (path ?? meta.path).startsWith('/blog/') ? [{ name: 'blog', url: `${SITE}${PAGES.blog.path}` }] : [],
+    nodes: override?.jsonLd ?? [],
+  });
   const ctx = tryGetContext<AppEnv>();
   const staticConfig = useStaticRender();
   const accountId = ctx?.get('account')?.id ?? null;
@@ -186,7 +199,7 @@ export const Layout: FC<{
         {publicNavigation && <link rel="stylesheet" href="/static/navigation.css" />}
         <title>{fullTitle}</title>
         <meta name="description" content={description} />
-        {(noindex || ('noindex' in meta && meta.noindex)) && <meta name="robots" content="noindex,follow" />}
+        {hidden && <meta name="robots" content="noindex,follow" />}
         <meta name="theme-color" content="#ffb000" />
         {domainVerification && <meta name="facebook-domain-verification" content={domainVerification} />}
         <link rel="canonical" href={url} />
@@ -195,7 +208,7 @@ export const Layout: FC<{
         {override?.published && <meta property="article:published_time" content={override.published} />}
         {override?.modified && <meta property="article:modified_time" content={override.modified} />}
         {override?.type === 'article' && <meta property="article:author" content="https://x.com/skeptrune" />}
-        {override?.jsonLd && <script type="application/ld+json">{raw(JSON.stringify(override.jsonLd).replace(/</g, '\\u003c'))}</script>}
+        {graph && <script type="application/ld+json">{raw(JSON.stringify(graph).replace(/</g, '\\u003c'))}</script>}
         <link rel="ai-catalog" href="/.well-known/ai-catalog.json" type="application/ai-catalog+json" />
         <link rel="ard" href="/.well-known/ard.json" />
         <link rel="alternate" type="text/markdown" href={path ?? meta.path} title="markdown version (Accept: text/markdown)" />

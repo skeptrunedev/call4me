@@ -37,7 +37,8 @@ test('blog pagination reaches each published post once and bounds cards and stru
     assert.ok(links.length <= BLOG_PAGE_SIZE);
     seen.push(...links);
     const metadata = JSON.parse(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(html)![1]);
-    assert.deepEqual(metadata.blogPost.map((p: { url: string }) => new URL(p.url).pathname), links);
+    const blog = metadata['@graph'].find((node: { '@type': string }) => node['@type'] === 'Blog');
+    assert.deepEqual(blog.blogPost.map((p: { url: string }) => new URL(p.url).pathname), links);
     assert.ok(html.includes(`<link rel="canonical" href="https://call4.me${blogIndexPath({ page })}"`));
     assert.equal(html.includes('class="featured-row"'), page === 1);
     assert.equal(html.includes('rel="prev"'), page > 1);
