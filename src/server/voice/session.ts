@@ -388,14 +388,29 @@ export class VoiceSession extends DurableObject<Env> {
     await this.scheduleAlarm(Date.now() + 1_000);
   }
 
+  /**
+   * The voice session ended on its own, by saying so (session.closed) or by its socket closing.
+   * Opened while it rang, a session nobody has spoken into yet expires after ~30s idle: a call
+   * still ringing then was hung up before anyone could answer (Cody's Flores Brothers call). It
+   * says "expired" before its socket closes, so guarding only the close missed every one: since
+   * Oct 25 no unanswered call rang past ~30s, against the carrier's 40s. Before pickup it is
+   * dropped, and pickup opens a fresh one, as before the session opened early.
+   */
+  private async liveEnded(reason: string): Promise<void> {
+    if (!this.answered && !this.ended) return this.dropUnusedLive();
+    await this.shutdown(reason);
+  }
+
   /** A voice session opened before pickup closed unused: forget it, so pickup opens another. */
   private dropUnusedLive(): void {
+    const live = this.live;
     this.live = null;
     this.liveReady = false;
     this.liveStartedAt = 0;
     this.nudgeScheduled = false;
     this.pendingAudio = [];
     void this.ctx.storage.delete('liveStarted');
+    if (live?.readyState === WebSocket.OPEN) live.close(1000, 'expired before pickup');
     this.mark('voice session expired before pickup; opening a new one at pickup');
   }
 
@@ -561,12 +576,7 @@ export class VoiceSession extends DurableObject<Env> {
     });
     // A socket dropped on purpose (phoneLost) is no longer this.live and ends nothing.
     ws.addEventListener('close', () => {
-      if (this.live !== ws) return;
-      // Opened while it rang, a session nobody has spoken into yet expires after ~30s idle: a
-      // call that rang longer was hung up before anyone could answer (Cody's Flores Brothers
-      // call). Drop it, and pickup opens a fresh one, as before the session opened early.
-      if (!this.answered && !this.ended) return this.dropUnusedLive();
-      void this.shutdown('the voice model disconnected');
+      if (this.live === ws) void this.liveEnded('the voice model disconnected');
     });
     ws.addEventListener('error', () => void (this.live === ws && this.shutdown('the voice model connection failed')));
     this.sendLive({
@@ -761,7 +771,7 @@ export class VoiceSession extends DurableObject<Env> {
         break;
       }
       case 'session.closed':
-        await this.shutdown(`the voice model closed the session (${(ev as { reason: string }).reason})`);
+        await this.liveEnded(`the voice model closed the session (${(ev as { reason: string }).reason})`);
         break;
     }
   }

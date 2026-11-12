@@ -337,3 +337,33 @@ test("a screener whose question isn't recognized still gets an introduction once
   for (let i = 0; i < 20; i++) await Promise.resolve();
   assert.ok(h.session.live.sent.slice(before).some((m: any) => /call screener is ready/.test(m.content ?? '')), 'introduces after the quiet');
 });
+
+test("a voice session that expires while the phone rings doesn't hang up the call; pickup opens a fresh one", async (t) => {
+  const h = harness(t);
+  h.session.answered = false;
+  const early = h.session.startLive();
+  await h.untilOpened(1);
+  const ringing = h.connected(0);
+  await early;
+  const shutdown = t.mock.method(h.session, 'shutdown', async () => {});
+  // GPT-Live says why before its socket closes: ~30s into ringing with no audio, "expired". Tassos's
+  // Eurobank calls were hung up right there, twice, still ringing.
+  ringing.message({ type: 'session.closed', reason: 'expired' });
+  for (let i = 0; i < 5; i++) await Promise.resolve();
+  ringing.close();
+  assert.equal(shutdown.mock.callCount(), 0);
+  assert.equal(h.session.live, null);
+  assert.equal(h.session.ended, false);
+
+  h.session.answered = true;
+  const pickup = h.session.startLive();
+  await h.untilOpened(2);
+  const live = h.connected(1);
+  await pickup;
+  assert.equal(h.session.live, live);
+  assert.equal(live.sent[0].type, 'session.start');
+  // Once someone has answered, the session closing ends the call as before.
+  live.message({ type: 'session.closed', reason: 'expired' });
+  for (let i = 0; i < 5; i++) await Promise.resolve();
+  assert.equal(shutdown.mock.callCount(), 1);
+});
