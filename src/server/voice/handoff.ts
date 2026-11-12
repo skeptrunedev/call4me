@@ -94,7 +94,9 @@ const OPENS_WITH_GOODBYE = /^[\s,.!]*(?:[a-z']+[\s,.!]+)?(?:good-?)?bye\b/i;
  * "Yeah, you're welcome. Thank you for calling Penn State Health" (that one left Juan's booked call
  * silent for 47s until the time limit).
  */
-const CLOSING = /^[\s,.!]*(?:(?:ok(?:ay)?|alright|all right|yeah|yep|yes|sure|thank(?:s| you) for calling(?: [\w'&-]+){0,6}|thanks?|thank you|you too|same to you|bye(?:[- ]bye)?|goodbye|good ?night|have a (?:good|great|nice|wonderful) (?:one|day|night|evening)|take care|you'?re welcome|no problem|mhm|mm-?hmm|de nada|gracias|igualmente|buenas noches|buen d[ií]a|adi[oó]s|hasta luego|chao|γ[εέ]ι[αά](?: σ(?:[αά]ς|ου))?|(?:σας )?ευχαριστ(?:[ωώ]|ο[υύ]με)(?: (?:π[αά]ρα )?πολ[υύ])?|κι εγ[ωώ]|κι εσ[εέ]ις|επ[ιί]σης|αντ[ιί]ο|χα[ιί]ρετε|καλην[υύ]χτα|καλημ[εέ]ρα|καλ[οό] (?:βρ[αά]δυ|απ[οό]γευμα)|καλ[ηή] (?:συν[εέ]χεια|μ[εέ]ρα|βραδι[αά])|να ?['’]?(?:στε|ε[ιί]στε) καλ[αά]|εντ[αά]ξει|ν[αά]ι|παρακαλ[ωώ]|οκ[εέ]ι?|μχμ)[\s,.!]*)+$/i;
+// Their goodbye often splits around ours ("You have a good" / "Bye." / "day Buh-bye"), so the tail
+// of a closing phrase ("day", "you", "one") and noises ("uh-huh", "[gulp]") count as closing too.
+const CLOSING = /^[\s,.!]*(?:(?:ok(?:ay)?|alright|all right|yeah|yep|yes|sure|thank(?:s| you) for calling(?: [\w'&-]+){0,6}|thanks?|thank you|you too|same to you|bye(?:[- ]bye)?|goodbye|good ?night|have a (?:good|great|nice|wonderful) (?:one|day|night|evening)|take care|you'?re welcome|no problem|mhm|mm-?hm+|uh-?huh|buh[- ]?bye|\[[^\]]*\]?|day|night|evening|one|weekend|you|de nada|gracias|igualmente|buenas noches|buen d[ií]a|adi[oó]s|hasta luego|chao|γ[εέ]ι[αά](?: σ(?:[αά]ς|ου))?|(?:σας )?ευχαριστ(?:[ωώ]|ο[υύ]με)(?: (?:π[αά]ρα )?πολ[υύ])?|κι εγ[ωώ]|κι εσ[εέ]ις|επ[ιί]σης|αντ[ιί]ο|χα[ιί]ρετε|καλην[υύ]χτα|καλημ[εέ]ρα|καλ[οό] (?:βρ[αά]δυ|απ[οό]γευμα)|καλ[ηή] (?:συν[εέ]χεια|μ[εέ]ρα|βραδι[αά])|να ?['’]?(?:στε|ε[ιί]στε) καλ[αά]|εντ[αά]ξει|ν[αά]ι|παρακαλ[ωώ]|οκ[εέ]ι?|μχμ)[\s,.!]*)+$/i;
 
 /** The caller said it would go do something (look something up, hang up) that needs the back office. */
 export function promisesAction(text: string): boolean {

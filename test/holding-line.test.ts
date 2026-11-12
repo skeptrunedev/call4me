@@ -65,3 +65,22 @@ test('the caller never guesses he or she from the name of who it calls for', asy
   assert.match(inboundInstructions({ owner: 'Nikhil', assistantName: null, callingAs: null, callbackNumber: '+14155550100', tasks: [], likely: false, recent: [], localTime: null, standing: null }),
     /Never guess from Nikhil's name whether they're a he or a she/);
 });
+
+test('their goodbye split around ours still hangs up', async () => {
+  const { missedHandoff } = await import('../src/server/voice/handoff');
+  const t = 1_000_000;
+  const said = (role: 'caller' | 'them', text: string, at: number) => ({ role, text, at: t + at });
+  // Each of these left the line open after the goodbyes, 20s to 155s, until the other side or the user hung up.
+  const endings: [string, string, string][] = [
+    ['Mm-hm. Alright, thank you too. You have a good', 'Bye.', 'day Buh-bye'],
+    ['Alright, thank', 'Bye.', 'you Uh-huh, bye-bye'],
+    ['Okay', 'Yeah, thanks again. Bye!', 'Alright. [suck teeth] Uh-huh. Bye bye'],
+  ];
+  for (const [before, ours, after] of endings) {
+    const lines = [said('them', 'The soonest is Friday at 8:20.', 0), said('them', before, 4000), said('caller', ours, 5000), said('them', after, 6000)];
+    assert.equal(missedHandoff(lines, 0, new Set())?.reason, 'promise', after);
+  }
+  // Words after our goodbye that aren't a closing still get answered, not hung up on.
+  const question = [said('them', 'You have a good', 4000), said('caller', 'Bye.', 5000), said('them', 'day, oh wait, what was the callback number?', 6000)];
+  assert.equal(missedHandoff(question, 0, new Set()), null);
+});
