@@ -2,12 +2,15 @@
  * Buy a phone number on someone's account, the way call4me_buy_number does for them: same carrier
  * order, same charge from their balance, pending while the carrier reviews it.
  *
- *   npm run number -- buy <email> <country> [--gift] [--local]
- *   npm run number -- share|unshare <number> [--local]
+ *   npm run number -- buy <email> <country> [--gift] [--local|--staging]
+ *   npm run number -- share|unshare <number> [--local|--staging]
  *
  * --gift credits the price back, so the number costs them nothing today (its monthly renewal still
  * comes from their balance, as for any bought number). buy needs TELNYX_API_KEY and
  * TELNYX_CONNECTION_ID in the environment.
+ *
+ * --staging works on staging's database (wrangler.staging.jsonc); give it staging's Telnyx app as
+ * TELNYX_CONNECTION_ID so the number rings the staging workers, not production.
  *
  * share lets every account call that number's country from it (services/numbers.ts sharedNumber);
  * it stays on its account, which keeps paying for it. unshare makes it that account's own again.
@@ -21,12 +24,12 @@ const args = process.argv.slice(2);
 const flags = new Set(args.filter((a) => a.startsWith('--')));
 // buy takes an email, share and unshare a phone number.
 const [command, target, country] = args.filter((a) => !a.startsWith('--'));
-const db = cliD1(flags.has('--local') ? '--local' : '--remote');
+const db = cliD1(flags.has('--local') ? '--local' : '--remote', flags.has('--staging') ? 'staging' : 'production');
 
 if (command === 'share' || command === 'unshare') {
   const parsed = checkDialable(target ?? '');
   if (!parsed.ok) {
-    console.error('usage: npm run number -- share|unshare <number> [--local]');
+    console.error('usage: npm run number -- share|unshare <number> [--local|--staging]');
     process.exit(1);
   }
   const row = await db.prepare(`SELECT n.id, n.country, a.email FROM numbers n JOIN accounts a ON a.id = n.account_id WHERE n.phone_number = ? AND n.status = 'active'`).bind(parsed.e164).first<{ id: string; country: string; email: string }>();
@@ -41,7 +44,7 @@ if (command === 'share' || command === 'unshare') {
 
 const email = target;
 if (command !== 'buy' || !email?.includes('@') || !/^[A-Za-z]{2}$/.test(country ?? '')) {
-  console.error('usage: npm run number -- buy <email> <country> [--gift] [--local]\n       npm run number -- share|unshare <number> [--local]');
+  console.error('usage: npm run number -- buy <email> <country> [--gift] [--local|--staging]\n       npm run number -- share|unshare <number> [--local|--staging]');
   process.exit(1);
 }
 if (!process.env.TELNYX_API_KEY || !process.env.TELNYX_CONNECTION_ID) {

@@ -28,9 +28,13 @@ function bindAll(sql: string, args: unknown[]): string {
   return out;
 }
 
-export function cliD1(where: '--remote' | '--local' = '--remote'): D1Database {
+/** Production's database, or staging's (wrangler.staging.jsonc: its own D1, Telnyx app and test number). */
+export type Deployment = 'production' | 'staging';
+
+export function cliD1(where: '--remote' | '--local' = '--remote', deployment: Deployment = 'production'): D1Database {
+  const target = deployment === 'staging' ? ['callbay-staging', '-c', 'wrangler.staging.jsonc'] : ['callbay'];
   const execute = (sql: string) => {
-    const out = execFileSync('npx', ['wrangler', 'd1', 'execute', 'callbay', where, '--json', '--command', sql], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'] });
+    const out = execFileSync('npx', ['wrangler', 'd1', 'execute', ...target, where, '--json', '--command', sql], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'] });
     return JSON.parse(out)[0] as { results: unknown[]; meta?: { changes?: number } };
   };
   const statement = (sql: string, args: unknown[] = []) => ({
