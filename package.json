@@ -19,6 +19,7 @@
     "grant": "node scripts/grant-credits.mjs",
     "fernand": "node scripts/fernand-sync.mjs",
     "number": "tsx scripts/number.ts",
+    "discount": "tsx scripts/discount.ts",
     "requirements": "node scripts/requirements.mjs",
     "messaging:registration": "node scripts/messaging-registration.mjs",
     "reddit:spend": "node scripts/sync-reddit-spend.mjs",
