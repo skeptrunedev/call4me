@@ -3,7 +3,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/": {
     "html": "/__pages/8a5edab282632443.html",
     "markdown": "/__pages/8a5edab282632443.md",
-    "tokens": 3289
+    "tokens": 3301
   },
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
@@ -28,17 +28,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/ai-call-assistant": {
     "html": "/__pages/9c2cf5350f943d84.html",
     "markdown": "/__pages/9c2cf5350f943d84.md",
-    "tokens": 2974
+    "tokens": 2968
   },
   "/app-that-calls-businesses-for-you": {
     "html": "/__pages/1d754aa507f67b2f.html",
     "markdown": "/__pages/1d754aa507f67b2f.md",
-    "tokens": 2945
+    "tokens": 2944
   },
   "/hold-for-me": {
     "html": "/__pages/ba822c49c148d1be.html",
     "markdown": "/__pages/ba822c49c148d1be.md",
-    "tokens": 2814
+    "tokens": 2815
   },
   "/book-doctor-appointment": {
     "html": "/__pages/c75d5c79ab7b63e3.html",
@@ -48,7 +48,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/cancel-subscription": {
     "html": "/__pages/25b27c4f152aa217.html",
     "markdown": "/__pages/25b27c4f152aa217.md",
-    "tokens": 2424
+    "tokens": 2425
   },
   "/book-restaurant-reservation": {
     "html": "/__pages/3dba287a8c818da2.html",
@@ -58,22 +58,22 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/call-customer-service": {
     "html": "/__pages/83c8be2160d0ee48.html",
     "markdown": "/__pages/83c8be2160d0ee48.md",
-    "tokens": 2309
+    "tokens": 2310
   },
   "/negotiate-bills": {
     "html": "/__pages/71a04d205e1d6891.html",
     "markdown": "/__pages/71a04d205e1d6891.md",
-    "tokens": 2412
+    "tokens": 2413
   },
   "/dispute-a-charge": {
     "html": "/__pages/92ecfc917ddafeee.html",
     "markdown": "/__pages/92ecfc917ddafeee.md",
-    "tokens": 2185
+    "tokens": 2186
   },
   "/phone-anxiety": {
     "html": "/__pages/4278e6ad77a870a4.html",
     "markdown": "/__pages/4278e6ad77a870a4.md",
-    "tokens": 7564
+    "tokens": 7581
   },
   "/hold-times": {
     "html": "/__pages/0adb6fe5d87ff479.html",
@@ -88,12 +88,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/mcp": {
     "html": "/__pages/88fe637beab867e2.html",
     "markdown": "/__pages/88fe637beab867e2.md",
-    "tokens": 2377
+    "tokens": 2395
   },
   "/rules": {
     "html": "/__pages/933053fc294245bb.html",
     "markdown": "/__pages/933053fc294245bb.md",
-    "tokens": 1311
+    "tokens": 1309
   },
   "/privacy": {
     "html": "/__pages/0ece7f7c306b4cf6.html",
