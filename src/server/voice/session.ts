@@ -8,6 +8,7 @@ import { alreadyUnreachable, callerHoldsFor, joinedMessage, leftMessage, legEnde
 import { HoldMeter, type HoldChange } from './hold';
 import { midConversation } from './time-limit';
 import { BACK_OFFICE_TOOLS } from './prompt';
+import { EDGE_COLO_HEADER } from './stub';
 import { answeredAfterScreener, INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, screenerAskedRecently, SCREENING_NOTE, voicemailGreeting, type MachineEvent, type MachineGuidance, type MachineState } from './voicemail';
 
 /**
@@ -355,16 +356,16 @@ export class VoiceSession extends DurableObject<Env> {
     if (this.ended) return new Response('call ended', { status: 410 });
     const [client, server] = Object.values(new WebSocketPair());
     server.accept();
-    this.attachPhone(server);
+    this.attachPhone(server, req.headers.get(EDGE_COLO_HEADER) ?? undefined);
     // Complete Telnyx's handshake first: it waits well under the time picking a call back up takes
     // (storage, D1, a new voice session), and drops a stream that isn't answered promptly.
     this.ctx.waitUntil(this.streamAttached(server).catch((err) => console.warn('stream attach', this.setup?.callId, String(err))));
     return new Response(null, { status: 101, webSocket: client });
   }
 
-  private attachPhone(server: WebSocket): void {
+  private attachPhone(server: WebSocket, via?: string): void {
     const previous = this.phone;
-    if (previous && previous !== server) this.detachLive();
+    if (previous && previous !== server) this.phoneReplaced(via);
     this.phone = server;
     this.phoneHeardAt = Date.now();
     this.phoneProbe = null;
@@ -376,6 +377,22 @@ export class VoiceSession extends DurableObject<Env> {
     // A stream that closes without Telnyx's "stop" is not a hang-up: the call may be reattached.
     server.addEventListener('close', () => void this.phoneLost(server, 'media stream closed'));
     server.addEventListener('error', () => void this.phoneLost(server, 'media stream error'));
+  }
+
+  /**
+   * Telnyx opened a new media stream while the old one still looked open here. Its connection to
+   * Cloudflare's edge drops in bursts that hit every call routed through one colo (Nov 13: YYZ
+   * at 11:03 AM PT, ATL at 11:09 and 11:10), and it reconnects within a second or two. The voice
+   * session belongs to the call, not to the stream. Each rebuild cost a reconnect, a session that
+   * knew the conversation only from a summary, and whatever was in progress: the key Brick + Iron
+   * Lofts' menu was getting was dropped 1.2s after it was asked for, and Windsor at Dogpatch's
+   * session was rebuilt three times in 1.4s. Only the audio queued on the old stream is gone.
+   */
+  private phoneReplaced(via?: string): void {
+    const now = Date.now();
+    this.mark(`phone stream replaced${via ? ` via ${via}` : ''}, ${now - this.phoneHeardAt}ms after the old one's last frame`);
+    this.playbackEndsAt = Math.min(this.playbackEndsAt, now);
+    this.speechEndsAt = Math.min(this.speechEndsAt, now);
   }
 
   private async streamAttached(socket: WebSocket): Promise<void> {
@@ -537,7 +554,7 @@ export class VoiceSession extends DurableObject<Env> {
     await Promise.race([started, new Promise((resolve) => setTimeout(resolve, waitMs))]);
   }
 
-  /** If the phone changes during an open, finish discarding that open, then serve the new phone. */
+  /** An open dropped with the phone that asked for it (phoneLost) is retried for the phone attached since. */
   private async openCurrentPhone(): Promise<void> {
     while (this.phone && !this.ended && !this.live) {
       const phone = this.phone;
@@ -552,8 +569,9 @@ export class VoiceSession extends DurableObject<Env> {
     const prewarm = Boolean(opts.prewarm);
     if (!s || this.live || this.ended) return;
     if (!prewarm && (!phone || phone.readyState !== WebSocket.OPEN)) return;
-    // Still current: the phone stream it was opened for, or, opened before pickup, the call itself.
-    const current = () => !this.ended && !this.live && (prewarm || (this.phone === phone && phone!.readyState === WebSocket.OPEN));
+    // Still wanted: a phone stream to serve, which may have replaced the one it was opened for
+    // (phoneReplaced), or, opened before pickup, the call itself.
+    const current = () => !this.ended && !this.live && (prewarm || this.phone?.readyState === WebSocket.OPEN);
     let instructions = s.instructions;
     if (this.resumed) {
       const row = this.transcriptComplete ? null : await callStore(this.env.DB).byId(s.callId);

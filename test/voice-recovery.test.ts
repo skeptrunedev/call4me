@@ -98,7 +98,7 @@ test('a phone lost during model connection cannot install an orphan session; a f
   assert.equal(h.values.has('orphanSince'), false);
 });
 
-test('a replacement phone arriving during an old open gets its own session', async (t) => {
+test('a phone stream replaced while the voice session opens is served by that session', async (t) => {
   const h = harness(t);
   const first = h.session.startLive();
   await h.untilOpened(1);
@@ -106,45 +106,44 @@ test('a replacement phone arriving during an old open gets its own session', asy
   h.session.attachPhone(replacement);
   const next = h.session.startLive();
   assert.equal(first, next, 'connection work stays serialized');
-  const stale = h.connected(0);
-  await h.untilOpened(2);
-  const live = h.connected(1);
+  const live = h.connected(0);
   await next;
+  assert.equal(h.opens.length, 1);
   assert.equal(h.session.live, live);
   assert.equal(h.session.ended, false);
-  assert.deepEqual(stale.sent, []);
   assert.equal(live.sent[0].type, 'session.start');
 });
 
-test('late model and phone events cannot affect a recovered call', async (t) => {
+test("a replaced phone stream keeps the call's voice session, and the old stream's late events change nothing", async (t) => {
   const h = harness(t);
   const first = h.session.startLive();
   await h.untilOpened(1);
-  const oldLive = h.connected(0);
+  const live = h.connected(0);
   await first;
-  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'old' } }));
-  oldLive.message({ type: 'session.input_transcript.delta', delta: 'Please wait while I check.' });
+  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'call' } }));
+  // Mid-reply when Telnyx reopens the stream: the 1.5s still queued on the old one never plays.
+  live.message({ type: 'session.output_audio.delta', delta: 'A'.repeat(16_000) });
+  assert.ok(h.session.speechEndsAt > Date.now());
   const replacement = new Socket();
-  h.session.attachPhone(replacement);
-  const next = h.session.startLive();
-  await h.untilOpened(2);
-  const live = h.connected(1);
-  await next;
-  assert.match(live.sent[0].session.instructions, /Please wait while I check/);
-  assert.equal(h.values.get('wrapAt'), 1_165_000, 'recovery keeps the original call deadline');
+  h.session.attachPhone(replacement, 'ATL');
+  await h.session.streamAttached(replacement);
+  assert.equal(h.opens.length, 1, 'no second voice session');
+  assert.equal(h.session.live, live);
+  assert.equal(live.sent.filter((m) => m.type === 'session.start').length, 1);
+  assert.equal(h.session.playbackEndsAt, Date.now());
+  assert.equal(h.session.speechEndsAt, Date.now());
+  replacement.message({ event: 'media', media: { payload: 'new-audio' } });
+  assert.deepEqual(live.sent.at(-1), { type: 'session.input_audio.append', audio: 'new-audio' });
+  live.message({ type: 'session.output_audio.delta', delta: 'AAAA' });
+  assert.deepEqual(replacement.sent.at(-1), { event: 'media', media: { payload: 'AAAA' } });
   const shutdown = t.mock.method(h.session, 'shutdown', async () => {});
-  const messagesBefore = live.sent.length;
-  h.phone.message({ event: 'stop' });
+  const sentBefore = live.sent.length;
+  assert.equal(h.phone.readyState, 3, 'the old stream is closed');
   h.phone.message({ event: 'media', media: { payload: 'stale' } });
-  oldLive.message({ type: 'session.closed', reason: 'expired' });
-  oldLive.message({ type: 'session.output_audio.delta', delta: 'AAAA' });
-  oldLive.message({ type: 'session.input_transcript.delta', delta: 'stale words' });
-  oldLive.message({ type: 'session.started', session: { id: 'stale' } });
+  h.phone.message({ event: 'stop' });
   assert.equal(shutdown.mock.callCount(), 0);
-  assert.equal(h.session.liveReady, false, 'old session.started cannot ready a replacement');
-  assert.equal(live.sent.length, messagesBefore);
-  assert.deepEqual(replacement.sent, []);
-  assert.doesNotMatch(JSON.stringify(h.session.transcript), /stale words/);
+  assert.equal(live.sent.length, sentBefore);
+  assert.equal(h.values.has('orphanSince'), false);
 });
 
 test('a pending tool result is never delivered to a replacement model session', async (t) => {
@@ -525,7 +524,8 @@ test('a question that goes unanswered reaches the voice session that replaced th
   await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'asking' } }));
   const asking = h.session.askUser(h.session.setup, "What is the household's annual income?");
   for (let i = 0; i < 20 && !h.session.waiting.size; i++) await Promise.resolve();
-  // A new phone stream replaces the voice session while the question is out.
+  // The phone stream is lost while the question is out, and the one that replaces it gets a new voice session.
+  await h.session.phoneLost(h.phone, 'test loss');
   const phone = new Socket();
   h.session.attachPhone(phone);
   const attached = h.session.streamAttached(phone);
@@ -537,6 +537,7 @@ test('a question that goes unanswered reaches the voice session that replaced th
   assert.match(await asking, /No answer is available/);
   assert.ok(replacement.sent.some((m: any) => m.type === 'session.commentary.append' && /No answer is available .*household's annual income/.test(m.content)), 'the replacement is told');
   // And a session opened after that has it in its instructions.
+  await h.session.phoneLost(phone, 'test loss');
   const later = new Socket();
   h.session.attachPhone(later);
   const reattached = h.session.streamAttached(later);

@@ -7,3 +7,6 @@ import type { VoiceSession } from './session';
 export function sessionFor(env: Env, callId: string): DurableObjectStub<VoiceSession> {
   return env.VOICE_SESSION.get(env.VOICE_SESSION.idFromName(callId), { locationHint: 'enam' });
 }
+
+/** The Cloudflare colo Telnyx's media stream came in through, passed on to the session for its logs. */
+export const EDGE_COLO_HEADER = 'x-edge-colo';

@@ -1,5 +1,5 @@
 import { hmacHex, safeEqual } from '../lib/keys';
-import { sessionFor } from './stub';
+import { EDGE_COLO_HEADER, sessionFor } from './stub';
 
 export { VoiceSession } from './session';
 export { RecapLog } from './recap-log';
@@ -28,7 +28,9 @@ export default {
     if (!safeEqual(sig, await hmacHex(env.STREAM_SECRET, callId))) return new Response('forbidden', { status: 403 });
     for (let attempt = 1; ; attempt++) {
       try {
-        return await sessionFor(env, callId).fetch(new Request('https://session/stream', req));
+        const stream = new Request('https://session/stream', req);
+        if (req.cf?.colo) stream.headers.set(EDGE_COLO_HEADER, String(req.cf.colo));
+        return await sessionFor(env, callId).fetch(stream);
       } catch (err) {
         if (!(err as { retryable?: boolean }).retryable || attempt >= 3) throw err;
         console.warn('stream attach retry', callId, attempt, String(err));
