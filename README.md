@@ -121,7 +121,8 @@ the proposed tool calls, and never executes a tool or places a phone call.
 1. Telnyx: a Call Control application (its id is `TELNYX_CONNECTION_ID`) with webhook URL
    `https://<host>/webhooks/telnyx`, an API key, and the account's webhook public key. Set its
    AnchorSite (`anchorsite_override`) to `Chicago, IL`: the default, `Latency`, anchored US and
-   Canada calls in Frankfurt, where their media streams to us failed to connect far more often.
+   Canada calls in Frankfurt, and two of the three failed media stream connects Telnyx traced
+   (Nov 12, 2026) came from there.
    Each account's number is bought on its first call and attached to that application.
 2. OpenAI: an API key with GPT-Live access.
 3. Stripe: webhook endpoint `https://<host>/webhooks/stripe` for `checkout.session.completed`,
