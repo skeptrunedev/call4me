@@ -3,9 +3,9 @@
 #
 # Deploying a Worker resets the durable objects it defines, and a reset VoiceSession loses its
 # live call. So this deploys only when the voice bundle changed, and only once no call is up:
-# it waits for zero active calls, locks out new ones (services/dialer.ts voiceDeployDone waits
-# on the lock), checks again, deploys, and unlocks only once the new version is serving and
-# Cloudflare has had time to retire the old one.
+# it waits for zero active calls, locks out new ones (services/dialer.ts assertVoiceUnlocked
+# refuses them, nothing charged), checks again, deploys, and unlocks only once the new version
+# is serving and Cloudflare has had time to retire the old one.
 #
 # Never deploy the voice Worker or change its secrets any other way: either restarts every call.
 set -euo pipefail
@@ -70,6 +70,10 @@ if ! npx wrangler deploy -c "$CONFIG" --var "VOICE_BUILD:$build" --var "VOICE_CO
 fi
 # Calls stay locked out until the new version answers and the old one has had time to retire. If
 # the new version never shows up, the lock is left to expire rather than lifted early.
+# Each step re-sets the lock to the most the rest can take, since a refused call is told to retry
+# when the lock ends (dialer.ts VoiceDeployLocked): left at LOCK_SECONDS, calls refused in the
+# final grace minute were told to wait about 4 minutes for a lock that lifted a minute later.
+lock $((ROLLOUT_SECONDS + GRACE_SECONDS))
 rollout=$((SECONDS + ROLLOUT_SECONDS))
 until [ "$(curl -fsS --max-time 10 "https://$HOST/build" || true)" = "$build" ]; do
   if [ "$SECONDS" -ge "$rollout" ]; then
@@ -78,6 +82,7 @@ until [ "$(curl -fsS --max-time 10 "https://$HOST/build" || true)" = "$build" ];
   fi
   sleep 5
 done
+lock "$GRACE_SECONDS"
 sleep "$GRACE_SECONDS"
 lock 0
 echo "voice worker $build live, calls unlocked"
