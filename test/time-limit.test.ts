@@ -18,6 +18,13 @@ test('they spoke last and went quiet: not waiting on them', () => {
   assert.equal(midConversation({ theirsAt: s(840), oursAt: s(835), personOn: false, now: s(896) }), false);
 });
 
+test("a rep's lookup starts when our question ends, not at their last word", () => {
+  // Lidl Antwerpen: they asked what to check, our three-part question took 21s, and they went to look.
+  assert.equal(midConversation({ theirsAt: s(700), oursAt: s(721), personOn: false, now: s(839) }), true);
+  // Our caller talking into the quiet much later ("are you still there?") doesn't restart their lookup.
+  assert.equal(midConversation({ theirsAt: s(700), oursAt: s(800), personOn: false, now: s(839) }), false);
+});
+
 test('a long silence after our answer ends it', () => {
   assert.equal(midConversation({ theirsAt: s(700), oursAt: s(705), personOn: false, now: s(896) }), false);
 });

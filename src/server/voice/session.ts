@@ -1492,7 +1492,9 @@ export class VoiceSession extends DurableObject<Env> {
         return;
       }
       // Still talking with them, or the user is on: a couple more minutes rather than hang up mid-sentence.
-      if (midConversation({ theirsAt: this.lastSpokeAt.them, oursAt: this.lastSpokeAt.caller, personOn: this.personOn, now }) && (await this.extendTalk(s, now))) {
+      // Our speech ends when its audio has played, which can be seconds after its transcript arrived.
+      const oursAt = Math.max(this.lastSpokeAt.caller, this.speechEndsAt);
+      if (midConversation({ theirsAt: this.lastSpokeAt.them, oursAt, personOn: this.personOn, now }) && (await this.extendTalk(s, now))) {
         await this.scheduleAlarm();
         return;
       }
