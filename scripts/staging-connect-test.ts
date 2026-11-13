@@ -9,7 +9,8 @@
  * a call from the business account to its own number, waits for the two assistants to talk, joins
  * the person's number the way call4me_connect_me does, then hangs up and reads both assistants'
  * transcripts: what each one heard is what came through the call. It passes when the business
- * heard the person, the person heard the business, and our caller kept talking once they joined
+ * heard what the person's assistant said, the person heard the business, and our caller kept
+ * talking once they joined
  * (with --listen, when the person heard the business and the business did not hear them).
  *
  * --person joins a real phone instead of staging's person number, to check a customer's own line:
@@ -108,13 +109,17 @@ for (const [label, r] of sides) {
   for (const l of lines(r)) console.log(`  ${at(l.at).padStart(7)} ${l.role.padEnd(6)} ${l.text.slice(0, 140)}`);
 }
 
-// What each assistant heard after the join is its "them" lines from then on. Our caller goes
-// quiet once the person joins, so on the business side that is the person. A real phone has no
-// assistant to say a known line, so any speech from it counts.
+// What each assistant heard after the join is its "them" lines from then on. Our caller keeps
+// talking once the person joins, so the business heard the person when something the person's
+// assistant said shows up in what the business heard. A real phone has no assistant to compare
+// with, so any speech after the join counts.
 const heardAfterJoin = (r?: Row) => lines(r).filter((l) => l.role === 'them' && l.at >= joinAt).map((l) => l.text);
+const words = (t: string) => t.toLowerCase().match(/[a-z']+/g) ?? [];
+const businessHeard = new Set(heardAfterJoin(businessSide).flatMap(words));
+const personSaid = lines(personSide).filter((l) => l.role === 'caller').map((l) => words(l.text)).filter((w) => w.length >= 4);
 const businessHeardPerson = realPhone
   ? heardAfterJoin(businessSide).length > 0
-  : heardAfterJoin(businessSide).some((t) => /this is the person|staging person|person joining|one,? two,? three/i.test(t));
+  : personSaid.some((w) => w.filter((x) => businessHeard.has(x)).length >= 0.7 * w.length);
 const personHeard = heardAfterJoin(personSide).length > 0;
 const joined = lines(outbound).some((l) => l.role === 'note' && /joined the call|is listening in/.test(l.text));
 const joinedAt = lines(outbound).find((l) => l.role === 'note' && /joined the call|is listening in/.test(l.text))?.at ?? Infinity;
