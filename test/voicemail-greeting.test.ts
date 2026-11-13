@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { asksForMessage, forcedHandoffMessage, greetingWaiting, voicemailLeft } from '../src/server/voice/handoff';
 import { HoldMeter } from '../src/server/voice/hold';
+import { voicemailGreeting } from '../src/server/voice/voicemail';
 
 test('greetings asking for a name and phone number are voicemail prompts, menu options are not', () => {
   for (const greeting of [
@@ -320,4 +321,13 @@ test("a screener's request for a message after its hold request is waiting on th
   assert.equal(greetingWaiting(queue, new Set()), null);
   const later = [{ role: 'them' as const, text: 'You can leave a message after the tone.', at: 2_000 }, { role: 'them' as const, text: 'Otherwise, please hold for the next available representative.', at: 5_000 }];
   assert.equal(greetingWaiting(later, new Set()), null);
+});
+
+test("a voicemail's greeting is told apart from a screener asking for an introduction", () => {
+  const them = (text: string) => [{ role: 'them', text }];
+  assert.ok(voicemailGreeting(them('The number you have reached, four one five, five five five, zero one nine nine, is not available')));
+  assert.ok(voicemailGreeting(them("Hi, you've reached Sam. I can't take your call right now.")));
+  assert.ok(!voicemailGreeting(them("Record your name and reason for calling. I'll see if this person is available")));
+  assert.ok(!voicemailGreeting(them('The person you are calling is not available right now. Please say your name and reason for calling.')));
+  assert.ok(!voicemailGreeting(them('Thanks for calling Example Market.')));
 });

@@ -8,7 +8,7 @@ import { alreadyUnreachable, callerHoldsFor, joinedMessage, leftMessage, legEnde
 import { HoldMeter, type HoldChange } from './hold';
 import { midConversation } from './time-limit';
 import { BACK_OFFICE_TOOLS } from './prompt';
-import { answeredAfterScreener, INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, screenerAskedRecently, SCREENING_NOTE, type MachineEvent, type MachineGuidance, type MachineState } from './voicemail';
+import { answeredAfterScreener, INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machineTransition, screenerAskedRecently, SCREENING_NOTE, voicemailGreeting, type MachineEvent, type MachineGuidance, type MachineState } from './voicemail';
 
 /**
  * One live phone call: Telnyx's media stream on one side, a GPT-Live session on the other.
@@ -110,6 +110,7 @@ const REATTACH_WAIT_MS = 15_000;
 const WRAP_UP_MS = 40_000;
 /** How long a call screener may stay quiet after its prompt before the caller introduces itself anyway. */
 const SCREENER_QUIET_MS = 6_000;
+const MACHINE_NOTE = 'carrier detected an automated greeting';
 
 export interface SessionSetup {
   callId: string;
@@ -1145,7 +1146,7 @@ export class VoiceSession extends DurableObject<Env> {
       if (this.ended || this.endingCall || this.personHolds()) return;
       if (guidance) {
         const notes: Record<MachineGuidance, string> = {
-          machine: 'carrier detected an automated greeting',
+          machine: MACHINE_NOTE,
           greeting_ended: 'carrier detected a possible voicemail beep',
           greeting_timeout: 'carrier greeting detection timed out without a beep',
           screening: SCREENING_NOTE,
@@ -1189,6 +1190,14 @@ export class VoiceSession extends DurableObject<Env> {
       this.pendingMachineGuidance = null;
       await this.saveMachineState();
       return;
+    }
+    // After a voicemail's greeting ("...is not available"), with no screener question, screening
+    // detection was the beep: the recording has started, and it gives up after a few seconds of quiet.
+    if (this.pendingMachineGuidance === 'screening' && !this.screenerAsked() && this.transcript.some((l) => l.role === 'note' && l.text === MACHINE_NOTE) && voicemailGreeting(this.transcript)) {
+      this.mark('screening detection came after a voicemail greeting; taking it for the beep');
+      this.pendingMachineGuidance = 'greeting_ended';
+      this.machineState = { ...this.machineState!, phase: 'voicemail' };
+      await this.saveMachineState();
     }
     // A screener whose question we don't recognize still waits on us: once the line has been quiet
     // for a while after it, introduce anyway rather than sit silent until the time limit (Tom's call

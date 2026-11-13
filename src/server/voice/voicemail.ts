@@ -1,3 +1,5 @@
+import { asksForMessage } from './handoff';
+
 /**
  * Premium AMD distinguishes a recording beep from an expired detector and an iOS screening
  * prompt. In particular, neither no_beep_detected nor prompt_ended means voicemail is recording.
@@ -94,6 +96,19 @@ export function screenerAskedRecently(lines: readonly { role: string; text: stri
   const heard = lines.filter((line) => line.role === 'them' && line.at >= now - SCREENER_ASK_WINDOW_MS).map((line) => line.text).join(' ');
   return screenerAsked(heard.slice(-400));
 }
+
+/**
+ * A voicemail greeting, not a screener asking for an introduction: Telnyx's screening detection
+ * also fires on a voicemail's beep. RankSurge's call to a carrier voicemail ("...is not
+ * available", then the beep) got screening_prompt_ended at the beep; the caller waited 4.6s more
+ * for a screener's question, introduced itself in one sentence, and the voicemail had already
+ * given up on the silence ("we didn't get your message").
+ */
+export function voicemailGreeting(lines: readonly { role: string; text: string }[]): boolean {
+  const heard = lines.filter((line) => line.role === 'them').map((line) => line.text).join(' ').slice(-600);
+  return !screenerAsked(heard) && (UNAVAILABLE.test(heard) || asksForMessage(heard));
+}
+const UNAVAILABLE = /\b(?:is (?:not |un)available|isn't available|not available (?:right now|at the moment|to take)|can(?:'t| ?not) (?:take|answer|come to) (?:your|the) (?:call|phone)|unable to (?:take|answer|come to) (?:your|the) (?:call|phone)|away from (?:the|my|his|her) (?:phone|desk)|forwarded to (?:an automated |a )?voice ?mail|voice ?mail ?box)\b/i;
 
 /** The transcript note marking a call screener's prompt. */
 export const SCREENING_NOTE = 'carrier detected a call screening prompt';

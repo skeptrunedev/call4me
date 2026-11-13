@@ -447,6 +447,20 @@ test("a call screener that asks for a message after the person didn't come gets 
   assert.ok(live.sent.some((m: any) => /recording now, even though no beep/.test(m.item?.content?.[0]?.text ?? '')));
 });
 
+test("screening detection right after a voicemail's greeting is its beep: the caller leaves the message now", async (t) => {
+  const h = harness(t);
+  const live = (h.session.live = new Socket());
+  h.session.liveReady = true;
+  await h.session.machineDetected('machine', new Date(Date.now()).toISOString());
+  h.session.transcript.push({ role: 'them', text: 'The number you have reached, four one five, five five five, zero one nine nine, is not available', at: Date.now() });
+  t.mock.timers.tick(5_000);
+  await h.session.machineDetected('screening_prompt_ended', new Date(Date.now()).toISOString());
+  assert.equal(h.session.machineState.phase, 'voicemail');
+  const guidance = live.sent.filter((m: any) => m.type === 'session.commentary.append').map((m: any) => m.content);
+  assert.match(guidance.at(-1), /The carrier detected a beep/);
+  assert.ok(!guidance.some((g: string) => /call screener is ready/.test(g)));
+});
+
 test('a greeting asking for a message is left to the caller when the carrier says a person answered', async (t) => {
   const h = harness(t);
   h.session.live = new Socket();
