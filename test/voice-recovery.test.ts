@@ -346,6 +346,32 @@ test('at the time limit the user on the call gets more time while credits last, 
   assert.deepEqual(hangups, ['the call reached its time limit']);
 });
 
+test('time notices go in as quiet context, never as an instruction that can cut off a reply', async (t) => {
+  const { accounts } = await import('../src/server/services/accounts');
+  const h = harness(t);
+  const db = h.session.env.DB;
+  const live = (h.session.live = new Socket());
+  h.session.hangup = async () => {};
+  h.session.heardThem = true;
+  h.session.setup.pricePerMinuteCents = 25;
+  await accounts(db).post('acct_alice', 50, 'adjustment', 'seed', 'credits');
+  await db.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at, answered_at) VALUES ('recovery_test', 'acct_alice', '+14155550100', 'Test store', 'Book a photo shoot', '{}', 'in_progress', 0, ?)`).bind(Date.now()).run();
+  // The clock fires wherever the conversation is, here just as the business finished a sentence.
+  h.values.set('wrapAt', Date.now() - 1);
+  await h.session.alarm();
+  assert.equal(h.values.get('stopAt'), Date.now() + 40_000);
+  assert.equal(live.sent.at(-1).type, 'session.thinking.append');
+  assert.match(live.sent.at(-1).content, /Time is almost up: about 40 seconds left\. Answer what they just said, then wrap up/);
+
+  t.mock.timers.tick(40_000);
+  h.session.lastSpokeAt = { them: Date.now() - 1_000, caller: Date.now() - 2_000 };
+  await h.session.alarm();
+  assert.equal(h.values.get('stopAt'), Date.now() + 2 * 60_000, 'still talking: more time instead of a hang-up');
+  assert.equal(live.sent.at(-1).type, 'session.thinking.append');
+  assert.match(live.sent.at(-1).content, /still talking with you, so you have 2 more minutes/);
+  assert.ok(!live.sent.some((m: any) => m.type === 'session.instructions.append'), 'no time notice can interrupt the caller');
+});
+
 test("a screener whose question isn't recognized still gets an introduction once it goes quiet", async (t) => {
   const h = harness(t);
   h.session.live = new Socket();

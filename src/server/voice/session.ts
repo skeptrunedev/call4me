@@ -1487,7 +1487,7 @@ export class VoiceSession extends DurableObject<Env> {
       // Put on hold during the wrap-up: keep waiting instead of hanging up on the queue.
       if (this.hold.holding() && (await this.extendOnHold(s, now))) {
         await this.ctx.storage.delete('stopAt');
-        if (!this.personOn) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'Ignore the earlier time warning: there is more time now. Stay on the line, stay silent while they have you waiting, and carry on when they come back.' });
+        this.timeNote('Ignore the earlier time warning: there is more time now. Stay on the line, stay silent while they have you waiting, and carry on when they come back.');
         await this.scheduleAlarm();
         return;
       }
@@ -1507,9 +1507,22 @@ export class VoiceSession extends DurableObject<Env> {
       }
       await this.ctx.storage.put('stopAt', now + WRAP_UP_MS);
       // With the user on, the caller isn't told to say goodbye over them; at the hard stop they get more time while credits last.
-      if (!this.personOn) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'Time is almost up. Wrap up now: get the one thing you still need, say a quick goodbye, and hand off to hang up (end_call).' });
+      this.timeNote(`Time is almost up: about ${WRAP_UP_MS / 1000} seconds left. Answer what they just said, then wrap up: get the one thing you still need, say a quick goodbye, and hand off to hang up (end_call).`);
     }
     await this.scheduleAlarm();
+  }
+
+  /**
+   * A notice from the call's clock, which fires wherever the conversation happens to be, so it goes
+   * in as quiet context the caller acts on at its next turn. An instruction append can interrupt
+   * speech in progress, and the model does not pick its reply back up: What's The Scoop's callback
+   * got the wrap-up 0.5s after the owner stopped talking, and the line sat silent 14s until the
+   * owner said hello. No notice while the user is on: the caller doesn't wrap up over them.
+   */
+  private timeNote(content: string): void {
+    if (this.personOn) return;
+    this.mark(`time note: ${content.slice(0, 40)}`);
+    this.sendLive({ type: 'session.thinking.append', delegation_id: null, content });
   }
 
   /** Record a hold starting or ending on the call, where the bill at hangup reads it. */
@@ -1546,7 +1559,7 @@ export class VoiceSession extends DurableObject<Env> {
     if (!minutes) return false;
     await this.ctx.storage.put('stopAt', now + minutes * 60_000);
     this.mark(`still talking at the time limit: ${minutes} more min to finish`);
-    if (!this.personOn) this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: `They're still talking with you, so you have ${minutes} more minutes. Finish this conversation: get what you still need, then say a quick goodbye and hand off to hang up (end_call).` });
+    this.timeNote(`They're still talking with you, so you have ${minutes} more minutes. Finish this conversation: get what you still need, then say a quick goodbye and hand off to hang up (end_call).`);
     return true;
   }
 
