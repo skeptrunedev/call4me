@@ -188,3 +188,22 @@ test("someone saying they'll stay on the line until we have the details is waiti
   assert.equal(new HoldMeter().them('Please stay on the line, your call will be answered shortly.', s(0))?.type, 'start');
   assert.equal(new HoldMeter().them('Remain on the line for the next available agent.', s(0))?.type, 'start');
 });
+
+test("a rep's return after minutes of silence ends the hold then, not at their last words before it", async () => {
+  const { HoldMeter } = await import('../src/server/voice/hold');
+  // Buck Mason: "is it okay if I put you a brief hold while I go look", then "Okay. Alright", five
+  // minutes in the stockroom, and "Hello, still there" with no punctuation in between.
+  const clerk = new HoldMeter();
+  assert.equal(clerk.them('Okay, is it okay if I put you a brief hold while I go', s(26))?.type, 'start');
+  assert.equal(clerk.caller('Sure, no problem.'), null);
+  assert.equal(clerk.them(' look', s(28)), null);
+  assert.equal(clerk.them(' Okay. Alright', s(31)), null);
+  assert.deepEqual(clerk.them(' Hello, still there', s(340)), { type: 'end', at: s(340), seconds: 314 });
+  // The same return answered by our caller instead of a "still there".
+  const rep = new HoldMeter();
+  assert.equal(rep.them('Let me check in the back.', s(0))?.type, 'start');
+  assert.equal(rep.them(' Alright', s(3)), null);
+  assert.equal(rep.them(' so we do have the black one in small', s(300)), null);
+  assert.equal(rep.caller('Great, can you hold it for me?'), null);
+  assert.deepEqual(rep.them(' Sure', s(310)), { type: 'end', at: s(300), seconds: 300 });
+});

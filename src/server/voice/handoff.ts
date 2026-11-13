@@ -15,7 +15,10 @@ const KEYPAD_MENU = [
   new RegExp(String.raw`\bpress(?:ing)?\s+(?:the\s+)?${KEY}(?!\w)`, 'i'),
   new RegExp(String.raw`\bdial\s+(?:the\s+)?${KEY}(?!\w)`, 'i'),
   /\bpress (?:any|a) key\b/i,
-  /\b(?:enter|type|key in)\b[^.?!]{0,60}\b(?:keypad|followed by (?:the )?(?:pound|hash|star))\b/i,
+  // Asking for input now, not describing a later step: New Jersey E-ZPass's queue recording says
+  // card numbers "you will be able to enter securely from your telephone keypad", and each replay
+  // started the back office on it, so our caller talked into the queue every 3.5 minutes.
+  /\b(?<!be (?:able|asked|prompted) to )(?:enter|type|key in)\b[^.?!]{0,60}\b(?:keypad|followed by (?:the )?(?:pound|hash|star))\b/i,
   /\bmenu options\b/i,
   /\bappuyez\b[^.?!]{0,30}\b(?:sur|le)\b/i,
   /\bcomposez\b[^.?!]{0,40}\b(?:zéro|zero|un|deux|trois|quatre|cinq|six|sept|huit|neuf|\d)\b/i,

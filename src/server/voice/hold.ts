@@ -53,6 +53,14 @@ const ACKNOWLEDGMENT = /^(?:(?:\[[^\]]*\]?|[^\s[\]]*\]|sure|okay|ok|alright|all 
 // Japanese has no \b, so its "my name is" (赤間と申します) sits outside it.
 const PERSON_BACK = /\b(?:my name is|how (?:can|may) i (?:help|assist)|(?:are you )?still there|mi nombre es|le habla|en qu[eé] (?:le|lo|la) (?:puedo|podemos) (?:ayudar|servir))\b|と申します/i;
 
+/**
+ * Their words after this long a silence start over, punctuated or not. Buck Mason's clerk said
+ * "Okay. Alright", went to check the stockroom for five minutes, and came back with "Hello, still
+ * there": transcribed as one sentence, the return was back-dated to "Alright" and the five minutes
+ * were billed at full price.
+ */
+const PAUSE_MS = 5_000;
+
 /** A line from the other side that is part of the wait: a hold request or a queue recording. */
 function isHoldLine(text: string): boolean {
   return QUEUE_RECORDING.test(text) || WAIT_REQUEST.test(text) || JA_WAIT.test(text) || asksUsToWait(text);
@@ -71,6 +79,8 @@ export class HoldMeter {
   /** How many sentences of theirs have started since our caller last answered, and when the latest began. */
   private sentences = 0;
   private sentenceAt = 0;
+  /** When their latest words came in. */
+  private theirsAt = 0;
 
   /** Resume a hold already in progress (the session object was reset mid-call). */
   constructor(since: number | null = null) {
@@ -84,12 +94,20 @@ export class HoldMeter {
   /** Words from the other side. Returns the change in hold state, if any. Judged one sentence at a time. */
   them(delta: string, at: number): HoldChange | null {
     if (!delta) return null;
+    const pausedFor = at - this.theirsAt;
+    this.theirsAt = at;
     // Our caller's turn is over once they speak again: judge it whole.
     const answered = this.settleCaller();
     if (answered) {
       this.theirs = delta;
       this.sentences = 0;
       return answered;
+    }
+    // Nothing said before the pause is part of what they say now, nor where their return began.
+    if (pausedFor >= PAUSE_MS) {
+      this.theirs = '';
+      this.sentences = 0;
+      this.speechAt = null;
     }
     // The sentence that was still open before this delta may have grown or finished.
     const from = Math.max(0, this.sentences - 1);

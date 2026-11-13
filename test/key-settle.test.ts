@@ -56,3 +56,16 @@ test("a voicemail's review menu, and a real option after a voicemail prompt, sti
   operator.observe('Please leave a message after the tone, or press 0 for the operator.', 1_000);
   assert.equal(operator.awaitingKey(), true);
 });
+
+test("a queue recording describing a later keypad step is not a menu", () => {
+  // New Jersey E-ZPass, replayed every 3.5 minutes on hold: each replay started the back office,
+  // and our caller said "still on hold" into the queue, which ended the hold early.
+  const queue = new MenuRecovery();
+  queue.observe('Please hold, and your call will be answered in the order it was received. You will never be asked to provide your credit card or bank information verbally. You will be able to enter it securely from your telephone keypad. New Jersey E-ZPass urges customers to be cautious.', 1_000);
+  assert.equal(queue.pending(), null);
+  for (const prompt of ['Please enter your account number using your telephone keypad.', 'Using your keypad, type your zip code followed by the pound key.']) {
+    const m = new MenuRecovery();
+    m.observe(prompt, 1_000);
+    assert.notEqual(m.pending(), null, prompt);
+  }
+});
