@@ -104,7 +104,7 @@ export function calls(db: D1Database) {
       if (input.timezone && !validTimeZone(input.timezone)) throw new CallError(`timezone: "${input.timezone}" is not an IANA time zone like America/New_York`);
 
       const blocked = await db.prepare(`SELECT reason FROM blocked_numbers WHERE number = ?`).bind(to.e164).first<{ reason: string }>();
-      if (blocked) throw new CallError('this number asked not to be called by call4me', 403);
+      if (blocked) throw new CallError('this number asked not to be called by call4me, so every call to it is refused: drop it from your list', 403);
 
       // connect_when and listen_in ring the account owner: the phone they gave for this call (when
       // it's their own call), else the one saved in their profile. Refuse now when there's none we
