@@ -25,3 +25,34 @@ test('a menu that answers the key later is still a new menu', () => {
   assert.notEqual(m.pending(), null);
   assert.equal(m.repeats('4'), false);
 });
+
+// Shaped like Beatrix Fulton Market's party line (2026-11-13, business renamed): the recording's own
+// controls read as a menu waiting on a key, and kept the caller off the line while it recorded.
+const GREETING = "You have reached Harbor Parties. Please leave your name, number, and a brief description of the event you are looking to plan and we will get back to you as soon as possible. Thank you. Record your message at the tone. Press any key or stop talking to end the recording";
+
+test("a voicemail's recording controls are not a menu waiting on a key", () => {
+  const m = new MenuRecovery();
+  m.observe('Harbor Market. For reservations, please dial one. For group dining and special events, please dial two.', 1_000);
+  assert.notEqual(m.pending(), null);
+  m.submitted('2', m.snapshot(), 1_100);
+  m.observe(` ${GREETING}`, 20_000);
+  assert.equal(m.awaitingKey(), false, 'the caller is heard while the voicemail records');
+  assert.equal(m.pending(), null);
+  for (const greeting of [
+    'At the tone, please record your message. When you have finished recording, you may hang up or press one for more options.',
+    'Please leave a message after the beep. When you are finished, press pound.',
+  ]) {
+    const vm = new MenuRecovery();
+    vm.observe(greeting, 1_000);
+    assert.equal(vm.awaitingKey(), false, greeting);
+  }
+});
+
+test("a voicemail's review menu, and a real option after a voicemail prompt, still wait on a key", () => {
+  const review = new MenuRecovery();
+  review.observe(`${GREETING} To save this recording, press one. To listen, press two. To rerecord, press three.`, 1_000);
+  assert.equal(review.awaitingKey(), true);
+  const operator = new MenuRecovery();
+  operator.observe('Please leave a message after the tone, or press 0 for the operator.', 1_000);
+  assert.equal(operator.awaitingKey(), true);
+});

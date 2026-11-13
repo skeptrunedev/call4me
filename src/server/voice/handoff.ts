@@ -136,6 +136,21 @@ function lastMatch(text: string, patterns: RegExp[]): number {
   return index;
 }
 
+/**
+ * The keypad offer at `at` is a voicemail's own recording control, after its request for a
+ * message: "Record your message at the tone. Press any key or stop talking to end the recording."
+ * Read as a menu waiting on its key, it kept our caller off the line for the whole recording:
+ * Beatrix Parties recorded only "...dining room available" of the message, then the back office
+ * pressed re-record five times into the same muting before saving it. A review menu after the
+ * recording (save, listen, re-record) is still a menu.
+ */
+function recordingControl(text: string, at: number): boolean {
+  const start = Math.max(...['.', '?', '!', '\n'].map((c) => text.lastIndexOf(c, at))) + 1;
+  const end = text.slice(at).search(/[.?!\n]/);
+  return RECORDING_CONTROL.test(text.slice(start, end < 0 ? text.length : at + end)) && VOICEMAIL_PROMPT.test(text.slice(0, at));
+}
+const RECORDING_CONTROL = /\b(?:(?:end|finish|stop|complete)\b[^.?!]{0,20}\brecording|finished recording|when (?:you(?:'re| are| have|'ve) )?(?:finished|done))\b/i;
+
 /** Recognize keypad intent, not acknowledgments such as "you pressed two" or ordinary filler. */
 function spokenKeypadDigits(text: string): string | null {
   const action = new RegExp(String.raw`\b(?:press(?:ing)?|dial(?:ing)?|enter(?:ing)?|send(?:ing)?|select(?:ing)?|choos(?:e|ing)|try(?:ing)?|hit(?:ting)?|tap(?:ping)?|now|next)[\s,:]+(?:the\s+)?(${KEY}(?:[\s,]+${KEY})*)(?!\w)`, 'gi');
@@ -209,6 +224,7 @@ export class MenuRecovery {
     const menu = lastMatch(snapshot.text, this.personSpeaking || WEB_ENTRY.test(snapshot.text) ? KEYPAD_MENU : MENU);
     const failure = this.menuContext && !this.personSpeaking ? lastMatch(snapshot.text, MENU_FAILURE) : -1;
     if (Math.max(menu, failure) < 0 || lastMatch(snapshot.text, WAIT_OR_PERSON) > Math.max(menu, failure)) return null;
+    if (failure < menu && recordingControl(snapshot.text, menu)) return null;
     return { reason: failure > menu ? 'menu_recovery' : 'menu', line: { role: 'them', text: snapshot.text, at: snapshot.at }, snapshot };
   }
 
@@ -473,7 +489,7 @@ export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[
       : miss.reason === 'signed_off'
       ? 'The other side said goodbye and the line has been silent since. The call is done: hand off end_call now, and write nothing.'
       : miss.reason !== 'promise'
-      ? `The latest phone menu needs attention. ${miss.reason === 'menu_recovery' ? 'It reported missing/invalid input or led to recorded instructions instead of completing the task.' : 'Choose from the fully heard options.'} Use press_digits for an announced option that serves the task or reaches a person. Wait if the options are incomplete. If a choice led to instructions only, use an announced back/main-menu option, then another relevant route such as other questions or a representative. Never assume 0, star or pound works when it was not offered. Do not repeat an unsuccessful route unchanged. Stay silent on hold or while a person speaks. A voicemail after a message was left needs end_call. If there is no supported route left, ask_user or end_call according to the brief.\n\nFresh menu input:\n${miss.line.text}\n\nKeypad history (carrier accepted these requests; navigation may still have failed):\n${keypadHistory}`
+      ? `The latest phone menu needs attention. ${miss.reason === 'menu_recovery' ? 'It reported missing/invalid input or led to recorded instructions instead of completing the task.' : 'Choose from the fully heard options.'} Use press_digits for an announced option that serves the task or reaches a person. Wait if the options are incomplete. If a choice led to instructions only, use an announced back/main-menu option, then another relevant route such as other questions or a representative. Never assume 0, star or pound works when it was not offered. Do not repeat an unsuccessful route unchanged. Stay silent on hold or while a person speaks. A voicemail after a message was left needs end_call; at its review menu (save, listen, re-record), press the save key, never re-record. If there is no supported route left, ask_user or end_call according to the brief.\n\nFresh menu input:\n${miss.line.text}\n\nKeypad history (carrier accepted these requests; navigation may still have failed):\n${keypadHistory}`
       : 'The caller said it would do something but never handed it off. Do it now: if they asked for something the caller does not have, ask_user; if the call is over, end_call; if a menu needs a key, press_digits.';
   return `${what} If nothing is actually needed, write nothing.
 
