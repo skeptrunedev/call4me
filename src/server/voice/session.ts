@@ -111,6 +111,12 @@ const REATTACH_WAIT_MS = 15_000;
 const WRAP_UP_MS = 40_000;
 /** How long a call screener may stay quiet after its prompt before the caller introduces itself anyway. */
 const SCREENER_QUIET_MS = 6_000;
+/**
+ * How long a call screener none of whose words reached the transcript gets before the caller
+ * introduces itself: AccuVision Optometry's prompt was never transcribed, and our caller sat
+ * silent 75s until it spoke up on its own.
+ */
+const UNHEARD_SCREENER_MS = 15_000;
 const MACHINE_NOTE = 'carrier detected an automated greeting';
 
 export interface SessionSetup {
@@ -220,6 +226,8 @@ export class VoiceSession extends DurableObject<Env> {
   private keyReplyBy = 0;
   /** When the current phone stream last sent anything, and the mark asking whether it is still there. */
   private phoneHeardAt = 0;
+  /** When this instance started waiting for a call screener's question (sendMachineGuidance). */
+  private screenerWaitSince = 0;
   private phoneProbe: { name: string; dueAt: number } | null = null;
   private lastTranscriptAt = 0;
   /** When each side last said something: the hard stop gives a live conversation time to finish. */
@@ -1222,11 +1230,12 @@ export class VoiceSession extends DurableObject<Env> {
     // to Google Call Assist waited 10 minutes).
     if (this.pendingMachineGuidance === 'screening' && !this.screenerAsked()) {
       if (this.ended || this.endingCall) return;
-      // Quiet counts from the screener's last words: before it has said anything, keep waiting.
+      // Quiet counts from the screener's last words; one we never heard gets longer, from when we started waiting.
+      this.screenerWaitSince ||= Date.now();
       const spokeAt = this.lastTranscriptAt;
-      const quietFor = spokeAt ? Date.now() - Math.max(spokeAt, this.speechEndsAt) : 0;
-      if (quietFor < SCREENER_QUIET_MS) {
-        setTimeout(() => void this.sendMachineGuidance(), SCREENER_QUIET_MS - quietFor + 100);
+      const due = spokeAt ? Math.max(spokeAt, this.speechEndsAt) + SCREENER_QUIET_MS : this.screenerWaitSince + UNHEARD_SCREENER_MS;
+      if (Date.now() < due) {
+        setTimeout(() => void this.sendMachineGuidance(), due - Date.now() + 100);
         return;
       }
       this.mark('screener went quiet without a recognized question; introducing anyway');

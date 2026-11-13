@@ -386,6 +386,31 @@ test("a screener whose question isn't recognized still gets an introduction once
   assert.ok(h.session.live.sent.slice(before).some((m: any) => /call screener is ready/.test(m.content ?? '')), 'introduces after the quiet');
 });
 
+test('a screener none of whose words were transcribed still gets an introduction', async (t) => {
+  // AccuVision Optometry: the carrier said a screening prompt ended, nothing of it was transcribed,
+  // and our caller waited 75s for the screener's first words.
+  const h = harness(t);
+  h.session.live = new Socket();
+  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'unheard' } }));
+  const live = h.session.live;
+  const before = live.sent.length;
+  await h.session.machineDetected('screening_prompt_ended', '2026-11-13T23:22:48Z');
+  const introduced = () => live.sent.slice(before).some((m: any) => /call screener is ready/.test(m.content ?? ''));
+  // The line carries audio the whole time (the untranscribed prompt), a second at a time.
+  const wait = async (seconds: number) => {
+    for (let i = 0; i < seconds; i++) {
+      h.phone.message({ event: 'media', media: { payload: 'prompt-audio' } });
+      t.mock.timers.tick(1_000);
+      await new Promise((r) => setImmediate(r));
+      for (let j = 0; j < 20; j++) await Promise.resolve();
+    }
+  };
+  await wait(7);
+  assert.equal(introduced(), false, 'a prompt may still be playing untranscribed');
+  await wait(9);
+  assert.ok(introduced(), 'introduces once it has had time to finish');
+});
+
 test("a voice session that expires while the phone rings doesn't hang up the call; pickup opens a fresh one", async (t) => {
   const h = harness(t);
   h.session.answered = false;
