@@ -82,7 +82,24 @@ for (let i = 0; i < 40 && status !== 'in_progress'; i++) {
 }
 if (status !== 'in_progress') throw new Error(`the call never connected (status ${status})`);
 console.log(`answered at ${at(Date.now())}; letting the two assistants talk`);
-await sleep(12_000);
+// Join once they are talking: our caller has said something real and the business answered it.
+// Joined earlier, a caller still told to stay silent through a greeting (staging's assistant can
+// read as an answering machine) never speaks, and neither assistant ever goes first.
+// The API gives each line as "role: text".
+const talking = (t: string[]) => {
+  const said = t.findIndex((l) => l.startsWith('caller: ') && l.slice(8).trim().split(/\s+/).length >= 4);
+  return said >= 0 && t.slice(said + 1).some((l) => l.startsWith('them: '));
+};
+let exchanged = false;
+for (let i = 0; i < 20 && !exchanged; i++) {
+  await sleep(2_000);
+  exchanged = talking(((await call('GET', `/calls/${callId}`)).transcript ?? []) as string[]);
+}
+if (!exchanged) {
+  await call('POST', `/calls/${callId}/hang-up`).catch(() => {});
+  console.log('INCONCLUSIVE  the two assistants never got talking, so nothing was joined: run it again');
+  process.exit(2);
+}
 
 const joinAt = Date.now();
 const connected = await call('POST', `/calls/${callId}/connect`, { phone: personPhone, mode: listen ? 'listen' : 'join' });
@@ -114,12 +131,15 @@ for (const [label, r] of sides) {
 // assistant said shows up in what the business heard. A real phone has no assistant to compare
 // with, so any speech after the join counts.
 const heardAfterJoin = (r?: Row) => lines(r).filter((l) => l.role === 'them' && l.at >= joinAt).map((l) => l.text);
-const words = (t: string) => t.toLowerCase().match(/[a-z']+/g) ?? [];
-const businessHeard = new Set(heardAfterJoin(businessSide).flatMap(words));
-const personSaid = lines(personSide).filter((l) => l.role === 'caller').map((l) => words(l.text)).filter((w) => w.length >= 4);
+// Four words in a row in both: their speech overlaps on the line, so neither side hears the
+// other's sentences whole, and "one two three" comes back as "1 2 3".
+const DIGITS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+const words = (t: string) => (t.toLowerCase().match(/[a-z']+|\d/g) ?? []).map((w) => (/\d/.test(w) ? DIGITS[Number(w)] : w));
+const runs = (w: string[]) => w.slice(3).map((_, i) => w.slice(i, i + 4).join(' '));
+const businessHeard = new Set(heardAfterJoin(businessSide).flatMap((t) => runs(words(t))));
 const businessHeardPerson = realPhone
   ? heardAfterJoin(businessSide).length > 0
-  : personSaid.some((w) => w.filter((x) => businessHeard.has(x)).length >= 0.7 * w.length);
+  : lines(personSide).some((l) => l.role === 'caller' && runs(words(l.text)).some((r) => businessHeard.has(r)));
 const personHeard = heardAfterJoin(personSide).length > 0;
 const joined = lines(outbound).some((l) => l.role === 'note' && /joined the call|is listening in/.test(l.text));
 const joinedAt = lines(outbound).find((l) => l.role === 'note' && /joined the call|is listening in/.test(l.text))?.at ?? Infinity;
