@@ -966,10 +966,11 @@ export class VoiceSession extends DurableObject<Env> {
       if (!this.unansweredTimer) this.scheduleUnansweredCheck(UNANSWERED_MS - quietFor);
       unanswered = null;
     }
-    // A recording that asked for a message and went quiet is recording it, beep or not. Not on
-    // hold: a queue can offer voicemail ("leave a message, or stay on the line") and keep playing music.
-    // Its audio has to be quiet too: a greeting's next sentence can still be playing before its transcript lands.
-    let greeting = (phase === 'machine' || phase === 'uncertain') && !this.hold.holding() ? greetingWaiting(this.transcript, this.forcedHandoffs) : null;
+    // A recording that asked for a message and went quiet is recording it, beep or not, after a
+    // call screener too ("I'm sorry, this person is not available. If you would like to leave an
+    // additional message, please reply after the tone"). Its audio has to be quiet as well: a
+    // greeting's next sentence, or a queue's music, can still be playing before its transcript lands.
+    let greeting = phase === 'machine' || phase === 'uncertain' || phase === 'screening' ? greetingWaiting(this.transcript, this.forcedHandoffs) : null;
     const greetingQuietFor = Math.min(quietFor, Date.now() - this.themAudibleAt);
     if (greeting && greetingQuietFor < GREETING_QUIET_MS) {
       this.scheduleUnansweredCheck(GREETING_QUIET_MS - greetingQuietFor);

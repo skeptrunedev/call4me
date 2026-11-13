@@ -304,3 +304,20 @@ test('a message left after a French greeting streamed in fragments is a voicemai
   ];
   assert.equal(voicemailLeft(lines, null, new Set())?.reason, 'voicemail_left');
 });
+
+// A phone's call screener (business renamed): the person wasn't available, and the screener asked
+// for a message after a hold request. The caller sat silent 30s until the user hung up.
+const screened = [
+  { role: 'them' as const, text: "Record your name and reason for calling. I'll see if this person is available", at: 1_800 },
+  { role: 'note' as const, text: 'carrier detected a call screening prompt', at: 7_200 },
+  { role: 'caller' as const, text: 'Hi, Alex from Example Co for Michael, about his website.', at: 7_700 },
+  { role: 'them' as const, text: "Thanks, Michael. Please stay on the line I'm sorry, this person is not available. If you would like to leave an additional message, please reply after the tone", at: 18_600 },
+];
+
+test("a screener's request for a message after its hold request is waiting on the message; a queue offering one is not", () => {
+  assert.equal(greetingWaiting(screened, new Set())?.reason, 'greeting_waiting');
+  const queue = [{ role: 'them' as const, text: 'All of our agents are busy. Please leave a message after the tone, or stay on the line for the next available representative.', at: 2_000 }];
+  assert.equal(greetingWaiting(queue, new Set()), null);
+  const later = [{ role: 'them' as const, text: 'You can leave a message after the tone.', at: 2_000 }, { role: 'them' as const, text: 'Otherwise, please hold for the next available representative.', at: 5_000 }];
+  assert.equal(greetingWaiting(later, new Set()), null);
+});

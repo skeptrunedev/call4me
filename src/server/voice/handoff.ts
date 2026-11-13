@@ -337,7 +337,10 @@ export function messageAfterGreeting(lines: TranscriptLine[], forced: ReadonlySe
  */
 export function greetingWaiting(lines: TranscriptLine[], forced: ReadonlySet<number>): MissedHandoff | null {
   const prompt = messagePrompt(lines);
-  if (!prompt || forced.has(prompt.at) || pickedUpAfter(lines, prompt)) return null;
+  // A queue can offer voicemail and keep us waiting ("leave a message after the tone, or stay on
+  // the line"); a hold request before the offer is over once it comes ("Please stay on the line.
+  // I'm sorry, this person is not available. If you would like to leave an additional message...").
+  if (!prompt || forced.has(prompt.at) || pickedUpAfter(lines, prompt) || HOLD_REQUEST.test(afterAsk(lines, prompt))) return null;
   const words = lines.filter((l) => l.role === 'caller' && l.at >= prompt.at).reduce((n, l) => n + l.text.trim().split(/\s+/).filter(Boolean).length, 0);
   return words < MESSAGE_WORDS ? { reason: 'greeting_waiting', line: prompt } : null;
 }
@@ -375,9 +378,13 @@ function messagePrompt(lines: TranscriptLine[]): TranscriptLine | undefined {
  * greetings say "thanks for calling" before it.
  */
 function pickedUpAfter(lines: TranscriptLine[], prompt: TranscriptLine): boolean {
+  return PICKED_UP.test(afterAsk(lines, prompt));
+}
+
+/** What they said after the prompt's last request for a message. */
+function afterAsk(lines: TranscriptLine[], prompt: TranscriptLine): string {
   const ask = [...prompt.text.matchAll(new RegExp(VOICEMAIL_PROMPT.source, 'gi'))].pop();
-  const after = [prompt.text.slice(ask ? ask.index! + ask[0].length : 0), ...lines.filter((l) => l.role === 'them' && l.at > prompt.at).map((l) => l.text)].join(' ');
-  return PICKED_UP.test(after);
+  return [prompt.text.slice(ask ? ask.index! + ask[0].length : 0), ...lines.filter((l) => l.role === 'them' && l.at > prompt.at).map((l) => l.text)].join(' ');
 }
 
 /** A person answering the phone, as opposed to a greeting that is still recording. */

@@ -430,6 +430,23 @@ test('a greeting that asked for a message and went quiet gets the message withou
   assert.equal(forced(), 1, 'asked once');
 });
 
+test("a call screener that asks for a message after the person didn't come gets one", async (t) => {
+  const h = harness(t);
+  const live = (h.session.live = new Socket());
+  await h.session.machineDetected('screening_prompt_ended', new Date(Date.now()).toISOString());
+  assert.equal(h.session.machineState.phase, 'screening');
+  t.mock.timers.tick(100_000);
+  const at = Date.now() - 6_000;
+  h.session.transcript.push(
+    { role: 'caller', text: 'Hi, Alex from Example Co for Michael, about his website.', at: at - 11_000 },
+    { role: 'them', text: "Thanks, Michael. Please stay on the line I'm sorry, this person is not available. If you would like to leave an additional message, please reply after the tone", at },
+  );
+  h.session.hold.them('Thanks, Michael. Please stay on the line', at);
+  h.session.lastTranscriptAt = at;
+  h.session.checkMissedHandoff();
+  assert.ok(live.sent.some((m: any) => /recording now, even though no beep/.test(m.item?.content?.[0]?.text ?? '')));
+});
+
 test('a greeting asking for a message is left to the caller when the carrier says a person answered', async (t) => {
   const h = harness(t);
   h.session.live = new Socket();
