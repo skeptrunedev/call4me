@@ -1005,8 +1005,14 @@ export class VoiceSession extends DurableObject<Env> {
     let unanswered = (phase !== 'human' ? messageUnanswered(this.transcript, this.forcedHandoffs) : null) ?? messageAfterGreeting(this.transcript, this.forcedHandoffs) ?? signedOff(this.transcript, this.forcedHandoffs);
     // Its transcript lands before its audio finishes playing, so a long message is still being
     // spoken when the first check comes: check again once the line has been quiet long enough.
-    if (unanswered && quietFor < UNANSWERED_MS) {
-      if (!this.unansweredTimer) this.scheduleUnansweredCheck(UNANSWERED_MS - quietFor);
+    // After a key nothing has answered in words, the silence is the line's too: what the key
+    // started, a person's phone ringing or a queue's music, is never transcribed. Balthazar's
+    // closed line said "...for tonight, please press seven for assistance. Otherwise, please call
+    // back during our office hours"; 7 rang the reservationists, and that "call back" was taken
+    // for their goodbye 45s later, hanging up on the eighth ring (2026-11-14).
+    const lineQuietFor = this.menuRecovery.keyUnanswered() ? Math.min(quietFor, Date.now() - this.themAudibleAt) : quietFor;
+    if (unanswered && lineQuietFor < UNANSWERED_MS) {
+      if (!this.unansweredTimer) this.scheduleUnansweredCheck(UNANSWERED_MS - lineQuietFor);
       unanswered = null;
     }
     // A recording that asked for a message and went quiet is recording it, beep or not, after a

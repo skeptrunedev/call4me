@@ -265,8 +265,13 @@ export class MenuRecovery {
 
   /** The same keys again with nothing new heard since they went in: a duplicate, not a fresh choice. */
   repeats(digits: string): boolean {
+    return this.attempts.at(-1)?.digits === digits && this.keyUnanswered();
+  }
+
+  /** A key went in and the other side has said nothing since, past the rest of the prompt it answered. */
+  keyUnanswered(): boolean {
     const last = this.attempts.at(-1);
-    return last?.digits === digits && this.input.length <= last.inputEnd;
+    return last !== undefined && this.input.length <= last.inputEnd;
   }
 
   /** Call only after the carrier accepts DTMF, consuming input from before submission. */

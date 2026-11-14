@@ -484,6 +484,32 @@ test('a message left after a recording that turned the call away ends the call, 
   assert.ok(h.session.live.sent.some((m: any) => /left its voicemail message/.test(m.item?.content?.[0]?.text ?? '')), 'hands off end_call');
 });
 
+test('a key pressed after a recording turned the call away waits out the ringing it started, and a dead line after it still ends', async (t) => {
+  // Balthazar's closed reservations line, 2026-11-14: 7 rang the reservationists, and the turn-away
+  // before it was taken for their goodbye on the eighth ring.
+  const h = harness(t);
+  h.session.live = new Socket();
+  // Counted at the session: three quiet minutes replace the phone stream, and its live socket with it.
+  const sent = t.mock.method(h.session, 'sendLive');
+  await h.session.machineDetected('machine', new Date(Date.now()).toISOString());
+  t.mock.timers.tick(100_000);
+  const closed = "You have reached the reservations line. We are currently closed. If you are looking to make a reservation for tonight, please press seven for assistance. Otherwise, please call back during our office hours, which are from 10 AM to 9 PM daily.";
+  h.session.transcript.push({ role: 'them', text: closed, at: Date.now() });
+  h.session.menuRecovery.observe(closed, Date.now());
+  h.session.lastTranscriptAt = Date.now();
+  t.mock.timers.tick(2_500);
+  h.session.menuRecovery.submitted('7', h.session.menuRecovery.snapshot(), Date.now());
+  const goodbyes = () => sent.mock.calls.filter((c: any) => /a recording said nobody can take the call/.test(c.arguments[0].item?.content?.[0]?.text ?? '')).length;
+  for (let ring = 0; ring < 15; ring++) {
+    h.session.themAudibleAt = Date.now(); // ringback: 2s on, 4s off
+    t.mock.timers.tick(6_000);
+    h.session.checkMissedHandoff();
+  }
+  assert.equal(goodbyes(), 0, 'a ringing line is not a silent one');
+  t.mock.timers.tick(46_000); // the session's UNANSWERED_MS of quiet
+  assert.equal(goodbyes(), 1, 'once the ringing stops and the line stays dead, the call ends');
+});
+
 test('a greeting that asked for a message and went quiet gets the message without a beep, only once the line is quiet', async (t) => {
   const h = harness(t);
   const live = (h.session.live = new Socket());
