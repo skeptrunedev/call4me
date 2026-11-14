@@ -75,7 +75,9 @@ for (const e of leg) {
 }
 const row = await db.prepare(`SELECT id, status, error, answered_at, created_at FROM calls WHERE account_id = ? AND direction = 'inbound' AND created_at >= ? ORDER BY created_at DESC LIMIT 1`).bind(owner.id, t0 - 2_000).first<{ id: string; status: string; error: string | null; answered_at: number | null; created_at: number }>();
 console.log(`\nstaging's call row: ${row ? `${row.id} ${row.status}, created ${since(row.created_at)}${row.answered_at ? `, answered ${since(row.answered_at)}` : ''}${row.error ? `\n  ${row.error.slice(0, 200)}` : ''}` : 'none'}`);
-// Telnyx's log sometimes leaves out the answer command itself; call.answered is when the caller heard us pick up.
-const answered = leg.find((e) => e.name === 'call.answered');
+// Telnyx's log sometimes leaves out the answer command and call.answered too; the row's answered_at
+// (set by our call.answered webhook) is when we picked up either way.
+const answeredEvent = leg.find((e) => e.name === 'call.answered');
+const pickedUpAt = answeredEvent ? ms(answeredEvent.occurred_at) : row?.answered_at ?? null;
 const gaveUp = leg.find((e) => e.name === 'call.hangup' && e.payload?.payload?.hangup_cause === 'originator_cancel');
-console.log(answered ? `\nPICKED UP ${since(ms(answered.occurred_at))} after the caller started ringing` : `\nNEVER PICKED UP: the caller gave up ${gaveUp ? since(ms(gaveUp.occurred_at)) : ''} first`);
+console.log(pickedUpAt ? `\nPICKED UP ${since(pickedUpAt)} after the caller started ringing${answeredEvent ? '' : ' (from our row: Telnyx logged no call.answered)'}` : `\nNEVER PICKED UP: the caller gave up ${gaveUp ? since(ms(gaveUp.occurred_at)) : ''} first`);
