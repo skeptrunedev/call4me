@@ -22,6 +22,7 @@
     "discount": "tsx scripts/discount.ts",
     "staging:connect-test": "tsx scripts/staging-connect-test.ts",
     "staging:time-limit-test": "tsx scripts/staging-time-limit-test.ts",
+    "staging:inbound-answer-test": "tsx scripts/staging-inbound-answer-test.ts",
     "requirements": "node scripts/requirements.mjs",
     "messaging:registration": "node scripts/messaging-registration.mjs",
     "reddit:spend": "node scripts/sync-reddit-spend.mjs",
