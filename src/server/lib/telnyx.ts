@@ -327,6 +327,14 @@ export function telnyx(env: TelnyxEnv) {
       }
     },
 
+    /** A number our Telnyx account holds, with its status and the connection it rings; null when it holds no such number. */
+    async ownedNumber(number: string): Promise<{ status: string; connectionId: string | null } | null> {
+      const q = new URLSearchParams({ 'filter[phone_number]': number });
+      const r = await call<{ data: { phone_number: string; status: string; connection_id?: string | null }[] }>(env, 'GET', `/phone_numbers?${q}`);
+      const found = r.data.find((n) => n.phone_number === number);
+      return found ? { status: found.status, connectionId: found.connection_id ?? null } : null;
+    },
+
     /** Give a number back to Telnyx; its monthly charge stops. Already gone counts as released. */
     async releaseNumber(number: string): Promise<void> {
       const q = new URLSearchParams({ 'filter[phone_number]': number });

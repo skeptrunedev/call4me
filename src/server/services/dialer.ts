@@ -9,7 +9,7 @@ import type { SessionSetup } from '../voice/session';
 import { sessionFor } from '../voice/stub';
 import type { Voice } from '../voice/voices';
 import { accounts, type Account } from './accounts';
-import { answeringAccountId, EEA, numbers, ringablePhone } from './numbers';
+import { answeringAccountId, EEA, NumberError, numbers, ringablePhone } from './numbers';
 import { profiles } from './profiles';
 import { accentOf, answeringInstructionsOf, assistantNameOf, namePronunciationOf, type Profile, type Surface } from './intake';
 import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, todayUtc, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
@@ -236,6 +236,8 @@ export async function placeCall(
     await db.finish(call.id, { status: 'failed', error: String(err), pricePerMinuteCents: price });
     // Refused before the carrier took it, the call was never placed, so a retry with its key places it.
     if (!controlId && execution.idempotency) await db.releaseIdempotencyKey(call.id);
+    // Said for the agent already ("your free call4me number is still being set up..."), not a carrier refusal.
+    if (err instanceof NumberError) throw new CallError(`could not place the call (${call.id}): ${err.message}`, err.status, call.id);
     if (err instanceof VoiceDeployLocked) {
       throw new CallError(`could not place the call (${call.id}): call4me is updating its phone service. nothing was charged; place it again in about ${err.retryInSeconds} seconds.`, 503, call.id);
     }

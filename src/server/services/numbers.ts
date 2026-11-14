@@ -1,7 +1,7 @@
 import { newId, now } from '../lib/ids';
 import { CODE_ATTEMPTS, VERIFICATIONS_PER_DAY } from '../lib/number-schema';
 import { checkDialable, formatPhone, type PhoneCheck } from '../lib/phone';
-import { telnyx, TelnyxError, type AvailableNumber, type NumberOrderStatus } from '../lib/telnyx';
+import { telnyx, TelnyxError, type NumberOrderStatus } from '../lib/telnyx';
 import { accounts, dollars, type Account } from './accounts';
 import { CALLBACK_WINDOW_MS } from './call-store';
 import { addCreditsPath } from './drip';
@@ -467,7 +467,8 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
   async function refundOrder(row: Pick<NumberRow, 'id' | 'account_id' | 'phone_number'>, price: number): Promise<void> {
     // An order still pending may complete later: give the number back so it isn't held unpaid.
     await provider.releaseNumber(row.phone_number).catch((e) => console.error('releasing the failed order', row.phone_number, e));
-    await accounts(db).post(row.account_id, price, 'refund', `number:${row.id}:refund`, `order failed for ${formatPhone(row.phone_number)}`);
+    // The free first number took nothing, so there is nothing to give back.
+    if (price > 0) await accounts(db).post(row.account_id, price, 'refund', `number:${row.id}:refund`, `order failed for ${formatPhone(row.phone_number)}`);
   }
 
   /** Mark a pending number failed and refund what it took, once: a row already settled is left alone. */
@@ -479,9 +480,9 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
     return true;
   }
 
-  /** A completed order: the number goes live and its first month starts now. */
+  /** A completed order: the number goes live and its first month starts now. The free first number has no months to pay for. */
   async function activate(row: NumberRow, at = now()): Promise<boolean> {
-    const r = await db.prepare(`UPDATE numbers SET status = 'active', paid_through = ? WHERE id = ? AND status = 'pending'`).bind(at + RENEWAL_DAYS * DAY, row.id).run();
+    const r = await db.prepare(`UPDATE numbers SET status = 'active', paid_through = ? WHERE id = ? AND status = 'pending'`).bind(row.included ? null : at + RENEWAL_DAYS * DAY, row.id).run();
     return (r.meta.changes ?? 0) > 0;
   }
 
@@ -579,14 +580,32 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
     return out;
   }
 
-  /** How long a first call whose number order was throttled waits for a concurrent one's number. */
+  /** How long a first call waits for the free number a concurrent first call is ordering. */
   const CONCURRENT_ORDER_WAIT_MS = 1_000;
   const CONCURRENT_ORDER_TRIES = 15;
 
-  /** The free first number: no one has paid for it, so this waits as long as a US order can take. */
-  async function order(found: AvailableNumber, country: string): Promise<void> {
-    const placed = await provider.orderNumber(found.phoneNumber, { requirementGroupId: COUNTRIES[country].requirementGroup ?? null, waitMs: INCLUDED_WAIT_MS });
-    if (placed.status !== 'success') throw new TelnyxError(`number order ${placed.id} for ${found.phoneNumber} is ${placed.status}`, 503);
+  const includedRow = (accountId: string) =>
+    db.prepare(`SELECT * FROM numbers WHERE account_id = ? AND included = 1 AND status IN ('pending', 'active')`).bind(accountId).first<NumberRow>();
+
+  /** What a first call is told while its free number's order is still with the carrier. */
+  const settingUp = (row: Pick<NumberRow, 'phone_number'> | null) =>
+    new NumberError(`your free call4me number${row ? ` ${formatPhone(row.phone_number)}` : ''} is still being set up by the phone carrier. nothing was charged; place the call again in a minute`, 503);
+
+  /**
+   * The account's free number once it is live: a pending order is checked with the carrier first,
+   * and a concurrent first call's order is waited on briefly. Null when there is none to wait for.
+   */
+  async function includedNumber(accountId: string): Promise<string | null> {
+    for (let i = 0; ; i++) {
+      const row = await includedRow(accountId);
+      if (!row) return null;
+      if (row.status === 'pending' && row.order_id) await settle([row]);
+      const latest = await includedRow(accountId);
+      if (latest?.status === 'active') return latest.phone_number;
+      if (!latest) return null;
+      if (i >= CONCURRENT_ORDER_TRIES) throw settingUp(latest);
+      await new Promise((resolve) => setTimeout(resolve, CONCURRENT_ORDER_WAIT_MS));
+    }
   }
 
 
@@ -728,33 +747,67 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
       throw new NumberError(`calling ${COUNTRIES[to.country]?.name ?? to.country} needs a number there; buy one with call4me_buy_number`, 422);
     },
 
-    /** The account's free first number: a US local number, in the area code of the first place it calls when that is a +1 number. */
+    /**
+     * The account's free first number: a US local number, in the area code of the first place it
+     * calls when that is a +1 number. It is recorded as pending before the carrier is asked, like a
+     * bought one (purchase), so an order the carrier finishes after this stops waiting still lands
+     * on the account: settle() activates it. Zack's first call gave up on an order after 30s and
+     * the carrier completed it seconds later, a number we paid for that no account had, like eight
+     * before it; each retry ordered another. A first call racing another waits for that one's number.
+     */
     async ensureIncluded(account: Account, nearE164: string): Promise<string> {
-      const existing = await db.prepare(`SELECT phone_number FROM numbers WHERE account_id = ? AND included = 1 AND status = 'active'`).bind(account.id).first<{ phone_number: string }>();
-      if (existing) return existing.phone_number;
+      const held = await includedNumber(account.id);
+      if (held) return held;
       const found = await provider.availableNumber({ country: 'US', type: 'local', areaCode: isHome(nearE164) ? nearE164.slice(2, 5) : null });
       if (!found) throw new NumberError('no US numbers are for sale right now; try again shortly', 503);
+      const id = newId();
+      const r = await db
+        .prepare(`INSERT OR IGNORE INTO numbers (id, account_id, phone_number, country, number_type, included, monthly_cents, paid_through, status, created_at) VALUES (?, ?, ?, 'US', 'local', 1, 0, NULL, 'pending', ?)`)
+        .bind(id, account.id, found.phoneNumber, now())
+        .run();
+      // A concurrent first call recorded its order first (or a bought US number is still pending):
+      // call from that one once it's live.
+      if ((r.meta.changes ?? 0) === 0) return (await includedNumber(account.id)) ?? Promise.reject(settingUp(null));
+      const row = (await db.prepare(`SELECT * FROM numbers WHERE id = ?`).bind(id).first<NumberRow>())!;
+      let placed: { id: string; status: NumberOrderStatus };
       try {
-        await order(found, 'US');
+        placed = await provider.orderNumber(found.phoneNumber, { requirementGroupId: COUNTRIES.US.requirementGroup ?? null, reference: orderReference(id), waitMs: INCLUDED_WAIT_MS });
       } catch (err) {
-        // Several first calls at once each order a number: the carrier throttles them (429) or
-        // finds the one another just bought taken (409). Tom's agent placed five at once and four
-        // failed. Wait for the order that got through, and call from its number.
-        if (!(err instanceof TelnyxError && (err.status === 429 || err.status === 409))) throw err;
-        for (let i = 0; i < CONCURRENT_ORDER_TRIES; i++) {
-          await new Promise((resolve) => setTimeout(resolve, CONCURRENT_ORDER_WAIT_MS));
-          const bought = await db.prepare(`SELECT phone_number FROM numbers WHERE account_id = ? AND included = 1 AND status = 'active'`).bind(account.id).first<{ phone_number: string }>();
-          if (bought) return bought.phone_number;
-        }
+        // Never reached the carrier, or it refused outright: the next first call orders afresh.
+        await fail(row);
         throw err;
       }
-      const r = await db
-        .prepare(`INSERT OR IGNORE INTO numbers (id, account_id, phone_number, country, number_type, included, monthly_cents, paid_through, status, created_at) VALUES (?, ?, ?, 'US', 'local', 1, 0, NULL, 'active', ?)`)
-        .bind(newId(), account.id, found.phoneNumber, now())
+      await db.prepare(`UPDATE numbers SET order_id = ? WHERE id = ?`).bind(placed.id, id).run();
+      if (placed.status === 'failure') {
+        await fail(row);
+        throw new TelnyxError(`number order ${placed.id} for ${found.phoneNumber} was turned down`, 502);
+      }
+      if (placed.status === 'pending') throw settingUp(row);
+      await activate(row);
+      return found.phoneNumber;
+    },
+
+    /**
+     * Make `number`, already on our carrier account and our connection, the account's free number:
+     * for an order that completed after its first call stopped waiting (before ensureIncluded
+     * recorded orders first). Refuses an account that has a free number, or a number held already.
+     */
+    async adoptIncluded(account: Account, number: string): Promise<NumberView> {
+      const p = checkDialable(number);
+      if (!p.ok || !isHome(p.e164)) throw new NumberError(`${number} is not a US or Canadian number`);
+      const current = await includedRow(account.id);
+      if (current) throw new NumberError(`${account.email} already has a free number, ${formatPhone(current.phone_number)} (${current.status})`, 409);
+      const held = await db.prepare(`SELECT account_id FROM numbers WHERE phone_number = ? AND status IN ('pending', 'active')`).bind(p.e164).first();
+      if (held) throw new NumberError(`${formatPhone(p.e164)} is already on an account`, 409);
+      const owned = await provider.ownedNumber(p.e164);
+      if (!owned || owned.status !== 'active') throw new NumberError(`our carrier account doesn't hold ${formatPhone(p.e164)} as an active number (${owned?.status ?? 'not found'})`, 404);
+      if (owned.connectionId !== env.TELNYX_CONNECTION_ID) throw new NumberError(`${formatPhone(p.e164)} rings connection ${owned.connectionId}, not this environment's`, 409);
+      const id = newId();
+      await db
+        .prepare(`INSERT INTO numbers (id, account_id, phone_number, country, number_type, included, monthly_cents, paid_through, status, created_at) VALUES (?, ?, ?, 'US', 'local', 1, 0, NULL, 'active', ?)`)
+        .bind(id, account.id, p.e164, now())
         .run();
-      // A concurrent first call bought one too and landed first: keep that one, return this one.
-      if ((r.meta.changes ?? 0) === 0) await provider.releaseNumber(found.phoneNumber);
-      return this.ensureIncluded(account, nearE164);
+      return numberView((await db.prepare(`SELECT * FROM numbers WHERE id = ?`).bind(id).first<NumberRow>())!);
     },
 
     /**

@@ -3,7 +3,12 @@
  * order, same charge from their balance, pending while the carrier reviews it.
  *
  *   npm run number -- buy <email> <country> [--gift] [--local|--staging]
+ *   npm run number -- adopt <email> <number> [--local|--staging]
  *   npm run number -- share|unshare <number> [--local|--staging]
+ *
+ * adopt makes a US number already on our carrier account and connection the account's free first
+ * number: one whose order the carrier finished after the first call that placed it stopped
+ * waiting, before services/numbers.ts ensureIncluded recorded orders first.
  *
  * --gift credits the price back, so the number costs them nothing today (its monthly renewal still
  * comes from their balance, as for any bought number). buy needs TELNYX_API_KEY and
@@ -43,8 +48,10 @@ if (command === 'share' || command === 'unshare') {
 }
 
 const email = target;
-if (command !== 'buy' || !email?.includes('@') || !/^[A-Za-z]{2}$/.test(country ?? '')) {
-  console.error('usage: npm run number -- buy <email> <country> [--gift] [--local|--staging]\n       npm run number -- share|unshare <number> [--local|--staging]');
+const usage = 'usage: npm run number -- buy <email> <country> [--gift] [--local|--staging]\n       npm run number -- adopt <email> <number> [--local|--staging]\n       npm run number -- share|unshare <number> [--local|--staging]';
+const adopting = command === 'adopt';
+if (!(command === 'buy' || adopting) || !email?.includes('@') || !(adopting ? country : /^[A-Za-z]{2}$/.test(country ?? ''))) {
+  console.error(usage);
   process.exit(1);
 }
 if (!process.env.TELNYX_API_KEY || !process.env.TELNYX_CONNECTION_ID) {
@@ -58,6 +65,12 @@ const account = await ledger.byEmail(email.trim().toLowerCase());
 if (!account) {
   console.error(`no account for ${email}`);
   process.exit(1);
+}
+
+if (adopting) {
+  const view = await numbers(env).adoptIncluded(account, country!);
+  console.log(`${view.number} is now ${email}'s free call4me number`);
+  process.exit(0);
 }
 
 const bought = await numbers(env).buy(account, { country });
