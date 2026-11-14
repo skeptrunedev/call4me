@@ -325,9 +325,11 @@ export class VoiceSession extends DurableObject<Env> {
       // Zero data retention, an hour after the call ended (services/zdr.ts): the stored setup holds
       // its brief and PINs.
       case '/forget': {
-        // load(), not this.setup: a restarted session has not read the setup it may still owe.
         const s = await this.load();
-        if (s && !this.ended) return new Response('call still up', { status: 409 });
+        // Only a session still attached to a phone stream, and not yet ended, is a call that must
+        // keep its setup. By the time the purge asks, this instance has long been evicted and has
+        // no sockets left, so a restarted session must not refuse or the purge would never end.
+        if (s && !this.ended && this.phone) return new Response('call still up', { status: 409 });
         await this.ctx.storage.deleteAll();
         this.setup = null;
         return new Response('ok');

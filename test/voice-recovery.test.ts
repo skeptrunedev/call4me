@@ -43,10 +43,12 @@ function harness(t: TestContext) {
     get: async (key: string) => values.get(key),
     put: async (key: string, value: unknown) => { values.set(key, value); },
     delete: async (keys: string | string[]) => { for (const key of typeof keys === 'string' ? [keys] : keys) values.delete(key); },
+    deleteAll: async () => { values.clear(); },
     setAlarm: async (at: number) => { values.set('alarm', at); },
     deleteAlarm: async () => { values.delete('alarm'); },
   };
-  const session = new VoiceSession({ storage, waitUntil() {} } as any, { DB: d1(), OPENAI_API_KEY: 'test-key' } as any) as any;
+  const env = { DB: d1(), OPENAI_API_KEY: 'test-key' } as any;
+  const session = new VoiceSession({ storage, waitUntil() {} } as any, env) as any;
   session.setup = { callId: 'recovery_test', instructions: 'Test instructions', backOffice: 'Test tools', voice: 'marin', maxSeconds: 1200, redact: [] };
   session.answered = true;
   session.answeredAt = Date.now();
@@ -68,7 +70,7 @@ function harness(t: TestContext) {
     for (let i = 0; i < 50 && opens.length < count; i++) await Promise.resolve();
     assert.equal(opens.length, count);
   };
-  return { session, phone, opens, connected, untilOpened, values };
+  return { session, phone, opens, connected, untilOpened, values, storage, env };
 }
 
 test('a phone lost during model connection cannot install an orphan session; a fresh phone carries audio both ways', async (t) => {
@@ -591,4 +593,18 @@ test('a question that goes unanswered reaches the voice session that replaced th
   const third = h.connected(2);
   await reattached;
   assert.match(third.sent[0].session.instructions, /No answer is available .*household's annual income/);
+});
+
+test('forgetting a zero data retention call deletes its setup after it ended, and refuses one still on the phone', async (t) => {
+  const h = harness(t);
+  // The call is up with a phone stream attached: its setup still has work to do.
+  assert.equal((await h.session.fetch(new Request('https://session/forget', { method: 'POST' }))).status, 409);
+
+  // An hour later the instance has been evicted: the setup exists only in storage, and no socket
+  // is left, so the purge must be able to delete it (and the PINs it holds).
+  await h.storage.put('setup', h.session.setup);
+  const restarted = new VoiceSession({ storage: h.storage, waitUntil() {} } as any, h.env);
+  assert.equal((await restarted.fetch(new Request('https://session/forget', { method: 'POST' }))).status, 200);
+  assert.equal(restarted.setup, null);
+  assert.equal(h.values.size, 0);
 });
