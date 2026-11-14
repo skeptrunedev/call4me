@@ -16,11 +16,12 @@ import { answeredAfterScreener, INITIAL_MACHINE_STATE, MACHINE_GUIDANCE, machine
  * Both speak G.711 u-law at 8 kHz, so audio is relayed as-is in both directions.
  *
  * Lifecycle:
+ *   /preconnect answering a call, GPT-Live's socket is dialed while the worker reads its setup
  *   /setup      the worker stores the call's instructions before dialing or answering
  *   /stream     Telnyx connects its media WebSocket (audio flows once the call is answered)
  *   /answered   the call.answered webhook; GPT-Live starts here, not at dial time, so it
  *               never hears ringback
- *   /ended      the call.hangup webhook; close everything
+ *   /ended      the call.hangup webhook, or an incoming call we didn't pick up; close everything
  *
  * GPT-Live's back office (a Responses model with end_call / ask_user / press_digits)
  * runs our functions; we answer them over the same socket.
@@ -190,6 +191,8 @@ export class VoiceSession extends DurableObject<Env> {
   private liveStarting: Promise<void> | null = null;
   /** An answering call's voice session opening before pickup (prewarmLive), which startLive waits on. */
   private prewarming: Promise<void> | null = null;
+  /** GPT-Live's socket dialed before the call's setup came in (preconnect), until an open takes it. */
+  private preconnected: Promise<Response> | null = null;
   /** Resolved when the voice session reports it has started. */
   private liveStartedWaiters: (() => void)[] = [];
   private liveConnectAbort: AbortController | null = null;
@@ -300,6 +303,9 @@ export class VoiceSession extends DurableObject<Env> {
         }
         return new Response('ok');
       }
+      case '/preconnect':
+        this.preconnect();
+        return new Response('ok');
       case '/prewarm':
         await this.prewarmLive(PREWARM_WAIT_MS);
         return new Response(this.liveReady ? 'ready' : 'not ready');
@@ -585,6 +591,30 @@ export class VoiceSession extends DurableObject<Env> {
     await Promise.race([started, new Promise((resolve) => setTimeout(resolve, waitMs))]);
   }
 
+  /**
+   * Answering a call, dial GPT-Live while the worker still reads what the call's setup is made of:
+   * the socket takes 0.1-0.7s to open and only the session's start needs the setup, so the
+   * prewarm's open (openLive) takes a socket already open, or nearly. The open that takes it
+   * reports a failed dial; a call that isn't picked up closes it unused (teardown).
+   */
+  private preconnect(): void {
+    if (this.preconnected || this.live || this.ended) return;
+    const dialing = this.connectLive();
+    this.preconnected = dialing;
+    this.ctx.waitUntil(Promise.allSettled([dialing]));
+  }
+
+  /** Dials GPT-Live's socket; a teardown or a lost phone stream meanwhile aborts the dial. */
+  private async connectLive(): Promise<Response> {
+    const connecting = new AbortController();
+    this.liveConnectAbort = connecting;
+    try {
+      return await fetch(OPENAI_LIVE_URL, { headers: { upgrade: 'websocket', authorization: `Bearer ${this.env.OPENAI_API_KEY}` }, signal: connecting.signal });
+    } finally {
+      if (this.liveConnectAbort === connecting) this.liveConnectAbort = null;
+    }
+  }
+
   /** An open dropped with the phone that asked for it (phoneLost) is retried for the phone attached since. */
   private async openCurrentPhone(): Promise<void> {
     while (this.phone && !this.ended && !this.live) {
@@ -638,18 +668,17 @@ export class VoiceSession extends DurableObject<Env> {
       })().catch(() => console.warn('raindrop voice initialization failed', s.callId));
       this.ctx.waitUntil(this.monitoringReady);
     }
-    this.mark(prewarm ? 'live connecting (prewarm)' : 'live connecting');
-    const connecting = new AbortController();
-    this.liveConnectAbort = connecting;
+    // A socket dialed ahead (preconnect) serves one open; any later one dials its own.
+    const preconnected = this.preconnected;
+    this.preconnected = null;
+    this.mark(`${prewarm ? 'live connecting (prewarm)' : 'live connecting'}${preconnected ? ' on the socket dialed ahead' : ''}`);
     let res: Response;
     try {
-      res = await fetch(OPENAI_LIVE_URL, { headers: { upgrade: 'websocket', authorization: `Bearer ${this.env.OPENAI_API_KEY}` }, signal: connecting.signal });
+      res = await (preconnected ?? this.connectLive());
     } catch (err) {
       if (prewarm) return console.warn('prewarm could not open GPT-Live', String(err));
       if (this.phone === phone && !this.ended) await this.fail(`could not open GPT-Live: ${String(err)}`);
       return;
-    } finally {
-      if (this.liveConnectAbort === connecting) this.liveConnectAbort = null;
     }
     this.mark(`live connect ${res.status}`);
     const ws = res.webSocket;
@@ -1677,6 +1706,16 @@ export class VoiceSession extends DurableObject<Env> {
   private async teardown(reason: string): Promise<void> {
     this.ended = true;
     this.liveConnectAbort?.abort();
+    // A socket dialed for a call that was never picked up closes unused (a dial still going was just aborted).
+    const unused = this.preconnected;
+    this.preconnected = null;
+    void unused?.then(
+      (res) => {
+        res.webSocket?.accept();
+        res.webSocket?.close(1000, 'call not picked up');
+      },
+      (err) => console.warn('preconnect', String(err)),
+    );
     if (this.unansweredTimer) clearTimeout(this.unansweredTimer);
     if (this.handoffTimer) clearTimeout(this.handoffTimer);
     if (this.holdingTimer) clearTimeout(this.holdingTimer);

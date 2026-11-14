@@ -3,11 +3,18 @@ import { normalizeAccent, normalizeName, PROFILE_FIELDS, type Profile, type Prof
 
 export class ProfileError extends Error {}
 
+/** The profile a profiles row holds; none saved is an empty one. */
+export const profileOf = (row: { fields: string } | null | undefined): Profile => (row ? (JSON.parse(row.fields) as Profile) : {});
+
 export function profiles(db: D1Database) {
   return {
     async get(accountId: string): Promise<Profile> {
-      const row = await db.prepare(`SELECT fields FROM profiles WHERE account_id = ?`).bind(accountId).first<{ fields: string }>();
-      return row ? (JSON.parse(row.fields) as Profile) : {};
+      return profileOf(await this.getStatement(accountId).first<{ fields: string }>());
+    },
+
+    /** get's statement, to read in a batch with others; profileOf reads its row. */
+    getStatement(accountId: string): D1PreparedStatement {
+      return db.prepare(`SELECT fields FROM profiles WHERE account_id = ?`).bind(accountId);
     },
 
     /** Merge `changes` into the profile; an empty string removes a field. Values are checked like at call time. */

@@ -10,7 +10,7 @@ import { sessionFor } from '../voice/stub';
 import type { Voice } from '../voice/voices';
 import { accounts, type Account } from './accounts';
 import { answeringAccountId, EEA, NumberError, numbers, ringablePhone } from './numbers';
-import { profiles } from './profiles';
+import { profileOf, profiles } from './profiles';
 import { accentOf, answeringInstructionsOf, assistantNameOf, namePronunciationOf, type Profile, type Surface } from './intake';
 import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, todayUtc, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 import { analytics } from './analytics';
@@ -72,8 +72,16 @@ export class VoiceDeployLocked extends Error {
 }
 
 export async function assertVoiceUnlocked(db: D1Database, at = Date.now()): Promise<void> {
-  const lock = await db.prepare(`SELECT locked_until FROM voice_deploys WHERE id = 1`).first<{ locked_until: number }>();
-  if (lock && lock.locked_until > at) throw new VoiceDeployLocked(Math.ceil((lock.locked_until - at) / 1000));
+  const locked = voiceDeployLock(await voiceLockStatement(db).first<{ locked_until: number }>(), at);
+  if (locked) throw locked;
+}
+
+/** The deploy's lock, to read in the batch that writes a call's row, after the row. */
+export const voiceLockStatement = (db: D1Database) => db.prepare(`SELECT locked_until FROM voice_deploys WHERE id = 1`);
+
+/** The lock voiceLockStatement read, while it still holds. */
+export function voiceDeployLock(row: { locked_until: number } | null | undefined, at = Date.now()): VoiceDeployLocked | null {
+  return row && row.locked_until > at ? new VoiceDeployLocked(Math.ceil((row.locked_until - at) / 1000)) : null;
 }
 
 /** How long an outbound call may sit queued before it can only be an orphan: dialing takes seconds. */
@@ -267,152 +275,193 @@ export async function placeCall(
  */
 export const callbackMinutes = (balanceCents: number, priceCents: number) => Math.min(LIMITS.defaultMinutes, Math.floor(balanceCents / priceCents));
 
+/** The rows one statement of a D1 batch read. */
+const rowsOf = <T>(read: D1Result) => read.results as T[];
+
 /**
  * Someone called an account's number, usually a business calling back. Answer with a
  * message-taking brief that knows what this number called about recently.
+ *
+ * Callers hang up about 3s into the ringing (two on prod did, at 3.0s and 3.4s, while we took
+ * 2.5-3.9s to pick up), and each D1 round trip from the edge costs about 0.1s: what the answer
+ * needs is read in one batch, the hold, the row and the deploy lock go in another, all while the
+ * voice session comes up and dials GPT-Live. Only the session's start waits for all of it, so the
+ * greeting still plays the moment we pick up.
  */
 export async function answerInbound(env: Env, origin: string, opts: { controlId: string; from: string; to: string }): Promise<void> {
-  const accountId = await answeringAccountId(env.DB, opts.to, opts.from);
-  const account = accountId ? await accounts(env.DB).byId(accountId) : null;
-  const blocked = await env.DB.prepare(`SELECT 1 FROM blocked_numbers WHERE number = ?`).bind(opts.from).first();
-  const price = zdrPrice(pricePerMinute(env), account?.zdr ?? 0);
-  const balance = account ? await accounts(env.DB).balanceCents(account.id) : 0;
-  if (!account || blocked || balance < price) {
-    await telnyx(env).reject(opts.controlId);
-    return;
-  }
-  const owner = account.display_name || 'the person you reached';
-  const db = calls(env.DB);
-  // A callback only knows the calls placed from the number it rang, and answers as they were made:
-  // an account calling for several companies gives each its own number.
-  const { results: recent } = await env.DB.prepare(
-    `SELECT business, goal, outcome, created_at FROM calls WHERE account_id = ? AND direction = 'outbound' AND from_number = ? AND answered_at IS NOT NULL AND purged_at IS NULL ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 5`,
-  )
-    .bind(account.id, opts.to, opts.from)
-    .all<{ business: string; goal: string; outcome: string | null; created_at: number }>();
-  const earlier = await env.DB.prepare(`SELECT business FROM calls WHERE account_id = ? AND to_number = ? AND purged_at IS NULL ORDER BY created_at DESC LIMIT 1`).bind(account.id, opts.from).first<{ business: string }>();
-  const profile = await profiles(env.DB).get(account.id);
-  // The owner ringing their own call4me number from their own phone is not a business calling
-  // back: David Aviles called his to ask about his Kaiser call and was answered as Kaiser, its one
-  // open task. Their phone is the one in their profile, or one they verified on the account.
-  const savedPhone = profile.phone?.trim() ? checkDialable(profile.phone) : null;
-  const ownerCalling =
-    (savedPhone?.ok && savedPhone.e164 === opts.from) ||
-    Boolean(await env.DB.prepare(`SELECT 1 FROM verified_numbers WHERE account_id = ? AND phone_number = ? AND status = 'verified'`).bind(account.id, opts.from).first());
-  // A business calling back after a voicemail gets the original task finished, not a message taken.
-  const tasks = ownerCalling ? [] : openTasks((await db.unfinished(account.id)).filter((r) => r.from_number === opts.to), opts.from).slice(0, 3);
-  const likely = likelyTask(tasks, opts.from);
-  const openTask = (r: CallRow): OpenTask => {
-    const b = JSON.parse(r.brief) as Brief;
-    return {
-      business: r.business,
-      goal: r.goal,
-      onBehalfOf: b.on_behalf_of,
-      facts: b.facts,
-      flexibility: b.flexibility,
-      when: new Date(r.created_at).toISOString().slice(0, 10),
-      lastResult: r.outcome ? (JSON.parse(r.outcome) as Outcome).summary : null,
-    };
-  };
-
   const id = `call_${newId()}`;
-  // Credits up front here too: the callback holds what it may cost before it is answered.
-  const maxMinutes = callbackMinutes(balance, price);
-  const holdCents = maxMinutes * price;
-  if (!(await accounts(env.DB).hold(account.id, holdCents, `hold:${id}`, `up to ${maxMinutes} min callback`))) {
-    await telnyx(env).reject(opts.controlId);
-    return;
-  }
-  // A callback on a known task carries that task's brief, so its recap is judged against the goal.
-  const likelyBrief = likely ? (JSON.parse(likely.brief) as Brief) : null;
-  // Who answers: the identity of the call being returned, else of the latest call placed from this number.
-  const latest = likelyBrief
-    ? null
-    : await env.DB.prepare(`SELECT brief FROM calls WHERE account_id = ? AND direction = 'outbound' AND from_number = ? AND purged_at IS NULL ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 1`)
-        .bind(account.id, opts.to, opts.from)
-        .first<{ brief: string }>();
-  const identity: Pick<Brief, 'caller_name' | 'calling_as' | 'accent'> = likelyBrief ?? (latest ? (JSON.parse(latest.brief) as Brief) : {});
-  const brief: Brief = likelyBrief
-    ? { ...likelyBrief, max_minutes: maxMinutes }
-    : { on_behalf_of: owner, facts: '', flexibility: '', timezone: null, max_minutes: maxMinutes, caller_name: identity.caller_name ?? null, calling_as: identity.calling_as ?? null, accent: identity.accent ?? null };
-  await env.DB.prepare(
-    `INSERT INTO calls (id, account_id, direction, to_number, from_number, business, goal, brief, status, telnyx_call_control_id, hold_cents, callback_for, zdr, created_at) VALUES (?, ?, 'inbound', ?, ?, ?, ?, ?, 'dialing', ?, ?, ?, ?, ?)`,
-  )
-    .bind(
-      id,
-      account.id,
-      opts.from,
-      opts.to,
-      ownerCalling ? `${owner} (your own phone)` : likely?.business ?? earlier?.business ?? 'incoming call',
-      ownerCalling ? 'answer the owner calling from their own phone' : likely?.goal ?? (tasks.length ? 'finish an unfinished task, or take a message' : 'take the call and a message'),
-      JSON.stringify(brief),
-      opts.controlId,
-      holdCents,
-      likely?.id ?? null,
-      account.zdr,
-      now(),
-    )
-    .run();
-
+  const session = sessionFor(env, id);
+  // The call's session is a new Durable Object, whose first request waits on a global uniqueness
+  // check (a few hundred ms), and GPT-Live's socket takes 0.1-0.7s more to open: both start now,
+  // under the reads. Should the session not get this, the prewarm dials its own.
+  const preconnect = session.fetch('https://session/preconnect', { method: 'POST' }).catch((err) => console.warn('preconnect failed', id, String(err)));
+  let pickedUp = false;
   try {
-    await assertVoiceUnlocked(env.DB);
-  } catch (err) {
-    // Mid-deploy a session can't hold the call; the business can call back in a few minutes.
-    await telnyx(env).reject(opts.controlId);
-    await db.finish(id, { status: 'failed', error: String(err), pricePerMinuteCents: price });
-    return;
-  }
-  const ordered = likely ? [likely, ...tasks.filter((t) => t !== likely)] : tasks;
-  // Asked for a number, the line gives the one the returned call named, else the owner's own phone
-  // (a company line keeps its own number), else the number they rang.
-  const ownPhone = profile.phone?.trim() && !identity.calling_as ? checkDialable(profile.phone) : null;
-  const callbackNumber = likelyBrief?.callback_number ?? (ownPhone?.ok ? ownPhone.e164 : opts.to);
-  const setup: SessionSetup = {
-    callId: id,
-    instructions: inboundInstructions({
-      owner,
-      assistantName: identity.caller_name || assistantNameOf(profile),
-      accent: identity.accent || accentOf(profile),
-      ownerPronunciation: namePronunciationOf(profile),
-      callingAs: identity.calling_as ?? null,
-      callbackNumber,
-      tasks: ordered.map(openTask),
-      likely: Boolean(likely),
-      ownerCalling,
-      localTime: localTimeIn(likelyBrief?.timezone ?? null),
-      today: todayUtc(),
-      standing: answeringInstructionsOf(profile),
-      recent: recent.map((r) => ({
+    const [accountId, blocked] = await Promise.all([
+      answeringAccountId(env.DB, opts.to, opts.from),
+      env.DB.prepare(`SELECT 1 FROM blocked_numbers WHERE number = ?`).bind(opts.from).first(),
+    ]);
+    if (!accountId || blocked) {
+      await telnyx(env).reject(opts.controlId);
+      return;
+    }
+    const db = calls(env.DB);
+    const [accountRead, balanceRead, profileRead, unfinishedRead, recentRead, earlierRead, verifiedRead, latestRead] = await env.DB.batch([
+      accounts(env.DB).byIdStatement(accountId),
+      accounts(env.DB).balanceStatement(accountId),
+      profiles(env.DB).getStatement(accountId),
+      db.unfinishedStatement(accountId),
+      // A callback only knows the calls placed from the number it rang, and answers as they were made:
+      // an account calling for several companies gives each its own number.
+      env.DB.prepare(
+        `SELECT business, goal, outcome, created_at FROM calls WHERE account_id = ? AND direction = 'outbound' AND from_number = ? AND answered_at IS NOT NULL AND purged_at IS NULL ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 5`,
+      ).bind(accountId, opts.to, opts.from),
+      env.DB.prepare(`SELECT business FROM calls WHERE account_id = ? AND to_number = ? AND purged_at IS NULL ORDER BY created_at DESC LIMIT 1`).bind(accountId, opts.from),
+      env.DB.prepare(`SELECT 1 FROM verified_numbers WHERE account_id = ? AND phone_number = ? AND status = 'verified'`).bind(accountId, opts.from),
+      env.DB.prepare(`SELECT brief FROM calls WHERE account_id = ? AND direction = 'outbound' AND from_number = ? AND purged_at IS NULL ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 1`).bind(accountId, opts.to, opts.from),
+    ]);
+    const [account] = rowsOf<Account>(accountRead);
+    const price = zdrPrice(pricePerMinute(env), account?.zdr ?? 0);
+    const balance = rowsOf<{ b: number }>(balanceRead)[0]?.b ?? 0;
+    if (!account || balance < price) {
+      await telnyx(env).reject(opts.controlId);
+      return;
+    }
+    const owner = account.display_name || 'the person you reached';
+    const recent = rowsOf<{ business: string; goal: string; outcome: string | null; created_at: number }>(recentRead);
+    const [earlier] = rowsOf<{ business: string }>(earlierRead);
+    const profile = profileOf(rowsOf<{ fields: string }>(profileRead)[0]);
+    // The owner ringing their own call4me number from their own phone is not a business calling
+    // back: David Aviles called his to ask about his Kaiser call and was answered as Kaiser, its one
+    // open task. Their phone is the one in their profile, or one they verified on the account.
+    const savedPhone = profile.phone?.trim() ? checkDialable(profile.phone) : null;
+    const ownerCalling = (savedPhone?.ok && savedPhone.e164 === opts.from) || rowsOf(verifiedRead).length > 0;
+    // A business calling back after a voicemail gets the original task finished, not a message taken.
+    const tasks = ownerCalling ? [] : openTasks(rowsOf<CallRow>(unfinishedRead).filter((r) => r.from_number === opts.to), opts.from).slice(0, 3);
+    const likely = likelyTask(tasks, opts.from);
+    const openTask = (r: CallRow): OpenTask => {
+      const b = JSON.parse(r.brief) as Brief;
+      return {
         business: r.business,
         goal: r.goal,
-        summary: r.outcome ? (JSON.parse(r.outcome) as Outcome).summary : null,
+        onBehalfOf: b.on_behalf_of,
+        facts: b.facts,
+        flexibility: b.flexibility,
         when: new Date(r.created_at).toISOString().slice(0, 10),
-      })),
-    }),
-    backOffice: inboundBackOfficeInstructions(owner, ordered.map(openTask), answeringInstructionsOf(profile)),
-    inbandKeys: inbandKeysFor(opts.from),
-    // Whoever called hears the key go in (a collect call's "press 1 to accept"): send_dtmf alone is silent to a person.
-    keyBeep: true,
-    person: personFor(origin, account, profile, await ringablePhone(env.DB, account.id, profile.phone), opts.to),
-    voice: 'marin',
-    maxSeconds: maxMinutes * 60,
-    pricePerMinuteCents: price,
-    controlId: opts.controlId,
-    answering: true,
-    streamUrl: await streamUrl(env, id),
-    zdr: account.zdr === 1,
-  };
-  try {
-    const session = sessionFor(env, id);
-    await session.fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
-    // Open the voice session while it still rings (up to a couple of seconds), so whoever called
-    // hears the greeting as soon as we pick up instead of silence. A failed open just answers.
-    await session.fetch('https://session/prewarm', { method: 'POST' }).catch((err) => console.warn('prewarm failed', id, String(err)));
-    await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: setup.streamUrl!, callId: id, timeLimitSecs: LIMITS.maxMinutes * 60, record: account.zdr !== 1 });
-  } catch (err) {
-    // Most often the caller hung up while this was setting up: answering fails, and their hangup
-    // may have come before the call row existed, so nothing else would end it or release its hold.
-    console.error('answering an incoming call failed', id, errorText(err));
-    await db.finish(id, { status: 'failed', error: `could not answer: ${String(err)}`, pricePerMinuteCents: price });
+        lastResult: r.outcome ? (JSON.parse(r.outcome) as Outcome).summary : null,
+      };
+    };
+
+    // Credits up front here too: the callback holds what it may cost before it is answered.
+    const maxMinutes = callbackMinutes(balance, price);
+    const holdCents = maxMinutes * price;
+    // A callback on a known task carries that task's brief, so its recap is judged against the goal.
+    const likelyBrief = likely ? (JSON.parse(likely.brief) as Brief) : null;
+    // Who answers: the identity of the call being returned, else of the latest call placed from this number.
+    const [latest] = rowsOf<{ brief: string }>(latestRead);
+    const identity: Pick<Brief, 'caller_name' | 'calling_as' | 'accent'> = likelyBrief ?? (latest ? (JSON.parse(latest.brief) as Brief) : {});
+    const brief: Brief = likelyBrief
+      ? { ...likelyBrief, max_minutes: maxMinutes }
+      : { on_behalf_of: owner, facts: '', flexibility: '', timezone: null, max_minutes: maxMinutes, caller_name: identity.caller_name ?? null, calling_as: identity.calling_as ?? null, accent: identity.accent ?? null };
+    // The hold and the row commit together, as an outbound call's do (calls.create): the row is
+    // written only if the hold was. The deploy's lock is read after the row, in the same transaction.
+    const [[hold, , lockRead], ringable] = await Promise.all([
+      env.DB.batch([
+        accounts(env.DB).spendStatement(account.id, holdCents, 'hold', `hold:${id}`, `up to ${maxMinutes} min callback`),
+        env.DB.prepare(
+          `INSERT INTO calls (id, account_id, direction, to_number, from_number, business, goal, brief, status, telnyx_call_control_id, hold_cents, callback_for, zdr, created_at)
+           SELECT ?, ?, 'inbound', ?, ?, ?, ?, ?, 'dialing', ?, ?, ?, ?, ? WHERE EXISTS (SELECT 1 FROM ledger WHERE ref = ?)`,
+        ).bind(
+          id,
+          account.id,
+          opts.from,
+          opts.to,
+          ownerCalling ? `${owner} (your own phone)` : likely?.business ?? earlier?.business ?? 'incoming call',
+          ownerCalling ? 'answer the owner calling from their own phone' : likely?.goal ?? (tasks.length ? 'finish an unfinished task, or take a message' : 'take the call and a message'),
+          JSON.stringify(brief),
+          opts.controlId,
+          holdCents,
+          likely?.id ?? null,
+          account.zdr,
+          now(),
+          `hold:${id}`,
+        ),
+        voiceLockStatement(env.DB),
+      ]),
+      ringablePhone(env.DB, account.id, profile.phone),
+    ]);
+    if (!hold.meta.changes) {
+      await telnyx(env).reject(opts.controlId);
+      return;
+    }
+    const locked = voiceDeployLock(rowsOf<{ locked_until: number }>(lockRead)[0]);
+    if (locked) {
+      // Mid-deploy a session can't hold the call; the business can call back in a few minutes.
+      await telnyx(env).reject(opts.controlId);
+      await db.finish(id, { status: 'failed', error: String(locked), pricePerMinuteCents: price });
+      return;
+    }
+    const ordered = likely ? [likely, ...tasks.filter((t) => t !== likely)] : tasks;
+    // Asked for a number, the line gives the one the returned call named, else the owner's own phone
+    // (a company line keeps its own number), else the number they rang.
+    const ownPhone = profile.phone?.trim() && !identity.calling_as ? checkDialable(profile.phone) : null;
+    const callbackNumber = likelyBrief?.callback_number ?? (ownPhone?.ok ? ownPhone.e164 : opts.to);
+    const setup: SessionSetup = {
+      callId: id,
+      instructions: inboundInstructions({
+        owner,
+        assistantName: identity.caller_name || assistantNameOf(profile),
+        accent: identity.accent || accentOf(profile),
+        ownerPronunciation: namePronunciationOf(profile),
+        callingAs: identity.calling_as ?? null,
+        callbackNumber,
+        tasks: ordered.map(openTask),
+        likely: Boolean(likely),
+        ownerCalling,
+        localTime: localTimeIn(likelyBrief?.timezone ?? null),
+        today: todayUtc(),
+        standing: answeringInstructionsOf(profile),
+        recent: recent.map((r) => ({
+          business: r.business,
+          goal: r.goal,
+          summary: r.outcome ? (JSON.parse(r.outcome) as Outcome).summary : null,
+          when: new Date(r.created_at).toISOString().slice(0, 10),
+        })),
+      }),
+      backOffice: inboundBackOfficeInstructions(owner, ordered.map(openTask), answeringInstructionsOf(profile)),
+      inbandKeys: inbandKeysFor(opts.from),
+      // Whoever called hears the key go in (a collect call's "press 1 to accept"): send_dtmf alone is silent to a person.
+      keyBeep: true,
+      person: personFor(origin, account, profile, ringable, opts.to),
+      voice: 'marin',
+      maxSeconds: maxMinutes * 60,
+      pricePerMinuteCents: price,
+      controlId: opts.controlId,
+      answering: true,
+      streamUrl: await streamUrl(env, id),
+      zdr: account.zdr === 1,
+    };
+    // The dial is under way before the setup reaches the session.
+    await preconnect;
+    try {
+      await session.fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
+      // Open the voice session while it still rings (up to a couple of seconds), so whoever called
+      // hears the greeting as soon as we pick up instead of silence. A failed open just answers.
+      await session.fetch('https://session/prewarm', { method: 'POST' }).catch((err) => console.warn('prewarm failed', id, String(err)));
+      await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: setup.streamUrl!, callId: id, timeLimitSecs: LIMITS.maxMinutes * 60, record: account.zdr !== 1 });
+      pickedUp = true;
+    } catch (err) {
+      // Most often the caller hung up while this was setting up: answering fails, and their hangup
+      // may have come before the call row existed, so nothing else would end it or release its hold.
+      console.error('answering an incoming call failed', id, errorText(err));
+      await db.finish(id, { status: 'failed', error: `could not answer: ${String(err)}`, pricePerMinuteCents: price });
+    }
+  } finally {
+    // A call we don't pick up, refused or failed on the way, ends its voice session now: the socket
+    // dialed for it, or the session opened while it rang.
+    if (!pickedUp) {
+      await preconnect;
+      await session.fetch('https://session/ended', { method: 'POST' });
+    }
   }
 }

@@ -40,7 +40,12 @@ export function accounts(db: D1Database) {
     },
 
     async byId(id: string): Promise<Account | null> {
-      return db.prepare(`SELECT ${ACCOUNT_COLUMNS} FROM accounts WHERE id = ?`).bind(id).first<Account>();
+      return this.byIdStatement(id).first<Account>();
+    },
+
+    /** byId's statement, to read in a batch with others. */
+    byIdStatement(id: string): D1PreparedStatement {
+      return db.prepare(`SELECT ${ACCOUNT_COLUMNS} FROM accounts WHERE id = ?`).bind(id);
     },
 
     async byEmail(email: string): Promise<Account | null> {
@@ -95,8 +100,13 @@ export function accounts(db: D1Database) {
     },
 
     async balanceCents(accountId: string): Promise<number> {
-      const row = await db.prepare(`SELECT COALESCE(SUM(amount_cents), 0) AS b FROM ledger WHERE account_id = ?`).bind(accountId).first<{ b: number }>();
+      const row = await this.balanceStatement(accountId).first<{ b: number }>();
       return row?.b ?? 0;
+    },
+
+    /** balanceCents's statement, to read in a batch with others: one row, the balance as b. */
+    balanceStatement(accountId: string): D1PreparedStatement {
+      return db.prepare(`SELECT COALESCE(SUM(amount_cents), 0) AS b FROM ledger WHERE account_id = ?`).bind(accountId);
     },
 
     /** Idempotent on `ref`: returns false if this entry was already recorded. */

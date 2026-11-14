@@ -773,3 +773,50 @@ test('forgetting a zero data retention call deletes its setup after it ended, an
   assert.equal(restarted.setup, null);
   assert.equal(h.values.size, 0);
 });
+
+test("an incoming call's voice session starts on the socket dialed while its setup was being read", async (t) => {
+  // Prod callers hung up 3.0s and 3.4s into the ringing while we took 2.5-3.9s to pick up; GPT-Live's
+  // socket alone took 0.1-0.7s of that, after the setup's reads.
+  const h = harness(t);
+  const setup = { ...h.session.setup, answering: true };
+  h.session.setup = null;
+  h.session.answered = false;
+  h.session.answeredAt = 0;
+  await h.session.fetch(new Request('https://session/preconnect', { method: 'POST' }));
+  await h.untilOpened(1);
+  await h.session.fetch(new Request('https://session/setup', { method: 'POST', body: JSON.stringify(setup) }));
+  const prewarm = h.session.fetch(new Request('https://session/prewarm', { method: 'POST' }));
+  const live = h.connected(0);
+  for (let i = 0; i < 20; i++) await Promise.resolve();
+  assert.equal(live.sent[0].type, 'session.start');
+  assert.equal(live.sent[0].session.instructions, 'Test instructions');
+  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'ringing' } }));
+  assert.equal(await (await prewarm).text(), 'ready');
+  assert.equal(h.opens.length, 1, 'no second dial');
+});
+
+test('a call that is not picked up closes the socket dialed for it, and aborts one still dialing', async (t) => {
+  const h = harness(t);
+  h.session.setup = null;
+  h.session.answered = false;
+  await h.session.fetch(new Request('https://session/preconnect', { method: 'POST' }));
+  await h.untilOpened(1);
+  const dialed = h.connected(0);
+  await h.session.fetch(new Request('https://session/ended', { method: 'POST' }));
+  for (let i = 0; i < 5; i++) await Promise.resolve();
+  assert.equal(dialed.readyState, 3);
+  assert.deepEqual(dialed.sent, []);
+
+  const other = new VoiceSession({ storage: h.storage, waitUntil() {} } as any, h.env) as any;
+  let signal!: AbortSignal;
+  t.mock.method(globalThis, 'fetch', (_input: unknown, init: RequestInit) => {
+    signal = init.signal!;
+    return new Promise((_resolve, reject) => signal.addEventListener('abort', () => reject(new Error('aborted'))));
+  });
+  await other.fetch(new Request('https://session/preconnect', { method: 'POST' }));
+  await other.fetch(new Request('https://session/ended', { method: 'POST' }));
+  assert.equal(signal.aborted, true);
+  // Once ended, a late preconnect dials nothing.
+  await other.fetch(new Request('https://session/preconnect', { method: 'POST' }));
+  assert.equal(other.preconnected, null);
+});

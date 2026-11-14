@@ -217,7 +217,13 @@ export function callStore(db: D1Database) {
 
     /** Outbound calls whose task is still open (see OPEN_RESULTS) and that nothing later finished. */
     async unfinished(accountId: string, at = now()): Promise<CallRow[]> {
-      const { results } = await db
+      const { results } = await this.unfinishedStatement(accountId, at).all<CallRow>();
+      return results;
+    },
+
+    /** unfinished's statement, to read in a batch with others. */
+    unfinishedStatement(accountId: string, at = now()): D1PreparedStatement {
+      return db
         .prepare(
           `SELECT c.* FROM calls c
            WHERE c.account_id = ?1 AND c.direction = 'outbound' AND c.created_at > ?2
@@ -229,9 +235,7 @@ export function callStore(db: D1Database) {
                  AND (d.callback_for = c.id OR (d.direction = 'outbound' AND d.to_number = c.to_number)))
            ORDER BY c.created_at DESC LIMIT 20`,
         )
-        .bind(accountId, at - CALLBACK_WINDOW_MS)
-        .all<CallRow>();
-      return results;
+        .bind(accountId, at - CALLBACK_WINDOW_MS);
     },
 
     /** Callbacks that picked up this call's task. */

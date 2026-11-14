@@ -19,11 +19,14 @@ export function d1(): D1Database {
     run: async () => ({ meta: { changes: Number(sqlite.prepare(sql).run(...args).changes) } }),
   });
   // A batch is one transaction, as on D1: nothing runs between its statements, and one that fails
-  // rolls back the ones before it.
+  // rolls back the ones before it. A read gives its rows, a write its changes.
   const batch = async (statements: ReturnType<typeof statement>[]) => {
     sqlite.exec('BEGIN');
     try {
-      const results = statements.map((s) => ({ meta: { changes: Number(sqlite.prepare(s.sql).run(...s.args).changes) } }));
+      const results = statements.map((s) => {
+        const prepared = sqlite.prepare(s.sql);
+        return prepared.columns().length ? { results: prepared.all(...s.args), meta: { changes: 0 } } : { results: [], meta: { changes: Number(prepared.run(...s.args).changes) } };
+      });
       sqlite.exec('COMMIT');
       return results;
     } catch (err) {
