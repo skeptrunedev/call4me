@@ -380,3 +380,29 @@ test('a queue or a person mentioning a call back or being closed is not turning 
     assert.equal(signedOff(lines.slice(0, 1), new Set()), null, theirs);
   }
 });
+
+test("Google Voice asking for a name is a screener, not a voicemail: the introduction waits for the person it rings", () => {
+  // Fairy Meadow Flowers, 2026-11-13 and 11-14: the introduction was taken for a message left, and
+  // the call hung up on Google Voice ringing the florist.
+  const lines = [
+    { role: 'them' as const, text: 'Hello, please state your name after the tone and Google Voice will try', at: 1_000 },
+    { role: 'note' as const, text: 'carrier detected an automated greeting', at: 3_000 },
+    { role: 'them' as const, text: 'to connect you', at: 4_000 },
+    { role: 'note' as const, text: 'carrier detected a call screening prompt', at: 6_000 },
+    { role: 'caller' as const, text: "Hi, this is Adrian, assistant to photographer Rodrigo de Souza about Fairy Meadow's DoorDash photos.", at: 7_000 },
+  ];
+  assert.equal(voicemailLeft(lines, null, new Set()), null);
+  assert.equal(greetingWaiting(lines.slice(0, 4), new Set()), null);
+  for (const screener of [
+    'Hello, please state your name after the tone and Google Voice will try to connect you',
+    'Please say your name after the beep.',
+    'Por favor, diga su nombre después del tono',
+  ]) assert.ok(!asksForMessage(screener), screener);
+  // A greeting wanting more than a name after the tone still asks for a message.
+  for (const greeting of [
+    "Please state your name and reason for calling after the beep and I'll call you back.",
+    'Please state your name and message after the tone.',
+    'Please leave your name and number after the tone.',
+    'Deje su nombre y número después del tono.',
+  ]) assert.ok(asksForMessage(greeting), greeting);
+});
