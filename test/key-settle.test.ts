@@ -41,6 +41,8 @@ test("a voicemail's recording controls are not a menu waiting on a key", () => {
   for (const greeting of [
     'At the tone, please record your message. When you have finished recording, you may hang up or press one for more options.',
     'Please leave a message after the beep. When you are finished, press pound.',
+    // Zack's carrier voicemail, 2026-11-14: the control is the sentence before the key.
+    'Nothing has been recorded. Record your message after the tone .Simply hang up when done. Or for delivery options, press the pound sign',
   ]) {
     const vm = new MenuRecovery();
     vm.observe(greeting, 1_000);

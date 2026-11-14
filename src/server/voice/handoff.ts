@@ -146,9 +146,14 @@ function lastMatch(text: string, patterns: RegExp[]): number {
  * Beatrix Parties recorded only "...dining room available" of the message, then the back office
  * pressed re-record five times into the same muting before saving it. A review menu after the
  * recording (save, listen, re-record) is still a menu.
+ * The control can sit in the sentence before the key: Zack's carrier voicemail said "Record your
+ * message after the tone. Simply hang up when done. Or for delivery options, press the pound sign",
+ * and the caller was held silent for a key while it recorded nothing, until "Goodbye" (2026-11-14).
  */
 function recordingControl(text: string, at: number): boolean {
-  const start = Math.max(...['.', '?', '!', '\n'].map((c) => text.lastIndexOf(c, at))) + 1;
+  const sentenceStart = (i: number) => Math.max(...['.', '?', '!', '\n'].map((c) => text.lastIndexOf(c, i))) + 1;
+  const own = sentenceStart(at);
+  const start = own > 1 ? sentenceStart(own - 2) : own;
   const end = text.slice(at).search(/[.?!\n]/);
   return RECORDING_CONTROL.test(text.slice(start, end < 0 ? text.length : at + end)) && VOICEMAIL_PROMPT.test(text.slice(0, at));
 }
