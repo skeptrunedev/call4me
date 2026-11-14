@@ -331,3 +331,52 @@ test("a voicemail's greeting is told apart from a screener asking for an introdu
   assert.ok(!voicemailGreeting(them('The person you are calling is not available right now. Please say your name and reason for calling.')));
   assert.ok(!voicemailGreeting(them('Thanks for calling Example Market.')));
 });
+
+// Episcopal Community Services: menus, then a recording turning the call away. The carrier had
+// called the line a person, so the hold its "your call is very important to us" started never
+// ended, and the silent line after our caller's message was extended 15 minutes past its limit.
+const TURNED_AWAY_LINE =
+  'Thank you for calling Episcopal Community Services. Your call is very important to us. To reach a staff member by name, please press zero. For ECS programs and services, press one. ' +
+  'You have reached ECS problem solving services. Please hold on the line and our ambassador will take your call shortly. ' +
+  "Our apologies, we can't take your call right now. We either stepped away from the phone, or on the other line with a client. Please give us a call back. " +
+  'You can also email us at problem dash solving at ECS dash SF dot org. We will respond to your inquiry within twenty four to forty eight hours';
+
+test('a recording turning the call away ends the hold, and a message left after it ends the call', async () => {
+  const { messageAfterGreeting, signedOff, turnsAway } = await import('../src/server/voice/handoff');
+  const meter = new HoldMeter();
+  const changes = TURNED_AWAY_LINE.split(/(?<=\. )/).map((delta, i) => meter.them(delta, 1_000 + i * 2_000)).filter(Boolean);
+  assert.deepEqual(changes.map((c) => c!.type), ['start', 'end']);
+  assert.ok(!meter.holding());
+
+  const lines = [
+    { role: 'them' as const, text: TURNED_AWAY_LINE, at: 2_200 },
+    { role: 'caller' as const, text: "Hi, this is Nick's assistant. I'm calling about renting a studio apartment. You can call us back at two four eight, two six two, five two five six. Thanks so much.", at: 323_400 },
+  ];
+  assert.equal(messageAfterGreeting(lines, new Set())?.reason, 'voicemail_left');
+  // Left as their last word, it signs off the call like a goodbye.
+  assert.equal(signedOff(lines.slice(0, 1), new Set())?.reason, 'signed_off');
+
+  for (const away of ['Please call back during our normal business hours.', 'Our office is currently closed.', 'Please try your call again later.', 'You have reached us outside of our business hours.'])
+    assert.ok(turnsAway(away), away);
+  assert.ok(!turnsAway('To request a call back, press two.'));
+});
+
+test('a queue or a person mentioning a call back or being closed is not turning the call away', async () => {
+  const { messageAfterGreeting, signedOff } = await import('../src/server/voice/handoff');
+  const meter = new HoldMeter();
+  assert.equal(meter.them('All of our representatives are busy. ', 1_000)?.type, 'start');
+  assert.equal(meter.them('Please stay on the line or try again later. ', 3_000), null);
+  assert.equal(meter.them("We're closed for lunch, so please stay on the line for our answering service. ", 5_000), null);
+  assert.ok(meter.holding());
+
+  const message = { role: 'caller' as const, text: "Hi, this is Nick's assistant asking about studios. You can call us back at five five five, zero one two three.", at: 9_000 };
+  for (const theirs of [
+    "We're closed today, but how can I help you?",
+    'Our office is closed. Please stay on the line for the answering service.',
+    'Our office is closed. For the answering service, press one.',
+  ]) {
+    const lines = [{ role: 'them' as const, text: theirs, at: 1_000 }, message];
+    assert.equal(messageAfterGreeting(lines, new Set()), null, theirs);
+    assert.equal(signedOff(lines.slice(0, 1), new Set()), null, theirs);
+  }
+});

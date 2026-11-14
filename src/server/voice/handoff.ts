@@ -328,7 +328,38 @@ const MESSAGE_WORDS = 4;
 export function messageAfterGreeting(lines: TranscriptLine[], forced: ReadonlySet<number>): MissedHandoff | null {
   const theirs = lines.filter((l) => l.role === 'them');
   const last = theirs.length - 1;
-  return last >= 0 && (asksForMessage(theirs[last].text) || asksForMessage(greetingUpTo(theirs, last))) ? voicemailLeft(lines, null, forced) : null;
+  if (last < 0) return null;
+  if (asksForMessage(theirs[last].text) || asksForMessage(greetingUpTo(theirs, last))) return voicemailLeft(lines, null, forced);
+  // A recording that turned us away is no more coming back than one that asked for a message.
+  return turnedAway(greetingUpTo(theirs, last)) ? voicemailLeft(lines, theirs[last].at, forced) : null;
+}
+
+/**
+ * A recording turning the call away: nobody will come to the phone on this call. Episcopal
+ * Community Services' menus ended in "Our apologies, we can't take your call right now. ... Please
+ * give us a call back." It never asked for a message and the carrier had called the line a person,
+ * so our caller's callback message after it was never taken as one, and the silent line was held
+ * open as a hold, its limit extended 15 minutes.
+ */
+const TURN_AWAY = /\b(?:please (?:give us a )?call (?:us )?(?:back|again)|give us a call back|call (?:us )?(?:back|again) (?:later|tomorrow|another time|at another time|during (?:our )?(?:normal |regular )?(?:business|office) hours|on the next business day)|(?:please )?try (?:your call |calling )?again later|(?:we are|we're|(?:our|the) (?:office|offices|clinic|store|shop|restaurant) (?:is|are)) (?:now |currently )?closed|outside (?:of )?(?:our )?(?:normal |regular )?(?:business|office) hours)\b/i;
+
+/** One sentence turning the call away, not a menu option ("to request a call back, press 2"). */
+export function turnsAway(sentence: string): boolean {
+  return TURN_AWAY.test(sentence) && !isPhoneMenu(sentence);
+}
+
+/**
+ * Their words turned the call away and nothing from there on picks up, asks us to wait, or offers
+ * a menu: "we're closed, please stay on the line for the answering service" is still a wait, and
+ * "we're closed today, but how can I help?" is a person.
+ */
+function turnedAway(text: string): boolean {
+  const all = sentences(text);
+  let i = all.length - 1;
+  while (i >= 0 && !turnsAway(all[i])) i--;
+  if (i < 0) return false;
+  const from = all.slice(i).join(' ');
+  return !PICKED_UP.test(from) && !HOLD_REQUEST.test(from) && !isPhoneMenu(all.slice(i + 1).join(' '));
 }
 
 /**
@@ -468,16 +499,16 @@ export function messageUnanswered(lines: TranscriptLine[], forced: ReadonlySet<n
 }
 
 /**
- * A recording that said goodbye ("…through the Help section of your app. Goodbye") and left the
- * line open. The session asks only after UNANSWERED_MS of silence, so a person's goodbye has long
- * since been answered or hung up.
+ * A recording that said goodbye ("…through the Help section of your app. Goodbye"), or turned the
+ * call away, and left the line open. The session asks only after UNANSWERED_MS of silence, so a
+ * person's goodbye has long since been answered or hung up.
  */
 export function signedOff(lines: TranscriptLine[], forced: ReadonlySet<number>): MissedHandoff | null {
   let i = lines.length - 1;
   while (i >= 0 && lines[i].role === 'note') i--;
   const last = lines[i];
   if (!last || last.role !== 'them' || forced.has(last.at)) return null;
-  return /\b(?:good-?bye|adi[oó]s|auf wiedersehen|tsch[uü]ss)\W*$/i.test(last.text.trim()) ? { reason: 'signed_off', line: last } : null;
+  return /\b(?:good-?bye|adi[oó]s|auf wiedersehen|tsch[uü]ss)\W*$/i.test(last.text.trim()) || turnedAway(last.text) ? { reason: 'signed_off', line: last } : null;
 }
 
 /** "Please call back at…", "text Michael at four one five…": what a voicemail message asks for. */
@@ -497,7 +528,7 @@ export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[
       : miss.reason === 'greeting_waiting'
       ? "The voicemail greeting asked for a message and the line has been quiet since, so it is recording now, even though no beep was reported. Leave your message now, in the greeting's language: one or two sentences saying who you are, what it's about, and the callback number. Then hand off end_call."
       : miss.reason === 'signed_off'
-      ? 'The other side said goodbye and the line has been silent since. The call is done: hand off end_call now, and write nothing.'
+      ? 'The other side said goodbye, or a recording said nobody can take the call, and the line has been silent since. The call is done: hand off end_call now, and write nothing.'
       : miss.reason !== 'promise'
       ? `The latest phone menu needs attention. ${miss.reason === 'menu_recovery' ? 'It reported missing/invalid input or led to recorded instructions instead of completing the task.' : 'Choose from the fully heard options.'} Use press_digits for an announced option that serves the task or reaches a person. Wait if the options are incomplete. If a choice led to instructions only, use an announced back/main-menu option, then another relevant route such as other questions or a representative. Never assume 0, star or pound works when it was not offered. Do not repeat an unsuccessful route unchanged. Stay silent on hold or while a person speaks. A voicemail after a message was left needs end_call; at its review menu (save, listen, re-record), press the save key, never re-record. If there is no supported route left, ask_user or end_call according to the brief.\n\nFresh menu input:\n${miss.line.text}\n\nKeypad history (carrier accepted these requests; navigation may still have failed):\n${keypadHistory}`
       : 'The caller said it would do something but never handed it off. Do it now: if they asked for something the caller does not have, ask_user; if the call is over, end_call; if a menu needs a key, press_digits.';

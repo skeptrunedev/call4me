@@ -9,10 +9,10 @@
  * caller's own "sure, no problem" to "please hold" does not end it.
  *
  * A voicemail greeting is not a hold, though many say "your call is important to us": once it asks
- * for a message, the hold ends. Nobody comes back to a voicemail to end it otherwise, so it kept a
+ * for a message, or turns the call away ("please call back later"), the hold ends. Nobody comes back to a voicemail to end it otherwise, so it kept a
  * silent line billing past its limit (Fiola's events line, 12 minutes after the message was left).
  */
-import { asksForMessage, asksUsToWait, isPhoneMenu, JA_KEYPAD, JA_WAIT, SENTENCE_END } from './handoff';
+import { asksForMessage, asksUsToWait, isPhoneMenu, JA_KEYPAD, JA_WAIT, SENTENCE_END, turnsAway } from './handoff';
 
 // "Please stay on the line" asks us to wait; "I'll stay on the line until you have those details"
 // is them waiting on us. The Coronet's leasing bot said it every 30s, and its "holds" bought a call
@@ -137,6 +137,10 @@ export class HoldMeter {
     if (PERSON_BACK.test(sentence)) return this.end(this.speechAt ?? at);
     // Judged once the sentence is finished: "To leave a message," may still end "press two".
     if ((finished || /[.?!]\s*$/.test(sentence)) && asksForMessage(sentence)) return this.end(this.sentenceAt);
+    // Nor is a recording turning us away ("we can't take your call right now. Please give us a call
+    // back."): nobody is coming, and a hold would extend the open line past its limit (Episcopal
+    // Community Services). "Stay on the line or try again later" still has us waiting.
+    if ((finished || /[.?!]\s*$/.test(sentence)) && turnsAway(sentence) && !isHoldLine(sentence)) return this.end(this.sentenceAt);
     // A phone menu inside the queue ("press two for general inquiries") is part of the wait, not a person.
     if (isHoldLine(sentence) || isPhoneMenu(sentence) || JA_KEYPAD.test(sentence)) {
       this.speechAt = null;

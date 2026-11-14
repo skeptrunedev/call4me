@@ -461,6 +461,27 @@ test('a message left after a greeting that asked for one ends the call even when
   assert.ok(h.session.live.sent.some((m: any) => /left its voicemail message/.test(m.item?.content?.[0]?.text ?? '')), 'hands off end_call');
 });
 
+// Episcopal Community Services: the carrier said a person answered its menu, which ended in a
+// recording turning the call away. Our caller's message after it was held open 15 more minutes.
+test('a message left after a recording that turned the call away ends the call, and the hold with it', async (t) => {
+  const h = harness(t);
+  h.session.live = new Socket();
+  await h.session.machineDetected('human', new Date(Date.now()).toISOString());
+  t.mock.timers.tick(100_000);
+  const msgAt = Date.now() - 60_000;
+  const recording = "Your call is very important to us. Please hold on the line and our ambassador will take your call shortly. Our apologies, we can't take your call right now. Please give us a call back. You can also email us at help at example dot org.";
+  assert.equal(h.session.hold.them('Your call is very important to us. ', msgAt - 40_000)?.type, 'start');
+  assert.equal(h.session.hold.them(recording.slice('Your call is very important to us. '.length), msgAt - 20_000)?.type, 'end');
+  h.session.transcript.push(
+    { role: 'them' as const, text: recording, at: msgAt - 40_000 },
+    { role: 'caller' as const, text: "Hi, this is Alex Kim's assistant asking about studios. You can call us back at four one five, five five five, zero one two three. Thanks so much.", at: msgAt },
+  );
+  h.session.lastTranscriptAt = msgAt;
+  h.session.speechEndsAt = msgAt + 10_000; // 50s of quiet since the message ended
+  h.session.checkMissedHandoff();
+  assert.ok(h.session.live.sent.some((m: any) => /left its voicemail message/.test(m.item?.content?.[0]?.text ?? '')), 'hands off end_call');
+});
+
 test('a greeting that asked for a message and went quiet gets the message without a beep, only once the line is quiet', async (t) => {
   const h = harness(t);
   const live = (h.session.live = new Socket());
