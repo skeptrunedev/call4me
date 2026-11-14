@@ -20,3 +20,9 @@ export const DESTINATION_PRICE_CENTS: Readonly<Record<string, number>> = { AE: 4
 
 /** Calling coverage for descriptions; current prices are returned by the account tools. */
 export const ABROAD_CALLING = "UAE and Japanese businesses too, from the account's US number (the business sees a US caller ID)";
+
+/** Zero data retention (services/zdr.ts) costs this many times a call's price per minute. */
+export const ZDR_PRICE_MULTIPLIER = 1.5;
+
+/** A call's per-minute price with zero data retention on or off, rounded up to the cent. */
+export const zdrPrice = (cents: number, zdr: boolean | number) => (zdr ? Math.ceil(cents * ZDR_PRICE_MULTIPLIER) : cents);

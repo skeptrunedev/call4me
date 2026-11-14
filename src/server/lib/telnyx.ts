@@ -132,6 +132,27 @@ export function telnyx(env: TelnyxEnv) {
       throw new TelnyxError('too many webhook history pages', 502);
     },
 
+    /**
+     * The legs that rang the person into a call (dialPerson), one per time they were rung, from
+     * their hangup webhooks. The outbound voice profile records those legs separately from the
+     * call itself, so deleting a call's recordings (services/zdr.ts) needs them too.
+     */
+    async personLegs(callId: string): Promise<{ controlId: string; legId: string }[]> {
+      const state = personClientState(callId);
+      const legs = new Map<string, string>();
+      for (let page = 1; page <= 100; page++) {
+        const query = new URLSearchParams({ 'filter[webhook][contains]': state, 'filter[event_type]': 'call.hangup', 'page[number]': String(page), 'page[size]': '100' });
+        const result = await call<{ data: { webhook?: { payload?: { client_state?: string; call_control_id?: string; call_leg_id?: string } } }[]; meta: { total_pages: number } }>(env, 'GET', `/webhook_deliveries?${query}`);
+        if (!Array.isArray(result.data) || !Number.isInteger(result.meta?.total_pages) || result.meta.total_pages < 0) throw new TelnyxError('invalid webhook history response', 502);
+        for (const event of result.data) {
+          const p = event.webhook?.payload;
+          if (p?.client_state === state && p.call_control_id && p.call_leg_id) legs.set(p.call_leg_id, p.call_control_id);
+        }
+        if (page >= result.meta.total_pages) return [...legs].map(([legId, controlId]) => ({ controlId, legId }));
+      }
+      throw new TelnyxError('too many webhook history pages', 502);
+    },
+
     /** Fresh download links for one call. Control IDs are not call leg IDs. */
     async recordings(callControlId: string, callLegId?: string): Promise<TelnyxRecording[]> {
       const recordings: TelnyxRecording[] = [];
@@ -148,6 +169,15 @@ export function telnyx(env: TelnyxEnv) {
         if (page >= result.meta.total_pages) return recordings;
       }
       throw new TelnyxError('too many recording pages', 502);
+    },
+
+    /** Delete a recording for good (zero data retention, services/zdr.ts). One already gone counts as deleted. */
+    async deleteRecording(recordingId: string): Promise<void> {
+      try {
+        await call(env, 'DELETE', `/recordings/${encodeURIComponent(recordingId)}`);
+      } catch (err) {
+        if (!(err instanceof TelnyxError && err.status === 404)) throw err;
+      }
     },
 
     /** Place an outbound call. The outbound voice profile records it. */
@@ -167,15 +197,15 @@ export function telnyx(env: TelnyxEnv) {
       return r.data.call_control_id;
     },
 
-    /** Answer an inbound call, record it, and stream it the same way. */
-    async answer(callControlId: string, opts: { webhookUrl: string; streamUrl: string; callId: string; timeLimitSecs: number }): Promise<void> {
+    /** Answer an inbound call, record it (unless the account has zero data retention), and stream it the same way. */
+    async answer(callControlId: string, opts: { webhookUrl: string; streamUrl: string; callId: string; timeLimitSecs: number; record: boolean }): Promise<void> {
       await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/answer`, {
         webhook_url: opts.webhookUrl,
         client_state: clientState(opts.callId),
         time_limit_secs: opts.timeLimitSecs,
         stream_url: opts.streamUrl,
         ...STREAM,
-        ...INBOUND_RECORDING,
+        ...(opts.record ? INBOUND_RECORDING : {}),
       });
     },
 

@@ -149,6 +149,8 @@ export interface SessionSetup {
   keyBeep?: boolean;
   /** Who can be patched into the call (call4me's user), from which number, and where their leg reports. */
   person?: { name: string; phone: string | null; from: string; webhookUrl: string; connectWhen?: string | null; listenIn?: boolean };
+  /** Zero data retention (services/zdr.ts): no monitoring, no call content in logs. */
+  zdr?: boolean;
 }
 
 type Stored = SessionSetup;
@@ -318,6 +320,16 @@ export class VoiceSession extends DurableObject<Env> {
       }
       case '/ended': {
         await this.shutdown('hangup webhook');
+        return new Response('ok');
+      }
+      // Zero data retention, an hour after the call ended (services/zdr.ts): the stored setup holds
+      // its brief and PINs.
+      case '/forget': {
+        // load(), not this.setup: a restarted session has not read the setup it may still owe.
+        const s = await this.load();
+        if (s && !this.ended) return new Response('call still up', { status: 409 });
+        await this.ctx.storage.deleteAll();
+        this.setup = null;
         return new Response('ok');
       }
       case '/connect-person': {
@@ -588,7 +600,7 @@ export class VoiceSession extends DurableObject<Env> {
     }
     if (!current()) return;
     // Start monitoring alongside the connection, so telemetry never delays live audio.
-    if (this.env.RAINDROP_WRITE_KEY && !this.monitoringReady) {
+    if (this.env.RAINDROP_WRITE_KEY && !s.zdr && !this.monitoringReady) {
       this.monitoringReady = (async () => {
         const row = await callStore(this.env.DB).byId(s.callId);
         if (!row) return;
@@ -771,7 +783,8 @@ export class VoiceSession extends DurableObject<Env> {
       case 'session.delegation.created':
         this.backOfficeBusy = true;
         this.lastHandoffAt = Date.now();
-        console.log('delegation', JSON.stringify((ev as { delegation: unknown }).delegation));
+        // The delegation may carry what the voice model asked for: only its id for zero data retention.
+        console.log('delegation', this.setup?.zdr ? (ev as { delegation: { id: string } }).delegation.id : JSON.stringify((ev as { delegation: unknown }).delegation));
         this.observe(() => this.beginBackOffice((ev as { delegation: { id: string } }).delegation.id));
         break;
       case 'response.event': {
@@ -791,7 +804,8 @@ export class VoiceSession extends DurableObject<Env> {
         }
         if (e.event.type === 'response.output_item.done' && e.event.item?.type === 'function_call') {
           // With the call's id: on a busy account, an id-less line can't be tied to the menu it answered.
-          console.log('back office call', this.setup?.callId ?? '', e.event.item.name, e.event.item.arguments);
+          // A zero data retention call's arguments (questions, keypad digits) stay out of the logs.
+          console.log('back office call', this.setup?.callId ?? '', e.event.item.name, this.setup?.zdr ? '' : e.event.item.arguments);
           this.toolsRunning++;
           const item = e.event.item;
           this.observe(() => {

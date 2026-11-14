@@ -498,6 +498,14 @@
                             "null"
                           ]
                         },
+                        "zero_data_retention": {
+                          "description": "the account has zero data retention on: this call's brief, transcript, outcome and recording are deleted an hour after it ends",
+                          "type": "boolean"
+                        },
+                        "content_deleted": {
+                          "description": "the call ended more than an hour ago with zero data retention on: its brief, business name, goal, transcript, outcome and recording are gone; the numbers, times, length and cost remain",
+                          "type": "boolean"
+                        },
                         "created_at": {
                           "type": "string"
                         },
@@ -748,6 +756,10 @@
                       "type": "integer",
                       "minimum": -9007199254740991,
                       "maximum": 9007199254740991
+                    },
+                    "zero_data_retention": {
+                      "description": "true when zero data retention is on: prices above are already 1.5x, and each call's content is deleted an hour after it ends",
+                      "type": "boolean"
                     },
                     "phone_number": {
                       "type": [
@@ -1435,6 +1447,14 @@
                               "null"
                             ]
                           },
+                          "zero_data_retention": {
+                            "description": "the account has zero data retention on: this call's brief, transcript, outcome and recording are deleted an hour after it ends",
+                            "type": "boolean"
+                          },
+                          "content_deleted": {
+                            "description": "the call ended more than an hour ago with zero data retention on: its brief, business name, goal, transcript, outcome and recording are gone; the numbers, times, length and cost remain",
+                            "type": "boolean"
+                          },
                           "created_at": {
                             "type": "string"
                           },
@@ -1857,6 +1877,14 @@
                         "null"
                       ]
                     },
+                    "zero_data_retention": {
+                      "description": "the account has zero data retention on: this call's brief, transcript, outcome and recording are deleted an hour after it ends",
+                      "type": "boolean"
+                    },
+                    "content_deleted": {
+                      "description": "the call ended more than an hour ago with zero data retention on: its brief, business name, goal, transcript, outcome and recording are gone; the numbers, times, length and cost remain",
+                      "type": "boolean"
+                    },
                     "created_at": {
                       "type": "string"
                     },
@@ -2040,6 +2068,14 @@
                         "string",
                         "null"
                       ]
+                    },
+                    "zero_data_retention": {
+                      "description": "the account has zero data retention on: this call's brief, transcript, outcome and recording are deleted an hour after it ends",
+                      "type": "boolean"
+                    },
+                    "content_deleted": {
+                      "description": "the call ended more than an hour ago with zero data retention on: its brief, business name, goal, transcript, outcome and recording are gone; the numbers, times, length and cost remain",
+                      "type": "boolean"
                     },
                     "created_at": {
                       "type": "string"
@@ -2351,6 +2387,14 @@
                         "string",
                         "null"
                       ]
+                    },
+                    "zero_data_retention": {
+                      "description": "the account has zero data retention on: this call's brief, transcript, outcome and recording are deleted an hour after it ends",
+                      "type": "boolean"
+                    },
+                    "content_deleted": {
+                      "description": "the call ended more than an hour ago with zero data retention on: its brief, business name, goal, transcript, outcome and recording are gone; the numbers, times, length and cost remain",
+                      "type": "boolean"
                     },
                     "created_at": {
                       "type": "string"

@@ -5,7 +5,7 @@ import { assertVoiceUnlocked, failNeverDialed, LOST_AFTER_MS, NEVER_DIALED_MS, p
 import type { Account } from '../src/server/services/accounts';
 import { d1 } from './sqlite-d1';
 
-const alice = { id: 'acct_alice', email: 'alice@example.com', display_name: 'Alice', key_prefix: null, created_at: 0 } as unknown as Account;
+const alice = { id: 'acct_alice', email: 'alice@example.com', display_name: 'Alice', key_prefix: null, created_at: 0, zdr: 0 } as unknown as Account;
 
 async function setup(lockedUntil: number | null) {
   const db = d1();

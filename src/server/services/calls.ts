@@ -184,10 +184,10 @@ export function calls(db: D1Database) {
         accounts(db).spendStatement(account.id, holdCents, 'hold', `hold:${id}`, `up to ${maxMinutes} min to ${input.business.trim()}`),
         db
           .prepare(
-            `INSERT INTO calls (id, account_id, to_number, business, goal, brief, category, status, hold_cents, idempotency_key, idempotency_hash, created_at)
-             SELECT ?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?, ?, ? WHERE EXISTS (SELECT 1 FROM ledger WHERE ref = ?)`,
+            `INSERT INTO calls (id, account_id, to_number, business, goal, brief, category, status, hold_cents, idempotency_key, idempotency_hash, zdr, created_at)
+             SELECT ?, ?, ?, ?, ?, ?, ?, 'queued', ?, ?, ?, ?, ? WHERE EXISTS (SELECT 1 FROM ledger WHERE ref = ?)`,
           )
-          .bind(id, account.id, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(brief), category.slug, holdCents, idempotency?.key ?? null, idempotency?.fingerprint ?? null, now(), `hold:${id}`),
+          .bind(id, account.id, to.e164, input.business.trim(), input.goal.trim(), JSON.stringify(brief), category.slug, holdCents, idempotency?.key ?? null, idempotency?.fingerprint ?? null, account.zdr, now(), `hold:${id}`),
       ]);
       if (!hold.meta.changes) throw new CallError('another call is holding those credits; wait for it to finish, add credits, or pass a smaller max_minutes', 402);
       const secrets = intake.known.filter((k) => k.sensitive).map((k) => ({ label: k.label, value: k.value }));

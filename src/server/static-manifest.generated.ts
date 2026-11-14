@@ -93,12 +93,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/rules": {
     "html": "/__pages/933053fc294245bb.html",
     "markdown": "/__pages/933053fc294245bb.md",
-    "tokens": 1309
+    "tokens": 1339
   },
   "/privacy": {
     "html": "/__pages/0ece7f7c306b4cf6.html",
     "markdown": "/__pages/0ece7f7c306b4cf6.md",
-    "tokens": 3194
+    "tokens": 3369
   },
   "/terms": {
     "html": "/__pages/2dda5c6b8eee51aa.html",
@@ -113,7 +113,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/pricing": {
     "html": "/__pages/7394a2bb766646ca.html",
     "markdown": "/__pages/7394a2bb766646ca.md",
-    "tokens": 1106
+    "tokens": 1147
   },
   "/support": {
     "html": "/__pages/0b9f34c92865bdd1.html",

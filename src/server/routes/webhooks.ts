@@ -23,12 +23,15 @@ export const webhooks = new Hono<AppEnv>();
 async function writeRecap(env: Env, callId: string): Promise<void> {
   const db = calls(env.DB);
   const row = await db.byId(callId);
-  if (!row || row.outcome) return;
+  if (!row || row.outcome || row.purged_at) return;
   const transcript = row.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [];
   const startedAt = Date.now();
   let prompt = '';
-  const log = (status: 'completed' | 'error', output: string) =>
-    env.RECAP_LOG.record({ accountId: row.account_id, callId, model: env.BACK_OFFICE_MODEL || 'gpt-5.5', input: prompt, output, status, durationMs: Date.now() - startedAt }).catch(() => console.warn('raindrop recap delivery failed', callId));
+  const log = async (status: 'completed' | 'error', output: string) => {
+    // Zero data retention calls are never sent to monitoring (services/zdr.ts).
+    if (row.zdr) return;
+    await env.RECAP_LOG.record({ accountId: row.account_id, callId, model: env.BACK_OFFICE_MODEL || 'gpt-5.5', input: prompt, output, status, durationMs: Date.now() - startedAt }).catch(() => console.warn('raindrop recap delivery failed', callId));
+  };
   try {
     prompt = summaryPrompt(row, JSON.parse(row.brief) as Brief, transcript);
     const outcome = await summarizeCall(env, prompt);

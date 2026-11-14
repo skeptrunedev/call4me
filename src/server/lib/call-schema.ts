@@ -102,6 +102,8 @@ export const callOutput = z.looseObject({
   cost_cents: z.number().int().describe('billed so far, in US cents; final once finished'),
   ended: z.string().nullable().describe('who ended the call and why'),
   error: z.string().nullable(),
+  zero_data_retention: z.boolean().optional().describe('the account has zero data retention on: this call\'s brief, transcript, outcome and recording are deleted an hour after it ends'),
+  content_deleted: z.boolean().optional().describe('the call ended more than an hour ago with zero data retention on: its brief, business name, goal, transcript, outcome and recording are gone; the numbers, times, length and cost remain'),
   created_at: z.string(),
   transcript: z.array(z.string()).optional(),
 });
@@ -121,6 +123,7 @@ export const balanceOutput = z.looseObject({
   price_per_minute: z.string(),
   price_per_minute_by_country: z.record(z.string(), z.string()),
   minutes_left: z.number().int(),
+  zero_data_retention: z.boolean().optional().describe('true when zero data retention is on: prices above are already 1.5x, and each call\'s content is deleted an hour after it ends'),
   phone_number: z.string().nullable(),
   numbers: z.array(z.looseObject({ number: z.string(), e164: z.string() })),
 });

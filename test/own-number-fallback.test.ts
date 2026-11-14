@@ -5,7 +5,7 @@ import { placeCall } from '../src/server/services/dialer';
 import { d1 } from './sqlite-d1';
 
 const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
-const alice = { id: 'acct_alice', email: 'alice@example.com', display_name: 'Alice', key_prefix: null, created_at: 0 } as unknown as Account;
+const alice = { id: 'acct_alice', email: 'alice@example.com', display_name: 'Alice', key_prefix: null, created_at: 0, zdr: 0 } as unknown as Account;
 
 test("a call the carrier refuses from the user's own number goes out from their call4me number", async () => {
   // Tassos and Leonardo: Telnyx refused their verified Greek and Belgian numbers calling in their

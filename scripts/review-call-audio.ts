@@ -105,8 +105,9 @@ async function fetchCall(callId: string, out: string) {
   privatePath(out);
   assert.ok(process.env.TELNYX_API_KEY, 'TELNYX_API_KEY required');
   const db = cliD1();
-  const row = await db.prepare('SELECT * FROM calls WHERE id = ?').bind(callId).first<{ id: string; status: string; telnyx_call_control_id: string }>();
+  const row = await db.prepare('SELECT * FROM calls WHERE id = ?').bind(callId).first<{ id: string; status: string; telnyx_call_control_id: string; zdr: number }>();
   assert.ok(row && row.telnyx_call_control_id, 'call missing or has no provider control ID');
+  assert.ok(!row.zdr, 'zero data retention call: its audio is never reviewed or published');
   assert.ok(['completed', 'failed', 'canceled', 'cancelled', 'no_answer', 'busy'].includes(row.status), 'call must have finished');
   const controlId = row.telnyx_call_control_id;
   const provider = telnyx({ TELNYX_API_KEY: process.env.TELNYX_API_KEY, TELNYX_CONNECTION_ID: process.env.TELNYX_CONNECTION_ID ?? '' });

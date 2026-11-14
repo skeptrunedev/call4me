@@ -1,4 +1,4 @@
-import { DESTINATION_PRICE_CENTS } from '../lib/rates';
+import { DESTINATION_PRICE_CENTS, zdrPrice } from '../lib/rates';
 import { checkDialable, formatPhone } from '../lib/phone';
 import { sessionFor } from '../voice/stub';
 import { accounts, dollars, type Account } from './accounts';
@@ -86,6 +86,9 @@ export function callView(row: CallRow, questions: Question[], callbacks: CallRow
     error: row.error,
     created_at: new Date(row.created_at).toISOString(),
     transcript: transcript.map((l) => `${l.role}: ${l.text}`),
+    /** Zero data retention (services/zdr.ts): its content is deleted an hour after it ends. */
+    zero_data_retention: row.zdr === 1,
+    content_deleted: row.purged_at !== null,
   };
 }
 
@@ -130,7 +133,7 @@ export async function listCalls(env: Env, accountId: string, limit: number) {
 
 export async function balanceView(env: Env, account: Account) {
   const balance = await accounts(env.DB).balanceCents(account.id);
-  const price = pricePerMinute(env);
+  const price = zdrPrice(pricePerMinute(env), account.zdr);
   const reload = await reloadOf(env.DB, account.id);
   const owned = await numbers(env).views(account.id);
   return {
@@ -138,7 +141,8 @@ export async function balanceView(env: Env, account: Account) {
     balance_cents: balance,
     price_per_minute: dollars(price),
     // Destinations billed at their own price instead (the UAE, Japan).
-    price_per_minute_by_country: Object.fromEntries(Object.entries(DESTINATION_PRICE_CENTS).map(([c, cents]) => [c, dollars(cents)])),
+    price_per_minute_by_country: Object.fromEntries(Object.entries(DESTINATION_PRICE_CENTS).map(([c, cents]) => [c, dollars(zdrPrice(cents, account.zdr))])),
+    zero_data_retention: account.zdr === 1,
     minutes_left: Math.floor(balance / price),
     phone_number: owned[0]?.number ?? null,
     numbers: owned,

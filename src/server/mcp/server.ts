@@ -5,8 +5,8 @@ import { z } from 'zod';
 import { accounts, dollars, type Account } from '../services/accounts';
 import { CallError } from '../services/calls';
 import { answerQuestion, balanceView, usageView, categoriesView, connectPerson, followCall, followedView, hangUp, listCalls, profileView, requirementsView, saveProfile, callView, type CallView } from '../services/call-ops';
-import { placeCall, pricePerMinute, pricePerMinuteTo } from '../services/dialer';
-import { DESTINATION_PRICE_CENTS, ABROAD_CALLING } from '../lib/rates';
+import { callPrice, placeCall, pricePerMinute } from '../services/dialer';
+import { DESTINATION_PRICE_CENTS, ABROAD_CALLING, zdrPrice } from '../lib/rates';
 import { parseAmountCents, topups, TopupError } from '../services/topups';
 import { catalog, type Surface } from '../services/intake';
 import { ProfileError } from '../services/profiles';
@@ -146,6 +146,8 @@ function callText(v: CallView): string {
   for (const c of v.callbacks) lines.push('', `they called back (${c.id}, ${c.created_at.slice(0, 16).replace('T', ' ')}): ${c.outcome ? `${c.outcome.result}. ${c.outcome.summary}` : 'in progress'}`);
   if (v.error) lines.push('', `error: ${v.error}`);
   if (v.finished) lines.push('', `billed time ${v.talk_minutes} min (including phone menus, and hold time at half price), cost ${v.cost}${v.ended ? `, ended: ${v.ended}` : ''}`);
+  if (v.content_deleted) lines.push('', 'zero data retention: this call\'s brief, transcript, outcome and recording were deleted an hour after it ended.');
+  else if (v.zero_data_retention) lines.push('', 'zero data retention: call4me deletes this call\'s brief, transcript, outcome and recording an hour after it ends. Pass on to the user now whatever they need from it.');
   if (v.transcript.length) lines.push('', 'transcript:', ...v.transcript);
   return lines.join('\n').trim();
 }
@@ -207,7 +209,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       guard(async () => {
         const row = await placeCall(env, deps.origin, account, args, surface);
         const v = callView(row, []);
-        return ok(`calling ${v.business} at ${v.number} (${v.id}), ${dollars(pricePerMinuteTo(env, row.to_number, row.from_number))}/min from pickup, including phone menus; hold time is half price.${v.own_number ? ` It shows the user's own number ${v.own_number}, so callbacks go straight to their phone.` : ''} Your call4me number is ${v.calling_number}; show it to the user and ask them to save it as a contact if they haven't, so call screening doesn't answer in their place if they need to join. Poll call4me_get_call with wait_seconds: 30 until finished, and answer any open question immediately.`, v);
+        return ok(`calling ${v.business} at ${v.number} (${v.id}), ${dollars(callPrice(env, row))}/min from pickup${row.zdr ? ' with zero data retention' : ''}, including phone menus; hold time is half price.${v.own_number ? ` It shows the user's own number ${v.own_number}, so callbacks go straight to their phone.` : ''} Your call4me number is ${v.calling_number}; show it to the user and ask them to save it as a contact if they haven't, so call screening doesn't answer in their place if they need to join. Poll call4me_get_call with wait_seconds: 30 until finished, and answer any open question immediately.`, v);
       })()) as never,
   );
 
@@ -362,7 +364,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         const out = await balanceView(env, account);
         const owned = out.numbers;
         const reloadText = out.monthly_reload ? `reloads ${out.monthly_reload.amount} monthly${out.monthly_reload.next ? ` (next ${out.monthly_reload.next})` : ''}` : 'no monthly reload';
-        return ok(`balance ${out.balance} (~${out.minutes_left} min at ${out.price_per_minute}/min; UAE calls ${out.price_per_minute_by_country.AE}/min, Japan ${out.price_per_minute_by_country.JP}/min), ${reloadText}. ${owned.length ? `numbers: ${owned.map(numberText).join('; ')}. Show these to the user and suggest saving them as a contact named call4me` : 'number: assigned on the first call. Explain this during setup, then show calling_number from the first call result'}. Call4me may ring the personal phone in the user's profile if a business needs account verification or the user asks to join. They are on the call as soon as they answer; the caller keeps working with them on the line, and they press * or hang up to leave. They can also just listen in (listen_in on call4me_place_call, or mode "listen" on call4me_connect_me) and press 1 to join. Give a heads up before a call that may ring them and before connecting them.`, out);
+        return ok(`balance ${out.balance} (~${out.minutes_left} min at ${out.price_per_minute}/min; UAE calls ${out.price_per_minute_by_country.AE}/min, Japan ${out.price_per_minute_by_country.JP}/min), ${reloadText}.${out.zero_data_retention ? ' Zero data retention is on (1.5x the price): each call\'s brief, transcript, outcome and recording are deleted an hour after it ends.' : ''} ${owned.length ? `numbers: ${owned.map(numberText).join('; ')}. Show these to the user and suggest saving them as a contact named call4me` : 'number: assigned on the first call. Explain this during setup, then show calling_number from the first call result'}. Call4me may ring the personal phone in the user's profile if a business needs account verification or the user asks to join. They are on the call as soon as they answer; the caller keeps working with them on the line, and they press * or hang up to leave. They can also just listen in (listen_in on call4me_place_call, or mode "listen" on call4me_connect_me) and press 1 to join. Give a heads up before a call that may ring them and before connecting them.`, out);
       })()) as never,
   );
 
@@ -462,8 +464,8 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
           owned.length ? `your numbers:\n${owned.map((v) => `- ${numberText(v)}`).join('\n')}` : 'no numbers yet: the free US number is bought on the first call.',
           ...(pending.length ? [`paid for, waiting on the carrier's approval (they activate by themselves and can't place calls until then):\n${pending.map((v) => `- ${pendingText(v)}`).join('\n')}`] : []),
           ...(own.length ? [`the user's own numbers (calls use one only when from names it):\n${own.map((v) => `- ${ownNumberText(v)}`).join('\n')}`] : []),
-          `calling rates: ${dollars(pricePerMinute(env))}/min unless noted; ${Object.entries(DESTINATION_PRICE_CENTS).map(([country, cents]) => `${country} ${dollars(cents)}/min`).join(', ')}. Calls to an EEA country (such as GR) from an EEA number on the account (such as NL; not GB) are ${dollars(pricePerMinute(env))}/min.`,
-          `countries (number price today, then monthly; calls there cost ${dollars(pricePerMinute(env))}/min unless noted):\n${countries.map((c) => `- ${c.country} ${c.name} (${c.type}): ${c.available ? `${c.price}, then ${c.monthly}/month${DESTINATION_PRICE_CENTS[c.country] ? `; calls ${dollars(DESTINATION_PRICE_CENTS[c.country]!)}/min` : ''}` : c.reason}`).join('\n')}`,
+          `calling rates: ${dollars(zdrPrice(pricePerMinute(env), account.zdr))}/min unless noted; ${Object.entries(DESTINATION_PRICE_CENTS).map(([country, cents]) => `${country} ${dollars(zdrPrice(cents, account.zdr))}/min`).join(', ')}. Calls to an EEA country (such as GR) from an EEA number on the account (such as NL; not GB) are ${dollars(zdrPrice(pricePerMinute(env), account.zdr))}/min.${account.zdr === 1 ? ' Zero data retention is on, so these are already 1.5x, and each call\'s brief, transcript, outcome and recording are deleted an hour after it ends.' : ''}`,
+          `countries (number price today, then monthly; calls there cost ${dollars(zdrPrice(pricePerMinute(env), account.zdr))}/min unless noted):\n${countries.map((c) => `- ${c.country} ${c.name} (${c.type}): ${c.available ? `${c.price}, then ${c.monthly}/month${DESTINATION_PRICE_CENTS[c.country] ? `; calls ${dollars(zdrPrice(DESTINATION_PRICE_CENTS[c.country]!, account.zdr))}/min` : ''}` : c.reason}`).join('\n')}`,
         ].join('\n\n');
         // Without own or pending numbers, exactly the shape clients cached before either existed.
         return ok(text, { numbers: owned, ...(pending.length ? { pending_numbers: pending } : {}), ...(own.length ? { own_numbers: own } : {}), countries });

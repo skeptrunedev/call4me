@@ -88,6 +88,13 @@ export interface CallRow {
   /** The Idempotency-Key the request placing it sent, and its body's fingerprint (lib/idempotency.ts). */
   idempotency_key: string | null;
   idempotency_hash: string | null;
+  /** 1 for a call made or answered with zero data retention on (services/zdr.ts): billed at 1.5x, its content deleted after it ends. */
+  zdr: number;
+  /** When a zero data retention call's content was deleted; null before that. */
+  purged_at: number | null;
+  /** Failed purge runs so far, and the earliest time the next one may start (services/zdr.ts). */
+  purge_attempts: number;
+  purge_next_at: number | null;
   created_at: number;
 }
 
@@ -256,7 +263,9 @@ export function callStore(db: D1Database) {
     },
 
     async saveOutcome(id: string, outcome: Outcome): Promise<void> {
-      await db.prepare(`UPDATE calls SET outcome = ? WHERE id = ?`).bind(JSON.stringify(outcome), id).run();
+      // A zero data retention purge that ran while the recap was being written wins: the transcript
+      // this outcome was read from is gone, so the summary must not put content back.
+      await db.prepare(`UPDATE calls SET outcome = ? WHERE id = ? AND purged_at IS NULL`).bind(JSON.stringify(outcome), id).run();
     },
 
     /**

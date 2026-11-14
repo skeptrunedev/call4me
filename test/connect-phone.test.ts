@@ -4,7 +4,7 @@ import type { Account } from '../src/server/services/accounts';
 import { CallError, calls, type PlaceCallInput } from '../src/server/services/calls';
 import { d1 } from './sqlite-d1';
 
-const alice = { id: 'acct_alice', email: 'alice@example.com', display_name: 'Alice', key_prefix: null, created_at: 0 } as unknown as Account;
+const alice = { id: 'acct_alice', email: 'alice@example.com', display_name: 'Alice', key_prefix: null, created_at: 0, zdr: 0 } as unknown as Account;
 const call: PlaceCallInput = { to: '+1 415 555 0123', business: 'Rosa', category: 'general', goal: 'Ask their hours', details: { questions: 'What are your hours?' } };
 
 async function setup(profile: Record<string, string>) {

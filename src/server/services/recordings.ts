@@ -1,20 +1,23 @@
 import { recordingOutput } from '../lib/recording-schema';
-import { telnyx } from '../lib/telnyx';
-import { ACTIVE, CallError, calls } from './calls';
+import { telnyx, type TelnyxRecording } from '../lib/telnyx';
+import { ACTIVE, CallError, calls, type CallRow } from './calls';
+
+/** Every recording the carrier holds of a call's phone leg, in any state. Never talks to a live session. */
+export async function carrierRecordings(env: Env, row: Pick<CallRow, 'telnyx_call_control_id'>): Promise<TelnyxRecording[]> {
+  const provider = telnyx(env);
+  const controlId = row.telnyx_call_control_id;
+  if (!controlId) return [];
+  const saved = await env.DB.prepare('SELECT call_leg_id FROM call_provider_legs WHERE call_control_id = ?').bind(controlId).first<{ call_leg_id: string }>();
+  const legId = saved?.call_leg_id ?? await provider.callLeg(controlId);
+  if (legId && !saved) await env.DB.prepare('INSERT OR IGNORE INTO call_provider_legs (call_control_id, call_leg_id) VALUES (?, ?)').bind(controlId, legId).run();
+  return provider.recordings(controlId, legId ?? undefined);
+}
 
 /** User access only. Nothing here talks to a live session or changes call state. */
 export async function getCallRecordings(env: Env, accountId: string, callId: string) {
   const row = await calls(env.DB).forAccount(accountId, callId);
   if (ACTIVE.includes(row.status)) throw new CallError('the call must finish before recordings can be retrieved', 409);
-  const provider = telnyx(env);
-  const controlId = row.telnyx_call_control_id;
-  let legId: string | null = null;
-  if (controlId) {
-    const saved = await env.DB.prepare('SELECT call_leg_id FROM call_provider_legs WHERE call_control_id = ?').bind(controlId).first<{ call_leg_id: string }>();
-    legId = saved?.call_leg_id ?? await provider.callLeg(controlId);
-    if (legId && !saved) await env.DB.prepare('INSERT OR IGNORE INTO call_provider_legs (call_control_id, call_leg_id) VALUES (?, ?)').bind(controlId, legId).run();
-  }
-  const records = controlId ? await provider.recordings(controlId, legId ?? undefined) : [];
+  const records = await carrierRecordings(env, row);
   const recordings = records.filter((r) => r.status === 'completed' && (r.download_urls?.mp3 || r.download_urls?.wav)).map((r) => ({
     id: r.id,
     download_urls: {

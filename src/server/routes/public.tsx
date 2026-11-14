@@ -7,6 +7,7 @@ import { callView, usageView } from '../services/call-ops';
 import { accounts, type Account } from '../services/accounts';
 import { ACTIVE, calls, CallError } from '../services/calls';
 import { pricePerMinute } from '../services/dialer';
+import { zdrPrice } from '../lib/rates';
 import { PROFILE_FIELDS, type ProfileKey } from '../services/intake';
 import { NumberError, numbers } from '../services/numbers';
 import { ProfileError, profiles } from '../services/profiles';
@@ -134,7 +135,8 @@ async function accountPage(c: AppContext, account: Account, errors: { error?: st
     <AccountPage
       account={account}
       balanceCents={balance}
-      pricePerMinuteCents={pricePerMinute(c.env)}
+      pricePerMinuteCents={zdrPrice(pricePerMinute(c.env), account.zdr)}
+      zdrPricePerMinuteCents={zdrPrice(pricePerMinute(c.env), 1)}
       numbers={owned}
       pendingNumbers={pending}
       ownNumbers={own}
@@ -272,6 +274,14 @@ pub.post('/account/found-via', async (c) => {
   const answer = field(await c.req.formData(), 'found_via', 300);
   if (answer) await accounts(c.env.DB).saveFoundVia(account.id, answer);
   return c.redirect('/account', 303);
+});
+
+pub.post('/account/zdr', async (c) => {
+  if (!sameOrigin(c)) return c.text('request origin is not allowed', 403);
+  const account = c.get('account');
+  if (!account) return c.redirect('/login?next=/account', 303);
+  await accounts(c.env.DB).setZdr(account.id, field(await c.req.formData(), 'on', 1) === '1');
+  return c.redirect('/account#zdr', 303);
 });
 
 pub.post('/account/reload/stop', async (c) => {

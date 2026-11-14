@@ -2,7 +2,7 @@ import { newId, now } from '../lib/ids';
 import type { Idempotency } from '../lib/idempotency';
 import { hmacHex } from '../lib/keys';
 import { checkDialable } from '../lib/phone';
-import { DESTINATION_PRICE_CENTS } from '../lib/rates';
+import { DESTINATION_PRICE_CENTS, zdrPrice } from '../lib/rates';
 import { telnyx, TelnyxError } from '../lib/telnyx';
 import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions, inboundInstructions, type OpenTask } from '../voice/prompt';
 import type { SessionSetup } from '../voice/session';
@@ -35,9 +35,12 @@ export function pricePerMinuteTo(env: Env, to: string, from?: string | null): nu
   return DESTINATION_PRICE_CENTS[p.country] || pricePerMinute(env);
 }
 
-/** The per-minute price a call is billed at: by destination and caller ID when we placed it, the standard one for a call that came in. */
-export const callPrice = (env: Env, row: Pick<CallRow, 'direction' | 'to_number' | 'from_number'>) =>
-  row.direction === 'outbound' ? pricePerMinuteTo(env, row.to_number, row.from_number) : pricePerMinute(env);
+/**
+ * The per-minute price a call is billed at: by destination and caller ID when we placed it, the
+ * standard one for a call that came in, and 1.5x either with zero data retention (services/zdr.ts).
+ */
+export const callPrice = (env: Env, row: Pick<CallRow, 'direction' | 'to_number' | 'from_number' | 'zdr'>) =>
+  zdrPrice(row.direction === 'outbound' ? pricePerMinuteTo(env, row.to_number, row.from_number) : pricePerMinute(env), row.zdr);
 
 /**
  * Whether keypad presses on a call with `other` should be tones in the audio: anywhere but a +1
@@ -83,10 +86,10 @@ export const NEVER_DIALED_MS = 5 * 60_000;
  */
 export async function failNeverDialed(env: Env, at = Date.now()): Promise<number> {
   const { results } = await env.DB.prepare(
-    `SELECT id, direction, to_number, from_number FROM calls WHERE status = 'queued' AND telnyx_call_control_id IS NULL AND created_at < ?`,
+    `SELECT id, direction, to_number, from_number, zdr FROM calls WHERE status = 'queued' AND telnyx_call_control_id IS NULL AND created_at < ?`,
   )
     .bind(at - NEVER_DIALED_MS)
-    .all<Pick<CallRow, 'id' | 'direction' | 'to_number' | 'from_number'>>();
+    .all<Pick<CallRow, 'id' | 'direction' | 'to_number' | 'from_number' | 'zdr'>>();
   const db = calls(env.DB);
   for (const row of results) {
     await db.finish(row.id, { status: 'failed', error: 'never dialed: the request placing it ended before it dialed', pricePerMinuteCents: callPrice(env, row), at });
@@ -105,10 +108,10 @@ export const LOST_AFTER_MS = 10 * 60_000;
  */
 export async function settleLost(env: Env, at = Date.now()): Promise<number> {
   const { results } = await env.DB.prepare(
-    `SELECT id, direction, to_number, from_number, telnyx_call_control_id FROM calls WHERE status IN ('dialing', 'in_progress') AND telnyx_call_control_id IS NOT NULL AND created_at < ?`,
+    `SELECT id, direction, to_number, from_number, zdr, telnyx_call_control_id FROM calls WHERE status IN ('dialing', 'in_progress') AND telnyx_call_control_id IS NOT NULL AND created_at < ?`,
   )
     .bind(at - LOST_AFTER_MS)
-    .all<Pick<CallRow, 'id' | 'direction' | 'to_number' | 'from_number' | 'telnyx_call_control_id'>>();
+    .all<Pick<CallRow, 'id' | 'direction' | 'to_number' | 'from_number' | 'zdr' | 'telnyx_call_control_id'>>();
   const db = calls(env.DB);
   const carrier = telnyx(env);
   let settled = 0;
@@ -143,7 +146,7 @@ export async function placeCall(
   execution: { unattended?: boolean; idempotency?: Idempotency } = {},
 ): Promise<CallRow> {
   // Held at the destination's price; billed by the caller ID the call goes out from (callPrice).
-  let price = pricePerMinuteTo(env, input.to, input.from);
+  let price = zdrPrice(pricePerMinuteTo(env, input.to, input.from), account.zdr);
   const db = calls(env.DB);
   const { call, secrets, to, ownerPhone } = await db.create(account, input, price, surface, execution.idempotency);
   let controlId: string | null = null;
@@ -156,7 +159,7 @@ export async function placeCall(
     // Sets the call up for one caller ID and dials: who callbacks reach and the price depend on it.
     const dialFrom = async (caller: { number: string; own: boolean }): Promise<string> => {
       const from = caller.number;
-      price = pricePerMinuteTo(env, call.to_number, from);
+      price = zdrPrice(pricePerMinuteTo(env, call.to_number, from), call.zdr);
       // The user's phone always rings from a call4me number, never from their own.
       const ring = caller.own ? (await n.callerId(account, to)).number : from;
       await env.DB.prepare(`UPDATE calls SET from_number = ?, ring_number = ? WHERE id = ?`).bind(from, caller.own ? ring : null, call.id).run();
@@ -198,6 +201,7 @@ export async function placeCall(
         pricePerMinuteCents: price,
         redact: secrets.map((sec) => sec.value),
         inbandKeys: inbandKeysFor(call.to_number),
+        zdr: call.zdr === 1,
       };
       const session = sessionFor(env, call.id);
       await session.fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
@@ -266,11 +270,9 @@ export const callbackMinutes = (balanceCents: number, priceCents: number) => Mat
  */
 export async function answerInbound(env: Env, origin: string, opts: { controlId: string; from: string; to: string }): Promise<void> {
   const accountId = await answeringAccountId(env.DB, opts.to, opts.from);
-  const account = accountId
-    ? await env.DB.prepare(`SELECT id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc, first_touch FROM accounts WHERE id = ?`).bind(accountId).first<Account>()
-    : null;
+  const account = accountId ? await accounts(env.DB).byId(accountId) : null;
   const blocked = await env.DB.prepare(`SELECT 1 FROM blocked_numbers WHERE number = ?`).bind(opts.from).first();
-  const price = pricePerMinute(env);
+  const price = zdrPrice(pricePerMinute(env), account?.zdr ?? 0);
   const balance = account ? await accounts(env.DB).balanceCents(account.id) : 0;
   if (!account || blocked || balance < price) {
     await telnyx(env).reject(opts.controlId);
@@ -281,11 +283,11 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
   // A callback only knows the calls placed from the number it rang, and answers as they were made:
   // an account calling for several companies gives each its own number.
   const { results: recent } = await env.DB.prepare(
-    `SELECT business, goal, outcome, created_at FROM calls WHERE account_id = ? AND direction = 'outbound' AND from_number = ? AND answered_at IS NOT NULL ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 5`,
+    `SELECT business, goal, outcome, created_at FROM calls WHERE account_id = ? AND direction = 'outbound' AND from_number = ? AND answered_at IS NOT NULL AND purged_at IS NULL ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 5`,
   )
     .bind(account.id, opts.to, opts.from)
     .all<{ business: string; goal: string; outcome: string | null; created_at: number }>();
-  const earlier = await env.DB.prepare(`SELECT business FROM calls WHERE account_id = ? AND to_number = ? ORDER BY created_at DESC LIMIT 1`).bind(account.id, opts.from).first<{ business: string }>();
+  const earlier = await env.DB.prepare(`SELECT business FROM calls WHERE account_id = ? AND to_number = ? AND purged_at IS NULL ORDER BY created_at DESC LIMIT 1`).bind(account.id, opts.from).first<{ business: string }>();
   const profile = await profiles(env.DB).get(account.id);
   // The owner ringing their own call4me number from their own phone is not a business calling
   // back: David Aviles called his to ask about his Kaiser call and was answered as Kaiser, its one
@@ -323,7 +325,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
   // Who answers: the identity of the call being returned, else of the latest call placed from this number.
   const latest = likelyBrief
     ? null
-    : await env.DB.prepare(`SELECT brief FROM calls WHERE account_id = ? AND direction = 'outbound' AND from_number = ? ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 1`)
+    : await env.DB.prepare(`SELECT brief FROM calls WHERE account_id = ? AND direction = 'outbound' AND from_number = ? AND purged_at IS NULL ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 1`)
         .bind(account.id, opts.to, opts.from)
         .first<{ brief: string }>();
   const identity: Pick<Brief, 'caller_name' | 'calling_as' | 'accent'> = likelyBrief ?? (latest ? (JSON.parse(latest.brief) as Brief) : {});
@@ -331,7 +333,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     ? { ...likelyBrief, max_minutes: maxMinutes }
     : { on_behalf_of: owner, facts: '', flexibility: '', timezone: null, max_minutes: maxMinutes, caller_name: identity.caller_name ?? null, calling_as: identity.calling_as ?? null, accent: identity.accent ?? null };
   await env.DB.prepare(
-    `INSERT INTO calls (id, account_id, direction, to_number, from_number, business, goal, brief, status, telnyx_call_control_id, hold_cents, callback_for, created_at) VALUES (?, ?, 'inbound', ?, ?, ?, ?, ?, 'dialing', ?, ?, ?, ?)`,
+    `INSERT INTO calls (id, account_id, direction, to_number, from_number, business, goal, brief, status, telnyx_call_control_id, hold_cents, callback_for, zdr, created_at) VALUES (?, ?, 'inbound', ?, ?, ?, ?, ?, 'dialing', ?, ?, ?, ?, ?)`,
   )
     .bind(
       id,
@@ -344,6 +346,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
       opts.controlId,
       holdCents,
       likely?.id ?? null,
+      account.zdr,
       now(),
     )
     .run();
@@ -394,6 +397,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     controlId: opts.controlId,
     answering: true,
     streamUrl: await streamUrl(env, id),
+    zdr: account.zdr === 1,
   };
   try {
     const session = sessionFor(env, id);
@@ -401,7 +405,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     // Open the voice session while it still rings (up to a couple of seconds), so whoever called
     // hears the greeting as soon as we pick up instead of silence. A failed open just answers.
     await session.fetch('https://session/prewarm', { method: 'POST' }).catch((err) => console.warn('prewarm failed', id, String(err)));
-    await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: setup.streamUrl!, callId: id, timeLimitSecs: LIMITS.maxMinutes * 60 });
+    await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: setup.streamUrl!, callId: id, timeLimitSecs: LIMITS.maxMinutes * 60, record: account.zdr !== 1 });
   } catch (err) {
     // Most often the caller hung up while this was setting up: answering fails, and their hangup
     // may have come before the call row existed, so nothing else would end it or release its hold.

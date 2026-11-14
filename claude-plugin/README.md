@@ -25,7 +25,7 @@ Claude asks for anything the call needs in one message, confirms, and dials. You
 
 ## Data and billing
 
-The plugin runs no local code. Claude sends call details (the business's number, the goal, and the facts you give it for the call) to call4me at call4.me, which places the call and stores the call record, transcript, and recording in your account. Profile details are saved only when you agree. Calls use prepaid credits from your call4me account; answered time is billed per minute and unanswered calls are free. Credits are bought on the call4me website, never in the chat.
+The plugin runs no local code. Claude sends call details (the business's number, the goal, and the facts you give it for the call) to call4me at call4.me, which places the call and stores the call record, transcript, and recording in your account. Profile details are saved only when you agree. Accounts can turn on zero data retention in their account settings (1.5x the call price), and then each call's brief, transcript, outcome and recording are deleted an hour after it ends. Calls use prepaid credits from your call4me account; answered time is billed per minute and unanswered calls are free. Credits are bought on the call4me website, never in the chat.
 
 call4me only calls businesses and services you want to reach, never personal numbers, emergency services, or premium-rate numbers. A call can fail or end without the result you wanted, so check anything important.
 

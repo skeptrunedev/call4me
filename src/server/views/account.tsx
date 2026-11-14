@@ -120,6 +120,8 @@ export const AccountPage: FC<{
   account: Account;
   balanceCents: number;
   pricePerMinuteCents: number;
+  /** What a minute costs with zero data retention on, for the switch that turns it on. */
+  zdrPricePerMinuteCents: number;
   numbers: NumberView[];
   pendingNumbers: PendingNumberView[];
   ownNumbers: OwnNumberView[];
@@ -302,9 +304,10 @@ export const AccountPage: FC<{
     )}
     <h2>text alerts</h2>
     <p class="small"><a href="/sms">Manage optional text alerts</a> for call questions and phone number renewals.</p>
+    <ZdrBox on={p.account.zdr === 1} zdrPricePerMinuteCents={p.zdrPricePerMinuteCents} />
     <SpendingBox usage={p.usage} />
     <h2>calls</h2>
-    <p class="small">calls are recorded by our phone carrier (Telnyx). open a call to play or save its recording.</p>
+    <p class="small">calls are recorded by our phone carrier (Telnyx){p.account.zdr === 1 ? '; while zero data retention is on they are deleted an hour after they end, and calls we answer are not recorded at all' : ''}. open a call to play or save its recording.</p>
     {p.calls.length === 0 ? (
       <p class="muted">
         no calls yet. <a href="#first-call">connect your ai app</a>, then ask it to call somewhere.
@@ -447,6 +450,24 @@ export const SpendingBox: FC<{ usage: UsageView }> = ({ usage: u }) => {
   );
 };
 
+/** Zero data retention (services/zdr.ts): the switch, and what it does and costs. */
+const ZdrBox: FC<{ on: boolean; zdrPricePerMinuteCents: number }> = ({ on, zdrPricePerMinuteCents }) => (
+  <>
+    <h2 id="zdr">zero data retention</h2>
+    <p class="small">
+      {on ? <b>on.</b> : <b>off.</b>} with it on, calls cost 1.5x ({dollars(zdrPricePerMinuteCents)}/min, half that on hold). an hour after each call ends, call4me deletes its
+      brief, business name, transcript, outcome, the questions it asked you and the phone carrier's recording, so have your agent collect the result before then. calls you get
+      back on your number aren't recorded, and no call is sent to our monitoring tool. we keep the numbers, times and cost for billing. OpenAI's API, which runs the voice, may
+      keep request data for up to 30 days for abuse monitoring under <a href="https://developers.openai.com/api/docs/guides/your-data">its own policy</a>. it applies to calls
+      placed after you turn it on.
+    </p>
+    <form method="post" action="/account/zdr" class="inline">
+      <input type="hidden" name="on" value={on ? '0' : '1'} />
+      <button type="submit" class={on ? 'linkbutton' : undefined}>{on ? 'turn off zero data retention' : 'turn on zero data retention'}</button>
+    </form>
+  </>
+);
+
 export const MonthlyBox: FC<{ replacing?: boolean }> = ({ replacing }) => (
   <label class="check">
     <input type="checkbox" name="monthly" checked /> reload this amount every month{replacing ? ' (replaces your current reload)' : ''}. stop anytime.
@@ -463,10 +484,17 @@ const clock = (millis: number) => {
  * The call's audio. Players and links point at our own route, which checks the account and
  * fetches a fresh carrier link on each request, so a page left open never holds a dead link.
  */
-const RecordingSection: FC<{ callId: string; recordings: CallRecordings }> = ({ callId, recordings }) => (
+const RecordingSection: FC<{ callId: string; recordings: CallRecordings; zeroDataRetention: boolean; contentDeleted: boolean }> = ({ callId, recordings, zeroDataRetention, contentDeleted }) => (
   <>
     <h2>recording</h2>
-    <p class="small">calls are recorded by our phone carrier (Telnyx). play or save available recordings here, or ask your agent for them. only share recording links with people you want to hear the call.</p>
+    <p class="small">
+      {contentDeleted
+        ? 'zero data retention: this call’s recording was deleted with the rest of its content an hour after the call ended.'
+        : zeroDataRetention
+          ? 'zero data retention is on: an hour after the call ends its recording is deleted, and calls we answer to are not recorded.'
+          : 'calls are recorded by our phone carrier (Telnyx). play or save available recordings here, or ask your agent for them.'}{' '}
+      only share recording links with people you want to hear the call.
+    </p>
     {recordings.state === 'live' && <p class="muted">the recording shows up here once the call ends.</p>}
     {recordings.state === 'failed' && (
       <p class="err">
@@ -475,7 +503,11 @@ const RecordingSection: FC<{ callId: string; recordings: CallRecordings }> = ({ 
     )}
     {recordings.state === 'ready' && recordings.recordings.length === 0 && (
       <p class="muted">
-        no recording for this call yet. the carrier can take a minute to save one after hangup. <a href="">refresh</a> to check again.
+        {contentDeleted
+          ? 'deleted.'
+          : zeroDataRetention
+            ? 'none: zero data retention is on, so a call we answered is not recorded.'
+            : 'no recording for this call yet. the carrier can take a minute to save one after hangup. <a href="">refresh</a> to check again.'}
       </p>
     )}
     {recordings.state === 'ready' &&
@@ -504,7 +536,8 @@ const RecordingSection: FC<{ callId: string; recordings: CallRecordings }> = ({ 
 );
 
 export const CallPage: FC<{ call: CallView; recordings: CallRecordings; agentPrompt: string }> = ({ call, recordings, agentPrompt }) => (
-  <Layout title={call.business} page="call" path={`/account/calls/${call.id}`} signedIn>
+  // A zero data retention call's business stays out of the page title, which analytics on the page read.
+  <Layout title={call.zero_data_retention ? 'call' : call.business} page="call" path={`/account/calls/${call.id}`} signedIn>
     <h1>
       {call.business} <span class="small muted">{call.number}</span>
     </h1>
@@ -512,8 +545,14 @@ export const CallPage: FC<{ call: CallView; recordings: CallRecordings; agentPro
       <span class={`st st-${call.status}`}>{call.status.replace('_', ' ')}</span> / {call.direction} / {call.created_at.slice(0, 16).replace('T', ' ')} UTC / {call.talk_minutes} min / {call.cost}
     </p>
     <p>
-      <b>goal:</b> {call.goal}
+      <b>goal:</b> {call.goal || (call.content_deleted ? 'deleted (zero data retention)' : '')}
     </p>
+    {call.content_deleted && (
+      <p class="small muted">
+        zero data retention: an hour after this call ended, call4me deleted its business name, goal, brief, transcript, outcome, the questions asked mid-call
+        and the carrier's recording. the numbers, times, length and cost are kept for billing.
+      </p>
+    )}
     <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
     {call.outcome && (
       <div class="box">
@@ -532,11 +571,11 @@ export const CallPage: FC<{ call: CallView; recordings: CallRecordings; agentPro
         ))}
       </>
     )}
-    <RecordingSection callId={call.id} recordings={recordings} />
+    <RecordingSection callId={call.id} recordings={recordings} zeroDataRetention={call.zero_data_retention} contentDeleted={call.content_deleted} />
     <h2>transcript</h2>
     <div class="transcript">
       {call.transcript.length === 0 ? (
-        <p class="muted">nothing yet.</p>
+        <p class="muted">{call.content_deleted ? 'deleted.' : 'nothing yet.'}</p>
       ) : (
         call.transcript.map((line) => {
           const i = line.indexOf(': ');

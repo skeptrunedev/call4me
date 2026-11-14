@@ -6,7 +6,7 @@ import { placeDueCalls, SCHEDULE_LIMITS, scheduledCalls, scheduledView } from '.
 import type { SessionSetup } from '../src/server/voice/session';
 import { d1 } from './sqlite-d1';
 
-const alice = { id: 'acct_alice', email: 'alice@example.com', display_name: 'Alice', key_prefix: null, created_at: 0 } as unknown as Account;
+const alice = { id: 'acct_alice', email: 'alice@example.com', display_name: 'Alice', key_prefix: null, created_at: 0, zdr: 0 } as unknown as Account;
 
 const canby = {
   to: '+1 503 266 1156',

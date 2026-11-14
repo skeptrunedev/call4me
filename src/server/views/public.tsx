@@ -5,7 +5,7 @@ import type { CountryOffer, NumberView } from '../services/numbers';
 import { MAX_TOPUP_CENTS, MIN_TOPUP_CENTS } from '../services/topups';
 import { FoundViaForm, MonthlyBox } from './account';
 import { accountPath, CHATGPT_PLUGIN_URL, PAGES, SITE, SITE_PITCH } from '../lib/pages';
-import { DESTINATION_PRICE_CENTS } from '../lib/rates';
+import { DESTINATION_PRICE_CENTS, zdrPrice } from '../lib/rates';
 import { CopyBlock, Layout } from './layout';
 import { STUDENT_CREDIT_DOLLARS } from './students';
 import { CallOnboarding } from './onboarding';
@@ -445,7 +445,7 @@ export const RulesPage: FC<{ signedIn: boolean; pricePerMinuteCents: number; cou
       <li>no harassment, threats, pranks, or pretending to be someone else. the caller always calls <i>for</i> you; it never claims to be you.</li>
       <li>the same number can be called a few times a day, not more. anyone who asks not to be called again is never called by call4me again.</li>
       <li>the caller does not open by announcing it's an AI, the same way you don't open a call by explaining who you are. if someone sincerely asks, it tells the truth.</li>
-      <li>calls are recorded by our phone carrier (Telnyx). after a call ends, open it in <a href={accountPath(signedIn)}>my account</a> to play or save the recording. a text transcript is kept there too.</li>
+      <li>calls are recorded by our phone carrier (Telnyx). after a call ends, open it in <a href={accountPath(signedIn)}>my account</a> to play or save the recording. a text transcript is kept there too. with <a href={`${accountPath(signedIn)}#zdr`}>zero data retention</a> on, both are deleted an hour after the call ends.</li>
       <li>the caller never reads out card numbers, bank details, or passwords.</li>
     </ul>
     <p>break these and the account is closed without a refund of the remaining balance.</p>
@@ -456,7 +456,7 @@ export const RulesPage: FC<{ signedIn: boolean; pricePerMinuteCents: number; cou
 export const PrivacyPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ signedIn, agentPrompt }) => (
   <Layout title="privacy" page="privacy" signedIn={signedIn}>
     <h1>privacy policy</h1>
-    <p>updated October 11, 2026</p>
+    <p>updated November 13, 2026</p>
     <p>This policy covers call4me at call4.me, our phone-calling service, and our connected tools, including the call4me plugin in ChatGPT. Contact <a href="mailto:me@call4.me">me@call4.me</a> with privacy questions or requests.</p>
 
     <h2 id="data">What we collect and why</h2>
@@ -479,7 +479,7 @@ export const PrivacyPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ si
       <li><strong>The people and businesses you call</strong> receive the information shared during the conversation to carry out your task. They may keep their own records. Anyone you share a recording link with may be able to use it while it remains valid.</li>
       <li><strong>Cloudflare</strong> hosts our application, databases, call-session state, and operational logs. <strong>Telnyx</strong> carries calls and processes phone numbers, call metadata, and recorded audio.</li>
       <li><strong>OpenAI</strong> processes call instructions, relevant calling details, live audio, transcripts, and generated responses for the voice agent, its supporting reasoning, and call summaries. This API processing is separate from your use of ChatGPT as the connected client.</li>
-      <li><strong>Raindrop, when monitoring is enabled,</strong> receives diagnostic information about voice sessions and summaries, including account and call identifiers, model activity, and conversation content. We enable its personal-information redaction and apply additional redaction to supported fields; this is not a guarantee that every personal detail is removed.</li>
+      <li><strong>Raindrop, when monitoring is enabled and the account does not use zero data retention,</strong> receives diagnostic information about voice sessions and summaries, including account and call identifiers, model activity, and conversation content. We enable its personal-information redaction and apply additional redaction to supported fields; this is not a guarantee that every personal detail is removed.</li>
       <li><strong>Stripe</strong> processes payments. <strong>Google or X</strong> handles the sign-in method you choose. Our email service, normally <strong>Fastmail</strong>, processes message addresses and content to deliver account, support, and newsletter emails.</li>
       <li><strong>Your connected client</strong> receives tool results as described above. Our service providers may process information outside your country. Their separate retention and legal obligations can apply to information they receive.</li>
     </ul>
@@ -500,7 +500,8 @@ export const PrivacyPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ si
 
     <h2 id="retention">How long information is kept</h2>
     <ul>
-      <li><strong>Account records and text call history:</strong> there is currently no automatic age-based deletion. Account details, call briefs, transcripts, outcomes, schedules, and balance history remain stored until removed through an account or data-deletion request. Disconnecting a plugin or not using the service does not delete these records.</li>
+      <li><strong>Zero data retention:</strong> an account can turn it on in <a href={`${accountPath(signedIn)}#zdr`}>my account</a>, for 1.5 times the call price. For each call placed or answered while it is on, an hour after the call ends we delete its brief, business name and goal, transcript, outcome, mid-call questions and answers, and the Telnyx recording, and we do not record calls it answers. Those calls are not sent to Raindrop. We keep the phone numbers, times, duration and charges for billing and abuse prevention. OpenAI's abuse-monitoring retention described below still applies to the requests that run the call.</li>
+      <li><strong>Account records and text call history:</strong> apart from zero data retention calls, there is currently no automatic age-based deletion. Account details, call briefs, transcripts, outcomes, schedules, and balance history remain stored until removed through an account or data-deletion request. Disconnecting a plugin or not using the service does not delete these records.</li>
       <li><strong>Saved profiles:</strong> fields remain until you remove them or request account deletion. Removing a profile field does not erase a copy already used in an earlier call or shared with a business.</li>
       <li><strong>Call recordings:</strong> Telnyx stores the audio. Its <a href="https://support.telnyx.com/en/articles/5377454-call-recording">published recording policy</a> currently states that recordings are stored for one year unless deleted earlier, and that this maximum may change. We do not guarantee availability for that whole period. An expiring download link is not deletion of the underlying audio. Contact us to request earlier removal of a recording.</li>
       <li><strong>Sign-in and authorization:</strong> our browser sessions are configured for up to 400 days and renew with active use. OAuth access tokens last seven days; refresh tokens can last ten years and rotate when used. Tokens can be revoked before expiry. These are access lifetimes, not promises to erase the associated account, authorization records, or call history when a token expires.</li>
@@ -627,6 +628,7 @@ export const PricingPage: FC<{ signedIn: boolean; pricePerMinuteCents: number }>
           <tr><td>talking, and phone menus, from pickup by a person or automated system</td><td class="n" data-label="price">{dollars(pricePerMinuteCents)}/min</td></tr>
           <tr><td>whole minutes on hold</td><td class="n" data-label="price">half price</td></tr>
           <tr><td>unanswered, busy and failed calls</td><td class="n" data-label="price">free</td></tr>
+          <tr><td><a href={`${accountPath(signedIn)}#zdr`}>zero data retention</a>: each call's transcript, outcome and recording deleted an hour after it ends</td><td class="n" data-label="price">1.5x ({dollars(zdrPrice(pricePerMinuteCents, 1))}/min)</td></tr>
         </tbody>
       </table>
       <p>

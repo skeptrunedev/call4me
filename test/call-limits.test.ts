@@ -4,7 +4,7 @@ import { accounts, type Account } from '../src/server/services/accounts';
 import { CallError, calls, type Brief } from '../src/server/services/calls';
 import { d1 } from './sqlite-d1';
 
-const alice = { id: 'acct_alice', email: 'alice@example.com', display_name: 'Alice' } as Account;
+const alice = { id: 'acct_alice', email: 'alice@example.com', display_name: 'Alice', zdr: 0 } as Account;
 const input = {
   to: '+1 503 266 1156', business: 'Canby Utility', category: 'general',
   goal: 'Ask when the office opens.', details: { questions: 'What are your opening hours?' },

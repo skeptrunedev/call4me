@@ -295,7 +295,7 @@ test('inbound calls are recorded from answer like outbound ones, which the outbo
     bodies.push(JSON.parse(String(init.body)));
     return Response.json({ data: { result: 'ok', recording_id: 'rec_1' } });
   });
-  await telnyx(environment()).answer(controlId, { webhookUrl: 'https://call4.me/webhooks/telnyx', streamUrl: 'wss://voice.call4.me/stream', callId, timeLimitSecs: 1800 });
+  await telnyx(environment()).answer(controlId, { webhookUrl: 'https://call4.me/webhooks/telnyx', streamUrl: 'wss://voice.call4.me/stream', callId, timeLimitSecs: 1800, record: true });
   assert.equal(bodies.length, 1);
   assert.equal(bodies[0]!.record, 'record-from-answer');
   assert.equal(bodies[0]!.record_channels, 'single');

@@ -23,10 +23,12 @@ export interface Account {
   sales_calls: number;
   /** What they say they asked their AI or searched for when they found call4me (migrations/0040); null until answered. */
   found_via: string | null;
+  /** 1 when calls are made with zero data retention (services/zdr.ts), at 1.5x the price; 0 by default. */
+  zdr: number;
 }
 
 /** The columns every Account is read with. */
-export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc, first_touch, reddit_first_visit_id, reddit_last_visit_id, sales_calls, found_via`;
+export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc, first_touch, reddit_first_visit_id, reddit_last_visit_id, sales_calls, found_via, zdr`;
 
 export type LedgerKind = 'topup' | 'reload' | 'hold' | 'release' | 'call' | 'refund' | 'adjustment' | 'number';
 
@@ -50,6 +52,11 @@ export function accounts(db: D1Database) {
       const normalized = email.trim().toLowerCase();
       await db.prepare(`INSERT OR IGNORE INTO accounts (id, email, created_at) VALUES (?, ?, ?)`).bind(newId(), normalized, now()).run();
       return (await this.byEmail(normalized))!;
+    },
+
+    /** Turn zero data retention on or off for calls placed or answered from now on. */
+    async setZdr(accountId: string, on: boolean): Promise<void> {
+      await db.prepare(`UPDATE accounts SET zdr = ? WHERE id = ?`).bind(on ? 1 : 0, accountId).run();
     },
 
     async saveFoundVia(accountId: string, text: string): Promise<void> {
