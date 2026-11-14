@@ -4,11 +4,16 @@
  *
  *   npm run number -- buy <email> <country> [--gift] [--local|--staging]
  *   npm run number -- adopt <email> <number> [--local|--staging]
+ *   npm run number -- release <number>... [--local|--staging]
  *   npm run number -- share|unshare <number> [--local|--staging]
  *
  * adopt makes a US number already on our carrier account and connection the account's free first
  * number: one whose order the carrier finished after the first call that placed it stopped
  * waiting, before services/numbers.ts ensureIncluded recorded orders first.
+ *
+ * release gives numbers no account holds back to the carrier, so they stop billing: ones such an
+ * order left behind. It refuses any number an account holds (pending or active), and any the
+ * carrier doesn't have on this environment's connection.
  *
  * --gift credits the price back, so the number costs them nothing today (its monthly renewal still
  * comes from their balance, as for any bought number). buy needs TELNYX_API_KEY and
@@ -23,6 +28,7 @@
 import { checkDialable, formatPhone } from '../src/server/lib/phone';
 import { accounts } from '../src/server/services/accounts';
 import { numbers } from '../src/server/services/numbers';
+import { telnyx } from '../src/server/lib/telnyx';
 import { cliD1 } from './d1-cli';
 
 const args = process.argv.slice(2);
@@ -47,8 +53,34 @@ if (command === 'share' || command === 'unshare') {
   process.exit(0);
 }
 
+const usage = 'usage: npm run number -- buy <email> <country> [--gift] [--local|--staging]\n       npm run number -- adopt <email> <number> [--local|--staging]\n       npm run number -- release <number>... [--local|--staging]\n       npm run number -- share|unshare <number> [--local|--staging]';
+
+if (command === 'release') {
+  const listed = args.filter((a) => !a.startsWith('--')).slice(1);
+  if (!listed.length || !process.env.TELNYX_API_KEY || !process.env.TELNYX_CONNECTION_ID) {
+    console.error(listed.length ? 'TELNYX_API_KEY and TELNYX_CONNECTION_ID must be set' : usage);
+    process.exit(1);
+  }
+  const carrier = telnyx({ TELNYX_API_KEY: process.env.TELNYX_API_KEY } as unknown as Env);
+  let refused = 0;
+  for (const number of listed) {
+    const parsed = checkDialable(number);
+    const e164 = parsed.ok ? parsed.e164 : number;
+    const held = await db.prepare(`SELECT a.email, n.status FROM numbers n JOIN accounts a ON a.id = n.account_id WHERE n.phone_number = ? AND n.status IN ('pending', 'active')`).bind(e164).first<{ email: string; status: string }>();
+    const owned = held ? null : await carrier.ownedNumber(e164);
+    const reason = held ? `${held.email} holds it (${held.status})` : !owned ? 'the carrier has no such number on our account' : owned.connectionId !== process.env.TELNYX_CONNECTION_ID ? `it rings connection ${owned.connectionId}, not this environment's` : null;
+    if (reason) {
+      console.error(`kept ${formatPhone(e164)}: ${reason}`);
+      refused++;
+      continue;
+    }
+    await carrier.releaseNumber(e164);
+    console.log(`released ${formatPhone(e164)}`);
+  }
+  process.exit(refused ? 1 : 0);
+}
+
 const email = target;
-const usage = 'usage: npm run number -- buy <email> <country> [--gift] [--local|--staging]\n       npm run number -- adopt <email> <number> [--local|--staging]\n       npm run number -- share|unshare <number> [--local|--staging]';
 const adopting = command === 'adopt';
 if (!(command === 'buy' || adopting) || !email?.includes('@') || !(adopting ? country : /^[A-Za-z]{2}$/.test(country ?? ''))) {
   console.error(usage);
