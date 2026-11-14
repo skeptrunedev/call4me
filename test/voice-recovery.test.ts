@@ -278,6 +278,98 @@ test('known machine pickup suppresses the startup hello while waiting for its gr
   assert.match(h.session.live.sent[0].content, /Stay silent while the greeting plays/);
 });
 
+// 20ms G.711 μ-law frames, as Telnyx and GPT-Live both stream them nonstop: 0xFF is silence, 0x00 full scale.
+const QUIET = btoa('\xff'.repeat(160));
+const LOUD = btoa('\x00'.repeat(160));
+
+/**
+ * An outbound call just picked up, its voice session live. `play` runs the line frame by frame up to
+ * `untilMs` after pickup, both ways, with `loud` saying which side is audible when; `hellos` is
+ * whatever was sent that could make the caller speak up.
+ */
+async function outboundPickup(t: TestContext) {
+  const h = harness(t);
+  const live = (h.session.live = new Socket());
+  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'outbound' } }));
+  const play = async (untilMs: number, loud: (ms: number) => { them?: boolean; caller?: boolean } = () => ({})) => {
+    while (Date.now() - h.session.answeredAt < untilMs) {
+      const { them, caller } = loud(Date.now() - h.session.answeredAt);
+      h.session.phone.message({ event: 'media', media: { payload: them ? LOUD : QUIET } });
+      await h.session.onLive(JSON.stringify({ type: 'session.output_audio.delta', delta: caller ? LOUD : QUIET }));
+      t.mock.timers.tick(20);
+    }
+  };
+  const hellos = (socket: Socket = live) => socket.sent.filter((m) => m.type === 'session.commentary.append' || m.type === 'session.instructions.append');
+  const words = (role: 'them' | 'caller', delta: string) => h.session.onLive(JSON.stringify({ type: role === 'them' ? 'session.input_transcript.delta' : 'session.output_transcript.delta', delta }));
+  return { h, live, play, hellos, words };
+}
+
+test("the silent-pickup hello never cuts into the caller's intro to someone listening quietly", async (t) => {
+  // call_lcr5rgz3e4xsmesm, 2026-11-14: our caller started 61ms after pickup, to someone whose
+  // "Hello?" came before it; nothing of theirs was transcribed until +10.9s. The hello went in at
+  // +5s ("...testing their newHi, hello?") and the caller never spoke again.
+  const { play, hellos, words } = await outboundPickup(t);
+  const intro = (ms: number) => ({ caller: ms >= 61 && ms < 6_500 });
+  await play(1_000, intro);
+  await words('caller', "Hi! I'm Sarah, Alex's assistant. ");
+  await play(4_000, intro);
+  await words('caller', "Just letting you know Alex is testing their new phone assistant.");
+  // They say "Hello?" again at +7.8s; its transcript lands 3s later.
+  await play(10_900, (ms) => ({ ...intro(ms), them: ms >= 7_800 && ms < 8_300 }));
+  await words('them', 'Hello?');
+  await play(15_000);
+  assert.deepEqual(hellos(), [], 'nothing cuts into the intro or tells the caller to wait');
+});
+
+test('a pickup silent both ways still gets the hello, once, as something to say now with no wait after it', async (t) => {
+  const { play, hellos } = await outboundPickup(t);
+  await play(4_980);
+  assert.deepEqual(hellos(), []);
+  await play(5_000);
+  assert.equal(hellos().length, 1);
+  assert.equal(hellos()[0].type, 'session.commentary.append');
+  assert.match(hellos()[0].content, /Nobody has spoken since the call connected\. Say a short hello now.*When they answer, respond normally\./);
+  assert.doesNotMatch(hellos()[0].content, /wait/i);
+  await play(20_000);
+  assert.equal(hellos().length, 1);
+});
+
+test('the hello waits while the other side is audibly talking, before any of it is transcribed', async (t) => {
+  const { play, hellos, words } = await outboundPickup(t);
+  // They talk from +3s to +8s; their words reach the transcript a second after they stop.
+  await play(9_000, (ms) => ({ them: ms >= 3_000 && ms < 8_000 }));
+  assert.deepEqual(hellos(), [], 'not while they are talking');
+  await words('them', 'Front desk, this is Dana, sorry about that. How can I help?');
+  await play(20_000);
+  assert.deepEqual(hellos(), [], 'once their words are in, the caller answers them itself');
+});
+
+test('a sound from their side that is never transcribed only holds the hello until they have been quiet as long', async (t) => {
+  const { play, hellos } = await outboundPickup(t);
+  // The handset knocks on pickup, then nobody says anything.
+  await play(5_400, (ms) => ({ them: ms >= 400 && ms < 500 }));
+  assert.deepEqual(hellos(), []);
+  await play(5_500);
+  assert.equal(hellos().length, 1);
+});
+
+test("the caller's speech counts from its first audible frame, and still counts for a voice session opened after the phone stream was lost", async (t) => {
+  const { h, play, hellos, words } = await outboundPickup(t);
+  // Its audio starts just before the hello is due, ahead of any transcript of it.
+  await play(5_200, (ms) => ({ caller: ms >= 4_800 }));
+  assert.deepEqual(hellos(), []);
+  await words('caller', 'Hi, this is Sarah calling for Alex.');
+  await play(6_000, (ms) => ({ caller: ms < 5_800 }));
+  // The stream drops and a new one comes up with a new voice session, which arms the hello again.
+  await h.session.phoneLost(h.session.phone, 'test loss');
+  h.session.attachPhone(new Socket());
+  const replacement = (h.session.live = new Socket());
+  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'replacement' } }));
+  await play(13_000);
+  assert.equal(h.session.live, replacement);
+  assert.deepEqual(hellos(replacement), [], 'our caller already spoke on this call');
+});
+
 test('a fresh durable object restores the ongoing call and relays audio using its saved transcript', async (t) => {
   const h = harness(t);
   const transcript = [{ role: 'them', text: 'Please give me two minutes to check the order.', at: 9000 }];

@@ -39,7 +39,7 @@ const QUESTION_WAIT_MS = 120_000;
 /** What the voice model is told once a question to the person has gone unanswered. */
 const noAnswer = (question: string) =>
   `No answer is available from the person you work for about "${question.slice(0, 300)}". Stop waiting for it and do not keep saying you are checking or waiting to hear back. When the other person is waiting for your answer, say you don't have that detail and ask whether they can proceed or look it up using facts already supplied. Carry on with anything else you can accomplish. Never guess facts or accept anything outside your permission. If nothing can proceed, ask what is needed for a follow up, then say goodbye and delegate end_call. Do not promise a callback has been arranged. Stay silent during a phone menu, hold, transfer, or while the other person is speaking. A later answer will still be delivered.`;
-/** The other side usually speaks first ("Hi, thanks for calling..."). If they don't, nudge. */
+/** The other side usually speaks first ("Hi, thanks for calling..."). If nobody has, and they've been quiet this long, nudge. */
 const SILENT_PICKUP_MS = 5_000;
 /** Longest an incoming call waits to be answered while its voice session opens (prewarmLive). */
 const PREWARM_WAIT_MS = 2_500;
@@ -933,6 +933,12 @@ export class VoiceSession extends DurableObject<Env> {
    * Once the call is answered and the voice session is live, whichever comes last: if nobody has
    * spoken, have the caller speak. Answering a call, we speak first, right away: whoever rang
    * waits on our hello, and after 9 silent seconds MaxProMow asked "are you…" and hung up.
+   * Calling out, the hello is only for a line silent both ways. Our caller often starts talking
+   * within 100ms of pickup, to someone whose "Hello?" came before it and was never transcribed: on
+   * call_lcr5rgz3e4xsmesm (2026-11-14) they listened, the hello went in 5s into the intro ("...testing
+   * their newHi, hello?"), and the caller, told to wait, sat silent through two "Hello?"s and "No,
+   * it's not working" until they hung up. Their side making sound nobody has transcribed yet may be
+   * them talking, so the hello waits until they have been quiet as long.
    */
   private nudgeWhenSilent(): void {
     // Answering with a session opened before pickup, the greeting must wait for the phone stream:
@@ -941,13 +947,23 @@ export class VoiceSession extends DurableObject<Env> {
     this.nudgeScheduled = true;
     const live = this.live;
     const answering = Boolean(this.setup?.answering);
-    setTimeout(() => {
+    const nudge = (): void => {
       const personOrUnknown = !this.machineState || this.machineState.phase === 'unknown' || this.machineState.phase === 'human';
-      if (this.live === live && personOrUnknown && !this.heardThem && !this.ended) {
-        const content = answering ? 'You just picked up their call. Answer it now, the way your instructions say.' : 'Nobody has spoken since the call connected. Say a short hello in the language your instructions say to speak ("Hi, hello?" in English, "Bonjour ?" in French) and then wait.';
-        this.sendLive({ type: 'session.instructions.append', delegation_id: null, content });
-      }
-    }, answering ? 0 : SILENT_PICKUP_MS);
+      if (this.live !== live || !personOrUnknown || this.heardThem || this.ended) return;
+      if (answering) return this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: 'You just picked up their call. Answer it now, the way your instructions say.' });
+      // Our caller has spoken: its audible audio went to the phone (speechEndsAt, set ahead of its
+      // transcript; GPT-Live's nonstop silence never sets it), or its words are in the transcript,
+      // which outlives a lost phone stream (detachLive clears speechEndsAt, and the next voice
+      // session arms this again).
+      if (this.speechEndsAt || this.lastSpokeAt.caller) return;
+      const quietAt = this.themAudibleAt + SILENT_PICKUP_MS;
+      if (Date.now() < quietAt) return void setTimeout(nudge, quietAt - Date.now());
+      this.mark('nobody has spoken since pickup; saying hello');
+      // Commentary, GPT-Live's channel for something to say aloud, as OpenAI's session guide has an
+      // app make the model speak first. Thinking would wait for a turn a silent line never starts.
+      this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: 'Nobody has spoken since the call connected. Say a short hello now, in the language your instructions say to speak ("Hi, hello?" in English, "Bonjour ?" in French). When they answer, respond normally.' });
+    };
+    setTimeout(nudge, answering ? 0 : SILENT_PICKUP_MS);
   }
 
   private startWatchdog(): void {
