@@ -443,6 +443,53 @@ test("a voice session that expires while the phone rings doesn't hang up the cal
   assert.equal(shutdown.mock.callCount(), 1);
 });
 
+test('a voice session from before pickup that expires just after it, before anyone spoke, is replaced instead of hanging up', async (t) => {
+  // Restaurante Taracea, 2026-11-14: answered 29.2s after its session started, which expired a
+  // second later, and the call hung up on them.
+  const h = harness(t);
+  h.session.answered = false;
+  const early = h.session.startLive();
+  await h.untilOpened(1);
+  const ringing = h.connected(0);
+  await early;
+  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'ringing' } }));
+  const shutdown = t.mock.method(h.session, 'shutdown', async () => {});
+  t.mock.timers.tick(29_200);
+  h.session.answered = true;
+  h.session.answeredAt = Date.now();
+  t.mock.timers.tick(1_000);
+  ringing.message({ type: 'session.closed', reason: 'expired' });
+  await h.untilOpened(2);
+  const fresh = h.connected(1);
+  for (let i = 0; i < 20; i++) await Promise.resolve();
+  assert.equal(shutdown.mock.callCount(), 0, 'the call stays up');
+  assert.equal(h.session.live, fresh);
+  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'fresh' } }));
+  // The replacement started after pickup: its own close ends the call, so nothing loops.
+  fresh.message({ type: 'session.closed', reason: 'expired' });
+  for (let i = 0; i < 5; i++) await Promise.resolve();
+  assert.equal(shutdown.mock.callCount(), 1);
+});
+
+test('a voice session from before pickup that expires after someone spoke ends the call as before', async (t) => {
+  const h = harness(t);
+  h.session.answered = false;
+  const early = h.session.startLive();
+  await h.untilOpened(1);
+  const ringing = h.connected(0);
+  await early;
+  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'ringing' } }));
+  const shutdown = t.mock.method(h.session, 'shutdown', async () => {});
+  t.mock.timers.tick(29_200);
+  h.session.answered = true;
+  h.session.answeredAt = Date.now();
+  h.session.appendTranscript('them', 'Restaurante Taracea, dígame.');
+  ringing.message({ type: 'session.closed', reason: 'expired' });
+  for (let i = 0; i < 5; i++) await Promise.resolve();
+  assert.equal(shutdown.mock.callCount(), 1);
+  assert.equal(h.opens.length, 1);
+});
+
 // The Academe at 198: the carrier's detection said a person answered, 4s into the greeting.
 const academe = (msgAt: number) => [
   { role: 'them' as const, text: 'Thank you, and we look forward to welcoming you. Please leave a message after the tone. When you have finished, please hang up or press the pound key for more options', at: msgAt - 17_000 },

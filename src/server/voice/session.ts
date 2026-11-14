@@ -462,14 +462,23 @@ export class VoiceSession extends DurableObject<Env> {
    * says "expired" before its socket closes, so guarding only the close missed every one: since
    * Oct 25 no unanswered call rang past ~30s, against the carrier's 40s. Before pickup it is
    * dropped, and pickup opens a fresh one, as before the session opened early.
+   * The same expiry can land just after pickup: Restaurante Taracea answered 29.2s after its
+   * session started, the session expired a second later, and the call hung up on them before
+   * anyone spoke (2026-11-14). A session from before pickup expiring before anyone has spoken is
+   * replaced on the spot; any other session ending ends the call.
    */
-  private async liveEnded(reason: string): Promise<void> {
+  private async liveEnded(reason: string, expired = false): Promise<void> {
     if (!this.answered && !this.ended) return this.dropUnusedLive();
+    const fromBeforePickup = this.liveStartedAt > 0 && this.liveStartedAt < this.answeredAt;
+    if (expired && fromBeforePickup && !this.ended && !this.lastSpokeAt.them && !this.lastSpokeAt.caller) {
+      this.dropUnusedLive('voice session from before pickup expired before anyone spoke; opening a new one');
+      return this.startLive();
+    }
     await this.shutdown(reason);
   }
 
   /** A voice session opened before pickup closed unused: forget it, so pickup opens another. */
-  private dropUnusedLive(): void {
+  private dropUnusedLive(note = 'voice session expired before pickup; opening a new one at pickup'): void {
     const live = this.live;
     this.live = null;
     this.liveReady = false;
@@ -477,8 +486,8 @@ export class VoiceSession extends DurableObject<Env> {
     this.nudgeScheduled = false;
     this.pendingAudio = [];
     void this.ctx.storage.delete('liveStarted');
-    if (live?.readyState === WebSocket.OPEN) live.close(1000, 'expired before pickup');
-    this.mark('voice session expired before pickup; opening a new one at pickup');
+    if (live?.readyState === WebSocket.OPEN) live.close(1000, 'expired unused');
+    this.mark(note);
   }
 
   /** Socket state belongs to one phone stream; none of it may leak into its replacement. */
@@ -863,9 +872,11 @@ export class VoiceSession extends DurableObject<Env> {
         this.monitoringError = redact(e.error.message, this.setup?.redact ?? []);
         break;
       }
-      case 'session.closed':
-        await this.liveEnded(`the voice model closed the session (${(ev as { reason: string }).reason})`);
+      case 'session.closed': {
+        const why = (ev as { reason: string }).reason;
+        await this.liveEnded(`the voice model closed the session (${why})`, why === 'expired');
         break;
+      }
     }
   }
 
