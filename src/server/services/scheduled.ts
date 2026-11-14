@@ -5,6 +5,7 @@ import { accounts, type Account } from './accounts';
 import { CallError, calls, localTimeIn, type PlaceCallInput } from './calls';
 import { placeCall, type Voice } from './dialer';
 import type { Surface } from './intake';
+import { errorText } from '../lib/errors';
 
 /**
  * Calls placed later: "call Canby Utility Monday when they open". Scheduling checks everything
@@ -209,7 +210,7 @@ async function dialScheduled(env: Env, origin: string, row: ScheduledRow): Promi
     await settle('placed', call.id, null);
     return 'placed';
   } catch (err) {
-    if (!(err instanceof CallError)) console.error('scheduled call failed', row.id, err);
+    if (!(err instanceof CallError)) console.error('scheduled call failed', row.id, errorText(err));
     // A refusal after the call row exists (the carrier, a voice deploy) links it, so get_call shows it.
     await settle('failed', err instanceof CallError ? err.callId : null, err instanceof CallError ? err.message : 'something broke on the server placing it');
     return 'failed';

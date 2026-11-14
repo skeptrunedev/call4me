@@ -1,4 +1,5 @@
 import { usageParts, usageTotals, type UsageTotals } from '../services/stats';
+import { errorText } from './errors';
 
 /**
  * The footer's usage totals, kept in the edge cache so pages show them without waiting on D1.
@@ -24,10 +25,10 @@ export async function usage(db: D1Database | D1DatabaseSession, url: string, ctx
   const cached = await cachedUsage(url).catch(() => null);
   if (!cached) {
     const totals = await usageTotals(db);
-    ctx.waitUntil(remember(totals).catch((err) => console.error('usage cache write failed', err)));
+    ctx.waitUntil(remember(totals).catch((err) => console.error('usage cache write failed', errorText(err))));
     return totals;
   }
-  if (Date.now() - cached.at > FRESH_MS) ctx.waitUntil(usageTotals(db).then(remember).catch((err) => console.error('usage refresh failed', err)));
+  if (Date.now() - cached.at > FRESH_MS) ctx.waitUntil(usageTotals(db).then(remember).catch((err) => console.error('usage refresh failed', errorText(err))));
   return { calls: cached.calls, minutes: cached.minutes };
 }
 

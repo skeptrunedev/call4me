@@ -41,6 +41,7 @@ import { firstTouchCookie, firstTouchOf, firstTouchSetCookie, isCrawler } from '
 import { redditConversions, redditCookies, redditVisitCookie, redditVisitOf, saveRedditVisit } from './lib/reddit';
 import { metaConversions } from './lib/meta';
 import { siteData } from './routes/site-data';
+import { errorText } from './lib/errors';
 
 const app = new Hono<AppEnv>();
 
@@ -164,7 +165,7 @@ app.notFound((c) => c.html(<MessagePage title="not found" message="that page doe
 app.onError((err, c) => {
   // The blog's own refusals (no such post, a used link, already a supporter) are shown as they are.
   if (err instanceof BlogError) return c.html(<MessagePage title={err.status === 404 ? 'not found' : 'that did not work'} message={err.message} signedIn={Boolean(c.get('account'))} />, err.status);
-  console.error('unhandled', err);
+  console.error('unhandled', errorText(err));
   return c.html(<MessagePage title="something broke" message="try again in a moment." />, 500);
 });
 

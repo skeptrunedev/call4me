@@ -14,6 +14,7 @@ import { profiles } from './profiles';
 import { accentOf, answeringInstructionsOf, assistantNameOf, namePronunciationOf, type Profile, type Surface } from './intake';
 import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, todayUtc, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 import { analytics } from './analytics';
+import { errorText } from '../lib/errors';
 
 export { VOICES, type Voice } from '../voice/voices';
 
@@ -119,7 +120,7 @@ export async function settleLost(env: Env, at = Date.now()): Promise<number> {
     try {
       if (await carrier.callAlive(row.telnyx_call_control_id!)) continue;
     } catch (err) {
-      console.error('checking a lost call failed', row.id, err);
+      console.error('checking a lost call failed', row.id, errorText(err));
       continue;
     }
     await db.finish(row.id, { status: 'failed', error: 'the carrier ended this call without our hearing its hangup', pricePerMinuteCents: callPrice(env, row), at });
@@ -232,7 +233,7 @@ export async function placeCall(
     }
   } catch (err) {
     // The full carrier error stays on the call row for debugging; the agent gets the short version.
-    console.error('place call failed', call.id, err);
+    console.error('place call failed', call.id, errorText(err));
     await db.finish(call.id, { status: 'failed', error: String(err), pricePerMinuteCents: price });
     // Refused before the carrier took it, the call was never placed, so a retry with its key places it.
     if (!controlId && execution.idempotency) await db.releaseIdempotencyKey(call.id);
@@ -411,7 +412,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
   } catch (err) {
     // Most often the caller hung up while this was setting up: answering fails, and their hangup
     // may have come before the call row existed, so nothing else would end it or release its hold.
-    console.error('answering an incoming call failed', id, err);
+    console.error('answering an incoming call failed', id, errorText(err));
     await db.finish(id, { status: 'failed', error: `could not answer: ${String(err)}`, pricePerMinuteCents: price });
   }
 }

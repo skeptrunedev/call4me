@@ -14,6 +14,7 @@ import { accounts } from '../services/accounts';
 import { analytics } from '../services/analytics';
 import { decodeFirstTouch } from '../lib/first-touch';
 import { redditConversions } from '../lib/reddit';
+import { errorText } from '../lib/errors';
 
 /** Played to the user's own phone when it picks up to join a call (public/static/audio). */
 
@@ -42,7 +43,7 @@ async function writeRecap(env: Env, callId: string): Promise<void> {
     }
     await log('completed', JSON.stringify(outcome));
   } catch (err) {
-    console.error('recap failed', callId, err);
+    console.error('recap failed', callId, errorText(err));
     await env.DB.prepare(`UPDATE calls SET error = COALESCE(error, ?) WHERE id = ?`).bind(`recap failed: ${String(err).slice(0, 300)}`, callId).run();
     if (prompt) await log('error', String(err));
   }

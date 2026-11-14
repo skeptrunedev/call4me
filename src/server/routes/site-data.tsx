@@ -7,6 +7,7 @@ import { usage as usageTotals } from '../lib/usage-cache';
 import { supporters } from '../services/supporters';
 import { BlogComments } from '../views/blog';
 import { posts } from './blog';
+import { errorText } from '../lib/errors';
 
 /** Mounted under /blog as well so existing reader and D1 bookmark cookies reach it. */
 export const siteData = new Hono<AppEnv>();
@@ -48,7 +49,7 @@ siteData.get('/', async (c) => {
       ...(slug ? { post: { slug, liked, supporter, commentsHtml: String(<BlogComments comments={comments} />) } } : {}),
     });
   } catch (error) {
-    console.error('site data failed', error);
+    console.error('site data failed', errorText(error));
     return c.json({ error: 'Live information could not be loaded. Please retry.' }, 503);
   }
 });

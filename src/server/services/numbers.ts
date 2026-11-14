@@ -6,6 +6,7 @@ import { accounts, dollars, type Account } from './accounts';
 import { CALLBACK_WINDOW_MS } from './call-store';
 import { addCreditsPath } from './drip';
 import { isRecipientRejected, makeMessenger, type Messenger } from '../lib/messaging';
+import { errorText } from '../lib/errors';
 
 /**
  * The phone numbers an account holds. Its first US number is free and bought on its first
@@ -466,7 +467,7 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
   /** What buying `id` took from the balance, given back when its order fails. */
   async function refundOrder(row: Pick<NumberRow, 'id' | 'account_id' | 'phone_number'>, price: number): Promise<void> {
     // An order still pending may complete later: give the number back so it isn't held unpaid.
-    await provider.releaseNumber(row.phone_number).catch((e) => console.error('releasing the failed order', row.phone_number, e));
+    await provider.releaseNumber(row.phone_number).catch((e) => console.error('releasing the failed order', row.phone_number, errorText(e)));
     // The free first number took nothing, so there is nothing to give back.
     if (price > 0) await accounts(db).post(row.account_id, price, 'refund', `number:${row.id}:refund`, `order failed for ${formatPhone(row.phone_number)}`);
   }
@@ -521,7 +522,7 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
         .run();
     } catch (err) {
       // Another purchase in this country got recorded first (numbers_one_pending): this one never ordered anything.
-      console.error('recording the number purchase failed', id, err);
+      console.error('recording the number purchase failed', id, errorText(err));
       await ledger.post(account.id, price, 'refund', `number:${id}:refund`, `${c.name} number already being bought`);
       throw new NumberError(`a ${c.name} number is already being bought on this account; nothing more was charged`, 409);
     }
@@ -531,7 +532,7 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
     try {
       placed = await provider.orderNumber(found.phoneNumber, { requirementGroupId: c.requirementGroup ?? null, reference: orderReference(id), waitMs: PURCHASE_WAIT_MS });
     } catch (err) {
-      console.error('number order failed', id, err);
+      console.error('number order failed', id, errorText(err));
       await fail(row);
       throw new NumberError('the carrier could not complete that number order; nothing was charged. try again shortly', 502);
     }
@@ -569,7 +570,7 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
           }
         }
       } catch (err) {
-        console.error('number order status failed', n.id, err);
+        console.error('number order status failed', n.id, errorText(err));
         out.waiting++;
         continue;
       }
@@ -682,13 +683,13 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
     async refreshOffers(): Promise<{ refreshed: number; failed: number }> {
       const out = { refreshed: 0, failed: 0 };
       // Keep the carrier's destination whitelist in step with where accounts may call.
-      await provider.allowDestinations(CALLABLE).catch((err) => console.error('destination whitelist update failed', err));
+      await provider.allowDestinations(CALLABLE).catch((err) => console.error('destination whitelist update failed', errorText(err)));
       for (const country of Object.keys(COUNTRIES)) {
         try {
           await refreshOffer(country);
           out.refreshed++;
         } catch (err) {
-          console.error('number offer refresh failed', country, err);
+          console.error('number offer refresh failed', country, errorText(err));
           out.failed++;
         }
       }
@@ -839,7 +840,7 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
             await db.prepare(`UPDATE numbers SET status = 'released', released_at = ? WHERE id = ?`).bind(at, n.id).run();
             out.released++;
           } catch (err) {
-            console.error('number release failed', n.id, err);
+            console.error('number release failed', n.id, errorText(err));
           }
         }
       }

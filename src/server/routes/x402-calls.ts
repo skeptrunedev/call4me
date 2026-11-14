@@ -8,6 +8,7 @@ import { callView } from '../services/call-ops';
 import { CallError, calls } from '../services/calls';
 import { placeCall, pricePerMinuteTo } from '../services/dialer';
 import { carriesPayment, x402, type Payable } from '../services/x402';
+import { errorText } from '../lib/errors';
 
 /**
  * POST /api/x402/calls: place a call paid for in USDC, no call4me account needed. Without a
@@ -130,7 +131,7 @@ x402Calls.post(x402CallsPath, async (c) => {
   } catch (err) {
     // Paid but not placed: the credits stay on the account, and the key places it again on POST /api/calls.
     // Never a 402 here, which an x402 client would take as a new price to pay.
-    if (!(err instanceof CallError)) console.error('x402 call failed after payment', outcome.transaction, err);
+    if (!(err instanceof CallError)) console.error('x402 call failed after payment', outcome.transaction, errorText(err));
     const status = err instanceof CallError ? (err.status === 402 ? 409 : err.status) : 500;
     const message = err instanceof CallError ? err.message : 'call4me could not place the call.';
     return c.body(json({ error: `${message} The payment is kept as credits; place the call again with POST ${site}/api/calls and Authorization: Bearer <api_key>.`, ...paid, ...(await balance()) }), status as 400, headers);

@@ -10,6 +10,7 @@ import { pageGraph } from '../lib/entity';
 import { usageParts } from '../services/stats';
 import { usage } from '../lib/usage-cache';
 import { useStaticRender } from '../lib/static-render';
+import { errorText } from '../lib/errors';
 
 export { SITE_DESCRIPTION } from '../lib/pages';
 
@@ -31,7 +32,7 @@ async function renderCallCount(db: D1Database, url: string, waiter: Pick<Executi
     const [calls, minutes] = usageParts(await usage(db.withSession('first-unconstrained'), url, waiter));
     return <span class="footer-usage"><span>{calls}</span> <span>{minutes}</span></span>;
   } catch (error) {
-    console.error('footer call count failed', error);
+    console.error('footer call count failed', errorText(error));
     return <span class="footer-usage">call count unavailable</span>;
   }
 }

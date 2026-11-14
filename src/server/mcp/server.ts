@@ -16,6 +16,7 @@ import { buyNumberDescription, buyNumberInput, listNumbersDescription, numbersOu
 import { NumberError, numbers, type NumberView, type OwnNumberView, type PendingNumberView } from '../services/numbers';
 import { getCallRecordings } from '../services/recordings';
 import { scheduledCalls, scheduledText, scheduledView, type ScheduledInput } from '../services/scheduled';
+import { errorText } from '../lib/errors';
 
 /**
  * The call4me MCP server: the handful of tools a coding agent needs to make a phone call
@@ -179,7 +180,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       return await fn();
     } catch (err) {
       if (err instanceof CallError || err instanceof TopupError || err instanceof ProfileError || err instanceof NumberError) return fail(err.message);
-      console.error('mcp tool failed', err);
+      console.error('mcp tool failed', errorText(err));
       return fail('something broke on the server; try again in a moment.');
     }
   };
