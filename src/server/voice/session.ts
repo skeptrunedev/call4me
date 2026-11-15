@@ -204,6 +204,8 @@ export class VoiceSession extends DurableObject<Env> {
   private audioRecorded = false;
   /** When the phone last carried audible sound (their speech, a recording, hold music). */
   private themAudibleAt = 0;
+  /** When this instance got its first frame of the answered call: a reset starts a new one, deaf to the line before it. */
+  private firstFrameAt = 0;
   private framesOut = 0;
   private ended = false;
   private pendingAudio: string[] = [];
@@ -535,6 +537,7 @@ export class VoiceSession extends DurableObject<Env> {
       if (!this.audioRecorded && this.setup) this.recordAudio(this.setup.callId);
       if (!this.answered) return; // ringback and early media are not the other person
       if (this.framesIn++ === 0) this.mark('first audio from phone');
+      this.firstFrameAt ||= Date.now();
       if (this.liveReady) this.sendLive({ type: 'session.input_audio.append', audio: payload });
       else if (this.pendingAudio.length < 250) this.pendingAudio.push(payload); // ~5s at 20ms frames
       if (pcmuAudible(payload)) this.themAudibleAt = Date.now();
@@ -1645,10 +1648,23 @@ export class VoiceSession extends DurableObject<Env> {
   /**
    * The time limit came up during a hold (at the wrap-up point, or at the hard stop when the hold
    * began during the wrap-up): hold up to LIMITS.holdExtensionMinutes more of the account's
-   * credits and move the wrap-up point that far past `wrapAt`. False when the balance or the
-   * ceiling leaves no room, and the call wraps up as usual.
+   * credits and move the wrap-up point that far past `wrapAt`. False when the line has gone silent,
+   * or the balance or the ceiling leaves no room, and the call wraps up as usual.
    */
   private async extendOnHold(s: Stored, wrapAt: number): Promise<boolean> {
+    // A hold ends only on someone's words or our caller's reply, and a dead line gives neither. At
+    // 3715 California Apartments "we will be with you shortly" started a hold, the transfer behind
+    // its 1 went dead after the ringback and never hung up, and nine extensions kept the silent
+    // line open 2h13m, $16.88 billed as hold (call_bje9ny6dv8smyujy). Queue music on real holds is
+    // never quiet past 11.4s (Amazon's loop), nor a person on a live line past 31s. A silent hold
+    // is not ended or hung up on (small businesses hold with no music): it only gets no time past
+    // the call's planned length. Quiet counts only over frames this instance received: after a reset
+    // the hold resumes with themAudibleAt back at 0, and a live queue would look silent from pickup.
+    const silentFor = this.firstFrameAt ? Date.now() - Math.max(this.themAudibleAt, this.firstFrameAt) : 0;
+    if (silentFor >= DEAD_AIR_MS) {
+      this.mark(`line silent ${Math.round(silentFor / 1000)}s on hold at the time limit: not extending`);
+      return false;
+    }
     const minutes = await this.extendLimit(s, wrapAt, LIMITS.holdExtensionMinutes);
     if (!minutes) return false;
     await this.ctx.storage.put('wrapAt', wrapAt + minutes * 60_000);

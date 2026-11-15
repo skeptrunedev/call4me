@@ -465,6 +465,114 @@ test('time notices go in as quiet context, never as an instruction that can cut 
   assert.ok(!live.sent.some((m: any) => m.type === 'session.instructions.append'), 'no time notice can interrupt the caller');
 });
 
+/**
+ * call_bje9ny6dv8smyujy's start: an outbound call whose recording says "we will be with you
+ * shortly" 1.8s after pickup, which puts it on hold, with credits for extensions and its wrap-up
+ * point `limitMs` after pickup. `marks` is what the session logged.
+ */
+async function onHold(t: TestContext, limitMs: number) {
+  const { accounts } = await import('../src/server/services/accounts');
+  const log = t.mock.method(console, 'log', () => {});
+  const pickup = await outboundPickup(t);
+  const { h, play, words } = pickup;
+  const db = h.env.DB;
+  h.session.setup.pricePerMinuteCents = 25;
+  await accounts(db).post('acct_alice', 10_000, 'adjustment', 'seed', 'credits');
+  await db.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at, answered_at) VALUES ('recovery_test', 'acct_alice', '+14155550100', 'Test apartments', 'Ask about a unit', '{}', 'in_progress', 0, ?)`).bind(h.session.answeredAt).run();
+  await play(1_800, () => ({ them: true }));
+  await words('them', 'Thank you for calling. We will be with you shortly.');
+  assert.equal(h.session.hold.holding(), true);
+  const wrapAt = h.session.answeredAt + limitMs;
+  h.values.set('wrapAt', wrapAt);
+  const balance = () => accounts(db).balanceCents('acct_alice');
+  const marks = () => log.mock.calls.map((c: any) => String(c.arguments[0]));
+  return { ...pickup, wrapAt, balance, marks };
+}
+
+test('a hold on a line gone dead gets no extension at the time limit, and the call wraps up as planned', async (t) => {
+  // call_bje9ny6dv8smyujy: ringback until +87s after our 1, then exact-zero audio from a transfer
+  // that never hung up, extended 15 minutes at a time for 2h13m.
+  const { h, live, play, wrapAt, balance, marks } = await onHold(t, 3 * 60_000);
+  const hangups: string[] = [];
+  h.session.hangup = async (why: string) => { hangups.push(why); };
+  await play(3 * 60_000, (ms) => ({ them: ms < 87_000 }));
+  await h.session.alarm();
+  assert.equal(h.values.get('wrapAt'), wrapAt, 'no more time');
+  assert.equal(h.values.get('stopAt'), Date.now() + 40_000);
+  assert.ok(live.sent.some((m: any) => m.type === 'session.thinking.append' && /Time is almost up/.test(m.content)), 'the wrap-up note goes in');
+  assert.ok(marks().some((m) => /line silent 93s on hold at the time limit: not extending/.test(m)));
+  assert.equal(await balance(), 10_000, 'no credits held for an extension');
+
+  await play(3 * 60_000 + 40_000);
+  await h.session.alarm();
+  assert.deepEqual(hangups, ['the call reached its time limit']);
+  assert.equal(await balance(), 10_000);
+});
+
+test('a hold on queue music still gets its extension when the limit lands at the end of an 11.4s gap in the loop', async (t) => {
+  // Amazon's hold loop goes quiet up to 11.4s between plays; here every 31.4s, the limit at the end of the sixth gap.
+  const cycle = 31_400;
+  const { h, play, wrapAt, balance, marks } = await onHold(t, 6 * cycle);
+  await play(6 * cycle, (ms) => ({ them: ms % cycle < cycle - 11_400 }));
+  await h.session.alarm();
+  assert.equal(h.values.get('wrapAt'), wrapAt + 15 * 60_000);
+  assert.equal(h.values.has('stopAt'), false);
+  assert.ok(marks().some((m) => /still on hold at the time limit: held 15 more min/.test(m)));
+  assert.equal(await balance(), 10_000 - 15 * 25);
+});
+
+test('a hold whose line went quiet less than a minute before the limit still gets its extension', async (t) => {
+  const { h, play, wrapAt, marks } = await onHold(t, 3 * 60_000);
+  await play(3 * 60_000, (ms) => ({ them: ms < 3 * 60_000 - 59_000 }));
+  await h.session.alarm();
+  assert.equal(h.values.get('wrapAt'), wrapAt + 15 * 60_000);
+  assert.equal(h.values.has('stopAt'), false);
+  assert.ok(!marks().some((m) => /not extending/.test(m)));
+});
+
+test("a session reset mid-hold doesn't make the queue look silent, and a dead line is still caught after it", async (t) => {
+  const { accounts } = await import('../src/server/services/accounts');
+  const h = harness(t);
+  t.mock.method(console, 'log', () => {});
+  t.mock.method(console, 'warn', () => {});
+  const db = h.env.DB;
+  h.session.setup.pricePerMinuteCents = 25;
+  await accounts(db).post('acct_alice', 10_000, 'adjustment', 'seed', 'credits');
+  await db.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at, answered_at, hold_since) VALUES ('recovery_test', 'acct_alice', '+14155550100', 'Test apartments', 'Ask about a unit', '{}', 'in_progress', 0, ?, ?)`)
+    .bind(h.session.answeredAt, h.session.answeredAt + 1_800).run();
+  h.values.set('setup', h.session.setup);
+  h.values.set('liveStarted', true);
+  // 20 minutes into the hold, the instance holding the call is reset and its stream drops.
+  h.phone.close();
+  t.mock.timers.tick(20 * 60_000);
+  const restarted = new VoiceSession(h.session.ctx, h.session.env) as any;
+  const phone = new Socket();
+  restarted.attachPhone(phone);
+  const attached = restarted.streamAttached(phone);
+  await h.untilOpened(1);
+  h.connected(0);
+  await attached;
+  await restarted.onLive(JSON.stringify({ type: 'session.started', session: { id: 'restored' } }));
+  assert.equal(restarted.hold.holding(), true, 'the hold resumes');
+  const frames = (ms: number) => {
+    for (let at = 0; at < ms; at += 20) {
+      phone.message({ event: 'media', media: { payload: QUIET } });
+      t.mock.timers.tick(20);
+    }
+  };
+  // The stream comes back in a gap of the queue's music, 5s before the wrap-up point.
+  frames(5_000);
+  h.values.set('wrapAt', Date.now());
+  await restarted.alarm();
+  assert.equal(h.values.get('wrapAt'), Date.now() + 15 * 60_000, 'quiet before this instance heard the line is not silence');
+
+  // The queue is dead after all: a minute of nothing on this instance's own frames.
+  frames(60_000);
+  h.values.set('wrapAt', Date.now());
+  await restarted.alarm();
+  assert.equal(h.values.get('stopAt'), Date.now() + 40_000);
+});
+
 test("a screener whose question isn't recognized still gets an introduction once it goes quiet", async (t) => {
   const h = harness(t);
   h.session.live = new Socket();
