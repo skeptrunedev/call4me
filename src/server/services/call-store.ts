@@ -95,6 +95,17 @@ export interface CallRow {
   /** Failed purge runs so far, and the earliest time the next one may start (services/zdr.ts). */
   purge_attempts: number;
   purge_next_at: number | null;
+  /**
+   * When the voice session found this call's hold running out of credits (callStore.lowCredits), when
+   * it then wraps up unless credits are added, and the minutes that left. Null on every other call.
+   */
+  low_credit_at: number | null;
+  low_credit_deadline_at: number | null;
+  low_credit_minutes: number | null;
+  /** The low-credit email (services/low-credits.ts): sent, refused by the recipient's server, or claimed by a cron run until then. */
+  low_credit_email_sent_at: number | null;
+  low_credit_email_rejected_at: number | null;
+  low_credit_email_claim_until: number | null;
   created_at: number;
 }
 
@@ -188,6 +199,45 @@ function costAt(row: Metered, at: number, pricePerMinuteCents: number): { cents:
 function unusedHoldCents(row: Pick<CallRow, 'hold_cents'> & Metered, at: number, pricePerMinuteCents: number): number {
   if (!row.hold_cents || !row.answered_at) return 0;
   return Math.max(0, row.hold_cents - costAt(row, at, pricePerMinuteCents).cents);
+}
+
+/** The latest a call answered at `answeredAt` may run: a little before Telnyx's own time limit. */
+export const ceilingAt = (answeredAt: number) => answeredAt + (LIMITS.maxMinutes * 60 - 45) * 1000;
+
+/**
+ * What extending a call by up to `want` minutes at `at` takes: the minutes `balance` and the call's
+ * unused held credits pay for, and the cents of that held from the balance. Zero minutes when they
+ * can't cover one.
+ */
+function extension(row: Pick<CallRow, 'hold_cents'> & Metered, want: number, pricePerMinuteCents: number, balance: number, at: number): { minutes: number; cents: number } {
+  const unused = unusedHoldCents(row, at, pricePerMinuteCents);
+  const minutes = Math.min(want, Math.floor((balance + unused) / pricePerMinuteCents));
+  return minutes < 1 ? { minutes: 0, cents: 0 } : { minutes, cents: Math.max(0, minutes * pricePerMinuteCents - unused) };
+}
+
+/**
+ * When a call still on hold at its time limit `limitAt` wraps up for lack of credits, if none are
+ * added. Each limit extends it by what `balance` and its unused held credits fund of the next
+ * LIMITS.holdExtensionMinutes (as extend holds them), and it wraps up at the first limit that gets
+ * none. A short extension is not the last: hold minutes are held at full price and billed at half,
+ * so one leaves credits for a shorter one after it. Null when the credits fund the next extension in
+ * full, or carry the call to the ceiling, which ends it whatever the balance.
+ */
+export function holdCreditsRunOutAt(row: Pick<CallRow, 'hold_cents'> & Metered, balance: number, pricePerMinuteCents: number, limitAt: number): number | null {
+  if (!row.answered_at) return null;
+  const ceiling = ceilingAt(row.answered_at);
+  let at = limitAt;
+  let held = row.hold_cents ?? 0;
+  for (let first = true; ; first = false) {
+    const want = Math.min(LIMITS.holdExtensionMinutes, Math.floor((ceiling - at) / 60_000));
+    if (want < 1) return null;
+    const { minutes, cents } = extension({ ...row, hold_cents: held }, want, pricePerMinuteCents, balance, at);
+    if (!minutes) return at;
+    if (first && minutes === want) return null;
+    balance -= cents;
+    held += cents;
+    at += minutes * 60_000;
+  }
 }
 
 export function callStore(db: D1Database) {
@@ -351,15 +401,31 @@ export function callStore(db: D1Database) {
      * granted, 0 when the balance can't cover one.
      */
     async extend(row: Pick<CallRow, 'id' | 'account_id' | 'business' | 'hold_cents'> & Metered, want: number, pricePerMinuteCents: number, n: number, at: number): Promise<number> {
-      const unused = unusedHoldCents(row, at, pricePerMinuteCents);
       const balance = await accounts(db).balanceCents(row.account_id);
-      const minutes = Math.min(want, Math.floor((balance + unused) / pricePerMinuteCents));
-      if (minutes < 1) return 0;
-      const cents = Math.max(0, minutes * pricePerMinuteCents - unused);
+      const { minutes, cents } = extension(row, want, pricePerMinuteCents, balance, at);
+      if (!minutes) return 0;
       if (!cents) return minutes;
       if (!(await accounts(db).hold(row.account_id, cents, `hold:${row.id}:${n}`, `${minutes} more min on hold with ${row.business}`))) return 0;
       await db.prepare(`UPDATE calls SET hold_cents = COALESCE(hold_cents, 0) + ? WHERE id = ?`).bind(cents, row.id).run();
       return minutes;
+    },
+
+    /** When a call on hold through `limitAt` wraps up for lack of credits at today's balance (holdCreditsRunOutAt). */
+    async holdCreditsRunOutAt(row: Pick<CallRow, 'account_id' | 'hold_cents'> & Metered, pricePerMinuteCents: number, limitAt: number): Promise<number | null> {
+      return holdCreditsRunOutAt(row, await accounts(db).balanceCents(row.account_id), pricePerMinuteCents, limitAt);
+    },
+
+    /**
+     * The call's hold runs out of credits and the call wraps up at `deadline`, `minutes` from `at`:
+     * queued for the site's cron to email the user (services/low-credits.ts). Once per call; false when
+     * it already was, or the call has ended.
+     */
+    async lowCredits(id: string, deadline: number, minutes: number, at: number): Promise<boolean> {
+      const r = await db
+        .prepare(`UPDATE calls SET low_credit_at = ?, low_credit_deadline_at = ?, low_credit_minutes = ? WHERE id = ? AND status = 'in_progress' AND low_credit_at IS NULL`)
+        .bind(at, deadline, minutes, id)
+        .run();
+      return (r.meta.changes ?? 0) > 0;
     },
 
     async block(number: string, reason: string): Promise<void> {

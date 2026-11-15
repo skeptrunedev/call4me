@@ -467,26 +467,41 @@ test('time notices go in as quiet context, never as an instruction that can cut 
 
 /**
  * call_bje9ny6dv8smyujy's start: an outbound call whose recording says "we will be with you
- * shortly" 1.8s after pickup, which puts it on hold, with credits for extensions and its wrap-up
- * point `limitMs` after pickup. `marks` is what the session logged.
+ * shortly" 1.8s after pickup, which puts it on hold, with `credits` cents for extensions at 25c a
+ * minute and its wrap-up point `limitMs` after pickup. `marks` is what the session logged,
+ * `warning` the low-credit email it queued on the call's row, and `replay` plays the line like
+ * `play` while firing the session's alarm whenever it comes due, as Cloudflare does.
  */
-async function onHold(t: TestContext, limitMs: number) {
+async function onHold(t: TestContext, limitMs: number, credits = 10_000) {
   const { accounts } = await import('../src/server/services/accounts');
   const log = t.mock.method(console, 'log', () => {});
   const pickup = await outboundPickup(t);
   const { h, play, words } = pickup;
   const db = h.env.DB;
   h.session.setup.pricePerMinuteCents = 25;
-  await accounts(db).post('acct_alice', 10_000, 'adjustment', 'seed', 'credits');
+  await accounts(db).post('acct_alice', credits, 'adjustment', 'seed', 'credits');
   await db.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at, answered_at) VALUES ('recovery_test', 'acct_alice', '+14155550100', 'Test apartments', 'Ask about a unit', '{}', 'in_progress', 0, ?)`).bind(h.session.answeredAt).run();
+  // The limit is set and the alarm armed at pickup, before anything puts the call on hold.
+  const wrapAt = h.session.answeredAt + limitMs;
+  h.values.set('wrapAt', wrapAt);
+  await h.session.scheduleAlarm();
   await play(1_800, () => ({ them: true }));
   await words('them', 'Thank you for calling. We will be with you shortly.');
   assert.equal(h.session.hold.holding(), true);
-  const wrapAt = h.session.answeredAt + limitMs;
-  h.values.set('wrapAt', wrapAt);
+  // The credit check the hold's start set off settles before the test goes on.
+  await new Promise((resolve) => setImmediate(resolve));
   const balance = () => accounts(db).balanceCents('acct_alice');
   const marks = () => log.mock.calls.map((c: any) => String(c.arguments[0]));
-  return { ...pickup, wrapAt, balance, marks };
+  const warning = () => db.prepare(`SELECT low_credit_at, low_credit_deadline_at, low_credit_minutes FROM calls WHERE id = 'recovery_test'`).first();
+  const replay = async (untilMs: number, loud?: Parameters<typeof play>[1]) => {
+    while (Date.now() - h.session.answeredAt < untilMs) {
+      const due = h.values.get('alarm') as number;
+      assert.equal(typeof due, 'number', 'the alarm stays armed');
+      await play(Math.min(due - h.session.answeredAt, untilMs), loud);
+      if (Date.now() >= due) await h.session.alarm();
+    }
+  };
+  return { ...pickup, wrapAt, balance, marks, warning, replay };
 }
 
 test('a hold on a line gone dead gets no extension at the time limit, and the call wraps up as planned', async (t) => {
@@ -571,6 +586,87 @@ test("a session reset mid-hold doesn't make the queue look silent, and a dead li
   h.values.set('wrapAt', Date.now());
   await restarted.alarm();
   assert.equal(h.values.get('stopAt'), Date.now() + 40_000);
+});
+
+const lowCreditMarks = (marks: string[]) => marks.filter((m) => /low credits on hold: warning queued/.test(m));
+const music = () => ({ them: true });
+const MIN = 60_000;
+
+test('a hold short of credits for its time limit queues a low-credit email from the alarm 15 minutes before the limit', async (t) => {
+  // $1 at 25c a minute: 4 of the 15 minutes the limit 16 minutes after pickup would extend by.
+  const { h, replay, warning, marks } = await onHold(t, 16 * MIN, 100);
+  assert.equal((await warning())!.low_credit_at, null, 'the limit is more than 15 minutes off when the hold starts');
+  await replay(1 * MIN - 20, music);
+  assert.equal((await warning())!.low_credit_at, null);
+  assert.equal(h.values.get('alarm'), h.session.answeredAt + 1 * MIN, 'the alarm lands on the check');
+  await replay(1 * MIN + 20, music);
+  // The 4 minutes run out at +20: 19 minutes after the check.
+  assert.deepEqual({ ...(await warning()) }, { low_credit_at: h.session.answeredAt + 1 * MIN, low_credit_deadline_at: h.session.answeredAt + 20 * MIN, low_credit_minutes: 19 });
+  assert.deepEqual(lowCreditMarks(marks()).map((m) => m.replace(/ \(.*/, '')), ['call recovery_test: low credits on hold: warning queued, credits cover about 19 more min']);
+});
+
+test('a full extension that leaves too few credits for the one after it queues the warning as soon as it is granted', async (t) => {
+  // $4.75: the first limit's 15 minutes, then $1 plus what the half-price hold leaves unused.
+  const { h, replay, warning, marks, wrapAt } = await onHold(t, 3 * MIN, 475);
+  await replay(3 * MIN - 20, music);
+  assert.equal((await warning())!.low_credit_at, null, 'the first extension is covered in full');
+  await replay(3 * MIN + 20, music);
+  assert.equal(h.values.get('wrapAt'), wrapAt + 15 * MIN);
+  // At +18 the credits fund 9 minutes, then 5, 2, 1 and 1 as each half-price stretch leaves some unused.
+  assert.deepEqual({ ...(await warning()) }, { low_credit_at: wrapAt, low_credit_deadline_at: h.session.answeredAt + 36 * MIN, low_credit_minutes: 33 });
+  assert.equal(lowCreditMarks(marks()).length, 1);
+  // Nobody adds any: the session wraps up right where the email said.
+  await replay(36 * MIN + 20, music);
+  assert.deepEqual(marks().filter((m) => /held \d+ more min/.test(m)).map((m) => m.match(/held (\d+)/)![1]), ['15', '9', '5', '2', '1', '1']);
+  assert.equal(h.values.get('wrapAt'), h.session.answeredAt + 36 * MIN);
+  assert.equal(h.values.get('stopAt'), h.session.answeredAt + 36 * MIN + 40_000);
+});
+
+test('no low-credit warning while the credits cover the next extension', async (t) => {
+  const { h, replay, warning, marks, wrapAt } = await onHold(t, 3 * MIN);
+  await replay(3 * MIN + 20, music);
+  assert.equal(h.values.get('wrapAt'), wrapAt + 15 * MIN);
+  assert.equal((await warning())!.low_credit_at, null);
+  assert.deepEqual(lowCreditMarks(marks()), []);
+});
+
+test('no low-credit warning on a hold whose line has gone silent, until it carries sound again', async (t) => {
+  // The same short credits as above, the line dead from the recording on: it gets no extension at its limit, so nothing to warn about.
+  const { h, replay, warning, marks } = await onHold(t, 17 * MIN, 100);
+  await replay(3 * MIN);
+  assert.equal((await warning())!.low_credit_at, null);
+  assert.deepEqual(lowCreditMarks(marks()), []);
+  // Queue music comes back: the next alarm warns.
+  await replay(3 * MIN + 20_000, music);
+  assert.equal((await warning())!.low_credit_at, h.session.answeredAt + 3 * MIN + 20_000);
+});
+
+test('a hold starting with its limit already close queues the warning at once, and only once per call', async (t) => {
+  const { h, replay, warning, marks, wrapAt } = await onHold(t, 3 * MIN, 100);
+  // The hold starts at +1.8s with the limit 3 minutes after pickup: 4 more minutes, to +7, 6 whole minutes off.
+  const queued = { low_credit_at: h.session.answeredAt + 1_800, low_credit_deadline_at: h.session.answeredAt + 7 * MIN, low_credit_minutes: 6 };
+  assert.deepEqual({ ...(await warning()) }, queued);
+  // The heartbeats, the partial extension at the limit, and checks after it add none.
+  await replay(3 * MIN + 20, music);
+  assert.equal(h.values.get('wrapAt'), wrapAt + 4 * MIN);
+  assert.ok(marks().some((m) => /still on hold at the time limit: held 4 more min/.test(m)));
+  // Nor does the row let a second one in when the session's own note of it is gone.
+  h.values.delete('lowCreditsWarned');
+  await replay(4 * MIN, music);
+  assert.deepEqual({ ...(await warning()) }, queued);
+  assert.equal(lowCreditMarks(marks()).length, 1);
+});
+
+test('credits added after the low-credit warning pay for the next extension in full', async (t) => {
+  const { accounts } = await import('../src/server/services/accounts');
+  const { h, replay, warning, marks, wrapAt, balance } = await onHold(t, 3 * MIN, 100);
+  assert.notEqual((await warning())!.low_credit_at, null);
+  await accounts(h.env.DB).post('acct_alice', 1_000, 'topup', 'topup:test', 'added after the email');
+  await replay(3 * MIN + 20, music);
+  assert.equal(h.values.get('wrapAt'), wrapAt + 15 * MIN);
+  assert.equal(h.values.has('stopAt'), false);
+  assert.ok(marks().some((m) => /still on hold at the time limit: held 15 more min/.test(m)));
+  assert.equal(await balance(), 1_100 - 15 * 25);
 });
 
 test("a screener whose question isn't recognized still gets an introduction once it goes quiet", async (t) => {

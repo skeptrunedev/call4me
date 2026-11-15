@@ -78,6 +78,31 @@ test('a call on hold at its limit pays for its extension with the credits its ha
   assert.equal(done!.cost_cents, 2 * 25 + Math.ceil((43 * 25) / 2));
 });
 
+test('a hold short of credits is projected to wrap up exactly where extend stops granting more', async () => {
+  const { holdCreditsRunOutAt } = await import('../src/server/services/call-store');
+  const db = d1();
+  // 30 minutes held at full price, on hold from minute 1.5, and nothing left in the account: the
+  // $3.50 the half-price hold left unused funds 14 minutes at the limit, short of a full 15.
+  await answeredCall(db, 30 * 25);
+  await accounts(db).post('acct_alice', -(10_000 - 30 * 25), 'adjustment', 'drain', 'leave nothing');
+  const c = calls(db);
+  await c.holdStarted('call_1', s(90));
+  const projected = holdCreditsRunOutAt((await c.byId('call_1'))!, 0, 25, s(30 * 60));
+  // Each limit takes what extend grants there; the call wraps up at the first that gets nothing.
+  let limit = s(30 * 60);
+  const granted: number[] = [];
+  for (let n = 1; ; n++) {
+    const minutes = await c.extend((await c.byId('call_1'))!, 15, 25, n, limit);
+    if (!minutes) break;
+    granted.push(minutes);
+    limit += minutes * 60_000;
+  }
+  assert.ok(granted[0] < 15 && granted.length > 1, `short, and half-price hold leaves credits for more: ${granted}`);
+  assert.equal(projected, limit);
+  // Credits for a full extension: nothing to warn about.
+  assert.equal(holdCreditsRunOutAt((await c.byId('call_1'))!, 15 * 25, 25, s(30 * 60)), null);
+});
+
 
 test('a call answered without its audio ever reaching us fails and is free', async () => {
   const db = d1();

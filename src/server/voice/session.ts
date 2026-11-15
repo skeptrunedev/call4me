@@ -1,6 +1,6 @@
 import { DurableObject } from 'cloudflare:workers';
 import { Raindrop, type Interaction } from 'raindrop-ai';
-import { ACTIVE, callStore, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/call-store';
+import { ACTIVE, callStore, ceilingAt, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/call-store';
 import { telnyx } from '../lib/telnyx';
 import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
 import { asksUsToWait, connectCheckMessage, KEY_TRANSCRIPT_LAG_MS, forcedHandoffMessage, greetingWaiting, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft } from './handoff';
@@ -1548,11 +1548,17 @@ export class VoiceSession extends DurableObject<Env> {
 
   // ---- heartbeat and time limit
 
-  /** The next alarm: the heartbeat, or the wrap-up/stop time when that comes sooner. */
+  /**
+   * The next alarm: the heartbeat, or the wrap-up/stop time when that comes sooner. Until the call
+   * is warned, also the point holdExtensionMinutes before the wrap-up, where a hold's credits are
+   * first checked (warnLowCredits).
+   */
   private async scheduleAlarm(at = Date.now() + HEARTBEAT_MS): Promise<void> {
-    const [wrapAt, stopAt] = await Promise.all([this.ctx.storage.get<number>('wrapAt'), this.ctx.storage.get<number>('stopAt')]);
+    const [wrapAt, stopAt, warned] = await Promise.all([this.ctx.storage.get<number>('wrapAt'), this.ctx.storage.get<number>('stopAt'), this.ctx.storage.get<boolean>('lowCreditsWarned')]);
     const due = stopAt ?? wrapAt;
-    await this.ctx.storage.setAlarm(due && due < at ? due : at);
+    const creditsAt = wrapAt && !stopAt && !warned ? wrapAt - LIMITS.holdExtensionMinutes * 60_000 : 0;
+    const next = creditsAt > Date.now() && creditsAt < at ? creditsAt : at;
+    await this.ctx.storage.setAlarm(due && due < next ? due : next);
   }
 
   async alarm(): Promise<void> {
@@ -1619,6 +1625,7 @@ export class VoiceSession extends DurableObject<Env> {
       // With the user on, the caller isn't told to say goodbye over them; at the hard stop they get more time while credits last.
       this.timeNote(`Time is almost up: about ${WRAP_UP_MS / 1000} seconds left. Answer what they just said, then wrap up: get the one thing you still need, say a quick goodbye, and hand off to hang up (end_call).`);
     }
+    await this.warnBeforeLimit(s);
     await this.scheduleAlarm();
   }
 
@@ -1637,12 +1644,54 @@ export class VoiceSession extends DurableObject<Env> {
 
   /** Record a hold starting or ending on the call, where the bill at hangup reads it. */
   private trackHold(change: HoldChange | null): void {
-    const callId = this.setup?.callId;
-    if (!change || !callId) return;
+    const s = this.setup;
+    const callId = s?.callId;
+    if (!change || !s || !callId) return;
     const db = callStore(this.env.DB);
     const write = change.type === 'start' ? db.holdStarted(callId, change.at) : db.holdEnded(callId, change.at);
     write.catch((err) => console.warn('hold write failed', callId, String(err)));
     this.mark(change.type === 'start' ? 'on hold' : `off hold after ${change.seconds}s`);
+    // A hold that starts with the time limit already close may be short of credits for it.
+    if (change.type === 'start') void this.warnBeforeLimit(s).catch((err) => console.warn('low credit check failed', callId, String(err)));
+  }
+
+  /** warnLowCredits against the wrap-up point still ahead; none once the call is wrapping up. */
+  private async warnBeforeLimit(s: Stored): Promise<void> {
+    const [wrapAt, stopAt] = await Promise.all([this.ctx.storage.get<number>('wrapAt'), this.ctx.storage.get<number>('stopAt')]);
+    if (wrapAt && !stopAt && Date.now() < wrapAt) await this.warnLowCredits(s, wrapAt);
+  }
+
+  /**
+   * A hold about to run out of credits: its next time limit `limitAt` is within
+   * holdExtensionMinutes and the balance can't fund a full extension there (holdCreditsRunOutAt), so
+   * unless credits are added the call wraps up and loses its place in the queue. Queued once per
+   * call on its row, where the site's every-minute cron emails the user (services/low-credits.ts):
+   * the voice Worker sends no email. Checked when an extension is granted (extendOnHold), on each
+   * alarm from holdExtensionMinutes before the limit, and when a hold starts (trackHold). Never on
+   * a silent line, which gets no extension whatever the balance (extendOnHold).
+   */
+  private async warnLowCredits(s: Stored, limitAt: number): Promise<void> {
+    const now = Date.now();
+    if (this.ended || this.endingCall || !this.hold.holding() || limitAt - now > LIMITS.holdExtensionMinutes * 60_000 || this.silentFor() >= DEAD_AIR_MS) return;
+    try {
+      if (await this.ctx.storage.get('lowCreditsWarned')) return;
+      const db = callStore(this.env.DB);
+      const row = await db.byId(s.callId);
+      if (!row?.answered_at || row.status !== 'in_progress') return;
+      // The hold runs on to the limit; its start may not have reached the row yet (trackHold).
+      const deadline = await db.holdCreditsRunOutAt({ ...row, hold_since: row.hold_since ?? now }, s.pricePerMinuteCents, limitAt);
+      if (deadline === null) return;
+      const minutes = Math.floor((deadline - now) / 60_000);
+      if (await db.lowCredits(s.callId, deadline, minutes, now)) this.mark(`low credits on hold: warning queued, credits cover about ${minutes} more min`);
+      await this.ctx.storage.put('lowCreditsWarned', true);
+    } catch (err) {
+      console.warn('low credit warning failed', s.callId, String(err));
+    }
+  }
+
+  /** How long the phone has carried no audible frame, counted only over frames this instance received (see extendOnHold). */
+  private silentFor(): number {
+    return this.firstFrameAt ? Date.now() - Math.max(this.themAudibleAt, this.firstFrameAt) : 0;
   }
 
   /**
@@ -1660,7 +1709,7 @@ export class VoiceSession extends DurableObject<Env> {
     // is not ended or hung up on (small businesses hold with no music): it only gets no time past
     // the call's planned length. Quiet counts only over frames this instance received: after a reset
     // the hold resumes with themAudibleAt back at 0, and a live queue would look silent from pickup.
-    const silentFor = this.firstFrameAt ? Date.now() - Math.max(this.themAudibleAt, this.firstFrameAt) : 0;
+    const silentFor = this.silentFor();
     if (silentFor >= DEAD_AIR_MS) {
       this.mark(`line silent ${Math.round(silentFor / 1000)}s on hold at the time limit: not extending`);
       return false;
@@ -1669,6 +1718,8 @@ export class VoiceSession extends DurableObject<Env> {
     if (!minutes) return false;
     await this.ctx.storage.put('wrapAt', wrapAt + minutes * 60_000);
     this.mark(`still on hold at the time limit: held ${minutes} more min`);
+    // The next limit is now at most holdExtensionMinutes away: see whether the credits cover it.
+    await this.warnLowCredits(s, wrapAt + minutes * 60_000);
     return true;
   }
 
@@ -1693,8 +1744,7 @@ export class VoiceSession extends DurableObject<Env> {
   private async extendLimit(s: Stored, from: number, want: number): Promise<number> {
     const row = await callStore(this.env.DB).byId(s.callId);
     if (!row?.answered_at) return 0;
-    const ceilingAt = row.answered_at + (LIMITS.maxMinutes * 60 - 45) * 1000;
-    const room = Math.min(want, Math.floor((ceilingAt - from) / 60_000));
+    const room = Math.min(want, Math.floor((ceilingAt(row.answered_at) - from) / 60_000));
     if (room < 1) return 0;
     // Hold and talk extensions share one count: each is its own ledger hold (hold:<call>:<n>).
     const n = ((await this.ctx.storage.get<number>('holdExtensions')) ?? 0) + 1;

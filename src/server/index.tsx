@@ -28,6 +28,7 @@ import { runDrip } from './services/drip';
 import { placeDueCalls } from './services/scheduled';
 import { failNeverDialed, settleLost } from './services/dialer';
 import { purgeZdrCalls } from './services/zdr';
+import { warnLowCreditHolds } from './services/low-credits';
 import { numbers } from './services/numbers';
 import { notifySignups } from './services/signups';
 import { submitIndexNow } from './services/indexnow';
@@ -174,8 +175,9 @@ const EVERY_MINUTE = '* * * * *';
 
 export default {
   fetch: app.fetch,
-  // Every minute, scheduled calls that came due (services/scheduled.ts) and the content of zero data
-  // retention calls an hour after they end (services/zdr.ts). Every 15 minutes, number
+  // Every minute, scheduled calls that came due (services/scheduled.ts), the content of zero data
+  // retention calls an hour after they end (services/zdr.ts), and the email to add credits for a call
+  // on hold that is about to run out of them (services/low-credits.ts). Every 15 minutes, number
   // renewals and numbers waiting on the carrier (services/numbers.ts), calls that never dialed
   // or whose hangup was lost (services/dialer.ts), signup notices, IndexNow pings for new or changed pages
   // (services/indexnow.ts), and the signup drip (services/drip.ts), which is off while DRIP_START
@@ -184,6 +186,7 @@ export default {
     if (event.cron === EVERY_MINUTE) {
       ctx.waitUntil(placeDueCalls(env).then((r) => (r.placed || r.failed || r.missed) && console.log('scheduled calls', JSON.stringify(r))));
       ctx.waitUntil(purgeZdrCalls(env).then((n) => n && console.log('zero data retention calls purged', n)));
+      ctx.waitUntil(warnLowCreditHolds(env).then((n) => n && console.log('low credit hold emails sent', n)));
       return;
     }
     ctx.waitUntil(failNeverDialed(env).then((n) => n && console.log('failed never-dialed calls', n)));
