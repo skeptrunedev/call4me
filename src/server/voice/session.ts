@@ -3,7 +3,7 @@ import { Raindrop, type Interaction } from 'raindrop-ai';
 import { ACTIVE, callStore, ceilingAt, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/call-store';
 import { telnyx } from '../lib/telnyx';
 import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
-import { asksUsToWait, connectCheckMessage, KEY_TRANSCRIPT_LAG_MS, forcedHandoffMessage, greetingWaiting, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft } from './handoff';
+import { asksUsToWait, connectCheckMessage, KEY_TRANSCRIPT_LAG_MS, forcedHandoffMessage, greetingWaiting, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft, type KeyPress } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinedMessage, lastTokens, leftMessage, legEnded, listeningMessage, mergeTranscript, resumeInput, unreachableMessage, type LiveInput, type PersonMode } from './person';
 import { HoldMeter, type HoldChange } from './hold';
 import { midConversation } from './time-limit';
@@ -116,12 +116,20 @@ const REATTACH_WAIT_MS = 15_000;
  */
 const SESSION_MAX_MS = 7_200_000;
 /**
+ * expires_at is trusted only this far from the session's start: one sent in milliseconds, or from
+ * a skewed clock, would put every rollover in the wrong place, so SESSION_MAX_MS stands instead.
+ */
+const SESSION_LENGTH_RANGE_MS = [60_000, 24 * 60 * 60_000] as const;
+/**
  * A session is replaced before it expires (maybeRollLive): in its last 20 minutes (of 120) at a
- * quiet moment on hold, and in its last 8 at any quiet moment. Shares of its length, so staging's
- * short VOICE_SESSION_SECONDS runs the same path.
+ * quiet moment on hold, and in its last 8 at any quiet moment, in both with nothing under way on
+ * its socket. In its last minute, only a function running holds it back: expiring, it would drop
+ * the rest just the same. Shares of its length, so staging's short VOICE_SESSION_SECONDS runs the
+ * same path.
  */
 const ROLL_ON_HOLD_SHARE = 20 / 120;
 const ROLL_ANY_QUIET_SHARE = 8 / 120;
+const ROLL_ANYWAY_SHARE = 1 / 120;
 /** How long the line must have been quiet for it: on hold, the transcript; otherwise, both sides. */
 const ROLL_HOLD_QUIET_MS = 8_000;
 const ROLL_QUIET_MS = 2_000;
@@ -196,14 +204,12 @@ type BackOfficeMonitoring = { interaction: Interaction; output: string[]; starte
  */
 type Standby = {
   ws: WebSocket | null;
-  /** When it was dialed, whether the call was on hold then, and whether only a quiet moment was asked of it (the session's last minutes). */
+  /** When it was dialed. */
   since: number;
-  holding: boolean;
-  late: boolean;
-  /** How far the transcript ran when its history was taken: lines, and the last line's length. */
-  seen: { lines: number; chars: number };
-  /** The phone's latest frames, so it hears the line from where it takes over. */
-  frames: string[];
+  /** Where the call stood when its history was taken, once its socket was up: when, the transcript's lines and the last one's length, and whether on hold. */
+  seen: { at: number; lines: number; chars: number; holding: boolean } | null;
+  /** The phone's latest frames and when each came, so it hears the line from where it takes over. */
+  frames: { audio: string; at: number }[];
   started: { at: number; endsAt: number } | null;
 };
 
@@ -254,8 +260,11 @@ export class VoiceSession extends DurableObject<Env> {
   /** The next look for a rollover's quiet moment, once one is due (maybeRollLive). */
   private rollTimer: ReturnType<typeof setTimeout> | null = null;
   private rollovers = 0;
-  /** The call clock's latest notice, for a session that takes over while the call wraps up. */
+  /** A voice session that ended mid-call being replaced (rollOver): why it ended, and the hangup if no replacement starts in time. */
+  private replacing: { why: string; timer: ReturnType<typeof setTimeout> } | null = null;
+  /** The call clock's latest notice, and the person's answers to ask_user, for a session that takes the call over. */
   private lastTimeNote: string | null = null;
+  private answers: { question: string; answer: string }[] = [];
   private framesIn = 0;
   /** The call's audio has reached us and that's recorded (or being recorded): it is billable. */
   private audioRecorded = false;
@@ -279,6 +288,8 @@ export class VoiceSession extends DurableObject<Env> {
   private endingCall = false;
   /** Back-office bookkeeping for starting it ourselves when the voice model skips a hand-off (handoff.ts). */
   private backOfficeBusy = false;
+  /** Delegations the voice model started that haven't finished, by id, with when each started: one finishing clears backOfficeBusy while another runs. */
+  private delegations = new Map<string, number>();
   private lastHandoffAt = 0;
   private forcedHandoffs = new Set<number>();
   private menuRecovery = new MenuRecovery();
@@ -502,6 +513,7 @@ export class VoiceSession extends DurableObject<Env> {
     this.answered = true;
     this.answeredAt = row.answered_at;
     this.hold = new HoldMeter(row.hold_since);
+    this.menuRecovery.restore((await this.ctx.storage.get<KeyPress[]>('keys')) ?? []);
     this.resumed = true;
     this.heardThem = true;
     this.mark('resuming after the session restarted');
@@ -578,16 +590,20 @@ export class VoiceSession extends DurableObject<Env> {
     this.pendingAudio = [];
     this.playbackEndsAt = 0;
     this.speechEndsAt = 0;
+    this.keyReplyBy = 0;
     this.resetSessionState();
     if (live?.readyState === WebSocket.OPEN) live.close(1000, 'phone stream lost');
   }
 
-  /** State that belongs to one voice session's socket. The phone's playback clocks belong to its stream (detachLive). */
+  /**
+   * State that belongs to one voice session's socket: its back office's work. The phone's playback
+   * clocks belong to its stream (detachLive), and a menu waiting on a key's answer (keyReplyBy) to the call.
+   */
   private resetSessionState(): void {
     this.lastOutputAt = 0;
     this.backOfficeBusy = false;
+    this.delegations.clear();
     this.choosingKey = false;
-    this.keyReplyBy = 0;
   }
 
   private recordAudio(callId: string): void {
@@ -614,7 +630,7 @@ export class VoiceSession extends DurableObject<Env> {
       this.firstFrameAt ||= Date.now();
       if (this.liveReady) this.sendLive({ type: 'session.input_audio.append', audio: payload });
       else if (this.pendingAudio.length < 250) this.pendingAudio.push(payload); // ~5s at 20ms frames
-      if (this.standby && this.standby.frames.push(payload) > STANDBY_FRAMES) this.standby.frames.shift();
+      if (this.standby && this.standby.frames.push({ audio: payload, at: Date.now() }) > STANDBY_FRAMES) this.standby.frames.shift();
       if (pcmuAudible(payload)) this.themAudibleAt = Date.now();
     } else if (frame.event === 'stop') {
       void this.shutdown('the phone audio stream stopped');
@@ -711,13 +727,8 @@ export class VoiceSession extends DurableObject<Env> {
     // Still wanted: a phone stream to serve, which may have replaced the one it was opened for
     // (phoneReplaced), or, opened before pickup, the call itself.
     const current = () => !this.ended && !this.live && (prewarm || this.phone?.readyState === WebSocket.OPEN);
-    let input: LiveInput[] = [];
-    if (this.resumed) {
-      const row = this.transcriptComplete ? null : await callStore(this.env.DB).byId(s.callId);
-      const sofar = this.transcriptComplete ? this.transcript : row?.transcript ? (JSON.parse(row.transcript) as TranscriptLine[]) : [];
-      const wrapping = Boolean(await this.ctx.storage.get('stopAt'));
-      input = this.callSoFar(sofar, wrapping);
-    }
+    // A reset instance has the call so far only in D1 until its first flush.
+    const stored = this.resumed && !this.transcriptComplete ? await callStore(this.env.DB).byId(s.callId) : null;
     if (!current()) return;
     // Start monitoring alongside the connection, so telemetry never delays live audio.
     if (this.env.RAINDROP_WRITE_KEY && !s.zdr && !this.monitoringReady) {
@@ -756,7 +767,7 @@ export class VoiceSession extends DurableObject<Env> {
       res = await (preconnected ?? this.connectLive());
     } catch (err) {
       if (prewarm) return console.warn('prewarm could not open GPT-Live', String(err));
-      if (this.phone === phone && !this.ended) await this.fail(`could not open GPT-Live: ${String(err)}`);
+      if (this.phone === phone && !this.ended) await this.openFailed(`could not open GPT-Live: ${String(err)}`);
       return;
     }
     this.mark(`live connect ${res.status}`);
@@ -775,14 +786,27 @@ export class VoiceSession extends DurableObject<Env> {
       if (prewarm) return console.warn('prewarm', why);
       if (this.phone !== phone || this.ended) return;
       console.error(why);
-      await this.fail(why);
+      await this.openFailed(why);
       return;
     }
     ws.accept();
     this.live = ws;
     this.watchLive(ws);
-    this.sendLive(this.sessionStart(s, input));
+    // A session taking the call over mid-way gets it as it stands once the socket is up: what was
+    // said or told while it dialed, to no session at all, is in it.
+    const sofar = this.transcriptComplete ? this.transcript : stored?.transcript ? (JSON.parse(stored.transcript) as TranscriptLine[]) : [];
+    this.sendLive(this.sessionStart(s, this.resumed ? this.callSoFar(sofar) : []));
     await this.startTimeLimit();
+  }
+
+  /**
+   * A voice session that couldn't be opened. A call that never had one fails, unbilled. One that
+   * was replacing a session that ended mid-call (rollOver) ends the way that session's end did
+   * before replacements, billed: the call itself went through.
+   */
+  private openFailed(why: string): Promise<void> {
+    if (this.replacing) return this.shutdown(`${why}, replacing the voice session that ended (${this.replacing.why})`);
+    return this.fail(why);
   }
 
   /**
@@ -832,8 +856,13 @@ export class VoiceSession extends DurableObject<Env> {
     };
   }
 
-  /** Where the call stands, for a session that takes it over mid-way (resumeInput); `wrapping` once the wrap-up notice has gone out. */
-  private callSoFar(transcript: TranscriptLine[], wrapping: boolean): LiveInput[] {
+  /**
+   * Where the call stands, for a session that takes it over mid-way (resumeInput): what the
+   * sessions before it were told that still stands, the person's answers among it (one said only
+   * as "say it now" commentary was lost with the session it went to), and the call clock's latest
+   * notice, which stands until the next.
+   */
+  private callSoFar(transcript: TranscriptLine[]): LiveInput[] {
     const owner = this.setup?.person?.name;
     const asked = this.waiting.size ? this.holding?.question : undefined;
     return resumeInput({
@@ -842,19 +871,25 @@ export class VoiceSession extends DurableObject<Env> {
       keys: this.menuRecovery.history(),
       standing: [
         this.unanswered !== null ? noAnswer(this.unanswered) : '',
+        ...this.answers.slice(-3).map((a) => `${owner ?? 'The person you work for'} answered "${a.question.slice(0, 300)}": ${a.answer.slice(0, 300)}. If you haven't passed that on yet, do it as soon as you can.`),
         asked ? `A question is out to ${owner ?? 'the person you work for'}: "${asked.slice(0, 300)}". Their answer is passed to you the moment it comes in.` : '',
         owner && this.personOn ? joinedMessage(owner) : owner && this.personUnreachable ? unreachableMessage(owner) : '',
-        wrapping && this.lastTimeNote ? this.lastTimeNote : '',
+        this.lastTimeNote ?? '',
       ].filter(Boolean),
       now: Date.now(),
     });
   }
 
   /** When a session that started at `startedAt` expires. Staging's VOICE_SESSION_SECONDS stands in for GPT-Live's limit, to test rollovers. */
-  private sessionEndsAt(session: { expires_at?: number }, startedAt: number): number {
+  private sessionEndsAt(session: { id: string; expires_at?: number }, startedAt: number): number {
     const staged = Number(this.env.VOICE_SESSION_SECONDS);
     if (staged > 0) return startedAt + staged * 1000;
-    return session.expires_at ? session.expires_at * 1000 : startedAt + SESSION_MAX_MS;
+    if (session.expires_at === undefined) return startedAt + SESSION_MAX_MS;
+    const [shortest, longest] = SESSION_LENGTH_RANGE_MS;
+    const length = session.expires_at * 1000 - startedAt;
+    if (length >= shortest && length <= longest) return startedAt + length;
+    this.mark(`voice session ${session.id} expires_at ${session.expires_at} is ${Math.round(length / 1000)}s from its start; planning on ${SESSION_MAX_MS / 1000}s`);
+    return startedAt + SESSION_MAX_MS;
   }
 
   /**
@@ -870,7 +905,16 @@ export class VoiceSession extends DurableObject<Env> {
     await this.scheduleAlarm();
   }
 
-  private sendLive(msg: unknown): void {
+  /**
+   * To the live voice session. A replacement starting up (openStandby) has the call as it stood
+   * when its history was taken: anything else the live one is told after that, a time note, the
+   * person's answer, the person joining, leaves the replacement behind, so it is dropped and a later
+   * look starts one whose history has it. Replaying what was sent would need the messages bound to
+   * the old socket (function results, back-office responses) told apart from the rest, and would
+   * hand over "say it now" notes seconds late, after the old session may have said them.
+   */
+  private sendLive(msg: { type: string; [field: string]: unknown }): void {
+    if (this.standby?.seen && msg.type !== 'session.input_audio.append') this.dropStandby(`the live session was told something while it started (${msg.type})`);
     if (this.live?.readyState === WebSocket.OPEN) this.live.send(JSON.stringify(msg));
   }
 
@@ -888,6 +932,8 @@ export class VoiceSession extends DurableObject<Env> {
         this.liveReady = true;
         this.liveStartedAt = Date.now();
         this.liveEndsAt = this.sessionEndsAt(session, this.liveStartedAt);
+        if (this.replacing) clearTimeout(this.replacing.timer);
+        this.replacing = null;
         void this.ctx.storage.put('liveStarted', true);
         // Its id is what OpenAI needs to look into a session, such as one its safety filter ended.
         this.mark(`live session ${session.id} started, expiring in ${Math.round((this.liveEndsAt - this.liveStartedAt) / 1000)}s; flushing ${this.pendingAudio.length} buffered frames`);
@@ -951,6 +997,7 @@ export class VoiceSession extends DurableObject<Env> {
       case 'session.delegation.created':
         this.backOfficeBusy = true;
         this.lastHandoffAt = Date.now();
+        this.delegations.set((ev as { delegation: { id: string } }).delegation.id, this.lastHandoffAt);
         // The delegation may carry what the voice model asked for: only its id for zero data retention.
         console.log('delegation', this.setup?.zdr ? (ev as { delegation: { id: string } }).delegation.id : JSON.stringify((ev as { delegation: unknown }).delegation));
         this.observe(() => this.beginBackOffice((ev as { delegation: { id: string } }).delegation.id));
@@ -1009,6 +1056,7 @@ export class VoiceSession extends DurableObject<Env> {
           }
         } else if (e.event.type === 'response.completed' || e.event.type === 'response.failed' || e.event.type === 'error') {
           this.backOfficeBusy = false;
+          this.delegations.delete(e.delegation_id);
           if (!this.toolsRunning) this.choosingKey = false;
           this.scheduleHandoffCheck();
           console.log('back office', e.event.type);
@@ -1078,8 +1126,8 @@ export class VoiceSession extends DurableObject<Env> {
 
   /**
    * Replace the voice session before GPT-Live expires it, at a moment nobody will notice: in its
-   * last 20 minutes (of 120), on hold with the line quiet and nothing under way; in its last 8, at
-   * any moment quiet both ways with no back-office function running. A replacement starts alongside
+   * last 20 minutes (of 120), on hold with the line quiet; in its last 8, at any moment quiet both
+   * ways; either with nothing under way on its socket (rollBlocked). A replacement starts alongside
    * it (openStandby) and takes over once started (promoteStandby). Checked on each heartbeat, and
    * every ROLL_CHECK_MS once due; a session that expires anyway is replaced then (liveEnded).
    */
@@ -1091,12 +1139,13 @@ export class VoiceSession extends DurableObject<Env> {
     const length = this.liveEndsAt - this.liveStartedAt;
     const holdDue = left <= length * ROLL_ON_HOLD_SHARE && this.hold.holding();
     const quietDue = left <= length * ROLL_ANY_QUIET_SHARE;
-    const onHold = holdDue && now - this.lastTranscriptAt >= ROLL_HOLD_QUIET_MS && now >= this.speechEndsAt && !this.liveBusy(now);
+    const free = !this.rollBlocked(now);
+    const onHold = holdDue && now - this.lastTranscriptAt >= ROLL_HOLD_QUIET_MS && now >= this.speechEndsAt && free;
     // Their side may be talking before any of it is transcribed; on hold, that sound is the queue's music.
     const theirsAt = this.hold.holding() ? this.lastTranscriptAt : Math.max(this.lastTranscriptAt, this.themAudibleAt);
-    const quiet = quietDue && now - Math.max(theirsAt, this.speechEndsAt) >= ROLL_QUIET_MS && !this.toolsRunning;
+    const quiet = quietDue && now - Math.max(theirsAt, this.speechEndsAt) >= ROLL_QUIET_MS && free;
     if (onHold || quiet) {
-      this.ctx.waitUntil(this.openStandby(!onHold).catch((err) => console.warn('replacement voice session', this.setup?.callId, String(err))));
+      this.ctx.waitUntil(this.openStandby().catch((err) => console.warn('replacement voice session', this.setup?.callId, String(err))));
       return;
     }
     // Due, but not this moment: look again shortly. A conversation's pauses rarely land on a
@@ -1111,20 +1160,28 @@ export class VoiceSession extends DurableObject<Env> {
 
   /** Work under way on the live session's socket, or a menu waiting on its key. */
   private liveBusy(now: number): boolean {
-    const backOffice = this.backOfficeBusy && now - this.lastHandoffAt < BACK_OFFICE_STALE_MS;
+    const backOffice = (this.backOfficeBusy && now - this.lastHandoffAt < BACK_OFFICE_STALE_MS) || [...this.delegations.values()].some((at) => now - at < BACK_OFFICE_STALE_MS);
     return this.toolsRunning > 0 || backOffice || this.choosingKey || this.menuRecovery.pending() !== null || now < this.keyReplyBy || now < this.keysPlayingUntil || this.endingCall;
   }
 
+  /**
+   * What holds a rollover back: work under way on the live session's socket (liveBusy), which a
+   * replacement can't take over: a function call id, a back-office response, belongs to one socket.
+   * Checking only for a function running, a rollover went ahead between a delegation starting and
+   * its function call arriving, and end_call reached the retired socket: the call never hung up.
+   * In the session's last minute, only a function running: expiring, it would drop the rest anyway.
+   */
+  private rollBlocked(now: number): boolean {
+    const lastMinute = this.liveEndsAt - now <= (this.liveEndsAt - this.liveStartedAt) * ROLL_ANYWAY_SHARE;
+    return this.endingCall || (lastMinute ? this.toolsRunning > 0 : this.liveBusy(now));
+  }
+
   /** Dial the replacement and start its session, seeded with the call so far; its events go to onStandby. */
-  private async openStandby(late: boolean): Promise<void> {
+  private async openStandby(): Promise<void> {
     const s = this.setup;
     if (!s) return;
-    const standby: Standby = { ws: null, since: Date.now(), holding: this.hold.holding(), late, seen: { lines: 0, chars: 0 }, frames: [], started: null };
+    const standby: Standby = { ws: null, since: Date.now(), seen: null, frames: [], started: null };
     this.standby = standby;
-    const wrapping = Boolean(await this.ctx.storage.get('stopAt'));
-    if (this.standby !== standby) return;
-    standby.seen = { lines: this.transcript.length, chars: this.transcript.at(-1)?.text.length ?? 0 };
-    const input = this.callSoFar(this.transcript, wrapping);
     this.mark(`voice session ${Math.round((Date.now() - this.liveStartedAt) / 1000)}s old${this.hold.holding() ? ', on hold' : ''}: opening its replacement`);
     let res: Response;
     try {
@@ -1144,7 +1201,9 @@ export class VoiceSession extends DurableObject<Env> {
     ws.accept();
     standby.ws = ws;
     this.watchLive(ws);
-    ws.send(JSON.stringify(this.sessionStart(s, input)));
+    // The call as it stands once the socket is up, with what was said or told while it dialed.
+    standby.seen = { at: Date.now(), lines: this.transcript.length, chars: this.transcript.at(-1)?.text.length ?? 0, holding: this.hold.holding() };
+    ws.send(JSON.stringify(this.sessionStart(s, this.callSoFar(this.transcript))));
   }
 
   /** The replacement's own events. Until it takes over, what it says and hands off goes nowhere. */
@@ -1172,18 +1231,21 @@ export class VoiceSession extends DurableObject<Env> {
   }
 
   /**
-   * The started replacement takes over: from here only its audio reaches the phone, and it hears
-   * the line from where its history ended, the last few seconds as audio and anything transcribed
-   * as quiet context. Unless the call moved on while it started: our caller spoke (words its
-   * history lacks), a person did, the hold ended, or work began on the old socket. Then it is
-   * dropped and a later heartbeat tries again.
+   * The started replacement takes over: from here only its audio reaches the phone. It hears the
+   * line from where its history ended: words transcribed since as quiet context, and as audio only
+   * what came after their last transcribed words, for words not yet transcribed. Replaying audio
+   * already transcribed had it transcribed again, twice in the call's transcript and to its menu
+   * recovery. Unless the call moved on while it started: our caller spoke (words its history
+   * lacks), a person did, the hold ended, or work began on the old socket. Then it is dropped and a
+   * later look tries again.
    */
   private promoteStandby(): void {
     const standby = this.standby;
-    if (!standby?.started || !standby.ws || this.ended) return;
+    if (!standby?.started || !standby.ws || !standby.seen || this.ended) return;
+    const { seen } = standby;
     const now = Date.now();
-    const spoke = this.lastSpokeAt.caller >= standby.since || now < this.speechEndsAt || (!this.hold.holding() && this.lastSpokeAt.them >= standby.since);
-    if (spoke || (standby.holding && !this.hold.holding()) || (standby.late ? this.toolsRunning > 0 : this.liveBusy(now))) return this.dropStandby('the call moved on while it started');
+    const spoke = this.lastSpokeAt.caller >= seen.at || now < this.speechEndsAt || (!this.hold.holding() && this.lastSpokeAt.them >= seen.at);
+    if (spoke || (seen.holding && !this.hold.holding()) || this.rollBlocked(now)) return this.dropStandby('the call moved on while it started');
     const old = this.live;
     const age = Math.round((now - this.liveStartedAt) / 1000);
     this.standby = null;
@@ -1191,18 +1253,19 @@ export class VoiceSession extends DurableObject<Env> {
     this.liveReady = true;
     this.liveStartedAt = standby.started.at;
     this.liveEndsAt = standby.started.endsAt;
-    // The phone's playback clocks carry over, and so does the hello already set for the call (nudgeScheduled).
+    // The phone's playback clocks carry over, and so do the hello already set for the call
+    // (nudgeScheduled) and a menu's wait for a key's answer (keyReplyBy).
     this.resetSessionState();
     this.rollovers++;
     this.mark(`voice session rolled over (planned) at ${age}s session age`);
-    for (const audio of standby.frames) this.sendLive({ type: 'session.input_audio.append', audio });
-    const since = this.linesSince(standby.seen);
+    for (const frame of standby.frames) if (frame.at > this.lastSpokeAt.them) this.sendLive({ type: 'session.input_audio.append', audio: frame.audio });
+    const since = this.linesSince(seen);
     if (since) this.sendLive({ type: 'session.thinking.append', delegation_id: null, content: lastTokens(`While you were connecting, the call went on:\n${since}`, 480) });
     if (old) this.retire(old);
   }
 
   /** What the transcript gained since `seen`: lines added, and the words a line still going then has had since. */
-  private linesSince(seen: Standby['seen']): string {
+  private linesSince(seen: NonNullable<Standby['seen']>): string {
     return this.transcript
       .slice(Math.max(0, seen.lines - 1))
       .map((l, i) => {
@@ -1216,8 +1279,10 @@ export class VoiceSession extends DurableObject<Env> {
   /**
    * The voice session ended under a call still going: a new one picks the call up from its
    * history (openLive), with the phone's audio held for it meanwhile as at pickup. A replacement
-   * still starting is dropped for it: it was seeded for a moment already gone. One that never
-   * starts ends the call, as at pickup (startWatchdog), rather than leave the line silent.
+   * still starting is dropped for it: it was seeded for a moment already gone. One that doesn't
+   * start in time on this phone stream ends the call, billed as that session's end was before
+   * (openFailed), rather than leave the line silent. A phone stream lost meanwhile is the
+   * reattach's to recover (phoneLost), and any session starting clears it (onLive).
    */
   private async rollOver(why: string): Promise<void> {
     const age = Math.round((Date.now() - this.liveStartedAt) / 1000);
@@ -1229,12 +1294,19 @@ export class VoiceSession extends DurableObject<Env> {
     this.resumed = true;
     this.pendingAudio = [];
     this.resetSessionState();
-    const roll = ++this.rollovers;
+    this.rollovers++;
     this.mark(`voice session rolled over (after ${why}) at ${age}s session age`);
     if (live?.readyState === WebSocket.OPEN) live.close(1000, `voice session ended (${why})`);
-    setTimeout(() => {
-      if (!this.ended && this.rollovers === roll && this.phone && !this.liveReady) void this.shutdown(`the voice session replacing one that ended (${why}) did not start within ${SESSION_START_LIMIT_MS / 1000}s`);
+    const phone = this.phone;
+    if (this.replacing) clearTimeout(this.replacing.timer);
+    const timer = setTimeout(() => {
+      this.replacing = null;
+      if (!this.ended && this.phone === phone) void this.shutdown(`the voice session replacing one that ended (${why}) did not start within ${SESSION_START_LIMIT_MS / 1000}s`);
     }, SESSION_START_LIMIT_MS);
+    this.replacing = { why, timer };
+    // The open that installed the session just ended may still be finishing (openLive's last
+    // await): started now, startLive would hand back that open, which opens nothing more.
+    await Promise.allSettled([this.liveStarting]);
     await this.startLive();
   }
 
@@ -1696,6 +1768,8 @@ export class VoiceSession extends DurableObject<Env> {
           await this.pressKeys(s, s.controlId, digits);
           if (s.keyBeep && !s.inbandKeys) this.playInCall(beepFrames(), `played the key beep for ${digits}`);
           this.menuRecovery.submitted(digits, snapshot, Date.now());
+          // A session taking over after a reset is told which keys went in (callSoFar), not that none did.
+          void this.ctx.storage.put('keys', this.menuRecovery.pressed());
           this.keySentAt = Date.now();
           this.keyReplyBy = this.keySentAt + KEY_REPLY_HOLD_MS;
           output = `keypad submitted: ${digits}; wait for the next prompt to confirm it worked`;
@@ -1799,6 +1873,7 @@ export class VoiceSession extends DurableObject<Env> {
   private answerCameIn(id: string, question: string, answer: string): void {
     if (this.ended) return;
     this.unanswered = null;
+    this.answers.push({ question, answer });
     this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: `The answer came back for "${question.slice(0, 300)}": ${answer}. Say it to them now.` });
     this.waiting.get(id)?.(answer);
   }
@@ -2106,6 +2181,7 @@ export class VoiceSession extends DurableObject<Env> {
     if (this.handoffTimer) clearTimeout(this.handoffTimer);
     if (this.holdingTimer) clearTimeout(this.holdingTimer);
     if (this.rollTimer) clearTimeout(this.rollTimer);
+    if (this.replacing) clearTimeout(this.replacing.timer);
     for (const finish of this.waiting.values()) finish(null);
     console.log('call session ending:', reason);
     const s = await this.load();

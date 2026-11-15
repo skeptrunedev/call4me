@@ -25,7 +25,9 @@ Object.defineProperty(globalThis, 'WebSocket', { value: Socket, configurable: tr
 function harness(t: TestContext) {
   t.mock.timers.enable({ apis: ['Date', 'setTimeout'], now: 10_000 });
   // Match the existing session tests: exercise real provider message handling, no live calls.
-  const session = new VoiceSession({ storage: {} } as any, { TELNYX_API_KEY: 'test-key' } as any) as any;
+  const stored = new Map<string, unknown>();
+  const storage = { get: async (k: string) => stored.get(k), put: async (k: string, v: unknown) => void stored.set(k, v) };
+  const session = new VoiceSession({ storage } as any, { TELNYX_API_KEY: 'test-key' } as any) as any;
   session.setup = { callId: 'menu_test', controlId: 'test-control', redact: [] };
   session.answered = true; // A menu is talking, so the call is up: nothing is heard before pickup.
   session.live = new Socket();

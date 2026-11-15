@@ -213,6 +213,8 @@ function spokenKeypadDigits(text: string): string | null {
 export type MissedHandoff = { reason: 'menu' | 'menu_recovery' | 'keypad' | 'promise' | 'voicemail_left' | 'greeting_waiting' | 'signed_off'; line: TranscriptLine; menuContext?: string };
 type MenuSnapshot = { text: string; end: number; at: number; callerEnd: number };
 type KeypadAttempt = { digits: string; prompt: string; inputEnd: number; at: number };
+/** A key pressed on the call, as its history keeps it across a session reset (MenuRecovery.pressed). */
+export type KeyPress = { digits: string; prompt: string };
 
 /**
  * How far the other side's transcript runs behind their audio. Words transcribed this soon after a key
@@ -230,6 +232,7 @@ export class MenuRecovery {
   private menuContext = '';
   private personSpeaking = false;
   private attempts: KeypadAttempt[] = [];
+  private earlier: KeyPress[] = [];
   private callerInput = '';
   private callerBoundary = 0;
   private callerAt = 0;
@@ -326,8 +329,21 @@ export class MenuRecovery {
     if (spokenKeypadDigits(this.callerInput.slice(this.callerBoundary)) === digits) this.callerBoundary = this.callerInput.length;
   }
 
+  /**
+   * The keys pressed before a session reset, as pressed() gave them. For history() only: where
+   * their prompts ran in the old instance's input went with it.
+   */
+  restore(keys: KeyPress[]): void {
+    this.earlier = keys;
+  }
+
+  /** The latest keys pressed on the call, kept across a session reset (restore). */
+  pressed(): KeyPress[] {
+    return [...this.earlier, ...this.attempts.map((a) => ({ digits: a.digits, prompt: a.prompt.slice(-600) }))].slice(-8);
+  }
+
   history(): string {
-    return this.attempts.slice(-8).map((attempt, i) => `${i + 1}. Keypad submitted: ${attempt.digits}. Prompt: ${attempt.prompt.slice(-600)}`).join('\n') || '(no keypad input has been submitted)';
+    return this.pressed().map((key, i) => `${i + 1}. Keypad submitted: ${key.digits}. Prompt: ${key.prompt}`).join('\n') || '(no keypad input has been submitted)';
   }
 }
 
