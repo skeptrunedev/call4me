@@ -506,7 +506,7 @@ async function onHold(t: TestContext, limitMs: number, credits = 10_000) {
   return { ...pickup, wrapAt, balance, marks, warning, replay };
 }
 
-test('a hold on a line gone dead gets no extension at the time limit, and the call wraps up as planned', async (t) => {
+test('a hold on a line gone dead gets one extension, then none once it has been silent through it, and the call wraps up', async (t) => {
   // call_bje9ny6dv8smyujy: ringback until +87s after our 1, then exact-zero audio from a transfer
   // that never hung up, extended 15 minutes at a time for 2h13m.
   const { h, live, play, wrapAt, balance, marks } = await onHold(t, 3 * 60_000);
@@ -514,16 +514,20 @@ test('a hold on a line gone dead gets no extension at the time limit, and the ca
   h.session.hangup = async (why: string) => { hangups.push(why); };
   await play(3 * 60_000, (ms) => ({ them: ms < 87_000 }));
   await h.session.alarm();
-  assert.equal(h.values.get('wrapAt'), wrapAt, 'no more time');
+  assert.equal(h.values.get('wrapAt'), wrapAt + 15 * 60_000, '93s of quiet could still be someone gone to look');
+  assert.equal(await balance(), 10_000 - 15 * 25);
+
+  await play(18 * 60_000);
+  await h.session.alarm();
+  assert.equal(h.values.get('wrapAt'), wrapAt + 15 * 60_000, 'no more time');
   assert.equal(h.values.get('stopAt'), Date.now() + 40_000);
   assert.ok(live.sent.some((m: any) => m.type === 'session.thinking.append' && /Time is almost up/.test(m.content)), 'the wrap-up note goes in');
-  assert.ok(marks().some((m) => /line silent 93s on hold at the time limit: not extending/.test(m)));
-  assert.equal(await balance(), 10_000, 'no credits held for an extension');
+  assert.ok(marks().some((m) => /line silent 993s on hold at the time limit: not extending/.test(m)));
+  assert.equal(await balance(), 10_000 - 15 * 25, 'no credits held for a second extension');
 
-  await play(3 * 60_000 + 40_000);
+  await play(18 * 60_000 + 40_000);
   await h.session.alarm();
   assert.deepEqual(hangups, ['the call reached its time limit']);
-  assert.equal(await balance(), 10_000);
 });
 
 test('a hold on queue music still gets its extension when the limit lands at the end of an 11.4s gap in the loop', async (t) => {
@@ -538,12 +542,22 @@ test('a hold on queue music still gets its extension when the limit lands at the
   assert.equal(await balance(), 10_000 - 15 * 25);
 });
 
-test('a hold whose line went quiet less than a minute before the limit still gets its extension', async (t) => {
-  const { h, play, wrapAt, marks } = await onHold(t, 3 * 60_000);
-  await play(3 * 60_000, (ms) => ({ them: ms < 3 * 60_000 - 59_000 }));
+test('a silent hold where someone went to look still gets its extension at the time limit', async (t) => {
+  // call_x25yrdf0y2pfa497: "let me go look, hold on one second" at +46s, then the line's noise floor
+  // until the limit at +195s. A one-minute rule ended the call before they came back.
+  const { h, play, wrapAt, marks } = await onHold(t, 195_000);
+  await play(195_000, (ms) => ({ them: ms < 52_000 }));
   await h.session.alarm();
   assert.equal(h.values.get('wrapAt'), wrapAt + 15 * 60_000);
   assert.equal(h.values.has('stopAt'), false);
+  assert.ok(!marks().some((m) => /not extending/.test(m)));
+});
+
+test('a hold silent for just under 10 minutes at the limit still gets its extension', async (t) => {
+  const { h, play, wrapAt, marks } = await onHold(t, 12 * 60_000);
+  await play(12 * 60_000, (ms) => ({ them: ms < 2 * 60_000 + 1_000 }));
+  await h.session.alarm();
+  assert.equal(h.values.get('wrapAt'), wrapAt + 15 * 60_000);
   assert.ok(!marks().some((m) => /not extending/.test(m)));
 });
 
@@ -583,8 +597,8 @@ test("a session reset mid-hold doesn't make the queue look silent, and a dead li
   await restarted.alarm();
   assert.equal(h.values.get('wrapAt'), Date.now() + 15 * 60_000, 'quiet before this instance heard the line is not silence');
 
-  // The queue is dead after all: a minute of nothing on this instance's own frames.
-  frames(60_000);
+  // The queue is dead after all: ten minutes of nothing on this instance's own frames.
+  frames(10 * 60_000);
   h.values.set('wrapAt', Date.now());
   await restarted.alarm();
   assert.equal(h.values.get('stopAt'), Date.now() + 40_000);
@@ -633,14 +647,15 @@ test('no low-credit warning while the credits cover the next extension', async (
 });
 
 test('no low-credit warning on a hold whose line has gone silent, until it carries sound again', async (t) => {
-  // The same short credits as above, the line dead from the recording on: it gets no extension at its limit, so nothing to warn about.
-  const { h, replay, warning, marks } = await onHold(t, 17 * MIN, 100);
-  await replay(3 * MIN);
+  // The same short credits as above, the line dead from the recording on: silent 10 minutes by the
+  // check 15 minutes before its limit, it gets no extension there, so nothing to warn about.
+  const { h, replay, warning, marks } = await onHold(t, 26 * MIN, 100);
+  await replay(12 * MIN);
   assert.equal((await warning())!.low_credit_at, null);
   assert.deepEqual(lowCreditMarks(marks()), []);
   // Queue music comes back: the next alarm warns.
-  await replay(3 * MIN + 20_000, music);
-  assert.equal((await warning())!.low_credit_at, h.session.answeredAt + 3 * MIN + 20_000);
+  await replay(12 * MIN + 20_000, music);
+  assert.equal((await warning())!.low_credit_at, h.session.answeredAt + 12 * MIN + 20_000);
 });
 
 test('a hold starting with its limit already close queues the warning at once, and only once per call', async (t) => {

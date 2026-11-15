@@ -51,6 +51,12 @@ const SILENCE_LIMIT_MS = 30_000;
 /** How long after pickup a line that has never made a sound (no words, no audio) is given up on. */
 const DEAD_AIR_MS = 60_000;
 /**
+ * How long a hold may stay silent and still be waited on past the time limit. Someone who goes to
+ * look, or presses a hold button with no music, is back within minutes; a line silent for longer
+ * is dead. Shorter than a hold extension, so a line silent through a whole one never gets another.
+ */
+const SILENT_HOLD_MS = 10 * 60_000;
+/**
  * Audio from the phone normally starts within half a second of pickup. Telnyx sometimes drops the
  * stream within ~100ms of connecting and never says so (no streaming.started, no close reaching us),
  * leaving a socket that carries nothing; after this long without a frame it is reattached.
@@ -2066,7 +2072,7 @@ export class VoiceSession extends DurableObject<Env> {
    */
   private async warnLowCredits(s: Stored, limitAt: number): Promise<void> {
     const now = Date.now();
-    if (this.ended || this.endingCall || !this.hold.holding() || limitAt - now > LIMITS.holdExtensionMinutes * 60_000 || this.silentFor() >= DEAD_AIR_MS) return;
+    if (this.ended || this.endingCall || !this.hold.holding() || limitAt - now > LIMITS.holdExtensionMinutes * 60_000 || this.silentFor() >= SILENT_HOLD_MS) return;
     try {
       if (await this.ctx.storage.get('lowCreditsWarned')) return;
       const db = callStore(this.env.DB);
@@ -2098,13 +2104,15 @@ export class VoiceSession extends DurableObject<Env> {
     // A hold ends only on someone's words or our caller's reply, and a dead line gives neither. At
     // 3715 California Apartments "we will be with you shortly" started a hold, the transfer behind
     // its 1 went dead after the ringback and never hung up, and nine extensions kept the silent
-    // line open 2h13m, $16.88 billed as hold (call_bje9ny6dv8smyujy). Queue music on real holds is
-    // never quiet past 11.4s (Amazon's loop), nor a person on a live line past 31s. A silent hold
-    // is not ended or hung up on (small businesses hold with no music): it only gets no time past
-    // the call's planned length. Quiet counts only over frames this instance received: after a reset
-    // the hold resumes with themAudibleAt back at 0, and a live queue would look silent from pickup.
+    // line open 2h13m, $16.88 billed as hold (call_bje9ny6dv8smyujy). But a silent hold is often a
+    // person: at Five Below "let me go look, hold on one second" left the line at its noise floor,
+    // and a one-minute rule ended the call at its limit 143s later, before they came back
+    // (call_x25yrdf0y2pfa497). So silence only counts past SILENT_HOLD_MS. A silent hold is never
+    // ended or hung up on: it only gets no time past the call's planned length. Quiet counts only
+    // over frames this instance received: after a reset the hold resumes with themAudibleAt back at
+    // 0, and a live queue would look silent from pickup.
     const silentFor = this.silentFor();
-    if (silentFor >= DEAD_AIR_MS) {
+    if (silentFor >= SILENT_HOLD_MS) {
       this.mark(`line silent ${Math.round(silentFor / 1000)}s on hold at the time limit: not extending`);
       return false;
     }
