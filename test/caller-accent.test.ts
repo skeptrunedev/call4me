@@ -49,6 +49,19 @@ test('the owner calling their own line is greeted as the owner, never as a busin
   assert.doesNotMatch(inboundInstructions({ ...answered, owner: 'David Aviles' }), /# The caller is/);
 });
 
+test('the owner calling their own line is never told to answer "Hello?" or with the business opening', () => {
+  // Hy Saporta's call to their own line opened "Hello?": "What to do" still said to answer with a simple
+  // "Hello?" below the owner block's "Hey Hy!". Elijah Greene's opened with his business introduction.
+  const owner = inboundInstructions({ ...answered, owner: 'David Aviles', ownerCalling: true });
+  assert.match(owner, /- Answer with "Hey David!" and ask what they need/);
+  assert.doesNotMatch(owner, /a simple "Hello\?"/);
+  const business = inboundInstructions({ ...answered, owner: 'David Aviles', ownerCalling: true, callingAs: 'Aviles Plumbing', standing: 'Answer "Aviles Plumbing, how can I help?"' });
+  assert.match(business, /- Answer with "Hey David!"/);
+  assert.doesNotMatch(business, /Answer the way the standing instructions above say/);
+  // Anyone else still gets the usual opening.
+  assert.match(inboundInstructions({ ...answered, owner: 'David Aviles' }), /a simple "Hello\?"/);
+});
+
 test('the opener carries no example task the caller could borrow', () => {
   // Leonardo's optician call in French opened with a table for four from the old example.
   const prompt = callInstructions({ ...call, voice: 'marin', accent: 'French' });

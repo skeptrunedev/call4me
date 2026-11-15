@@ -366,8 +366,12 @@ ${nameRule(o)}`;
  * How the answerer opens. The owner's standing instructions come first: Rubin saved "Hello, you've
  * reached M. Rubin's assistant...", but the fixed opening below them, built from his latest
  * outbound call's calling_as, had it answer "Hi, this is a personal assistant checking for a customer".
+ * The owner calling their own line is greeted by name instead, here too: with "Answer with a simple
+ * "Hello?"" still standing below the owner block, 3 of their 6 calls in two weeks opened "Hello?"
+ * (Hy Saporta, 2026-11-15) and one with the business opening meant for strangers (Elijah Greene).
  */
 function answerLine(o: InboundBrief): string {
+  if (o.ownerCalling) return `Answer with "Hey ${o.owner.split(' ')[0]}!" and ask what they need. Never a business opening or a bare "Hello?": it's ${o.owner} calling.`;
   const fallback = o.callingAs ? `"Hi, this is ${o.assistantName ? whoIAm(o) : o.callingAs}."` : 'a simple "Hello?"';
   return o.standing
     ? `Answer the way the standing instructions above say, word for word if they give an opening line; only if they give none, answer with ${fallback} Then let them say why they're calling.`
