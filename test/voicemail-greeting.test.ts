@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { asksForMessage, forcedHandoffMessage, greetingWaiting, voicemailLeft } from '../src/server/voice/handoff';
+import { asksForMessage, forcedHandoffMessage, greetingWaiting, messageUnanswered, missedHandoff, promisesAction, signedOff, voicemailLeft } from '../src/server/voice/handoff';
 import { HoldMeter } from '../src/server/voice/hold';
 import { voicemailGreeting } from '../src/server/voice/voicemail';
 
@@ -405,4 +405,111 @@ test("Google Voice asking for a name is a screener, not a voicemail: the introdu
     'Please leave your name and number after the tone.',
     'Deje su nombre y número después del tono.',
   ]) assert.ok(asksForMessage(greeting), greeting);
+});
+
+// call_2tu8ltcnltknt45z (2026-11-15, owner renamed): no pattern knew German, so after both goodbyes
+// the line sat silent 46s, until signedOff heard their "tschüss".
+const germanCall = [
+  { role: 'them' as const, text: 'Ja, hallo', at: 0 },
+  { role: 'caller' as const, text: 'Hi, guten Tag! Ich hätte nur ne kurze Frage: Wie ist denn gerade das Wetter bei euch in Zypern?', at: 500 },
+  { role: 'them' as const, text: '[laugh ]Also die Sonne scheint und das Meer ist blau. Wer sind Sie denn überhaupt', at: 9_100 },
+  { role: 'caller' as const, text: 'Ach schön, das ähm freut mich zu hören. Ich bin der Assistent von Alex Kim, wir rufen nur kurz an, um nachzufragen, wie es Ihnen geht und um die Sprachverständlichkeit zu testen.', at: 13_500 },
+  { role: 'them' as const, text: 'Ah, ja, coole Sache. Dann richten Sie mal dem... dem... dem Owner bitte viele Grüße aus. Sonst noch was', at: 27_200 },
+  { role: 'caller' as const, text: "Klar, sehr gerne. Und jetzt, wo ich sie grad dran hab, wie geht's Ihnen denn heute so?", at: 33_100 },
+  { role: 'them' as const, text: "[laugh ]Wie geht's ganz wunderbar! Also ey, E macht richtig Spaß, will ich mal sagen. Und dir so", at: 39_500 },
+  { role: 'caller' as const, text: "Oh, mega gut. Mir geht's auch gut, danke. Super, das wollt ich nur wissen. Vielen Dank und dann noch nen schönen Tag für Sie. Tschüss!", at: 44_200 },
+  { role: 'them' as const, text: 'Ja, danke, tschüss', at: 53_400 },
+];
+
+test("a German goodbye, and theirs after it, hang up; the call's hellos and its mid-call danke don't", () => {
+  assert.equal(missedHandoff(germanCall, 0, new Set())?.line.at, 44_200);
+  assert.equal(missedHandoff(germanCall.slice(0, 8), 0, new Set())?.reason, 'promise', 'before their reply, too');
+  for (let i = 0; i < 7; i++) assert.equal(missedHandoff(germanCall.slice(0, i + 1), 0, new Set()), null, germanCall[i].text);
+  for (const goodbye of ['Vielen Dank, auf Wiederhören!', 'Danke, auf Wiedersehen.', 'Alles klar, einen schönen Abend noch!', 'Super, danke. Bis dann!', 'Okay, ich lege jetzt auf.'])
+    assert.ok(promisesAction(goodbye), goodbye);
+  const ours = germanCall.slice(0, 8);
+  for (const theirs of ['Danke, Ihnen auch noch einen schönen Tag, auf Wiederhören', 'Gleichfalls, tschüss', 'Bitte schön, wiederhören', 'Ja, tschüss. Und grüßen Sie den Owner'])
+    assert.equal(missedHandoff([...ours, { role: 'them' as const, text: theirs, at: 53_400 }], 0, new Set())?.reason, 'promise', theirs);
+  // Hellos, a "danke" mid-call and "bis dann" as a deadline are the call going on.
+  for (const line of ['Guten Tag!', 'Schönen guten Tag, hier ist die Assistentin von Alex Kim.', 'Danke, und wann haben Sie geöffnet?', 'Können Sie mir das bis später schicken?', 'Ich brauche die Unterlagen bis dann.'])
+    assert.ok(!promisesAction(line), line);
+  // Someone new answering after our goodbye is not closing it.
+  assert.equal(missedHandoff([...ours, { role: 'them' as const, text: 'Guten Tag, Praxis Dr. Weber, was kann ich für Sie tun?', at: 53_400 }], 0, new Set()), null);
+});
+
+// call_xogq1dyai72r5qp7 (2026-11-13, names, number and topic changed): the receptionist transferred us
+// to a voicemail the carrier never flagged, and the message's "Je raccroche." was held open 68s more.
+const frenchTransfer = [
+  { role: 'caller' as const, text: 'Salut!', at: 0 },
+  { role: 'them' as const, text: 'Bonjour', at: 400 },
+  { role: 'caller' as const, text: "J'appelle pour Sam Martin. Je cherche Claire Dubois ou l'équipe de fiscalité, pour un deuxième avis rapide.", at: 1_200 },
+  { role: 'them' as const, text: "D'accord, donc si Madame Dubois, vous aimeriez parler, je vais transférer. Je vous invite quand même à laisser un message parce que parfois sont en réunion ou en formation. Je vous transfère. C'est bon", at: 27_000 },
+  { role: 'caller' as const, text: "Oui, c'est bon. Merci.", at: 39_900 },
+  { role: 'them' as const, text: "D'accord. N'est pas disponible. Veuillez laisser un message après la tonalité.", at: 43_500 },
+  { role: 'caller' as const, text: "Bonjour, c'est l'assistante de Sam Martin. J'appelle pour une consultation aujourd'hui ou lundi. S'il vous plaît, rappelez Sam au cinq cinq cinq, zéro un deux trois, avec les frais et vos disponibilités. Merci. Je raccroche.", at: 54_200 },
+];
+
+test('a French message saying it hangs up hangs up; "Salut!", "Bonjour, merci de patienter" and a mid-call merci do not', () => {
+  assert.equal(missedHandoff(frenchTransfer, 0, new Set())?.line.at, 54_200);
+  for (let i = 0; i < 6; i++) assert.equal(missedHandoff(frenchTransfer.slice(0, i + 1), 0, new Set()), null, frenchTransfer[i].text);
+  for (const goodbye of ['Merci beaucoup, au revoir!', 'Merci, bonne journée!', 'Merci et bonne fin de journée.', 'À bientôt!', 'Je vais raccrocher maintenant.'])
+    assert.ok(promisesAction(goodbye), goodbye);
+  for (const line of ['Bonjour, merci de patienter.', 'Bonsoir, je vous appelle pour une réservation.', 'Merci, est-ce que vous avez de la place samedi?', 'On peut reporter à la prochaine réunion?'])
+    assert.ok(!promisesAction(line), line);
+  // Their closing after our goodbye; someone picking up after it is not one.
+  const ours = [...frenchTransfer.slice(0, 2), { role: 'caller' as const, text: 'Parfait, merci beaucoup. Au revoir!', at: 5_000 }];
+  for (const theirs of ['Oui, merci, au revoir', "D'accord, merci à vous, bonne journée", 'Merci, vous aussi'])
+    assert.equal(missedHandoff([...ours, { role: 'them' as const, text: theirs, at: 6_000 }], 0, new Set())?.reason, 'promise', theirs);
+  assert.equal(missedHandoff([...ours, { role: 'them' as const, text: 'Bonjour, merci de patienter', at: 6_000 }], 0, new Set()), null);
+  // Its "rappelez Sam au" is a callback request too.
+  assert.equal(messageUnanswered(frenchTransfer, new Set())?.reason, 'voicemail_left');
+});
+
+// call_aihc4eblepn5p0jz (2026-11-13, business, names and number changed): its message ended "Merci. Hmm.",
+// with no goodbye in any language, so only the voicemail checks can end it; none knew its French
+// "Vous pouvez nous rappeler au" for a callback request.
+const frenchMenuVoicemail = [
+  { role: 'them' as const, text: 'Bonjour, vous avez joint la boîte vocale de Dubois Comptables. Au timbre', at: 0 },
+  { role: 'note' as const, text: 'carrier detected an automated greeting', at: 2_900 },
+  { role: 'them' as const, text: 'sonore, veuillez laisser un message. Merci. You have reached', at: 3_400 },
+  { role: 'note' as const, text: 'carrier detected a call screening prompt', at: 6_100 },
+  { role: 'them' as const, text: 'the Dubois', at: 6_100 },
+  { role: 'caller' as const, text: 'Bonjour,', at: 6_800 },
+  { role: 'them' as const, text: "Comptables' voice-mail. Please leave a message after the tone. Thank you", at: 7_800 },
+  { role: 'caller' as const, text: "C'est l'assistante de Sam Martin.", at: 9_900 },
+  { role: 'them' as const, text: 'Pour composer un autre numéro de poste, appuyez sur le 1. Pour laisser un message vocal, appuyez sur le 2. Vous pouvez également continuer à patienter Veuillez laisser un message après la tonalité', at: 10_600 },
+  { role: 'caller' as const, text: "Bonjour, c'est l'assistante de Sam Martin. Je vous appelle pour prendre un rendez-vous de consultation. Vous pouvez nous rappeler au cinq cinq cinq, zéro un deux trois. Merci. Hmm.", at: 29_600 },
+];
+
+test('a French callback request left on voicemail is a message left, and its closing "Merci" is no goodbye', () => {
+  assert.equal(messageUnanswered(frenchMenuVoicemail, new Set())?.reason, 'voicemail_left');
+  assert.equal(missedHandoff(frenchMenuVoicemail, 0, new Set()), null);
+  for (const message of ['Pouvez-vous me rappeler au cinq cinq cinq, zéro un deux trois, pour confirmer le rendez-vous.', 'Vous pouvez nous joindre au cinq cinq cinq, zéro un deux trois, à tout moment demain.'])
+    assert.equal(messageUnanswered([{ role: 'caller' as const, text: message, at: 1 }], new Set())?.reason, 'voicemail_left', message);
+});
+
+test('Italian and Portuguese goodbyes hang up; ciao, buongiorno and bom dia, which open calls too, do not', () => {
+  const said = (role: 'caller' | 'them', text: string, at: number) => ({ role, text, at });
+  for (const [answer, goodbye, theirs] of [
+    ['Sì, alle otto va bene.', 'Perfetto, grazie mille. Arrivederci!', 'Grazie a lei, arrivederci'],
+    ['Sì, alle otto va bene.', 'Grazie, buona giornata!', 'Sì, grazie, buongiorno'],
+    ['Sì, alle otto va bene.', 'Benissimo, a presto!', 'Prego, ciao ciao'],
+    ['Sim, às oito está ótimo.', 'Obrigada, tchau!', 'Tá bom, obrigado, tchau'],
+    ['Sim, às oito está ótimo.', 'Muito obrigado, tenha um ótimo dia!', 'De nada, tenha um bom dia'],
+    ['Sim, às oito está ótimo.', 'Perfeito, até logo!', 'Obrigada você, boa tarde'],
+  ]) {
+    const lines = [said('them', answer, 0), said('caller', goodbye, 2_000)];
+    assert.equal(missedHandoff(lines, 0, new Set())?.reason, 'promise', goodbye);
+    assert.equal(missedHandoff([...lines, said('them', theirs, 4_000)], 0, new Set())?.reason, 'promise', theirs);
+  }
+  for (const line of [
+    "Ciao! Sono l'assistente di Alex, chiamo per una prenotazione.", 'Buongiorno, vorrei prenotare un tavolo.', 'Buonasera, avete posto per due?', 'Possiamo spostarlo alla prossima settimana?', 'Grazie, e a che ora aprite?',
+    'Bom dia! Sou a assistente do Alex.', 'Boa tarde, gostaria de marcar uma consulta.', 'O prazo vai até a próxima semana?', 'Obrigada, e qual é o horário?',
+  ]) assert.ok(!promisesAction(line), line);
+});
+
+test('a recording or a person signing off in German, French, Italian or Portuguese is a goodbye left on the line', () => {
+  for (const recording of ['Merci de votre appel. Au revoir.', 'Grazie per aver chiamato. Arrivederci', 'Vielen Dank für Ihren Anruf. Auf Wiederhören', 'Danke, tschüs', 'Obrigado por ligar. Tchau'])
+    assert.equal(signedOff([{ role: 'them' as const, text: recording, at: 1 }], new Set())?.reason, 'signed_off', recording);
+  assert.equal(signedOff([{ role: 'them' as const, text: 'Au revoir? Attendez, je vous transfère.', at: 1 }], new Set()), null);
 });

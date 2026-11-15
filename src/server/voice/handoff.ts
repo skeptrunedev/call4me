@@ -77,6 +77,24 @@ const PROMISES = [
   /\bque tenga(?:s)? (?:un |una )?buen[oa]s? (?:d[ií]a|noche|tarde|fin de semana)\b/i,
   // \b only knows ASCII letters, so Greek words are bounded by \p{L} instead.
   /(?:^|\P{L})(?:αντ[ιί]ο|καλην[υύ]χτα|καλ[οό] (?:βρ[αά]δυ|απ[οό]γευμα|σαββατοκ[υύ]ριακο)|καλ[ηή] συν[εέ]χεια|να ?['’]?(?:στε|ε[ιί]στε) καλ[αά])(?!\p{L})/iu,
+  // German, French, Italian and Portuguese goodbyes went unseen: call_2tu8ltcnltknt45z's caller ended
+  // "Vielen Dank und dann noch nen schönen Tag für Sie. Tschüss!", they said "Ja, danke, tschüss", and
+  // the line sat 46s until signedOff heard their tschüss. Only words that never open a call count:
+  // "Guten Tag" and "Schönen guten Tag", "Bonjour", "Bonsoir", "buongiorno", "ciao" and "bom dia" are
+  // hellos too. "Auf Wiederhören" is German's phone goodbye.
+  /\b(?:tsch[uü]ss?(?:i|le)?|(?:auf )?wieder(?:sehen|seh'?n|h[oö]ren|h[oö]r'?n|schau(?:e)?n)|sch[oö]nen (?:tag|abend|nachmittag|feierabend|sonntag)|sch[oö]nes wochenende|sch[oö]ne woche)\b/i,
+  // "Bis dann", "bis bald" and "bis später" end a call as a sentence of their own, not as a deadline
+  // ("Können Sie mir das bis später schicken?").
+  /(?:^|[.!?,]\s*)(?:(?:also|okay|ok|gut|super|alles klar|na dann|dann|ja) )?bis (?:dann|bald|sp[äa]ter)[\s.!]*$/iu,
+  // The caller saying it is hanging up: "Ich lege jetzt auf", and call_xogq1dyai72r5qp7's French voicemail,
+  // whose message ended "Merci. Je raccroche." and was held open 68s more.
+  /\b(?:ich leg(?:e)?|leg(?:e)? ich) (?:(?:jetzt|dann|nun|mal|gleich) )*auf(?=\s*(?:[.!,]|$))/i,
+  /\bje (?:vais )?raccroch(?:e|er)\b/i,
+  // Not "à la prochaine", "alla prossima" or "até a próxima": they run on into "semaine", "settimana",
+  // "semana", next week, as often as they say goodbye.
+  /(?:^|\P{L})(?:au revoir|bonne (?:journ[ée]e|soir[ée]e|nuit|continuation|fin de (?:journ[ée]e|soir[ée]e|semaine))|bon (?:week-?end|apr[èe]s-midi)|à bient[ôo]t)(?!\p{L})/iu,
+  /\b(?:arrivederci|arrivederla|buona (?:giornata|serata|notte|continuazione)|buonanotte|buon (?:proseguimento|fine settimana|weekend)|a presto)\b/i,
+  /(?:^|\P{L})(?:tchau|adeus|at[ée] (?:logo|breve)|tenha (?:um|uma) (?:bom|boa|[óo]tim[oa]|excelente) (?:dia|tarde|noite|fim de semana|semana)|bom fim de semana)(?!\p{L})/iu,
 ];
 
 /**
@@ -92,8 +110,8 @@ function greekGoodbye(lines: TranscriptLine[], i: number): boolean {
   return before >= OPENING_CHARS;
 }
 
-/** Their reply opening with a goodbye, perhaps after a word ("Cool. Bye.", "Okay bye, ..."). */
-const OPENS_WITH_GOODBYE = /^[\s,.!]*(?:[a-z']+[\s,.!]+)?(?:good-?)?bye\b/i;
+/** Their reply opening with a goodbye, perhaps after a word ("Cool. Bye.", "Okay bye, ...", "Ja, tschüss, ..."). */
+const OPENS_WITH_GOODBYE = /^[\s,.!]*(?:[a-z']+[\s,.!]+)?(?:(?:good-?)?bye|tsch[uü]ss?|auf wieder(?:sehen|h[oö]ren)|au revoir|arrivederci|tchau|adeus)\b/i;
 
 /**
  * The other side only closing the call after our caller's goodbye: "you too", "de nada", "buenas noches",
@@ -102,7 +120,29 @@ const OPENS_WITH_GOODBYE = /^[\s,.!]*(?:[a-z']+[\s,.!]+)?(?:good-?)?bye\b/i;
  */
 // Their goodbye often splits around ours ("You have a good" / "Bye." / "day Buh-bye"), so the tail
 // of a closing phrase ("day", "you", "one") and noises ("uh-huh", "[gulp]") count as closing too.
-const CLOSING = /^[\s,.!]*(?:(?:ok(?:ay)?|alright|all right|yeah|yep|yes|sure|thank(?:s| you) for calling(?: [\w'&-]+){0,6}|thanks?|thank you|you too|same to you|bye(?:[- ]bye)?|goodbye|good ?night|have a (?:good|great|nice|wonderful) (?:one|day|night|evening)|take care|you'?re welcome|no problem|mhm|mm-?hm+|uh-?huh|buh[- ]?bye|\[[^\]]*\]?|day|night|evening|one|weekend|you|de nada|gracias|igualmente|buenas noches|buen d[ií]a|adi[oó]s|hasta luego|chao|γ[εέ]ι[αά](?: σ(?:[αά]ς|ου))?|(?:σας )?ευχαριστ(?:[ωώ]|ο[υύ]με)(?: (?:π[αά]ρα )?πολ[υύ])?|κι εγ[ωώ]|κι εσ[εέ]ις|επ[ιί]σης|αντ[ιί]ο|χα[ιί]ρετε|καλην[υύ]χτα|καλημ[εέ]ρα|καλ[οό] (?:βρ[αά]δυ|απ[οό]γευμα)|καλ[ηή] (?:συν[εέ]χεια|μ[εέ]ρα|βραδι[αά])|να ?['’]?(?:στε|ε[ιί]στε) καλ[αά]|εντ[αά]ξει|ν[αά]ι|παρακαλ[ωώ]|οκ[εέ]ι?|μχμ)[\s,.!]*)+$/i;
+// The whole line has to be closing words, so a plain "ja", "merci" or "grazie" counts here though
+// never in our caller's own goodbye, and so do the hellos that are also goodbyes ("buongiorno",
+// "bom dia"); "Bonjour, merci de patienter" from someone picking up is not a closing. No words
+// read two ways (one listed in two languages, "bye bye" as one word or two, "thank you" as one or
+// "thank" + "you"): each repeat doubles the readings of a line that isn't closing, and one with 16
+// "bye bye"s took a second to rule out.
+const CLOSING_WORDS = [
+  // English
+  String.raw`ok(?:ay)?|alright|all right|yeah|yep|yes|sure|thank(?:s| you) for calling(?: [\w'&-]+){0,6}|thanks?|you too|same to you|bye(?:-bye)?|goodbye|good ?night|have a (?:good|great|nice|wonderful) (?:one|day|night|evening)|take care|you'?re welcome|no problem|mhm|mm-?hm+|uh-?huh|buh[- ]?bye|\[[^\]]*\]?|day|night|evening|one|weekend|you`,
+  // Spanish
+  String.raw`de nada|gracias|igualmente|buenas noches|buen d[ií]a|adi[oó]s|hasta luego|chao`,
+  // Greek
+  String.raw`γ[εέ]ι[αά](?: σ(?:[αά]ς|ου))?|(?:σας )?ευχαριστ(?:[ωώ]|ο[υύ]με)(?: (?:π[αά]ρα )?πολ[υύ])?|κι εγ[ωώ]|κι εσ[εέ]ις|επ[ιί]σης|αντ[ιί]ο|χα[ιί]ρετε|καλην[υύ]χτα|καλημ[εέ]ρα|καλ[οό] (?:βρ[αά]δυ|απ[οό]γευμα)|καλ[ηή] (?:συν[εέ]χεια|μ[εέ]ρα|βραδι[αά])|να ?['’]?(?:στε|ε[ιί]στε) καλ[αά]|εντ[αά]ξει|ν[αά]ι|παρακαλ[ωώ]|οκ[εέ]ι?|μχμ`,
+  // German: "Ja, danke, tschüss" (call_2tu8ltcnltknt45z)
+  String.raw`ja(?:wohl)?|genau|gut|super|alles klar|(?:vielen |herzlichen )*dank(?:e)?(?:[ -]?sch[öo]n| sehr)?|bitte(?:[ -]?sch[öo]n| sehr)?|gern(?:e)?(?: geschehen)?|ebenfalls|gleichfalls|(?:ihnen|dir|euch) auch|tsch[üu]ss?|tschau|(?:auf )?wieder(?:sehen|seh'?n|h[öo]ren|h[öo]r'?n|schau(?:e)?n)|(?:noch )?(?:(?:einen|nen) )?sch[öo]nen (?:tag|abend|feierabend|sonntag)(?: noch)?|sch[öo]nes wochenende|bis (?:dann|bald|sp[äa]ter)`,
+  // French
+  String.raw`oui|ouais|d['’]accord|parfait|tr[èe]s bien|merci(?: beaucoup| bien| à vous)?|de rien|je vous en prie|avec plaisir|pas de (?:probl[èe]me|souci)|(?:à )?vous (?:aussi|de m[êe]me)|toi aussi|pareillement|[ée]galement|au revoir|salut|bonsoir|bonne (?:journ[ée]e|soir[ée]e|nuit|continuation|fin de (?:journ[ée]e|soir[ée]e|semaine))|bon (?:week-?end|apr[èe]s-midi)|à (?:bient[ôo]t|la prochaine|plus)`,
+  // Italian
+  String.raw`s[ìi]|certo|va bene|perfetto|grazie(?: mille| tante| a lei| a te)?|prego|di niente|si figuri|figurati|altrettanto|anche a (?:lei|te|voi)|arrivederci|arrivederla|ciao|buongiorno|buonasera|buona (?:sera|giornata|serata|notte|continuazione)|buonanotte|buon (?:pomeriggio|proseguimento|fine settimana|weekend)|a presto|alla prossima`,
+  // Portuguese
+  String.raw`sim|t[áa] (?:bom|bem|[óo]timo)|est[áa] bem|beleza|valeu|(?:muito )?obrigad[oa](?: voc[êe])?|eu que agrade[çc]o|por nada|(?:pra|para) (?:voc[êe]|o senhor|a senhora)|tamb[ée]m|tchau|adeus|at[ée] (?:logo|mais|breve|a pr[óo]xima)|tenha (?:um|uma) (?:bom|boa|[óo]tim[oa]|excelente) (?:dia|tarde|noite|fim de semana|semana)|bom dia|boa tarde|boa noite|bom fim de semana|um abra[çc]o`,
+];
+const CLOSING = new RegExp(String.raw`^[\s,.!]*(?:(?:${CLOSING_WORDS.join('|')})[\s,.!]*)+$`, 'i');
 
 /** The caller said it would go do something (look something up, hang up) that needs the back office. */
 export function promisesAction(text: string): boolean {
@@ -522,11 +562,12 @@ export function signedOff(lines: TranscriptLine[], forced: ReadonlySet<number>):
   while (i >= 0 && lines[i].role === 'note') i--;
   const last = lines[i];
   if (!last || last.role !== 'them' || forced.has(last.at)) return null;
-  return /\b(?:good-?bye|adi[oó]s|auf wiedersehen|tsch[uü]ss)\W*$/i.test(last.text.trim()) || turnedAway(last.text) ? { reason: 'signed_off', line: last } : null;
+  return /\b(?:good-?bye|adi[oó]s|auf wiedersehen|auf wiederh[oö]ren|tsch[uü]ss?|au revoir|arrivederci|arrivederla|tchau|adeus)\W*$/i.test(last.text.trim()) || turnedAway(last.text) ? { reason: 'signed_off', line: last } : null;
 }
 
 /** "Please call back at…", "text Michael at four one five…": what a voicemail message asks for. */
-const CALLBACK_REQUEST = /\b(?:call (?:me|him|her|us|them) back|call back|callback number|text (?:me|him|her|us|them)|email (?:me|him|her|us|them)|reply (?:by|to|at)|reach (?:(?:me|him|her|us|them) )?(?:back )?at|(?:call|text)(?: or (?:call|text))? \w+ at|please call (?:\d|zero|one|two|three|four|five|six|seven|eight|nine)|give (?:me|him|her|us|them) a call|(?:my|his|her|our|the) (?:callback )?number is|devu[eé]lva(?:me|nos)? la llamada|ll[aá]me(?:me|nos)? (?:al|a)|(?:me|nos) (?:puede|podr[ií]a) llamar|r[uü]ckruf|ruf (?:mich|uns) (?:zur[uü]ck|an))\b/i;
+// French too: "Vous pouvez nous rappeler au ..." (call_aihc4eblepn5p0jz), "rappelez <name> au ..." (call_xogq1dyai72r5qp7).
+const CALLBACK_REQUEST = /\b(?:call (?:me|him|her|us|them) back|call back|callback number|text (?:me|him|her|us|them)|email (?:me|him|her|us|them)|reply (?:by|to|at)|reach (?:(?:me|him|her|us|them) )?(?:back )?at|(?:call|text)(?: or (?:call|text))? \w+ at|please call (?:\d|zero|one|two|three|four|five|six|seven|eight|nine)|give (?:me|him|her|us|them) a call|(?:my|his|her|our|the) (?:callback )?number is|devu[eé]lva(?:me|nos)? la llamada|ll[aá]me(?:me|nos)? (?:al|a)|(?:me|nos) (?:puede|podr[ií]a) llamar|r[uü]ckruf|ruf (?:mich|uns) (?:zur[uü]ck|an)|rappel(?:ez|er|le)|joindre au|(?:mon|notre) num[ée]ro est)\b/i;
 
 /** What the back office is told when the session starts it because the voice model didn't. */
 export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[], keypadHistory = '(no keypad input has been submitted)'): string {

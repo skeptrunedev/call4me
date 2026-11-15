@@ -727,6 +727,44 @@ test('a callback request a person heard is not taken for a voicemail, however lo
   assert.ok(!h.session.live.sent.some((m: any) => /left its voicemail message/.test(m.item?.content?.[0]?.text ?? '')));
 });
 
+const promiseHandoffs = (live: Socket) => live.sent.filter((m) => m.type === 'response.item.create' && /said it would do something but never handed it off/.test(m.item.content[0].text)).map((m) => m.item.content[0].text);
+
+test("a German goodbye the voice model never handed off is handed off once the line goes quiet, not 46s later", async (t) => {
+  // call_2tu8ltcnltknt45z, 2026-11-15 (owner renamed): "Tschüss!" and their "Ja, danke, tschüss" were
+  // unknown words, and the silent line waited for signedOff's 45s.
+  const { live, play, words } = await outboundPickup(t);
+  let ms = 0;
+  const turn = async (role: 'them' | 'caller', text: string) => { await words(role, text); await play((ms += 3_000)); };
+  await turn('them', 'Ja, hallo');
+  await turn('caller', 'Hi, guten Tag! Ich hätte nur ne kurze Frage: Wie ist denn gerade das Wetter bei euch in Zypern?');
+  await turn('them', 'Also die Sonne scheint und das Meer ist blau. Wer sind Sie denn überhaupt');
+  await turn('caller', 'Ach schön, das freut mich zu hören. Ich bin der Assistent von Alex Kim, wir rufen nur kurz an, um nachzufragen, wie es Ihnen geht.');
+  await turn('them', "Wie geht's ganz wunderbar! Und dir so");
+  assert.deepEqual(promiseHandoffs(live), [], '"guten Tag" opens a call');
+  await words('caller', "Oh, mega gut. Mir geht's auch gut, danke. Vielen Dank und dann noch nen schönen Tag für Sie. Tschüss!");
+  await play((ms += 1_000));
+  await words('them', 'Ja, danke, tschüss');
+  await play((ms += 1_400));
+  assert.deepEqual(promiseHandoffs(live), [], 'their closing is still landing');
+  await play((ms += 200));
+  assert.equal(promiseHandoffs(live).length, 1);
+  assert.match(promiseHandoffs(live)[0], /them: Ja, danke, tschüss/);
+});
+
+test('a French voicemail message ending "Je raccroche." is handed off once the line goes quiet, not after 45s', async (t) => {
+  // call_xogq1dyai72r5qp7, 2026-11-13 (names and number changed): a receptionist transferred us to
+  // voicemail, the carrier had called the line a person, and the silent line stayed open 68s.
+  const { h, live, play, words } = await outboundPickup(t);
+  await h.session.machineDetected('human', new Date(Date.now()).toISOString());
+  await words('them', "D'accord. N'est pas disponible. Veuillez laisser un message après la tonalité.");
+  await play(5_000);
+  await words('caller', "Bonjour, c'est l'assistante de Sam Martin. S'il vous plaît, rappelez Sam au cinq cinq cinq, zéro un deux trois, avec vos disponibilités. Merci. Je raccroche.");
+  await play(6_400);
+  assert.deepEqual(promiseHandoffs(live), []);
+  await play(6_600);
+  assert.equal(promiseHandoffs(live).length, 1);
+});
+
 test('a question that goes unanswered reaches the voice session that replaced the one asking, and any opened later', async (t) => {
   const h = harness(t);
   await h.session.env.DB.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at) VALUES ('recovery_test', 'acct_alice', '+14155550100', 'Example Apartments', 'Studio rent', '{}', 'in_progress', 0)`).run();
