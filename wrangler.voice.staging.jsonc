@@ -23,7 +23,11 @@
   // STREAM_SECRET (the same value as the site's, which signs the stream URLs).
   "vars": {
     "VOICE_MODEL": "gpt-live-1",
-    "BACK_OFFICE_MODEL": "gpt-5.5"
+    "BACK_OFFICE_MODEL": "gpt-5.5",
+    // Voice sessions are rolled over as if GPT-Live ended them 3 minutes in, not 2 hours
+    // (session.ts maybeRollLive), so every staging call past 3 minutes is due one.
+    // npm run staging:rollover-test checks it.
+    "VOICE_SESSION_SECONDS": "180"
   },
   "observability": { "enabled": true }
 }

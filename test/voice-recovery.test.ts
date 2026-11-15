@@ -387,7 +387,9 @@ test('a fresh durable object restores the ongoing call and relays audio using it
   const live = h.connected(0);
   await attached;
   assert.equal(restarted.answeredAt, 8500);
-  assert.match(live.sent[0].session.instructions, /Please give me two minutes to check the order/);
+  // The call's own instructions as they were, and the call so far as its history.
+  assert.equal(live.sent[0].session.instructions, 'Test instructions');
+  assert.deepEqual(live.sent[0].session.input[0], { type: 'message', role: 'user', content: [{ type: 'input_text', text: 'Please give me two minutes to check the order.' }] });
   assert.equal(h.values.get('wrapAt'), 1_000_000);
   await restarted.onLive(JSON.stringify({ type: 'session.started', session: { id: 'restored' } }));
   phone.message({ event: 'media', media: { payload: 'new-phone-audio' } });
@@ -786,6 +788,314 @@ test('a voice session from before pickup that expires after someone spoke ends t
   assert.equal(h.opens.length, 1);
 });
 
+const settle = async () => {
+  await new Promise((resolve) => setImmediate(resolve));
+  for (let i = 0; i < 20; i++) await Promise.resolve();
+};
+
+/**
+ * An outbound call whose voice session GPT-Live started at pickup, expiring two hours later as
+ * every session does. `said` puts words on the line from `socket`'s session, `line` runs the
+ * phone a second at a time (`loud` for hold music) and `marks` is what the session logged.
+ */
+async function liveCall(t: TestContext) {
+  const log = t.mock.method(console, 'log', () => {});
+  const h = harness(t);
+  h.session.setup.maxSeconds = 4 * 60 * 60;
+  const starting = h.session.startLive();
+  await h.untilOpened(1);
+  const live = h.connected(0);
+  await starting;
+  live.message({ type: 'session.started', session: { id: 'live_first', expires_at: (Date.now() + 120 * MIN) / 1000 } });
+  await settle();
+  const said = async (socket: Socket, role: 'them' | 'caller', delta: string) => {
+    socket.message({ type: role === 'them' ? 'session.input_transcript.delta' : 'session.output_transcript.delta', delta });
+    await settle();
+  };
+  const line = (ms: number, loud = false) => {
+    for (let at = 0; at < ms; at += 1_000) {
+      h.phone.message({ event: 'media', media: { payload: loud ? LOUD : QUIET } });
+      t.mock.timers.tick(1_000);
+    }
+  };
+  const marks = () => log.mock.calls.map((c: any) => String(c.arguments[0]));
+  const nudges = (socket: Socket) => socket.sent.filter((m) => m.type === 'session.commentary.append' || m.type === 'session.instructions.append');
+  return { h, live, said, line, marks, nudges };
+}
+
+const historyOf = (start: any) => start.session.input.map((m: any) => `${m.role}: ${m.content[0].text}`);
+
+test("a call on hold when its voice session nears GPT-Live's two hours moves to a new session that knows the call, with nothing heard twice and no hello", async (t) => {
+  // call_f7ihvt0ubr23hf6e, 2026-11-15: American Airlines held the customer two hours on one
+  // session, which expired 7199.4s after it started and hung up on them.
+  const { h, live, said, line, marks, nudges } = await liveCall(t);
+  await said(live, 'them', 'Thank you for calling American Airlines. What is your confirmation code?');
+  await said(live, 'caller', "Hi, I'm calling for Alex Kim. The code is K X 7 4 Q 2.");
+  await said(live, 'them', 'Thank you. Please hold while I transfer you to a specialist.');
+  assert.equal(h.session.hold.holding(), true);
+  line(99 * MIN, true);
+  await h.session.alarm();
+  assert.equal(h.opens.length, 1, 'more than 20 minutes left: nothing yet');
+  line(6 * MIN, true);
+  // The queue's recording just played: it may go on, so not yet, and no waiting for the next heartbeat either.
+  await said(live, 'them', 'Your call is important to us. Please stay on the line.');
+  line(3_000, true);
+  await h.session.alarm();
+  assert.equal(h.opens.length, 1, 'not 3s after a recording');
+  line(4_000, true);
+  assert.equal(h.opens.length, 1);
+  line(1_000, true);
+  await h.untilOpened(2);
+  const next = h.connected(1);
+  await settle();
+  const start = next.sent[0];
+  assert.equal(start.type, 'session.start');
+  assert.equal(start.session.instructions, 'Test instructions', "the call's own instructions, unchanged");
+  assert.deepEqual(historyOf(start).slice(0, 3), [
+    'user: Thank you for calling American Airlines. What is your confirmation code?',
+    "assistant: Hi, I'm calling for Alex Kim. The code is K X 7 4 Q 2.",
+    'user: Thank you. Please hold while I transfer you to a specialist.Your call is important to us. Please stay on the line.',
+  ]);
+  assert.equal(start.session.input[1].content[0].type, 'output_text');
+  const note = historyOf(start).at(-1);
+  assert.match(note, /^developer: You are back on the SAME call.*Do not greet them or introduce yourself again/);
+  assert.match(note, /They put you on hold 105 minutes ago, and you are still waiting\. Stay completely silent through hold music and recordings/);
+  assert.match(note, /Keys pressed on this call so far:\n\(no keypad input has been submitted\)/);
+  assert.equal(h.session.live, live, 'the old session serves the call while the new one starts');
+
+  // The queue's music while it starts reaches the old one serving the call, and the new one as it
+  // takes over: its last 4s, GPT-Live refusing a burst over 5s.
+  const before = live.sent.length;
+  for (let i = 0; i < 300; i++) {
+    h.phone.message({ event: 'media', media: { payload: LOUD } });
+    t.mock.timers.tick(20);
+  }
+  assert.equal(live.sent.length, before + 300);
+  assert.equal(next.sent.length, 1, 'nothing reaches it before it has started');
+  next.message({ type: 'session.started', session: { id: 'live_second', expires_at: (Date.now() + 120 * MIN) / 1000 } });
+  await settle();
+  assert.equal(h.session.live, next);
+  assert.deepEqual(next.sent.slice(1), Array(200).fill({ type: 'session.input_audio.append', audio: LOUD }));
+  assert.ok(marks().some((m) => /voice session rolled over \(planned\) at 631\ds session age/.test(m)), marks().filter((m) => /roll/.test(m)).join('\n'));
+  assert.ok(marks().some((m) => /replacement voice session live_second started/.test(m)));
+
+  // The old session is closed the way GPT-Live asks, and nothing it says reaches the phone.
+  assert.deepEqual(live.sent.at(-1), { type: 'session.close' });
+  assert.equal(live.readyState, 1, 'kept until it confirms');
+  const phoneBefore = h.phone.sent.length;
+  live.message({ type: 'session.output_audio.delta', delta: LOUD });
+  assert.equal(h.phone.sent.length, phoneBefore);
+  live.message({ type: 'session.closed', reason: 'close_requested' });
+  await settle();
+  assert.equal(live.readyState, 3);
+  assert.equal(h.session.ended, false);
+  next.message({ type: 'session.output_audio.delta', delta: 'AAAA' });
+  assert.deepEqual(h.phone.sent.at(-1), { event: 'media', media: { payload: 'AAAA' } });
+  line(10_000, true);
+  assert.equal(next.sent.filter((m) => m.type === 'session.input_audio.append').length, 210, 'the line goes to the new session only');
+  assert.deepEqual(nudges(next), [], 'no hello, no greeting');
+  assert.equal(h.session.hold.holding(), true);
+});
+
+test('a replacement the call moved on from while it started is dropped, and a later heartbeat rolls over', async (t) => {
+  const { h, live, said, line, marks } = await liveCall(t);
+  await said(live, 'them', 'Please hold for the next available agent.');
+  line(105 * MIN, true);
+  await h.session.alarm();
+  await h.untilOpened(2);
+  const early = h.connected(1);
+  await settle();
+  // An agent picks up while it starts: the history it was given is already out of date.
+  await said(live, 'them', 'Hi, this is Maria, how can I help you today?');
+  assert.equal(h.session.hold.holding(), false);
+  early.message({ type: 'session.started', session: { id: 'live_early' } });
+  await settle();
+  assert.equal(h.session.live, live);
+  assert.deepEqual(early.sent.at(-1), { type: 'session.close' });
+  assert.ok(marks().some((m) => /replacement voice session dropped: the call moved on while it started/.test(m)));
+  early.message({ type: 'session.output_audio.delta', delta: LOUD });
+  assert.ok(!h.phone.sent.some((m: any) => m.media?.payload === LOUD), 'nothing it says reaches the phone');
+
+  // Later the line has been quiet a while, with no hold now: in the last 8 minutes, a quiet moment will do.
+  await said(live, 'caller', "Hi Maria, I'm calling for Alex Kim about the refund on order 4417.");
+  await said(live, 'them', 'Okay, I see the order here. The refund went out yesterday.');
+  line(8 * MIN);
+  await h.session.alarm();
+  await h.untilOpened(3);
+  const next = h.connected(2);
+  await settle();
+  assert.equal(historyOf(next.sent[0]).at(-2), 'user: Okay, I see the order here. The refund went out yesterday.');
+  assert.doesNotMatch(historyOf(next.sent[0]).at(-1), /on hold/);
+  next.message({ type: 'session.started', session: { id: 'live_next' } });
+  await settle();
+  assert.equal(h.session.live, next);
+  assert.ok(marks().some((m) => /voice session rolled over \(planned\) at \d+s session age/.test(m)));
+});
+
+test('a rollover in the last minutes waits for a quiet moment and for an ask_user out to the person, whose late answer reaches the new session', async (t) => {
+  const { h, live, said, line } = await liveCall(t);
+  await h.env.DB.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at) VALUES ('recovery_test', 'acct_alice', '+14155550100', 'Example Clinic', 'Book a cleaning', '{}', 'in_progress', 0)`).run();
+  h.session.setup.person = { name: 'Alex Kim' };
+  await said(live, 'them', 'Front desk, this is Dana.');
+  await said(live, 'caller', "Hi Dana, I'm calling for Alex Kim to book a cleaning.");
+  line(118 * MIN);
+  // Talking: no rollover mid-sentence.
+  await said(live, 'them', 'Sure, what day works for Alex?');
+  line(1_000);
+  await h.session.alarm();
+  assert.equal(h.opens.length, 1);
+  // The back office asks Alex; the line is quiet, but its function belongs to this session's socket.
+  live.message({ type: 'response.event', delegation_id: 'd1', event: { type: 'response.output_item.done', item: { type: 'function_call', call_id: 'ask-1', name: 'ask_user', arguments: '{"question":"Which day works for the cleaning?"}' } } });
+  await settle();
+  assert.equal(h.session.waiting.size, 1);
+  line(5_000);
+  await h.session.alarm();
+  assert.equal(h.opens.length, 1, 'not while ask_user waits');
+
+  // GPT-Live expires the session with the question still out, and the answer comes after.
+  line(90_000);
+  live.message({ type: 'session.closed', reason: 'expired' });
+  await h.untilOpened(2);
+  const next = h.connected(1);
+  await settle();
+  assert.match(historyOf(next.sent[0]).at(-1), /A question is out to Alex Kim: "Which day works for the cleaning\?"\. Their answer is passed to you the moment it comes in\./);
+  next.message({ type: 'session.started', session: { id: 'live_second' } });
+  await settle();
+  const [{ id }] = await h.session.env.DB.prepare(`SELECT id FROM call_questions`).all().then((r: any) => r.results);
+  await h.session.fetch(new Request('https://session/answer', { method: 'POST', body: JSON.stringify({ id, question: 'Which day works for the cleaning?', answer: 'Tuesday morning' }) }));
+  await settle();
+  assert.ok(next.sent.some((m) => m.type === 'session.commentary.append' && /Tuesday morning/.test(m.content)), 'the answer reaches the session now on the call');
+  assert.ok(!next.sent.some((m) => m.type === 'response.item.create'), "the old session's function result stays with it");
+  assert.equal(h.session.ended, false);
+});
+
+test('a voice session that expires mid-call is replaced by one that knows the call, instead of hanging up', async (t) => {
+  const { h, live, said, line, marks, nudges } = await liveCall(t);
+  const shutdown = t.mock.method(h.session, 'shutdown', async () => {});
+  await said(live, 'them', 'Leasing office, this is Sam.');
+  await said(live, 'caller', 'Hi Sam, do you have any studios open?');
+  await said(live, 'them', 'Let me check what is coming up.');
+  line(2 * MIN);
+  live.message({ type: 'session.closed', reason: 'expired' });
+  await settle();
+  line(1_000);
+  live.close();
+  await h.untilOpened(2);
+  const next = h.connected(1);
+  await settle();
+  assert.equal(shutdown.mock.callCount(), 0);
+  assert.equal(h.session.live, next);
+  assert.deepEqual(historyOf(next.sent[0]).slice(0, 3), ['user: Leasing office, this is Sam.', 'assistant: Hi Sam, do you have any studios open?', 'user: Let me check what is coming up.']);
+  assert.ok(marks().some((m) => /voice session rolled over \(after expired\) at 120s session age/.test(m)));
+  // The second of the line while it opened is held for it, as at pickup.
+  next.message({ type: 'session.started', session: { id: 'live_second' } });
+  await settle();
+  assert.deepEqual(next.sent.filter((m) => m.type === 'session.input_audio.append'), [{ type: 'session.input_audio.append', audio: QUIET }]);
+  next.message({ type: 'session.output_audio.delta', delta: 'AAAA' });
+  assert.deepEqual(h.phone.sent.at(-1), { event: 'media', media: { payload: 'AAAA' } });
+  line(10_000);
+  assert.deepEqual(nudges(next), []);
+});
+
+test("a session GPT-Live's safety filter ends still ends the call", async (t) => {
+  const { h, live, said, line } = await liveCall(t);
+  const shutdown = t.mock.method(h.session, 'shutdown', async () => {});
+  await said(live, 'them', 'Hello?');
+  line(2 * MIN);
+  live.message({ type: 'session.closed', reason: 'content' });
+  await settle();
+  assert.equal(shutdown.mock.callCount(), 1);
+  assert.equal(h.opens.length, 1);
+});
+
+test('a call gets at most four replacement voice sessions', async (t) => {
+  const { h, live, said, line } = await liveCall(t);
+  const shutdown = t.mock.method(h.session, 'shutdown', async () => {});
+  await said(live, 'them', 'Please hold.');
+  // Each of four sessions drops a couple of minutes in, a socket closing with no word from GPT-Live among them.
+  let current = live;
+  for (let n = 1; n <= 4; n++) {
+    line(2 * MIN, true);
+    if (n === 1) current.close();
+    else current.message({ type: 'session.closed', reason: 'connection_lost' });
+    await h.untilOpened(n + 1);
+    current = h.connected(n);
+    await settle();
+    current.message({ type: 'session.started', session: { id: `live_${n}` } });
+    await settle();
+  }
+  assert.equal(shutdown.mock.callCount(), 0);
+  line(2 * MIN, true);
+  current.message({ type: 'session.closed', reason: 'expired' });
+  await settle();
+  assert.equal(shutdown.mock.callCount(), 1, 'the fifth ends the call');
+  assert.equal(h.opens.length, 5);
+});
+
+test('a replacement voice session that ends within a minute of starting ends the call', async (t) => {
+  const { h, live, said, line } = await liveCall(t);
+  const shutdown = t.mock.method(h.session, 'shutdown', async () => {});
+  await said(live, 'them', 'Hello?');
+  line(2 * MIN);
+  live.message({ type: 'session.closed', reason: 'expired' });
+  await h.untilOpened(2);
+  const replacement = h.connected(1);
+  await settle();
+  replacement.message({ type: 'session.started', session: { id: 'live_short' } });
+  await settle();
+  line(30_000);
+  replacement.message({ type: 'session.closed', reason: 'expired' });
+  await settle();
+  assert.equal(shutdown.mock.callCount(), 1);
+  assert.equal(h.opens.length, 2);
+});
+
+test('the call so far fits GPT-Live startup limits, keeping its first lines and its latest', async () => {
+  const { resumeInput, tokens } = await import('../src/server/voice/person');
+  const now = 10 * 60 * MIN;
+  const first = [
+    { role: 'them' as const, text: 'Thank you for calling American Airlines. For reservations, press 1.', at: 1 },
+    { role: 'note' as const, text: 'carrier detected a live person', at: 2 },
+    { role: 'caller' as const, text: 'Reservations.', at: 3 },
+    { role: 'them' as const, text: 'Please say or enter your confirmation code.', at: 4 },
+    { role: 'caller' as const, text: 'K X 7 4 Q 2.', at: 5 },
+    { role: 'them' as const, text: 'Thank you. Please hold for the next available agent. '.repeat(3_000) + 'Your estimated wait is 40 minutes.', at: 6 },
+  ];
+  const middle = Array.from({ length: 400 }, (_, i) => ({ role: i % 2 ? ('caller' as const) : ('them' as const), text: `line ${i}: ${'blah '.repeat(40)}`, at: 100 + i }));
+  // One last line in Japanese, a character to a token or more.
+  const last = { role: 'them' as const, text: 'お待たせいたしました。'.repeat(200), at: 1_000 };
+  const input = resumeInput({ transcript: [...first, ...middle, last], holdSince: now - 100 * MIN, keys: '1. Keypad submitted: 1. Prompt: For reservations, press 1.', standing: ['No answer is available from the person you work for about "Which seat?".'], now });
+  assert.ok(input.length <= 128);
+  const total = input.reduce((n, m) => n + tokens(m.content[0].text) + 4, 0);
+  assert.ok(total <= 6_000, `${total} estimated tokens`);
+  assert.deepEqual(input.slice(0, 5).map((m) => `${m.role}: ${m.content[0].text}`), [
+    'user: Thank you for calling American Airlines. For reservations, press 1.',
+    'developer: note: carrier detected a live person',
+    'assistant: Reservations.',
+    'user: Please say or enter your confirmation code.',
+    'assistant: K X 7 4 Q 2.',
+  ]);
+  // The hold's one huge line keeps its end.
+  assert.match(input[5].content[0].text, /^…/);
+  assert.match(input[5].content[0].text, /Your estimated wait is 40 minutes\.$/);
+  assert.ok(tokens(input[5].content[0].text) <= 400);
+  assert.match(input[6].content[0].text, /^\(\d+ more lines of the call came here, left out for length\.\)$/);
+  assert.equal(input.at(-2)!.role, 'user');
+  assert.match(input.at(-2)!.content[0].text, /^….*(お待たせいたしました。){30}$/u);
+  assert.ok(tokens(input.at(-2)!.content[0].text) <= 400);
+  assert.match(input.at(-3)!.content[0].text, /^line 399:/, 'the newest lines, in order');
+  const note = input.at(-1)!;
+  assert.equal(note.role, 'developer');
+  assert.match(note.content[0].text, /on hold 100 minutes ago/);
+  assert.match(note.content[0].text, /Keys pressed on this call so far:\n1\. Keypad submitted: 1\./);
+  assert.match(note.content[0].text, /No answer is available from the person you work for about "Which seat\?"/);
+
+  // A short call goes in whole, with nothing marked left out.
+  const short = resumeInput({ transcript: first.slice(0, 5), holdSince: null, keys: '(no keypad input has been submitted)', standing: [], now });
+  assert.equal(short.length, 6);
+  assert.doesNotMatch(short.at(-1)!.content[0].text, /on hold/);
+});
+
 // The Academe at 198: the carrier's detection said a person answered, 4s into the greeting.
 const academe = (msgAt: number) => [
   { role: 'them' as const, text: 'Thank you, and we look forward to welcoming you. Please leave a message after the tone. When you have finished, please hang up or press the pound key for more options', at: msgAt - 17_000 },
@@ -999,7 +1309,7 @@ test('a question that goes unanswered reaches the voice session that replaced th
   await h.untilOpened(3);
   const third = h.connected(2);
   await reattached;
-  assert.match(third.sent[0].session.instructions, /No answer is available .*household's annual income/);
+  assert.match(third.sent[0].session.input.at(-1).content[0].text, /No answer is available .*household's annual income/);
 });
 
 test('forgetting a zero data retention call deletes its setup after it ended, and refuses one still on the phone', async (t) => {

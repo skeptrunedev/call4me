@@ -91,6 +91,11 @@ export class HoldMeter {
     return this.since !== null;
   }
 
+  /** When the hold under way started, or null. */
+  holdingSince(): number | null {
+    return this.since;
+  }
+
   /** Words from the other side. Returns the change in hold state, if any. Judged one sentence at a time. */
   them(delta: string, at: number): HoldChange | null {
     if (!delta) return null;

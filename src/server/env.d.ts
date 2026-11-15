@@ -31,6 +31,8 @@ interface Env {
   VOICE_BUILD?: string;
   /** Voice Worker only: hash of the site-facing session interface it serves (scripts/voice-contract.sh). */
   VOICE_CONTRACT?: string;
+  /** Voice Worker, staging only: a voice session's length to plan rollovers around, in place of GPT-Live's (session.ts maybeRollLive). Unset in production. */
+  VOICE_SESSION_SECONDS?: string;
   BETTER_AUTH_SECRET: string;
   GOOGLE_CLIENT_ID?: string;
   GOOGLE_CLIENT_SECRET?: string;

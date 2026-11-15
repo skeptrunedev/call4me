@@ -57,16 +57,108 @@ export function alreadyUnreachable(owner: string): string {
   return `${owner} couldn't be reached a moment ago, so don't ring again on this call. ${unreachableMessage(owner)}`;
 }
 
+/** One message of a voice session's startup history (session.start's `input`). */
+export type LiveInput = { type: 'message'; role: 'developer' | 'user' | 'assistant'; content: [{ type: 'input_text' | 'output_text'; text: string }] };
+
 /**
- * What the voice model is told when a restarted session picks the call back up: the call so far,
- * so it carries on instead of greeting them again.
+ * GPT-Live takes at most 128 messages and 8,192 tokens of startup history, and refuses the whole
+ * session over either. There's no tokenizer here: the history stays at 6,000 by an estimate
+ * (tokens), which leaves room where the estimate runs low.
  */
-export function resumeNote(transcript: TranscriptLine[]): string {
-  const lines = transcript.slice(-40).map((l) => `${l.role === 'caller' ? 'you' : l.role === 'them' ? 'them' : 'note'}: ${l.text.trim()}`);
-  return [
-    'The audio dropped for a moment on our side and you are back on the SAME call, mid-conversation. Do not greet them or introduce yourself again, and do not repeat what you already said. Carry on from where it left off; if they were in the middle of something, wait for them. If they ask, say the line cut out for a second.',
-    lines.length ? `The call so far:\n${lines.join('\n')}` : '',
-  ].filter(Boolean).join('\n\n');
+const RESUME_MESSAGES = 128;
+const RESUME_TOKENS = 6_000;
+/** A message's rendering on top of its text. */
+const MESSAGE_TOKENS = 4;
+/** A call's first lines say how it got where it is: the menu path, and facts like a confirmation code. */
+const RESUME_FIRST_LINES = 6;
+/**
+ * No one line takes more. Our caller stays silent on hold, so every repeat of the queue's recording
+ * runs into one line of theirs, and after an hour on hold that line is the hour; its end is where
+ * the call is.
+ */
+const RESUME_LINE_TOKENS = 400;
+const RESUME_KEYS_TOKENS = 400;
+
+/**
+ * A token for every four letters of a word (with the space before it), and one for every other
+ * character. Against GPT-Live's own count: a third high for English and French, two to four times
+ * for Japanese, Chinese, Korean, Arabic and Hindi, and about right for a code spelled out ("K X 7
+ * 4 Q 2"), a token a character with its spaces, which overran 8,192 when counted at four
+ * characters a token. RESUME_TOKENS leaves the rest.
+ */
+export function tokens(text: string): number {
+  let n = 0;
+  for (const [run] of text.matchAll(/ ?[A-Za-z]+|[^A-Za-z]/gu)) n += /[A-Za-z]/.test(run) ? Math.ceil(run.trimStart().length / 4) : 1;
+  return n;
+}
+
+/** The end of `text`, within `max` tokens. */
+export function lastTokens(text: string, max: number): string {
+  if (tokens(text) <= max) return text;
+  const chars = [...text];
+  // The shortest cut whose rest fits; a later start never costs more.
+  let lo = 0;
+  let hi = chars.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if (tokens(`…${chars.slice(mid).join('')}`) <= max) hi = mid;
+    else lo = mid + 1;
+  }
+  return `…${chars.slice(lo).join('')}`;
+}
+
+/** What a voice session that takes a call over mid-way is told about it (resumeInput). */
+export interface CallSoFar {
+  transcript: TranscriptLine[];
+  /** When the business put us on hold, while it still has us waiting. */
+  holdSince: number | null;
+  /** The keys pressed so far (MenuRecovery.history). */
+  keys: string;
+  /** What the voice model was told along the way that still stands, word for word: a question that got no answer, the person on the call, the time running out. */
+  standing: string[];
+  now: number;
+}
+
+/**
+ * The startup history for a voice session that takes a call over mid-way: a session lost with
+ * its phone stream (detachLive), one replaced after a reset, and one that rolls over before
+ * GPT-Live's session limit (maybeRollLive). The call's lines as the conversation (theirs as the
+ * user's, our caller's as the assistant's, notes as the developer's), then a note on where the
+ * call stands, so it carries on instead of greeting them again. A long call keeps its first lines
+ * and as many of its latest as fit.
+ */
+export function resumeInput(c: CallSoFar): LiveInput[] {
+  const message = (role: LiveInput['role'], text: string): LiveInput => ({ type: 'message', role, content: [{ type: role === 'assistant' ? 'output_text' : 'input_text', text }] });
+  const lines = c.transcript
+    .filter((l) => l.text.trim())
+    .map((l) => message(l.role === 'them' ? 'user' : l.role === 'caller' ? 'assistant' : 'developer', lastTokens(`${l.role === 'note' ? 'note: ' : ''}${l.text.trim()}`, RESUME_LINE_TOKENS)));
+  const minutes = c.holdSince === null ? 0 : Math.max(1, Math.round((c.now - c.holdSince) / 60_000));
+  const note = message('developer', [
+    "You are back on the SAME call, mid-conversation: the messages before this one are the call so far, and the assistant's lines are what you said. Do not greet them or introduce yourself again, and do not repeat what you already said. Carry on from where it left off; if they were in the middle of something, wait for them. If they ask, say the line cut out for a second.",
+    c.holdSince === null ? '' : `They put you on hold ${minutes} minute${minutes === 1 ? '' : 's'} ago, and you are still waiting. Stay completely silent through hold music and recordings, and speak only once a person talks to you.`,
+    `Keys pressed on this call so far:\n${lastTokens(c.keys, RESUME_KEYS_TOKENS)}`,
+    ...c.standing,
+  ].filter(Boolean).join('\n\n'));
+  const cost = (m: LiveInput) => tokens(m.content[0].text) + MESSAGE_TOKENS;
+  const leftOut = (n: number) => message('developer', `(${n} more lines of the call came here, left out for length.)`);
+  // Room for the note, and for the marker where lines were left out.
+  let budget = RESUME_TOKENS - cost(note) - cost(leftOut(lines.length));
+  let slots = RESUME_MESSAGES - 2;
+  const take = (m: LiveInput) => {
+    if (!slots || cost(m) > budget) return false;
+    budget -= cost(m);
+    slots--;
+    return true;
+  };
+  const first: LiveInput[] = [];
+  for (const m of lines.slice(0, RESUME_FIRST_LINES)) {
+    if (!take(m)) break;
+    first.push(m);
+  }
+  const latest: LiveInput[] = [];
+  for (let i = lines.length - 1; i >= first.length && take(lines[i]); i--) latest.unshift(lines[i]);
+  const left = lines.length - first.length - latest.length;
+  return [...first, ...(left ? [leftOut(left)] : []), ...latest, note];
 }
 
 /**
