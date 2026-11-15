@@ -2,7 +2,7 @@ import type { FC } from 'hono/jsx';
 import { CopyBlock, Layout } from './layout';
 
 /** The grant a student gets once Nick approves the request (credited with `npm run grant`). */
-export const STUDENT_CREDIT_DOLLARS = 50;
+export const STUDENT_CREDIT_DOLLARS = 20;
 
 const CLAIM_SUBJECT = 'student credits';
 

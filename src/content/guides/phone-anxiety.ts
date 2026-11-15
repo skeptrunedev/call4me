@@ -157,7 +157,7 @@ call4me connects to an AI assistant you already use, like ChatGPT, Claude or Cod
 
 Option 2 is the gentlest if calls make you anxious: you hear exactly what happened, with no pressure to speak. Be honest with yourself about it, though. For the calls on your practice list, listening in is still a way of not making the call. It's a fine step on a ladder, as long as you keep climbing.
 
-Calls cost $0.25 a minute from when someone answers, and whole minutes on hold cost half that. Unanswered calls are free, and credits start at $10. Students can ask for [$50 in free credits](/students). To set it up in ChatGPT, follow our [ChatGPT phone calls guide](/blog/chatgpt-phone-calls). For other apps, see the [install page](/mcp).
+Calls cost $0.25 a minute from when someone answers, and whole minutes on hold cost half that. Unanswered calls are free, and credits start at $10. Students can ask for [$20 in free credits](/students). To set it up in ChatGPT, follow our [ChatGPT phone calls guide](/blog/chatgpt-phone-calls). For other apps, see the [install page](/mcp).
 
 Jem, one of our users, had call4me call an airline about a delayed flight and came away with [a $100 travel voucher](/blog/customer-story-flight-credit). Jem's post about it on X: "literally zero chance i was going to do that myself."
 

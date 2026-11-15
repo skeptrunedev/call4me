@@ -101,7 +101,7 @@ export const CARDS: Record<string, OgCard> = {
   bills: { title: 'AI bill negotiation that calls to lower your bills', subtitle: 'hospital, internet, TV and phone: it asks for the discounts, promotions and payment plans', footer: 'real recorded billing calls · call4.me' },
   anxiety: { title: 'phone anxiety: an AI can make the calls you hate', subtitle: 'hand off the whole call, listen in, or get rung when a person picks up', footer: 'scripts and what helps · call4.me/phone-anxiety' },
   dispute: { title: 'an AI that calls your bank to dispute a charge', subtitle: 'it gets through the phone tree to the disputes team, and patches you in to verify', footer: '5 recorded bank calls · call4.me' },
-  students: { title: "we'll make the call", subtitle: 'free call credits for students. appointments, pharmacies, customer service, waiting on hold.', footer: '$50 free for students · approved by hand' },
+  students: { title: "we'll make the call", subtitle: 'free call credits for students. appointments, pharmacies, customer service, waiting on hold.', footer: '$20 free for students · approved by hand' },
   companies: { title: 'customer service numbers we called', subtitle: 'a real recorded call to each one, and how long it took to reach a person', footer: 'airlines · banks · telecom · insurance · subscriptions' },
   voices: { title: 'hear every caller voice', subtitle: 'the same line in each voice, recorded at phone quality', footer: 'marin · cedar · gleam · meridian · vesper · willow' },
   site: { title: 'book dinners, doctor appointments, call dealerships', subtitle: 'one prompt installs it in claude code, codex, claude desktop, or chatgpt', footer: 'prepaid credits from $10' },
