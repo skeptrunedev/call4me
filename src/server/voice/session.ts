@@ -1473,7 +1473,8 @@ export class VoiceSession extends DurableObject<Env> {
     // call screener too ("I'm sorry, this person is not available. If you would like to leave an
     // additional message, please reply after the tone"). Its audio has to be quiet as well: a
     // greeting's next sentence, or a queue's music, can still be playing before its transcript lands.
-    let greeting = phase === 'machine' || phase === 'uncertain' || phase === 'screening' ? greetingWaiting(this.transcript, this.forcedHandoffs) : null;
+    // On a line taken for voicemail too: a greeting that plays again after our message never recorded it.
+    let greeting = automated ? greetingWaiting(this.transcript, this.forcedHandoffs) : null;
     const greetingQuietFor = Math.min(quietFor, Date.now() - this.themAudibleAt);
     if (greeting && greetingQuietFor < GREETING_QUIET_MS) {
       this.scheduleUnansweredCheck(GREETING_QUIET_MS - greetingQuietFor);

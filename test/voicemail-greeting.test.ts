@@ -513,3 +513,22 @@ test('a recording or a person signing off in German, French, Italian or Portugue
     assert.equal(signedOff([{ role: 'them' as const, text: recording, at: 1 }], new Set())?.reason, 'signed_off', recording);
   assert.equal(signedOff([{ role: 'them' as const, text: 'Au revoir? Attendez, je vous transfère.', at: 1 }], new Set()), null);
 });
+
+test('a greeting that plays again after our message asks for it again, and the message left after it ends the call', () => {
+  // West Capital Lending (renamed): our message began before the recording did, the greeting
+  // replayed, and with the replay taken for the first greeting's tail the line sat silent 7 minutes.
+  const replay = [
+    { role: 'them' as const, text: 'This call may be recorded for quality and training purposes', at: 1_600 },
+    { role: 'note' as const, text: 'carrier detected a call screening prompt', at: 7_200 },
+    { role: 'them' as const, text: "Hi, you've reached the office of Sam Lee at Example Lending. I'm away from my desk or on the other line. Please leave your name and number and I'll call you back", at: 8_700 },
+    { role: 'caller' as const, text: "Hi, this is Alex's assistant, calling about studio availability. You can reach us at four one five, five five five, zero one two three. Thank you.", at: 25_800 },
+    { role: 'them' as const, text: "Hi, you've reached the office of Sam Lee at Example Lending. I'm away from my desk or on the other line, please leave your name and number and I'll call you back", at: 44_600 },
+  ];
+  assert.equal(voicemailLeft(replay, null, new Set()), null);
+  const miss = greetingWaiting(replay, new Set());
+  assert.equal(miss?.reason, 'greeting_waiting');
+  assert.equal(miss?.line.at, 44_600);
+  const again = [...replay, { role: 'caller' as const, text: "Hi, this is Alex's assistant, calling about studio availability. Please call back at four one five, five five five, zero one two three.", at: 52_000 }];
+  assert.equal(greetingWaiting(again, new Set()), null);
+  assert.equal(voicemailLeft(again, null, new Set())?.reason, 'voicemail_left');
+});

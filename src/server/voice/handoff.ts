@@ -466,8 +466,23 @@ function messagePrompt(lines: TranscriptLine[]): TranscriptLine | undefined {
   let i = theirs.length - 1;
   while (i >= 0 && !asks(i)) i--;
   if (i < 0) return undefined;
-  while (i > 0 && asks(i - 1)) i--;
+  const latest = i;
+  while (i > 0 && asks(i - 1) && !askedAgainAfterMessage(lines, theirs, i, latest)) i--;
   return asksForMessage(theirs[i].text) ? theirs[i] : { ...theirs[i], text: greetingUpTo(theirs, i) };
+}
+
+/**
+ * Their lines from i to latest ask for a message by themselves, after a message of ours: the
+ * greeting played again, a new request rather than the end of the one before. West Capital
+ * Lending's greeting replayed when our message began before its recording did, and taking the
+ * replay for the first greeting's tail counted the unrecorded message as left after it: nothing
+ * asked the caller to leave it again, and the line sat silent 7 minutes until the time limit
+ * (2026-11-16). A fragment trailing our message ("Thank" / "you") asks only joined to what came before.
+ */
+function askedAgainAfterMessage(lines: TranscriptLine[], theirs: TranscriptLine[], i: number, latest: number): boolean {
+  const ours = lines.filter((l) => l.role === 'caller' && l.at > theirs[i - 1].at && l.at < theirs[i].at);
+  const words = ours.reduce((n, l) => n + l.text.trim().split(/\s+/).filter(Boolean).length, 0);
+  return words >= MESSAGE_WORDS && asksForMessage(theirs.slice(i, latest + 1).map((l) => l.text.trim()).join(' '));
 }
 
 /**
