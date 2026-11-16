@@ -146,7 +146,7 @@ interface TelnyxWebhook {
   data?: {
     event_type?: string;
     occurred_at?: string;
-    payload?: { call_control_id?: string; call_leg_id?: string; client_state?: string | null; direction?: string; from?: string; to?: string; hangup_cause?: string; sip_hangup_cause?: string; hangup_source?: string; digit?: string; digits?: string; status?: string; result?: string };
+    payload?: { call_control_id?: string; call_leg_id?: string; client_state?: string | null; direction?: string; from?: string; to?: string; hangup_cause?: string; sip_hangup_cause?: string; hangup_source?: string; digit?: string; digits?: string; status?: string; result?: string; failure_reason?: string; stream_id?: string };
   };
 }
 
@@ -248,7 +248,8 @@ webhooks.post('/telnyx', async (c) => {
       break;
     }
     case 'streaming.failed':
-      console.warn('telnyx media stream failed', callId, body.slice(0, 500));
+      // The reason, not the raw body: 500 characters of the body ended just before failure_reason.
+      console.warn('telnyx media stream failed', callId, p.failure_reason ?? 'no reason given', `leg ${p.call_leg_id ?? '?'} stream ${p.stream_id ?? '?'}`);
       break;
   }
   return c.text('ok');
