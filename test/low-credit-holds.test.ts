@@ -57,12 +57,39 @@ test('no email once the call has ended or its deadline has passed', async () => 
   assert.equal((await row())!.low_credit_email_sent_at, null);
 });
 
-test('a call off hold for now is left for a later run, and emailed if the hold comes back in time', async () => {
+test('a call off hold for now is left for a later run, and emailed once the hold that comes back has lasted 2 minutes', async () => {
   await set('hold_since = NULL');
   assert.equal(await warnLowCreditHolds(env, messenger, at), 0);
   await set('hold_since = ?', at + 1 * MIN);
-  assert.equal(await warnLowCreditHolds(env, messenger, at + 2 * MIN), 1);
-  assert.match(sent[0].text, /on hold for 1 minute\. Your credits cover about 7 more minutes,/);
+  assert.equal(await warnLowCreditHolds(env, messenger, at + 3 * MIN - 1), 0);
+  assert.equal(await warnLowCreditHolds(env, messenger, at + 3 * MIN), 1);
+  assert.match(sent[0].text, /on hold for 2 minutes\. Your credits cover about 6 more minutes,/);
+});
+
+test('a recorded greeting taken for a hold gets no email: the warning waits for the hold to last 2 minutes', async () => {
+  // call_9pcdwl0vhq0l82iy: the hold started 8s after pickup with 25 minutes of credits left, and a
+  // person answered 56s later.
+  await set('hold_since = ?, low_credit_deadline_at = ?', at, at + 25 * MIN);
+  assert.equal(await warnLowCreditHolds(env, messenger, at + 1 * MIN), 0);
+  await set('hold_since = NULL, hold_seconds = 56');
+  assert.equal(await warnLowCreditHolds(env, messenger, at + 2 * MIN), 0);
+  assert.equal(sent.length, 0);
+  // A real hold that starts later still gets its warning.
+  await set('hold_since = ?', at + 5 * MIN);
+  assert.equal(await warnLowCreditHolds(env, messenger, at + 7 * MIN), 1);
+  assert.match(sent[0].text, /on hold for 2 minutes\. Your credits cover about 18 more minutes,/);
+});
+
+test('a deadline 5 minutes away is emailed as soon as the hold starts', async () => {
+  await set('hold_since = ?, low_credit_deadline_at = ?', at, at + 5 * MIN);
+  assert.equal(await warnLowCreditHolds(env, messenger, at), 1);
+  assert.match(sent[0].text, /Your credits cover about 5 more minutes,/);
+});
+
+test('a deadline 6 minutes away waits for the hold to last 2 minutes', async () => {
+  await set('hold_since = ?, low_credit_deadline_at = ?', at, at + 6 * MIN);
+  assert.equal(await warnLowCreditHolds(env, messenger, at), 0);
+  assert.equal(await warnLowCreditHolds(env, messenger, at + 1 * MIN), 1, 'by then the deadline is 5 minutes away');
 });
 
 test('a send another cron run has claimed is left to it until the claim lapses', async () => {

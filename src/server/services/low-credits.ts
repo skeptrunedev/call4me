@@ -23,8 +23,24 @@ const CLAIM_MS = 2 * 60_000;
 
 const SUBJECT = 'Your call on hold is about to run out of credits';
 
-/** Still worth sending at `?1`: on hold, before its deadline, not already sent, refused or claimed. */
+/**
+ * How long the current hold must have lasted before its warning goes out. The voice session queues
+ * the warning as soon as a hold starts near the time limit, and a recorded greeting or menu counts as
+ * hold: Tokyo Disney Resort's recording ended after 56s, a person answered, and the user had already
+ * been told their hold was running out with 24 minutes of credits left (call_9pcdwl0vhq0l82iy). A
+ * hold that lasts this long is a real one, and the wait costs the warning little of its lead.
+ */
+const SETTLED_HOLD_MS = 2 * 60_000;
+
+/** A deadline this close is warned about as soon as the hold starts: every minute of notice counts. */
+const URGENT_MS = 5 * 60_000;
+
+/**
+ * Still worth sending at `?1`: on hold, long enough to be a real hold or with the deadline close,
+ * before that deadline, and not already sent, refused or claimed.
+ */
 const DUE = `status = 'in_progress' AND hold_since IS NOT NULL AND low_credit_deadline_at > ?1
+  AND (hold_since <= ?1 - ${SETTLED_HOLD_MS} OR low_credit_deadline_at <= ?1 + ${URGENT_MS})
   AND low_credit_email_sent_at IS NULL AND low_credit_email_rejected_at IS NULL
   AND (low_credit_email_claim_until IS NULL OR low_credit_email_claim_until <= ?1)`;
 
