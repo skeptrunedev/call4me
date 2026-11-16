@@ -57,8 +57,13 @@ async function reportCallEnded(env: Env, callId: string): Promise<void> {
   const params = { status: row.status, direction: row.direction, talk_seconds: row.billed_seconds ?? 0, currency: 'USD', value: (row.cost_cents ?? 0) / 100 };
   await analytics(env).track(account, [{ name: 'call_ended', params }]);
   if (row.direction !== 'outbound' || row.status !== 'completed') return;
+  // Only whether there is one completed call, and whether they span two days: each count stops at
+  // 2, so an account with thousands of calls doesn't read all of them after every call it makes.
   const completed = await env.DB
-    .prepare(`SELECT COUNT(*) AS calls, COUNT(DISTINCT date(created_at / 1000, 'unixepoch')) AS days FROM calls WHERE account_id = ? AND direction = 'outbound' AND status = 'completed'`)
+    .prepare(
+      `SELECT (SELECT COUNT(*) FROM (SELECT 1 FROM calls WHERE account_id = ?1 AND direction = 'outbound' AND status = 'completed' LIMIT 2)) AS calls,
+              (SELECT COUNT(*) FROM (SELECT DISTINCT date(created_at / 1000, 'unixepoch') FROM calls WHERE account_id = ?1 AND direction = 'outbound' AND status = 'completed' LIMIT 2)) AS days`,
+    )
     .bind(account.id)
     .first<{ calls: number; days: number }>();
   const reddit = redditConversions(env);
