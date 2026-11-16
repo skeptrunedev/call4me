@@ -1444,11 +1444,13 @@ export class VoiceSession extends DurableObject<Env> {
     const phase = this.machineState?.phase;
     const automated = phase === 'voicemail' || phase === 'machine' || phase === 'screening' || phase === 'uncertain';
     const quietFor = Date.now() - Math.max(this.lastTranscriptAt, this.speechEndsAt);
+    let settlingMessage: number | null = null;
     let voicemail = automated ? voicemailLeft(this.transcript, phase === 'voicemail' ? this.machineState!.occurredAt : null, this.forcedHandoffs) : null;
     // A recording stays silent after the message; a person who picked up answers within seconds
     // (Haileybury Beach Motel's receptionist began "Just give me..." 4s after ours ended).
     if (voicemail && quietFor < VOICEMAIL_QUIET_MS) {
       this.scheduleUnansweredCheck(VOICEMAIL_QUIET_MS - quietFor);
+      settlingMessage = voicemail.line.at;
       voicemail = null;
     }
     // After a long silence, flagged or not: a callback request or a message after the greeting's
@@ -1480,7 +1482,14 @@ export class VoiceSession extends DurableObject<Env> {
       this.scheduleUnansweredCheck(GREETING_QUIET_MS - greetingQuietFor);
       greeting = null;
     }
-    const miss = menu ?? voicemail ?? unanswered ?? greeting ?? (this.forcedHandoffs.size < MAX_FORCED_HANDOFFS ? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs) : null);
+    // A voicemail message ends with a promise or a goodbye ("If you could call me back... Thanks so
+    // much. Bye."). Taken for an unkept promise while the voicemail check waited out its quiet, it was
+    // marked handled, so that check never matched it again, and the line sat open 7 minutes after the
+    // message until the time limit (call_qsucw4yvaz1j82ra, 2026-11-16). It stays the voicemail
+    // check's; on a line taken for a person, there is no such check and the promise is handed off.
+    let promise = this.forcedHandoffs.size < MAX_FORCED_HANDOFFS ? missedHandoff(this.transcript, this.lastHandoffAt, this.forcedHandoffs) : null;
+    if (promise && promise.line.at === settlingMessage) promise = null;
+    const miss = menu ?? voicemail ?? unanswered ?? greeting ?? promise;
     if (!miss) {
       this.checkConnectCondition();
       return;

@@ -1661,3 +1661,19 @@ test('a call that is not picked up closes the socket dialed for it, and aborts o
   await other.fetch(new Request('https://session/preconnect', { method: 'POST' }));
   assert.equal(other.preconnected, null);
 });
+
+test('a voicemail message ending with a goodbye is ended by the voicemail check, not taken for an unkept promise', async (t) => {
+  // call_qsucw4yvaz1j82ra, 2026-11-16 (renamed): the promise check took the message's "Bye." while
+  // the voicemail check waited for quiet, and the line stayed open 7 minutes after the message.
+  const { h, live, play, words } = await outboundPickup(t);
+  await h.session.machineDetected('machine', new Date(Date.now()).toISOString());
+  await words('them', 'Your call is being transferred. Please hold. The party you are trying to reach is not available to take your call. Please leave a message after the tone. Press the pound key to end recording');
+  await play(2_500);
+  await words('caller', "Hi, this is Alex Kim's assistant. I'm calling to ask about studio availability and parking. If you could call me back at four one five, five five five, zero one two three, that would be great. Thanks so much. Bye.");
+  await play(4_100);
+  assert.deepEqual(promiseHandoffs(live), [], 'not an unkept promise while the voicemail check waits out its quiet');
+  await play(9_000);
+  const left = live.sent.filter((m) => m.type === 'response.item.create' && /left its voicemail message/.test(m.item.content[0].text));
+  assert.equal(left.length, 1, 'once the line is quiet, the message ends the call');
+  assert.deepEqual(promiseHandoffs(live), []);
+});
