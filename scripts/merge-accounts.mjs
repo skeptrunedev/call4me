@@ -61,7 +61,7 @@ const statements = [
   `UPDATE numbers SET included = 0, monthly_cents = 0, paid_through = NULL WHERE account_id = ${f} AND included = 1 AND EXISTS (SELECT 1 FROM numbers WHERE account_id = ${i} AND included = 1)`,
   `UPDATE numbers SET account_id = ${i} WHERE account_id = ${f}`,
   ...oneEach.flatMap((t) => [`UPDATE OR IGNORE ${t} SET account_id = ${i} WHERE account_id = ${f}`, `DELETE FROM ${t} WHERE account_id = ${f}`]),
-  `UPDATE accounts SET stripe_customer_id = COALESCE(stripe_customer_id, (SELECT stripe_customer_id FROM accounts WHERE id = ${f})), sales_calls = MAX(sales_calls, (SELECT sales_calls FROM accounts WHERE id = ${f})) WHERE id = ${i}`,
+  `UPDATE accounts SET stripe_customer_id = COALESCE(stripe_customer_id, (SELECT stripe_customer_id FROM accounts WHERE id = ${f})), sales_calls = MAX(sales_calls, (SELECT sales_calls FROM accounts WHERE id = ${f})), unmetered = MAX(unmetered, (SELECT unmetered FROM accounts WHERE id = ${f})) WHERE id = ${i}`,
   `DELETE FROM accounts WHERE id = ${f}`,
 ];
 // Signing in the way the merged account did (its Google login, its agents' OAuth grants) now opens the one that stays.

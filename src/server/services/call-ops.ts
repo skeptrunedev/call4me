@@ -143,7 +143,9 @@ export async function balanceView(env: Env, account: Account) {
     // Destinations billed at their own price instead (the UAE, Japan).
     price_per_minute_by_country: Object.fromEntries(Object.entries(DESTINATION_PRICE_CENTS).map(([c, cents]) => [c, dollars(zdrPrice(cents, account.zdr))])),
     zero_data_retention: account.zdr === 1,
-    minutes_left: Math.floor(balance / price),
+    // Unmetered: calls are never held back for credits, so there is no count of minutes left.
+    ...(account.unmetered ? { unlimited: true } : {}),
+    minutes_left: account.unmetered ? null : Math.floor(balance / price),
     phone_number: owned[0]?.number ?? null,
     numbers: owned,
     email: account.email,

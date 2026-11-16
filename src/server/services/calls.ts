@@ -1,7 +1,7 @@
 import { newId, now } from '../lib/ids';
 import { replayOf, type Idempotency } from '../lib/idempotency';
 import { checkDialable, type PhoneCheck } from '../lib/phone';
-import { accounts, type Account } from './accounts';
+import { accounts, fundsOf, type Account } from './accounts';
 import { catalog, missingMessage, normalizeAccent, normalizeName, PROFILE_FIELDS, resolveIntake, savedContext, type Surface } from './intake';
 import { mayCall, ringablePhone } from './numbers';
 import { profiles } from './profiles';
@@ -148,7 +148,8 @@ export function calls(db: D1Database) {
 
       // Credits up front: the call holds its maximum cost now and settles when it ends.
       const balance = await accounts(db).balanceCents(account.id);
-      if (balance < pricePerMinuteCents) {
+      const funds = fundsOf(account, balance);
+      if (funds < pricePerMinuteCents) {
         // Calls in progress hold their maximum cost until they end: say so, or a third parallel call
         // reads "$0.00" while two live calls hold the account's last $4 (wjbono's ChatGPT).
         const live = await db
@@ -158,7 +159,7 @@ export function calls(db: D1Database) {
         const held = live?.n ? `, with $${(live.cents / 100).toFixed(2)} held for ${live.n} call${live.n === 1 ? '' : 's'} in progress until ${live.n === 1 ? 'it ends' : 'they end'}; wait for ${live.n === 1 ? 'it' : 'them'} to finish, or ` : '; '
         throw new CallError(`balance is $${(balance / 100).toFixed(2)}${held}${surface === 'agents' ? 'add credits with call4me_add_funds' : 'the user can add credits on the call4me website'}`, 402);
       }
-      const affordable = Math.floor(balance / pricePerMinuteCents);
+      const affordable = Math.floor(funds / pricePerMinuteCents);
       const maxMinutes = Math.max(1, Math.min(input.max_minutes ?? LIMITS.defaultMinutes, LIMITS.maxMinutes, affordable));
       const holdCents = maxMinutes * pricePerMinuteCents;
 

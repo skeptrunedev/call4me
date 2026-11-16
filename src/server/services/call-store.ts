@@ -401,8 +401,8 @@ export function callStore(db: D1Database) {
      * granted, 0 when the balance can't cover one.
      */
     async extend(row: Pick<CallRow, 'id' | 'account_id' | 'business' | 'hold_cents'> & Metered, want: number, pricePerMinuteCents: number, n: number, at: number): Promise<number> {
-      const balance = await accounts(db).balanceCents(row.account_id);
-      const { minutes, cents } = extension(row, want, pricePerMinuteCents, balance, at);
+      const funds = await accounts(db).fundsCents(row.account_id);
+      const { minutes, cents } = extension(row, want, pricePerMinuteCents, funds, at);
       if (!minutes) return 0;
       if (!cents) return minutes;
       if (!(await accounts(db).hold(row.account_id, cents, `hold:${row.id}:${n}`, `${minutes} more min on hold with ${row.business}`))) return 0;
@@ -410,9 +410,9 @@ export function callStore(db: D1Database) {
       return minutes;
     },
 
-    /** When a call on hold through `limitAt` wraps up for lack of credits at today's balance (holdCreditsRunOutAt). */
+    /** When a call on hold through `limitAt` wraps up for lack of credits at today's funds (holdCreditsRunOutAt): never for an unmetered account. */
     async holdCreditsRunOutAt(row: Pick<CallRow, 'account_id' | 'hold_cents'> & Metered, pricePerMinuteCents: number, limitAt: number): Promise<number | null> {
-      return holdCreditsRunOutAt(row, await accounts(db).balanceCents(row.account_id), pricePerMinuteCents, limitAt);
+      return holdCreditsRunOutAt(row, await accounts(db).fundsCents(row.account_id), pricePerMinuteCents, limitAt);
     },
 
     /**

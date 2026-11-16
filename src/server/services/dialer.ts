@@ -8,7 +8,7 @@ import { backOfficeInstructions, callInstructions, inboundBackOfficeInstructions
 import type { SessionSetup } from '../voice/session';
 import { sessionFor } from '../voice/stub';
 import type { Voice } from '../voice/voices';
-import { accounts, type Account } from './accounts';
+import { accounts, fundsOf, type Account } from './accounts';
 import { answeringAccountId, EEA, NumberError, numbers, ringablePhone } from './numbers';
 import { profileOf, profiles } from './profiles';
 import { accentOf, answeringInstructionsOf, assistantNameOf, namePronunciationOf, type Profile, type Surface } from './intake';
@@ -323,7 +323,8 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     const [account] = rowsOf<Account>(accountRead);
     const price = zdrPrice(pricePerMinute(env), account?.zdr ?? 0);
     const balance = rowsOf<{ b: number }>(balanceRead)[0]?.b ?? 0;
-    if (!account || balance < price) {
+    const funds = account ? fundsOf(account, balance) : 0;
+    if (!account || funds < price) {
       await telnyx(env).reject(opts.controlId);
       return;
     }
@@ -353,7 +354,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     };
 
     // Credits up front here too: the callback holds what it may cost before it is answered.
-    const maxMinutes = callbackMinutes(balance, price);
+    const maxMinutes = callbackMinutes(funds, price);
     const holdCents = maxMinutes * price;
     // A callback on a known task carries that task's brief, so its recap is judged against the goal.
     const likelyBrief = likely ? (JSON.parse(likely.brief) as Brief) : null;

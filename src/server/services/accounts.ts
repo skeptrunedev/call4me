@@ -25,10 +25,19 @@ export interface Account {
   found_via: string | null;
   /** 1 when calls are made with zero data retention (services/zdr.ts), at 1.5x the price; 0 by default. */
   zdr: number;
+  /** 1 when spending is never held back for credits (migrations/0048, fundsOf); 0 for everyone else. */
+  unmetered: number;
 }
 
 /** The columns every Account is read with. */
-export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc, first_touch, reddit_first_visit_id, reddit_last_visit_id, sales_calls, found_via, zdr`;
+export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc, first_touch, reddit_first_visit_id, reddit_last_visit_id, sales_calls, found_via, zdr, unmetered`;
+
+/**
+ * What the account can spend: its balance, or without limit when it is unmetered. Call lengths and
+ * extensions are sized from this, never from the balance itself, which an unmetered account runs
+ * below zero; the balance stays what is shown.
+ */
+export const fundsOf = (account: Pick<Account, 'unmetered'>, balanceCents: number): number => (account.unmetered ? Number.POSITIVE_INFINITY : balanceCents);
 
 export type LedgerKind = 'topup' | 'reload' | 'hold' | 'release' | 'call' | 'refund' | 'adjustment' | 'number';
 
@@ -109,6 +118,15 @@ export function accounts(db: D1Database) {
       return db.prepare(`SELECT COALESCE(SUM(amount_cents), 0) AS b FROM ledger WHERE account_id = ?`).bind(accountId);
     },
 
+    /** fundsOf for an account known only by id: what it can spend now. */
+    async fundsCents(accountId: string): Promise<number> {
+      const row = await db
+        .prepare(`SELECT (SELECT unmetered FROM accounts WHERE id = ?1) AS unmetered, COALESCE(SUM(amount_cents), 0) AS b FROM ledger WHERE account_id = ?1`)
+        .bind(accountId)
+        .first<{ unmetered: number | null; b: number }>();
+      return fundsOf({ unmetered: row?.unmetered ?? 0 }, row?.b ?? 0);
+    },
+
     /** Idempotent on `ref`: returns false if this entry was already recorded. */
     async post(accountId: string, amountCents: number, kind: LedgerKind, ref: string, note?: string): Promise<boolean> {
       const r = await db
@@ -119,8 +137,9 @@ export function accounts(db: D1Database) {
     },
 
     /**
-     * Take `cents` out of the balance only if the balance covers it, in one statement so two
-     * concurrent calls cannot both spend the same credits. False when the balance is short.
+     * Take `cents` out of the balance only if the balance covers it (or the account is unmetered),
+     * in one statement so two concurrent calls cannot both spend the same credits. False when the
+     * balance is short.
      */
     async hold(accountId: string, cents: number, ref: string, note: string): Promise<boolean> {
       return this.spend(accountId, cents, 'hold', ref, note);
@@ -132,15 +151,24 @@ export function accounts(db: D1Database) {
       return (r.meta.changes ?? 0) > 0;
     },
 
-    /** spend's statement, to run in a batch with what the credits pay for (it changes no row when short). */
+    /**
+     * spend's statement, to run in a batch with what the credits pay for (it changes no row when
+     * short). An unmetered account always spends, and its balance goes below zero.
+     */
     spendStatement(accountId: string, cents: number, kind: LedgerKind, ref: string, note: string): D1PreparedStatement {
       return db
         .prepare(
           `INSERT OR IGNORE INTO ledger (id, account_id, amount_cents, kind, ref, note, created_at)
            SELECT ?1, ?2, -?3, ?4, ?5, ?6, ?7
-           WHERE (SELECT COALESCE(SUM(amount_cents), 0) FROM ledger WHERE account_id = ?2) >= ?3`,
+           WHERE (SELECT unmetered FROM accounts WHERE id = ?2) = 1
+              OR (SELECT COALESCE(SUM(amount_cents), 0) FROM ledger WHERE account_id = ?2) >= ?3`,
         )
         .bind(newId(), accountId, cents, kind, ref, note, now());
+    },
+
+    /** Turn unlimited spending on or off (migrations/0048). */
+    async setUnmetered(accountId: string, on: boolean): Promise<void> {
+      await db.prepare(`UPDATE accounts SET unmetered = ? WHERE id = ?`).bind(on ? 1 : 0, accountId).run();
     },
 
     async ledger(accountId: string, limit = 50) {

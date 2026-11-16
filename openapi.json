@@ -753,9 +753,21 @@
                       }
                     },
                     "minutes_left": {
-                      "type": "integer",
-                      "minimum": -9007199254740991,
-                      "maximum": 9007199254740991
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "null when the account has no credit limit (unlimited)"
+                    },
+                    "unlimited": {
+                      "description": "true when calls on this account are never held back for credits",
+                      "type": "boolean"
                     },
                     "zero_data_retention": {
                       "description": "true when zero data retention is on: prices above are already 1.5x, and each call's content is deleted an hour after it ends",
