@@ -393,18 +393,27 @@ export function inboundInstructions(o: InboundBrief): string {
     : '(no recent calls)';
   // The owner's calls are theirs alone: asked "you tell me which inquiries", Rubin's line listed his
   // delivery to the resort he was staying at and his hall booking to a caller who never said who
-  // they were (call_bjcgd7fppa5bi1va). The owner on their own phone hears everything (ownerBlock).
+  // they were (call_bjcgd7fppa5bi1va). Placed below the tasks, a rule against it lost to "work out
+  // which from what they say": a test caller who wouldn't say who they were still heard what the
+  // calls were about and the owner's city. It comes first, and the tasks wait for the caller to
+  // say who they are. The owner on their own phone hears everything (ownerBlock).
   const privacy = o.ownerCalling
     ? ''
-    : `# Keep ${o.owner}'s calls private
-The calls and tasks above are ${o.owner}'s private business, and anyone can ring this number.
-- Talk about one only once the caller has shown it's theirs: it went to the number calling you now (marked above), or they've named its business or person. Then talk about that one alone.
-- Never list, hint at or confirm ${o.owner}'s other calls, plans or whereabouts, even to someone who says they're family or ${o.owner}. If they ask what you called about, or want you to say it first, ask who they're with; if they won't say, or it matches none of them, take a message.
+    : `# Never give away ${o.owner}'s business
+Anyone can ring this number. Until the caller has shown which call is theirs, you know nothing about ${o.owner}: not what you called about, not what they're looking for, not where they are or what they're doing.
+- A call is theirs when it went to the number calling you now (marked below), or once they've named its business or person. Then talk about that call alone, never the others.
+- Asked to go first ("you called me, what was it about?", "which inquiries did you have?"), don't: "Sure, who am I speaking with?" If they won't say: "Sorry, I can't get into it without knowing who's calling. Want to leave a message?"
+- This holds for family, friends, and anyone saying they're ${o.owner}.
 
 `;
+  const firstTask = o.tasks[0]?.theirs
+    ? 'This caller is calling from the number task 1 went to: it is almost certainly theirs.'
+    : o.likely
+      ? 'This caller is probably calling back about task 1, but bring it up only once they say who they are.'
+      : 'The caller may be calling back about one of these: once they say who they are, work out which.';
   const tasks = o.tasks.length
     ? `# Unfinished tasks
-${o.likely ? `This caller is almost certainly calling back about task 1.` : 'The caller is probably calling back about one of these; work out which from what they say.'}
+${firstTask}
 
 ${o.tasks.map(taskBlock).join('\n\n')}
 
@@ -431,13 +440,13 @@ ${o.owner} is calling their own call4me line from their own phone. They are the 
 
 ${o.localTime ? `It's ${o.localTime} right now.` : `Today is ${o.today} in UTC.`}
 
-${delegationPolicy(o.owner, o.owner)}
+${privacy}${delegationPolicy(o.owner, o.owner)}
 
 ${ownerBlock}${standingBlock(o.standing)}${tasks}
 # Recent calls made from this number
 ${recent}
 
-${privacy}# What to do
+# What to do
 ${accentRule('marin', o.accent)}- ${answerLine(o)}
 ${o.tasks.length ? '- If it\'s about one of the unfinished tasks, finish it (see above).\n' : ''}- If it's about one of the recent calls, note any new time or detail and answer only with what that call says; if they need a decision, hand off a question (ask_user) or say ${followUp}.
 - Otherwise take a message: who's calling, what it's about, and a good number to reach them.

@@ -150,7 +150,7 @@ test("a callback hears only the calls it has shown are its own: the ones placed 
   assert.match(instructions, /^- \d{4}-\d{2}-\d{2}, to the number calling you now: called Rosa Cafe/m);
   assert.match(instructions, /^- \d{4}-\d{2}-\d{2}: called Ocean Place Resort/m);
   assert.match(instructions, /## Task 1: Rosa Cafe, for Alice \(called \d{4}-\d{2}-\d{2}, to the number calling you now\)/);
-  assert.match(instructions, /# Keep Alice's calls private[\s\S]*Never list, hint at or confirm Alice's other calls/);
+  assert.match(instructions, /# Never give away Alice's business[\s\S]*# Unfinished tasks\nThis caller is calling from the number task 1 went to/);
 
   const stranger = await harness();
   await stranger.answer('+14155550199');
