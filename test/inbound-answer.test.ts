@@ -134,3 +134,25 @@ test("a call that can't be answered fails, releases its hold and ends its voice 
   assert.equal((await h.inbound())!.status, 'failed');
   assert.equal(await h.balanceCents(), 1000);
 });
+
+test("a callback hears only the calls it has shown are its own: the ones placed to its number are marked, and the rest kept private", async () => {
+  // Rubin's line listed his delivery to the resort he was staying at to a caller who never said who
+  // they were, asked "you tell me which inquiries" (call_bjcgd7fppa5bi1va).
+  const h = await harness();
+  await h.run(
+    `INSERT INTO calls (id, account_id, direction, to_number, from_number, business, goal, brief, status, hold_cents, answered_at, created_at) VALUES ('call_resort', 'acct_alice', 'outbound', '+17325550100', ?, 'Ocean Place Resort', 'ask about a delivery to the room tonight', '{}', 'completed', 0, ?, ?)`,
+    NUMBER,
+    Date.now() - 30_000,
+    Date.now() - 30_000,
+  );
+  await h.answer();
+  const instructions = String(h.setup()!.instructions);
+  assert.match(instructions, /^- \d{4}-\d{2}-\d{2}, to the number calling you now: called Rosa Cafe/m);
+  assert.match(instructions, /^- \d{4}-\d{2}-\d{2}: called Ocean Place Resort/m);
+  assert.match(instructions, /## Task 1: Rosa Cafe, for Alice \(called \d{4}-\d{2}-\d{2}, to the number calling you now\)/);
+  assert.match(instructions, /# Keep Alice's calls private[\s\S]*Never list, hint at or confirm Alice's other calls/);
+
+  const stranger = await harness();
+  await stranger.answer('+14155550199');
+  assert.doesNotMatch(String(stranger.setup()!.instructions), /, to the number calling you now/);
+});

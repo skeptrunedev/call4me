@@ -30,3 +30,11 @@ test("the owner's saved opening wins over the callback's default greeting", () =
   assert.doesNotMatch(withOpening, /- Answer with "Hi, this is a personal assistant/);
   assert.match(inboundInstructions({ ...brief, standing: null }), /- Answer with a simple "Hello\?"/);
 });
+
+test("the owner's calls are kept private from anyone but the owner on their own phone", () => {
+  const recent = [{ business: 'Ocean Place Resort', goal: 'ask about a delivery to the room tonight', summary: null, when: '2026-11-16' }];
+  const stranger = inboundInstructions({ ...brief, recent });
+  assert.match(stranger, /# Keep Stephanie's calls private/);
+  assert.match(stranger, /If they ask what you called about, or want you to say it first, ask who they're with/);
+  assert.doesNotMatch(inboundInstructions({ ...brief, recent, ownerCalling: true }), /calls private/);
+});

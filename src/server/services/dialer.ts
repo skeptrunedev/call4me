@@ -314,7 +314,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
       // A callback only knows the calls placed from the number it rang, and answers as they were made:
       // an account calling for several companies gives each its own number.
       env.DB.prepare(
-        `SELECT business, goal, outcome, created_at FROM calls WHERE account_id = ? AND direction = 'outbound' AND from_number = ? AND answered_at IS NOT NULL AND purged_at IS NULL ORDER BY (to_number = ?) DESC, created_at DESC LIMIT 5`,
+        `SELECT business, goal, outcome, created_at, to_number = ?3 AS theirs FROM calls WHERE account_id = ?1 AND direction = 'outbound' AND from_number = ?2 AND answered_at IS NOT NULL AND purged_at IS NULL ORDER BY theirs DESC, created_at DESC LIMIT 5`,
       ).bind(accountId, opts.to, opts.from),
       env.DB.prepare(`SELECT business FROM calls WHERE account_id = ? AND to_number = ? AND purged_at IS NULL ORDER BY created_at DESC LIMIT 1`).bind(accountId, opts.from),
       env.DB.prepare(`SELECT 1 FROM verified_numbers WHERE account_id = ? AND phone_number = ? AND status = 'verified'`).bind(accountId, opts.from),
@@ -329,7 +329,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
       return;
     }
     const owner = account.display_name || 'the person you reached';
-    const recent = rowsOf<{ business: string; goal: string; outcome: string | null; created_at: number }>(recentRead);
+    const recent = rowsOf<{ business: string; goal: string; outcome: string | null; created_at: number; theirs: number }>(recentRead);
     const [earlier] = rowsOf<{ business: string }>(earlierRead);
     const profile = profileOf(rowsOf<{ fields: string }>(profileRead)[0]);
     // The owner ringing their own call4me number from their own phone is not a business calling
@@ -350,6 +350,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
         flexibility: b.flexibility,
         when: new Date(r.created_at).toISOString().slice(0, 10),
         lastResult: r.outcome ? (JSON.parse(r.outcome) as Outcome).summary : null,
+        theirs: r.to_number === opts.from,
       };
     };
 
@@ -427,6 +428,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
           goal: r.goal,
           summary: r.outcome ? (JSON.parse(r.outcome) as Outcome).summary : null,
           when: new Date(r.created_at).toISOString().slice(0, 10),
+          theirs: Boolean(r.theirs),
         })),
       }),
       backOffice: inboundBackOfficeInstructions(owner, ordered.map(openTask), answeringInstructionsOf(profile)),

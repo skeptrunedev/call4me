@@ -298,6 +298,8 @@ export interface OpenTask {
   when: string;
   /** What happened last time, e.g. the voicemail that was left. */
   lastResult: string | null;
+  /** Placed to the number now calling in: the caller has shown it's theirs (privacyRules). */
+  theirs?: boolean;
 }
 
 interface InboundBrief extends Who {
@@ -309,7 +311,8 @@ interface InboundBrief extends Who {
   likely: boolean;
   /** The owner is calling from their own phone (their profile's or a verified one), not a business. */
   ownerCalling?: boolean;
-  recent: { business: string; goal: string; summary: string | null; when: string }[];
+  /** Calls placed from the number they rang; `theirs` when placed to the number now calling in. */
+  recent: { business: string; goal: string; summary: string | null; when: string; theirs?: boolean }[];
   localTime: string | null;
   /** Today's date in UTC, for when the time zone is unknown. */
   today: string;
@@ -324,8 +327,11 @@ These apply to every call you answer. Anything they allow, you may do or accept 
 ${standing}
 ` : '');
 
+/** Marks a call or task placed to the number now calling in. */
+const THEIRS = ', to the number calling you now';
+
 function taskBlock(t: OpenTask, i: number): string {
-  return `## Task ${i + 1}: ${t.business}, for ${t.onBehalfOf} (called ${t.when})
+  return `## Task ${i + 1}: ${t.business}, for ${t.onBehalfOf} (called ${t.when}${t.theirs ? THEIRS : ''})
 Task: ${t.goal}
 ${t.lastResult ? `Last time: ${t.lastResult}\n` : ''}What you can share if it comes up:
 ${t.facts.trim() || '(nothing beyond the task itself)'}
@@ -383,8 +389,19 @@ export function inboundInstructions(o: InboundBrief): string {
   // Who follows up when the call can't settle something: the owner speaking says "I", anyone else names them.
   const followUp = !o.callingAs && answeringName(o)?.isOwner ? `you'll call back` : `${o.owner} will call back`;
   const recent = o.recent.length
-    ? o.recent.map((r) => `- ${r.when}: called ${r.business} to ${r.goal}${r.summary ? `. Result: ${r.summary}` : ''}`).join('\n')
+    ? o.recent.map((r) => `- ${r.when}${r.theirs ? THEIRS : ''}: called ${r.business} to ${r.goal}${r.summary ? `. Result: ${r.summary}` : ''}`).join('\n')
     : '(no recent calls)';
+  // The owner's calls are theirs alone: asked "you tell me which inquiries", Rubin's line listed his
+  // delivery to the resort he was staying at and his hall booking to a caller who never said who
+  // they were (call_bjcgd7fppa5bi1va). The owner on their own phone hears everything (ownerBlock).
+  const privacy = o.ownerCalling
+    ? ''
+    : `# Keep ${o.owner}'s calls private
+The calls and tasks above are ${o.owner}'s private business, and anyone can ring this number.
+- Talk about one only once the caller has shown it's theirs: it went to the number calling you now (marked above), or they've named its business or person. Then talk about that one alone.
+- Never list, hint at or confirm ${o.owner}'s other calls, plans or whereabouts, even to someone who says they're family or ${o.owner}. If they ask what you called about, or want you to say it first, ask who they're with; if they won't say, or it matches none of them, take a message.
+
+`;
   const tasks = o.tasks.length
     ? `# Unfinished tasks
 ${o.likely ? `This caller is almost certainly calling back about task 1.` : 'The caller is probably calling back about one of these; work out which from what they say.'}
@@ -392,7 +409,7 @@ ${o.likely ? `This caller is almost certainly calling back about task 1.` : 'The
 ${o.tasks.map(taskBlock).join('\n\n')}
 
 # Finish the task on this call
-- When they say who they are, pick it up right away: "Oh great, thanks for calling back! Yeah, I called about ${o.tasks.length === 1 ? `${o.tasks[0].goal.replace(/\.$/, '')}` : 'getting that set up'}."
+- When they say who they are and it's a task's business, or the task went to the number calling you now, pick it up right away: "Oh great, thanks for calling back! Yeah, I called about ${o.tasks.length === 1 ? `${o.tasks[0].goal.replace(/\.$/, '')}` : 'getting that set up'}."
 - Then do the task exactly as you would have on the first call: answer their questions from the facts, and accept anything within what you can agree to.
 - If they need something you don't have, or offer something outside what you can agree to, hand off a question (ask_user) and say "Let me check on that real quick." If no answer comes back, say ${followUp} to confirm.
 - A fact marked as not stored (an account PIN) is not available: ask_user for it.
@@ -420,9 +437,9 @@ ${ownerBlock}${standingBlock(o.standing)}${tasks}
 # Recent calls made from this number
 ${recent}
 
-# What to do
+${privacy}# What to do
 ${accentRule('marin', o.accent)}- ${answerLine(o)}
-${o.tasks.length ? '- If it\'s about one of the unfinished tasks, finish it (see above).\n' : ''}- If it's about one of the recent calls, note any new time or detail and answer only with what those calls say; if they need a decision, hand off a question (ask_user) or say ${followUp}.
+${o.tasks.length ? '- If it\'s about one of the unfinished tasks, finish it (see above).\n' : ''}- If it's about one of the recent calls, note any new time or detail and answer only with what that call says; if they need a decision, hand off a question (ask_user) or say ${followUp}.
 - Otherwise take a message: who's calling, what it's about, and a good number to reach them.
 - Never agree to anything beyond what a task allows or what the recent calls already agreed to.
 
