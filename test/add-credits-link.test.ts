@@ -19,13 +19,17 @@ const { pub } = await import('../src/server/routes/public');
 const secret = 'test-secret';
 const account = { id: 'acct123abc', email: 'test@example.com' };
 
-// Just enough D1: the account lookup, no saved Stripe customer, and every write recorded.
+// Just enough D1: the account lookup, no saved Stripe customer, the credits product already made
+// in Stripe, and every write recorded.
 const writes: unknown[][] = [];
 let savedCustomer: string | null = null;
 const db = {
   prepare: (sql: string) => ({
     bind: (...args: unknown[]) => ({
-      first: async () => (/FROM accounts/.test(sql) && args.includes(account.id) ? (/SELECT stripe_customer_id/.test(sql) ? { stripe_customer_id: savedCustomer } : account) : null),
+      first: async () =>
+        /FROM settings/.test(sql) && args.includes('credits_product_id')
+          ? { value: 'prod_credits' }
+          : /FROM accounts/.test(sql) && args.includes(account.id) ? (/SELECT stripe_customer_id/.test(sql) ? { stripe_customer_id: savedCustomer } : account) : null,
       all: async () => ({ results: [] }),
       run: async () => {
         writes.push([sql, ...args]);

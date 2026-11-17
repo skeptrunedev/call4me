@@ -59,6 +59,16 @@ export interface Reload {
 const LIVE_RELOAD = `status NOT IN ('canceled', 'incomplete_expired')`;
 
 const PRODUCT = { name: 'call4me credits', description: 'Prepaid credits for phone calls your AI agent places.' };
+/**
+ * What a credits charge says on the buyer's card statement. The Stripe account is shared with
+ * other apps, so its own descriptor (SKEPTRUNE.COM) names none of them, and a buyer who didn't
+ * recognize two top-ups asked whether they were fraud. A one-time card payment takes a suffix to
+ * the account's prefix ("SKEPTRUNE* CALL4ME"); a subscription's charges take the whole descriptor
+ * from its product's statement_descriptor instead (checked on test charges), and may not use '*'.
+ */
+export const STATEMENT_SUFFIX = 'CALL4ME';
+export const RELOAD_STATEMENT_DESCRIPTOR = 'SKEPTRUNE CALL4ME';
+const PRODUCT_KEY = 'credits_product_id';
 const PROMOTION_ERROR = 'this discount code cannot be used for this purchase. you can add credits at call4.me.';
 
 /** Where a subscription's invoices land: the account it was bought for. */
@@ -131,6 +141,15 @@ export function topups(db: D1Database, stripe: Stripe) {
     }
   }
 
+  /** The credits product, carrying the reload descriptor: created in Stripe on first use and cached. */
+  async function productId(): Promise<string> {
+    const cached = await db.prepare(`SELECT value FROM settings WHERE key = ?`).bind(PRODUCT_KEY).first<{ value: string }>();
+    if (cached) return cached.value;
+    const product = await stripe.products.create({ ...PRODUCT, statement_descriptor: RELOAD_STATEMENT_DESCRIPTOR, metadata: { app: 'callbay', kind: 'credits' } });
+    await db.prepare(`INSERT INTO settings (key, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at`).bind(PRODUCT_KEY, product.id, now()).run();
+    return product.id;
+  }
+
   return {
     /**
      * A Checkout session that adds `amountCents` now and, when `monthly`, again every month
@@ -169,7 +188,7 @@ export function topups(db: D1Database, stripe: Stripe) {
       }
       // Adjustable: $10 units, quantity chosen on Stripe's page (the "add funds" button goes
       // straight there). Otherwise the amount was chosen on our form.
-      const price_data = { currency: 'usd', unit_amount: opts.adjustable ? UNIT_CENTS : opts.amountCents, product_data: PRODUCT };
+      const price_data = { currency: 'usd', unit_amount: opts.adjustable ? UNIT_CENTS : opts.amountCents, product: await productId() };
       const quantity = opts.adjustable
         ? { quantity: Math.max(1, Math.round(opts.amountCents / UNIT_CENTS)), adjustable_quantity: { enabled: true, minimum: MIN_TOPUP_CENTS / UNIT_CENTS, maximum: MAX_TOPUP_CENTS / UNIT_CENTS } }
         : { quantity: 1 };
@@ -190,6 +209,7 @@ export function topups(db: D1Database, stripe: Stripe) {
           : {
               mode: 'payment' as const,
               line_items: [{ ...quantity, price_data }],
+              payment_intent_data: { statement_descriptor_suffix: STATEMENT_SUFFIX },
               ...(customer ? {} : { customer_creation: 'always' as const }),
             }),
       }).catch((err: unknown) => {

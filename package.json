@@ -30,6 +30,7 @@
     "outreach": "node scripts/outreach.mjs",
     "campaign": "tsx scripts/campaign.ts",
     "transfer": "node scripts/transfer-credits.mjs",
+    "reload-descriptors": "tsx scripts/reload-descriptors.ts",
     "template": "tsx scripts/email-template.ts",
     "recap": "tsx scripts/recap.ts",
     "password-user": "node scripts/create-password-user.mjs",

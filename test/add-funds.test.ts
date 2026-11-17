@@ -16,6 +16,7 @@ registerHooks({
 });
 
 const { createCall4meServer } = await import('../src/server/mcp/server');
+const { topups, STATEMENT_SUFFIX, RELOAD_STATEMENT_DESCRIPTOR } = await import('../src/server/services/topups');
 
 // Just enough D1 for checkout: no saved Stripe customer, and the topup insert.
 const inserts: unknown[][] = [];
@@ -31,7 +32,12 @@ const db = {
   }),
 };
 const sessions: Record<string, unknown>[] = [];
-const stripe = { checkout: { sessions: { create: async (params: Record<string, unknown>) => (sessions.push(params), { id: 'cs_test', url: 'https://checkout.stripe.com/c/cs_test' }) } } };
+const products: Record<string, unknown>[] = [];
+const stripe = {
+  checkout: { sessions: { create: async (params: Record<string, unknown>) => (sessions.push(params), { id: 'cs_test', url: 'https://checkout.stripe.com/c/cs_test' }) } },
+  products: { create: async (params: Record<string, unknown>) => (products.push(params), { id: 'prod_credits' }) },
+};
+type LineItem = { price_data: { product: string } };
 
 const account = { id: 'acct_test', email: 'test@example.com' } as Account;
 const handler = createMcpHandler(() => createCall4meServer({ env: { DB: db } as unknown as Env, origin: 'https://call4.me', account, stripe: () => stripe as never }), { legacy: 'stateless' });
@@ -64,4 +70,19 @@ test('add_funds always opens a monthly checkout, even if asked for a one-time lo
   // topups row: (id, account_id, email, amount_cents, monthly, ...)
   assert.equal(inserts.at(-1)![4], 1);
   assert.match(JSON.stringify(result!.content), /reloads monthly/);
+});
+
+test('credits charges name call4me on the card statement, one-time and monthly', async () => {
+  const t = topups(db as unknown as D1Database, stripe as never);
+  await t.checkout({ amountCents: 1000, monthly: true, origin: 'https://call4.me', account });
+  const monthly = sessions.at(-1)!;
+  // A subscription's charges take the whole descriptor from its product.
+  assert.equal(products.at(-1)!.statement_descriptor, RELOAD_STATEMENT_DESCRIPTOR);
+  assert.equal((monthly.line_items as LineItem[])[0].price_data.product, 'prod_credits');
+  await t.checkout({ amountCents: 1000, monthly: false, origin: 'https://call4.me', account });
+  const once = sessions.at(-1)!;
+  assert.equal(once.mode, 'payment');
+  // A one-time card payment takes a suffix to the account's prefix: "SKEPTRUNE* CALL4ME".
+  assert.deepEqual(once.payment_intent_data, { statement_descriptor_suffix: STATEMENT_SUFFIX });
+  assert.equal((once.line_items as LineItem[])[0].price_data.product, 'prod_credits');
 });
