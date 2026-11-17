@@ -92,3 +92,31 @@ test('a far end that stops sending audio keeps its stream when Telnyx still answ
   assert.equal(h.session.phone, h.phone);
   assert.equal(h.values.has('orphanSince'), false);
 });
+
+// SoMa Square Apartments (call_ysgg915yqhzdoimc, 2026-11-17): no audio 4s after pickup, and Telnyx
+// refused the reattach with "Limit of maximum concurrent bidirectional RTP streaming session
+// reached (1)": the dead stream still held the call's one slot, and the call failed.
+test("a dead stream is stopped before the call's stream is started again", async (t) => {
+  const h = harness(t);
+  const db = h.session.env.DB;
+  await db.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at, answered_at) VALUES ('dead_stream_test', 'acct_alice', '+14155550100', 'Test store', 'Ask', '{}', 'in_progress', 0, ?)`).bind(Date.now()).run();
+  Object.assign(h.session.setup, { controlId: 'v3:control', streamUrl: 'wss://voice.call4.me/voice/stream/dead_stream_test/token' });
+  const telnyx: { path: string; body: any }[] = [];
+  t.mock.method(globalThis, 'fetch', async (input: string | URL | Request, init?: RequestInit) => {
+    const path = new URL(String(input)).pathname;
+    telnyx.push({ path, body: JSON.parse(String(init?.body ?? '{}')) });
+    // Nothing left to stop is refused, and the stream starts anyway.
+    if (path.endsWith('/streaming_stop')) return new Response(JSON.stringify({ errors: [{ detail: 'no stream to stop' }] }), { status: 422 });
+    return new Response('{}', { status: 200 });
+  });
+  await h.frames(3_000);
+  await h.quiet(8_000);
+  assert.equal(h.session.phone, null);
+  await h.session.alarm();
+  assert.deepEqual(
+    telnyx.map((r) => r.path),
+    ['/v2/calls/v3%3Acontrol/actions/streaming_stop', '/v2/calls/v3%3Acontrol/actions/streaming_start'],
+  );
+  assert.deepEqual(telnyx[0].body, {}, 'every stream on the call, not one by id');
+  assert.equal(telnyx[1].body.stream_url, 'wss://voice.call4.me/voice/stream/dead_stream_test/token');
+});

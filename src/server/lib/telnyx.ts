@@ -1,7 +1,7 @@
 /**
  * The few Telnyx Call Control and Numbers endpoints call4me uses.
  * Docs: developers.telnyx.com/api-reference (dial incl. supervise_call_control_id, switch_supervisor_role,
- * hangup, send_dtmf, answer, streaming_start,
+ * hangup, send_dtmf, answer, streaming_start, streaming_stop,
  * available_phone_numbers, number_orders, phone_numbers, requirement_groups, outbound_voice_profiles,
  * verified_numbers)
  * and .../receiving-webhooks for signatures.
@@ -212,6 +212,11 @@ export function telnyx(env: TelnyxEnv) {
     /** Reattach the media stream to a live call whose stream dropped (the session restarted). */
     async startStreaming(callControlId: string, streamUrl: string): Promise<void> {
       await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/streaming_start`, { stream_url: streamUrl, ...STREAM });
+    },
+
+    /** Stop every media stream on the call (no stream_id: "stops all streams associated with a given call_control_id"). */
+    async stopStreaming(callControlId: string): Promise<void> {
+      await call(env, 'POST', `/calls/${encodeURIComponent(callControlId)}/actions/streaming_stop`, {});
     },
 
     async reject(callControlId: string): Promise<void> {

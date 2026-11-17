@@ -1995,6 +1995,12 @@ export class VoiceSession extends DurableObject<Env> {
       if (!(await this.ctx.storage.get('reattached')) && s.controlId && s.streamUrl) {
         await this.ctx.storage.put('reattached', true);
         console.warn('reattaching the media stream', s.callId);
+        // A call has one slot for a bidirectional stream, and a stream that went dead can still
+        // hold it: Telnyx refused the reattach of SoMa Square Apartments' silent stream with "Limit
+        // of maximum concurrent bidirectional RTP streaming session reached (1)", and the call
+        // failed (call_ysgg915yqhzdoimc). Stopping every stream on the call frees the slot; with
+        // none left to stop, Telnyx's refusal of that changes nothing.
+        await telnyx(this.env).stopStreaming(s.controlId).catch((err) => console.warn('stopping the dead stream failed', s.callId, String(err)));
         await telnyx(this.env).startStreaming(s.controlId, s.streamUrl).catch((err) => console.warn('reattach failed', s.callId, String(err)));
         await this.ctx.storage.setAlarm(now + REATTACH_WAIT_MS);
         return;
