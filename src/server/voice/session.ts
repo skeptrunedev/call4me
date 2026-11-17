@@ -3,6 +3,7 @@ import { Raindrop, type Interaction } from 'raindrop-ai';
 import { ACTIVE, callStore, ceilingAt, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/call-store';
 import { telnyx } from '../lib/telnyx';
 import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
+import { Playout } from './playout';
 import { asksUsToWait, connectCheckMessage, KEY_TRANSCRIPT_LAG_MS, forcedHandoffMessage, greetingWaiting, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft, type KeyPress } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinedMessage, lastTokens, leftMessage, legEnded, listeningMessage, mergeTranscript, resumeInput, unreachableMessage, type LiveInput, type PersonMode } from './person';
 import { HoldMeter, type HoldChange } from './hold';
@@ -286,6 +287,8 @@ export class VoiceSession extends DurableObject<Env> {
   private heardThem = false;
   /** Wall-clock time when the audio already sent to Telnyx will finish playing. */
   private playbackEndsAt = 0;
+  /** Where the caller's audio reached the phone too late to play on time (playout.ts). */
+  private playout = new Playout();
   /** When the caller's last audible words finish playing; GPT-Live streams silence nonstop, so playback alone never goes quiet. */
   private speechEndsAt = 0;
   /** Until when keypad tones are playing; the caller's audio is held off the line until then. */
@@ -634,6 +637,7 @@ export class VoiceSession extends DurableObject<Env> {
       if (!this.answered) return; // ringback and early media are not the other person
       if (this.framesIn++ === 0) this.mark('first audio from phone');
       this.firstFrameAt ||= Date.now();
+      this.playout.phoneFrame(Date.now());
       if (this.liveReady) this.sendLive({ type: 'session.input_audio.append', audio: payload });
       else if (this.pendingAudio.length < 250) this.pendingAudio.push(payload); // ~5s at 20ms frames
       if (this.standby && this.standby.frames.push({ audio: payload, at: Date.now() }) > STANDBY_FRAMES) this.standby.frames.shift();
@@ -960,8 +964,12 @@ export class VoiceSession extends DurableObject<Env> {
         this.sendPhone({ event: 'media', media: { payload: e.delta } });
         const now = Date.now();
         // Audio deltas carry no timing, so how long they play comes from their length.
-        this.playbackEndsAt = Math.max(this.playbackEndsAt, now) + pcmuMs(e.delta);
-        if (pcmuAudible(e.delta)) this.speechEndsAt = this.playbackEndsAt;
+        const ms = pcmuMs(e.delta);
+        const audible = pcmuAudible(e.delta);
+        const late = this.playout.sent(now, ms, audible, this.playbackEndsAt);
+        if (late) this.mark(`caller audio ran dry ${late.gaps} times (${late.gapMs}ms of speech lost): ${late.receivedMs}ms of audio arrived in ${late.wallMs}ms, longest wait between phone frames ${late.longestPhoneGapMs}ms`);
+        this.playbackEndsAt = Math.max(this.playbackEndsAt, now) + ms;
+        if (audible) this.speechEndsAt = this.playbackEndsAt;
         this.lastOutputAt = now;
         break;
       }
@@ -2201,6 +2209,7 @@ export class VoiceSession extends DurableObject<Env> {
     if (this.rollTimer) clearTimeout(this.rollTimer);
     if (this.replacing) clearTimeout(this.replacing.timer);
     for (const finish of this.waiting.values()) finish(null);
+    if (this.playout.total.gaps) this.mark(`caller audio ran dry ${this.playout.total.gaps} times in all (${Math.round(this.playout.total.gapMs)}ms of speech lost)`);
     console.log('call session ending:', reason);
     const s = await this.load();
     if (s?.controlId && reason !== 'hangup webhook') {
