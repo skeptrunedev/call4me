@@ -396,6 +396,9 @@ export class VoiceSession extends DurableObject<Env> {
         this.answeredAt = Date.now();
         this.mark('answered');
         this.startWatchdog();
+        // A stream lost while it rang could not be reattached before pickup (recoverStream): now it can.
+        const s = await this.load();
+        if (s && !this.phone && (await this.ctx.storage.get('orphanSince'))) await this.recoverStream(s, this.answeredAt);
         await this.startLive();
         // A session opened while it rang has no time limit yet: it counts from pickup.
         await this.startTimeLimit();
@@ -1992,49 +1995,69 @@ export class VoiceSession extends DurableObject<Env> {
     await this.ctx.storage.setAlarm(due && due < next ? due : next);
   }
 
+  /**
+   * A call with no phone stream here: the instance holding it was reset, or the stream dropped,
+   * and nothing has reconnected it. Telnyx is asked once per loss to stream the call here again,
+   * and a call whose stream doesn't come back within REATTACH_WAIT_MS of that is ended, unbilled.
+   *
+   * Ringing, Telnyx takes no streaming command ("This call can't receive streaming_start command
+   * because it has not been answered yet"), so a stream lost then waits for pickup, which runs this
+   * again (/answered): the ABC Store call lost its stream 54ms after it connected, spent its one
+   * reattach on that refusal, and was answered into 9s of silence before it failed
+   * (call_9wnkn3unpc0gp1bp, 2026-11-18).
+   */
+  private async recoverStream(s: SessionSetup, now: number): Promise<void> {
+    const row = await callStore(this.env.DB).byId(s.callId);
+    if (!row || !ACTIVE.includes(row.status)) {
+      await this.ctx.storage.deleteAlarm();
+      return;
+    }
+    if (!row.answered_at) {
+      await this.ctx.storage.setAlarm(now + HEARTBEAT_MS);
+      return;
+    }
+    const since = (await this.ctx.storage.get<number>('orphanSince')) ?? now;
+    await this.ctx.storage.put('orphanSince', since);
+    // Billed only if the audio comes back (audioArrived clears it): the business may hang up on the silence first.
+    await callStore(this.env.DB).audioLost(s.callId, since);
+    const reattachedAt = await this.ctx.storage.get<number>('reattached');
+    if (!reattachedAt && s.controlId && s.streamUrl) {
+      await this.ctx.storage.put('reattached', now);
+      // A call has one slot for a bidirectional stream, and a stream that went dead can still
+      // hold it: Telnyx refused the reattach of SoMa Square Apartments' silent stream with "Limit
+      // of maximum concurrent bidirectional RTP streaming session reached (1)", and the call
+      // failed (call_ysgg915yqhzdoimc). Stopping every stream on the call frees the slot; with
+      // none left to stop, Telnyx's refusal of that changes nothing.
+      const hungUp = await telnyx(this.env).stopStreaming(s.controlId).then(() => false, (err) => {
+        if (callEnded(err)) return true;
+        console.warn('stopping the dead stream failed', s.callId, String(err));
+        return false;
+      });
+      // The stream closed because the call ended, and its hang-up hasn't reached the call's row
+      // yet (an alarm ran 1.2s after Telnyx's hang-up on call_3tai2urataie5tve, 2026-11-18).
+      // Nothing to reattach; the next alarm finds it ended.
+      if (hungUp) this.mark('the call ended with its stream; not reattaching');
+      else {
+        console.warn('reattaching the media stream', s.callId);
+        await telnyx(this.env).startStreaming(s.controlId, s.streamUrl).catch((err) => console.warn('reattach failed', s.callId, String(err)));
+      }
+      await this.ctx.storage.setAlarm(now + REATTACH_WAIT_MS);
+      return;
+    }
+    const giveUpAt = Math.max(since, reattachedAt ?? 0) + REATTACH_WAIT_MS;
+    if (now < giveUpAt) {
+      await this.ctx.storage.setAlarm(giveUpAt);
+      return;
+    }
+    await this.fail('lost the call audio and could not reconnect it');
+  }
+
   async alarm(): Promise<void> {
     const s = await this.load();
     if (!s || this.ended) return;
     const now = Date.now();
     if (!this.phone) {
-      // The instance holding the stream was reset and nothing has reconnected it here.
-      const row = await callStore(this.env.DB).byId(s.callId);
-      if (!row || !ACTIVE.includes(row.status)) {
-        await this.ctx.storage.deleteAlarm();
-        return;
-      }
-      const since = (await this.ctx.storage.get<number>('orphanSince')) ?? now;
-      await this.ctx.storage.put('orphanSince', since);
-      // Billed only if the audio comes back (audioArrived clears it): the business may hang up on the silence first.
-      await callStore(this.env.DB).audioLost(s.callId, since);
-      if (!(await this.ctx.storage.get('reattached')) && s.controlId && s.streamUrl) {
-        await this.ctx.storage.put('reattached', true);
-        // A call has one slot for a bidirectional stream, and a stream that went dead can still
-        // hold it: Telnyx refused the reattach of SoMa Square Apartments' silent stream with "Limit
-        // of maximum concurrent bidirectional RTP streaming session reached (1)", and the call
-        // failed (call_ysgg915yqhzdoimc). Stopping every stream on the call frees the slot; with
-        // none left to stop, Telnyx's refusal of that changes nothing.
-        const hungUp = await telnyx(this.env).stopStreaming(s.controlId).then(() => false, (err) => {
-          if (callEnded(err)) return true;
-          console.warn('stopping the dead stream failed', s.callId, String(err));
-          return false;
-        });
-        // The stream closed because the call ended, and its hang-up hasn't reached the call's row
-        // yet: Gustavo's call rang out, and this alarm ran 1.2s after Telnyx's hang-up
-        // (call_3tai2urataie5tve, 2026-11-18). Nothing to reattach; the next alarm finds it ended.
-        if (hungUp) this.mark('the call ended with its stream; not reattaching');
-        else {
-          console.warn('reattaching the media stream', s.callId);
-          await telnyx(this.env).startStreaming(s.controlId, s.streamUrl).catch((err) => console.warn('reattach failed', s.callId, String(err)));
-        }
-        await this.ctx.storage.setAlarm(now + REATTACH_WAIT_MS);
-        return;
-      }
-      if (now - since < REATTACH_WAIT_MS) {
-        await this.ctx.storage.setAlarm(since + REATTACH_WAIT_MS);
-        return;
-      }
-      await this.fail('lost the call audio and could not reconnect it');
+      await this.recoverStream(s, now);
       return;
     }
     // Nobody ever came on: our caller said hello into a line that never answered with a word or a

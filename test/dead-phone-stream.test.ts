@@ -140,3 +140,47 @@ test('a stream that closed because the call ended is not started again', async (
   assert.deepEqual(telnyx, ['/v2/calls/v3%3Acontrol/actions/streaming_stop']);
   assert.ok(h.values.get('alarm'), 'the next heartbeat still looks at the call');
 });
+
+// The ABC Store (call_9wnkn3unpc0gp1bp, 2026-11-18): the stream died 54ms after it connected, while
+// the call rang. Telnyx refused the stop and the start as "has not been answered yet", which spent
+// the call's one reattach, and the business answered into 9s of silence before the call failed.
+test('a stream lost while the call rings is reattached when it is answered, not before', async (t) => {
+  const h = harness(t);
+  const db = h.session.env.DB;
+  h.session.answered = false;
+  h.session.answeredAt = 0;
+  await db.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at) VALUES ('dead_stream_test', 'acct_alice', '+14155550100', 'Test store', 'Ask', '{}', 'dialing', 0)`).run();
+  Object.assign(h.session.setup, { controlId: 'v3:control', streamUrl: 'wss://voice.call4.me/voice/stream/dead_stream_test/token' });
+  let pickedUp = false;
+  const telnyx: string[] = [];
+  t.mock.method(globalThis, 'fetch', async (input: string | URL | Request) => {
+    const path = new URL(String(input)).pathname;
+    telnyx.push(path.replace('/v2/calls/v3%3Acontrol/actions/', ''));
+    if (!pickedUp) return new Response(JSON.stringify({ errors: [{ detail: "This call can't receive streaming_start command because it has not been answered yet." }] }), { status: 422 });
+    return new Response('{}', { status: 200 });
+  });
+  h.phone.close();
+  await flush();
+  assert.equal(h.session.phone, null);
+  await h.session.alarm();
+  assert.deepEqual(telnyx, [], 'nothing is asked of Telnyx while it rings');
+  assert.ok(h.values.get('alarm'), 'the heartbeat keeps watching the ringing call');
+
+  t.mock.timers.tick(8_000);
+  pickedUp = true;
+  await db.prepare(`UPDATE calls SET status = 'in_progress', answered_at = ? WHERE id = 'dead_stream_test'`).bind(Date.now()).run();
+  await h.session.fetch(new Request('https://session/answered', { method: 'POST' }));
+  assert.deepEqual(telnyx, ['streaming_stop', 'streaming_start'], 'pickup reattaches the stream at once');
+
+  // One reattach per loss, and the call gets its full wait for the stream from the reattach.
+  await h.session.alarm();
+  assert.deepEqual(telnyx, ['streaming_stop', 'streaming_start']);
+  const row = await db.prepare(`SELECT status FROM calls WHERE id = 'dead_stream_test'`).first();
+  assert.equal(row.status, 'in_progress');
+  // A stream that never comes back still ends the call, unbilled.
+  t.mock.timers.tick(15_000);
+  await h.session.alarm();
+  const after = await db.prepare(`SELECT status, cost_cents FROM calls WHERE id = 'dead_stream_test'`).first();
+  assert.equal(after.status, 'failed');
+  assert.equal(after.cost_cents, 0);
+});
