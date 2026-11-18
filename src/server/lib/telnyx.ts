@@ -28,6 +28,11 @@ export class TelnyxError extends Error {
   }
 }
 
+/** Telnyx refused a command because the call already ended: "This call is no longer active and can't receive commands." */
+export function callEnded(err: unknown): boolean {
+  return err instanceof TelnyxError && err.status === 422 && /no longer active/i.test(err.detail);
+}
+
 async function call<T>(env: TelnyxEnv, method: string, path: string, body?: unknown): Promise<T> {
   const res = await fetch(`${API}${path}`, {
     method,

@@ -1,8 +1,9 @@
 import { DurableObject } from 'cloudflare:workers';
 import { Raindrop, type Interaction } from 'raindrop-ai';
 import { ACTIVE, callStore, ceilingAt, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/call-store';
-import { telnyx } from '../lib/telnyx';
+import { callEnded, telnyx } from '../lib/telnyx';
 import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
+import { InputPace } from './input-pace';
 import { Playout } from './playout';
 import { asksUsToWait, connectCheckMessage, KEY_TRANSCRIPT_LAG_MS, forcedHandoffMessage, greetingWaiting, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft, type KeyPress } from './handoff';
 import { alreadyUnreachable, callerHoldsFor, joinedMessage, lastTokens, leftMessage, legEnded, listeningMessage, mergeTranscript, resumeInput, unreachableMessage, type LiveInput, type PersonMode } from './person';
@@ -289,6 +290,8 @@ export class VoiceSession extends DurableObject<Env> {
   private playbackEndsAt = 0;
   /** Where the caller's audio reached the phone too late to play on time (playout.ts). */
   private playout = new Playout();
+  /** The phone audio sent into the current voice session, against GPT-Live's input pace. */
+  private inputPace = new InputPace();
   /** When the caller's last audible words finish playing; GPT-Live streams silence nonstop, so playback alone never goes quiet. */
   private speechEndsAt = 0;
   /** Until when keypad tones are playing; the caller's audio is held off the line until then. */
@@ -638,7 +641,7 @@ export class VoiceSession extends DurableObject<Env> {
       if (this.framesIn++ === 0) this.mark('first audio from phone');
       this.firstFrameAt ||= Date.now();
       this.playout.phoneFrame(Date.now());
-      if (this.liveReady) this.sendLive({ type: 'session.input_audio.append', audio: payload });
+      if (this.liveReady) this.sendInput(payload);
       else if (this.pendingAudio.length < 250) this.pendingAudio.push(payload); // ~5s at 20ms frames
       if (this.standby && this.standby.frames.push({ audio: payload, at: Date.now() }) > STANDBY_FRAMES) this.standby.frames.shift();
       if (pcmuAudible(payload)) this.themAudibleAt = Date.now();
@@ -915,6 +918,13 @@ export class VoiceSession extends DurableObject<Env> {
     await this.scheduleAlarm();
   }
 
+  /** Phone audio into the voice session, metered against GPT-Live's input pace (input-pace.ts). */
+  private sendInput(audio: string): void {
+    this.sendLive({ type: 'session.input_audio.append', audio });
+    const burst = this.inputPace.sent(Date.now(), pcmuMs(audio));
+    if (burst) this.mark(`phone audio ran ${burst.overMs}ms past the voice model's input pace: ${burst.sentMs}ms of it in ${burst.wallMs}ms, longest pause between frames ${burst.longestPauseMs}ms`);
+  }
+
   /**
    * To the live voice session. A replacement starting up (openStandby) has the call as it stood
    * when its history was taken: anything else the live one is told after that, a time note, the
@@ -948,7 +958,8 @@ export class VoiceSession extends DurableObject<Env> {
         // Its id is what OpenAI needs to look into a session, such as one its safety filter ended.
         this.mark(`live session ${session.id} started, expiring in ${Math.round((this.liveEndsAt - this.liveStartedAt) / 1000)}s; flushing ${this.pendingAudio.length} buffered frames`);
         for (const resolve of this.liveStartedWaiters.splice(0)) resolve();
-        for (const a of this.pendingAudio) this.sendLive({ type: 'session.input_audio.append', audio: a });
+        this.inputPace = new InputPace();
+        for (const a of this.pendingAudio) this.sendInput(a);
         this.pendingAudio = [];
         await this.queueMachineUpdate(() => this.sendMachineGuidance());
         if (this.live === live) this.nudgeWhenSilent();
@@ -1087,7 +1098,7 @@ export class VoiceSession extends DurableObject<Env> {
       }
       case 'error': {
         const e = ev as { error: { code?: string; message: string } };
-        console.warn('gpt-live error', e.error.code, e.error.message);
+        console.warn('gpt-live error', this.setup?.callId, e.error.code, e.error.message);
         this.monitoringError = redact(e.error.message, this.setup?.redact ?? []);
         break;
       }
@@ -1238,7 +1249,7 @@ export class VoiceSession extends DurableObject<Env> {
       this.promoteStandby();
     } else if (ev.type === 'error') {
       const e = ev as { error: { code?: string; message: string } };
-      console.warn('gpt-live error (replacement session)', e.error.code, e.error.message);
+      console.warn('gpt-live error (replacement session)', this.setup?.callId, e.error.code, e.error.message);
     } else if (ev.type === 'session.closed') {
       this.dropStandby(`it closed (${(ev as { reason: string }).reason})`);
     }
@@ -1272,7 +1283,8 @@ export class VoiceSession extends DurableObject<Env> {
     this.resetSessionState();
     this.rollovers++;
     this.mark(`voice session rolled over (planned) at ${age}s session age`);
-    for (const frame of standby.frames) if (frame.at > this.lastSpokeAt.them) this.sendLive({ type: 'session.input_audio.append', audio: frame.audio });
+    this.inputPace = new InputPace();
+    for (const frame of standby.frames) if (frame.at > this.lastSpokeAt.them) this.sendInput(frame.audio);
     const since = this.linesSince(seen);
     if (since) this.sendLive({ type: 'session.thinking.append', delegation_id: null, content: lastTokens(`While you were connecting, the call went on:\n${since}`, 480) });
     if (old) this.retire(old);
@@ -1994,14 +2006,24 @@ export class VoiceSession extends DurableObject<Env> {
       await callStore(this.env.DB).audioLost(s.callId, since);
       if (!(await this.ctx.storage.get('reattached')) && s.controlId && s.streamUrl) {
         await this.ctx.storage.put('reattached', true);
-        console.warn('reattaching the media stream', s.callId);
         // A call has one slot for a bidirectional stream, and a stream that went dead can still
         // hold it: Telnyx refused the reattach of SoMa Square Apartments' silent stream with "Limit
         // of maximum concurrent bidirectional RTP streaming session reached (1)", and the call
         // failed (call_ysgg915yqhzdoimc). Stopping every stream on the call frees the slot; with
         // none left to stop, Telnyx's refusal of that changes nothing.
-        await telnyx(this.env).stopStreaming(s.controlId).catch((err) => console.warn('stopping the dead stream failed', s.callId, String(err)));
-        await telnyx(this.env).startStreaming(s.controlId, s.streamUrl).catch((err) => console.warn('reattach failed', s.callId, String(err)));
+        const hungUp = await telnyx(this.env).stopStreaming(s.controlId).then(() => false, (err) => {
+          if (callEnded(err)) return true;
+          console.warn('stopping the dead stream failed', s.callId, String(err));
+          return false;
+        });
+        // The stream closed because the call ended, and its hang-up hasn't reached the call's row
+        // yet: Gustavo's call rang out, and this alarm ran 1.2s after Telnyx's hang-up
+        // (call_3tai2urataie5tve, 2026-11-18). Nothing to reattach; the next alarm finds it ended.
+        if (hungUp) this.mark('the call ended with its stream; not reattaching');
+        else {
+          console.warn('reattaching the media stream', s.callId);
+          await telnyx(this.env).startStreaming(s.controlId, s.streamUrl).catch((err) => console.warn('reattach failed', s.callId, String(err)));
+        }
         await this.ctx.storage.setAlarm(now + REATTACH_WAIT_MS);
         return;
       }

@@ -120,3 +120,23 @@ test("a dead stream is stopped before the call's stream is started again", async
   assert.deepEqual(telnyx[0].body, {}, 'every stream on the call, not one by id');
   assert.equal(telnyx[1].body.stream_url, 'wss://voice.call4.me/voice/stream/dead_stream_test/token');
 });
+
+// Gustavo (call_3tai2urataie5tve, 2026-11-18): the call rang out and its stream closed with it, and
+// the heartbeat ran 1.2s after Telnyx's hang-up, before the hang-up had reached the call's row.
+// Telnyx refused the stop and then the start as "no longer active", and the log read "reattach failed".
+test('a stream that closed because the call ended is not started again', async (t) => {
+  const h = harness(t);
+  const db = h.session.env.DB;
+  await db.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at, answered_at) VALUES ('dead_stream_test', 'acct_alice', '+14155550100', 'Test store', 'Ask', '{}', 'in_progress', 0, ?)`).bind(Date.now()).run();
+  Object.assign(h.session.setup, { controlId: 'v3:control', streamUrl: 'wss://voice.call4.me/voice/stream/dead_stream_test/token' });
+  const telnyx: string[] = [];
+  t.mock.method(globalThis, 'fetch', async (input: string | URL | Request) => {
+    telnyx.push(new URL(String(input)).pathname);
+    return new Response(JSON.stringify({ errors: [{ detail: "This call is no longer active and can't receive commands." }] }), { status: 422 });
+  });
+  await h.frames(3_000);
+  await h.quiet(8_000);
+  await h.session.alarm();
+  assert.deepEqual(telnyx, ['/v2/calls/v3%3Acontrol/actions/streaming_stop']);
+  assert.ok(h.values.get('alarm'), 'the next heartbeat still looks at the call');
+});
