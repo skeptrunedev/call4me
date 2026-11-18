@@ -17,13 +17,22 @@ export interface Signup {
 
 const PROVIDERS: Record<string, string> = { google: 'Google', twitter: 'X', email: 'an email link' };
 
+/** How Nick's emails name an account: by its email, or by its name when it has no real email (an X sign-in). */
+export function accountName(email: string, displayName: string | null): { who: string; full: string } {
+  if (email.endsWith('.invalid')) {
+    const who = `${displayName ?? 'someone'} (no email)`;
+    return { who, full: who };
+  }
+  return { who: email, full: displayName ? `${email} (${displayName})` : email };
+}
+
 export function signupEmail(s: Signup, origin: string): { subject: string; text: string } {
   const how = s.provider ? `signed in with ${PROVIDERS[s.provider] ?? s.provider}` : 'paid at checkout before signing in';
-  const who = s.email.endsWith('.invalid') ? `${s.display_name ?? 'someone'} (no email)` : s.email;
+  const { who, full } = accountName(s.email, s.display_name);
   return {
     subject: `new Call for Me signup: ${who}`,
     text: [
-      `${who}${s.display_name && !s.email.endsWith('.invalid') ? ` (${s.display_name})` : ''} ${how}.`,
+      `${full} ${how}.`,
       `when: ${new Date(s.created_at).toISOString().replace('T', ' ').slice(0, 16)} UTC`,
       `account: ${s.id}`,
       `give credits: npm run grant -- ${s.email} 25 "feedback credits"`,

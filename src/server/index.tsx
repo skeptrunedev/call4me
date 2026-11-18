@@ -31,6 +31,7 @@ import { purgeZdrCalls } from './services/zdr';
 import { warnLowCreditHolds } from './services/low-credits';
 import { numbers } from './services/numbers';
 import { notifySignups } from './services/signups';
+import { notifyPayments } from './services/payments';
 import { submitIndexNow } from './services/indexnow';
 import { sitemapEntries } from './lib/discovery';
 import { blog, posts } from './routes/blog';
@@ -187,6 +188,12 @@ export default {
       ctx.waitUntil(placeDueCalls(env).then((r) => (r.placed || r.failed || r.missed) && console.log('scheduled calls', JSON.stringify(r))));
       ctx.waitUntil(purgeZdrCalls(env).then((n) => n && console.log('zero data retention calls purged', n)));
       ctx.waitUntil(warnLowCreditHolds(env).then((n) => n && console.log('low credit hold emails sent', n)));
+      // Every minute, not with the signups: Nick hears about a payment as it lands.
+      ctx.waitUntil(
+        notifyPayments({ db: env.DB, messenger: makeMessenger(env), to: adminEmails(env), origin: `https://${env.CANONICAL_HOST}` }).then(
+          (r) => (r.sent || r.failed) && console.log('payment notices', JSON.stringify(r)),
+        ),
+      );
       return;
     }
     ctx.waitUntil(failNeverDialed(env).then((n) => n && console.log('failed never-dialed calls', n)));
