@@ -1065,6 +1065,46 @@ test('a replacement voice session that ends within a minute of starting ends the
   assert.equal(h.opens.length, 2);
 });
 
+test("a call's first voice session that just drops seconds in is replaced once; a replacement that drops as fast ends the call", async (t) => {
+  // erario's FedEx call (call_yo3oe3t4qkjnci9e): the socket closed 10s in with no session.closed or
+  // error, and the call hung up; their next call to the same menu ran fine.
+  const { h, live, said, line, marks } = await liveCall(t);
+  const shutdown = t.mock.method(h.session, 'shutdown', async () => {});
+  await said(live, 'them', 'Welcome to FedEx. This call may be monitored or recorded for quality assurance.');
+  line(10_000, true);
+  live.close();
+  await h.untilOpened(2);
+  const next = h.connected(1);
+  await settle();
+  assert.equal(shutdown.mock.callCount(), 0, 'the call stays up');
+  assert.equal(h.session.live, next);
+  assert.deepEqual(historyOf(next.sent[0]).slice(0, 1), ['user: Welcome to FedEx. This call may be monitored or recorded for quality assurance.']);
+  assert.ok(marks().some((m) => /voice model socket closed: code/.test(m)), 'how the socket closed is logged');
+  assert.ok(marks().some((m) => /voice session rolled over \(after its connection dropped\) at 10s session age/.test(m)));
+  next.message({ type: 'session.started', session: { id: 'live_second' } });
+  await settle();
+  line(5_000, true);
+  next.close();
+  await settle();
+  assert.equal(shutdown.mock.callCount(), 1);
+  assert.equal(h.opens.length, 2);
+});
+
+test('a first voice session that sent an error before it dropped seconds in still ends the call', async (t) => {
+  // While the API's credits ran out (Nov 16), every session said so and closed: a new one would too.
+  t.mock.method(console, 'warn', () => {});
+  const { h, live, said, line } = await liveCall(t);
+  const shutdown = t.mock.method(h.session, 'shutdown', async () => {});
+  await said(live, 'them', 'Hello?');
+  line(3_000);
+  live.message({ type: 'error', error: { code: 'credit_balance_exhausted', message: 'You have no credits remaining.' } });
+  await settle();
+  live.close();
+  await settle();
+  assert.equal(shutdown.mock.callCount(), 1);
+  assert.equal(h.opens.length, 1);
+});
+
 const endCallFrom = (socket: Socket, delegation: string) =>
   socket.message({ type: 'response.event', delegation_id: delegation, event: { type: 'response.output_item.done', item: { type: 'function_call', call_id: `end-${delegation}`, name: 'end_call', arguments: '{}' } } });
 

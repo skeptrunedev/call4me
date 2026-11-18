@@ -41,6 +41,7 @@
     "geo:check": "tsx scripts/geo-check.ts",
     "test": "node --import tsx --test test/*.test.ts",
     "test:menu:live": "tsx scripts/eval-menu-recovery.ts",
+    "test:speech-menu:live": "tsx scripts/eval-speech-menu.ts",
     "build:site": "tsx scripts/build-site.tsx"
   },
   "dependencies": {

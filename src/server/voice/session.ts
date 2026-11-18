@@ -153,7 +153,11 @@ const STANDBY_FRAMES = 4_000 / FRAME_MS;
 const STANDBY_START_LIMIT_MS = SESSION_START_LIMIT_MS;
 /** How long a replaced session's socket is kept open for its session.closed. */
 const RETIRE_MS = 5_000;
-/** Rollovers a call gets. A session that closes within ROLL_MIN_AGE_MS of starting ends the call instead: a new one would only fail the same way. */
+/**
+ * Rollovers a call gets. A session that closes within ROLL_MIN_AGE_MS of starting ends the call
+ * instead, a new one would only fail the same way, unless it is the call's first and its connection
+ * just dropped (liveEnded).
+ */
 const MAX_ROLLOVERS = 4;
 const ROLL_MIN_AGE_MS = 60_000;
 /** Between the wrap-up heads-up and the hard stop. */
@@ -266,6 +270,8 @@ export class VoiceSession extends DurableObject<Env> {
   /** The next look for a rollover's quiet moment, once one is due (maybeRollLive). */
   private rollTimer: ReturnType<typeof setTimeout> | null = null;
   private rollovers = 0;
+  /** GPT-Live sent an error on the live session: if it then closes, it said why. */
+  private liveErrored = false;
   /** A voice session that ended mid-call being replaced (rollOver): why it ended, and the hangup if no replacement starts in time. */
   private replacing: { why: string; timer: ReturnType<typeof setTimeout> } | null = null;
   /** The call clock's latest notice, and the person's answers to ask_user, for a session that takes the call over. */
@@ -586,8 +592,13 @@ export class VoiceSession extends DurableObject<Env> {
       return this.startLive();
     }
     const dropped = closed === undefined || closed === 'expired' || closed === 'connection_lost';
-    // A session that ends soon after it started would only fail the same way again.
-    if (dropped && !this.ended && !this.endingCall && this.liveStartedAt && Date.now() - this.liveStartedAt >= ROLL_MIN_AGE_MS && this.rollovers < MAX_ROLLOVERS) {
+    // A session that ends soon after it started would only fail the same way again: one GPT-Live
+    // ended itself (expired) or that sent an error first, as every session did while the API's
+    // credits ran out (Nov 16). A connection that just dropped, with no word from GPT-Live, gets one
+    // replacement on the call's first session: erario's FedEx call (call_yo3oe3t4qkjnci9e, Nov 18)
+    // lost its session 10s in and hung up, and their next call to the same menu ran fine.
+    const justDropped = (closed === undefined || closed === 'connection_lost') && !this.liveErrored && this.rollovers === 0;
+    if (dropped && !this.ended && !this.endingCall && this.liveStartedAt && (Date.now() - this.liveStartedAt >= ROLL_MIN_AGE_MS || justDropped) && this.rollovers < MAX_ROLLOVERS) {
       return this.rollOver(closed ?? 'its connection dropped');
     }
     await this.shutdown(reason);
@@ -629,6 +640,7 @@ export class VoiceSession extends DurableObject<Env> {
    */
   private resetSessionState(): void {
     this.lastOutputAt = 0;
+    this.liveErrored = false;
     this.backOfficeBusy = false;
     this.delegations.clear();
     this.choosingKey = false;
@@ -856,12 +868,20 @@ export class VoiceSession extends DurableObject<Env> {
       if (this.live === ws) void this.onLive(raw);
       else if (this.standby?.ws === ws) this.onStandby(raw);
     });
-    ws.addEventListener('close', () => {
-      if (this.live === ws) void this.liveEnded('the voice model disconnected');
-      else if (this.standby?.ws === ws) this.dropStandby('its socket closed');
+    ws.addEventListener('close', (ev) => {
+      // The code and reason are all a socket that drops without a session.closed says about why.
+      // After the call ends it closes anyway: GPT-Live drops it (1006) once told session.close.
+      const how = `code ${ev.code}${ev.reason ? ` "${ev.reason.slice(0, 200)}"` : ''}${ev.wasClean ? '' : ', not clean'}`;
+      if (this.live === ws) {
+        if (!this.ended) this.mark(`voice model socket closed: ${how}`);
+        void this.liveEnded('the voice model disconnected');
+      } else if (this.standby?.ws === ws) this.dropStandby(`its socket closed (${how})`);
     });
-    ws.addEventListener('error', () => {
-      if (this.live === ws) void this.liveEnded('the voice model connection failed');
+    ws.addEventListener('error', (ev) => {
+      if (this.live === ws) {
+        if (!this.ended) this.mark(`voice model socket failed: ${(ev as ErrorEvent).message || 'no message'}`);
+        void this.liveEnded('the voice model connection failed');
+      }
       else if (this.standby?.ws === ws) this.dropStandby('its socket failed');
     });
   }
@@ -1120,6 +1140,7 @@ export class VoiceSession extends DurableObject<Env> {
       case 'error': {
         const e = ev as { error: { code?: string; message: string } };
         console.warn('gpt-live error', this.setup?.callId, e.error.code, e.error.message);
+        this.liveErrored = true;
         this.monitoringError = redact(e.error.message, this.setup?.redact ?? []);
         break;
       }
