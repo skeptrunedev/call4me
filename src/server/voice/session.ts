@@ -303,6 +303,15 @@ export class VoiceSession extends DurableObject<Env> {
   private lastHandoffAt = 0;
   private forcedHandoffs = new Set<number>();
   private menuRecovery = new MenuRecovery();
+  /**
+   * Keys on an international call go as tones in our own audio (Stored.inbandKeys), since some
+   * routes there drop Telnyx's RFC 2833 key events: UAE menus never heard them. Others carry the
+   * events and not the tones: September Hotel Thessaloniki's phone system played its menu on through
+   * both tones of its "press 1", each in the call's recording at normal level (call_ghv3jeflp0erg8il,
+   * Nov 18). So once a menu plays again and gets the key it was just sent, keys go the other way,
+   * until a menu comes back for its key again.
+   */
+  private keysSwapped = false;
   private forcedMenus = 0;
   /** The back office is choosing a menu's key; started by the session, so it has no delegation of its own. */
   private choosingKey = false;
@@ -532,6 +541,7 @@ export class VoiceSession extends DurableObject<Env> {
     this.answeredAt = row.answered_at;
     this.hold = new HoldMeter(row.hold_since);
     this.menuRecovery.restore((await this.ctx.storage.get<KeyPress[]>('keys')) ?? []);
+    this.keysSwapped = (await this.ctx.storage.get<boolean>('keysSwapped')) ?? false;
     this.resumed = true;
     this.heardThem = true;
     this.mark('resuming after the session restarted');
@@ -1811,9 +1821,14 @@ export class VoiceSession extends DurableObject<Env> {
         // A second press before the other side says anything lands in whatever menu comes next.
         else if (digits && this.menuRecovery.repeats(digits)) output = `${digits} was already submitted and nothing new has been heard since; do not press it again, wait for the next prompt`;
         else if (digits && s.controlId) {
+          if (s.inbandKeys && this.menuRecovery.sameKeyAgain(digits)) {
+            this.keysSwapped = !this.keysSwapped;
+            void this.ctx.storage.put('keysSwapped', this.keysSwapped);
+            this.mark(`the menu played again for ${digits}: keys go as ${this.keysAsTones(s) ? 'tones in our audio' : 'Telnyx key events'} now`);
+          }
           const snapshot = this.menuRecovery.snapshot();
           await this.pressKeys(s, s.controlId, digits);
-          if (s.keyBeep && !s.inbandKeys) this.playInCall(beepFrames(), `played the key beep for ${digits}`);
+          if (s.keyBeep && !this.keysAsTones(s)) this.playInCall(beepFrames(), `played the key beep for ${digits}`);
           this.menuRecovery.submitted(digits, snapshot, Date.now());
           // A session taking over after a reset is told which keys went in (callSoFar), not that none did.
           void this.ctx.storage.put('keys', this.menuRecovery.pressed());
@@ -1839,13 +1854,19 @@ export class VoiceSession extends DurableObject<Env> {
     }
   }
 
+  /** Whether keys go as tones in our own audio, not as Telnyx's RFC 2833 events (keysSwapped). */
+  private keysAsTones(s: Stored): boolean {
+    return Boolean(s.inbandKeys) && !this.keysSwapped;
+  }
+
   /**
    * Press keys on the other side's phone menu: RFC 2833 events through Telnyx for +1 numbers,
-   * tones in our own audio elsewhere (only one of the two, so no menu hears a key twice).
+   * tones in our own audio elsewhere until a menu didn't hear them (keysSwapped). Only one of the
+   * two at a time, so no menu hears a key twice.
    * Any of the caller's speech still queued at Telnyx is cleared first so it doesn't mask the tones.
    */
   private async pressKeys(s: Stored, controlId: string, digits: string): Promise<void> {
-    if (!s.inbandKeys) return telnyx(this.env).sendDtmf(controlId, digits);
+    if (!this.keysAsTones(s)) return telnyx(this.env).sendDtmf(controlId, digits);
     this.playInCall(dtmfFrames(digits), `played keypad tones ${digits}`);
   }
 

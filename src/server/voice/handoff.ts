@@ -224,6 +224,27 @@ export type KeyPress = { digits: string; prompt: string };
  */
 export const KEY_TRANSCRIPT_LAG_MS = 2_000;
 
+/** A prompt's consecutive word pairs, accents and case aside: enough of a menu's wording to tell it from another menu's. */
+function wordPairs(text: string): Set<string> {
+  const words = text.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '').match(/[\p{L}\p{N}]+/gu) ?? [];
+  return new Set(words.slice(1).map((word, i) => `${words[i]} ${word}`));
+}
+
+/**
+ * Whether two prompts are one menu played again: nearly all of the shorter one's word pairs are in
+ * the other. A looping recording is cut at different points each time it is transcribed, while a
+ * submenu that takes the same key ("for reservations press 1" after "for English press 1") shares
+ * the "press 1" phrasing and little of the rest.
+ */
+export function sameMenu(a: string, b: string): boolean {
+  const [x, y] = [wordPairs(a), wordPairs(b)];
+  const [shorter, longer] = x.size <= y.size ? [x, y] : [y, x];
+  if (shorter.size < 4) return false;
+  let shared = 0;
+  for (const pair of shorter) if (longer.has(pair)) shared++;
+  return shared / shorter.size >= 0.8;
+}
+
 /** Fresh IVR input is tracked separately: a transcript line can span several menus. */
 export class MenuRecovery {
   private input = '';
@@ -314,6 +335,15 @@ export class MenuRecovery {
   /** The same keys again with nothing new heard since they went in: a duplicate, not a fresh choice. */
   repeats(digits: string): boolean {
     return this.attempts.at(-1)?.digits === digits && this.keyUnanswered();
+  }
+
+  /**
+   * The menu the last key answered has played again and gets that same key: the key most likely
+   * never registered, rather than a new menu that happens to take it too.
+   */
+  sameKeyAgain(digits: string): boolean {
+    const last = this.attempts.at(-1);
+    return last?.digits === digits && !this.keyUnanswered() && sameMenu(last.prompt, this.snapshot().text);
   }
 
   /** A key went in and the other side has said nothing since, past the rest of the prompt it answered. */

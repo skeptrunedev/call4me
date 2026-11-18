@@ -337,3 +337,85 @@ test('a menu that never answers the key releases the caller after the hold', asy
   assert.equal(heard(), 1, 'never held for good when nothing answers');
 });
 
+
+// September Hotel Thessaloniki's menu as call_ghv3jeflp0erg8il transcribed it, Nov 18.
+const thessalonikiMenu =
+  'Ευχαριστούμε που καλέσατε τη September Hotel Θεσσαλονίκη. Μέλος της Hotel Brain. Thank you for calling September Hotel Thessaloniki member of Hotel Brain. For English, please press zero. Για την υποδοχή του September Hotel, παρακαλώ πατήστε το ένα. Για το τμήμα κρατήσεων πιέστε το δύο. Για το σπα, πατήστε το τρία.';
+
+function telnyxKeys(t: TestContext): string[] {
+  const keys: string[] = [];
+  t.mock.method(globalThis, 'fetch', async (input: string | URL | Request, init?: RequestInit) => {
+    assert.equal(new URL(input instanceof Request ? input.url : input).pathname, '/v2/calls/test-control/actions/send_dtmf');
+    keys.push(JSON.parse(String(init?.body)).digits);
+    return Response.json({ data: {} });
+  });
+  return keys;
+}
+
+test("a menu abroad that plays again for the key just sent as tones gets it as Telnyx key events, and as tones again if those aren't heard either", async (t) => {
+  const h = harness(t);
+  h.session.setup.inbandKeys = true;
+  const log = t.mock.method(console, 'log', () => {});
+  const keys = telnyxKeys(t);
+  const tones = () => h.session.phone.sent.filter((m: any) => m.event === 'media').length;
+
+  await h.input(thessalonikiMenu);
+  await h.keypress('1');
+  await h.response('response.completed');
+  assert.deepEqual(keys, []);
+  assert.equal(tones(), dtmfFrames('1').length, 'the first press is a tone in our audio');
+
+  t.mock.timers.tick(40_000);
+  await h.input(` περιμένετε ${thessalonikiMenu}`);
+  await h.keypress('1');
+  await h.response('response.completed');
+  assert.deepEqual(keys, ['1'], 'the menu played on: the same key goes as an RFC 2833 event');
+  assert.equal(tones(), dtmfFrames('1').length);
+  assert.ok(log.mock.calls.some((c: any) => /the menu played again for 1: keys go as Telnyx key events now/.test(String(c.arguments[0]))));
+  assert.equal(await h.session.ctx.storage.get('keysSwapped'), true, 'a session taking over after a reset keeps sending them that way');
+
+  t.mock.timers.tick(40_000);
+  await h.input(` περιμένετε ${thessalonikiMenu}`);
+  await h.keypress('1');
+  await h.response('response.completed');
+  assert.deepEqual(keys, ['1']);
+  assert.equal(tones(), 2 * dtmfFrames('1').length, 'not heard that way either: tones again');
+});
+
+test('a key abroad that moved the menu on keeps going as tones, even when the next menu takes the same key', async (t) => {
+  const h = harness(t);
+  h.session.setup.inbandKeys = true;
+  const keys = telnyxKeys(t);
+  await h.input('Thank you for calling Hotel Lux. For English, press 1. Για ελληνικά, πατήστε το δύο.');
+  await h.keypress('1');
+  await h.response('response.completed');
+  t.mock.timers.tick(5_000);
+  await h.input(' For reservations, press 1. For the restaurant, press 2. For all other questions, press 3.');
+  await h.keypress('1');
+  await h.response('response.completed');
+  assert.deepEqual(keys, []);
+  assert.equal(h.session.phone.sent.filter((m: any) => m.event === 'media').length, 2 * dtmfFrames('1').length);
+});
+
+test('a +1 menu that plays again for its key keeps getting Telnyx key events', async (t) => {
+  const h = harness(t);
+  const keys = telnyxKeys(t);
+  await h.input('For billing, press 1. For technical support, press 2. For anything else, press 3.');
+  await h.keypress('1');
+  await h.response('response.completed');
+  t.mock.timers.tick(30_000);
+  await h.input(' For billing, press 1. For technical support, press 2. For anything else, press 3.');
+  await h.keypress('1');
+  await h.response('response.completed');
+  assert.deepEqual(keys, ['1', '1']);
+  assert.equal(h.session.phone.sent.filter((m: any) => m.event === 'media').length, 0);
+});
+
+test("one menu transcribed twice is the same menu; a submenu sharing its phrasing isn't", async () => {
+  const { sameMenu } = await import('../src/server/voice/handoff');
+  // Call_gufknn41gz4ykeph's transcript of the same recording, cut differently and split mid-word.
+  const again = 'ίκη Μέλος της Hotel Brain. Thank you for calling September Hotel Thessaloniki. Member of Hotel Brain. For English, please press zero. Για την υποδοχή του September Hotel παρακαλώ πατήστε το ένα. Για το τμήμα κρ';
+  assert.equal(sameMenu(thessalonikiMenu, again), true);
+  assert.equal(sameMenu('For reception, press 1. For reservations, press 2. For the spa, press 3.', 'For reservations, press 1. For cancellations, press 2.'), false);
+  assert.equal(sameMenu('Press 1.', 'Press 1.'), false, 'too short to tell');
+});
