@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { field, origin, ownerKey, stripeFor, viewerKey, visitor, type AppContext, type AppEnv } from '../lib/context';
+import { field, origin, ownerKey, sameOrigin, stripeFor, viewerKey, visitor, type AppContext, type AppEnv } from '../lib/context';
 import { accountPrompt, aiCallAssistantPrompt, callPrompt, companiesPrompt, studentsPrompt, examplesPrompt, voicesPrompt, installPrompt, privacyPrompt, rulesPrompt, supportPrompt, taskPrompt, termsPrompt } from '../lib/prompts';
 import { PAGES } from '../lib/pages';
 import { confirmVerificationInput } from '../lib/number-schema';
@@ -239,9 +239,6 @@ pub.post('/account/numbers/own/remove', async (c) => {
     throw err;
   }
 });
-
-// The calling profile holds personal details, so its forms also refuse cross-site posts (as /sms does).
-const sameOrigin = (c: AppContext) => c.req.header('origin') === origin(c) && c.req.header('sec-fetch-site') !== 'cross-site';
 
 /** Every field is in the form, so an emptied field is removed, as in call4me_save_profile. */
 pub.post('/account/profile', async (c) => {

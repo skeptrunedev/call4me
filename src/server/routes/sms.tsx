@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { field, origin, type AppContext, type AppEnv } from '../lib/context';
+import { field, sameOrigin, type AppContext, type AppEnv } from '../lib/context';
 import { numbers } from '../services/numbers';
 import { smsConsent, SmsConsentError } from '../services/sms-consent';
 import { SmsPage } from '../views/sms';
@@ -21,11 +21,6 @@ async function page(c: AppContext, error?: string) {
     ? await Promise.all([numbers(c.env).ownViews(account.id), smsConsent(c.env.DB).current(account.id)])
     : [[], null];
   return c.html(<SmsPage signedIn={Boolean(account)} ownNumbers={ownNumbers} consent={consent} error={error} saved={c.req.query('saved') === '1'} />, error ? 400 : 200);
-}
-
-// A strict Origin check protects both form actions from cross-site consent changes.
-function sameOrigin(c: AppContext): boolean {
-  return c.req.header('origin') === origin(c) && c.req.header('sec-fetch-site') !== 'cross-site';
 }
 
 sms.get('/sms', (c) => page(c));

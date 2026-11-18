@@ -1,6 +1,6 @@
 import { COOKIE_PREFIX } from './session-credentials';
 import type { BetterAuthOptions } from 'better-auth';
-import { bearer, jwt, magicLink } from 'better-auth/plugins';
+import { bearer, emailOTP, jwt, magicLink } from 'better-auth/plugins';
 import { mcp } from '@better-auth/mcp';
 
 /**
@@ -19,7 +19,7 @@ export interface AuthDeps {
   appName: string;
   google: { clientId: string; clientSecret: string };
   twitter: { clientId: string; clientSecret: string };
-  /** Mails a sign-in link (the email-link sign-in below). */
+  /** Mails a sign-in link and, in the same email, a sign-in code (the email sign-in below). */
   sendSignInLink: (email: string, url: string) => Promise<void>;
 }
 
@@ -28,6 +28,24 @@ export { COOKIE_PREFIX } from './session-credentials';
 const ACCESS_TOKEN_TTL = 7 * 24 * 3600;
 /** Where an emailed sign-in link lands: our page with a button, not the verify endpoint itself. */
 export const SIGN_IN_LINK_PATH = '/login/email';
+/** How long an emailed sign-in link and its code work. An hour: relay addresses and some inboxes deliver minutes late. */
+const SIGN_IN_EMAIL_TTL = 3600;
+
+/**
+ * The email-otp plugin's HTTP endpoints other than signing in with a code. Codes go out only in
+ * the sign-in link's email (lib/auth.ts), so nothing else may mail one, check one, or spend one
+ * on an email change or a password reset.
+ */
+const UNUSED_CODE_PATHS = [
+  '/email-otp/send-verification-otp',
+  '/email-otp/check-verification-otp',
+  '/email-otp/verify-email',
+  '/email-otp/request-password-reset',
+  '/forget-password/email-otp',
+  '/email-otp/reset-password',
+  '/email-otp/request-email-change',
+  '/email-otp/change-email',
+];
 
 export function authOptions(deps: AuthDeps) {
   return {
@@ -56,6 +74,7 @@ export function authOptions(deps: AuthDeps) {
       cookieCache: { enabled: true, maxAge: 5 * 60 },
     },
     rateLimit: { enabled: true, storage: 'database' },
+    disabledPaths: UNUSED_CODE_PATHS,
     advanced: {
       cookiePrefix: COOKIE_PREFIX,
       // Cloudflare sets this to the visitor's address and overwrites any copy the client sends. Without
@@ -68,14 +87,28 @@ export function authOptions(deps: AuthDeps) {
       // Sign-in by emailed link: the only way in for someone who paid at Checkout with an address
       // no Google or X account carries (Apple Pay hands Stripe an iCloud Hide My Email relay).
       magicLink({
-        // An hour: relay addresses and some inboxes deliver minutes late, and the token is single-use.
-        expiresIn: 3600,
+        // Single-use, like the code that comes with it.
+        expiresIn: SIGN_IN_EMAIL_TTL,
         storeToken: 'hashed',
         // Mail scanners open every link in an email, and opening the verify endpoint spends the
         // token. The email points at our page instead, which verifies only when a person clicks.
         sendMagicLink: async ({ email, url }) => {
           const link = new URL(url);
           await deps.sendSignInLink(email, `${new URL(SIGN_IN_LINK_PATH, deps.baseURL)}?${link.searchParams}`);
+        },
+      }),
+      // The sign-in code in the same email, typed on the page that asked for it (POST /login/code).
+      // The link signs in whichever browser opens it, so an app being connected on a computer never
+      // heard back when the email was read on a phone; the code signs in the browser it's typed
+      // into. Six digits with three tries each, and each new email's code replaces the last.
+      emailOTP({
+        otpLength: 6,
+        expiresIn: SIGN_IN_EMAIL_TTL,
+        allowedAttempts: 3,
+        storeOTP: 'hashed',
+        // Its own mailer would send a code without the link; that endpoint is off (UNUSED_CODE_PATHS).
+        sendVerificationOTP: async () => {
+          throw new Error('sign-in codes are mailed with the sign-in link, not on their own');
         },
       }),
       // Lets API clients send the session token as `Authorization: Bearer` instead of a cookie.

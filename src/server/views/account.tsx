@@ -33,9 +33,18 @@ export const LoginPage: FC<{ next: string; error?: string; email?: string; sent?
     {agentPrompt && <CopyBlock id="agent-prompt" text={agentPrompt} label="[ or have your agent connect: copy prompt for your agent ]" rows={12} hidden />}
     {error && <p class="err">{error}</p>}
     {sent && (
-      <p class="notice">
-        sign-in link sent to <b>{email}</b>. open it on this device to finish. it works once, for an hour.
-      </p>
+      <>
+        <p class="notice">
+          we emailed a sign-in code and link to <b>{email}</b>. type the code here, or open the link on this device. they work once, for an hour.
+        </p>
+        <form method="post" action="/login/code" class="email-code">
+          <input type="hidden" name="next" value={next} />
+          <input type="hidden" name="email" value={email} />
+          <label for="login-code">sign-in code</label>
+          <input id="login-code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" maxlength={7} placeholder="123456" required autofocus />{' '}
+          <button type="submit">sign in</button>
+        </form>
+      </>
     )}
     {providers.google && (
       <form method="post" action="/login/google" class="inline">
@@ -53,11 +62,11 @@ export const LoginPage: FC<{ next: string; error?: string; email?: string; sent?
       <input type="hidden" name="next" value={next} />
       <label for="login-email">or with any email</label>
       <input type="email" id="login-email" name="email" placeholder="you@example.com" autocomplete="email" value={email} required />{' '}
-      <button type="submit">email me a sign-in link</button>
+      <button type="submit">{sent ? 'send a new code' : 'email me a sign-in code'}</button>
     </form>
     <p class="small">
       paid before signing in? use the email you paid with and your credits are there. paid with apple pay? apple may have given us an icloud relay address
-      (like name.0w@icloud.com): it's on your receipt from stripe, and the link still reaches your inbox.
+      (like name.0w@icloud.com): it's on your receipt from stripe, and the email still reaches your inbox.
     </p>
     <details>
       <summary class="small">sign in with a password</summary>
@@ -71,10 +80,19 @@ export const LoginPage: FC<{ next: string; error?: string; email?: string; sent?
   </Layout>
 );
 
-/** The emailed sign-in link's page: one click verifies the link (see the GET /login/email route). */
-export const EmailLinkPage: FC<{ params: [string, string][] }> = ({ params }) => (
+/**
+ * The emailed sign-in link's page: one click verifies the link (see the GET /login/email route).
+ * Connecting an app (`connecting`), it says the app only hears back in the browser it started in.
+ */
+export const EmailLinkPage: FC<{ params: [string, string][]; connecting?: boolean }> = ({ params, connecting }) => (
   <Layout title="sign in" page="login">
     <h1>sign in to call4me</h1>
+    {connecting && (
+      <p class="notice">
+        connecting claude, chatgpt or another app on a different device, like your computer? type the 6-digit code from this email there instead. signing in here
+        won't connect it.
+      </p>
+    )}
     <form method="get" action="/api/auth/magic-link/verify" class="inline">
       {params.map(([name, value]) => (
         <input type="hidden" name={name} value={value} />

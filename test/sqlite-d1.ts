@@ -3,8 +3,8 @@ import { DatabaseSync, type SQLInputValue } from 'node:sqlite';
 
 /**
  * D1 for tests that hang on real SQL (partial unique indexes, status changes): every migration run
- * on an in-memory SQLite, behind the prepare/bind/first/all/run and batch calls the services use. Seeded with
- * the accounts acct_alice and acct_bob.
+ * on an in-memory SQLite, behind the prepare/bind/first/all/run, batch and exec calls the services and
+ * better-auth's D1 dialect use. Seeded with the accounts acct_alice and acct_bob.
  */
 export function d1(): D1Database {
   const sqlite = new DatabaseSync(':memory:');
@@ -15,7 +15,16 @@ export function d1(): D1Database {
     args,
     bind: (...next: unknown[]) => statement(sql, next as SQLInputValue[]),
     first: async () => sqlite.prepare(sql).get(...args) ?? null,
-    all: async () => ({ results: sqlite.prepare(sql).all(...args) }),
+    // As on D1, all() runs writes too (better-auth's dialect sends every query through it), with their changes.
+    all: async () => {
+      const prepared = sqlite.prepare(sql);
+      if (prepared.columns().length) {
+        const results = prepared.all(...args);
+        return { results, meta: { changes: 0 } };
+      }
+      const { changes, lastInsertRowid } = prepared.run(...args);
+      return { results: [], meta: { changes: Number(changes), last_row_id: Number(lastInsertRowid) } };
+    },
     run: async () => ({ meta: { changes: Number(sqlite.prepare(sql).run(...args).changes) } }),
   });
   // A batch is one transaction, as on D1: nothing runs between its statements, and one that fails
@@ -34,5 +43,5 @@ export function d1(): D1Database {
       throw err;
     }
   };
-  return { prepare: (sql: string) => statement(sql), batch } as unknown as D1Database;
+  return { prepare: (sql: string) => statement(sql), batch, exec: async (sql: string) => void sqlite.exec(sql) } as unknown as D1Database;
 }

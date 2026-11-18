@@ -9,12 +9,25 @@ import { messengerFor } from './messaging';
 import { ACCOUNT_COLUMNS, accounts, type Account } from '../services/accounts';
 
 /**
+ * The email-sign-in email: a code to type on the page that asked for it, and a link that signs in
+ * whichever browser opens it. The code leads the subject, so a phone's notification shows it.
+ */
+export function signInEmail(url: string, code: string): { subject: string; text: string } {
+  return {
+    subject: `call4me sign-in code: ${code}`,
+    text: `your call4me sign-in code is ${code}\n\ntype it on the page where you asked to sign in. or open this link on that same device:\n\n${url}\n\nthey work once, for an hour. asked more than once? use the newest email. if you didn't ask to sign in, ignore this email.\n`,
+  };
+}
+
+type Auth = ReturnType<typeof betterAuth<ReturnType<typeof authOptions>>>;
+
+/**
  * A better-auth instance per request. Module-scope construction is unreliable on
  * Workers (bindings are per-request and a cached instance can wedge if the first
  * request aborts), and construction is cheap.
  */
-const buildAuth = (env: Env, baseURL: string) =>
-  betterAuth(
+function buildAuth(env: Env, baseURL: string): Auth {
+  const auth: Auth = betterAuth(
     authOptions({
       database: env.DB,
       secret: env.BETTER_AUTH_SECRET,
@@ -22,14 +35,17 @@ const buildAuth = (env: Env, baseURL: string) =>
       appName: env.APP_NAME,
       google: { clientId: env.GOOGLE_CLIENT_ID ?? '', clientSecret: env.GOOGLE_CLIENT_SECRET ?? '' },
       twitter: { clientId: env.X_CLIENT_ID ?? '', clientSecret: env.X_CLIENT_SECRET ?? '' },
-      sendSignInLink: (email, url) =>
-        messengerFor(env).sendEmail(
-          email,
-          'your call4me sign-in link',
-          `open this link to sign in to call4me:\n\n${url}\n\nit works once, for an hour. if you didn't ask to sign in, ignore this email.\n`,
-        ),
+      // The code is made as the link is mailed, after the link's own rate limit let it through: a new
+      // code replaces the one before it, so a refused request must not make one.
+      sendSignInLink: async (email, url) => {
+        const code = await auth.api.createVerificationOTP({ body: { email, type: 'sign-in' } });
+        const { subject, text } = signInEmail(url, code);
+        await messengerFor(env).sendEmail(email, subject, text);
+      },
     }),
   );
+  return auth;
+}
 
 /**
  * One auth instance per database and origin, kept for the isolate's life. Building one runs the

@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { createAuth, withAuthCookies } from '../lib/auth';
-import { field, origin, safeNext, type AppContext, type AppEnv } from '../lib/context';
+import { field, origin, safeNext, sameOrigin, type AppContext, type AppEnv } from '../lib/context';
 import { signInPrompt } from '../lib/prompts';
 import { ConsentPage, EmailLinkPage, LoginPage } from '../views/account';
 
@@ -49,8 +49,8 @@ for (const [path, provider, label] of [
 }
 
 /**
- * Sign-in by emailed link, which also opens an account for a new email. Through the HTTP handler
- * rather than auth.api so better-auth's per-address rate limit guards the mailbox.
+ * Sign-in by email (a link and a code in one email), which also opens an account for a new email.
+ * Through the HTTP handler rather than auth.api so better-auth's per-address rate limit guards the mailbox.
  */
 authRoutes.post('/login/email', async (c) => {
   const form = await c.req.formData();
@@ -64,16 +64,51 @@ authRoutes.post('/login/email', async (c) => {
     }),
   );
   if (res.ok) return c.html(<LoginPage next={next} email={email} sent providers={providers(c)} />);
-  const error = res.status === 429 ? 'too many sign-in links asked for. wait a minute and try again.' : res.status === 400 ? 'that email address does not look right.' : 'could not send the sign-in link. try again.';
+  const error = res.status === 429 ? 'too many sign-in emails asked for. wait a minute and try again.' : res.status === 400 ? 'that email address does not look right.' : 'could not send the sign-in email. try again.';
   if (res.status >= 500) console.error('sign-in link failed', res.status, await res.text().catch(() => ''));
   return c.html(<LoginPage next={next} email={email} error={error} providers={providers(c)} />, res.status === 429 ? 429 : 400);
+});
+
+/** What the code sign-in endpoint's error codes mean to the person typing the code. */
+const CODE_ERRORS: Record<string, string> = {
+  INVALID_OTP: "that code isn't right. check it against the newest sign-in email.",
+  OTP_EXPIRED: 'that code expired. get a new one below.',
+  TOO_MANY_ATTEMPTS: 'too many wrong codes. get a new one below.',
+};
+
+/**
+ * Sign-in by the code in that email, typed into the browser that asked for it. The link signs in
+ * whichever browser opens it: connecting Claude on a computer, vdshustov opened the email on an
+ * iPhone three times, and each time the phone signed in and approved while Claude, waiting on the
+ * computer, never heard back (Nov 18). Through the HTTP handler for its per-address rate limit.
+ */
+authRoutes.post('/login/code', async (c) => {
+  // Another site's form could sign this browser into an account of its choosing.
+  if (!sameOrigin(c)) return c.text('request origin is not allowed', 403);
+  const form = await c.req.formData();
+  const next = safeNext(field(form, 'next'));
+  const email = field(form, 'email', 200);
+  const res = await createAuth(c).handler(
+    new Request(`${origin(c)}/api/auth/sign-in/email-otp`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', origin: origin(c), 'cf-connecting-ip': c.req.header('cf-connecting-ip') ?? '' },
+      body: JSON.stringify({ email, otp: field(form, 'code', 20).replace(/\D/g, '') }),
+    }),
+  );
+  if (res.ok) return withAuthCookies(c.redirect(next, 303), res.headers);
+  const body = (await res.json().catch(() => ({}))) as { code?: string };
+  const error = res.status === 429 ? 'too many tries. wait a minute and try again.' : (body.code && CODE_ERRORS[body.code]) || 'could not sign in with that code. try again.';
+  if (res.status >= 500) console.error('sign-in code failed', res.status, body.code);
+  return c.html(<LoginPage next={next} email={email} sent error={error} providers={providers(c)} />, res.status === 429 ? 429 : 400);
 });
 
 /** Where the emailed link lands. Verifying spends the link, so it waits for a click: mail scanners open every link. */
 authRoutes.get('/login/email', (c) => {
   const url = new URL(c.req.url);
   if (!url.searchParams.get('token')) return c.redirect('/login', 302);
-  return c.html(<EmailLinkPage params={[...url.searchParams]} />);
+  // Signing in for an agent's OAuth flow: the app waits in the browser that started it.
+  const connecting = (url.searchParams.get('callbackURL') ?? '').startsWith('/api/auth/oauth2/authorize');
+  return c.html(<EmailLinkPage params={[...url.searchParams]} connecting={connecting} />);
 });
 
 /** Accounts made with scripts/create-password-user.mjs; there is no password sign-up. */

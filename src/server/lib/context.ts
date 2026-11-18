@@ -25,6 +25,13 @@ export type AppContext = Context<AppEnv>;
 export const origin = (c: AppContext) => new URL(c.req.url).origin;
 
 /**
+ * A form post from one of our own pages. Forms that change an account (consent, the calling
+ * profile) or sign a browser in refuse cross-site posts: another site could otherwise submit them
+ * with values it chose.
+ */
+export const sameOrigin = (c: AppContext) => c.req.header('origin') === origin(c) && c.req.header('sec-fetch-site') !== 'cross-site';
+
+/**
  * An account's API key for the copy prompts on a page shown to its owner. The page then
  * carries a secret, so no shared cache may keep it.
  */
@@ -57,7 +64,8 @@ export const stripeFor = (c: AppContext): Stripe => makeStripe(c.env.STRIPE_SECR
 
 /** Only same-site relative redirects from `next` params. */
 export function safeNext(next: string | undefined | null, fallback = '/'): string {
-  if (!next || !next.startsWith('/') || next.startsWith('//')) return fallback;
+  // Browsers read a backslash as a slash, so "/\evil.com" is "//evil.com", another site.
+  if (!next || !next.startsWith('/') || next[1] === '/' || next[1] === '\\') return fallback;
   return next;
 }
 
