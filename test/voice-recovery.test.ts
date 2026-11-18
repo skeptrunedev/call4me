@@ -1615,25 +1615,62 @@ test('forgetting a zero data retention call deletes its setup after it ended, an
   assert.equal(h.values.size, 0);
 });
 
-test("an incoming call's voice session starts on the socket dialed while its setup was being read", async (t) => {
+test("an incoming call's voice session starts on the socket dialed while its setup was being read, and the call is answered before it has started", async (t) => {
   // Prod callers hung up 3.0s and 3.4s into the ringing while we took 2.5-3.9s to pick up; GPT-Live's
-  // socket alone took 0.1-0.7s of that, after the setup's reads.
+  // socket alone took 0.1-0.7s of that, after the setup's reads. Waiting on session.started too,
+  // call_um9umnbavygg7u6z (2026-11-18) was answered 3.0s in, after its caller hung up 2.5s in: the
+  // session starts (median 0.7s) while Telnyx picks up and connects the phone (median 1.5s).
   const h = harness(t);
   const setup = { ...h.session.setup, answering: true };
   h.session.setup = null;
   h.session.answered = false;
   h.session.answeredAt = 0;
+  h.session.phone = null;
   await h.session.fetch(new Request('https://session/preconnect', { method: 'POST' }));
   await h.untilOpened(1);
   await h.session.fetch(new Request('https://session/setup', { method: 'POST', body: JSON.stringify(setup) }));
   const prewarm = h.session.fetch(new Request('https://session/prewarm', { method: 'POST' }));
   const live = h.connected(0);
-  for (let i = 0; i < 20; i++) await Promise.resolve();
+  assert.equal(await (await prewarm).text(), 'starting');
   assert.equal(live.sent[0].type, 'session.start');
   assert.equal(live.sent[0].session.instructions, 'Test instructions');
-  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'ringing' } }));
-  assert.equal(await (await prewarm).text(), 'ready');
   assert.equal(h.opens.length, 1, 'no second dial');
+
+  // Picked up, the phone's audio arrives before the session has started: it waits, as does the greeting.
+  await h.session.fetch(new Request('https://session/answered', { method: 'POST' }));
+  const stream = new Socket();
+  h.session.attachPhone(stream);
+  await h.session.streamAttached(stream);
+  stream.message({ event: 'media', media: { payload: 'hello-audio' } });
+  t.mock.timers.tick(1);
+  for (let i = 0; i < 20; i++) await Promise.resolve();
+  assert.deepEqual(live.sent.map((m) => m.type), ['session.start']);
+  assert.equal(h.opens.length, 1, 'pickup and the stream reuse the open session');
+
+  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'ringing' } }));
+  t.mock.timers.tick(1);
+  for (let i = 0; i < 20; i++) await Promise.resolve();
+  assert.deepEqual(live.sent.find((m) => m.type === 'session.input_audio.append'), { type: 'session.input_audio.append', audio: 'hello-audio' });
+  assert.ok(live.sent.some((m) => m.type === 'session.instructions.append' && /You just picked up their call/.test(m.content)), 'greeted once the session started');
+});
+
+test('an incoming call whose voice session could not be opened is answered at once, not after the prewarm wait', async (t) => {
+  t.mock.method(console, 'warn', () => {});
+  const h = harness(t);
+  const setup = { ...h.session.setup, answering: true };
+  h.session.setup = null;
+  h.session.answered = false;
+  h.session.answeredAt = 0;
+  h.session.phone = null;
+  await h.session.fetch(new Request('https://session/setup', { method: 'POST', body: JSON.stringify(setup) }));
+  const prewarm = h.session.fetch(new Request('https://session/prewarm', { method: 'POST' }));
+  await h.untilOpened(1);
+  h.opens[0].response.resolve({ status: 503, webSocket: null, text: async () => 'unavailable' } as any);
+  let returned = false;
+  void prewarm.then(() => { returned = true; });
+  for (let i = 0; i < 50 && !returned; i++) await Promise.resolve();
+  assert.equal(returned, true, 'no 2.5s of ringing on a session that will not open');
+  assert.equal(await (await prewarm).text(), 'not open');
 });
 
 test('a call that is not picked up closes the socket dialed for it, and aborts one still dialing', async (t) => {

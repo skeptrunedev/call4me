@@ -256,8 +256,6 @@ export class VoiceSession extends DurableObject<Env> {
   private prewarming: Promise<void> | null = null;
   /** GPT-Live's socket dialed before the call's setup came in (preconnect), until an open takes it. */
   private preconnected: Promise<Response> | null = null;
-  /** Resolved when the voice session reports it has started. */
-  private liveStartedWaiters: (() => void)[] = [];
   private liveConnectAbort: AbortController | null = null;
   /** When each milestone happened, logged as one line per step so a broken call shows where it stopped. */
   private answeredAt = 0;
@@ -390,7 +388,7 @@ export class VoiceSession extends DurableObject<Env> {
         return new Response('ok');
       case '/prewarm':
         await this.prewarmLive(PREWARM_WAIT_MS);
-        return new Response(this.liveReady ? 'ready' : 'not ready');
+        return new Response(this.liveReady ? 'ready' : this.live ? 'starting' : 'not open');
       case '/stream':
         return this.acceptStream(req);
       case '/answered': {
@@ -684,18 +682,24 @@ export class VoiceSession extends DurableObject<Env> {
   /**
    * Answering a call, open the voice session before picking up, so it can speak the moment the
    * call connects: opened once the phone stream attached after pickup, it took about 1.7s, and
-   * callers heard silence before the greeting (Rubin's callbacks). Waits up to `waitMs` for the
-   * session to start. A failed or slow open is not the call's failure: the phone stream opens one
+   * callers heard silence before the greeting (Rubin's callbacks).
+   *
+   * Waits up to `waitMs` for the socket to open and the session's start to be sent, not for the
+   * session to start: GPT-Live starts it while Telnyx picks up. Over 47 callbacks (Nov 15 to 18)
+   * GPT-Live took 0.25-1.3s from its socket opening to the session starting (median 0.7s), and the
+   * first phone audio came 0.9-3.5s after that start, when we answered (median 1.5s): the greeting
+   * waits for the phone anyway (nudgeWhenSilent). Waiting on the start only made the caller ring
+   * longer, and callers hang up in the first ring: call_um9umnbavygg7u6z hung up 2.5s in, and we
+   * answered 3.0s in. A failed or slow open is not the call's failure: the phone stream opens one
    * after pickup as before.
    */
   private async prewarmLive(waitMs: number): Promise<void> {
     const s = await this.load();
     if (!s?.answering || this.live || this.ended || this.answered) return;
-    this.prewarming ??= this.openLive({ prewarm: true }).finally(() => {
+    const opening = (this.prewarming ??= this.openLive({ prewarm: true }).finally(() => {
       this.prewarming = null;
-    });
-    const started = new Promise<void>((resolve) => this.liveStartedWaiters.push(resolve));
-    await Promise.race([started, new Promise((resolve) => setTimeout(resolve, waitMs))]);
+    }));
+    await Promise.race([opening, new Promise((resolve) => setTimeout(resolve, waitMs))]);
   }
 
   /**
@@ -957,7 +961,6 @@ export class VoiceSession extends DurableObject<Env> {
         void this.ctx.storage.put('liveStarted', true);
         // Its id is what OpenAI needs to look into a session, such as one its safety filter ended.
         this.mark(`live session ${session.id} started, expiring in ${Math.round((this.liveEndsAt - this.liveStartedAt) / 1000)}s; flushing ${this.pendingAudio.length} buffered frames`);
-        for (const resolve of this.liveStartedWaiters.splice(0)) resolve();
         this.inputPace = new InputPace();
         for (const a of this.pendingAudio) this.sendInput(a);
         this.pendingAudio = [];

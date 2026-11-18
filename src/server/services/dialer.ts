@@ -285,8 +285,8 @@ const rowsOf = <T>(read: D1Result) => read.results as T[];
  * Callers hang up about 3s into the ringing (two on prod did, at 3.0s and 3.4s, while we took
  * 2.5-3.9s to pick up), and each D1 round trip from the edge costs about 0.1s: what the answer
  * needs is read in one batch, the hold, the row and the deploy lock go in another, all while the
- * voice session comes up and dials GPT-Live. Only the session's start waits for all of it, so the
- * greeting still plays the moment we pick up.
+ * voice session comes up and dials GPT-Live. Only the session's start waits for all of it, and the
+ * answer only for its socket (prewarmLive), so the greeting still plays the moment we pick up.
  */
 export async function answerInbound(env: Env, origin: string, opts: { controlId: string; from: string; to: string }): Promise<void> {
   const id = `call_${newId()}`;
@@ -448,8 +448,9 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     await preconnect;
     try {
       await session.fetch('https://session/setup', { method: 'POST', body: JSON.stringify(setup) });
-      // Open the voice session while it still rings (up to a couple of seconds), so whoever called
-      // hears the greeting as soon as we pick up instead of silence. A failed open just answers.
+      // Open the voice session while it still rings, so whoever called hears the greeting as soon
+      // as we pick up instead of silence. This waits for the session's socket, not its start: GPT-Live
+      // starts it while Telnyx picks up, which takes longer. A failed open just answers.
       await session.fetch('https://session/prewarm', { method: 'POST' }).catch((err) => console.warn('prewarm failed', id, String(err)));
       await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: setup.streamUrl!, callId: id, timeLimitSecs: LIMITS.maxMinutes * 60, record: account.zdr !== 1 });
       pickedUp = true;
