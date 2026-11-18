@@ -519,6 +519,11 @@ export class VoiceSession extends DurableObject<Env> {
 
   /** A stream reaching a fresh instance of a call whose voice session already ran: pick the call back up. */
   private async resumeIfLive(): Promise<void> {
+    // A session this instance started itself is not one that ran before a reset: an incoming
+    // call's opens before pickup (prewarmLive), and Telnyx's stream can attach a moment before the
+    // answered webhook lands. Five callbacks from Nov 12 to 18 were taken for restarts that way, the
+    // call marked as already heard from (call_a5sdu8cc7r4ix82w).
+    if (this.liveStartedAt) return;
     const s = await this.load();
     if (!s || !(await this.ctx.storage.get('liveStarted'))) return;
     const row = await callStore(this.env.DB).byId(s.callId);

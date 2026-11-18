@@ -1654,6 +1654,33 @@ test("an incoming call's voice session starts on the socket dialed while its set
   assert.ok(live.sent.some((m) => m.type === 'session.instructions.append' && /You just picked up their call/.test(m.content)), 'greeted once the session started');
 });
 
+test("an incoming call's stream attaching just before the answered webhook is not taken for a restarted session", async (t) => {
+  // call_a5sdu8cc7r4ix82w (2026-11-18): the session started while it rang, the stream attached, and
+  // the call row was already answered when the answered webhook reached the session.
+  const h = harness(t);
+  const setup = { ...h.session.setup, answering: true };
+  h.session.setup = null;
+  h.session.answered = false;
+  h.session.answeredAt = 0;
+  h.session.phone = null;
+  await h.env.DB.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at, answered_at) VALUES ('recovery_test', 'acct_alice', '+14155550100', 'Callback', 'Take a message', '{}', 'in_progress', 0, ?)`).bind(Date.now()).run();
+  await h.session.fetch(new Request('https://session/setup', { method: 'POST', body: JSON.stringify(setup) }));
+  const prewarm = h.session.fetch(new Request('https://session/prewarm', { method: 'POST' }));
+  await h.untilOpened(1);
+  const live = h.connected(0);
+  await prewarm;
+  await h.session.onLive(JSON.stringify({ type: 'session.started', session: { id: 'ringing' } }));
+  const stream = new Socket();
+  h.session.attachPhone(stream);
+  await h.session.streamAttached(stream);
+  assert.equal(h.session.resumed, false);
+  assert.equal(h.session.heardThem, false);
+  await h.session.fetch(new Request('https://session/answered', { method: 'POST' }));
+  t.mock.timers.tick(1);
+  for (let i = 0; i < 20; i++) await Promise.resolve();
+  assert.ok(live.sent.some((m) => m.type === 'session.instructions.append' && /You just picked up their call/.test(m.content)), 'greeted as a new call');
+});
+
 test('an incoming call whose voice session could not be opened is answered at once, not after the prewarm wait', async (t) => {
   t.mock.method(console, 'warn', () => {});
   const h = harness(t);
