@@ -11,6 +11,13 @@ const KEEP_SECONDS = 86_400;
 
 interface Cached extends UsageTotals { at: number }
 
+/**
+ * The stale copy (by its `at`) this isolate is refreshing. Every page renders the footer, so a
+ * burst of page loads used to start a count of every call each: a scanner's ~160 requests did,
+ * and D1 refused them as overloaded along with the agents' tool calls landing then (2026-11-18).
+ */
+let refreshing: number | null = null;
+
 const keyFor = (url: string) => new Request(new URL('/__usage-totals', url));
 
 /** What the edge cache holds, or null. Never reads D1, so static pages can use it. */
@@ -28,7 +35,13 @@ export async function usage(db: D1Database | D1DatabaseSession, url: string, ctx
     ctx.waitUntil(remember(totals).catch((err) => console.error('usage cache write failed', errorText(err))));
     return totals;
   }
-  if (Date.now() - cached.at > FRESH_MS) ctx.waitUntil(usageTotals(db).then(remember).catch((err) => console.error('usage refresh failed', errorText(err))));
+  if (Date.now() - cached.at > FRESH_MS && refreshing !== cached.at) {
+    const stale = cached.at;
+    refreshing = stale;
+    // The copy is marked fresh before D1 is read, so this location's other isolates serve it meanwhile instead of counting too.
+    const refresh = remember(cached).then(() => usageTotals(db)).then(remember);
+    ctx.waitUntil(refresh.catch((err) => console.error('usage refresh failed', errorText(err))).finally(() => { if (refreshing === stale) refreshing = null; }));
+  }
   return { calls: cached.calls, minutes: cached.minutes };
 }
 

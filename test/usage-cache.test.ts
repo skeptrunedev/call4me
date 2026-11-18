@@ -31,6 +31,30 @@ test('usage reads D1 once, serves the cached copy while fresh, and refreshes a s
   assert.equal((await cachedUsage(url))?.calls, 11);
 });
 
+test('a burst of page loads on a stale copy counts the calls once, and marks the copy fresh before counting', async () => {
+  const cache = installEdgeCache();
+  let reads = 0;
+  let release!: () => void;
+  const counted = new Promise<void>((resolve) => { release = resolve; });
+  const db = { prepare: () => ({ first: async () => { reads++; await counted; return { calls: 12, minutes: 30 }; } }) } as unknown as D1Database;
+  const background: Promise<unknown>[] = [];
+  const ctx = { waitUntil: (p: Promise<unknown>) => background.push(p) };
+  const stale = Date.now() - 61_000;
+  cache.set(new URL('/__usage-totals', url).toString(), Response.json({ calls: 10, minutes: 20, at: stale }));
+
+  const pages = await Promise.all(Array.from({ length: 20 }, () => usage(db, url, ctx)));
+  assert.ok(pages.every((p) => p.calls === 10), 'every page is served the stale copy at once');
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(reads, 1, 'one count, not one per page');
+  const claimed = await cachedUsage(url);
+  assert.equal(claimed?.calls, 10);
+  assert.ok(claimed!.at > stale, 'other isolates see a fresh copy while the count runs');
+
+  release();
+  await Promise.all(background);
+  assert.equal((await cachedUsage(url))?.calls, 12);
+});
+
 test('prebuilt pages get the cached totals in place of the loading placeholder, and are untouched without them', async () => {
   installEdgeCache();
   const html = '<footer><span>© call4me</span><span class="footer-usage" data-site-call-count aria-live="polite">loading call count</span></footer>';
