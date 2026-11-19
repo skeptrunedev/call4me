@@ -27,10 +27,12 @@ export interface Account {
   zdr: number;
   /** 1 when spending is never held back for credits (migrations/0048, fundsOf); 0 for everyone else. */
   unmetered: number;
+  /** 1 when call4me answers calls to the account's numbers (migrations/0050, answerInbound); 0 turns them all away. */
+  answer_calls: number;
 }
 
 /** The columns every Account is read with. */
-export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc, first_touch, reddit_first_visit_id, reddit_last_visit_id, sales_calls, found_via, zdr, unmetered`;
+export const ACCOUNT_COLUMNS = `id, email, display_name, key_prefix, created_at, ga_client_id, ga_signup_at, meta_fbp, meta_fbc, first_touch, reddit_first_visit_id, reddit_last_visit_id, sales_calls, found_via, zdr, unmetered, answer_calls`;
 
 /**
  * What the account can spend: its balance, or without limit when it is unmetered. Call lengths and
@@ -71,6 +73,11 @@ export function accounts(db: D1Database) {
     /** Turn zero data retention on or off for calls placed or answered from now on. */
     async setZdr(accountId: string, on: boolean): Promise<void> {
       await db.prepare(`UPDATE accounts SET zdr = ? WHERE id = ?`).bind(on ? 1 : 0, accountId).run();
+    },
+
+    /** Answer calls to the account's numbers, or turn every one away with a busy signal. */
+    async setAnswerCalls(accountId: string, on: boolean): Promise<void> {
+      await db.prepare(`UPDATE accounts SET answer_calls = ? WHERE id = ?`).bind(on ? 1 : 0, accountId).run();
     },
 
     async saveFoundVia(accountId: string, text: string): Promise<void> {

@@ -94,6 +94,20 @@ test('a caller from no account, or a blocked one, is refused, and the socket dia
   assert.deepEqual(blocked.events, ['session /preconnect', 'telnyx reject (holds 0, rows 0)', 'session /ended']);
 });
 
+test("an account that turned off incoming calls turns every one away, its owner's own phone too, before any hold or row", async () => {
+  const business = await harness();
+  await business.run(`UPDATE accounts SET answer_calls = 0 WHERE id = 'acct_alice'`);
+  await business.answer();
+  assert.deepEqual(business.events, ['session /preconnect', 'telnyx reject (holds 0, rows 0)', 'session /ended']);
+  assert.equal(await business.balanceCents(), 1000);
+
+  const owner = await harness();
+  await owner.run(`UPDATE accounts SET answer_calls = 0 WHERE id = 'acct_alice'`);
+  await owner.run(`INSERT INTO profiles (account_id, fields, updated_at) VALUES ('acct_alice', ?, 0)`, JSON.stringify({ phone: '+1 415 555 0199' }));
+  await owner.answer('+14155550199');
+  assert.deepEqual(owner.events, ['session /preconnect', 'telnyx reject (holds 0, rows 0)', 'session /ended']);
+});
+
 test('a balance under a minute is refused before any hold or row, and the socket dialed for it closes', async () => {
   const h = await harness(20);
   await h.answer();

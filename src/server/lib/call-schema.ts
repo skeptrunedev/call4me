@@ -125,6 +125,7 @@ export const balanceOutput = z.looseObject({
   minutes_left: z.number().int().nullable().describe('null when the account has no credit limit (unlimited)'),
   unlimited: z.boolean().optional().describe('true when calls on this account are never held back for credits'),
   zero_data_retention: z.boolean().optional().describe('true when zero data retention is on: prices above are already 1.5x, and each call\'s content is deleted an hour after it ends'),
+  answers_incoming_calls: z.boolean().optional().describe('false when the user turned off incoming calls on their account page: calls to the account\'s numbers get a busy signal, so businesses can\'t call back on them'),
   phone_number: z.string().nullable(),
   numbers: z.array(z.looseObject({ number: z.string(), e164: z.string() })),
 });

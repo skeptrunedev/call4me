@@ -254,6 +254,7 @@ export const AccountPage: FC<{
       </select>{' '}
       <button type="submit">buy from balance</button>
     </form>
+    <AnsweringBox on={p.account.answer_calls !== 0} />
     <h2>your own number</h2>
     <p class="small">
       calls can show your own phone number instead of a call4me number. we text it a code (or call and read it out) to check it's
@@ -467,6 +468,22 @@ export const SpendingBox: FC<{ usage: UsageView }> = ({ usage: u }) => {
     </>
   );
 };
+
+/** Whether call4me answers calls to the account's numbers (answerInbound): the switch, and what each way means. */
+const AnsweringBox: FC<{ on: boolean }> = ({ on }) => (
+  <>
+    <h2 id="answering">incoming calls</h2>
+    <p class="small">
+      {on ? <b>on.</b> : <b>off.</b>} with it on, call4me answers calls to your numbers: a business calling back finishes the task it was called about, anyone else gets
+      a message taken, and the call is billed like any other. with it off, every call to your numbers gets a busy signal and costs nothing, your own phone's calls
+      included. to still get callbacks then, have your calls show your own number (below).
+    </p>
+    <form method="post" action="/account/answering" class="inline">
+      <input type="hidden" name="on" value={on ? '0' : '1'} />
+      <button type="submit" class={on ? 'linkbutton' : undefined}>{on ? 'turn off incoming calls' : 'turn on incoming calls'}</button>
+    </form>
+  </>
+);
 
 /** Zero data retention (services/zdr.ts): the switch, and what it does and costs. */
 const ZdrBox: FC<{ on: boolean; zdrPricePerMinuteCents: number }> = ({ on, zdrPricePerMinuteCents }) => (

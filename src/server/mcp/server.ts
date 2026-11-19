@@ -79,7 +79,10 @@ export interface McpDeps {
   surface?: Surface;
 }
 
-function instructions(surface: Surface, salesCalls: boolean): string {
+/** What a tool says of an account with incoming calls turned off (accounts.answer_calls). */
+const INCOMING_OFF = "Incoming calls are turned off (the user's choice, on their account page): calls to these numbers get a busy signal and cost nothing, so businesses can't call back on them.";
+
+function instructions(surface: Surface, salesCalls: boolean, answersCalls: boolean): string {
   const agents = surface === 'agents';
   const health = surface !== 'chatgpt';
   return `call4me places real phone calls for the user: ${health ? 'doctor/dentist/vet appointments' : 'vet appointments'}, restaurant bookings, car service and dealership questions, home services, salons, and questions for any business.
@@ -102,7 +105,7 @@ Calls go out from the account's own numbers: its free US number, plus any it bou
 
 ${agents ? `The user can also call from their own phone number: verify it once with call4me_verify_number (the carrier texts it a code; ask the user for it), then pass it as from to call4me_place_call. Only when the user asks for it; it is never picked on its own. Businesses see the user's number (a carrier may refuse it on some international calls), and callbacks ring the user's phone instead of call4me; call4me still rings the user from the call's calling_number when they join.
 
-` : ''}Every call leaves the number the business saw as the callback, unless callback_number names another one (the user's mobile, an assistant's line): then callbacks ring that phone and call4me can't pick them up. If a call ends in voicemail or "we'll call you back", call4me remembers the task for 14 days: when the business calls a call4me number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (call4me_get_call lists its callbacks) and in call4me_list_calls.
+` : ''}Every call leaves the number the business saw as the callback, unless callback_number names another one (the user's mobile, an assistant's line): then callbacks ring that phone and call4me can't pick them up. ${answersCalls ? `If a call ends in voicemail or "we'll call you back", call4me remembers the task for 14 days: when the business calls a call4me number back, it answers and finishes the task within the same facts and flexibility, and the result shows on the original call (call4me_get_call lists its callbacks) and in call4me_list_calls.` : `The user turned off incoming calls on their account page: every call to the account's call4me numbers gets a busy signal, so a business can't call back on them. When a callback matters (a voicemail, "we'll call you back"), call from the user's own verified number or pass callback_number.`}
 
 The caller sounds like a normal person calling for the user. It keeps turns short and does not read the booking back at the end; the recap comes back to you.
 Call businesses and services the user wants to reach, or people who know the call is coming (the user's friends and family, someone who asked to be called). Never call someone who isn't expecting it.${salesCalls ? `
@@ -159,7 +162,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
   const agents = surface === 'agents';
   const health = surface !== 'chatgpt';
   const intake = catalog(surface);
-  const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION, title: 'call4me', websiteUrl: deps.origin }, { instructions: instructions(surface, account.sales_calls === 1), jsonSchemaValidator: new CfWorkerJsonSchemaValidator() });
+  const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION, title: 'call4me', websiteUrl: deps.origin }, { instructions: instructions(surface, account.sales_calls === 1, account.answer_calls !== 0), jsonSchemaValidator: new CfWorkerJsonSchemaValidator() });
   const sched = scheduledCalls(env.DB);
 
   // Each tool call logs one line: the tool, the account, how long it took and how it came out. Never
@@ -356,7 +359,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     'call4me_get_balance',
     titled({
       title: 'Balance and phone numbers',
-      description: 'The prepaid balance, the per-minute price, and the account\'s own call4me phone numbers. During setup, show these numbers and ask the user to save them as a contact named call4me, so phones that screen unknown callers let call4me ring through. Call4me can ring the user\'s personal phone for account verification or to join a call, from that call\'s calling_number. The free US number is assigned on the first call; a null phone_number is normal before then. Callbacks to the calling number finish the unfinished task or take a message.',
+      description: 'The prepaid balance, the per-minute price, and the account\'s own call4me phone numbers. During setup, show these numbers and ask the user to save them as a contact named call4me, so phones that screen unknown callers let call4me ring through. Call4me can ring the user\'s personal phone for account verification or to join a call, from that call\'s calling_number. The free US number is assigned on the first call; a null phone_number is normal before then. Callbacks to the calling number finish the unfinished task or take a message, unless the user turned off incoming calls (answers_incoming_calls false).',
       inputSchema: z.object({}),
       annotations: RO,
     }),
@@ -365,7 +368,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
         const out = await balanceView(env, account);
         const owned = out.numbers;
         const reloadText = out.monthly_reload ? `reloads ${out.monthly_reload.amount} monthly${out.monthly_reload.next ? ` (next ${out.monthly_reload.next})` : ''}` : 'no monthly reload';
-        return ok(`balance ${out.balance} (${out.unlimited ? 'no credit limit on this account' : `~${out.minutes_left} min`} at ${out.price_per_minute}/min; UAE calls ${out.price_per_minute_by_country.AE}/min, Japan ${out.price_per_minute_by_country.JP}/min), ${reloadText}.${out.zero_data_retention ? ' Zero data retention is on (1.5x the price): each call\'s brief, transcript, outcome and recording are deleted an hour after it ends.' : ''} ${owned.length ? `numbers: ${owned.map(numberText).join('; ')}. Show these to the user and suggest saving them as a contact named call4me` : 'number: assigned on the first call. Explain this during setup, then show calling_number from the first call result'}. Call4me may ring the personal phone in the user's profile if a business needs account verification or the user asks to join. They are on the call as soon as they answer; the caller keeps working with them on the line, and they press * or hang up to leave. They can also just listen in (listen_in on call4me_place_call, or mode "listen" on call4me_connect_me) and press 1 to join. Give a heads up before a call that may ring them and before connecting them.`, out);
+        return ok(`balance ${out.balance} (${out.unlimited ? 'no credit limit on this account' : `~${out.minutes_left} min`} at ${out.price_per_minute}/min; UAE calls ${out.price_per_minute_by_country.AE}/min, Japan ${out.price_per_minute_by_country.JP}/min), ${reloadText}.${out.zero_data_retention ? ' Zero data retention is on (1.5x the price): each call\'s brief, transcript, outcome and recording are deleted an hour after it ends.' : ''}${out.answers_incoming_calls ? '' : ` ${INCOMING_OFF}`} ${owned.length ? `numbers: ${owned.map(numberText).join('; ')}. Show these to the user and suggest saving them as a contact named call4me` : 'number: assigned on the first call. Explain this during setup, then show calling_number from the first call result'}. Call4me may ring the personal phone in the user's profile if a business needs account verification or the user asks to join. They are on the call as soon as they answer; the caller keeps working with them on the line, and they press * or hang up to leave. They can also just listen in (listen_in on call4me_place_call, or mode "listen" on call4me_connect_me) and press 1 to join. Give a heads up before a call that may ring them and before connecting them.`, out);
       })()) as never,
   );
 
@@ -463,6 +466,7 @@ function registerPurchaseTools(server: McpServer, deps: McpDeps, guard: (fn: () 
         const [owned, pending, own, countries] = await Promise.all([n.views(account.id), n.pendingViews(account.id), n.ownViews(account.id), n.offers()]);
         const text = [
           owned.length ? `your numbers:\n${owned.map((v) => `- ${numberText(v)}`).join('\n')}` : 'no numbers yet: the free US number is bought on the first call.',
+          ...(account.answer_calls === 0 ? [INCOMING_OFF] : []),
           ...(pending.length ? [`paid for, waiting on the carrier's approval (they activate by themselves and can't place calls until then):\n${pending.map((v) => `- ${pendingText(v)}`).join('\n')}`] : []),
           ...(own.length ? [`the user's own numbers (calls use one only when from names it):\n${own.map((v) => `- ${ownNumberText(v)}`).join('\n')}`] : []),
           `calling rates: ${dollars(zdrPrice(pricePerMinute(env), account.zdr))}/min unless noted; ${Object.entries(DESTINATION_PRICE_CENTS).map(([country, cents]) => `${country} ${dollars(zdrPrice(cents, account.zdr))}/min`).join(', ')}. Calls to an EEA country (such as GR) from an EEA number on the account (such as NL; not GB) are ${dollars(zdrPrice(pricePerMinute(env), account.zdr))}/min.${account.zdr === 1 ? ' Zero data retention is on, so these are already 1.5x, and each call\'s brief, transcript, outcome and recording are deleted an hour after it ends.' : ''}`,

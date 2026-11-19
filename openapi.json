@@ -773,6 +773,10 @@
                       "description": "true when zero data retention is on: prices above are already 1.5x, and each call's content is deleted an hour after it ends",
                       "type": "boolean"
                     },
+                    "answers_incoming_calls": {
+                      "description": "false when the user turned off incoming calls on their account page: calls to the account's numbers get a busy signal, so businesses can't call back on them",
+                      "type": "boolean"
+                    },
                     "phone_number": {
                       "type": [
                         "string",
@@ -3938,7 +3942,7 @@
     "/api/numbers/{number}": {
       "delete": {
         "operationId": "releaseNumber",
-        "description": "Give up one of the account's bought numbers. Its monthly charge stops; what was already paid is not refunded, and the number cannot be gotten back. The free number that came with the account cannot be released. Only do this when the user asks.",
+        "description": "Give up one of the account's bought numbers. Its monthly charge stops; what was already paid is not refunded, and the number cannot be gotten back. The free number that came with the account cannot be released; to stop it answering calls, the user turns off incoming calls on their account page. Only do this when the user asks.",
         "security": [
           {
             "bearerAuth": []

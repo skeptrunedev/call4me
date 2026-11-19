@@ -324,7 +324,9 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     const price = zdrPrice(pricePerMinute(env), account?.zdr ?? 0);
     const balance = rowsOf<{ b: number }>(balanceRead)[0]?.b ?? 0;
     const funds = account ? fundsOf(account, balance) : 0;
-    if (!account || funds < price) {
+    // An account that turned off incoming calls has every one turned away, its owner's own phone
+    // included, before anything is held or written.
+    if (!account || account.answer_calls !== 1 || funds < price) {
       await telnyx(env).reject(opts.controlId);
       return;
     }

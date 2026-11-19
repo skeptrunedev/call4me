@@ -711,7 +711,7 @@ export function numbers(env: Env, messenger: Messenger = makeMessenger(env)) {
       const row = await db.prepare(`SELECT * FROM numbers WHERE account_id = ? AND phone_number = ? AND status IN ('active', 'pending')`).bind(account.id, e164).first<NumberRow>();
       if (!row) throw new NumberError('no such number on this account', 404);
       if (row.status === 'pending') throw new NumberError(`${formatPhone(row.phone_number)} is still waiting on the carrier's approval; it can be released once it's active`, 409);
-      if (row.included) throw new NumberError('the free number that came with the account cannot be released', 409);
+      if (row.included) throw new NumberError("the free number that came with the account cannot be released. to stop it answering calls, the user can turn off incoming calls on their account page", 409);
       await carrier(() => provider.releaseNumber(row.phone_number));
       await db.prepare(`UPDATE numbers SET status = 'released', released_at = ? WHERE id = ?`).bind(now(), row.id).run();
       return numberView({ ...row, status: 'released' });

@@ -281,6 +281,14 @@ pub.post('/account/zdr', async (c) => {
   return c.redirect('/account#zdr', 303);
 });
 
+pub.post('/account/answering', async (c) => {
+  if (!sameOrigin(c)) return c.text('request origin is not allowed', 403);
+  const account = c.get('account');
+  if (!account) return c.redirect('/login?next=/account', 303);
+  await accounts(c.env.DB).setAnswerCalls(account.id, field(await c.req.formData(), 'on', 1) === '1');
+  return c.redirect('/account#answering', 303);
+});
+
 pub.post('/account/reload/stop', async (c) => {
   const account = c.get('account');
   if (!account) return c.redirect('/login?next=/account', 302);
