@@ -2,7 +2,8 @@ import { now } from '../lib/ids';
 import { errorText } from '../lib/errors';
 import { isRecipientRejected, makeMessenger, type Messenger } from '../lib/messaging';
 import { accounts } from './accounts';
-import type { CallRow } from './call-store';
+import { LIMITS, type CallRow } from './call-store';
+import { callPrice } from './dialer';
 import { addCreditsPath } from './drip';
 
 /**
@@ -11,8 +12,19 @@ import { addCreditsPath } from './drip';
  * and loses its place in the queue. The voice session sees that coming and records it on the call
  * (callStore.lowCredits): it alone knows the call's limit, and the voice Worker has no mail
  * credentials. This sends it, every minute, while the call is still on hold and before it wraps up.
- * Credits added in time are held at the next limit like any others.
+ * Credits added in time are held at the next limit like any others, and a warning they made untrue
+ * before it went out is called off instead (fundsNextExtension).
  */
+
+/**
+ * Whether the account can now fund its call's next hold extension in full, the test the voice
+ * session warned on (holdCreditsRunOutAt): credits were added since, and the hold carries on.
+ * call_qz3qenug5hlh2wp0's owner added $10 at 10:17:52 PM PT and was emailed at 10:19 that their
+ * call was about to run out, inviting a second payment.
+ */
+async function fundsNextExtension(env: Env, row: CallRow): Promise<boolean> {
+  return (await accounts(env.DB).fundsCents(row.account_id)) >= LIMITS.holdExtensionMinutes * callPrice(env, row);
+}
 
 /**
  * How long a send keeps its claim. Overlapping cron runs don't send twice, and an interrupted send
@@ -83,6 +95,12 @@ export async function warnLowCreditHolds(env: Env, messenger: Messenger = makeMe
     const claim = await db.prepare(`UPDATE calls SET low_credit_email_claim_until = ?2 WHERE id = ?3 AND ${DUE}`).bind(at, until, id).run();
     if (!claim.meta.changes) continue;
     try {
+      if (await fundsNextExtension(env, row)) {
+        // Called off for good: no deadline is no longer due, and the session warns once per call.
+        await db.prepare(`UPDATE calls SET low_credit_deadline_at = NULL, low_credit_email_claim_until = NULL WHERE id = ? AND low_credit_email_claim_until = ?`).bind(id, until).run();
+        console.log('low credit warning called off, credits were added', id);
+        continue;
+      }
       const account = await accounts(db).byId(row.account_id);
       if (!account) throw new Error('low credit call account missing');
       const link = `https://${env.CANONICAL_HOST}${await addCreditsPath(env.BETTER_AUTH_SECRET, row.account_id)}`;

@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import test, { beforeEach } from 'node:test';
 import { addCreditsPath } from '../src/server/services/drip';
 import { warnLowCreditHolds } from '../src/server/services/low-credits';
-import type { CallRow } from '../src/server/services/call-store';
+import { LIMITS, type CallRow } from '../src/server/services/call-store';
+import { callPrice } from '../src/server/services/dialer';
 import type { Messenger } from '../src/server/lib/messaging';
 import { d1 } from './sqlite-d1';
 
@@ -19,7 +20,7 @@ const row = () => env.DB.prepare(`SELECT * FROM calls WHERE id = 'call_held'`).f
 const set = (sql: string, ...values: unknown[]) => env.DB.prepare(`UPDATE calls SET ${sql} WHERE id = 'call_held'`).bind(...values).run();
 
 beforeEach(async () => {
-  env = { DB: d1(), CANONICAL_HOST: 'call4.me', BETTER_AUTH_SECRET: 'test' } as Env;
+  env = { DB: d1(), CANONICAL_HOST: 'call4.me', BETTER_AUTH_SECRET: 'test', PRICE_PER_MINUTE_CENTS: '25' } as Env;
   sent = []; failure = null;
   // On hold for 42 minutes; the voice session found the credits run out 9 minutes from now.
   await env.DB.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at, answered_at, hold_since, low_credit_at, low_credit_deadline_at, low_credit_minutes)
@@ -40,6 +41,30 @@ test('a call on hold running out of credits gets one email in minutes, with its 
   assert.equal((await row())!.low_credit_email_claim_until, null);
   // A later run, still on hold before the deadline, sends nothing more.
   await warnLowCreditHolds(env, messenger, at + 1 * MIN);
+  assert.equal(sent.length, 1);
+});
+
+/** Credits added since the voice session queued the warning, `short` of its next full extension. */
+const topUp = async (short: number) => {
+  const full = LIMITS.holdExtensionMinutes * callPrice(env, (await row())!);
+  await env.DB.prepare(`INSERT INTO ledger (id, account_id, amount_cents, kind, ref, note, created_at) VALUES ('t1', 'acct_alice', ?, 'topup', 'test:topup', 'card', ?)`).bind(full - short, at).run();
+};
+
+test('credits added since the warning was queued that fund the next extension call it off instead of emailing', async () => {
+  // call_qz3qenug5hlh2wp0: $10 added at 10:17:52 PM PT, and the email still went out at 10:19.
+  await topUp(0);
+  assert.equal(await warnLowCreditHolds(env, messenger, at), 0);
+  assert.equal(sent.length, 0);
+  const called = (await row())!;
+  assert.equal(called.low_credit_deadline_at, null, 'called off, as the watcher reads it');
+  assert.equal(called.low_credit_email_sent_at, null);
+  assert.equal(called.low_credit_email_claim_until, null);
+  assert.equal(await warnLowCreditHolds(env, messenger, at + 1 * MIN), 0, 'and never sent later');
+});
+
+test('credits added short of the next full extension still get the warning', async () => {
+  await topUp(1);
+  assert.equal(await warnLowCreditHolds(env, messenger, at), 1);
   assert.equal(sent.length, 1);
 });
 
