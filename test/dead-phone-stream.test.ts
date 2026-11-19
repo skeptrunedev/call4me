@@ -35,7 +35,7 @@ Object.defineProperty(globalThis, 'WebSocket', { value: Socket, configurable: tr
 
 const flush = async () => { for (let i = 0; i < 5; i++) await new Promise((r) => setImmediate(r)); };
 
-function harness(t: TestContext) {
+function harness(t: TestContext, { attached = true } = {}) {
   t.mock.timers.enable({ apis: ['Date', 'setTimeout'], now: 10_000 });
   const values = new Map<string, unknown>();
   const storage = {
@@ -54,7 +54,7 @@ function harness(t: TestContext) {
   session.live = new Socket();
   session.liveReady = true;
   const phone = new Socket();
-  session.attachPhone(phone);
+  if (attached) session.attachPhone(phone);
   const frames = async (ms: number, reply = (_m: any) => {}) => {
     for (let at = 0; at < ms; at += 20) {
       phone.message({ event: 'media', media: { payload: '/w==' } });
@@ -183,4 +183,68 @@ test('a stream lost while the call rings is reattached when it is answered, not 
   const after = await db.prepare(`SELECT status, cost_cents FROM calls WHERE id = 'dead_stream_test'`).first();
   assert.equal(after.status, 'failed');
   assert.equal(after.cost_cents, 0);
+});
+
+// Century Center Garage (call_phs50yanv5i0fy3s, 2026-11-19): Telnyx's stream never connected
+// (streaming.failed "connection_failed" 3s into dialing), so nothing reached the session to mark the
+// audio lost. Pickup reattached nothing, and the business hung up on 8s of silence.
+test('a stream that never connected is reattached when the call is answered', async (t) => {
+  const h = harness(t, { attached: false });
+  const db = h.session.env.DB;
+  h.session.answered = false;
+  h.session.answeredAt = 0;
+  await db.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at) VALUES ('dead_stream_test', 'acct_alice', '+14155550100', 'Test store', 'Ask', '{}', 'dialing', 0)`).run();
+  Object.assign(h.session.setup, { controlId: 'v3:control', streamUrl: 'wss://voice.call4.me/voice/stream/dead_stream_test/token' });
+  const telnyx: string[] = [];
+  t.mock.method(globalThis, 'fetch', async (input: string | URL | Request) => {
+    telnyx.push(new URL(String(input)).pathname.replace('/v2/calls/v3%3Acontrol/actions/', ''));
+    return new Response('{}', { status: 200 });
+  });
+  await h.session.fetch(new Request('https://session/stream-failed', { method: 'POST' }));
+  assert.deepEqual(telnyx, [], 'nothing is asked of Telnyx while it rings');
+  assert.ok(h.values.has('orphanSince'), 'the call is known to have no stream');
+
+  t.mock.timers.tick(9_000);
+  await db.prepare(`UPDATE calls SET status = 'in_progress', answered_at = ? WHERE id = 'dead_stream_test'`).bind(Date.now()).run();
+  await h.session.fetch(new Request('https://session/answered', { method: 'POST' }));
+  assert.deepEqual(telnyx, ['streaming_stop', 'streaming_start'], 'pickup starts the stream again');
+
+  // As acceptStream takes the reattached stream.
+  h.session.attachPhone(h.phone);
+  await h.session.streamAttached(h.phone);
+  assert.equal(h.session.phone, h.phone);
+  assert.equal(h.values.has('orphanSince'), false, 'the stream is back');
+});
+
+// Mission Plaza Apartments (call_otkulez0v3d533k0, 2026-11-16): answered 2s in, its stream failed to
+// connect 3s after that, and the call failed at 10s with no audio from the phone.
+test('a stream that fails to connect after pickup is reattached at once', async (t) => {
+  const h = harness(t, { attached: false });
+  const db = h.session.env.DB;
+  await db.prepare(`INSERT INTO calls (id, account_id, to_number, business, goal, brief, status, created_at, answered_at) VALUES ('dead_stream_test', 'acct_alice', '+14155550100', 'Test store', 'Ask', '{}', 'in_progress', 0, ?)`).bind(Date.now()).run();
+  Object.assign(h.session.setup, { controlId: 'v3:control', streamUrl: 'wss://voice.call4.me/voice/stream/dead_stream_test/token' });
+  const telnyx: string[] = [];
+  t.mock.method(globalThis, 'fetch', async (input: string | URL | Request) => {
+    telnyx.push(new URL(String(input)).pathname.replace('/v2/calls/v3%3Acontrol/actions/', ''));
+    return new Response('{}', { status: 200 });
+  });
+  await h.session.fetch(new Request('https://session/stream-failed', { method: 'POST' }));
+  assert.deepEqual(telnyx, ['streaming_stop', 'streaming_start']);
+  // Once per loss: a second failure report waits out the reattach instead of starting another.
+  await h.session.fetch(new Request('https://session/stream-failed', { method: 'POST' }));
+  assert.deepEqual(telnyx, ['streaming_stop', 'streaming_start']);
+});
+
+test("a failed stream's report changes nothing while another stream carries the call", async (t) => {
+  const h = harness(t);
+  await h.frames(1_000);
+  const telnyx: string[] = [];
+  t.mock.method(globalThis, 'fetch', async (input: string | URL | Request) => {
+    telnyx.push(new URL(String(input)).pathname);
+    return new Response('{}', { status: 200 });
+  });
+  await h.session.fetch(new Request('https://session/stream-failed', { method: 'POST' }));
+  assert.deepEqual(telnyx, []);
+  assert.equal(h.session.phone, h.phone);
+  assert.equal(h.values.has('orphanSince'), false);
 });

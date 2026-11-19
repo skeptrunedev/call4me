@@ -255,6 +255,7 @@ webhooks.post('/telnyx', async (c) => {
     case 'streaming.failed':
       // The reason, not the raw body: 500 characters of the body ended just before failure_reason.
       console.warn('telnyx media stream failed', callId, p.failure_reason ?? 'no reason given', `leg ${p.call_leg_id ?? '?'} stream ${p.stream_id ?? '?'}`);
+      await sessionFor(c.env, callId).fetch('https://session/stream-failed', { method: 'POST' });
       break;
   }
   return c.text('ok');

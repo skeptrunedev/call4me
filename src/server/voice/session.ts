@@ -426,6 +426,9 @@ export class VoiceSession extends DurableObject<Env> {
         await this.shutdown('hangup webhook');
         return new Response('ok');
       }
+      case '/stream-failed':
+        await this.streamFailed();
+        return new Response('ok');
       // Zero data retention, an hour after the call ended (services/zdr.ts): the stored setup holds
       // its brief and PINs.
       case '/forget': {
@@ -551,6 +554,23 @@ export class VoiceSession extends DurableObject<Env> {
     this.resumed = true;
     this.heardThem = true;
     this.mark('resuming after the session restarted');
+  }
+
+  /**
+   * Telnyx gave up on the call's media stream (streaming.failed) and none is attached here. A stream
+   * that never connected reaches this session no other way: nothing marked the call's audio lost, so
+   * pickup reattached nothing and the business was answered into silence. Century Center Garage's
+   * stream failed to connect 3s into dialing, 9s before pickup, and the business hung up 8s after it
+   * (call_phs50yanv5i0fy3s, 2026-11-19), and three calls on Nov 16 failed at pickup the same way. It is
+   * lost like a stream that dropped (phoneLost): reattached once, now if answered, else at pickup.
+   */
+  private async streamFailed(): Promise<void> {
+    if (this.phone || this.ended) return;
+    const s = await this.load();
+    if (!s) return;
+    this.mark('telnyx could not keep the media stream, and none is attached');
+    if (!(await this.ctx.storage.get('orphanSince'))) await this.ctx.storage.put('orphanSince', Date.now());
+    await this.recoverStream(s, Date.now());
   }
 
   /** The stream dropped without a hang-up: drop the voice session and let the heartbeat reattach or end the call. */
