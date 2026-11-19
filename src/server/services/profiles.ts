@@ -24,7 +24,7 @@ export function profiles(db: D1Database) {
         if (!(key in PROFILE_FIELDS)) throw new ProfileError(`unknown profile field "${key}"; fields are ${Object.keys(PROFILE_FIELDS).join(', ')}`);
         const k = key as ProfileKey;
         const trimmed = (raw ?? '').trim().slice(0, 500);
-        const value = k === 'accent' ? normalizeAccent(trimmed) : k === 'assistant_name' ? normalizeName(trimmed) : trimmed;
+        const value = k === 'accent' ? normalizeAccent(trimmed) : k === 'assistant_name' ? normalizeName(trimmed) : k === 'voice' ? trimmed.toLowerCase() : trimmed;
         if (!value) {
           delete current[k];
           continue;

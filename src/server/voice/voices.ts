@@ -2,6 +2,9 @@
 export const VOICES = ['marin', 'cedar', 'gleam', 'meridian', 'vesper', 'willow'] as const;
 export type Voice = (typeof VOICES)[number];
 
+/** The voice a call gets when neither it nor the account's profile picks one. */
+export const DEFAULT_VOICE: Voice = 'marin';
+
 /**
  * The regional accent OpenAI documents for a voice (the "Regional influence" column at
  * https://developers.openai.com/api/docs/guides/live-conversations). Only the voices people pick

@@ -1,4 +1,4 @@
-import { VOICE_ACCENTS, VOICES, type Voice } from '../server/voice/voices';
+import { DEFAULT_VOICE, VOICE_ACCENTS, VOICES, type Voice } from '../server/voice/voices';
 
 /**
  * The five most spoken languages (Ethnologue 2025, total speakers) and the line each sample
@@ -26,6 +26,6 @@ export const sampleAudio = (voice: Voice, code: string) => `/static/voices/${cod
 export const VOICE_SAMPLES: { voice: Voice; audio: string; isDefault: boolean; accent: string | null }[] = VOICES.map((voice) => ({
   voice,
   audio: sampleAudio(voice, 'en'),
-  isDefault: voice === 'marin',
+  isDefault: voice === DEFAULT_VOICE,
   accent: VOICE_ACCENTS[voice] ?? null,
 }));

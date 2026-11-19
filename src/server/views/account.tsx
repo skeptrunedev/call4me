@@ -9,6 +9,7 @@ import { dollars, type Account } from '../services/accounts';
 import type { CountryOffer, NumberView, OwnNumberView, PendingNumberView } from '../services/numbers';
 import { DESTINATION_PRICE_CENTS } from '../lib/rates';
 import { PROFILE_FIELDS, type Profile, type ProfileKey } from '../services/intake';
+import { DEFAULT_VOICE, VOICE_ACCENTS, VOICES } from '../voice/voices';
 import { MIN_TOPUP_CENTS, type Reload } from '../services/topups';
 import { CopyBlock, Layout } from './layout';
 import { CallOnboarding } from './onboarding';
@@ -309,7 +310,7 @@ export const AccountPage: FC<{
       {(Object.keys(PROFILE_FIELDS) as ProfileKey[]).map((k) => (
         <div class="row">
           <label for={`profile-${k}`}>{PROFILE_FIELDS[k].label}</label>
-          <input type="text" id={`profile-${k}`} name={k} value={p.profile[k] ?? ''} maxlength={500} />
+          {k === 'voice' ? <VoiceSelect saved={p.profile.voice} /> : <input type="text" id={`profile-${k}`} name={k} value={p.profile[k] ?? ''} maxlength={500} />}
         </div>
       ))}
       <div class="actions">
@@ -482,6 +483,25 @@ const AnsweringBox: FC<{ on: boolean }> = ({ on }) => (
       <input type="hidden" name="on" value={on ? '0' : '1'} />
       <button type="submit" class={on ? 'linkbutton' : undefined}>{on ? 'turn off incoming calls' : 'turn on incoming calls'}</button>
     </form>
+  </>
+);
+
+/**
+ * The voice every call the account places or answers uses (services/intake.ts voiceOf), one of
+ * the voices on /voices. The default option is blank, so saving leaves the field unset.
+ */
+const VoiceSelect: FC<{ saved: string | undefined }> = ({ saved }) => (
+  <>
+    <select id="profile-voice" name="voice">
+      {VOICES.map((v) => (
+        <option value={v === DEFAULT_VOICE ? '' : v} selected={v === DEFAULT_VOICE ? !saved || saved === v : saved === v}>
+          {v}
+          {v === DEFAULT_VOICE ? ' (default)' : ''}
+          {VOICE_ACCENTS[v] ? ` (${VOICE_ACCENTS[v]!.toLowerCase()} accent)` : ''}
+        </option>
+      ))}
+    </select>{' '}
+    <a href="/voices" class="small">hear each voice</a>
   </>
 );
 

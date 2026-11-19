@@ -282,7 +282,7 @@
                     "maximum": 60
                   },
                   "voice": {
-                    "description": "caller voice (default marin); hear each at https://call4.me/voices",
+                    "description": "caller voice for this call only (default: the profile's voice, else marin); hear each at https://call4.me/voices",
                     "type": "string",
                     "enum": [
                       "marin",
@@ -1131,6 +1131,11 @@
                     "type": "string",
                     "maxLength": 500
                   },
+                  "voice": {
+                    "description": "caller voice",
+                    "type": "string",
+                    "maxLength": 500
+                  },
                   "answering_instructions": {
                     "description": "answering instructions",
                     "type": "string",
@@ -1693,7 +1698,7 @@
                     "maximum": 240
                   },
                   "voice": {
-                    "description": "caller voice (default marin); hear each at https://call4.me/voices",
+                    "description": "caller voice for this call only (default: the profile's voice, else marin); hear each at https://call4.me/voices",
                     "type": "string",
                     "enum": [
                       "marin",
@@ -3009,7 +3014,7 @@
                     "maximum": 240
                   },
                   "voice": {
-                    "description": "caller voice (default marin); hear each at https://call4.me/voices",
+                    "description": "caller voice for this call only (default: the profile's voice, else marin); hear each at https://call4.me/voices",
                     "type": "string",
                     "enum": [
                       "marin",

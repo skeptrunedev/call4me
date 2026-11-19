@@ -11,7 +11,7 @@ import type { Voice } from '../voice/voices';
 import { accounts, fundsOf, type Account } from './accounts';
 import { answeringAccountId, EEA, NumberError, numbers, ringablePhone } from './numbers';
 import { profileOf, profiles } from './profiles';
-import { accentOf, answeringInstructionsOf, assistantNameOf, namePronunciationOf, type Profile, type Surface } from './intake';
+import { accentOf, answeringInstructionsOf, assistantNameOf, namePronunciationOf, voiceOf, type Profile, type Surface } from './intake';
 import { calls, CallError, LIMITS, likelyTask, localTimeIn, openTasks, SECRET_MASK, todayUtc, type Brief, type CallRow, type Outcome, type PlaceCallInput } from './calls';
 import { analytics } from './analytics';
 import { errorText } from '../lib/errors';
@@ -195,7 +195,7 @@ export async function placeCall(
         connectWhen: brief.connect_when ?? null,
         ownerReachable: Boolean(person.phone),
         unattended: execution.unattended,
-        voice: input.voice ?? 'marin',
+        voice: input.voice ?? voiceOf(profile),
       };
       const stream = await streamUrl(env, call.id);
       const setup: SessionSetup = {
@@ -438,7 +438,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
       // Whoever called hears the key go in (a collect call's "press 1 to accept"): send_dtmf alone is silent to a person.
       keyBeep: true,
       person: personFor(origin, account, profile, ringable, opts.to),
-      voice: 'marin',
+      voice: voiceOf(profile),
       maxSeconds: maxMinutes * 60,
       pricePerMinuteCents: price,
       controlId: opts.controlId,

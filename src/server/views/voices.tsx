@@ -39,9 +39,9 @@ export const VoicesPage: FC<{ signedIn: boolean; agentPrompt: string }> = ({ sig
       <h2>calls in other languages</h2>
       <p>tell your agent which language to start in ("speak french first"). on real calls to montreal businesses, the caller held the whole call in french, and when one business answered in french without being asked, the caller replied in french on its own.</p>
       <h2>pick a voice</h2>
-      <p>tell your agent which voice to use when it places the call ("use the gleam voice"). it passes it to the call tool:</p>
+      <p>to use one on every call, placed or answered, pick it under caller voice in your <a href={signedIn ? '/account#profile' : '/login?next=/account%23profile'}>calling profile</a>, or ask your agent to save it ("always use the gleam voice"). for one call only, tell your agent which voice to use when it places the call ("use the gleam voice"). it passes it to the call tool:</p>
       <pre>{`call4me_place_call({ ..., voice: "gleam" })`}</pre>
-      <p>no voice means {VOICE_SAMPLES.find((s) => s.isDefault)!.voice}. every voice introduces itself as your assistant, with no name of its own. if you want one ("hi, I'm Sam, Alex's assistant"), ask your agent to save assistant_name in your profile.</p>
+      <p>with neither, the caller uses {VOICE_SAMPLES.find((s) => s.isDefault)!.voice}. every voice introduces itself as your assistant, with no name of its own. if you want one ("hi, I'm Sam, Alex's assistant"), ask your agent to save assistant_name in your profile.</p>
       <p><a href="/blog/openai-realtime-voices-phone-calls">why the voices work this way</a> / <a href="/examples">listen to real calls</a> / <a href="/mcp">install mcp</a></p>
     </main>
     <script>{raw(AUDIO_SCRIPT)}</script>

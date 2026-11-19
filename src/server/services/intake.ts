@@ -6,12 +6,14 @@
  * Fields that are the same on every call (name, DOB, phone, address, insurance) live in the
  * account's saved profile and are filled from it; per-call fields come with the call.
  */
+import { DEFAULT_VOICE, VOICES, type Voice } from '../voice/voices';
 
 export type ProfileKey =
   | 'full_name'
   | 'name_pronunciation'
   | 'assistant_name'
   | 'accent'
+  | 'voice'
   | 'answering_instructions'
   | 'date_of_birth'
   | 'phone'
@@ -43,6 +45,7 @@ export const PROFILE_FIELDS: Record<ProfileKey, ProfileField> = {
   name_pronunciation: { label: 'name pronunciation', ask: 'Only if the user asks for it, or their name is easy to say wrong: how to say their name, written the way it sounds, stressed syllable in capitals (e.g. "ah-MEER tah-ree-GAHT"). The caller says it exactly this way.', optional: true },
   assistant_name: { label: 'assistant name', ask: 'Only if the user asks for it: a first name the caller introduces itself with ("Hi, I\'m Sam, Alex\'s assistant"). Unset, it is just "Alex\'s assistant".', check: (v) => (/^[\p{L}][\p{L}' -]{0,29}$/u.test(v) ? null : `use a first name, letters only (got "${v}")`), optional: true },
   accent: { label: 'caller accent', ask: 'Only if the user asks for it: the accent or dialect the caller speaks with on every call, e.g. "Austrian German" or "Scottish". Unset, it uses its voice\'s own.', check: (v) => (/^[\p{L}][\p{L}' -]{0,39}$/u.test(v) ? null : `name an accent, letters only, e.g. "Austrian German" (got "${v}")`), optional: true },
+  voice: { label: 'caller voice', ask: `Only if the user asks for it: the voice the caller speaks with on every call, placed or answered, one of ${VOICES.join(', ')} (hear each at https://call4.me/voices). A call's own voice overrides it. Unset, it is ${DEFAULT_VOICE}.`, check: (v) => (isVoice(v) ? null : `pick one of ${VOICES.join(', ')} (got "${v}")`), optional: true },
   answering_instructions: { label: 'answering instructions', ask: 'Only if the user asks for it: standing instructions for calls their call4me number answers, and what it may accept on them without asking (e.g. "Accept collect calls from jails and prisons by pressing 1, then take the inmate\'s name, facility and message").', optional: true },
   date_of_birth: { label: 'date of birth', ask: "What's your date of birth?", check: (v) => (parseDate(v) ? null : 'use a full date like 1990-03-14') },
   phone: { label: 'phone number', ask: "What's the best phone number for them to reach you?", check: (v) => (v.replace(/\D/g, '').length >= 10 ? null : 'use a 10-digit phone number') },
@@ -335,6 +338,14 @@ export const assistantNameOf = (profile: Profile) => profile.assistant_name || n
 /** The accent or dialect the caller holds on every call ("Austrian German"), or null for its voice's own. */
 export const accentOf = (profile: Profile) => profile.accent?.trim() || null;
 
+const isVoice = (v: string): v is Voice => (VOICES as readonly string[]).includes(v);
+
+/** The voice the caller speaks with on every call the account places or answers, unless a call picks its own. */
+export const voiceOf = (profile: Profile): Voice => {
+  const saved = profile.voice?.trim().toLowerCase() ?? '';
+  return isVoice(saved) ? saved : DEFAULT_VOICE;
+};
+
 /** What answered calls may do and accept without asking the owner, e.g. take collect calls from jails; null for just taking messages. */
 /**
  * An accent as agents write it, reduced to letters: "Greek (Athens)" or "Athenian Greek." is
@@ -363,7 +374,7 @@ export interface Resolved {
 const isSelfPay = (v: string | undefined) => Boolean(v && /self[\s-]?pay|no insurance|uninsured|cash/i.test(v));
 
 /** Profile fields about how the caller speaks and answers: the call carries them itself, not as facts. */
-const CALL_STYLE: ReadonlySet<ProfileKey> = new Set(['name_pronunciation', 'assistant_name', 'accent', 'answering_instructions']);
+const CALL_STYLE: ReadonlySet<ProfileKey> = new Set(['name_pronunciation', 'assistant_name', 'accent', 'voice', 'answering_instructions']);
 
 /**
  * The rest of the owner's saved profile, for a call they make for themselves. A category asks only
