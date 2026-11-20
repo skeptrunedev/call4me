@@ -6,7 +6,7 @@
  * call4me's own transactional mail, so a campaign to everyone should drip: --per-day caps each day
  * (e.g. 40,60,80,110,120,140), spread through --hours from the --at time of day, the accounts that
  * have completed calls going first. Several "Subject:" lines rotate across recipients.
- * --skip-from a canceled campaign's state leaves out whoever it already reached.
+ * --skip-from (repeatable) a canceled campaign's state leaves out whoever it already reached.
  */
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, renameSync, unlinkSync, writeFileSync } from 'node:fs';
@@ -241,11 +241,11 @@ function exclusions() {
 async function main() {
   const { values, positionals } = parseArgs({ allowPositionals: true, options: {
     state: { type: 'string' }, file: { type: 'string' }, at: { type: 'string' }, 'per-day': { type: 'string' }, hours: { type: 'string', default: '8' },
-    'skip-from': { type: 'string' },
+    'skip-from': { type: 'string', multiple: true },
   } });
   const [action] = positionals;
   if (positionals.length !== 1 || !['prepare', 'schedule', 'status', 'cancel'].includes(action) || !values.state) {
-    throw new Error('Usage: campaign prepare --file MESSAGE --at UTC_TIMESTAMP [--per-day 40,60,... --hours 8] [--skip-from PRIOR_STATE_JSON] --state PRIVATE_JSON | schedule|status|cancel --state PRIVATE_JSON');
+    throw new Error('Usage: campaign prepare --file MESSAGE --at UTC_TIMESTAMP [--per-day 40,60,... --hours 8] [--skip-from PRIOR_STATE_JSON ...] --state PRIVATE_JSON | schedule|status|cancel --state PRIVATE_JSON');
   }
   const statePath = resolve(values.state);
   if (action === 'prepare') {
@@ -255,8 +255,8 @@ async function main() {
     const drip = values['per-day'] !== undefined;
     if (!drip && message.subjects.length > 1) throw new Error('Rotating subjects needs --per-day, so each day gets every subject');
     // Re-planning a campaign: whoever the earlier one sent to (or still has scheduled) is left out, so no one gets it twice.
-    const prior = values['skip-from'] ? JSON.parse(readFileSync(values['skip-from'], 'utf8')) as Campaign : undefined;
-    const reached = new Set(prior?.recipients.filter(r => r.state === 'scheduled' || r.state === 'scheduling').map(r => r.accountId));
+    const prior = (values['skip-from'] ?? []).map(path => JSON.parse(readFileSync(path, 'utf8')) as Campaign);
+    const reached = new Set(prior.flatMap(c => c.recipients).filter(r => r.state === 'scheduled' || r.state === 'scheduling').map(r => r.accountId));
     const rows = (await engagementOrder(cliD1(), await eligibleRecipients(cliD1(), exclusions()))).filter(row => !reached.has(row.id));
     if (!rows.length) throw new Error('No eligible recipients');
     const times = drip ? dripTimes(rows.length, Date.parse(values.at), values['per-day']!.split(',').map(Number), Number(values.hours)) : [];
