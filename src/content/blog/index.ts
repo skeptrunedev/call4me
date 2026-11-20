@@ -230,6 +230,7 @@ import capitalOneDisputeCharge from './capital-one-dispute-charge.md';
 import pncDisputeCharge from './pnc-dispute-charge.md';
 import wellsFargoDisputeCharge from './wells-fargo-dispute-charge.md';
 import netflixCustomerServiceNumber from './netflix-customer-service-number.md';
+import gptLive11Upgrade from './gpt-live-1-1-upgrade.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -237,6 +238,7 @@ import netflixCustomerServiceNumber from './netflix-customer-service-number.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'gpt-live-1-1-upgrade', markdown: gptLive11Upgrade },
   { slug: 'mediacom-customer-service-number', markdown: mediacomCustomerServiceNumber },
   { slug: 'straight-talk-customer-service-number', markdown: straightTalkCustomerServiceNumber },
   { slug: 'vivid-seats-customer-service-number', markdown: vividSeatsCustomerServiceNumber },

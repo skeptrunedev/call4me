@@ -8,6 +8,7 @@
  * Add subjects for every new article without selecting individual related links.
  */
 export const RELATED_TOPICS: Record<string, string[]> = {
+  'gpt-live-1-1-upgrade': ['agent-software', 'voice-technology'],
   'mediacom-customer-service-number': ['telecom'],
   'straight-talk-customer-service-number': ['telecom'],
   'vivid-seats-customer-service-number': ['venue-activities', 'retail-shopping'],
