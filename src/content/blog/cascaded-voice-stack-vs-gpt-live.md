@@ -57,11 +57,11 @@ OpenAI supports both managed Responses delegation and client delegation. With cl
 
 ## The configuration call4me actually uses
 
-Our voice service configures `gpt-live-1`, a `gpt-5.5` Responses backend, and G.711 μ law audio at 8 kHz. This is the relevant part of the session configuration, with the prompts and tool definitions omitted:
+Our voice service configures `gpt-live-1.1`, a `gpt-5.5` Responses backend, and G.711 μ law audio at 8 kHz. This is the relevant part of the session configuration, with the prompts and tool definitions omitted:
 
 ```json
 {
-  "model": "gpt-live-1",
+  "model": "gpt-live-1.1",
   "audio": {
     "format": { "type": "audio/pcmu", "rate": 8000 },
     "output": { "voice": "marin" }

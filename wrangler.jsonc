@@ -72,7 +72,7 @@
     "APP_NAME": "call4me",
     // US cents per started minute of talk time.
     "PRICE_PER_MINUTE_CENTS": "25",
-    "VOICE_MODEL": "gpt-live-1",
+    "VOICE_MODEL": "gpt-live-1.1",
     "BACK_OFFICE_MODEL": "gpt-5.5"
   },
   "observability": { "enabled": true }

@@ -1208,7 +1208,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/cascaded-voice-stack-vs-gpt-live": {
     "html": "/__pages/aeae359d4c5c3e33.html",
     "markdown": "/__pages/aeae359d4c5c3e33.md",
-    "tokens": 5515
+    "tokens": 5516
   },
   "/blog/cancel-factor": {
     "html": "/__pages/505eb83b629fa414.html",

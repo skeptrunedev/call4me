@@ -18,6 +18,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { VOICE_ACCENTS, VOICES } from '../src/server/voice/voices.ts';
 const LIVE_URL = 'wss://api.openai.com/v1/live/sessions';
+/** The voice model real calls use, so a sample sounds like the call. */
+const MODEL = readFileSync(join(import.meta.dirname, '..', 'wrangler.voice.jsonc'), 'utf8').match(/"VOICE_MODEL"\s*:\s*"([^"]+)"/)?.[1];
+if (!MODEL) throw new Error('VOICE_MODEL must be configured in wrangler.voice.jsonc');
 /**
  * The five most spoken languages (Ethnologue 2025, total speakers). Each has the business's
  * greeting and the caller's line, worded so the line doesn't depend on the voice's gender.
@@ -76,7 +79,7 @@ const outDir = customOut ?? join(import.meta.dirname, '..', 'public', 'static', 
 mkdirSync(outDir, { recursive: true, ...(customOut ? { mode: 0o700 } : {}) });
 const ffmpeg = (...args) => execFileSync('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', ...args]);
 const sampleName = (voice) => lang === 'en' ? voice : `${voice}-${lang}`;
-const sessionConfig = (voice) => ({ model: 'gpt-live-1', instructions: instructionsFor(voice), audio: { format: { type: 'audio/pcmu', rate: 8000 }, output: { voice } } });
+const sessionConfig = (voice) => ({ model: MODEL, instructions: instructionsFor(voice), audio: { format: { type: 'audio/pcmu', rate: 8000 }, output: { voice } } });
 
 /** The business picking up, as 8 kHz μ-law, the same as the phone side of a real call. */
 async function greeting() {
@@ -151,7 +154,7 @@ function record(voice, phone) {
         };
         const accepted = { model: session.model, voice: session.audio?.output?.voice,
           format: session.audio?.format?.type, rate: session.audio?.format?.rate };
-        const expected = { model: 'gpt-live-1', voice, format: 'audio/pcmu', rate: 8000 };
+        const expected = { model: MODEL, voice, format: 'audio/pcmu', rate: 8000 };
         verification = Object.fromEntries(Object.entries(expected).map(([field, value]) =>
           [field, accepted[field] == null ? 'not returned' : accepted[field] === value ? 'matched' : 'mismatch']));
         const mismatches = Object.keys(expected).filter((field) => verification[field] === 'mismatch');

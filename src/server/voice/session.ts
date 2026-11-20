@@ -818,7 +818,7 @@ export class VoiceSession extends DurableObject<Env> {
           event: 'callbay_voice_call',
           userId: row.account_id,
           convoId: s.callId,
-          model: this.env.VOICE_MODEL || 'gpt-live-1',
+          model: this.env.VOICE_MODEL || 'gpt-live-1.1',
           input: redact(s.instructions, s.redact ?? []),
           properties: { direction: row.direction, back_office_model: this.env.BACK_OFFICE_MODEL || 'gpt-5.5' },
         });
@@ -911,7 +911,7 @@ export class VoiceSession extends DurableObject<Env> {
     return {
       type: 'session.start',
       session: {
-        model: this.env.VOICE_MODEL || 'gpt-live-1',
+        model: this.env.VOICE_MODEL || 'gpt-live-1.1',
         instructions: s.instructions,
         ...(input.length ? { input } : {}),
         audio: { format: { type: 'audio/pcmu', rate: 8000 }, output: { voice: s.voice } },

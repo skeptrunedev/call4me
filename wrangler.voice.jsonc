@@ -22,7 +22,7 @@
   // Secrets: OPENAI_API_KEY, TELNYX_API_KEY, TELNYX_CONNECTION_ID, RAINDROP_WRITE_KEY, and
   // STREAM_SECRET (the same value as the site's, which signs the stream URLs).
   "vars": {
-    "VOICE_MODEL": "gpt-live-1",
+    "VOICE_MODEL": "gpt-live-1.1",
     "BACK_OFFICE_MODEL": "gpt-5.5"
   },
   "observability": { "enabled": true }

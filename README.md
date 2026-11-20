@@ -69,7 +69,7 @@ The rest of this README is for working on call4me itself or hosting your own cop
 agent ──MCP──▶ worker ──POST /v2/calls──▶ Telnyx ──PSTN──▶ business
                   ▲                          │ media stream (PCMU, bidirectional RTP)
                   │ webhooks                 ▼
-                  └──────────────── VoiceSession (Durable Object) ◀──WS──▶ GPT-Live (gpt-live-1, audio/pcmu 8k)
+                  └──────────────── VoiceSession (Durable Object) ◀──WS──▶ GPT-Live (gpt-live-1.1, audio/pcmu 8k)
                                                                            └─ back office (Responses model):
                                                                               end_call · ask_user · press_digits
 ```
