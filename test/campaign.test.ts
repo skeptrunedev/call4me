@@ -21,6 +21,8 @@ function fixture() {
     },
     async submissionsForEmail(emailId: string) { events.push(`inspect:${emailId}`); return records.filter(r => r.emailId === emailId); },
     async submissions(ids: string[]) { return { list: records.filter(r => ids.includes(r.id)) }; },
+    async cancelSubmissions(ids: string[]) { return ids; },
+    async destroyEmails(ids: string[]) { return ids; },
   };
   const save = () => savedStates.push(campaign.recipients.map(r => r.state));
   return { campaign, events, records, client, save, savedStates };
@@ -31,7 +33,7 @@ test('campaign snapshots exact content, schedules privately and skips newly supp
   await scheduleCampaign(f.campaign, f.client, f.save, new Set(['one']));
   assert.deepEqual(f.events, ['draft:one@example.com', 'schedule:email:one@example.com']);
   assert.ok(f.savedStates.some(states => states[0] === 'scheduling'));
-  assert.deepEqual(await verifyCampaign(f.campaign, f.client), { sendAt: f.campaign.sendAt, scheduled: 1, remaining: 0, skipped: 1 });
+  assert.deepEqual(await verifyCampaign(f.campaign, f.client), { sendAt: f.campaign.sendAt, lastSendAt: f.campaign.sendAt, scheduled: 1, remaining: 0, skipped: 1, canceled: 0 });
   await scheduleCampaign(f.campaign, f.client, f.save, new Set(['one', 'two']));
   assert.equal(f.events.length, 2, 'repeating the command must not send duplicates or revive skipped users');
 });

@@ -409,11 +409,14 @@ pub.get('/unsubscribe', async (c) => {
   return c.html(<UnsubscribePage accountId={a} sig={s} token={token} />);
 });
 
+// Mail apps' one-click unsubscribe (RFC 8058) POSTs List-Unsubscribe=One-Click to the link
+// itself, so the ids come from its query string when the form doesn't carry them.
 pub.post('/unsubscribe', async (c) => {
   const form = await c.req.formData();
-  const a = field(form, 'a', 100);
-  const s = field(form, 's', 200);
-  const token = field(form, 'token', 200);
+  const param = (name: string, max: number) => field(form, name, max) || (c.req.query(name) ?? '').trim().slice(0, max);
+  const a = param('a', 100);
+  const s = param('s', 200);
+  const token = param('token', 200);
   const valid = (s && await validUnsubscribe(c.env.BETTER_AUTH_SECRET, a, s)) || await validCampaignUnsubscribe(c.env.DB, a, token);
   if (!valid) return c.html(<MessagePage title="link not valid" message="this unsubscribe link is not valid." />, 400);
   await c.env.DB.prepare(`UPDATE accounts SET email_opt_out = 1 WHERE id = ?`).bind(a).run();

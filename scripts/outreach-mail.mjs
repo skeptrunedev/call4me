@@ -100,7 +100,8 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     return context;
   }
 
-  async function createDraft({ to, subject, text, inReplyTo, references, expectedThreadId, attachments = [] }) {
+  // listUnsubscribe is a call4.me /unsubscribe link; with the one-click header, Gmail and Yahoo show their own unsubscribe button.
+  async function createDraft({ to, subject, text, inReplyTo, references, expectedThreadId, attachments = [], listUnsubscribe }) {
     if (!to || !subject || !text?.trim()) throw new Error('Email recipient, subject and body are required');
     const session = await discover();
     const result = await call(session, 'Email/set', {
@@ -112,6 +113,7 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
         htmlBody: [{ partId: 'html', type: 'text/html' }],
         bodyValues: { html: { value: messageHtml(text) } },
         ...(attachments.length ? { attachments } : {}),
+        ...(listUnsubscribe ? { 'header:List-Unsubscribe:asURLs': [listUnsubscribe], 'header:List-Unsubscribe-Post:asText': 'List-Unsubscribe=One-Click' } : {}),
       } },
     });
     const id = result.created?.draft?.id;
