@@ -39,10 +39,13 @@ export function listeningMessage(owner: string): string {
 /**
  * What the caller is told when the person comes on the call. It used to go silent here, so people
  * who joined heard only the business and took the caller for gone. It keeps working instead, but
- * never hangs up on them.
+ * never hangs up on them, and leaves questions for the person to them: Vidéotron asked the account
+ * holder for his date of birth, and the caller said it over him, mishearing the month, then insisted
+ * on its version twice. Two people giving two birthdays failed the identity check and the account
+ * holder was sent to a store (call_bai3hadrpqh08a9r, 2026-11-20).
  */
 export function joinedMessage(owner: string): string {
-  return `${owner} has joined the call. ${owner}, you and the other side can all hear each other now. Keep working on the task as before. When ${owner} speaks, let them finish, and follow their lead if they answer something or tell you what to do. Don't hang up while ${owner} is on the call: they hang up when they're done.`;
+  return `${owner} has joined the call. ${owner}, you and the other side can all hear each other now. Keep working on the task as before. When ${owner} speaks, let them finish, and follow their lead if they answer something or tell you what to do. Questions for ${owner} themselves, like their date of birth, a security answer or their consent, are theirs to answer: stay quiet while they do, and never answer for them or repeat what they said, even if you heard it. Don't hang up while ${owner} is on the call: they hang up when they're done.`;
 }
 
 export function leftMessage(owner: string): string {

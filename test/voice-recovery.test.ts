@@ -407,6 +407,7 @@ test('once the user joins, the caller keeps talking and working, but never hangs
   h.session.personLeg = 'person-leg';
   await h.session.personJoined();
   assert.match(JSON.stringify(live.sent.at(-1)), /Alex Kim has joined the call\..*Keep working on the task as before/);
+  assert.match(JSON.stringify(live.sent.at(-1)), /Questions for Alex Kim themselves.*never answer for them or repeat what they said/, 'identity questions are left to the user');
   assert.ok(!h.phone.sent.some((m: any) => m.event === 'clear'), 'what the caller was saying is not cut off');
   await h.session.onLive(JSON.stringify({ type: 'session.output_audio.delta', delta: 'AAAA' }));
   assert.deepEqual(h.phone.sent.at(-1), { event: 'media', media: { payload: 'AAAA' } });
