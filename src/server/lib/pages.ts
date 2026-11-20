@@ -64,6 +64,7 @@ export const PAGES = {
   companies: { description: `Customer service phone numbers for ${COMPANIES.length} companies, each with a real recorded call, the route we tried and whether we reached a person.`, card: 'companies', path: '/companies' },
   holdTimes: { description: `Recorded customer service call results from ${COMPANIES.length} companies, with measured hold times, outcomes and the route we tried. Free CSV and JSON.`, card: 'holdtimes', path: '/hold-times' },
   superintelligenceCalling: { description: 'Compare personal superintelligence phone calling tools: Muse, Grok Bot, Instinct and Pine. Recorded calls, source evidence and a free CSV and JSON dataset.', card: 'superintelligence', path: '/superintelligence-calling-index' },
+  angryFunny: { description: 'real call4me calls where the other end got mad, suspicious, or just done.', card: 'examples', path: '/angry-funny', noindex: true },
   voices: { description: 'hear every call4me caller voice (marin, cedar, gleam, meridian, vesper, willow) saying the same line at phone quality, and how to pick one for your calls.', card: 'voices', path: '/voices' },
   mcp: { description: 'call4me is a remote MCP server for making phone calls at https://call4.me/mcp. install it in claude code, codex, claude desktop, claude.ai, chatgpt, muse, or grok bot with one prompt.', card: 'mcp', path: '/mcp' },
   login: { description: 'sign in to call4me with google, x, or an emailed link to load credits and connect your AI agent.', card: 'login', path: '/login', noindex: true },

@@ -19,6 +19,8 @@ import { AccountPage, CallPage, NewKeyPage, type CallRecordings } from '../views
 import { AboutPage, AddCreditsPage, HomePage, MessagePage, PricingPage, PrivacyPage, RulesPage, SupportPage, TermsPage, UnsubscribePage, WelcomePage } from '../views/public';
 import { ExamplesPage } from '../views/examples';
 import { VoicesPage } from '../views/voices';
+import { AngryFunnyPage, type AngrySection } from '../views/angry-funny';
+import { exampleAudio } from '../lib/example-audio';
 import { CompaniesPage } from '../views/companies';
 import { SuperintelligenceCallingPage } from '../views/superintelligence-calling';
 import { HoldTimesPage } from '../views/hold-times';
@@ -64,6 +66,20 @@ pub.get('/companies', async (c) => c.html(<CompaniesPage signedIn={signedIn(c)} 
 pub.get('/hold-times', (c) => c.html(<HoldTimesPage signedIn={signedIn(c)} />));
 pub.get('/superintelligence-calling-index', (c) => c.html(<SuperintelligenceCallingPage signedIn={signedIn(c)} />));
 pub.get('/voices', async (c) => c.html(<VoicesPage signedIn={signedIn(c)} agentPrompt={voicesPrompt(origin(c), await viewerKey(c))} />));
+// Unlisted, and its content stays out of the repository: rendered from the private R2 bucket
+// (views/angry-funny.tsx). Missing content or a missing binding is simply not found.
+const UNLISTED = { 'x-robots-tag': 'noindex, nofollow', 'cache-control': 'private, no-store' };
+pub.get('/angry-funny', async (c) => {
+  const content = await c.env.PRIVATE_PAGES?.get('angry-funny/content.json');
+  if (!content) return c.notFound();
+  const sections = await content.json<AngrySection[]>();
+  return c.html(<AngryFunnyPage signedIn={signedIn(c)} sections={sections} />, 200, UNLISTED);
+});
+pub.on(['GET', 'HEAD'], '/angry-funny/clips/:file{angry-[a-z0-9-]+\\.mp3}', async (c) => {
+  const clip = await c.env.PRIVATE_PAGES?.get(`angry-funny/clips/${c.req.param('file')}`);
+  if (!clip) return c.notFound();
+  return exampleAudio(c.req.raw, new Response(clip.body, { headers: { 'content-type': 'audio/mpeg', etag: clip.httpEtag, ...UNLISTED } }));
+});
 
 /**
  * "add funds": straight to Stripe, signed in or not. Credits come in $10 units (the buyer

@@ -189,6 +189,12 @@ audio { width: 100%; display: block; }
 .example-transcript { margin-top: 20px; }
 .example-transcript p { margin: 14px 0; }
 .example-transcript .example-cut { color: var(--muted); padding-left: 16px; border-left: 2px solid #c6c6bd; }
+.angry-sections { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 18px 0 8px; }
+.angry section > h2 { margin-top: 56px; }
+.angry .example h3 { margin-top: 0; font-size: clamp(24px, 2.6vw, 31px); }
+.angry-quotes { margin: 20px 0; padding-left: 18px; border-left: 3px solid var(--accent); }
+.angry-quotes p { margin: 10px 0; font-size: 19px; }
+.angry .example audio { display: block; margin: 14px 0; }
 .page-voices .examples { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; }
 .page-voices .examples > :not(.example) { grid-column: 1 / -1; }
 .page-voices .example { padding: 28px; margin: 20px 0 4px; }
