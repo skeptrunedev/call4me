@@ -28,8 +28,10 @@ function save(file: string, value: unknown) {
   chmodSync(file, 0o600);
 }
 export type Mute = { start: number; end: number; label: string };
+/** A reviewed excerpt of the source, in source seconds. Without one the export keeps the complete timeline. */
+export type Clip = { start: number; end: number };
 /** disguise spans keep a voice audible but pitch and formant shifted, e.g. an account owner who joined the call. */
-export type Manifest = { source: string; sourceSha256: string; reviewed: true; mutes: Mute[]; disguise?: Mute[] };
+export type Manifest = { source: string; sourceSha256: string; reviewed: true; mutes: Mute[]; disguise?: Mute[]; clip?: Clip };
 function validateMutes(mutes: Mute[], duration: number) {
   assert.ok(Array.isArray(mutes), 'mutes must be an array');
   let previousEnd = 0;
@@ -38,6 +40,12 @@ function validateMutes(mutes: Mute[], duration: number) {
     assert.ok(typeof mute.label === 'string' && mute.label.trim(), 'every manual mute needs a reason');
     previousEnd = mute.end;
   }
+}
+/** Mutes on the excerpt's own timeline: shifted to start at zero, cut to the excerpt, dropped when outside it. */
+export function clipMutes(mutes: Mute[], clip: Clip): Mute[] {
+  return mutes
+    .filter(m => m.end > clip.start && m.start < clip.end)
+    .map(m => ({ ...m, start: Math.max(m.start, clip.start) - clip.start, end: Math.min(m.end, clip.end) - clip.start }));
 }
 function muteFilter(mutes: Mute[]) {
   return mutes.length ? `aeval=exprs='val(0)*(${mutes.map(m => `not(between(t,${m.start},${m.end}))`).join('*')})'` : 'anull';
@@ -200,19 +208,24 @@ function loadManifest(file: string, binary: string) {
   const duration = decode(manifest.source, binary).length / 16000;
   validateMutes(manifest.mutes, duration);
   validateMutes(manifest.disguise ?? [], duration);
-  return { manifest, duration };
+  const clip = manifest.clip;
+  if (clip) assert.ok(Number.isFinite(clip.start) && Number.isFinite(clip.end) && clip.start >= 0 && clip.end > clip.start && clip.end <= duration + 0.001, 'clip must lie within the source');
+  return { manifest, duration, clip };
 }
 function exportAudio(manifestFile: string, out: string, binary: string) {
-  const { manifest, duration } = loadManifest(manifestFile, binary);
+  const { manifest, duration, clip } = loadManifest(manifestFile, binary);
   assert.ok(out.endsWith('.mp3'), 'export must use .mp3');
   assert.notEqual(resolve(out), manifest.source, 'cannot overwrite source');
   mkdirSync(dirname(resolve(out)), { recursive: true });
-  // Mono first, sample accurate muting, normal speed and complete timing. Mute
-  // again after normalization/resampling to prevent filters smearing private audio.
+  // Mono first, sample accurate muting, normal speed and complete timing (or the reviewed
+  // excerpt). Mute again after normalization/resampling to prevent filters smearing private audio.
   const mute = muteFilter(manifest.mutes);
-  const graph = `${disguiseGraph(manifest.disguise ?? [])};[voice]${mute},loudnorm=I=-16:TP=-1.5:LRA=11,aresample=24000,${mute}[out]`;
-  ffmpeg(binary, ['-y', '-i', manifest.source, '-vn', '-filter_complex', graph, '-map', '[out]', '-ac', '1', '-ar', '24000', '-c:a', 'libmp3lame', '-b:a', `${exportBitrate(duration)}k`, '-map_metadata', '-1', '-id3v2_version', '0', out]);
-  console.log(JSON.stringify({ file: out, sha256: hash(out), kbps: exportBitrate(duration) }));
+  const trim = clip ? `atrim=start=${clip.start}:end=${clip.end},asetpts=PTS-STARTPTS,` : '';
+  const after = clip ? muteFilter(clipMutes(manifest.mutes, clip)) : mute;
+  const length = clip ? clip.end - clip.start : duration;
+  const graph = `${disguiseGraph(manifest.disguise ?? [])};[voice]${mute},${trim}loudnorm=I=-16:TP=-1.5:LRA=11,aresample=24000,${after}[out]`;
+  ffmpeg(binary, ['-y', '-i', manifest.source, '-vn', '-filter_complex', graph, '-map', '[out]', '-ac', '1', '-ar', '24000', '-c:a', 'libmp3lame', '-b:a', `${exportBitrate(length)}k`, '-map_metadata', '-1', '-id3v2_version', '0', out]);
+  console.log(JSON.stringify({ file: out, sha256: hash(out), kbps: exportBitrate(length) }));
 }
 /** Cloudflare Workers serves static assets of at most 25 MiB; leave headroom for MP3 framing. */
 const MAX_ASSET_BYTES = 24 * 1024 * 1024;
@@ -243,13 +256,14 @@ export function silenceChecks(samples: Float32Array, mutes: Mute[]) {
 }
 async function verify(manifestFile: string, file: string, out: string, binary: string) {
   privatePath(out);
-  const { manifest, duration } = loadManifest(manifestFile, binary);
+  const { manifest, duration: sourceDuration, clip } = loadManifest(manifestFile, binary);
+  const duration = clip ? clip.end - clip.start : sourceDuration;
   const samples = decode(file, binary);
   const exportedDuration = samples.length / 16000;
   assert.ok(Math.abs(duration - exportedDuration) < 0.05, `duration changed: ${duration} vs ${exportedDuration}`);
-  const mutes = silenceChecks(samples, manifest.mutes);
+  const mutes = silenceChecks(samples, clip ? clipMutes(manifest.mutes, clip) : manifest.mutes);
   await transcribe(file, join(out, 'asr'), binary);
-  save(join(out, 'verification.private.json'), { sourceSha256: manifest.sourceSha256, exportSha256: hash(file), sourceDuration: duration, exportedDuration, mutes, verifiedAt: new Date().toISOString(), note: 'ASR requires manual comparison; this report does not establish privacy review or human listening.' });
+  save(join(out, 'verification.private.json'), { sourceSha256: manifest.sourceSha256, exportSha256: hash(file), sourceDuration, clip, expectedDuration: duration, exportedDuration, mutes, verifiedAt: new Date().toISOString(), note: 'ASR requires manual comparison; this report does not establish privacy review or human listening.' });
   console.log(JSON.stringify({ file, duration: exportedDuration, verifiedMutes: mutes.length, out }));
 }
 async function main() {

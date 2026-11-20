@@ -35,6 +35,11 @@ The `reviewed` field records the operator's review, not an automated assertion.
 }
 ```
 
+`clip` is optional: `{ "start": 812.4, "end": 851.0 }` in source seconds exports
+only that reviewed excerpt (mutes keep source times and are shifted onto it).
+Without it the export keeps the complete source timeline. Verify then checks
+the excerpt's duration and the mutes that fall inside it.
+
 `disguise` is optional. Each span keeps the voice audible at the same timing,
 with pitch and formants shifted (rubberband, so FFmpeg needs librubberband).
 Use it for an account owner who joined the call. Mutes still apply on top, so
