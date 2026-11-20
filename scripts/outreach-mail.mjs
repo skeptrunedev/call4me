@@ -265,6 +265,29 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     return verified;
   }
 
+  /** Call off up to 100 pending scheduled sends at once, then read each back as canceled. */
+  async function cancelSubmissions(ids) {
+    if (!Array.isArray(ids) || !ids.length || ids.length > 100 || ids.some((id) => typeof id !== 'string' || !id)) throw new Error('Provide 1 to 100 submission ids');
+    const session = await discover();
+    const result = await call(session, 'EmailSubmission/set', { update: Object.fromEntries(ids.map((id) => [id, { undoStatus: 'canceled' }])) });
+    const failed = ids.filter((id) => !Object.hasOwn(result.updated ?? {}, id));
+    if (failed.length) throw new Error(`Cancellation failed for submissions ${failed.join(', ')}: ${result.notUpdated?.[failed[0]]?.type ?? 'missing update confirmation'}`);
+    // Fastmail deletes a canceled submission, so it reads back as not found rather than canceled.
+    const verified = await submissions(ids);
+    const unverified = ids.filter((id) => { const item = verified.list?.find((s) => s.id === id); return item && item.undoStatus !== 'canceled'; });
+    if (unverified.length) throw new Error(`Cancellation was not verified for submissions ${unverified.join(', ')}; inspect before submitting again`);
+    return ids;
+  }
+
+  /** Remove up to 100 emails this tool created, such as the unsent copies of canceled scheduled sends. */
+  async function destroyEmails(ids) {
+    if (!Array.isArray(ids) || !ids.length || ids.length > 100 || ids.some((id) => typeof id !== 'string' || !id)) throw new Error('Provide 1 to 100 email ids');
+    const result = await call(await discover(), 'Email/set', { destroy: ids });
+    const failed = ids.filter((id) => !result.destroyed?.includes(id));
+    if (failed.length) throw new Error(`Removal failed for emails ${failed.join(', ')}: ${result.notDestroyed?.[failed[0]]?.type ?? 'missing confirmation'}`);
+    return result.destroyed;
+  }
+
   async function scheduleDraft({ id, to, subject, text, sendAt }) {
     if (!subject) throw new Error('Approved subject is required');
     const timestamp = typeof sendAt === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(sendAt) ? Date.parse(sendAt) : NaN;
@@ -386,6 +409,8 @@ export function fastmail({ token = process.env.FASTMAIL_JMAP_TOKEN, fetchImpl = 
     submissions,
     submissionsForEmail,
     cancelSubmission,
+    cancelSubmissions,
+    destroyEmails,
     sendReplyDraft,
     replyMessage,
     async reply(message) {

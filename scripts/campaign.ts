@@ -15,7 +15,7 @@ export interface Recipient {
   accountId: string;
   email: string;
   text: string;
-  state: 'prepared' | 'drafted' | 'scheduling' | 'scheduled' | 'skipped';
+  state: 'prepared' | 'drafted' | 'scheduling' | 'scheduled' | 'skipped' | 'canceled';
   emailId?: string;
   submissionId?: string;
 }
@@ -33,6 +33,8 @@ type Client = {
   scheduleDraft(message: { id: string; to: string; subject: string; text: string; sendAt: string }): Promise<{ submissionId: string }>;
   submissionsForEmail(id: string): Promise<Submission[]>;
   submissions(ids: string[]): Promise<{ list: Submission[]; notFound?: string[] }>;
+  cancelSubmissions(ids: string[]): Promise<string[]>;
+  destroyEmails(ids: string[]): Promise<string[]>;
 };
 
 export async function eligibleRecipients(db: D1Database, internal: string[]) {
@@ -100,17 +102,41 @@ export async function scheduleCampaign(campaign: Campaign, client: Client, save:
   }
 }
 
+/**
+ * Call off every scheduled send that hasn't gone out, then remove the unsent copies that scheduling
+ * filed in Sent. A send already released can't be called back, so it stays scheduled and is reported.
+ */
+export async function cancelCampaign(campaign: Campaign, client: Client, save: () => void) {
+  if (campaign.recipients.some(r => r.state === 'scheduling')) throw new Error('A send is mid-schedule; run status first so it is resolved before canceling');
+  const scheduled = campaign.recipients.filter(r => r.state === 'scheduled');
+  for (let offset = 0; offset < scheduled.length; offset += 100) {
+    const batch = scheduled.slice(offset, offset + 100);
+    const current = await client.submissions(batch.map(r => r.submissionId!));
+    const pending = batch.filter(r => current.list.find(s => s.id === r.submissionId)?.undoStatus === 'pending');
+    if (pending.length) await client.cancelSubmissions(pending.map(r => r.submissionId!));
+    // Fastmail deletes a canceled submission: one gone before its send time was canceled, not sent.
+    const gone = (r: Recipient) => !current.list.some(s => s.id === r.submissionId) && Date.parse(campaign.sendAt) > Date.now();
+    const canceled = batch.filter(r => pending.includes(r) || gone(r) || current.list.find(s => s.id === r.submissionId)?.undoStatus === 'canceled');
+    if (canceled.length) await client.destroyEmails(canceled.map(r => r.emailId!));
+    for (const r of canceled) r.state = 'canceled';
+    save();
+  }
+  const released = campaign.recipients.filter(r => r.state === 'scheduled').length;
+  return { canceled: campaign.recipients.filter(r => r.state === 'canceled').length, alreadyReleased: released };
+}
+
 export async function verifyCampaign(campaign: Campaign, client: Client) {
   if (campaign.fingerprint !== fingerprint(campaign)) throw new Error('Campaign content or audience changed');
   const scheduled = campaign.recipients.filter(r => r.state === 'scheduled');
-  const pending = campaign.recipients.filter(r => !['scheduled', 'skipped'].includes(r.state));
+  const pending = campaign.recipients.filter(r => !['scheduled', 'skipped', 'canceled'].includes(r.state));
   for (let offset = 0; offset < scheduled.length; offset += 100) {
     const batch = scheduled.slice(offset, offset + 100);
     const result = await client.submissions(batch.map(r => r.submissionId!));
     for (const recipient of batch) verifyScheduled(result.list.find(s => s.id === recipient.submissionId), recipient, campaign.sendAt);
   }
   return { sendAt: campaign.sendAt, scheduled: scheduled.length, remaining: pending.length,
-    skipped: campaign.recipients.filter(r => r.state === 'skipped').length };
+    skipped: campaign.recipients.filter(r => r.state === 'skipped').length,
+    canceled: campaign.recipients.filter(r => r.state === 'canceled').length };
 }
 
 function exclusions() {
@@ -125,8 +151,8 @@ async function main() {
     state: { type: 'string' }, file: { type: 'string' }, at: { type: 'string' },
   } });
   const [action] = positionals;
-  if (positionals.length !== 1 || !['prepare', 'schedule', 'status'].includes(action) || !values.state) {
-    throw new Error('Usage: campaign prepare --file MESSAGE --at UTC_TIMESTAMP --state PRIVATE_JSON | schedule|status --state PRIVATE_JSON');
+  if (positionals.length !== 1 || !['prepare', 'schedule', 'status', 'cancel'].includes(action) || !values.state) {
+    throw new Error('Usage: campaign prepare --file MESSAGE --at UTC_TIMESTAMP --state PRIVATE_JSON | schedule|status|cancel --state PRIVATE_JSON');
   }
   const statePath = resolve(values.state);
   if (action === 'prepare') {
@@ -169,6 +195,10 @@ async function main() {
     } finally {
       unlinkSync(lockPath);
     }
+  }
+  if (action === 'cancel') {
+    console.log(JSON.stringify(await cancelCampaign(campaign, client, save)));
+    return;
   }
   const result = await verifyCampaign(campaign, client);
   console.log(JSON.stringify(result));
