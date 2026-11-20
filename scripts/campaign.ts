@@ -38,6 +38,7 @@ export interface Campaign {
   recipients: Recipient[];
 }
 type Submission = { id: string; emailId: string; sendAt: string; undoStatus: string };
+type Email = { id: string; mailboxIds: Record<string, boolean>; keywords?: Record<string, boolean>; subject?: string; bodyValues?: Record<string, { value: string }> };
 type Client = {
   createDraft(message: { to: string; subject: string; text: string; listUnsubscribe?: string }): Promise<{ id: string }>;
   scheduleDraft(message: { id: string; to: string; subject: string; text: string; sendAt: string }): Promise<{ submissionId: string }>;
@@ -45,6 +46,9 @@ type Client = {
   submissions(ids: string[]): Promise<{ list: Submission[]; notFound?: string[] }>;
   cancelSubmissions(ids: string[]): Promise<string[]>;
   destroyEmails(ids: string[]): Promise<string[]>;
+  status(): Promise<{ sentMailboxId: string }>;
+  read(ids: string[]): Promise<{ list: Email[] }>;
+  search(query: { filter: object; limit: number }): Promise<{ ids: string[] }>;
 };
 
 export async function eligibleRecipients(db: D1Database, internal: string[]) {
@@ -176,19 +180,55 @@ export async function cancelCampaign(campaign: Campaign, client: Client, save: (
   return { canceled: campaign.recipients.filter(r => r.state === 'canceled').length, alreadyReleased: released };
 }
 
+/**
+ * Where every scheduled email stands. Fastmail drops a submission once it sends, so an email
+ * whose submission is gone must be in Sent; anything else is an error to inspect. Bounces are
+ * the mail-server notices since the campaign was prepared that name a recipient.
+ */
 export async function verifyCampaign(campaign: Campaign, client: Client) {
   if (campaign.fingerprint !== fingerprint(campaign)) throw new Error('Campaign content or audience changed');
   const scheduled = campaign.recipients.filter(r => r.state === 'scheduled');
   const pending = campaign.recipients.filter(r => !['scheduled', 'skipped', 'canceled'].includes(r.state));
+  const sent: Recipient[] = [];
+  let queued = 0;
   for (let offset = 0; offset < scheduled.length; offset += 100) {
     const batch = scheduled.slice(offset, offset + 100);
     const result = await client.submissions(batch.map(r => r.submissionId!));
-    for (const recipient of batch) verifyScheduled(result.list.find(s => s.id === recipient.submissionId), recipient, sendAtOf(campaign, recipient));
+    const gone = batch.filter(r => !result.list.some(s => s.id === r.submissionId));
+    for (const recipient of batch.filter(r => !gone.includes(r))) {
+      verifyScheduled(result.list.find(s => s.id === recipient.submissionId), recipient, sendAtOf(campaign, recipient));
+      queued++;
+    }
+    if (!gone.length) continue;
+    const { sentMailboxId } = await client.status();
+    const emails = await client.read(gone.map(r => r.emailId!));
+    for (const recipient of gone) {
+      const email = emails.list.find(e => e.id === recipient.emailId);
+      if (!email?.mailboxIds[sentMailboxId] || email.keywords?.$draft) throw new Error(`Email for account ${recipient.accountId} is neither scheduled nor sent; inspect ${recipient.emailId}`);
+      sent.push(recipient);
+    }
   }
+  const failures = sent.length ? await bounces(campaign, sent, client) : { bounced: [], delayed: [] };
   const times = campaign.recipients.map(r => sendAtOf(campaign, r)).sort();
-  return { sendAt: campaign.sendAt, lastSendAt: times[times.length - 1], scheduled: scheduled.length, remaining: pending.length,
+  return { sendAt: campaign.sendAt, lastSendAt: times[times.length - 1], scheduled: scheduled.length, sent: sent.length, queued,
+    bounced: failures.bounced.length, delayed: failures.delayed.length, bouncedAccounts: failures.bounced, remaining: pending.length,
     skipped: campaign.recipients.filter(r => r.state === 'skipped').length,
     canceled: campaign.recipients.filter(r => r.state === 'canceled').length };
+}
+
+async function bounces(campaign: Campaign, sent: Recipient[], client: Client) {
+  const notices = await client.search({ limit: 100, filter: { operator: 'AND', conditions: [{ after: campaign.createdAt },
+    { operator: 'OR', conditions: [{ from: 'mailer-daemon' }, { from: 'postmaster' }] }] } });
+  const bounced = new Set<string>(), delayed = new Set<string>();
+  for (let offset = 0; offset < notices.ids.length; offset += 100) {
+    for (const notice of (await client.read(notices.ids.slice(offset, offset + 100))).list) {
+      const text = Object.values(notice.bodyValues ?? {}).map(v => v.value).join('\n').toLowerCase();
+      const into = /delayed|still being retried/i.test(notice.subject ?? '') ? delayed : bounced;
+      for (const r of sent) if (text.includes(r.email.toLowerCase())) into.add(r.accountId);
+    }
+  }
+  for (const account of bounced) delayed.delete(account);
+  return { bounced: [...bounced], delayed: [...delayed] };
 }
 
 function exclusions() {
