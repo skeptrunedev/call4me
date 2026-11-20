@@ -20,6 +20,7 @@
     "fernand": "node scripts/fernand-sync.mjs",
     "number": "tsx scripts/number.ts",
     "discount": "tsx scripts/discount.ts",
+    "checkout-link": "tsx scripts/checkout-link.ts",
     "staging:connect-test": "tsx scripts/staging-connect-test.ts",
     "staging:time-limit-test": "tsx scripts/staging-time-limit-test.ts",
     "staging:inbound-answer-test": "tsx scripts/staging-inbound-answer-test.ts",
