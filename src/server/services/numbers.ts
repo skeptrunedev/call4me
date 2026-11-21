@@ -269,6 +269,9 @@ export const FROM_HOME = new Set([...EUROPE, 'AE', 'JP', 'TH', 'BR', 'NP', 'UZ',
 /** Every country some account may call: the telephone carrier must allow each of them. */
 const CALLABLE = [...new Set(['US', 'CA', ...FROM_HOME, ...Object.keys(COUNTRIES)])];
 
+/** Whether call4me calls `country` at all, from the free US number or a number bought there. */
+export const placesCallsTo = (country: string) => CALLABLE.includes(country);
+
 /** Whether the account may reach `to`: +1 numbers and FROM_HOME countries always, elsewhere a country it holds a number in. */
 export async function mayCall(db: D1Database, accountId: string, to: Extract<PhoneCheck, { ok: true }>): Promise<boolean> {
   if (to.home || FROM_HOME.has(to.country)) return true;

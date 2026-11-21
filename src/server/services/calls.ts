@@ -3,7 +3,7 @@ import { replayOf, type Idempotency } from '../lib/idempotency';
 import { checkDialable, type PhoneCheck } from '../lib/phone';
 import { accounts, fundsOf, type Account } from './accounts';
 import { catalog, missingMessage, normalizeAccent, normalizeName, PROFILE_FIELDS, resolveIntake, savedContext, type Surface } from './intake';
-import { mayCall, ringablePhone } from './numbers';
+import { mayCall, placesCallsTo, ringablePhone } from './numbers';
 import { profiles } from './profiles';
 
 type Dialable = Extract<PhoneCheck, { ok: true }>;
@@ -79,6 +79,9 @@ export function calls(db: D1Database) {
       if (!to.ok) throw new CallError(to.reason);
       // Abroad, an account calls only FROM_HOME countries and those it holds a number in (services/numbers.ts).
       if (!(await mayCall(db, account.id, to))) {
+        // Where call4me sells no numbers, buying one isn't a way in: Vladislav's agent, calling
+        // Belarus, was told to buy a number there (2026-11-21).
+        if (!placesCallsTo(to.country)) throw new CallError(`call4me doesn't place calls to ${to.country} numbers`, 422);
         throw new CallError(`calling ${to.country} numbers needs a number in ${to.country}: ${surface === 'agents' ? 'see call4me_list_numbers, then buy one with call4me_buy_number' : 'this account has none (call4me_get_balance lists its numbers)'}`, 422);
       }
       if (input.from) {
