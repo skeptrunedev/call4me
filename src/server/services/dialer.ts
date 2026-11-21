@@ -410,10 +410,13 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
     // (a company line keeps its own number), else the number they rang.
     const ownPhone = profile.phone?.trim() && !identity.calling_as ? checkDialable(profile.phone) : null;
     const callbackNumber = likelyBrief?.callback_number ?? (ownPhone?.ok ? ownPhone.e164 : opts.to);
+    // Answered calls are recorded unless zero data retention is on, and the line says so when asked.
+    const recorded = account.zdr !== 1;
     const setup: SessionSetup = {
       callId: id,
       instructions: inboundInstructions({
         owner,
+        recorded,
         assistantName: identity.caller_name || assistantNameOf(profile),
         accent: identity.accent || accentOf(profile),
         ownerPronunciation: namePronunciationOf(profile),
@@ -454,7 +457,7 @@ export async function answerInbound(env: Env, origin: string, opts: { controlId:
       // as we pick up instead of silence. This waits for the session's socket, not its start: GPT-Live
       // starts it while Telnyx picks up, which takes longer. A failed open just answers.
       await session.fetch('https://session/prewarm', { method: 'POST' }).catch((err) => console.warn('prewarm failed', id, String(err)));
-      await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: setup.streamUrl!, callId: id, timeLimitSecs: LIMITS.maxMinutes * 60, record: account.zdr !== 1 });
+      await telnyx(env).answer(opts.controlId, { webhookUrl: `${origin}/webhooks/telnyx`, streamUrl: setup.streamUrl!, callId: id, timeLimitSecs: LIMITS.maxMinutes * 60, record: recorded });
       pickedUp = true;
     } catch (err) {
       // Most often the caller hung up while this was setting up: answering fails, and their hangup

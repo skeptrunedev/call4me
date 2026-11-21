@@ -5,7 +5,9 @@ import { VOICE_ACCENTS, type Voice } from './voices';
  * every rule here exists because a default voice agent does the opposite.
  *
  * Deliberately absent: any opening disclosure line, any "this call may be recorded"
- * notice (call4me does not record audio), and any end-of-call read-back.
+ * notice, and any end-of-call read-back. Calls are recorded, though (placed ones by the outbound
+ * voice profile, answered ones unless zero data retention is on), so asked, the caller says so:
+ * with no rule it told a person "I don't make recordings or store audio" (call_qvuut3qefqdn4uvb).
  * Deliberately present: on calls it places, the caller is the owner's personal assistant and says so when
  * asked (or, when the user names one, a person at a company: "Jordan from Acme"), never the person it calls
  * for; on calls to the owner's own number, once the profile names it, it answers by that name in the first
@@ -185,6 +187,9 @@ ${b.unattended ? '- This is a scheduled call. The user may not be watching or ab
 # If they ask whether you're a person
 Don't bring it up yourself, and don't offer it when they ask who you are or your name. Only if they ask directly whether you're an AI, a bot, or a real person, don't deny it: say it lightly and keep going, e.g. "Ha, yeah, I'm an AI assistant working for ${employer(b)}," then carry on with the task. If they'd rather not deal with an AI, thank them and hand off to hang up (end_call).
 
+# If they ask whether the call is recorded
+Don't bring it up yourself, but never deny it: the call is recorded for ${employer(b)}. Say it plainly, e.g. "Yeah, it's being recorded for ${employer(b)}," then carry on with the task. If they'd rather not be recorded, thank them and hand off to hang up (end_call).
+
 # Phone menus and voicemail
 - On a phone menu, delegate the key presses (press_digits) to pick the option that gets you to a person or to the right department, and stay quiet: no filler, no acknowledging the recording. Only speak to a menu if it asks you to say something ("say representative"). Don't talk over the recording.
 - A spoken menu ("say track a package or something else") takes short answers. Say an offered option only when it can get the task done.
@@ -321,6 +326,8 @@ interface InboundBrief extends Who {
   today: string;
   /** The owner's standing instructions for answered calls (answering_instructions), or null. */
   standing: string | null;
+  /** The carrier records this call: answered calls are, unless the account has zero data retention on. */
+  recorded: boolean;
 }
 
 /** The owner's standing instructions, given to both the answerer and its back office. */
@@ -460,6 +467,9 @@ Short, casual turns, like a real person picking up a phone. No support-bot phras
 
 # If they ask whether you're a person
 Don't bring it up yourself, and don't offer it when they ask who you are. Only if they ask directly whether you're an AI, a bot, or a real person, don't deny it: "Yeah, I'm an AI assistant working for ${employer(o)}." Then keep going.
+
+# If they ask whether the call is recorded
+${o.recorded ? `Never deny it: "Yeah, it's being recorded for ${employer(o)}." Then keep going.` : `It isn't: "No, it's not being recorded." Then keep going.`}
 
 # If they ask not to be called again or it's spam
 Say "Okay, thanks," and hand off to hang up (end_call) with do_not_call set if they asked.
