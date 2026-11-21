@@ -90,8 +90,10 @@ export interface CallRow {
   idempotency_hash: string | null;
   /** 1 for a call made or answered with zero data retention on (services/zdr.ts): billed at 1.5x, its content deleted after it ends. */
   zdr: number;
-  /** When a zero data retention call's content was deleted; null before that. */
+  /** When the call's content was deleted (zero data retention, or on request); null before that. */
   purged_at: number | null;
+  /** When support marked the call for deletion on request (scripts/delete-calls.mjs); purged like a zero data retention call. */
+  delete_requested_at: number | null;
   /** Failed purge runs so far, and the earliest time the next one may start (services/zdr.ts). */
   purge_attempts: number;
   purge_next_at: number | null;

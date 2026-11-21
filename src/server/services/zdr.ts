@@ -13,11 +13,17 @@ import { carrierRecordings } from './recordings';
  * voice session's stored setup (which holds the call's PINs) and the carrier's recordings (the
  * call's and, when the person joined, their own leg's). What billing and abuse prevention need
  * stays: the numbers, the times, the length and the cost.
+ *
+ * A call support marks for deletion on request (delete_requested_at, scripts/delete-calls.mjs) is
+ * purged the same way on the next run, however recently it ended.
  */
 export const ZDR_KEEP_MS = 60 * 60_000;
 
 /** What a deleted call's business name reads as on the account page and in the agent's tools. */
 export const DELETED = 'deleted (zero data retention)';
+
+/** The same, for a call deleted on request. */
+export const DELETED_ON_REQUEST = 'deleted on request';
 
 const EMPTY_BRIEF: Brief = { on_behalf_of: '', facts: '', flexibility: '', timezone: null, max_minutes: 0 };
 
@@ -36,7 +42,8 @@ const RETRY_LAST_MS = 60 * 60_000;
 export const retryDelayMs = (attempts: number) => Math.min(RETRY_FIRST_MS * 2 ** Math.max(0, attempts - 1), RETRY_LAST_MS);
 
 /**
- * Deletes the content of zero data retention calls that ended more than ZDR_KEEP_MS ago. The D1
+ * Deletes the content of zero data retention calls that ended more than ZDR_KEEP_MS ago, and of
+ * ended calls marked for deletion on request. The D1
  * content goes first, every time; the call counts as purged only once its voice session storage
  * and carrier recordings are gone too, so a carrier outage is retried later. A failed call is put
  * back with a growing delay rather than at the head of the queue, so it never starves the rest.
@@ -45,21 +52,23 @@ export async function purgeZdrCalls(env: Env, at = now()): Promise<number> {
   // A schedule cleanup that fails must not stop the calls' content from being purged.
   await purgeZdrSchedules(env, at).catch((err) => console.error('zero data retention schedule cleanup failed', String(err)));
   const { results } = await env.DB.prepare(
-    `SELECT id, telnyx_call_control_id, purge_attempts FROM calls
-      WHERE zdr = 1 AND purged_at IS NULL AND ended_at IS NOT NULL AND ended_at < ?
+    `SELECT id, zdr, telnyx_call_control_id, purge_attempts FROM calls
+      WHERE purged_at IS NULL AND ended_at IS NOT NULL
+        AND ((zdr = 1 AND ended_at < ?) OR delete_requested_at IS NOT NULL)
         AND (purge_next_at IS NULL OR purge_next_at <= ?)
       ORDER BY ended_at LIMIT ${BATCH}`,
   )
     .bind(at - ZDR_KEEP_MS, at)
-    .all<Pick<CallRow, 'id' | 'telnyx_call_control_id' | 'purge_attempts'>>();
+    .all<Pick<CallRow, 'id' | 'zdr' | 'telnyx_call_control_id' | 'purge_attempts'>>();
   let purged = 0;
   for (const row of results) {
     const id = row.id;
+    const label = row.zdr === 1 ? DELETED : DELETED_ON_REQUEST;
     try {
       await env.DB.batch([
-        env.DB.prepare(`UPDATE calls SET business = ?, goal = '', brief = ?, transcript = NULL, outcome = NULL, end_reason = NULL WHERE id = ?`).bind(DELETED, JSON.stringify(EMPTY_BRIEF), id),
+        env.DB.prepare(`UPDATE calls SET business = ?, goal = '', brief = ?, transcript = NULL, outcome = NULL, end_reason = NULL WHERE id = ?`).bind(label, JSON.stringify(EMPTY_BRIEF), id),
         env.DB.prepare(`DELETE FROM call_questions WHERE call_id = ?`).bind(id),
-        env.DB.prepare(`UPDATE scheduled_calls SET business = ?, goal = '', input = '{}' WHERE call_id = ?`).bind(DELETED, id),
+        env.DB.prepare(`UPDATE scheduled_calls SET business = ?, goal = '', input = '{}' WHERE call_id = ?`).bind(label, id),
         // The call's hold, its extensions (hold:<id>:<n>), the release and the charge.
         env.DB.prepare(`UPDATE ledger SET note = 'call' WHERE ref IN (?, ?, ?) OR (ref > ? AND ref < ?)`).bind(`hold:${id}`, `release:${id}`, `call:${id}`, `hold:${id}:`, `hold:${id};`),
       ]);

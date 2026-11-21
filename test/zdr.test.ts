@@ -6,7 +6,7 @@ import type { CallRow } from '../src/server/services/calls';
 import { callPrice, placeCall } from '../src/server/services/dialer';
 import { zdrPrice } from '../src/server/lib/rates';
 import { telnyx } from '../src/server/lib/telnyx';
-import { DELETED, purgeZdrCalls, RETRY_FIRST_MS, retryDelayMs, ZDR_KEEP_MS } from '../src/server/services/zdr';
+import { DELETED, DELETED_ON_REQUEST, purgeZdrCalls, RETRY_FIRST_MS, retryDelayMs, ZDR_KEEP_MS } from '../src/server/services/zdr';
 import { d1 } from './sqlite-d1';
 
 const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
@@ -43,7 +43,10 @@ function carrier(opts: { deleteFails?: boolean; sessionFails?: number } = {}) {
     const url = new URL(String(input));
     asked.push(`${init?.method ?? 'GET'} ${url.pathname}`);
     if (url.pathname === '/v2/recordings' && (init?.method ?? 'GET') === 'GET') {
-      return json(200, { data: [{ id: 'rec_zdr', call_control_id: 'v3:zdr', call_leg_id: 'leg_zdr', status: 'completed' }], meta: { total_pages: 1 } });
+      // Only call_zdr has a recording; like Telnyx, the filter on the leg or call finds nothing for the rest.
+      const filter = [...url.searchParams].find(([k]) => k.startsWith('filter['))?.[1];
+      const theirs = filter === 'leg_zdr' || filter === 'v3:zdr';
+      return json(200, { data: theirs ? [{ id: 'rec_zdr', call_control_id: 'v3:zdr', call_leg_id: 'leg_zdr', status: 'completed' }] : [], meta: { total_pages: 1 } });
     }
     if (init?.method === 'DELETE' && url.pathname === '/v2/recordings/rec_zdr') {
       return opts.deleteFails ? json(503, { errors: [{ detail: 'recording store is down' }] }) : json(200, { data: { id: 'rec_zdr' } });
@@ -119,6 +122,33 @@ test('a call that ended less than an hour ago keeps its content', async () => {
   assert.equal(fresh!.business, 'Rosa');
   assert.equal(fresh!.purged_at, null);
   assert.ok(!asked.some((a) => a.includes('call_fresh')));
+});
+
+test('a call marked for deletion on request is purged on the next run, however recently it ended', async () => {
+  const { db } = await setup();
+  const { env, asked } = carrier();
+  env.DB = db;
+  const at = Date.now();
+  // Ben asked for three of his calls to be deleted (2026-11-21): Bob's normal account, one call marked a minute after it ended.
+  const insert = `INSERT INTO calls (id, account_id, direction, to_number, business, goal, brief, status, telnyx_call_control_id, ended_at, transcript, created_at, delete_requested_at)
+    VALUES (?, 'acct_bob', 'outbound', '+14155550125', 'Test Kitchen', 'Taste test', '{}', 'completed', ?, ?, ?, ?, ?)`;
+  const said = JSON.stringify([{ role: 'them', text: 'Are you recording this?' }]);
+  await db.prepare(insert).bind('call_asked', 'v3:asked', at - 120_000, said, at - 180_000, at - 60_000).run();
+  await db.prepare(insert).bind('call_other', 'v3:other', at - 120_000, said, at - 180_000, null).run();
+
+  assert.equal(await purgeZdrCalls(env, at), 2);
+
+  const gone = await db.prepare(`SELECT business, goal, transcript, purged_at FROM calls WHERE id = 'call_asked'`).first<{ business: string; goal: string; transcript: string | null; purged_at: number | null }>();
+  assert.deepEqual({ ...gone }, { business: DELETED_ON_REQUEST, goal: '', transcript: null, purged_at: at });
+  assert.ok(asked.includes('SESSION call_asked /forget'));
+  // The zero data retention call keeps its own label; the unmarked calls keep everything.
+  const zdr = await db.prepare(`SELECT business FROM calls WHERE id = 'call_zdr'`).first<{ business: string }>();
+  assert.equal(zdr!.business, DELETED);
+  for (const id of ['call_other', 'call_kept']) {
+    const kept = await db.prepare(`SELECT transcript, purged_at FROM calls WHERE id = ?`).bind(id).first<{ transcript: string | null; purged_at: number | null }>();
+    assert.ok(kept!.transcript);
+    assert.equal(kept!.purged_at, null);
+  }
 });
 
 test('a purge the carrier cannot finish is retried later, and never holds up the calls behind it', async () => {
