@@ -154,6 +154,13 @@ export async function accountForToken(c: AppContext, claims: JWTPayload): Promis
  * is none or it does not verify.
  */
 export async function bearerAccount(c: AppContext): Promise<Account | null> {
+  const account = await bearerCredentialAccount(c);
+  // Named on the request's log line (lib/api-log.ts).
+  if (account) c.set('apiAccount', account.id);
+  return account;
+}
+
+async function bearerCredentialAccount(c: AppContext): Promise<Account | null> {
   const token = bearerToken(c);
   if (!token) return null;
   if (!looksLikeJwt(token)) return accounts(c.env.DB).byKey(token);

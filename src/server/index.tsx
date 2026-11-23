@@ -44,6 +44,7 @@ import { redditConversions, redditCookies, redditVisitCookie, redditVisitOf, sav
 import { metaConversions } from './lib/meta';
 import { siteData } from './routes/site-data';
 import { errorText } from './lib/errors';
+import { apiLog } from './lib/api-log';
 
 const app = new Hono<AppEnv>();
 
@@ -102,6 +103,8 @@ app.route('/', ivrProbe);
 // documents; ahead of mountAuth so the root documents are ours, not the auth plugin's.
 app.route('/', agent);
 app.route('/', a2a);
+// Each signed-in API request logs its outcome, a refusal with its error (lib/api-log.ts).
+app.use('/api/*', apiLog);
 app.route('/', apiRoot);
 app.route('/', x402Calls);
 app.route('/', recordings);

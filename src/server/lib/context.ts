@@ -17,6 +17,8 @@ export type AppEnv = {
     gaEmailHash: string | null;
     /** Latest paid Reddit landing known for this request. */
     redditVisitId: string | null;
+    /** The account an /api request's Bearer key or token signed in as (lib/auth.ts bearerAccount), for its log line (lib/api-log.ts). */
+    apiAccount: string;
   };
 };
 
