@@ -39,7 +39,9 @@ export function checkDialable(input: string): PhoneCheck {
 function checkHome(trimmed: string): PhoneCheck {
   let digits = trimmed.replace(/[^\d]/g, '');
   if (digits.length === 11 && digits.startsWith('1')) digits = digits.slice(1);
-  if (digits.length === 3 && /^[2-9]11$/.test(digits)) return { ok: false, reason: 'emergency and N11 service numbers cannot be called' };
+  // The agent is told what to do instead: jesseunderhill1998's was refused an N11 code (Nov 23) and placed nothing after.
+  if (digits === '911') return { ok: false, reason: 'emergency numbers cannot be called: if this is an emergency, tell the user to dial 911 themselves now' };
+  if (digits.length === 3 && /^[2-9]11$/.test(digits)) return { ok: false, reason: "N11 service codes like 311 or 411 cannot be called: call the service's full 10-digit number instead (a city's 311 line lists one for calls from outside the city)" };
   if (digits.length !== 10) return { ok: false, reason: 'expected a 10-digit US or Canadian phone number, or an international number starting with + and its country code' };
   const area = digits.slice(0, 3);
   const exchange = digits.slice(3, 6);
