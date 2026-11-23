@@ -6,6 +6,7 @@ import { MAX_TOPUP_CENTS, MIN_TOPUP_CENTS } from '../services/topups';
 import { FoundViaForm, MonthlyBox } from './account';
 import { accountPath, CHATGPT_PLUGIN_URL, PAGES, SITE, SITE_PITCH } from '../lib/pages';
 import { DESTINATION_PRICE_CENTS, zdrPrice } from '../lib/rates';
+import { andList, FROM_HOME_PLACES } from '../lib/coverage';
 import { CopyBlock, Layout } from './layout';
 import { STUDENT_CREDIT_DOLLARS } from './students';
 import { CallOnboarding } from './onboarding';
@@ -440,7 +441,7 @@ export const RulesPage: FC<{ signedIn: boolean; pricePerMinuteCents: number; cou
     <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
     <p>call4me places calls a person would make themselves: bookings, appointments, questions for a business. it is not for anything else.</p>
     <ul>
-      <li>US, Canadian and European numbers, and numbers in other countries where your account holds a call4me number. no emergency numbers, no premium-rate or shared-cost numbers.</li>
+      <li>US, Canadian and European numbers, numbers in {andList(FROM_HOME_PLACES)}, and numbers in other countries where your account holds a call4me number. no emergency numbers, no premium-rate or shared-cost numbers.</li>
       <li>no telemarketing, sales, surveys, debt collection, political calls, or calls to people who didn't expect to hear from you.</li>
       <li>no harassment, threats, pranks, or pretending to be someone else. the caller always calls <i>for</i> you; it never claims to be you.</li>
       <li>the same number can be called a few times a day, not more. anyone who asks not to be called again is never called by call4me again.</li>

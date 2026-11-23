@@ -1,6 +1,7 @@
 import { newId, now } from '../lib/ids';
 import { CODE_ATTEMPTS, VERIFICATIONS_PER_DAY } from '../lib/number-schema';
 import { checkDialable, formatPhone, type PhoneCheck } from '../lib/phone';
+import { EEA, EUROPE, FROM_HOME } from '../lib/coverage';
 import { telnyx, TelnyxError, type NumberOrderStatus } from '../lib/telnyx';
 import { accounts, dollars, type Account } from './accounts';
 import { CALLBACK_WINDOW_MS } from './call-store';
@@ -233,38 +234,11 @@ export function ownNumberView(r: VerifiedNumberRow): OwnNumberView {
   };
 }
 
-/**
- * Europe, where any account may call businesses from any of its numbers: from a European number
- * when it holds one, else from its US number. EU and EEA countries, the UK and Switzerland; calls
- * there cost the carrier a few cents a minute at most.
- */
-export const EUROPE = new Set([
-  'AT', 'BE', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HR', 'HU', 'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK',
-]);
-
-/**
- * The EEA (Europe less the UK and Switzerland). A call into it from an EEA caller ID is charged the
- * carrier's local rate; from anywhere else some carriers add a surcharge: Greek mobiles cost
- * $0.0325/min from an EEA number and $0.4611/min from a US one (lib/rates.ts).
- */
-export const EEA = new Set([...EUROPE].filter((c) => c !== 'GB' && c !== 'CH'));
-
-/**
- * Countries any account may call from its free US number without holding a number there: Europe,
- * the UAE, where no carrier sells numbers to a company outside the country, and Japan, where the
- * carrier sells none and refuses a Japanese caller ID it didn't issue (so the user's own number
- * can't be verified there either), so a US caller ID is the only way in. Thailand too, so a user
- * needn't buy a number there for one call (Claudia, 2026-11-03), and Brazil, Nepal and Uzbekistan,
- * where call4me sells no numbers (Eduardo, Michael and Stanislav, 2026-11-03 to -07). Calls to the UAE and Japan cost more
- * (lib/rates.ts).
- */
 /** The reason a country isn't sold yet while its regulatory paperwork is pending. */
 const awaitingApproval = (name: string) => `${name} numbers are waiting on regulatory approval`;
 
 /** Whether an unavailable offer is held back by regulator paperwork, as opposed to the carrier having none in stock. */
 export const isAwaitingApproval = (offer: CountryOffer) => !offer.available && offer.reason === awaitingApproval(offer.name);
-
-export const FROM_HOME = new Set([...EUROPE, 'AE', 'JP', 'TH', 'BR', 'NP', 'UZ', 'ID', 'AU']);
 
 /** Every country some account may call: the telephone carrier must allow each of them. */
 const CALLABLE = [...new Set(['US', 'CA', ...FROM_HOME, ...Object.keys(COUNTRIES)])];

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ABROAD_CALLING } from './rates';
+import { ABROAD_CALLING } from './coverage';
 
 /** Shared by the MCP number tools, the /api/numbers routes and the OpenAPI document. */
 

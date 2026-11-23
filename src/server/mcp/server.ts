@@ -6,7 +6,8 @@ import { accounts, dollars, type Account } from '../services/accounts';
 import { CallError } from '../services/calls';
 import { answerQuestion, balanceView, usageView, categoriesView, connectPerson, followCall, followedView, hangUp, listCalls, profileView, requirementsView, saveProfile, callView, type CallView } from '../services/call-ops';
 import { callPrice, placeCall, pricePerMinute } from '../services/dialer';
-import { DESTINATION_PRICE_CENTS, ABROAD_CALLING, zdrPrice } from '../lib/rates';
+import { DESTINATION_PRICE_CENTS, zdrPrice } from '../lib/rates';
+import { ABROAD_CALLING, FROM_HOME_PLACES } from '../lib/coverage';
 import { parseAmountCents, topups, TopupError } from '../services/topups';
 import { catalog, type Surface } from '../services/intake';
 import { ProfileError } from '../services/profiles';
@@ -205,7 +206,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
     titled({
       title: 'Place a phone call',
       description:
-        `Call a business, or someone expecting the call, for the user (US, Canada, Europe, the UAE and Japan, or any other country the account holds a number in, prices vary by destination; see ${agents ? 'call4me_list_numbers' : 'call4me_get_balance'} for current calling rates) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category's required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with call4me_get_call. Credits for the maximum length are held up front; billed from pickup by a person or automated system, including phone menus, hold time, and conversation at the same rate, rounded up to the minute; unanswered calls are free.`,
+        `Call a business, or someone expecting the call, for the user (US, Canada, Europe, ${FROM_HOME_PLACES.join(', ')}, or any other country the account holds a number in, prices vary by destination; see ${agents ? 'call4me_list_numbers' : 'call4me_get_balance'} for current calling rates) and have a natural conversation to get something done (book, reschedule, cancel, ask). Refuses to dial until the category's required information is known, and says exactly what to ask the user. Returns right away with a call id; follow it with call4me_get_call. Credits for the maximum length are held up front; billed from pickup by a person or automated system, including phone menus, hold time, and conversation at the same rate, rounded up to the minute; unanswered calls are free.`,
       inputSchema: placeInput,
       annotations: DIALS,
     }),

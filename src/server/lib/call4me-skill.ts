@@ -1,5 +1,6 @@
 import { CATEGORIES } from '../services/intake';
-import { DESTINATION_PRICE_CENTS, ABROAD_CALLING } from './rates';
+import { DESTINATION_PRICE_CENTS } from './rates';
+import { ABROAD_CALLING, FROM_HOME_PLACES } from './coverage';
 import { CHATGPT_PLUGIN_URL } from './pages';
 
 /**
@@ -20,7 +21,7 @@ export function call4meSkillMd(site: string, pricePerMinuteCents: number): strin
   const japanPrice = `$${(DESTINATION_PRICE_CENTS.JP / 100).toFixed(2)}`;
   return `---
 name: call4me
-description: Place real phone calls for the user with call4me (${site}): book restaurants, doctor, dentist, and vet appointments, call dealerships, home internet providers, and airlines, or ask any business a question (US, Canada, Europe, the UAE and Japan, or elsewhere from a call4me number in that country). Use when the user asks you to call somewhere, book something by phone, or find something out from a business that has no online way to do it.
+description: Place real phone calls for the user with call4me (${site}): book restaurants, doctor, dentist, and vet appointments, call dealerships, home internet providers, and airlines, or ask any business a question (US, Canada, Europe, ${FROM_HOME_PLACES.join(', ')}, or elsewhere from a call4me number in that country). Use when the user asks you to call somewhere, book something by phone, or find something out from a business that has no online way to do it.
 ---
 
 # call4me

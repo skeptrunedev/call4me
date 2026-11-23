@@ -1,6 +1,7 @@
 import { EXAMPLES, type CallExample } from './examples';
 import { HOLD_TIMES, holdSummary, type HoldTime } from './hold-times';
 import { PHONE_ANXIETY_GUIDE } from './guides/phone-anxiety';
+import { andList, FROM_HOME_PLACES } from '../server/lib/coverage';
 
 /**
  * One page per errand people ask an AI to phone for ("an AI that waits on hold for me"),
@@ -84,7 +85,7 @@ export const TASKS: Task[] = [
     how: [
       'if you hate calling businesses, this is the part you hand off: the menu, the hold and the conversation. you can still listen in without anyone hearing you, and press 1 anytime to join.',
       'the caller calls for you and never claims to be you, and it never reads out card numbers, bank details or passwords. it makes the calls a person would make for their own errands: bookings, appointments, quotes and questions for a business, not sales or telemarketing.',
-      'calls go out from a free US number, assigned on your first call, to businesses in the US, Canada, Europe, the UAE and Japan.',
+      `calls go out from a free US number, assigned on your first call, to businesses in ${andList(['the US', 'Canada', 'Europe', ...FROM_HOME_PLACES])}.`,
     ],
     others: {
       heading: 'Other apps that call businesses for you',
