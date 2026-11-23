@@ -21,6 +21,11 @@ const PREMIUM = new Set(['900', '976']);
 const TOLL_FREE = new Set(['800', '833', '844', '855', '866', '877', '888']);
 /** Number types that cost the caller extra or reach no business. */
 const UNCALLABLE: Set<NumberType> = new Set(['PREMIUM_RATE', 'SHARED_COST', 'PERSONAL_NUMBER', 'PAGER', 'VOICEMAIL']);
+/**
+ * Banks and big companies abroad often publish only a shared-cost line (Australia's 13 and 1300,
+ * France's 08), so the refusal points the agent to the number they list for callers overseas.
+ */
+const SHARED_COST_REFUSAL = "shared-cost numbers cannot be called: call the business's regular landline, or the number it lists for calling from overseas";
 
 /** `country` is ISO 3166-1 alpha-2; `home` marks the +1 numbers every account may call. */
 export type PhoneCheck = { ok: true; e164: string; country: string; home: boolean } | { ok: false; reason: string };
@@ -50,7 +55,8 @@ function checkAbroad(plus: string): PhoneCheck {
   const parsed = parsePhoneNumberFromString(plus);
   if (!parsed?.isValid() || !parsed.country) return { ok: false, reason: 'not a valid phone number; write international numbers with their country code, e.g. +31 20 123 4567' };
   const type = parsed.getType();
-  if (type && UNCALLABLE.has(type)) return { ok: false, reason: 'premium-rate, shared-cost and personal numbers cannot be called' };
+  if (type === 'SHARED_COST') return { ok: false, reason: SHARED_COST_REFUSAL };
+  if (type && UNCALLABLE.has(type)) return { ok: false, reason: 'premium-rate and personal numbers cannot be called' };
   return { ok: true, e164: parsed.number, country: parsed.country, home: false };
 }
 
