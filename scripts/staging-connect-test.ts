@@ -63,9 +63,8 @@ const sides: [string, Row | undefined][] = [['our caller', outbound], ['business
 if (person) sides.push(['person (answering assistant)', personSide]);
 printSides(sides);
 
-// What each assistant heard after the join is its "them" lines from then on. Our caller keeps
-// talking once the person joins, so the business heard the person when something the person's
-// assistant said shows up in what the business heard. A real phone has no assistant to compare
+// What each assistant heard after the join is its "them" lines from then on. The business heard
+// the person when something the person's assistant said shows up in what the business heard. A real phone has no assistant to compare
 // with, so any speech after the join counts.
 const heardAfterJoin = (r?: Row) => lines(r).filter((l) => l.role === 'them' && l.at >= joinAt).map((l) => l.text);
 // Four words in a row in both: their speech overlaps on the line, so neither side hears the
@@ -80,12 +79,15 @@ const businessHeardPerson = realPhone
 const personHeard = heardAfterJoin(personSide).length > 0;
 const joined = lines(outbound).some((l) => l.role === 'note' && /joined the call|is listening in/.test(l.text));
 const joinedAt = lines(outbound).find((l) => l.role === 'note' && /joined the call|is listening in/.test(l.text))?.at ?? Infinity;
+// Listening, our caller keeps working; joined, it goes quiet until the person leaves, since it can't hear them.
+const leftAt = lines(outbound).find((l) => l.role === 'note' && l.at > joinedAt && /left the call/.test(l.text))?.at ?? Infinity;
 const callerKeptTalking = lines(outbound).some((l) => l.role === 'caller' && l.at > joinedAt);
+const callerQuietWhileOn = !lines(outbound).some((l) => l.role === 'caller' && l.at > joinedAt && l.at < leftAt);
 const passed = verdict([
   [`the person's phone ${listen ? 'started listening' : 'joined'}`, joined],
   ...(realPhone ? [] : [['the person heard the business', personHeard] as const]),
   [listen ? 'the business did not hear the person' : 'the business heard the person', listen ? !businessHeardPerson : businessHeardPerson],
-  ['our caller kept talking after they came on', callerKeptTalking],
+  listen ? ['our caller kept talking while they listened', callerKeptTalking] : ['our caller stayed quiet while they were on', callerQuietWhileOn],
 ]);
 if (realPhone) console.log('ASK   whether they heard the business (staging\'s assistant) after picking up');
 process.exit(passed ? 0 : 1);

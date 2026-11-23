@@ -57,8 +57,8 @@ export const AiCallAssistantPage: FC<{ signedIn: boolean; pricePerMinuteCents: n
         <h2>you can listen in or join the call</h2>
         <p>
           call4me can ring your own phone. ask your assistant to connect you "as soon as a person picks up" and you skip the hold music; hold time is
-          still billed, at half the normal rate. you're on the call as soon as you answer, and the AI caller keeps
-          working with you on the line. press * or hang up to leave, and it carries on with the task. if you'd rather just hear how it's going, ask to
+          still billed, at half the normal rate. you're on the call as soon as you answer, and the AI caller goes
+          quiet while you talk. press * or hang up to leave, and it carries on with the task. if you'd rather just hear how it's going, ask to
           listen in: nobody on the call hears you, the caller keeps working, and you can press 1 anytime to join. if calls make you anxious, our
           guide to <a href="/phone-anxiety">phone anxiety</a> has scripts for the common ones and is honest about when to hand a call off.
         </p>

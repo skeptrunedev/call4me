@@ -1029,8 +1029,9 @@ export class VoiceSession extends DurableObject<Env> {
       case 'session.output_audio.delta': {
         // After the hang-up hand-off the goodbye has already been said; anything more is
         // the model filling the silence before the line drops, so it never reaches the phone.
-        // Before pickup the session is only warming up: nothing it says is heard.
-        if (!this.answered || this.endingCall || Date.now() < this.keysPlayingUntil || this.menuHoldsCaller()) break;
+        // Before pickup the session is only warming up: nothing it says is heard. With the person on
+        // the call, the caller can't hear them, so anything it says would be said over them (joinedMessage).
+        if (!this.answered || this.endingCall || this.personOn || Date.now() < this.keysPlayingUntil || this.menuHoldsCaller()) break;
         const e = ev as { delta: string };
         if (this.framesOut++ === 0) this.mark('first caller audio');
         this.sendPhone({ event: 'media', media: { payload: e.delta } });
@@ -1068,7 +1069,8 @@ export class VoiceSession extends DurableObject<Env> {
         break;
       }
       case 'session.output_transcript.delta':
-        if (this.answered && !this.endingCall) {
+        // What the caller says while the person is on never reaches the line, so it isn't the call's.
+        if (this.answered && !this.endingCall && !this.personOn) {
           const delta = (ev as { delta: string }).delta;
           // Kept off a menu's line, a key the caller announces ("pressing 3") still needs pressing.
           const offLine = this.menuHoldsCaller();
@@ -1687,10 +1689,13 @@ export class VoiceSession extends DurableObject<Env> {
     await this.personJoined();
   }
 
-  /** They're on the call: the business hears them, they hear both sides, and the caller works on. */
+  /** They're on the call with the business, and the caller goes quiet until they leave (joinedMessage). */
   private async personJoined(): Promise<void> {
     const s = await this.load();
     this.personOn = true;
+    // Anything the caller had queued would play over them.
+    this.sendPhone({ event: 'clear' });
+    this.playbackEndsAt = Date.now();
     this.note(`${s?.person?.name ?? 'the person'} joined the call`);
     this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: joinedMessage(s?.person?.name ?? 'The person') });
   }
@@ -1837,9 +1842,9 @@ export class VoiceSession extends DurableObject<Env> {
       // leave empty; each tool validates what it needs
     }
     let output: string;
-    // The caller works on with the person on the line, but never hangs up on them.
-    if (this.personOn && item.name === 'end_call') {
-      const output = `${s.person?.name ?? 'The person'} is still on the call, so it stays up: they hang up when they're done. Keep helping, or wait quietly if nothing is left to do.`;
+    // The caller waits silently while the person is on: no keys over them, and it never hangs up on them.
+    if (this.personOn && item.name !== 'ask_user') {
+      const output = `${s.person?.name ?? 'The person'} is on the call, so do nothing until they hand it back to you.`;
       this.observe(() => this.toolMonitoring.get(item.call_id)?.monitoring.output.push(output));
       this.sendLive({ type: 'response.item.create', item: { type: 'function_call_output', call_id: item.call_id, output } });
       return;
@@ -1969,7 +1974,7 @@ export class VoiceSession extends DurableObject<Env> {
    */
   private questionUnanswered(question: string): string {
     this.unanswered = question;
-    if (!this.ended) this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: noAnswer(question) });
+    if (!this.ended && !this.personOn) this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: noAnswer(question) });
     return 'No answer is available. The caller has been told to acknowledge the missing detail and proceed using known facts or an alternative lookup. Do not ask the same question again or wait again. A later answer still reaches the caller. Write nothing unless another tool is needed.';
   }
 
@@ -1983,7 +1988,9 @@ export class VoiceSession extends DurableObject<Env> {
     if (this.ended) return;
     this.unanswered = null;
     this.answers.push({ question, answer });
-    this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: `The answer came back for "${question.slice(0, 300)}": ${answer}. Say it to them now.` });
+    // With the person on, it's said once they hand the call back: nothing the caller says reaches the line meanwhile.
+    const when = this.personOn ? `${this.setup?.person?.name ?? 'The person'} is on the call, so say it once they hand the call back to you.` : 'Say it to them now.';
+    this.sendLive({ type: 'session.commentary.append', delegation_id: null, content: `The answer came back for "${question.slice(0, 300)}": ${answer}. ${when}` });
     this.waiting.get(id)?.(answer);
   }
 

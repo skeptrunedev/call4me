@@ -186,7 +186,8 @@ type Metered = Pick<CallRow, 'answered_at' | 'hold_seconds' | 'hold_since'>;
 
 /**
  * What a call has cost by `at`: its answered time, with hold minutes at half price. Time the user
- * spends on the call themselves counts like the rest: the caller keeps working while they're on.
+ * spends on the call themselves counts like the rest: free joined time would make any call free by
+ * joining at pickup.
  */
 function costAt(row: Metered, at: number, pricePerMinuteCents: number): { cents: number; seconds: number; holdSeconds: number } {
   const seconds = row.answered_at ? Math.max(0, Math.round((at - row.answered_at) / 1000)) : 0;

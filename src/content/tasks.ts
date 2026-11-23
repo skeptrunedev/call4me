@@ -63,7 +63,7 @@ const holds = (...slugs: string[]) => slugs.map((slug) => {
 const summary = holdSummary();
 const list = (items: readonly string[]) => `${items.slice(0, -1).join(', ')} or ${items.at(-1)}`;
 const costs = (perMinute: string) => `calls cost ${perMinute} from pickup and half that on hold, and unanswered calls are free.`;
-const joinWhenAnswered = 'ask your assistant to connect you "as soon as a person picks up": your phone rings from your call4me number, you are on the call as soon as you answer, and the AI caller keeps working with you on the line. press * or hang up to leave.';
+const joinWhenAnswered = 'ask your assistant to connect you "as soon as a person picks up": your phone rings from your call4me number, you are on the call as soon as you answer, and the AI caller goes quiet while you talk. press * or hang up to hand the call back.';
 
 export const TASKS: Task[] = [
   {

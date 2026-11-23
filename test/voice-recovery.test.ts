@@ -398,7 +398,10 @@ test('a fresh durable object restores the ongoing call and relays audio using it
   assert.deepEqual(phone.sent.at(-1), { event: 'media', media: { payload: 'AAAA' } });
 });
 
-test('once the user joins, the caller keeps talking and working, but never hangs up on them', async (t) => {
+test("once the user joins, the caller goes quiet: none of its speech reaches the line or the transcript, and it uses no tools until they hand back", async (t) => {
+  // The caller can't hear the user, and told everyone could hear everyone it answered for them: at
+  // Spectrum it read out made-up verification codes and "Yes, I authorize you" before Anna spoke
+  // (call_9hr5465c2jrqm2le, Nov 23).
   const h = harness(t);
   const live = new Socket();
   h.session.live = live;
@@ -406,17 +409,24 @@ test('once the user joins, the caller keeps talking and working, but never hangs
   h.session.setup.person = { name: 'Alex Kim' };
   h.session.personLeg = 'person-leg';
   await h.session.personJoined();
-  assert.match(JSON.stringify(live.sent.at(-1)), /Alex Kim has joined the call\..*Keep working on the task as before/);
-  assert.match(JSON.stringify(live.sent.at(-1)), /Questions for Alex Kim themselves.*never answer for them or repeat what they said/, 'identity questions are left to the user');
-  assert.ok(!h.phone.sent.some((m: any) => m.event === 'clear'), 'what the caller was saying is not cut off');
+  assert.match(JSON.stringify(live.sent.at(-1)), /Alex Kim has joined the call.*You can't hear Alex Kim.*Stay completely silent and don't use any tools/);
+  assert.ok(h.phone.sent.some((m: any) => m.event === 'clear'), 'what the caller had queued is cut off');
+  const sentToPhone = h.phone.sent.length;
   await h.session.onLive(JSON.stringify({ type: 'session.output_audio.delta', delta: 'AAAA' }));
-  assert.deepEqual(h.phone.sent.at(-1), { event: 'media', media: { payload: 'AAAA' } });
+  await h.session.onLive(JSON.stringify({ type: 'session.output_transcript.delta', delta: 'Yes, I authorize you' }));
+  assert.equal(h.phone.sent.length, sentToPhone, 'nothing the caller says reaches the line');
+  assert.ok(!h.session.transcript.some((l: any) => l.role === 'caller'), 'nor the transcript');
 
   const hangups: string[] = [];
   h.session.hangup = async (why: string) => { hangups.push(why); };
   await h.session.runTool({ call_id: 'bye', name: 'end_call', arguments: '{}' });
   assert.deepEqual(hangups, []);
-  assert.match(JSON.stringify(live.sent.at(-1)), /Alex Kim is still on the call/);
+  assert.match(JSON.stringify(live.sent.at(-1)), /Alex Kim is on the call, so do nothing until they hand it back/);
+
+  h.session.personLeft();
+  assert.match(JSON.stringify(live.sent.at(-1)), /Alex Kim has left the call and handed it back to you.*I'm back on for Alex Kim/);
+  await h.session.onLive(JSON.stringify({ type: 'session.output_audio.delta', delta: 'BBBB' }));
+  assert.deepEqual(h.phone.sent.at(-1), { event: 'media', media: { payload: 'BBBB' } }, 'handed back, the caller is heard again');
 });
 
 test('at the time limit the user on the call gets more time while credits last, then it ends', async (t) => {

@@ -4,8 +4,9 @@ import type { TranscriptLine } from '../services/call-store';
  * Patching the person (call4me's user) into a live call. Their phone is rung as a listen-only
  * supervisor. Ringing to join, they are put on the call the moment they pick up: Telnyx refuses
  * to play a prompt on a supervisor leg, so nothing could tell them to press a key, and people
- * talked into a call nobody heard. Once they're on, the caller keeps working with them on the
- * line. In listen mode they stay listen-only for as long as they like and the caller carries on.
+ * talked into a call nobody heard. Once they're on, the caller goes quiet until they leave: the
+ * caller and the person can't hear each other (see joinedMessage). In listen mode they stay
+ * listen-only for as long as they like and the caller carries on.
  * A ring to join that ends unanswered is settled for the call: the caller is told they can't be
  * reached, and doesn't ring again on its own.
  */
@@ -13,7 +14,8 @@ import type { TranscriptLine } from '../services/call-store';
 /**
  * 'join': ring them onto the call, where the other side hears them as soon as they answer (a
  * voicemail answering is patched in too; that's accepted). 'listen': ring them to listen in for as
- * long as they like; they can press 1 anytime to join. Either way the caller keeps working.
+ * long as they like while the caller keeps working; they can press 1 anytime to join, and then the
+ * caller goes quiet as for 'join'.
  */
 export type PersonMode = 'join' | 'listen';
 
@@ -33,23 +35,26 @@ export function legEnded(mode: PersonMode, wasOn: boolean): 'left' | 'unreachabl
 
 /** What connect_person returns while they're already listening: they join by pressing 1. */
 export function listeningMessage(owner: string): string {
-  return `${owner} is listening in on this call. If they press 1 they join it and the other side hears them too. Either way, keep handling it yourself.`;
+  return `${owner} is listening in on this call. If they press 1 they join it, the other side hears them, and you go quiet until they leave. Until then, keep handling it yourself.`;
 }
 
 /**
- * What the caller is told when the person comes on the call. It used to go silent here, so people
- * who joined heard only the business and took the caller for gone. It keeps working instead, but
- * never hangs up on them, and leaves questions for the person to them: Vidéotron asked the account
- * holder for his date of birth, and the caller said it over him, mishearing the month, then insisted
- * on its version twice. Two people giving two birthdays failed the identity check and the account
- * holder was sent to a store (call_bai3hadrpqh08a9r, 2026-11-20).
+ * What the caller is told when the person comes on the call. The caller and the person can't hear
+ * each other: the caller's audio goes only to the business (the phone stream), and the person's
+ * voice, mixed in by Telnyx as a barging supervisor, never reaches the caller's stream. Told for
+ * two weeks that everyone could hear everyone, the caller heard questions meant for the person,
+ * heard no answer, and answered them itself over the person: a date of birth at Vidéotron
+ * (call_bai3hadrpqh08a9r, Nov 20), consent at Apple (call_bwvocr5a999y005i, Nov 15), and at Spectrum
+ * three made-up verification codes and "Yes, I authorize you to discuss the account with me" before
+ * Anna spoke (call_9hr5465c2jrqm2le, Nov 23). So the caller goes quiet while they're on, as it did
+ * before Nov 12, and nothing it says reaches the line (session.ts drops it).
  */
 export function joinedMessage(owner: string): string {
-  return `${owner} has joined the call. ${owner}, you and the other side can all hear each other now. Keep working on the task as before. When ${owner} speaks, let them finish, and follow their lead if they answer something or tell you what to do. Questions for ${owner} themselves, like their date of birth, a security answer or their consent, are theirs to answer: stay quiet while they do, and never answer for them or repeat what they said, even if you heard it. Don't hang up while ${owner} is on the call: they hang up when they're done.`;
+  return `${owner} has joined the call and is talking to the other side directly. You can't hear ${owner}, and nothing you say reaches the call while they're on it. Stay completely silent and don't use any tools. Keep listening to the other side so you know where things stand; you'll be told when ${owner} hands the call back to you.`;
 }
 
 export function leftMessage(owner: string): string {
-  return `${owner} has left the call. Keep working on the task. If it's already done, say bye and hand off to hang up.`;
+  return `${owner} has left the call and handed it back to you. You couldn't hear what ${owner} said, only the other side. Pick up where they left off: say something short like "Hi, I'm back on for ${owner}", then keep working on the task. If it's already done, say bye and hand off to hang up.`;
 }
 
 export function unreachableMessage(owner: string): string {
