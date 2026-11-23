@@ -29,6 +29,7 @@ import { placeDueCalls } from './services/scheduled';
 import { failNeverDialed, settleLost } from './services/dialer';
 import { purgeZdrCalls } from './services/zdr';
 import { warnLowCreditHolds } from './services/low-credits';
+import { emailLowBalanceRefusals } from './services/low-balance';
 import { numbers } from './services/numbers';
 import { notifySignups } from './services/signups';
 import { notifyPayments } from './services/payments';
@@ -183,7 +184,8 @@ export default {
   fetch: app.fetch,
   // Every minute, scheduled calls that came due (services/scheduled.ts), the content of zero data
   // retention calls an hour after they end and calls deleted on request (services/zdr.ts), and the email to add credits for a call
-  // on hold that is about to run out of them (services/low-credits.ts). Every 15 minutes, number
+  // on hold that is about to run out of them (services/low-credits.ts), and the one to an account refused a call for
+  // its balance (services/low-balance.ts). Every 15 minutes, number
   // renewals and numbers waiting on the carrier (services/numbers.ts), calls that never dialed
   // or whose hangup was lost (services/dialer.ts), signup notices, IndexNow pings for new or changed pages
   // (services/indexnow.ts), and the signup drip (services/drip.ts), which is off while DRIP_START
@@ -193,6 +195,7 @@ export default {
       ctx.waitUntil(placeDueCalls(env).then((r) => (r.placed || r.failed || r.missed) && console.log('scheduled calls', JSON.stringify(r))));
       ctx.waitUntil(purgeZdrCalls(env).then((n) => n && console.log('zero data retention calls purged', n)));
       ctx.waitUntil(warnLowCreditHolds(env).then((n) => n && console.log('low credit hold emails sent', n)));
+      ctx.waitUntil(emailLowBalanceRefusals(env).then((n) => n && console.log('low balance emails sent', n)));
       // Every minute, not with the signups: Nick hears about a payment as it lands.
       ctx.waitUntil(
         notifyPayments({ db: env.DB, messenger: makeMessenger(env), to: adminEmails(env), origin: `https://${env.CANONICAL_HOST}` }).then(

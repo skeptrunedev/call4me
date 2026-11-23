@@ -160,6 +160,9 @@ export function calls(db: D1Database) {
           .bind(account.id)
           .first<{ n: number; cents: number }>();
         const held = live?.n ? `, with $${(live.cents / 100).toFixed(2)} held for ${live.n} call${live.n === 1 ? '' : 's'} in progress until ${live.n === 1 ? 'it ends' : 'they end'}; wait for ${live.n === 1 ? 'it' : 'them'} to finish, or ` : '; '
+        // With nothing held, the user is out of credits: they're emailed an add-credits link
+        // (services/low-balance.ts), since the agent told to add them may never pass it on.
+        if (!live?.n) await db.prepare(`UPDATE accounts SET low_balance_refused_at = ? WHERE id = ?`).bind(now(), account.id).run();
         throw new CallError(`balance is $${(balance / 100).toFixed(2)}${held}${surface === 'agents' ? 'add credits with call4me_add_funds' : 'the user can add credits on the call4me website'}`, 402);
       }
       const affordable = Math.floor(funds / pricePerMinuteCents);

@@ -10,6 +10,8 @@ const input = {
   goal: 'Ask when the office opens.', details: { questions: 'What are your opening hours?' },
 };
 
+const refusedAt = async (db: D1Database) => (await db.prepare(`SELECT low_balance_refused_at AS at FROM accounts WHERE id = ?`).bind(alice.id).first<{ at: number | null }>())!.at;
+
 async function setup(balance: number) {
   const db = d1();
   await accounts(db).post(alice.id, balance, 'topup', 'test:credits');
@@ -57,6 +59,8 @@ test('less than one minute of credits refuses a call without recording a hold', 
   await assert.rejects(calls(db).create(alice, input, 25), (err: unknown) => err instanceof CallError && err.status === 402);
   assert.equal(await accounts(db).balanceCents(alice.id), 24);
   assert.deepEqual(await calls(db).list(alice.id), []);
+  // Recorded for the add-credits email (services/low-balance.ts).
+  assert.ok((await refusedAt(db)) !== null);
 });
 
 test('a short balance says how much calls in progress are holding', async () => {
@@ -66,4 +70,6 @@ test('a short balance says how much calls in progress are holding', async () => 
   await service.create(alice, { ...input, max_minutes: 8 }, 25);
   await service.create(alice, { ...input, max_minutes: 8 }, 25);
   await assert.rejects(service.create(alice, input, 25), (err: unknown) => err instanceof CallError && err.status === 402 && /balance is \$0\.00, with \$4\.00 held for 2 calls in progress until they end; wait for them to finish, or /.test(err.message));
+  // Credits held for live calls come back when they end: no add-credits email for that.
+  assert.equal(await refusedAt(db), null);
 });
