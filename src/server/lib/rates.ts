@@ -16,8 +16,8 @@
 // from a US caller ID: priced at the 40c tier until a call's record shows the rate.
 // ID is published at $0.0688/min to fixed lines and $0.0888 to mobiles (checked 2026-11-10): the
 // standard price covers it.
-// AU is published at $0.0119/min to fixed lines and $0.03 to mobiles (checked 2026-11-22): the
-// standard price covers it.
+// AU is published at $0.0119/min to fixed lines and $0.03 to mobiles (checked 2026-11-22), and a
+// call to a Sydney landline from a US caller ID was billed $0.0152/min: the standard price covers it.
 export const DESTINATION_PRICE_CENTS: Readonly<Record<string, number>> = { AE: 40, JP: 40, PH: 40, PA: 50, GH: 60, BO: 60, UA: 65, GR: 75, UZ: 40 };
 
 /** Zero data retention (services/zdr.ts) costs this many times a call's price per minute. */
