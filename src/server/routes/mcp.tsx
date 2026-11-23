@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { Hono, type MiddlewareHandler } from 'hono';
 import { createMcpHandler, hostHeaderValidationResponse } from '@modelcontextprotocol/server';
 import { accountForToken, bearerToken, challenge, looksLikeJwt, sessionAccount, verifyMcpToken, type McpPath } from '../lib/auth';
 import { legacyHosts, origin, stripeFor, viewerKey, type AppContext, type AppEnv } from '../lib/context';
@@ -98,3 +98,23 @@ export function directoryMcp(path: McpPath, surface: Surface): Hono<AppEnv> {
   app.all('/', (c) => authorized(c, path, surface));
   return app;
 }
+
+/** An MCP message: JSON-RPC 2.0 with a method, alone or in a batch. */
+const isMcpMessage = (body: unknown): boolean =>
+  Array.isArray(body) ? body.some(isMcpMessage) : typeof body === 'object' && body !== null && (body as { jsonrpc?: unknown }).jsonrpc === '2.0' && typeof (body as { method?: unknown }).method === 'string';
+
+/**
+ * An MCP client pointed at the REST API instead of /mcp. A claude.ai connector set up with
+ * https://call4.me/api/calls sent its MCP handshake there for over an hour (Nov 22, 2026), was told
+ * that to, business and goal "received undefined", and never connected. An MCP message to any /api
+ * route is answered in JSON-RPC with where the MCP server is. /api/auth is better-auth's, which
+ * never takes JSON-RPC.
+ */
+export const mcpAtRestApi: MiddlewareHandler<AppEnv> = async (c, next) => {
+  if (c.req.method !== 'POST' || c.req.path.startsWith('/api/auth/')) return next();
+  const body: unknown = await c.req.raw.clone().json().catch(() => null);
+  if (!isMcpMessage(body)) return next();
+  console.log(`mcp message at ${c.req.path}, pointed to /mcp`);
+  const id = Array.isArray(body) ? null : ((body as { id?: unknown }).id ?? null);
+  return c.json({ jsonrpc: '2.0', id, error: { code: -32600, message: `${c.req.path} is call4me's REST API, not its MCP server: connect your MCP client to ${origin(c)}/mcp` } }, 400);
+};

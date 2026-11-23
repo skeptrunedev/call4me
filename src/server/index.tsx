@@ -3,7 +3,7 @@ import './zod-first';
 import { Hono } from 'hono';
 import { contextStorage } from 'hono/context-storage';
 import { canonicalRedirect, visitor, type AppEnv } from './lib/context';
-import { directoryMcp, mcp } from './routes/mcp';
+import { directoryMcp, mcp, mcpAtRestApi } from './routes/mcp';
 import { pub } from './routes/public';
 import { sms } from './routes/sms';
 import { ivrProbe } from './routes/ivr-probe';
@@ -103,6 +103,8 @@ app.route('/', ivrProbe);
 // documents; ahead of mountAuth so the root documents are ours, not the auth plugin's.
 app.route('/', agent);
 app.route('/', a2a);
+// An MCP client set up with a REST URL is told where the MCP server is (routes/mcp.tsx).
+app.use('/api/*', mcpAtRestApi);
 // Each signed-in API request logs its outcome, a refusal with its error (lib/api-log.ts).
 app.use('/api/*', apiLog);
 app.route('/', apiRoot);
