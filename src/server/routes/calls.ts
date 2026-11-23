@@ -76,7 +76,17 @@ async function idempotencyOf(key: string | null, input: unknown): Promise<Idempo
   return key ? { key, fingerprint: await fingerprintOf(input) } : undefined;
 }
 
-const invalid = (c: AppContext, error: z.ZodError) => c.json({ error: z.prettifyError(error) }, 400);
+/**
+ * A request that doesn't validate gets zod's issues. A body checked against `schema` gets them led
+ * by the names of any fields the schema doesn't know (never their values), so an agent that names
+ * fields its own way learns which ones, not only what is missing. One POSTed /api/calls over 100
+ * times in an hour (Nov 22, 2026), each told only that to, business and goal "received undefined".
+ */
+const invalid = (c: AppContext, error: z.ZodError, raw?: unknown, schema?: z.ZodObject) => {
+  const unknown = schema && raw && typeof raw === 'object' && !Array.isArray(raw) ? Object.keys(raw).filter((k) => !Object.hasOwn(schema.shape, k)) : [];
+  const lead = unknown.length ? `unrecognized fields: ${unknown.slice(0, 10).map((k) => k.slice(0, 40)).join(', ')}. ` : '';
+  return c.json({ error: `${lead}${z.prettifyError(error)}` }, 400);
+};
 const badId = (c: AppContext) => c.json({ error: 'invalid id' }, 400);
 const body = (c: AppContext) => c.req.json().catch(() => null);
 
@@ -113,8 +123,9 @@ callRoutes.get(profilePath, async (c) => {
 callRoutes.patch(profilePath, async (c) => {
   const account = await signedIn(c);
   if (!account) return unauthorized(c);
-  const input = profileFields.safeParse(await body(c));
-  if (!input.success) return invalid(c, input.error);
+  const raw = await body(c);
+  const input = profileFields.safeParse(raw);
+  if (!input.success) return invalid(c, input.error, raw, profileFields);
   try {
     return c.json(await saveProfile(c.env, intake, account.id, input.data));
   } catch (err) {
@@ -136,8 +147,9 @@ callRoutes.post(callsPath, async (c) => {
   if (!account) return unauthorized(c);
   const key = idempotencyKeyOf(c.req.header('idempotency-key'));
   if ('error' in key) return c.json({ error: key.error }, 400);
-  const input = placeInput.safeParse(await body(c));
-  if (!input.success) return invalid(c, input.error);
+  const raw = await body(c);
+  const input = placeInput.safeParse(raw);
+  if (!input.success) return invalid(c, input.error, raw, placeInput);
   try {
     const idempotency = await idempotencyOf(key.key, input.data);
     return c.json(callView(await placeCall(c.env, origin(c), account, input.data, 'agents', { idempotency }), []), 201);
@@ -206,8 +218,9 @@ callRoutes.post(scheduledCallsPath, async (c) => {
   if (!account) return unauthorized(c);
   const key = idempotencyKeyOf(c.req.header('idempotency-key'));
   if ('error' in key) return c.json({ error: key.error }, 400);
-  const input = scheduleInput.safeParse(await body(c));
-  if (!input.success) return invalid(c, input.error);
+  const raw = await body(c);
+  const input = scheduleInput.safeParse(raw);
+  if (!input.success) return invalid(c, input.error, raw, scheduleInput);
   const { call_at, ...call } = input.data;
   try {
     const idempotency = await idempotencyOf(key.key, input.data);

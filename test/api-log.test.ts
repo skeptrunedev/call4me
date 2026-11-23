@@ -38,6 +38,22 @@ test('a refused API call logs the account and the error it returned, never the r
   assert.doesNotMatch(lines[0], /Jane Doe|1990/);
 });
 
+test('a call body with fields of its own names them, never their values, ahead of what is missing', async (t) => {
+  const { request, lines } = await setup(t);
+  const res = await request('/api/calls', {
+    method: 'POST',
+    headers: { authorization: `Bearer ${KEY}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ phone_number: '+14155550123', business_name: 'Dr. Example Dental', business: 'Dr. Example Dental', purpose: 'Book a cleaning for Jane Doe' }),
+  });
+  assert.equal(res.status, 400);
+  const { error } = (await res.json()) as { error: string };
+  assert.match(error, /^unrecognized fields: phone_number, business_name, purpose\. ✖/);
+  assert.match(error, /at to/);
+  assert.doesNotMatch(error, /at business\b/);
+  assert.match(lines[0], /400 error: unrecognized fields: phone_number, business_name, purpose\./);
+  assert.doesNotMatch(lines[0], /4155550123|Jane Doe|Example Dental/);
+});
+
 test('a signed-in API request that works logs ok, and one with no valid key logs nothing', async (t) => {
   const { request, lines } = await setup(t);
   assert.equal((await request('/api/balance', { headers: { authorization: `Bearer ${KEY}` } })).status, 200);
