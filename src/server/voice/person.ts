@@ -57,6 +57,20 @@ export function leftMessage(owner: string): string {
   return `${owner} has left the call and handed it back to you. You couldn't hear what ${owner} said, only the other side. Pick up where they left off: say something short like "Hi, I'm back on for ${owner}", then keep working on the task. If it's already done, say bye and hand off to hang up.`;
 }
 
+/**
+ * The call's note when a ring to join ends unanswered, from the leg's SIP code. A phone that
+ * declines the call (603, or 607/608 for a call marked unwanted) is refusing the call4me number,
+ * which the person can fix. Anna's phone declined all three rings from her call4me number within
+ * 0.6s (Nov 23, 2026), and each note read "no answer or voicemail", so nothing told her agent that.
+ */
+export function unreachableNote(owner: string, from: string | undefined, sip: string | null | undefined): string {
+  if (sip === '603' || sip === '607' || sip === '608') {
+    return `${owner}'s phone declined the call${from ? ` from ${from}: it may be on Do Not Disturb or blocking unknown callers, and saving ${from} as a contact lets it ring through` : ''}`;
+  }
+  if (sip === '486' || sip === '600') return `${owner}'s line was busy`;
+  return `${owner} didn't join (no answer or voicemail)`;
+}
+
 export function unreachableMessage(owner: string): string {
   return `${owner} couldn't be reached (no answer, or their voicemail picked up). Don't try to connect them again on this call. Tell them ${owner} isn't available right now and ask whether they can call ${owner} back, or carry on with whatever you can do without them.`;
 }

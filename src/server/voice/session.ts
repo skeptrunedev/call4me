@@ -6,7 +6,7 @@ import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
 import { InputPace } from './input-pace';
 import { Playout } from './playout';
 import { asksUsToWait, connectCheckMessage, KEY_TRANSCRIPT_LAG_MS, forcedHandoffMessage, greetingWaiting, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft, type KeyPress } from './handoff';
-import { alreadyUnreachable, callerHoldsFor, joinedMessage, lastTokens, leftMessage, legEnded, listeningMessage, mergeTranscript, resumeInput, unreachableMessage, type LiveInput, type PersonMode } from './person';
+import { alreadyUnreachable, callerHoldsFor, joinedMessage, lastTokens, leftMessage, legEnded, listeningMessage, mergeTranscript, resumeInput, unreachableMessage, unreachableNote, type LiveInput, type PersonMode } from './person';
 import { HoldMeter, type HoldChange } from './hold';
 import { midConversation } from './time-limit';
 import { BACK_OFFICE_TOOLS } from './prompt';
@@ -453,9 +453,11 @@ export class VoiceSession extends DurableObject<Env> {
         await this.personKey(digit);
         return new Response('ok');
       }
-      case '/person-left':
-        this.personLeft();
+      case '/person-left': {
+        const { sip } = (await req.json().catch(() => ({}))) as { sip?: string | null };
+        this.personLeft(sip);
         return new Response('ok');
+      }
       case '/hang-up':
         return Response.json({ message: await this.hangUpForUser() });
       case '/machine': {
@@ -1700,7 +1702,8 @@ export class VoiceSession extends DurableObject<Env> {
     this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: joinedMessage(s?.person?.name ?? 'The person') });
   }
 
-  private personLeft(): void {
+  /** Their leg ended; sip is its SIP hangup code, which says why a ring to join went unanswered. */
+  private personLeft(sip?: string | null): void {
     const ended = legEnded(this.personMode, this.personOn);
     this.personOn = false;
     this.personLeg = null;
@@ -1713,7 +1716,7 @@ export class VoiceSession extends DurableObject<Env> {
       this.note(`${name} stopped listening`);
       return;
     }
-    this.note(ended === 'left' ? `${name} left the call` : `${name} didn't join (no answer or voicemail)`);
+    this.note(ended === 'left' ? `${name} left the call` : unreachableNote(name, this.setup?.person?.from, sip));
     this.sendLive({ type: 'session.instructions.append', delegation_id: null, content: ended === 'left' ? leftMessage(name) : unreachableMessage(name) });
   }
 
