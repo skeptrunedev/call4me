@@ -104,7 +104,7 @@ app.route('/', ivrProbe);
 // documents; ahead of mountAuth so the root documents are ours, not the auth plugin's.
 app.route('/', agent);
 app.route('/', a2a);
-// An MCP client set up with a REST URL is told where the MCP server is (routes/mcp.tsx).
+// An MCP client set up with /api/calls is served there; one at any other REST URL is told where the MCP server is (routes/mcp.tsx).
 app.use('/api/*', mcpAtRestApi);
 // Each signed-in API request logs its outcome, a refusal with its error (lib/api-log.ts).
 app.use('/api/*', apiLog);

@@ -172,9 +172,12 @@ async function bearerCredentialAccount(c: AppContext): Promise<Account | null> {
   }
 }
 
-/** The RFC 9728 challenge: 401 + WWW-Authenticate so MCP clients start (or repeat) the OAuth flow. */
-export function challenge(c: AppContext, message: string, error?: string, path: McpPath = '/mcp'): Response {
-  const metadata = `${origin(c)}/.well-known/oauth-protected-resource${path}`;
+/**
+ * The RFC 9728 challenge: 401 + WWW-Authenticate so MCP clients start (or repeat) the OAuth flow,
+ * for the MCP server at `path`, or '/' for the site's own resource (the REST API's).
+ */
+export function challenge(c: AppContext, message: string, error?: string, path: McpPath | '/' = '/mcp'): Response {
+  const metadata = `${origin(c)}/.well-known/oauth-protected-resource${path === '/' ? '' : path}`;
   // A header value is a quoted ASCII string: no double quotes, nothing past Latin-1 (Workers throws).
   const description = message.replace(/"/g, "'").replace(/…/g, '...').replace(/[^\x20-\x7e]/g, '?');
   const params = [`resource_metadata="${metadata}"`, ...(error ? [`error="${error}"`, `error_description="${description}"`] : [])];

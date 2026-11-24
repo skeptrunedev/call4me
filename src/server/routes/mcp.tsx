@@ -1,6 +1,7 @@
 import { Hono, type MiddlewareHandler } from 'hono';
 import { createMcpHandler, hostHeaderValidationResponse } from '@modelcontextprotocol/server';
-import { accountForToken, bearerToken, challenge, looksLikeJwt, sessionAccount, verifyMcpToken, type McpPath } from '../lib/auth';
+import { accountForToken, bearerAccount, bearerToken, challenge, looksLikeJwt, sessionAccount, verifyMcpToken, type McpPath } from '../lib/auth';
+import { callsPath } from '../lib/call-schema';
 import { legacyHosts, origin, stripeFor, viewerKey, type AppContext, type AppEnv } from '../lib/context';
 import { describeKey, normalizeKey } from '../lib/keys';
 import { installPrompt } from '../lib/prompts';
@@ -104,13 +105,38 @@ const isMcpMessage = (body: unknown): boolean =>
   Array.isArray(body) ? body.some(isMcpMessage) : typeof body === 'object' && body !== null && (body as { jsonrpc?: unknown }).jsonrpc === '2.0' && typeof (body as { method?: unknown }).method === 'string';
 
 /**
- * An MCP client pointed at the REST API instead of /mcp. A claude.ai connector set up with
- * https://call4.me/api/calls sent its MCP handshake there for over an hour (Nov 22, 2026), was told
- * that to, business and goal "received undefined", and never connected. An MCP message to any /api
- * route is answered in JSON-RPC with where the MCP server is. /api/auth is better-auth's, which
- * never takes JSON-RPC.
+ * A request in the MCP protocol rather than REST: a JSON-RPC message, or the stream a client opens
+ * with a GET (REST never asks for an event stream) or a request carrying an MCP session header.
+ */
+async function isMcpRequest(c: AppContext): Promise<boolean> {
+  if (c.req.method === 'POST') return isMcpMessage(await c.req.raw.clone().json().catch(() => null));
+  return (c.req.header('accept') ?? '').includes('text/event-stream') || c.req.raw.headers.has('mcp-protocol-version') || c.req.raw.headers.has('mcp-session-id');
+}
+
+/**
+ * /api/calls as an MCP server, with the credentials the REST API takes there: an API key, or an
+ * OAuth token for the site or one of the MCP servers. Without one, the REST API's own challenge, so
+ * a client signs in through the site's resource, as connectors set up with this URL already did.
+ */
+async function mcpAtCalls(c: AppContext): Promise<Response> {
+  const account = await bearerAccount(c);
+  console.log(`mcp at ${c.req.path} ${account ? `account=${account.id}` : 'without a credential'}`);
+  if (account) return serve(c, account);
+  return bearerToken(c)
+    ? challenge(c, 'credential not accepted: sign in again, or use a call4me API key', 'invalid_token', '/')
+    : challenge(c, 'sign in to call4me to use this server', undefined, '/');
+}
+
+/**
+ * MCP clients pointed at the REST API. People paste /api/calls, the address the REST docs show,
+ * into MCP clients: a claude.ai connector set up with it signed in and then failed every handshake
+ * for days (Nov 22-24, 2026), because claude.ai shows its user a failed connection, not the error
+ * naming /mcp, so it is an MCP server too and such a connector just works. An MCP message to any
+ * other /api route is answered in JSON-RPC with where the MCP server is. /api/auth is
+ * better-auth's, which never takes JSON-RPC.
  */
 export const mcpAtRestApi: MiddlewareHandler<AppEnv> = async (c, next) => {
+  if (c.req.path === callsPath) return (await isMcpRequest(c)) ? mcpAtCalls(c) : next();
   if (c.req.method !== 'POST' || c.req.path.startsWith('/api/auth/')) return next();
   const body: unknown = await c.req.raw.clone().json().catch(() => null);
   if (!isMcpMessage(body)) return next();
