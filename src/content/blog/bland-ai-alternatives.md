@@ -38,7 +38,7 @@ This makes the original task's constraints useful during the conversation. It al
 
 ### Join when your own voice is needed
 
-call4me can ring your saved phone so you can join a business call. You answer and press 1 to participate, then press * or hang up to hand it back to the assistant. Listen mode lets you hear the conversation while the assistant continues speaking.
+call4me can ring your saved phone so you can join a business call. You're on the call as soon as you answer, and the assistant goes quiet while you talk; press * or hang up to hand it back. Listen mode lets you hear the conversation while the assistant keeps speaking, and you press 1 to join.
 
 Our [Spectrum retention case](/blog/spectrum-retention-department) shows why this matters. The assistant handled the menu and hold, but the representative required the account holder before making changes. call4me patched in the user, who finished the conversation. The public audio covers the assistant's portion; the user's portion is summarized in the article. Listen mode is a documented option, not something that recording demonstrates.
 
