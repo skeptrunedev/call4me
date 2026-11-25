@@ -33,6 +33,7 @@ import { emailLowBalanceRefusals } from './services/low-balance';
 import { numbers } from './services/numbers';
 import { notifySignups } from './services/signups';
 import { notifyPayments } from './services/payments';
+import { grantTopupBonuses } from './services/topup-bonuses';
 import { submitIndexNow } from './services/indexnow';
 import { sitemapEntries } from './lib/discovery';
 import { blog, posts } from './routes/blog';
@@ -196,6 +197,7 @@ export default {
       ctx.waitUntil(purgeZdrCalls(env).then((n) => n && console.log('zero data retention calls purged', n)));
       ctx.waitUntil(warnLowCreditHolds(env).then((n) => n && console.log('low credit hold emails sent', n)));
       ctx.waitUntil(emailLowBalanceRefusals(env).then((n) => n && console.log('low balance emails sent', n)));
+      ctx.waitUntil(grantTopupBonuses(env).then((n) => n && console.log('top-up bonuses granted', n)));
       // Every minute, not with the signups: Nick hears about a payment as it lands.
       ctx.waitUntil(
         notifyPayments({ db: env.DB, messenger: makeMessenger(env), to: adminEmails(env), origin: `https://${env.CANONICAL_HOST}` }).then(
