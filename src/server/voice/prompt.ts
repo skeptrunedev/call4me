@@ -47,6 +47,18 @@ function nameRule(w: Who): string {
   return w.ownerPronunciation ? `${name}\n- Every time you say ${w.owner}'s name, pronounce it exactly like this: ${w.ownerPronunciation}. Never guess at it.` : name;
 }
 
+/**
+ * A brief can keep the person's name private, and the name in every self-introduction won over it:
+ * a batch of 22 calls (call_e8nul6tdxwu4sj3h, 2026-11-25) each said "don't disclose the customer's
+ * name", and the caller still opened with "I'm [name]'s assistant", on voicemail too, and was "an AI
+ * assistant working for [name]". The restriction is stated next to the name, so it wins wherever it's said.
+ */
+function unnamedRule(b: CallBrief): string {
+  const names = b.onBehalfOf === b.owner ? b.owner : `${b.onBehalfOf} or ${b.owner}`;
+  const self = b.callingAs ? `you're calling from ${b.callingAs} for a client` : `you're "an assistant calling for a client"`;
+  return `- When the task, facts or what you can agree to say not to give out ${names}'s name (or "the customer's name", "my name"), that wins over every line here that names them: never say ${names}'s name, in your intro, on voicemail, when asked who's calling, who you work for or who's recording. Say ${self}, and if they ask for the name, say you can't share it.`;
+}
+
 /** A name says nothing reliable about pronouns: on an Avis call the caller guessed "her" for the renter from his name. */
 const pronounRule = (person: string) =>
   `- Never guess from ${person}'s name whether they're a he or a she: say "${person}" or "they", unless the task or facts say which.`;
@@ -118,7 +130,7 @@ ${join}
 - A phone menu repeats, rejects input, says no input was received, or sends you to recorded instructions without doing the task. Delegate again to recover the route; don't just acknowledge it or hang up.
 - A recording asks you to choose a language, or speaks a language other than English. Act within a few seconds; menus like this often hang up on silence. If it offers English (a key, or saying "English"), take it. If it only offers its own language, say "English" once right after it finishes, and if nothing changes take the option it offers and carry on in that language.
 - They need a missing detail that cannot be handled with the supplied facts or an alternative lookup, or offer something outside what you can agree to. If the brief already says a detail is unknown, say so and ask for another way to proceed instead of asking the same question again.
-- The call is over: you both said bye, you left a voicemail, or they asked you not to call again.
+- The call is over: you both said bye, you left a voicemail (or reached one on a task that says not to leave one), or they asked you not to call again.
 Do not delegate to the backend when: you can answer from what you were given, the brief already says the answer is unknown, or they're just talking to you.
 Delegate before giving an answer that depends on backend work. Do not guess the result while waiting.`;
 }
@@ -133,6 +145,7 @@ ${introRule(b)}
 - The task and facts below are written from ${b.onBehalfOf}'s side ("we called earlier", "my car"). Say them as the assistant: "${b.onBehalfOf} called earlier", "${b.onBehalfOf}'s car".
 ${pronounRule(b.onBehalfOf)}
 ${nameRule(b)}
+${unnamedRule(b)}
 - Never mention AI, bots, or anything automated unless they ask you directly (see below). "Who is this?" and "what's your name?" are not that question.
 
 # Your task
@@ -144,7 +157,7 @@ ${spellingRule(`${b.goal}\n${b.facts}`)}
 What you can agree to without checking:
 ${b.flexibility.trim() || '(only exactly what the task says)'}
 
-The callback number is ${spokenPhone(b.callbackNumber)}${b.callbackRingsOwner ? `, ${b.owner}'s own phone: a callback reaches ${b.owner} directly` : ''}. Whenever they want a number to call back or text, a contact number for a booking, order or hold, and on any voicemail, give this one and only this one. A phone number among the facts above is for finding or verifying an account: when a person or a phone menu asks for the phone number on file, give that one, never the callback number. When the task or facts say there's no account or not to give out a phone number, that wins: give no number, and say there's no account.
+The callback number is ${spokenPhone(b.callbackNumber)}${b.callbackRingsOwner ? `, ${b.owner}'s own phone: a callback reaches ${b.owner} directly` : ''}. Whenever they want a number to call back or text, a contact number for a booking, order or hold, and on any voicemail, give this one and only this one. A phone number among the facts above is for finding or verifying an account: when a person or a phone menu asks for the phone number on file, give that one, never the callback number. When the task or facts say there's no account, that wins: give no number, and say there's no account. When they say not to give out a phone number or ask for a callback, that wins everywhere, voicemail included: give no number, only another contact they give (an email), if any.
 ${b.localTime ? `It's ${b.localTime} for them right now.` : `Today is ${b.today} in UTC. Their time zone isn't known, so for them it may still be the day before or already the next day.`}
 
 ${delegationPolicy(b.onBehalfOf, b.owner, b.connectWhen, b.ownerReachable ?? true)}
@@ -199,7 +212,7 @@ Don't bring it up yourself, but never deny it: the call is recorded for ${employ
 - When an automated assistant offers to connect you with a person and the task needs one or isn't done yet, say yes right away.
 - An automated assistant isn't the person your task asks for. When the task says to reach a person, a representative or an agent, ask it to connect you, with the reason, instead of putting your questions to it, and don't end the call on its answers.
 - A menu in another language (Arabic, Spanish, anything): never sit silent at it. Pick English if it's offered, by key or by saying "English". If it isn't, take the option it offers and continue in that language; you can speak it. A person who answers in another language gets a reply in their language.
-- If you reach voicemail, say nothing while the greeting plays, in any language (not "okay", not "waiting for the beep", not "j'attends le bip"). Then leave one or two sentences, in the greeting's language: after the beep, or once a greeting that asked for a message goes quiet, since many never beep and are already recording. Say that you're ${whoIAm(b)}${b.onBehalfOf === b.owner ? '' : ` calling for ${b.onBehalfOf}`}, what it's about, and the callback number. Then hand off to hang up (end_call).
+- If you reach voicemail, say nothing while the greeting plays, in any language (not "okay", not "waiting for the beep", not "j'attends le bip"). When the task, facts or what you can agree to say not to leave a voicemail or a message, leave nothing: hand off to hang up (end_call) without a word, even after the beep. Otherwise leave one or two sentences, in the greeting's language: after the beep, or once a greeting that asked for a message goes quiet, since many never beep and are already recording. Say that you're ${whoIAm(b)}${b.onBehalfOf === b.owner ? '' : ` calling for ${b.onBehalfOf}`}, what it's about, and the callback number, except what the task says not to give out: no name or no phone number then, as above. Then hand off to hang up (end_call).
 
 # Boundaries
 - If they ask you not to call again, say "Of course, sorry about that," and hand off to hang up (end_call) with do_not_call set.

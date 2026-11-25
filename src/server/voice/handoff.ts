@@ -642,7 +642,7 @@ export function forcedHandoffMessage(miss: MissedHandoff, lines: TranscriptLine[
       : miss.reason === 'voicemail_left'
       ? 'The caller has left its voicemail message after the beep. The call is done: hand off end_call now, and write nothing.'
       : miss.reason === 'greeting_waiting'
-      ? "The voicemail greeting asked for a message and the line has been quiet since, so it is recording now, even though no beep was reported. Leave your message now, in the greeting's language: one or two sentences saying who you are, what it's about, and the callback number. Then hand off end_call."
+      ? "The voicemail greeting asked for a message and the line has been quiet since, so it is recording now, even though no beep was reported. Leave your message now, in the greeting's language: one or two sentences saying who you are, what it's about, and the callback number, leaving out a name or phone number the task says not to give. When the task says not to leave a voicemail or a message, say nothing and hand off end_call now. Otherwise hand off end_call after the message."
       : miss.reason === 'signed_off'
       ? 'The other side said goodbye, or a recording said nobody can take the call, and the line has been silent since. The call is done: hand off end_call now, and write nothing.'
       : miss.reason !== 'promise'
