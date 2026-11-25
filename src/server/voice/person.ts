@@ -6,7 +6,7 @@ import type { TranscriptLine } from '../services/call-store';
  * to play a prompt on a supervisor leg, so nothing could tell them to press a key, and people
  * talked into a call nobody heard. Once they're on, the caller goes quiet until they leave: the
  * caller and the person can't hear each other (see joinedMessage). In listen mode they stay
- * listen-only for as long as they like and the caller carries on.
+ * listen-only for as long as they like and the caller carries on, and they hear both sides.
  * A ring to join that ends unanswered is settled for the call: the caller is told they can't be
  * reached, and doesn't ring again on its own.
  */
@@ -39,8 +39,7 @@ export function listeningMessage(owner: string): string {
 }
 
 /**
- * What the caller is told when the person comes on the call. The caller and the person can't hear
- * each other: the caller's audio goes only to the business (the phone stream), and the person's
+ * What the caller is told when the person comes on the call. The caller can't hear the person: their
  * voice, mixed in by Telnyx as a barging supervisor, never reaches the caller's stream. Told for
  * two weeks that everyone could hear everyone, the caller heard questions meant for the person,
  * heard no answer, and answered them itself over the person: a date of birth at Vidéotron

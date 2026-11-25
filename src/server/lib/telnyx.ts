@@ -80,12 +80,19 @@ export interface TelnyxRecording {
   recording_ended_at?: string;
 }
 
-/** Bidirectional G.711 u-law over RTP both ways: the same format GPT-Live speaks, so no transcoding. */
+/**
+ * Bidirectional G.711 u-law over RTP both ways: the same format GPT-Live speaks, so no transcoding.
+ * The caller's audio goes to both legs: on Telnyx's default ("opposite") only the business heard it,
+ * and a person listening in as a supervisor heard the business answering a caller they couldn't
+ * hear (Alex, Nov 23). Measured on staging, "both" reaches the business and the listener, and
+ * neither the caller nor the business hears itself.
+ */
 const STREAM = {
   stream_track: 'inbound_track',
   stream_codec: 'PCMU',
   stream_bidirectional_mode: 'rtp',
   stream_bidirectional_codec: 'PCMU',
+  stream_bidirectional_target_legs: 'both',
 } as const;
 
 /**

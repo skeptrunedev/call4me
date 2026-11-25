@@ -8,7 +8,7 @@
  * and reads both assistants' transcripts: what each one heard is what came through the call. It
  * passes when the business heard what the person's assistant said, the person heard the business,
  * and our caller kept talking once they joined
- * (with --listen, when the person heard the business and the business did not hear them).
+ * (with --listen, when the person heard the business and our caller, and the business did not hear them).
  *
  * --person joins a real phone instead of staging's person number, to check a customer's own line:
  * it rings from staging-test@call4.me's number, and the test passes when the business heard
@@ -77,6 +77,10 @@ const businessHeardPerson = realPhone
   ? heardAfterJoin(businessSide).length > 0
   : lines(personSide).some((l) => l.role === 'caller' && runs(words(l.text)).some((r) => businessHeard.has(r)));
 const personHeard = heardAfterJoin(personSide).length > 0;
+// A listener hears our caller when something it said after the join shows up in what the person's
+// assistant heard. Alex heard only the business (Nov 23): the caller's audio went to the business alone.
+const personHeardRuns = new Set(heardAfterJoin(personSide).flatMap((t) => runs(words(t))));
+const personHeardCaller = lines(outbound).some((l) => l.role === 'caller' && l.at >= joinAt && runs(words(l.text)).some((r) => personHeardRuns.has(r)));
 const joined = lines(outbound).some((l) => l.role === 'note' && /joined the call|is listening in/.test(l.text));
 const joinedAt = lines(outbound).find((l) => l.role === 'note' && /joined the call|is listening in/.test(l.text))?.at ?? Infinity;
 // Listening, our caller keeps working; joined, it goes quiet until the person leaves, since it can't hear them.
@@ -86,6 +90,7 @@ const callerQuietWhileOn = !lines(outbound).some((l) => l.role === 'caller' && l
 const passed = verdict([
   [`the person's phone ${listen ? 'started listening' : 'joined'}`, joined],
   ...(realPhone ? [] : [['the person heard the business', personHeard] as const]),
+  ...(listen && !realPhone ? [['the person heard our caller', personHeardCaller] as const] : []),
   [listen ? 'the business did not hear the person' : 'the business heard the person', listen ? !businessHeardPerson : businessHeardPerson],
   listen ? ['our caller kept talking while they listened', callerKeptTalking] : ['our caller stayed quiet while they were on', callerQuietWhileOn],
 ]);
