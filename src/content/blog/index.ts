@@ -58,7 +58,7 @@ import sassafrazPrivateDining from './sassafraz-private-dining.md';
 import vitalantPhoneNumber from './vitalant-phone-number.md';
 import suitsupplyCustomerService from './suitsupply-customer-service.md';
 import paradoxHotelVancouver from './paradox-hotel-vancouver.md';
-import hotelEarlyCheckIn from './hotel-early-check-in.md';
+import lateCheckoutEarlyCheckIn from './late-checkout-early-check-in.md';
 import ritzCarltonBachelorGulchReservations from './ritz-carlton-bachelor-gulch-reservations.md';
 import laMarSanFranciscoReservations from './la-mar-san-francisco-reservations.md';
 import equalPartsSfReservations from './equal-parts-sf-reservations.md';
@@ -317,7 +317,7 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'vitalant-phone-number', markdown: vitalantPhoneNumber },
   { slug: 'suitsupply-customer-service', markdown: suitsupplyCustomerService },
   { slug: 'paradox-hotel-vancouver', markdown: paradoxHotelVancouver },
-  { slug: 'hotel-early-check-in', markdown: hotelEarlyCheckIn },
+  { slug: 'late-checkout-early-check-in', markdown: lateCheckoutEarlyCheckIn },
   { slug: 'ritz-carlton-bachelor-gulch-reservations', markdown: ritzCarltonBachelorGulchReservations },
   { slug: 'la-mar-san-francisco-reservations', markdown: laMarSanFranciscoReservations },
   { slug: 'equal-parts-sf-reservations', markdown: equalPartsSfReservations },

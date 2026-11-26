@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "29e8cf515d4e4e02b7b7139a140b6d14e80f867f8ba15779dfbac5ea9ee93643"
+  "sourceHash": "2dbd6384f37b97966a8d6723c4ad14f5fad2df9d243052d3a6cbc765682d5ffb"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -721,8 +721,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.686512
     },
     {
-      "slug": "hotel-early-check-in",
-      "similarity": 0.655601
+      "slug": "late-checkout-early-check-in",
+      "similarity": 0.656422
     },
     {
       "slug": "inn-at-jim-thorpe-reservations",
@@ -2689,28 +2689,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.663956
     }
   ],
-  "hotel-early-check-in": [
-    {
-      "slug": "booking-com-customer-service-number",
-      "similarity": 0.655601
-    },
-    {
-      "slug": "virgin-hotels-new-york-parking",
-      "similarity": 0.626805
-    },
-    {
-      "slug": "springhill-suites-phoenix-gilbert",
-      "similarity": 0.621094
-    },
-    {
-      "slug": "moxy-st-petersburg-downtown",
-      "similarity": 0.615692
-    },
-    {
-      "slug": "the-base-glamping-yugawara",
-      "similarity": 0.611765
-    }
-  ],
   "how-far-in-advance-to-order-catering": [
     {
       "slug": "ask-a-store-to-hold-an-item",
@@ -3264,6 +3242,32 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.758142
     }
   ],
+  "late-checkout-early-check-in": [
+    {
+      "slug": "booking-com-customer-service-number",
+      "similarity": 0.656422
+    },
+    {
+      "slug": "virgin-hotels-new-york-parking",
+      "similarity": 0.633884
+    },
+    {
+      "slug": "springhill-suites-phoenix-gilbert",
+      "similarity": 0.629854
+    },
+    {
+      "slug": "moxy-st-petersburg-downtown",
+      "similarity": 0.620648
+    },
+    {
+      "slug": "the-base-glamping-yugawara",
+      "similarity": 0.613491
+    },
+    {
+      "slug": "ritz-carlton-bachelor-gulch-reservations",
+      "similarity": 0.603345
+    }
+  ],
   "lawyer-consultation-fee": [],
   "les-schwab-oil-change": [
     {
@@ -3601,8 +3605,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.62983
     },
     {
-      "slug": "hotel-early-check-in",
-      "similarity": 0.615692
+      "slug": "late-checkout-early-check-in",
+      "similarity": 0.620648
     },
     {
       "slug": "the-base-glamping-yugawara",
@@ -4439,6 +4443,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "moxy-st-petersburg-downtown",
       "similarity": 0.62983
+    },
+    {
+      "slug": "late-checkout-early-check-in",
+      "similarity": 0.603345
     }
   ],
   "roku-customer-service-number": [
@@ -4780,8 +4788,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.645291
     },
     {
-      "slug": "hotel-early-check-in",
-      "similarity": 0.621094
+      "slug": "late-checkout-early-check-in",
+      "similarity": 0.629854
     }
   ],
   "straight-talk-customer-service-number": [
@@ -4956,8 +4964,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.613732
     },
     {
-      "slug": "hotel-early-check-in",
-      "similarity": 0.611765
+      "slug": "late-checkout-early-check-in",
+      "similarity": 0.613491
     }
   ],
   "ticketmaster-customer-service-number": [
@@ -5421,8 +5429,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "virgin-hotels-new-york-parking": [
     {
-      "slug": "hotel-early-check-in",
-      "similarity": 0.626805
+      "slug": "late-checkout-early-check-in",
+      "similarity": 0.633884
     },
     {
       "slug": "moxy-st-petersburg-downtown",

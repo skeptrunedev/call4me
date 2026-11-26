@@ -137,7 +137,7 @@ If you use call4me, paste this into your agent:
 
 > My Frontier flight [is delayed and I'll miss my connection / was pushed overnight] and I'm not flying it. Call Frontier at 801-401-9000 with confirmation [code] for passenger [name]. Ask for a cash refund of the whole itinerary to the original card, not a voucher or credit. Get the amount, when it will post, and whether they're emailing a confirmation. Ask what caused the delay and whether Frontier counts it as within its control. Don't rebook, change or cancel anything else, and don't accept a voucher instead of the refund.
 
-More real calls from call4me users: [early check-in and late checkout by phone](/blog/hotel-early-check-in), [extending a rental car by phone](/blog/extend-a-rental-car), and how a call4me user [found dress shoes and got a pair held in a morning](/blog/need-dress-shoes-today). [Listen to more real calls](/examples).
+More real calls from call4me users: [early check-in and late checkout by phone](/blog/late-checkout-early-check-in), [extending a rental car by phone](/blog/extend-a-rental-car), and how a call4me user [found dress shoes and got a pair held in a morning](/blog/need-dress-shoes-today). [Listen to more real calls](/examples).
 
 <details>
 <summary>Read the call 1 transcript (the missed connection refund)</summary>

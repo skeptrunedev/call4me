@@ -123,7 +123,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2452
+    "tokens": 2473
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
@@ -228,22 +228,22 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 23033
+    "tokens": 23046
   },
   "/blog/fix-an-order-or-delivery-by-phone": {
     "html": "/__pages/f61aa29aa55e54a9.html",
     "markdown": "/__pages/f61aa29aa55e54a9.md",
-    "tokens": 9767
+    "tokens": 9768
   },
-  "/blog/hotel-early-check-in": {
-    "html": "/__pages/bb81d33975503f1e.html",
-    "markdown": "/__pages/bb81d33975503f1e.md",
-    "tokens": 7608
+  "/blog/late-checkout-early-check-in": {
+    "html": "/__pages/3fa2de3079418250.html",
+    "markdown": "/__pages/3fa2de3079418250.md",
+    "tokens": 7780
   },
   "/blog/needoh-in-stock": {
     "html": "/__pages/8df7edccfa7ab0c1.html",
     "markdown": "/__pages/8df7edccfa7ab0c1.md",
-    "tokens": 6492
+    "tokens": 6493
   },
   "/blog/check-store-stock-in-japan": {
     "html": "/__pages/058cae80884861ab.html",
@@ -288,7 +288,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/frontier-airlines-refund": {
     "html": "/__pages/3ac1ee515eb5a0f7.html",
     "markdown": "/__pages/3ac1ee515eb5a0f7.md",
-    "tokens": 7329
+    "tokens": 7331
   },
   "/blog/gpt-live-1-1-upgrade": {
     "html": "/__pages/aa53374796bdd8ea.html",
@@ -493,7 +493,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/springhill-suites-phoenix-gilbert": {
     "html": "/__pages/fe34eb384046f4e2.html",
     "markdown": "/__pages/fe34eb384046f4e2.md",
-    "tokens": 3639
+    "tokens": 3660
   },
   "/blog/blue-shield-of-california-dental-phone-number": {
     "html": "/__pages/b2f0afd4b2393e26.html",
@@ -668,7 +668,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/virgin-hotels-new-york-parking": {
     "html": "/__pages/fff4dd4a906f9d0d.html",
     "markdown": "/__pages/fff4dd4a906f9d0d.md",
-    "tokens": 5046
+    "tokens": 5067
   },
   "/blog/moxy-st-petersburg-downtown": {
     "html": "/__pages/6a400c20fc16bbf9.html",
