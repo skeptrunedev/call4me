@@ -123,117 +123,122 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2086
+    "tokens": 2136
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2252
+    "tokens": 2255
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2194
+    "tokens": 2172
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2201
+    "tokens": 2194
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2321
+    "tokens": 2304
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 1998
+    "tokens": 2044
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2230
+    "tokens": 2185
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2241
+    "tokens": 2243
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2266
+    "tokens": 2263
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2107
+    "tokens": 2148
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 2218
+    "tokens": 2222
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 1813
+    "tokens": 1806
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 2110
+    "tokens": 2102
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 1845
+    "tokens": 1881
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1776
+    "tokens": 1779
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 1890
+    "tokens": 1850
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 1914
+    "tokens": 1958
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 2036
+    "tokens": 1985
   },
   "/blog?page=19": {
     "html": "/__pages/bcb642deee219a0c.html",
     "markdown": "/__pages/bcb642deee219a0c.md",
-    "tokens": 2081
+    "tokens": 2118
   },
   "/blog?page=20": {
     "html": "/__pages/cdbb74b6d785b988.html",
     "markdown": "/__pages/cdbb74b6d785b988.md",
-    "tokens": 1171
+    "tokens": 1295
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 21783
+    "tokens": 21918
+  },
+  "/blog/fix-an-order-or-delivery-by-phone": {
+    "html": "/__pages/f61aa29aa55e54a9.html",
+    "markdown": "/__pages/f61aa29aa55e54a9.md",
+    "tokens": 9792
   },
   "/blog/needoh-in-stock": {
     "html": "/__pages/8df7edccfa7ab0c1.html",
     "markdown": "/__pages/8df7edccfa7ab0c1.md",
-    "tokens": 6313
+    "tokens": 6348
   },
   "/blog/how-far-in-advance-to-order-catering": {
     "html": "/__pages/dc826468df108ca7.html",
     "markdown": "/__pages/dc826468df108ca7.md",
-    "tokens": 7860
+    "tokens": 8048
   },
   "/blog/gpt-live-1-1-upgrade": {
     "html": "/__pages/aa53374796bdd8ea.html",
@@ -283,7 +288,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/stubhub-customer-service-number": {
     "html": "/__pages/115dc7ed057d6429.html",
     "markdown": "/__pages/115dc7ed057d6429.md",
-    "tokens": 2483
+    "tokens": 2671
   },
   "/blog/monkeybrains-customer-service-number": {
     "html": "/__pages/57b6ae779ce46540.html",

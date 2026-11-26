@@ -132,6 +132,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'muse-code-mcp-phone-calls': ['agent-software'],
   'need-dress-shoes-today': ['retail-shopping'],
   'needoh-in-stock': ['retail-shopping'],
+  'fix-an-order-or-delivery-by-phone': ['shipping', 'retail-shopping'],
   'ohio-workers-compensation-insurance': ['insurance', 'legal-business-paperwork'],
   'openai-realtime-voices-phone-calls': ['voice-technology', 'agent-software'],
   'paypal-customer-service-number': ['personal-finance'],

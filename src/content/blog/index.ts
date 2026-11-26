@@ -233,6 +233,7 @@ import wellsFargoDisputeCharge from './wells-fargo-dispute-charge.md';
 import netflixCustomerServiceNumber from './netflix-customer-service-number.md';
 import howFarInAdvanceToOrderCatering from './how-far-in-advance-to-order-catering.md';
 import gptLive11Upgrade from './gpt-live-1-1-upgrade.md';
+import fixAnOrderOrDeliveryByPhone from './fix-an-order-or-delivery-by-phone.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -240,6 +241,7 @@ import gptLive11Upgrade from './gpt-live-1-1-upgrade.md';
  * goes at public/static/blog/<slug>.svg.
  */
 export const POST_SOURCES: PostSource[] = [
+  { slug: 'fix-an-order-or-delivery-by-phone', markdown: fixAnOrderOrDeliveryByPhone },
   { slug: 'gpt-live-1-1-upgrade', markdown: gptLive11Upgrade },
   { slug: 'mediacom-customer-service-number', markdown: mediacomCustomerServiceNumber },
   { slug: 'straight-talk-customer-service-number', markdown: straightTalkCustomerServiceNumber },

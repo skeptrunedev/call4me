@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "c93c3316d66a4ce17a1afc90dcaf1579a3d9a592df225030ff55f5fcfa2d60de"
+  "sourceHash": "344fc2a9549acbe90458fb5ece55c1bd1987bee3ff19bf3e92fbe56dc540f5cf"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -174,7 +174,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "gemini-phone-calls",
-      "similarity": 0.729582
+      "similarity": 0.729583
     },
     {
       "slug": "instinct-ai-phone-calls",
@@ -1728,7 +1728,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.796703
+      "similarity": 0.796702
     },
     {
       "slug": "goose-mcp-phone-calls",
@@ -2061,6 +2061,20 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "usaa-phone-number",
       "similarity": 0.604701
+    }
+  ],
+  "fix-an-order-or-delivery-by-phone": [
+    {
+      "slug": "how-far-in-advance-to-order-catering",
+      "similarity": 0.653779
+    },
+    {
+      "slug": "stubhub-customer-service-number",
+      "similarity": 0.65319
+    },
+    {
+      "slug": "need-dress-shoes-today",
+      "similarity": 0.601002
     }
   ],
   "follow-up-appointment-telehealth": [
@@ -2476,7 +2490,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "gym-day-pass": [
     {
       "slug": "gyms-with-sauna-near-me",
-      "similarity": 0.810296
+      "similarity": 0.810295
     },
     {
       "slug": "bonner-springs-ymca-swim-lessons",
@@ -2494,7 +2508,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "gyms-with-sauna-near-me": [
     {
       "slug": "gym-day-pass",
-      "similarity": 0.810296
+      "similarity": 0.810295
     }
   ],
   "hertz-customer-service-number": [
@@ -2544,6 +2558,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "how-far-in-advance-to-order-catering": [
+    {
+      "slug": "fix-an-order-or-delivery-by-phone",
+      "similarity": 0.653779
+    },
     {
       "slug": "needoh-in-stock",
       "similarity": 0.65023
@@ -2633,7 +2651,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "san-francisco-oral-surgeon-consultation",
-      "similarity": 0.623343
+      "similarity": 0.623342
     },
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
@@ -3471,6 +3489,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "needoh-in-stock",
       "similarity": 0.618547
+    },
+    {
+      "slug": "fix-an-order-or-delivery-by-phone",
+      "similarity": 0.601002
     }
   ],
   "needoh-in-stock": [
@@ -3596,7 +3618,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "devin-phone-calls",
-      "similarity": 0.796703
+      "similarity": 0.796702
     },
     {
       "slug": "t3-code-phone-calls",
@@ -4254,7 +4276,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-find-a-new-primary-care-doctor",
-      "similarity": 0.623343
+      "similarity": 0.623342
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -4480,6 +4502,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "vivid-seats-customer-service-number",
       "similarity": 0.711774
+    },
+    {
+      "slug": "fix-an-order-or-delivery-by-phone",
+      "similarity": 0.65319
     }
   ],
   "suitsupply-customer-service": [
@@ -4505,7 +4531,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.665719
+      "similarity": 0.665718
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5113,7 +5139,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.665719
+      "similarity": 0.665718
     },
     {
       "slug": "best-buy-customer-service-number",
