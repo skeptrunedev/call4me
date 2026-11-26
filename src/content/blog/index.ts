@@ -138,6 +138,7 @@ import needDressShoesToday from './need-dress-shoes-today.md';
 import needohInStock from './needoh-in-stock.md';
 import checkStoreStockInJapan from './check-store-stock-in-japan.md';
 import askAStoreToHoldAnItem from './ask-a-store-to-hold-an-item.md';
+import pokemon30thAnniversaryCardsInStock from './pokemon-30th-anniversary-cards-in-stock.md';
 import spectrumRetention from './spectrum-retention-department.md';
 import allstateCustomerServiceNumber from './allstate-customer-service-number.md';
 import cancelAudible from './cancel-audible.md';
@@ -403,6 +404,7 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'needoh-in-stock', markdown: needohInStock },
   { slug: 'check-store-stock-in-japan', markdown: checkStoreStockInJapan },
   { slug: 'ask-a-store-to-hold-an-item', markdown: askAStoreToHoldAnItem },
+  { slug: 'pokemon-30th-anniversary-cards-in-stock', markdown: pokemon30thAnniversaryCardsInStock },
   { slug: 'spectrum-retention-department', markdown: spectrumRetention },
   { slug: 'allstate-customer-service-number', markdown: allstateCustomerServiceNumber },
   { slug: 'cancel-audible', markdown: cancelAudible },

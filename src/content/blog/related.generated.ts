@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "d922f1634ad93d038730ee2cb7c9f083afba52506707fa8924b857b41c300375"
+  "sourceHash": "a6aab8c289114ebcca82e71b3b9f50026ab40759cb5b0caba38b0089675aacb1"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -453,6 +453,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.713156
     },
     {
+      "slug": "pokemon-30th-anniversary-cards-in-stock",
+      "similarity": 0.707594
+    },
+    {
       "slug": "check-store-stock-in-japan",
       "similarity": 0.700168
     },
@@ -467,10 +471,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "need-dress-shoes-today",
       "similarity": 0.659066
-    },
-    {
-      "slug": "stubhub-customer-service-number",
-      "similarity": 0.622026
     }
   ],
   "att-customer-service-number": [
@@ -754,6 +754,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "victorias-secret-georgetown",
       "similarity": 0.681207
+    },
+    {
+      "slug": "pokemon-30th-anniversary-cards-in-stock",
+      "similarity": 0.637543
     },
     {
       "slug": "how-far-in-advance-to-order-catering",
@@ -1264,6 +1268,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "check-store-stock-in-japan": [
     {
+      "slug": "pokemon-30th-anniversary-cards-in-stock",
+      "similarity": 0.708314
+    },
+    {
       "slug": "ask-a-store-to-hold-an-item",
       "similarity": 0.700168
     },
@@ -1290,10 +1298,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "how-far-in-advance-to-order-catering",
       "similarity": 0.613735
-    },
-    {
-      "slug": "need-dress-shoes-today",
-      "similarity": 0.602344
     }
   ],
   "chime-customer-service-number": [
@@ -2068,7 +2072,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "fabletics-customer-service": [
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.719139
+      "similarity": 0.719138
     },
     {
       "slug": "directv-customer-service",
@@ -2169,6 +2173,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "check-store-stock-in-japan",
       "similarity": 0.633456
+    },
+    {
+      "slug": "pokemon-30th-anniversary-cards-in-stock",
+      "similarity": 0.622452
     },
     {
       "slug": "need-dress-shoes-today",
@@ -2669,6 +2677,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.65023
     },
     {
+      "slug": "pokemon-30th-anniversary-cards-in-stock",
+      "similarity": 0.636786
+    },
+    {
       "slug": "call-a-store-to-check-stock",
       "similarity": 0.619199
     },
@@ -2761,7 +2773,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "san-francisco-oral-surgeon-consultation",
-      "similarity": 0.623342
+      "similarity": 0.623343
     },
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
@@ -3472,7 +3484,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "windstream-customer-service",
-      "similarity": 0.614165
+      "similarity": 0.614166
     },
     {
       "slug": "xfinity-customer-service-number",
@@ -3605,6 +3617,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.618547
     },
     {
+      "slug": "pokemon-30th-anniversary-cards-in-stock",
+      "similarity": 0.608188
+    },
+    {
       "slug": "check-store-stock-in-japan",
       "similarity": 0.602344
     },
@@ -3621,6 +3637,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "ask-a-store-to-hold-an-item",
       "similarity": 0.730137
+    },
+    {
+      "slug": "pokemon-30th-anniversary-cards-in-stock",
+      "similarity": 0.726244
     },
     {
       "slug": "check-store-stock-in-japan",
@@ -4035,6 +4055,40 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.640728
     }
   ],
+  "pokemon-30th-anniversary-cards-in-stock": [
+    {
+      "slug": "needoh-in-stock",
+      "similarity": 0.726244
+    },
+    {
+      "slug": "check-store-stock-in-japan",
+      "similarity": 0.708314
+    },
+    {
+      "slug": "ask-a-store-to-hold-an-item",
+      "similarity": 0.707594
+    },
+    {
+      "slug": "call-a-store-to-check-stock",
+      "similarity": 0.637543
+    },
+    {
+      "slug": "how-far-in-advance-to-order-catering",
+      "similarity": 0.636786
+    },
+    {
+      "slug": "stubhub-customer-service-number",
+      "similarity": 0.624663
+    },
+    {
+      "slug": "fix-an-order-or-delivery-by-phone",
+      "similarity": 0.622452
+    },
+    {
+      "slug": "need-dress-shoes-today",
+      "similarity": 0.608188
+    }
+  ],
   "posada-real-los-condestables": [
     {
       "slug": "zessan-otemachi-private-room",
@@ -4406,7 +4460,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-find-a-new-primary-care-doctor",
-      "similarity": 0.623342
+      "similarity": 0.623343
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -4642,6 +4696,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.65319
     },
     {
+      "slug": "pokemon-30th-anniversary-cards-in-stock",
+      "similarity": 0.624663
+    },
+    {
       "slug": "ask-a-store-to-hold-an-item",
       "similarity": 0.622026
     }
@@ -4649,7 +4707,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "suitsupply-customer-service": [
     {
       "slug": "fabletics-customer-service",
-      "similarity": 0.719139
+      "similarity": 0.719138
     },
     {
       "slug": "wayfair-customer-service",
@@ -4669,7 +4727,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -4765,7 +4823,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "ticketmaster-customer-service-number": [
     {
       "slug": "vivid-seats-customer-service-number",
-      "similarity": 0.697516
+      "similarity": 0.697515
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5227,7 +5285,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ticketmaster-customer-service-number",
-      "similarity": 0.697516
+      "similarity": 0.697515
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5289,7 +5347,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5473,7 +5531,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "monkeybrains-customer-service-number",
-      "similarity": 0.614165
+      "similarity": 0.614166
     },
     {
       "slug": "verizon-customer-service",
