@@ -137,6 +137,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'ask-a-store-to-hold-an-item': ['retail-shopping'],
   'call-a-store-to-check-stock': ['retail-shopping'],
   'pokemon-30th-anniversary-cards-in-stock': ['retail-shopping'],
+  'ps5-in-stock-near-me': ['retail-shopping'],
   'ohio-workers-compensation-insurance': ['insurance', 'legal-business-paperwork'],
   'openai-realtime-voices-phone-calls': ['voice-technology', 'agent-software'],
   'paypal-customer-service-number': ['personal-finance'],
