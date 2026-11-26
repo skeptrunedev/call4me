@@ -17,7 +17,10 @@
     "i hate calling businesses, can an ai do it for me",
     "ai that negotiates my bills for me",
     "ai that calls the hospital to negotiate my medical bill",
-    "ai that calls my bank to dispute a charge for me"
+    "ai that calls my bank to dispute a charge for me",
+    "ai that calls stores to check if something is in stock",
+    "how do i find an iphone duo in stock near me",
+    "can an ai call a store and ask them to hold an item for me"
   ],
   "competitors": {
     "Google (Gemini, Duplex)": "gemini|duplex|hold for me",
