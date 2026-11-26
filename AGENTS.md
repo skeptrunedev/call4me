@@ -16,7 +16,7 @@ Other outreach rules:
 
 ## Content
 
-**New `/blog` posts need Nick's go.** Every blog tier lost most of its Google impressions by November 1, 2026 (sliding from a 719 a day peak on October 26), cause unknown, while root pages held and Bing rose. It is Google-specific. Nick lifted the pause on November 25, 2026 for holiday shopping case studies built from anonymized customer calls (stock checks, holds, launch-day hunts, holiday food orders, orders and deliveries). Other new posts still wait for his go. Keep placing recorded calls and add the results to `/companies` and `/hold-times`. Don't delete, noindex or rewrite posts until the drop is diagnosed.
+**New `/blog` posts need Nick's go.** Every blog tier lost most of its Google impressions by November 1, 2026 (sliding from a 719 a day peak on October 26), cause unknown, while root pages held and Bing rose. It is Google-specific. Nick lifted the pause on November 25, 2026 for holiday shopping case studies built from anonymized customer calls (stock checks, holds, launch-day hunts, holiday food orders, orders and deliveries), and the same day for five more built the same way (winter tire prices, out-the-door car prices, hotel early check-in and late checkout, Frontier refunds, rental car extensions). The two price posts are his named exceptions to the cost-post rule below, not a lifting of it. Other new posts still wait for his go. Keep placing recorded calls and add the results to `/companies` and `/hold-times`. Don't delete, noindex or rewrite posts until the drop is diagnosed.
 
 Write for the questions where call4me is the answer, not where someone else is the authority:
 
