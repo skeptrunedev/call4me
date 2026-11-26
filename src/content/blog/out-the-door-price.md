@@ -41,22 +41,22 @@ Calls 1 and 2 overlapped. We've left out one more call to Toyota Walnut Creek, a
 
 ### Texas: a BMW M3 Competition xDrive
 
-All times Central, November 2026.
+All times Central, over five days in late November 2026.
 
 | Call | Dealer | Time | What happened |
 |---|---|---|---|
-| **6** | Principle BMW of San Antonio | Fri Nov 20, 4:11 pm | A listed 2027 M3 Competition xDrive "is a customer order," still "on the water," due at the dealer "sometime in December" |
+| **6** | Principle BMW of San Antonio | Day 1, 4:11 pm | A listed 2027 M3 Competition xDrive "is a customer order," still "on the water," due at the dealer "sometime in December" |
 | **7** | Sewell BMW of the Permian Basin, Midland | 4:18 pm | **Available and unreserved: "It just arrived today."** The salesperson read through the car's options and said "there's no rebates or incentives" on an M3 Competition |
 | **8** | SouthFork Chrysler Dodge Jeep Ram, Manvel | 4:24 pm | About 6 minutes in the sales queue. No one answered |
 | **9** | One BMW dealer in Houston | 4:24 pm | Wouldn't check a 2027 M3 without our caller's phone number: "I just, um, need to pull a profile" |
 | **10** | SouthFork Chrysler Dodge Jeep Ram, again | 4:30 pm | Asking about a used M3, our caller was transferred, and the line went to voicemail |
 | **11** | A second BMW dealer in Houston | 6:47 pm | About 5 and a half minutes of the same recorded greeting on a loop. No one picked up |
 | **12** | BMW of Arlington | 7:00 pm | The voice menu didn't take "Sales," three tries |
-| **13** | Car Place Dallas, Addison | Mon Nov 23, 2:43 pm | Cut off 24 seconds in |
+| **13** | Car Place Dallas, Addison | Day 4, 2:43 pm | Cut off 24 seconds in |
 | **14** | Car Place Dallas | 2:44 pm | A 2026 M3 Competition xDrive, "available today?" "Yes." Our caller got the salesperson's email address instead of giving a phone number |
 | **15** | Car Place Dallas | 3:28 pm | Asked for **$100,000 out the door, no add-ons.** The Elite Protection package is **"just as an option."** The **$999 reconditioning charge stays:** "it's part of my sales price" |
 | **16** | Car Place Dallas | 5:42 pm | **"the best number I have is at one-o-two,"** whatever the financing. The sales manager wanted to talk to the buyer directly |
-| **17** | Car Place Dallas | Tue Nov 24, 9:06 am | Voicemail asking for a yes or no on the user's emailed offer of $101,250 out the door |
+| **17** | Car Place Dallas | Day 5, 9:06 am | Voicemail asking for a yes or no on the user's emailed offer of $101,250 out the door |
 
 Calls 7 through 10 overlapped: the user's assistant placed calls 8, 9 and 10 while the Sewell BMW call was still going.
 
@@ -142,7 +142,7 @@ And ask about incentives. Sewell's answer on the M3: "because it's an M3 competi
 - **Car Place Dallas** asked "what's your phone number?" too. Our caller said "I don't need a callback, I'm just after the sales team's email address," and got it. From then on, the quotes went to email.
 - **Sewell BMW** asked, "are you a broker?" Our caller said, "I'm an assistant gathering info for a shopper," and the salesperson went ahead.
 
-The phone system remembered, too. By that Monday evening, Car Place Dallas's phone system offered to connect our caller straight to the user's "sales representative." The next morning it greeted the call with the user's first name.
+The phone system remembered, too. By that evening, Car Place Dallas's phone system offered to connect our caller straight to the user's "sales representative." The next morning it greeted the call with the user's first name.
 
 ## What didn't get through
 
@@ -155,7 +155,7 @@ The phone system remembered, too. By that Monday evening, Car Place Dallas's pho
 
 - **It asked for things it had already been told.** At Toyota Walnut Creek, after the salesperson had answered the price, lot and recall questions, our caller asked for all of it again in the email. "Uh, we just covered all of that. The vehicle is on the lot. The price is correct." Ask once, then ask for the email.
 - **It didn't say "sales" to a voice menu.** At the second Houston BMW dealer, the greeting asked callers to say a department, and our caller just waited through five and a half minutes of it.
-- **It lost a call.** The first Car Place Dallas call on Monday ended 24 seconds in, after our caller asked, "can you hear me okay?" It dialed again right away, and that one worked.
+- **It lost a call.** The first Car Place Dallas call that day ended 24 seconds in, after our caller asked, "can you hear me okay?" It dialed again right away, and that one worked.
 
 ## How to get an out-the-door price before the end of the year
 
