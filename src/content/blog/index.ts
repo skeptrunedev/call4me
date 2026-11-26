@@ -135,6 +135,7 @@ import fedexCustomerServiceNumber from './fedex-customer-service-number.md';
 import unitedChangeFlight from './united-change-flight.md';
 import unitedhealthcarePhoneNumber from './unitedhealthcare-phone-number.md';
 import needDressShoesToday from './need-dress-shoes-today.md';
+import needohInStock from './needoh-in-stock.md';
 import spectrumRetention from './spectrum-retention-department.md';
 import allstateCustomerServiceNumber from './allstate-customer-service-number.md';
 import cancelAudible from './cancel-audible.md';
@@ -393,6 +394,7 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'united-change-flight', markdown: unitedChangeFlight },
   { slug: 'unitedhealthcare-phone-number', markdown: unitedhealthcarePhoneNumber },
   { slug: 'need-dress-shoes-today', markdown: needDressShoesToday },
+  { slug: 'needoh-in-stock', markdown: needohInStock },
   { slug: 'spectrum-retention-department', markdown: spectrumRetention },
   { slug: 'allstate-customer-service-number', markdown: allstateCustomerServiceNumber },
   { slug: 'cancel-audible', markdown: cancelAudible },

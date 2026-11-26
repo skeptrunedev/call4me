@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "2dfe0c93fc5a3084f47a430c46023e3ba218373384a96fb42eb8d8c786bda4d8"
+  "sourceHash": "13b156097232b21b64c578c149bb7f1be5b7269cd444808a71f9b93144994a4b"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -1466,7 +1466,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "costco-customer-service": [
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.669986
+      "similarity": 0.669985
     },
     {
       "slug": "pottery-barn-customer-service",
@@ -1728,7 +1728,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.796702
+      "similarity": 0.796703
     },
     {
       "slug": "goose-mcp-phone-calls",
@@ -1870,7 +1870,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "zessan-otemachi-private-room",
-      "similarity": 0.695845
+      "similarity": 0.695846
     },
     {
       "slug": "pin-on-grand-reservations",
@@ -3457,6 +3457,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "victorias-secret-georgetown",
       "similarity": 0.663257
+    },
+    {
+      "slug": "needoh-in-stock",
+      "similarity": 0.618547
+    }
+  ],
+  "needoh-in-stock": [
+    {
+      "slug": "need-dress-shoes-today",
+      "similarity": 0.618547
     }
   ],
   "netflix-customer-service-number": [
@@ -3572,7 +3582,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "devin-phone-calls",
-      "similarity": 0.796702
+      "similarity": 0.796703
     },
     {
       "slug": "t3-code-phone-calls",
@@ -4481,7 +4491,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5085,11 +5095,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "costco-customer-service",
-      "similarity": 0.669986
+      "similarity": 0.669985
     },
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5348,7 +5358,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "equal-parts-sf-reservations",
-      "similarity": 0.695845
+      "similarity": 0.695846
     },
     {
       "slug": "posada-real-los-condestables",

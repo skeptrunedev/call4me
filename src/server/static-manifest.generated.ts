@@ -3,7 +3,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/": {
     "html": "/__pages/8a5edab282632443.html",
     "markdown": "/__pages/8a5edab282632443.md",
-    "tokens": 3301
+    "tokens": 3304
   },
   "/examples": {
     "html": "/__pages/1a130cabaa8a47b0.html",
@@ -28,17 +28,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/ai-call-assistant": {
     "html": "/__pages/9c2cf5350f943d84.html",
     "markdown": "/__pages/9c2cf5350f943d84.md",
-    "tokens": 2968
+    "tokens": 2966
   },
   "/app-that-calls-businesses-for-you": {
     "html": "/__pages/1d754aa507f67b2f.html",
     "markdown": "/__pages/1d754aa507f67b2f.md",
-    "tokens": 2944
+    "tokens": 2959
   },
   "/hold-for-me": {
     "html": "/__pages/ba822c49c148d1be.html",
     "markdown": "/__pages/ba822c49c148d1be.md",
-    "tokens": 2815
+    "tokens": 2816
   },
   "/book-doctor-appointment": {
     "html": "/__pages/c75d5c79ab7b63e3.html",
@@ -48,7 +48,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/cancel-subscription": {
     "html": "/__pages/25b27c4f152aa217.html",
     "markdown": "/__pages/25b27c4f152aa217.md",
-    "tokens": 2425
+    "tokens": 2426
   },
   "/book-restaurant-reservation": {
     "html": "/__pages/3dba287a8c818da2.html",
@@ -58,22 +58,22 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/call-customer-service": {
     "html": "/__pages/83c8be2160d0ee48.html",
     "markdown": "/__pages/83c8be2160d0ee48.md",
-    "tokens": 2310
+    "tokens": 2311
   },
   "/negotiate-bills": {
     "html": "/__pages/71a04d205e1d6891.html",
     "markdown": "/__pages/71a04d205e1d6891.md",
-    "tokens": 2413
+    "tokens": 2414
   },
   "/dispute-a-charge": {
     "html": "/__pages/92ecfc917ddafeee.html",
     "markdown": "/__pages/92ecfc917ddafeee.md",
-    "tokens": 2186
+    "tokens": 2187
   },
   "/phone-anxiety": {
     "html": "/__pages/4278e6ad77a870a4.html",
     "markdown": "/__pages/4278e6ad77a870a4.md",
-    "tokens": 7581
+    "tokens": 7577
   },
   "/hold-times": {
     "html": "/__pages/0adb6fe5d87ff479.html",
@@ -88,12 +88,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/mcp": {
     "html": "/__pages/88fe637beab867e2.html",
     "markdown": "/__pages/88fe637beab867e2.md",
-    "tokens": 2395
+    "tokens": 2399
   },
   "/rules": {
     "html": "/__pages/933053fc294245bb.html",
     "markdown": "/__pages/933053fc294245bb.md",
-    "tokens": 1339
+    "tokens": 1361
   },
   "/privacy": {
     "html": "/__pages/0ece7f7c306b4cf6.html",
@@ -123,112 +123,117 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2014
+    "tokens": 2044
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2241
+    "tokens": 2244
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2240
+    "tokens": 2221
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2198
+    "tokens": 2197
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2271
+    "tokens": 2285
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2036
+    "tokens": 2009
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2242
+    "tokens": 2265
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2261
+    "tokens": 2235
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2220
+    "tokens": 2247
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2112
+    "tokens": 2107
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 2150
+    "tokens": 2183
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 1920
+    "tokens": 1863
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 2043
+    "tokens": 2076
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 1810
+    "tokens": 1838
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1795
+    "tokens": 1782
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 1926
+    "tokens": 1899
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 1871
+    "tokens": 1911
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 2114
+    "tokens": 2052
   },
   "/blog?page=19": {
     "html": "/__pages/bcb642deee219a0c.html",
     "markdown": "/__pages/bcb642deee219a0c.md",
-    "tokens": 2004
+    "tokens": 2049
   },
   "/blog?page=20": {
     "html": "/__pages/cdbb74b6d785b988.html",
     "markdown": "/__pages/cdbb74b6d785b988.md",
-    "tokens": 919
+    "tokens": 1052
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 21540
+    "tokens": 21668
+  },
+  "/blog/needoh-in-stock": {
+    "html": "/__pages/8df7edccfa7ab0c1.html",
+    "markdown": "/__pages/8df7edccfa7ab0c1.md",
+    "tokens": 6107
   },
   "/blog/gpt-live-1-1-upgrade": {
     "html": "/__pages/aa53374796bdd8ea.html",
     "markdown": "/__pages/aa53374796bdd8ea.md",
-    "tokens": 2790
+    "tokens": 2821
   },
   "/blog/mediacom-customer-service-number": {
     "html": "/__pages/5f37898813236fe9.html",
@@ -1013,7 +1018,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/bland-ai-alternatives": {
     "html": "/__pages/ae7d8f0f01361a52.html",
     "markdown": "/__pages/ae7d8f0f01361a52.md",
-    "tokens": 3272
+    "tokens": 3284
   },
   "/blog/ai-agent-that-makes-phone-calls": {
     "html": "/__pages/c6d4cf77fa9ecc89.html",
@@ -1343,7 +1348,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/need-dress-shoes-today": {
     "html": "/__pages/18c64c271fefb021.html",
     "markdown": "/__pages/18c64c271fefb021.md",
-    "tokens": 7720
+    "tokens": 7891
   },
   "/blog/spectrum-retention-department": {
     "html": "/__pages/cad6a590d97a2bfd.html",
