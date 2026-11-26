@@ -192,6 +192,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'walgreens-specialty-pharmacy-phone-number': ['pharmacy'],
   'moxy-st-petersburg-downtown': ['travel-lodging'],
   'virgin-hotels-new-york-parking': ['travel-lodging'],
+  'hotel-early-check-in': ['travel-lodging'],
   'inn-at-jim-thorpe-reservations': ['travel-lodging'],
   'ventura-superior-court-judgment-debtor-exam': ['legal-business-paperwork'],
   'marina-traffic-court-phone-number': ['legal-business-paperwork'],
