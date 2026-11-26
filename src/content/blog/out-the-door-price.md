@@ -100,9 +100,9 @@ Two calls show why the words matter:
 
 Some fees hide inside the selling price. Car Place Dallas's own listings show it: each car has an "Original price," then "Recon $999" and "Doc Fee $225," then a "Sale price" $1,224 higher ([carplacedallas.com](https://carplacedallas.com/)). When our caller asked about removing "that nine hundred and ninety nine reconditioning charge," the salesperson said, "No, so it's-it's part of my sales price."
 
-## Will a dealer honor an out-the-door price? San Francisco Toyota said yes
+## Will a dealer honor an out-the-door price? San Francisco Toyota did, on a RAV4 Plug-in Hybrid
 
-At least this one did, for one more day. The salesperson had emailed the user a write-up with a $46,530 out-the-door price on a 2026 RAV4 Plug-in Hybrid SE. Our caller pointed out, "Your write-up says the offer expires today," and asked whether the price would still be honored the next day. "Um, yes," and then: "As long as it's available."
+For one more day, at least. The salesperson had emailed the user a write-up with a $46,530 out-the-door price on a 2026 RAV4 Plug-in Hybrid SE. Our caller pointed out, "Your write-up says the offer expires today," and asked whether the price would still be honored the next day. "Um, yes," and then: "As long as it's available."
 
 So the price would hold, but nothing held the car: someone else could still buy it in the meantime. The dealer's way to hold it was a $500 deposit, and the salesperson said, "It is fully refundable if he does not buy it." The deposit wasn't placed on this call, and the salesperson hadn't cleared it with a manager yet: "I have not asked my boss because you guys have not told me..." Asked to put the refund terms in writing: "Of course I can."
 
