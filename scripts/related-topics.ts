@@ -252,4 +252,5 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'how-far-in-advance-to-order-catering': ['dining', 'retail-shopping'],
   'iphone-duo-in-stock': ['retail-shopping'],
   'winter-tire-prices': ['car-maintenance'],
+  'frontier-airlines-refund': ['airlines'],
 };

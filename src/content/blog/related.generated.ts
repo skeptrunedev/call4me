@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "2e39336f6a00a57c238f2f47bd3e7bf2a90a99d24cc3d8f99b9d554c965cc026"
+  "sourceHash": "29e8cf515d4e4e02b7b7139a140b6d14e80f867f8ba15779dfbac5ea9ee93643"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -700,7 +700,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "salon-per-se-bellaire",
-      "similarity": 0.688542
+      "similarity": 0.688543
     },
     {
       "slug": "fresh-blades-barbershop-divisadero",
@@ -1365,7 +1365,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.828317
+      "similarity": 0.828316
     },
     {
       "slug": "langchain-mcp-phone-calls",
@@ -1707,6 +1707,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "customer-story-flight-credit": [
     {
+      "slug": "frontier-airlines-refund",
+      "similarity": 0.669193
+    },
+    {
       "slug": "american-airlines-flight-credit",
       "similarity": 0.649587
     }
@@ -1872,7 +1876,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "netflix-customer-service-number",
-      "similarity": 0.637012
+      "similarity": 0.637011
     },
     {
       "slug": "how-to-lower-directv-bill",
@@ -1980,7 +1984,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "zessan-otemachi-private-room",
-      "similarity": 0.695846
+      "similarity": 0.695845
     },
     {
       "slug": "pin-on-grand-reservations",
@@ -2265,6 +2269,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "running-late-to-barber",
       "similarity": 0.608961
+    }
+  ],
+  "frontier-airlines-refund": [
+    {
+      "slug": "customer-story-flight-credit",
+      "similarity": 0.669193
     }
   ],
   "geico-customer-service": [
@@ -2612,7 +2622,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "gym-day-pass": [
     {
       "slug": "gyms-with-sauna-near-me",
-      "similarity": 0.810296
+      "similarity": 0.810295
     },
     {
       "slug": "bonner-springs-ymca-swim-lessons",
@@ -2630,7 +2640,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "gyms-with-sauna-near-me": [
     {
       "slug": "gym-day-pass",
-      "similarity": 0.810296
+      "similarity": 0.810295
     }
   ],
   "hertz-customer-service-number": [
@@ -2811,7 +2821,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "san-francisco-oral-surgeon-consultation",
-      "similarity": 0.623343
+      "similarity": 0.623342
     },
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
@@ -3213,7 +3223,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "m-hansik-durham-private-dining",
-      "similarity": 0.693239
+      "similarity": 0.693238
     },
     {
       "slug": "customer-story-rick-dinner-reservation",
@@ -3308,7 +3318,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "lai-wah-heen-private-dining",
-      "similarity": 0.693239
+      "similarity": 0.693238
     },
     {
       "slug": "palmeri-brentwood-private-dining",
@@ -3376,7 +3386,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.828317
+      "similarity": 0.828316
     },
     {
       "slug": "cline-phone-calls",
@@ -3754,7 +3764,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "directv-customer-service",
-      "similarity": 0.637012
+      "similarity": 0.637011
     },
     {
       "slug": "spectrum-retention-department",
@@ -4358,7 +4368,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "stubhub-customer-service-number",
-      "similarity": 0.629199
+      "similarity": 0.6292
     }
   ],
   "reschedule-dentist-appointment": [
@@ -4528,7 +4538,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "salon-per-se-bellaire": [
     {
       "slug": "book-haircut-appointment",
-      "similarity": 0.688542
+      "similarity": 0.688543
     },
     {
       "slug": "fresh-blades-barbershop-divisadero",
@@ -4582,7 +4592,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-find-a-new-primary-care-doctor",
-      "similarity": 0.623343
+      "similarity": 0.623342
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -4819,7 +4829,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ps5-in-stock-near-me",
-      "similarity": 0.629199
+      "similarity": 0.6292
     },
     {
       "slug": "pokemon-30th-anniversary-cards-in-stock",
@@ -4853,7 +4863,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.665719
+      "similarity": 0.665718
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5489,7 +5499,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.665719
+      "similarity": 0.665718
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5782,7 +5792,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "equal-parts-sf-reservations",
-      "similarity": 0.695846
+      "similarity": 0.695845
     },
     {
       "slug": "posada-real-los-condestables",

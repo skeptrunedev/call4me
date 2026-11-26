@@ -123,112 +123,112 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2376
+    "tokens": 2452
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2093
+    "tokens": 2014
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2212
+    "tokens": 2241
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2255
+    "tokens": 2240
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2206
+    "tokens": 2198
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2229
+    "tokens": 2271
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2064
+    "tokens": 2036
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2231
+    "tokens": 2242
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2270
+    "tokens": 2261
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2219
+    "tokens": 2220
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 2121
+    "tokens": 2112
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 2099
+    "tokens": 2150
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 1925
+    "tokens": 1920
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 2054
+    "tokens": 2043
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1831
+    "tokens": 1810
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 1779
+    "tokens": 1795
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 1939
+    "tokens": 1926
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 1864
+    "tokens": 1871
   },
   "/blog?page=19": {
     "html": "/__pages/bcb642deee219a0c.html",
     "markdown": "/__pages/bcb642deee219a0c.md",
-    "tokens": 2101
+    "tokens": 2114
   },
   "/blog?page=20": {
     "html": "/__pages/cdbb74b6d785b988.html",
     "markdown": "/__pages/cdbb74b6d785b988.md",
-    "tokens": 2037
+    "tokens": 2004
   },
   "/blog?page=21": {
     "html": "/__pages/a483033cd4a02de8.html",
     "markdown": "/__pages/a483033cd4a02de8.md",
-    "tokens": 761
+    "tokens": 919
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 22910
+    "tokens": 23033
   },
   "/blog/fix-an-order-or-delivery-by-phone": {
     "html": "/__pages/f61aa29aa55e54a9.html",
@@ -283,12 +283,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/winter-tire-prices": {
     "html": "/__pages/89e3ef237de9ec58.html",
     "markdown": "/__pages/89e3ef237de9ec58.md",
-    "tokens": 7247
+    "tokens": 7256
+  },
+  "/blog/frontier-airlines-refund": {
+    "html": "/__pages/3ac1ee515eb5a0f7.html",
+    "markdown": "/__pages/3ac1ee515eb5a0f7.md",
+    "tokens": 7329
   },
   "/blog/gpt-live-1-1-upgrade": {
     "html": "/__pages/aa53374796bdd8ea.html",
     "markdown": "/__pages/aa53374796bdd8ea.md",
-    "tokens": 2823
+    "tokens": 2822
   },
   "/blog/mediacom-customer-service-number": {
     "html": "/__pages/5f37898813236fe9.html",
@@ -968,7 +973,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/customer-story-flight-credit": {
     "html": "/__pages/4d462d33064c5ddf.html",
     "markdown": "/__pages/4d462d33064c5ddf.md",
-    "tokens": 1407
+    "tokens": 1582
   },
   "/blog/customer-story-rick-dinner-reservation": {
     "html": "/__pages/5023fc4d4837d0ba.html",
