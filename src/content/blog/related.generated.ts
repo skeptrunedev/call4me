@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "c20154ef148e243b1bb0d6595297801236313228d35a1b8bcfd37905c5431f29"
+  "sourceHash": "6d474247021640b1fab2c0a0ecc3c848a76aec7c0607842f5048797dcee7862a"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -33,7 +33,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "geico-customer-service",
-      "similarity": 0.679611
+      "similarity": 0.67961
     },
     {
       "slug": "unitedhealthcare-phone-number",
@@ -439,6 +439,36 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.619983
     }
   ],
+  "ask-a-store-to-hold-an-item": [
+    {
+      "slug": "needoh-in-stock",
+      "similarity": 0.730137
+    },
+    {
+      "slug": "how-far-in-advance-to-order-catering",
+      "similarity": 0.713156
+    },
+    {
+      "slug": "check-store-stock-in-japan",
+      "similarity": 0.700168
+    },
+    {
+      "slug": "victorias-secret-georgetown",
+      "similarity": 0.674929
+    },
+    {
+      "slug": "fix-an-order-or-delivery-by-phone",
+      "similarity": 0.663887
+    },
+    {
+      "slug": "need-dress-shoes-today",
+      "similarity": 0.659066
+    },
+    {
+      "slug": "stubhub-customer-service-number",
+      "similarity": 0.622026
+    }
+  ],
   "att-customer-service-number": [
     {
       "slug": "straight-talk-customer-service-number",
@@ -562,7 +592,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "cascaded-voice-stack-vs-gpt-live",
-      "similarity": 0.720376
+      "similarity": 0.720377
     },
     {
       "slug": "instinct-ai-phone-calls",
@@ -1071,7 +1101,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "bland-ai-alternatives",
-      "similarity": 0.720376
+      "similarity": 0.720377
     },
     {
       "slug": "vapi-alternatives",
@@ -1208,6 +1238,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "check-store-stock-in-japan": [
     {
+      "slug": "ask-a-store-to-hold-an-item",
+      "similarity": 0.700168
+    },
+    {
       "slug": "needoh-in-stock",
       "similarity": 0.674359
     },
@@ -1285,7 +1319,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.828316
+      "similarity": 0.828317
     },
     {
       "slug": "langchain-mcp-phone-calls",
@@ -1500,7 +1534,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "home-depot-customer-service",
-      "similarity": 0.641562
+      "similarity": 0.641561
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -1526,7 +1560,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
-      "similarity": 0.621841
+      "similarity": 0.621842
     }
   ],
   "costco-return-policy": [
@@ -2091,6 +2125,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "fix-an-order-or-delivery-by-phone": [
     {
+      "slug": "ask-a-store-to-hold-an-item",
+      "similarity": 0.663887
+    },
+    {
       "slug": "how-far-in-advance-to-order-catering",
       "similarity": 0.653779
     },
@@ -2182,7 +2220,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "aaa-insurance-customer-service",
-      "similarity": 0.679611
+      "similarity": 0.67961
     },
     {
       "slug": "allstate-customer-service-number",
@@ -2589,6 +2627,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "how-far-in-advance-to-order-catering": [
     {
+      "slug": "ask-a-store-to-hold-an-item",
+      "similarity": 0.713156
+    },
+    {
       "slug": "fix-an-order-or-delivery-by-phone",
       "similarity": 0.653779
     },
@@ -2811,7 +2853,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "xfinity-customer-service-number",
-      "similarity": 0.669881
+      "similarity": 0.66988
     },
     {
       "slug": "spectrum-retention-department",
@@ -2873,7 +2915,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "inn-at-jim-thorpe-reservations": [
     {
       "slug": "ritz-carlton-bachelor-gulch-reservations",
-      "similarity": 0.670147
+      "similarity": 0.670148
     },
     {
       "slug": "booking-com-customer-service-number",
@@ -3164,7 +3206,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "pin-on-grand-reservations",
-      "similarity": 0.614578
+      "similarity": 0.614577
     },
     {
       "slug": "posada-real-los-condestables",
@@ -3216,7 +3258,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.828316
+      "similarity": 0.828317
     },
     {
       "slug": "cline-phone-calls",
@@ -3521,6 +3563,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.663257
     },
     {
+      "slug": "ask-a-store-to-hold-an-item",
+      "similarity": 0.659066
+    },
+    {
       "slug": "needoh-in-stock",
       "similarity": 0.618547
     },
@@ -3534,6 +3580,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "needoh-in-stock": [
+    {
+      "slug": "ask-a-store-to-hold-an-item",
+      "similarity": 0.730137
+    },
     {
       "slug": "check-store-stock-in-japan",
       "similarity": 0.674359
@@ -4144,7 +4194,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "inn-at-jim-thorpe-reservations",
-      "similarity": 0.670147
+      "similarity": 0.670148
     },
     {
       "slug": "posada-real-los-condestables",
@@ -4242,7 +4292,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "costco-eye-exam-cost",
-      "similarity": 0.621841
+      "similarity": 0.621842
     },
     {
       "slug": "colonoscopy-screening-san-juan",
@@ -4552,6 +4602,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "fix-an-order-or-delivery-by-phone",
       "similarity": 0.65319
+    },
+    {
+      "slug": "ask-a-store-to-hold-an-item",
+      "similarity": 0.622026
     }
   ],
   "suitsupply-customer-service": [
@@ -5097,6 +5151,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "victorias-secret-georgetown": [
     {
+      "slug": "ask-a-store-to-hold-an-item",
+      "similarity": 0.674929
+    },
+    {
       "slug": "need-dress-shoes-today",
       "similarity": 0.663257
     },
@@ -5388,7 +5446,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-lower-xfinity-bill",
-      "similarity": 0.669881
+      "similarity": 0.66988
     },
     {
       "slug": "windstream-customer-service",

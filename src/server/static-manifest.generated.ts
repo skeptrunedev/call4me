@@ -123,22 +123,22 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2170
+    "tokens": 2194
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2243
+    "tokens": 2235
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2162
+    "tokens": 2172
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2221
+    "tokens": 2204
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
@@ -148,102 +148,107 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2068
+    "tokens": 2065
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2151
+    "tokens": 2178
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2233
+    "tokens": 2183
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2306
+    "tokens": 2314
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2169
+    "tokens": 2188
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 2190
+    "tokens": 2176
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 1801
+    "tokens": 1849
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 2132
+    "tokens": 2117
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 1891
+    "tokens": 1905
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1786
+    "tokens": 1783
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 1845
+    "tokens": 1847
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 1956
+    "tokens": 1962
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 1947
+    "tokens": 1907
   },
   "/blog?page=19": {
     "html": "/__pages/bcb642deee219a0c.html",
     "markdown": "/__pages/bcb642deee219a0c.md",
-    "tokens": 2112
+    "tokens": 2110
   },
   "/blog?page=20": {
     "html": "/__pages/cdbb74b6d785b988.html",
     "markdown": "/__pages/cdbb74b6d785b988.md",
-    "tokens": 1461
+    "tokens": 1617
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 22044
+    "tokens": 22162
   },
   "/blog/fix-an-order-or-delivery-by-phone": {
     "html": "/__pages/f61aa29aa55e54a9.html",
     "markdown": "/__pages/f61aa29aa55e54a9.md",
-    "tokens": 9814
+    "tokens": 9800
   },
   "/blog/needoh-in-stock": {
     "html": "/__pages/8df7edccfa7ab0c1.html",
     "markdown": "/__pages/8df7edccfa7ab0c1.md",
-    "tokens": 6517
+    "tokens": 6525
   },
   "/blog/check-store-stock-in-japan": {
     "html": "/__pages/058cae80884861ab.html",
     "markdown": "/__pages/058cae80884861ab.md",
-    "tokens": 9546
+    "tokens": 9517
+  },
+  "/blog/ask-a-store-to-hold-an-item": {
+    "html": "/__pages/9229a7b23056de7b.html",
+    "markdown": "/__pages/9229a7b23056de7b.md",
+    "tokens": 6459
   },
   "/blog/how-far-in-advance-to-order-catering": {
     "html": "/__pages/dc826468df108ca7.html",
     "markdown": "/__pages/dc826468df108ca7.md",
-    "tokens": 8106
+    "tokens": 8095
   },
   "/blog/gpt-live-1-1-upgrade": {
     "html": "/__pages/aa53374796bdd8ea.html",
@@ -438,7 +443,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/victorias-secret-georgetown": {
     "html": "/__pages/d529bbf9b8194852.html",
     "markdown": "/__pages/d529bbf9b8194852.md",
-    "tokens": 3680
+    "tokens": 3667
   },
   "/blog/fresh-blades-barbershop-divisadero": {
     "html": "/__pages/c4fbb24653a521ec.html",
@@ -1363,7 +1368,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/need-dress-shoes-today": {
     "html": "/__pages/18c64c271fefb021.html",
     "markdown": "/__pages/18c64c271fefb021.md",
-    "tokens": 7891
+    "tokens": 7884
   },
   "/blog/spectrum-retention-department": {
     "html": "/__pages/cad6a590d97a2bfd.html",
