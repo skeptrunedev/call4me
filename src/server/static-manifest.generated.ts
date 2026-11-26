@@ -293,7 +293,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/out-the-door-price": {
     "html": "/__pages/9e2840a343977310.html",
     "markdown": "/__pages/9e2840a343977310.md",
-    "tokens": 8343
+    "tokens": 8345
   },
   "/blog/extend-a-rental-car": {
     "html": "/__pages/f9e875e9fda2e67b.html",

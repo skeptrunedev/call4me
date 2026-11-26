@@ -188,7 +188,7 @@ If you use call4me, paste this into your agent:
 
 > Call [dealer and phone number] about the [year, model, trim and color] they have listed. Ask if it's physically on the lot, unreserved and not a customer order. Ask for their best out-the-door price, including all tax, title, registration and dealer fees, with no protection packages or add-ons, itemized by email to [email]. Ask how long the price is good for, which fees are optional, and whether any hold deposit is refundable. Don't agree to anything, give a card or fill out a credit application. Tell me exactly what they said.
 
-More from this batch of holiday calls: [winter tire prices](/blog/winter-tire-prices), [asking a hotel for early check-in](/blog/hotel-early-check-in), [a Frontier Airlines refund by phone](/blog/frontier-airlines-refund) and [extending a rental car](/blog/extend-a-rental-car). For something smaller than a car, see [how to ask a store to hold an item](/blog/ask-a-store-to-hold-an-item) and how one user [found dress shoes and got them held the same day](/blog/need-dress-shoes-today). Or [listen to more real calls](/examples).
+More from this batch of holiday calls: [winter tire prices](/blog/winter-tire-prices), [asking a hotel for early check-in](/blog/late-checkout-early-check-in), [a Frontier Airlines refund by phone](/blog/frontier-airlines-refund) and [extending a rental car](/blog/extend-a-rental-car). For something smaller than a car, see [how to ask a store to hold an item](/blog/ask-a-store-to-hold-an-item) and how one user [found dress shoes and got them held the same day](/blog/need-dress-shoes-today). Or [listen to more real calls](/examples).
 
 <details>
 <summary>Read the San Francisco Toyota transcript (the clip)</summary>
