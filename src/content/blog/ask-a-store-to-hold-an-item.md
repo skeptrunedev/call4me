@@ -167,7 +167,7 @@ If you use call4me, paste this into your agent:
 
 > Call [store and phone number] and ask if they have [item, size, color] in stock today. Ask them to look at the shelf, not just the system. If they have it, ask them to hold it under my name until [time] and confirm what time they close. If they won't hold it, ask whether I should order it online for pickup. Don't buy anything or give a card. Tell me exactly what they said.
 
-More from this batch of holiday shopping calls: [how to check if a store has something in stock](/blog/call-a-store-to-check-stock), [PS5 stock calls](/blog/ps5-in-stock-near-me), [iPhone Duo stock calls](/blog/iphone-duo-in-stock), [NeeDoh and holiday toy hunts](/blog/needoh-in-stock), [holiday food orders by phone](/blog/holiday-food-orders-by-phone) and [fixing an order or delivery by phone](/blog/fix-an-order-or-delivery-by-phone). Or [listen to more real calls](/examples).
+More from this batch of holiday shopping calls: [how to check if a store has something in stock](/blog/call-a-store-to-check-stock), [PS5 stock calls](/blog/ps5-in-stock-near-me), [iPhone Duo stock calls](/blog/iphone-duo-in-stock), [NeeDoh and holiday toy hunts](/blog/needoh-in-stock), [holiday food orders by phone](/blog/how-far-in-advance-to-order-catering) and [fixing an order or delivery by phone](/blog/fix-an-order-or-delivery-by-phone). Or [listen to more real calls](/examples).
 
 <details>
 <summary>Read the Walmart transcript (the clip)</summary>

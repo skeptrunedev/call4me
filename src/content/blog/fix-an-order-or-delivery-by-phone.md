@@ -1,6 +1,6 @@
 ---
 title: "Can a hotel hold your package? How to fix an order or delivery by phone"
-seoTitle: "Hotel package holds, delivery fixes (Nov 2026)"
+seoTitle: "How to cancel an order or send one to a hotel"
 subtitle: call4me users' AI phone assistants made 33 calls about packages and orders this fall. Four hotels held or said they hold guests' packages, UPS sent a T-Mobile device order back before delivery, Filson explained what happens when it's too late to cancel, and stores answered return questions. Here's what each one said, two front desk recordings, and how to do it yourself.
 description: "Yes, hotels hold packages for guests, with rules. What 4 front desks, UPS, FedEx and 8 more businesses said on 33 calls about holiday orders and cancellations."
 date: 2026-11-25
@@ -201,7 +201,7 @@ If you use call4me, paste this into your agent:
 
 > Call [hotel, carrier or store] about my [order or package]. The [tracking or order] number is [number] and the name on the label is [name]. Ask them to [the change you need], and get the date it will happen, the name of any next step, and any case number. Don't pay for anything, agree to fees or cancel anything else. Put the answers in one table.
 
-More from this batch of holiday calls: [asking a store to hold an item](/blog/ask-a-store-to-hold-an-item), [calling a store to check stock](/blog/call-a-store-to-check-stock), [holiday food orders by phone](/blog/holiday-food-orders-by-phone), and [how one user found dress shoes and got a pair held the same day](/blog/need-dress-shoes-today). Or see [an app that calls businesses for you](/app-that-calls-businesses-for-you) and [listen to more real calls](/examples).
+More from this batch of holiday calls: [asking a store to hold an item](/blog/ask-a-store-to-hold-an-item), [calling a store to check stock](/blog/call-a-store-to-check-stock), [holiday food orders by phone](/blog/how-far-in-advance-to-order-catering), and [how one user found dress shoes and got a pair held the same day](/blog/need-dress-shoes-today). Or see [an app that calls businesses for you](/app-that-calls-businesses-for-you) and [listen to more real calls](/examples).
 
 <details>
 <summary>Read the AC Hotel Birmingham transcript</summary>

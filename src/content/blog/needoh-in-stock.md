@@ -145,7 +145,7 @@ If you use call4me, paste this into your agent:
 
 > Call [stores and phone numbers] and ask a person to check the shelf for [item and variant], not [the similar item]. Ask if any are in the back, when the next truck or shipment comes, and what time they open. Don't buy, reserve or hold anything. Put the answers in one table.
 
-More shopping calls from this holiday season: [how to check if a store has something in stock](/blog/call-a-store-to-check-stock), [asking a store to hold an item](/blog/ask-a-store-to-hold-an-item), [Pokemon 30th Anniversary cards](/blog/pokemon-30th-anniversary-cards-in-stock), [PS5 stock calls](/blog/ps5-in-stock-near-me), [the iPhone Duo hunt](/blog/iphone-duo-in-stock) and [holiday food orders](/blog/holiday-food-orders-by-phone). For a same-day errand with a hold at the end, see [finding dress shoes the same day](/blog/need-dress-shoes-today), and [listen to other real calls](/examples).
+More shopping calls from this holiday season: [how to check if a store has something in stock](/blog/call-a-store-to-check-stock), [asking a store to hold an item](/blog/ask-a-store-to-hold-an-item), [Pokemon 30th Anniversary cards](/blog/pokemon-30th-anniversary-cards-in-stock), [PS5 stock calls](/blog/ps5-in-stock-near-me), [the iPhone Duo hunt](/blog/iphone-duo-in-stock) and [holiday food orders](/blog/how-far-in-advance-to-order-catering). For a same-day errand with a hold at the end, see [finding dress shoes the same day](/blog/need-dress-shoes-today), and [listen to other real calls](/examples).
 
 <details>
 <summary>Read the Kohl's Avondale transcript (the excerpt above)</summary>

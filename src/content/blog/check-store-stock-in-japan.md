@@ -278,6 +278,6 @@ More from these November 2026 shopping calls:
 - [Call a store to check stock](/blog/call-a-store-to-check-stock): how to check if a store has something, across all of the calls
 - [Ask a store to hold an item](/blog/ask-a-store-to-hold-an-item): which stores set things aside and for how long
 - [PS5 in stock near me](/blog/ps5-in-stock-near-me), [iPhone Duo in stock](/blog/iphone-duo-in-stock), [Pokemon 30th Anniversary cards in stock](/blog/pokemon-30th-anniversary-cards-in-stock) and [NeeDoh in stock](/blog/needoh-in-stock)
-- [Holiday food orders by phone](/blog/holiday-food-orders-by-phone) and [fix an order or delivery by phone](/blog/fix-an-order-or-delivery-by-phone)
+- [Holiday food orders by phone](/blog/how-far-in-advance-to-order-catering) and [fix an order or delivery by phone](/blog/fix-an-order-or-delivery-by-phone)
 - [Need dress shoes today?](/blog/need-dress-shoes-today): a same-day stock check and hold in Washington, DC
 - In Japan: [booking a private room in Tokyo by phone](/blog/zessan-otemachi-private-room)
