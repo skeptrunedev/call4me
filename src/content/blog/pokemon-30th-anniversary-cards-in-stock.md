@@ -30,21 +30,21 @@ All 11 calls were made by a call4me user in Ontario. Our caller didn't buy, rese
 
 ## The 11 calls, in order
 
-All times Eastern. Waterloo has five Shoppers Drug Marts in this list, numbered in the order our caller first reached them.
+All times Eastern. Five of the stores are Shoppers Drug Marts in Waterloo, told apart here as one, a second, a third, a fourth and a fifth.
 
 | Call | Store | When | What happened |
 |---|---|---|---|
-| **1** | Lids, Waterloo | Wed Nov 11, 11:48 am | No 30th products. "Everything I have coming in is Delta." No holds |
-| **2** | Lids, Kitchener | Wed Nov 11, 11:48 am | **The 30th ETB, $200.** No Ultra-Premium Collection. "None of this can be held" |
-| **3** | Lids, Cambridge | Wed Nov 11, 11:48 am | None of "the new release stuff." It could arrive within "like three weeks." First come, first served |
-| **4** | Shoppers Drug Mart, Waterloo (first store) | Wed Nov 11, 11:56 am | **One Knock Out Collection in stock.** No hold. No price by phone: "we would have to scan that" |
-| **5** | Lids, Guelph | Fri Nov 20, 11:35 am | **The last 30th Celebration Battle Deck, $40.** No Ultra-Premium Collection or booster bundles. Restocks "weekly" |
-| **6** | Shoppers Drug Mart, Waterloo (second store) | Fri Nov 20, 1:27 pm | "We do not have any Pokémon thirtieth at the moment" |
-| **7** | Shoppers Drug Mart, Waterloo (third store) | Fri Nov 20, 1:27 pm | No Knock Out Collection: "We don't at the moment" |
-| **8** | Shoppers Drug Mart, Waterloo (first store again) | Fri Nov 20, 1:28 pm | Phone menu, then no one picked up before the call ended, just under 2 minutes in |
-| **9** | Shoppers Drug Mart, Waterloo (fourth store) | Fri Nov 20, 1:30 pm | No Knock Out Collection: "No we don't" |
-| **10** | Shoppers Drug Mart, Waterloo (fifth store) | Fri Nov 20, 1:30 pm | Same as call 8: the menu, then no one before the call ended |
-| **11** | EB Games, Kitchener | Wed Nov 25, 12:48 pm | **Ultra-Premium Collection in stock for walk-in purchase, $380** |
+| **1** | A Lids in Waterloo | Wed Nov 11, 11:48 am | No 30th products. "Everything I have coming in is Delta." No holds |
+| **2** | A Lids in Kitchener | Wed Nov 11, 11:48 am | **The 30th ETB, $200.** No Ultra-Premium Collection. "None of this can be held" |
+| **3** | A Lids in Cambridge | Wed Nov 11, 11:48 am | None of "the new release stuff." It could arrive within "like three weeks." First come, first served |
+| **4** | One Shoppers Drug Mart in Waterloo | Wed Nov 11, 11:56 am | **One Knock Out Collection in stock.** No hold. No price by phone: "we would have to scan that" |
+| **5** | A Lids in Guelph | Fri Nov 20, 11:35 am | **The last 30th Celebration Battle Deck, $40.** No Ultra-Premium Collection or booster bundles. Restocks "weekly" |
+| **6** | A second Shoppers Drug Mart in Waterloo | Fri Nov 20, 1:27 pm | "We do not have any Pokémon thirtieth at the moment" |
+| **7** | A third Shoppers Drug Mart in Waterloo | Fri Nov 20, 1:27 pm | No Knock Out Collection: "We don't at the moment" |
+| **8** | The first Waterloo Shoppers Drug Mart again | Fri Nov 20, 1:28 pm | Phone menu, then no one picked up before the call ended, just under 2 minutes in |
+| **9** | A fourth Shoppers Drug Mart in Waterloo | Fri Nov 20, 1:30 pm | No Knock Out Collection: "No we don't" |
+| **10** | A fifth Shoppers Drug Mart in Waterloo | Fri Nov 20, 1:30 pm | Same as call 8: the menu, then no one before the call ended |
+| **11** | An EB Games in Kitchener | Wed Nov 25, 12:48 pm | **Ultra-Premium Collection in stock for walk-in purchase, $380** |
 
 Calls 1 to 3 went out within 14 seconds of each other, so all three Lids stores were on the line at the same time. Calls 6 to 8 did the same, and so did calls 9 and 10.
 
@@ -73,9 +73,9 @@ Calls 1 to 3 went out within 14 seconds of each other, so all three Lids stores 
 
 ## Who had Pokémon 30th Anniversary cards in stock in Nov 2026
 
-**A Shoppers Drug Mart in Waterloo had the Knock Out Collection on November 11.** Our caller asked for the "Pokémon thirtieth Knockout Collection, like, physically in stock right now." The associate repeated the name and said "Give me a second." After two holds, about three minutes in all: "Hi, we do have, yeah, we do have one in stock, but we don't put it on hold." The price? "No, we would have to scan that... you would be able to check it online." A purchase limit? "We just have one in stock."
+**One Shoppers Drug Mart in Waterloo had the Knock Out Collection on November 11.** Our caller asked for the "Pokémon thirtieth Knockout Collection, like, physically in stock right now." The associate repeated the name and said "Give me a second." After two holds, about three minutes in all: "Hi, we do have, yeah, we do have one in stock, but we don't put it on hold." The price? "No, we would have to scan that... you would be able to check it online." A purchase limit? "We just have one in stock."
 
-When our caller tried that store again on November 20, nobody picked up before the call ended. Three other Shoppers Drug Marts in Waterloo said no. The second store: "We do not have any Pokémon thirtieth at the moment." The third: "We don't at the moment. I'm so sorry." The fourth: "No we don't."
+When our caller tried that store again on November 20, nobody picked up before the call ended. Three other Shoppers Drug Marts in Waterloo said no. A second store: "We do not have any Pokémon thirtieth at the moment." A third: "We don't at the moment. I'm so sorry." A fourth: "No we don't."
 
 **A Lids in Kitchener had the 30th ETB at $200 on November 11.** That was its only 30th product: no Ultra-Premium Collection. The associate didn't know if more was coming: "We don't order the product, it's just allocated to us."
 
@@ -89,10 +89,10 @@ When our caller tried that store again on November 20, nobody picked up before t
 
 Our caller asked four stores about holds. All four said no:
 
-- **Lids, Waterloo:** "We do not. Nope." Then: "Absolutely not."
-- **Lids, Kitchener:** "No, none of this can be held, unfortunately."
-- **Lids, Cambridge:** "Uh, not yet, not until they come in. It's kind of first come, first served."
-- **Shoppers Drug Mart, Waterloo:** "We don't put it on hold."
+- **A Lids in Waterloo:** "We do not. Nope." Then: "Absolutely not."
+- **A Lids in Kitchener:** "No, none of this can be held, unfortunately."
+- **A Lids in Cambridge:** "Uh, not yet, not until they come in. It's kind of first come, first served."
+- **One Shoppers Drug Mart in Waterloo:** "We don't put it on hold."
 
 It asked two stores about purchase limits, and neither gave a number. Each had a single box. The Lids in Guelph: "I think so, uh, yeah, but there's only one, there's only one of the thirtieth anniversaries left." The Shoppers in Waterloo: "We just have one in stock."
 
@@ -100,10 +100,10 @@ It asked two stores about purchase limits, and neither gave a number. Each had a
 
 No store gave a restock day or time. The closest was "weekly."
 
-- **Lids, Waterloo:** "They don't tell us when anything comes in." Not later that day: "It'll be another day." Its advice: "You can or you can just come into the store and check."
-- **Lids, Kitchener:** "It's just allocated to us," with no tracking information.
-- **Lids, Cambridge:** "We can get it at any point within the next like three weeks. We never actually get these on the actual date of the release."
-- **Lids, Guelph:** "It's pretty often, I believe it'd be weekly... I'd say maybe check back next week."
+- **The Lids in Waterloo:** "They don't tell us when anything comes in." Not later that day: "It'll be another day." Its advice: "You can or you can just come into the store and check."
+- **The Lids in Kitchener:** "It's just allocated to us," with no tracking information.
+- **The Lids in Cambridge:** "We can get it at any point within the next like three weeks. We never actually get these on the actual date of the release."
+- **The Lids in Guelph:** "It's pretty often, I believe it'd be weekly... I'd say maybe check back next week."
 
 The Cambridge answer matches what we saw. On November 11, five days after the Ultra-Premium Collection's date on Pokémon's US site, none of the three Lids stores had one.
 
@@ -111,7 +111,7 @@ The Cambridge answer matches what we saw. On November 11, five days after the Ul
 
 Every Shoppers Drug Mart our caller tried had the same phone menu: a flu shot message, then **1** for prescription refills, **2** for health care providers, **3** for other pharmacy questions, **4** for "customer service, including beauty department and post office," **5** for hours, **6** for the management team. After 4, a second menu: **1** for customer service, **2** for beauty, **3** for postal services.
 
-On the four calls that reached a person, it took about 70 to 95 seconds from the greeting to a human voice. At the first Waterloo store on November 11, the associate then put our caller on hold twice to go check, about three minutes in all. The greetings also gave that day's hours: on Friday, November 20, two of the Waterloo stores said they were open until midnight.
+On the four calls that reached a person, it took about 70 to 95 seconds from the greeting to a human voice. At the first Waterloo Shoppers on November 11, the associate then put our caller on hold twice to go check, about three minutes in all. The greetings also gave that day's hours: on Friday, November 20, two of the Waterloo stores said they were open until midnight.
 
 ## Best Buy won't check Pokémon stock by phone
 

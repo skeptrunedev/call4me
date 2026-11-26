@@ -253,7 +253,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/pokemon-30th-anniversary-cards-in-stock": {
     "html": "/__pages/455393a9ca1af16a.html",
     "markdown": "/__pages/455393a9ca1af16a.md",
-    "tokens": 7013
+    "tokens": 7025
   },
   "/blog/ps5-in-stock-near-me": {
     "html": "/__pages/6d59456b370471f7.html",
