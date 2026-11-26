@@ -235,14 +235,24 @@
                     "description": "the kind of call; decides what must be known first (see call4me_get_requirements)"
                   },
                   "details": {
-                    "description": "answers to the category's fields by key, e.g. {\"reason\":\"annual physical\",\"patient_status\":\"existing\",\"availability\":\"weekday mornings next week\"}. Profile fields (name, DOB, phone, insurance...) are filled from the saved profile only when the call is for the profile's owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner's are never used.",
+                    "description": "answers to the category's fields by key (a list is joined one item per line), e.g. {\"reason\":\"annual physical\",\"patient_status\":\"existing\",\"availability\":\"weekday mornings next week\"}. Profile fields (name, DOB, phone, insurance...) are filled from the saved profile only when the call is for the profile's owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner's are never used.",
                     "type": "object",
                     "propertyNames": {
                       "type": "string"
                     },
                     "additionalProperties": {
-                      "type": "string",
-                      "maxLength": 1000
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 1000
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      ]
                     }
                   },
                   "on_behalf_of": {
@@ -252,9 +262,19 @@
                     "maxLength": 80
                   },
                   "facts": {
-                    "description": "anything else the caller may share beyond the category's fields, one per line",
-                    "type": "string",
-                    "maxLength": 3000
+                    "description": "anything else the caller may share beyond the category's fields, one per line or as a list",
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 3000
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
                   },
                   "flexibility": {
                     "description": "what the caller may accept without asking: \"any time 6:30-8pm\", \"a different day this week is fine\", \"up to $300\". Anything outside this becomes a question to you.",
@@ -325,8 +345,7 @@
                   "business",
                   "goal",
                   "category"
-                ],
-                "additionalProperties": false
+                ]
               }
             }
           }
@@ -1211,8 +1230,7 @@
                     "type": "string",
                     "maxLength": 500
                   }
-                },
-                "additionalProperties": false
+                }
               }
             }
           }
@@ -1651,14 +1669,24 @@
                     "description": "the kind of call; decides what must be known first (see call4me_get_requirements)"
                   },
                   "details": {
-                    "description": "answers to the category's fields by key, e.g. {\"reason\":\"annual physical\",\"patient_status\":\"existing\",\"availability\":\"weekday mornings next week\"}. Profile fields (name, DOB, phone, insurance...) are filled from the saved profile only when the call is for the profile's owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner's are never used.",
+                    "description": "answers to the category's fields by key (a list is joined one item per line), e.g. {\"reason\":\"annual physical\",\"patient_status\":\"existing\",\"availability\":\"weekday mornings next week\"}. Profile fields (name, DOB, phone, insurance...) are filled from the saved profile only when the call is for the profile's owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner's are never used.",
                     "type": "object",
                     "propertyNames": {
                       "type": "string"
                     },
                     "additionalProperties": {
-                      "type": "string",
-                      "maxLength": 1000
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 1000
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      ]
                     }
                   },
                   "on_behalf_of": {
@@ -1668,9 +1696,19 @@
                     "maxLength": 80
                   },
                   "facts": {
-                    "description": "anything else the caller may share beyond the category's fields, one per line",
-                    "type": "string",
-                    "maxLength": 3000
+                    "description": "anything else the caller may share beyond the category's fields, one per line or as a list",
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 3000
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
                   },
                   "flexibility": {
                     "description": "what the caller may accept without asking: \"any time 6:30-8pm\", \"a different day this week is fine\", \"up to $300\". Anything outside this becomes a question to you.",
@@ -1741,8 +1779,7 @@
                   "business",
                   "goal",
                   "category"
-                ],
-                "additionalProperties": false
+                ]
               }
             }
           }
@@ -2552,8 +2589,7 @@
                 "required": [
                   "question_id",
                   "answer"
-                ],
-                "additionalProperties": false
+                ]
               }
             }
           }
@@ -2687,11 +2723,7 @@
                       "listen"
                     ]
                   }
-                },
-                "required": [
-                  "mode"
-                ],
-                "additionalProperties": false
+                }
               }
             }
           }
@@ -2967,14 +2999,24 @@
                     "description": "the kind of call; decides what must be known first (see call4me_get_requirements)"
                   },
                   "details": {
-                    "description": "answers to the category's fields by key, e.g. {\"reason\":\"annual physical\",\"patient_status\":\"existing\",\"availability\":\"weekday mornings next week\"}. Profile fields (name, DOB, phone, insurance...) are filled from the saved profile only when the call is for the profile's owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner's are never used.",
+                    "description": "answers to the category's fields by key (a list is joined one item per line), e.g. {\"reason\":\"annual physical\",\"patient_status\":\"existing\",\"availability\":\"weekday mornings next week\"}. Profile fields (name, DOB, phone, insurance...) are filled from the saved profile only when the call is for the profile's owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner's are never used.",
                     "type": "object",
                     "propertyNames": {
                       "type": "string"
                     },
                     "additionalProperties": {
-                      "type": "string",
-                      "maxLength": 1000
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 1000
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      ]
                     }
                   },
                   "on_behalf_of": {
@@ -2984,9 +3026,19 @@
                     "maxLength": 80
                   },
                   "facts": {
-                    "description": "anything else the caller may share beyond the category's fields, one per line",
-                    "type": "string",
-                    "maxLength": 3000
+                    "description": "anything else the caller may share beyond the category's fields, one per line or as a list",
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 3000
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
                   },
                   "flexibility": {
                     "description": "what the caller may accept without asking: \"any time 6:30-8pm\", \"a different day this week is fine\", \"up to $300\". Anything outside this becomes a question to you.",
@@ -3064,8 +3116,7 @@
                   "goal",
                   "category",
                   "call_at"
-                ],
-                "additionalProperties": false
+                ]
               }
             }
           }
@@ -3688,8 +3739,7 @@
                 },
                 "required": [
                   "country"
-                ],
-                "additionalProperties": false
+                ]
               }
             }
           }
@@ -4158,10 +4208,8 @@
                   }
                 },
                 "required": [
-                  "number",
-                  "method"
-                ],
-                "additionalProperties": false
+                  "number"
+                ]
               }
             }
           }
@@ -4359,8 +4407,7 @@
                 },
                 "required": [
                   "code"
-                ],
-                "additionalProperties": false
+                ]
               }
             }
           }

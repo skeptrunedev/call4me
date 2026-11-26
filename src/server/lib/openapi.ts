@@ -58,8 +58,10 @@ const usd = (cents: number) => (cents / 100).toFixed(2);
 
 /** Generated from the same schemas used by the HTTP route and MCP tool. */
 export function openApiDocument(site: string, pricePerMinuteCents = 25) {
-  const schema = (s: z.ZodType) => z.toJSONSchema(s, { target: 'draft-2020-12' });
-  const json = (description: string, s: z.ZodType) => ({ description, content: { 'application/json': { schema: schema(s) } } });
+  // What a client sends is described as zod takes it in (a list where a field takes one, a default
+  // left optional); what it gets back, as it comes out.
+  const schema = (s: z.ZodType) => z.toJSONSchema(s, { target: 'draft-2020-12', io: 'input' });
+  const json = (description: string, s: z.ZodType) => ({ description, content: { 'application/json': { schema: z.toJSONSchema(s, { target: 'draft-2020-12' }) } } });
   const bearer = [{ bearerAuth: [] }];
   const path = (name: string, description: string, s: z.ZodType) => ({ name, in: 'path', required: true, description, schema: schema(s) });
   const query = (name: string, description: string, s: z.ZodType) => ({ name, in: 'query', required: false, description, schema: schema(s) });

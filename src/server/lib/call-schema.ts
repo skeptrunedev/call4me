@@ -5,6 +5,17 @@ import { catalog, PROFILE_FIELDS, type Surface } from '../services/intake';
 
 /** Shared by the MCP call tools, the /api/calls routes and the OpenAPI document. */
 
+/**
+ * Text the caller works from that an agent may send as a list of lines: one on the REST API sent
+ * facts and details.questions as arrays (Nov 25, 2026) and had each of those calls refused over the
+ * shape alone. The general server and the REST API take a list and join it one item per line; the
+ * directory servers keep the plain string their listings were reviewed with.
+ */
+function linesInput(max: number, agents: boolean) {
+  const text = z.string().max(max);
+  return agents ? z.union([text, z.array(z.string())]).transform((v) => (Array.isArray(v) ? v.join('\n') : v)).pipe(text) : text;
+}
+
 /** What a call needs, for placing it now or scheduling it. */
 export function placeCallInput(surface: Surface) {
   const agents = surface === 'agents';
@@ -14,9 +25,9 @@ export function placeCallInput(surface: Surface) {
     business: z.string().min(1).max(120).describe('who you are calling, as a person would say it: "Nopa", "Dr. Chen\'s office", "Toyota of Berkeley service"'),
     goal: z.string().min(5).max(1500).describe('what the call should achieve, in plain words: "Book a table for 4 tomorrow (Sat Oct 3) around 7pm under Khami."'),
     category: z.enum(catalog(surface).slugs).describe('the kind of call; decides what must be known first (see call4me_get_requirements)'),
-    details: z.record(z.string(), z.string().max(1000)).optional().describe(`answers to the category's fields by key, e.g. ${health ? '{"reason":"annual physical","patient_status":"existing","availability":"weekday mornings next week"}' : '{"party_size":"4","date":"Sat Oct 3","time_window":"7pm, anything 6:30-8"}'}. Profile fields (${health ? 'name, DOB, phone, insurance' : 'name, phone, address'}...) are filled from the saved profile only when the call is for the profile's owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner's are never used.`),
+    details: z.record(z.string(), linesInput(1000, agents)).optional().describe(`answers to the category's fields by key${agents ? ' (a list is joined one item per line)' : ''}, e.g. ${health ? '{"reason":"annual physical","patient_status":"existing","availability":"weekday mornings next week"}' : '{"party_size":"4","date":"Sat Oct 3","time_window":"7pm, anything 6:30-8"}'}. Profile fields (${health ? 'name, DOB, phone, insurance' : 'name, phone, address'}...) are filled from the saved profile only when the call is for the profile's owner; for anyone else (on_behalf_of is another name) pass all of their details here, since the owner's are never used.`),
     on_behalf_of: z.string().min(1).max(80).optional().describe('who the call is for, as the caller should say it (default: the profile\'s full_name). The caller calls FOR this person; it never claims to be them.'),
-    facts: z.string().max(3000).optional().describe('anything else the caller may share beyond the category\'s fields, one per line'),
+    facts: linesInput(3000, agents).optional().describe(`anything else the caller may share beyond the category's fields, one per line${agents ? ' or as a list' : ''}`),
     flexibility: z.string().max(1500).optional().describe('what the caller may accept without asking: "any time 6:30-8pm", "a different day this week is fine", "up to $300". Anything outside this becomes a question to you.'),
     timezone: z.string().max(60).optional().describe('IANA time zone of the business, e.g. "America/Los_Angeles", so "tomorrow" is unambiguous'),
     connect_when: z.string().max(300).optional().describe('when to ring the user and patch them into the call without being asked, e.g. "as soon as a person picks up" (skip the hold) or "if they need to speak to me". Rings their own phone: details.phone when given, else the one in their profile; a call with neither is refused. The caller goes quiet while they are on, and takes over again when they press * or hang up.'),
