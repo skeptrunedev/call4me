@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "1512bf19a22ace47d8707e17e843625ad0a2e8730d0f4fe626f70ccbcdd2dab9"
+  "sourceHash": "64186f763ca2f53e24b3d13122ed7aee476a0742881a7b757bab761874c0a2ac"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -469,8 +469,8 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.674929
     },
     {
-      "slug": "need-dress-shoes-today",
-      "similarity": 0.659066
+      "slug": "iphone-duo-in-stock",
+      "similarity": 0.673414
     }
   ],
   "att-customer-service-number": [
@@ -764,12 +764,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.637543
     },
     {
-      "slug": "how-far-in-advance-to-order-catering",
-      "similarity": 0.619199
+      "slug": "iphone-duo-in-stock",
+      "similarity": 0.620458
     },
     {
-      "slug": "fix-an-order-or-delivery-by-phone",
-      "similarity": 0.614256
+      "slug": "how-far-in-advance-to-order-catering",
+      "similarity": 0.619199
     }
   ],
   "cancel-audible": [
@@ -1280,6 +1280,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.72874
     },
     {
+      "slug": "iphone-duo-in-stock",
+      "similarity": 0.716178
+    },
+    {
       "slug": "pokemon-30th-anniversary-cards-in-stock",
       "similarity": 0.708314
     },
@@ -1302,10 +1306,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "victorias-secret-georgetown",
       "similarity": 0.616221
-    },
-    {
-      "slug": "how-far-in-advance-to-order-catering",
-      "similarity": 0.613735
     }
   ],
   "chime-customer-service-number": [
@@ -1830,7 +1830,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.796702
+      "similarity": 0.796703
     },
     {
       "slug": "goose-mcp-phone-calls",
@@ -2188,7 +2188,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ups-contact-number",
-      "similarity": 0.602472
+      "similarity": 0.602471
     }
   ],
   "follow-up-appointment-telehealth": [
@@ -2346,7 +2346,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.733995
+      "similarity": 0.733996
     },
     {
       "slug": "n8n-mcp-phone-calls",
@@ -3040,6 +3040,36 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.706903
     }
   ],
+  "iphone-duo-in-stock": [
+    {
+      "slug": "ps5-in-stock-near-me",
+      "similarity": 0.750933
+    },
+    {
+      "slug": "check-store-stock-in-japan",
+      "similarity": 0.716178
+    },
+    {
+      "slug": "pokemon-30th-anniversary-cards-in-stock",
+      "similarity": 0.698817
+    },
+    {
+      "slug": "needoh-in-stock",
+      "similarity": 0.69656
+    },
+    {
+      "slug": "ask-a-store-to-hold-an-item",
+      "similarity": 0.673414
+    },
+    {
+      "slug": "call-a-store-to-check-stock",
+      "similarity": 0.620458
+    },
+    {
+      "slug": "need-dress-shoes-today",
+      "similarity": 0.600639
+    }
+  ],
   "irs-phone-number": [
     {
       "slug": "cash-app-customer-service-number",
@@ -3384,7 +3414,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.748737
+      "similarity": 0.748738
     },
     {
       "slug": "mastra-mcp-phone-calls",
@@ -3492,7 +3522,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "windstream-customer-service",
-      "similarity": 0.614166
+      "similarity": 0.614165
     },
     {
       "slug": "xfinity-customer-service-number",
@@ -3635,6 +3665,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "check-store-stock-in-japan",
       "similarity": 0.602344
+    },
+    {
+      "slug": "iphone-duo-in-stock",
+      "similarity": 0.600639
     }
   ],
   "needoh-in-stock": [
@@ -3653,6 +3687,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "pokemon-30th-anniversary-cards-in-stock",
       "similarity": 0.726244
+    },
+    {
+      "slug": "iphone-duo-in-stock",
+      "similarity": 0.69656
     },
     {
       "slug": "check-store-stock-in-japan",
@@ -3780,7 +3818,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "devin-phone-calls",
-      "similarity": 0.796702
+      "similarity": 0.796703
     },
     {
       "slug": "t3-code-phone-calls",
@@ -3966,7 +4004,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "t3-code-phone-calls",
-      "similarity": 0.81059
+      "similarity": 0.810589
     },
     {
       "slug": "schedule-phone-calls-claude-code-codex",
@@ -4085,6 +4123,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.707594
     },
     {
+      "slug": "iphone-duo-in-stock",
+      "similarity": 0.698817
+    },
+    {
       "slug": "call-a-store-to-check-stock",
       "similarity": 0.637543
     },
@@ -4095,10 +4137,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "stubhub-customer-service-number",
       "similarity": 0.624663
-    },
-    {
-      "slug": "need-dress-shoes-today",
-      "similarity": 0.608188
     }
   ],
   "posada-real-los-condestables": [
@@ -4261,6 +4299,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.756297
     },
     {
+      "slug": "iphone-duo-in-stock",
+      "similarity": 0.750933
+    },
+    {
       "slug": "pokemon-30th-anniversary-cards-in-stock",
       "similarity": 0.73915
     },
@@ -4278,11 +4320,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "stubhub-customer-service-number",
-      "similarity": 0.629199
-    },
-    {
-      "slug": "need-dress-shoes-today",
-      "similarity": 0.621277
+      "similarity": 0.6292
     }
   ],
   "reschedule-dentist-appointment": [
@@ -4739,7 +4777,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ps5-in-stock-near-me",
-      "similarity": 0.629199
+      "similarity": 0.6292
     },
     {
       "slug": "pokemon-30th-anniversary-cards-in-stock",
@@ -4773,7 +4811,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -4829,7 +4867,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.81059
+      "similarity": 0.810589
     },
     {
       "slug": "mastra-mcp-phone-calls",
@@ -5091,7 +5129,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "fix-an-order-or-delivery-by-phone",
-      "similarity": 0.602472
+      "similarity": 0.602471
     }
   ],
   "usaa-phone-number": [
@@ -5397,7 +5435,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5581,7 +5619,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "monkeybrains-customer-service-number",
-      "similarity": 0.614166
+      "similarity": 0.614165
     },
     {
       "slug": "verizon-customer-service",
