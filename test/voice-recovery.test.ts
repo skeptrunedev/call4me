@@ -1792,3 +1792,50 @@ test('a voicemail message ending with a goodbye is ended by the voicemail check,
   assert.equal(left.length, 1, 'once the line is quiet, the message ends the call');
   assert.deepEqual(promiseHandoffs(live), []);
 });
+
+test("on an automated line the caller's filler never reaches the phone or the transcript, and its answer does; with a person it plays", async (t) => {
+  // Kate's call to GE Appliances (call_ldb8bzvlopko2yzl): "Okay. Schedule a repair." got "Sorry, I didn't get that."
+  const turn = async (h: Awaited<ReturnType<typeof outboundPickup>>) => {
+    const media = () => h.h.session.phone.sent.filter((m: any) => m.event === 'media' && m.media.payload === LOUD).length;
+    await h.words('them', 'How can I help you today? You can say things like, purchase a new appliance, schedule a repair, or something else.');
+    await h.words('caller', ' Okay.');
+    await h.play(600, (ms) => ({ caller: ms >= 200 && ms < 500 }));
+    const afterFiller = media();
+    await h.words('caller', ' Schedule');
+    await h.play(900, (ms) => ({ caller: ms >= 700 }));
+    await h.words('caller', ' a repair.');
+    await h.play(1_600, (ms) => ({ caller: ms < 1_500 }));
+    const said = h.h.session.transcript.filter((l: any) => l.role === 'caller').map((l: any) => l.text).join(' ');
+    return { afterFiller, total: media(), said };
+  };
+  const machine = await outboundPickup(t);
+  await machine.h.session.machineDetected('machine', new Date(Date.now()).toISOString());
+  const automated = await turn(machine);
+  assert.equal(automated.afterFiller, 0, '"Okay." is kept off the line');
+  assert.equal(automated.total, 40, 'the answer plays in full');
+  assert.equal(automated.said, 'Schedule a repair.');
+  t.mock.timers.reset();
+  const human = await outboundPickup(t);
+  await human.h.session.machineDetected('human', new Date(Date.now()).toISOString());
+  const person = await turn(human);
+  assert.equal(person.afterFiller, 15, 'to a person, "okay" plays as it is said');
+  assert.equal(person.said, 'Okay. Schedule a repair.');
+});
+
+test("before the carrier knows who answered, a backchannel over their greeting stays off the line until the caller's first word", async (t) => {
+  // call_67h6k5zknkes4ha6: "Mm-hmm" over GE's greeting at +2.8s; the carrier heard a machine at +3.9s.
+  const { h, play, words } = await outboundPickup(t);
+  const media = () => h.session.phone.sent.filter((m: any) => m.event === 'media' && m.media.payload === LOUD).length;
+  await words('them', 'Thank you for calling GE');
+  await words('caller', ' Mm-hmm.');
+  await play(500, (ms) => ({ them: true, caller: ms >= 200 && ms < 400 }));
+  assert.equal(media(), 0);
+  await words('them', ' Appliances.');
+  await words('caller', ' Hi, I have a question about a repair.');
+  await play(1_500, (ms) => ({ caller: ms >= 800 && ms < 1_400 }));
+  assert.equal(media(), 30);
+  await words('caller', ' Okay.');
+  await play(2_000, (ms) => ({ caller: ms >= 1_700 && ms < 1_900 }));
+  assert.equal(media(), 40, 'once the caller is talking with them, its "okay" plays');
+  assert.equal(h.session.transcript.filter((l: any) => l.role === 'caller').map((l: any) => l.text).join(' '), 'Hi, I have a question about a repair. Okay.');
+});

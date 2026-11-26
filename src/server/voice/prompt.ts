@@ -112,6 +112,16 @@ function accentRule(voice: Voice, asked?: string | null): string {
 }
 
 /**
+ * GPT-Live is trained on a "Backchannel policy" heading (OpenAI's GPT-Live prompting guide) and,
+ * without one, backchannels by default: "mm-hmm" over GE Appliances' greeting on Kate's calls, and
+ * "Okay. Schedule a repair." / "Hmm. No." to its speech menu, which answered "Sorry, I didn't get
+ * that" and "That input was invalid" (call_ldb8bzvlopko2yzl, Nov 25). Rules against filler
+ * elsewhere in the prompt didn't stop it; this heading is the control the model reads for it.
+ */
+const BACKCHANNEL_POLICY = `# Backchannel policy
+Use moderate backchannels ("mm-hmm", "yeah") only while a live person is talking to you, once you've started talking with them. Never backchannel during a greeting, and never to a recording, a phone menu, an automated assistant, a voicemail greeting, hold music or ringing: stay silent until it's your turn. When it is your turn with a recording or an automated assistant, start with the answer itself: no "mm-hmm", "okay", "hi", "yeah", "sure" or "hmm" before it.`;
+
+/**
  * When the voice model should hand work to the back office, in the shape OpenAI's GPT-Live
  * prompting guide asks for (these three labels). The voice model only decides *when*; the back
  * office picks the tool. Concrete triggers matter: a spoken "2" never reaches a phone menu.
@@ -159,6 +169,8 @@ ${b.flexibility.trim() || '(only exactly what the task says)'}
 
 The callback number is ${spokenPhone(b.callbackNumber)}${b.callbackRingsOwner ? `, ${b.owner}'s own phone: a callback reaches ${b.owner} directly` : ''}. Whenever they want a number to call back or text, a contact number for a booking, order or hold, and on any voicemail, give this one and only this one. A phone number among the facts above is for finding or verifying an account: when a person or a phone menu asks for the phone number on file, give that one, never the callback number. When the task or facts say there's no account, that wins: give no number, and say there's no account. When they say not to give out a phone number or ask for a callback, that wins everywhere, voicemail included: give no number, only another contact they give (an email), if any.
 ${b.localTime ? `It's ${b.localTime} for them right now.` : `Today is ${b.today} in UTC. Their time zone isn't known, so for them it may still be the day before or already the next day.`}
+
+${BACKCHANNEL_POLICY}
 
 ${delegationPolicy(b.onBehalfOf, b.owner, b.connectWhen, b.ownerReachable ?? true)}
 

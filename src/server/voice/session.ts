@@ -3,6 +3,7 @@ import { Raindrop, type Interaction } from 'raindrop-ai';
 import { ACTIVE, callStore, ceilingAt, LIMITS, redact, type CallRow, type TranscriptLine } from '../services/call-store';
 import { callEnded, telnyx } from '../lib/telnyx';
 import { beepFrames, dtmfFrames, FRAME_MS, pcmuAudible, pcmuMs } from './dtmf';
+import { FillerGate, type GateOut } from './filler-gate';
 import { InputPace } from './input-pace';
 import { Playout } from './playout';
 import { asksUsToWait, connectCheckMessage, KEY_TRANSCRIPT_LAG_MS, forcedHandoffMessage, greetingWaiting, holdingLineMessage, isPhoneMenu, MenuRecovery, messageAfterGreeting, messageUnanswered, missedHandoff, signedOff, voicemailLeft, type KeyPress } from './handoff';
@@ -301,6 +302,8 @@ export class VoiceSession extends DurableObject<Env> {
   /** Until when keypad tones are playing; the caller's audio is held off the line until then. */
   private keysPlayingUntil = 0;
   private lastOutputAt = 0;
+  /** On an automated line or over a greeting, the caller's speech waits here until its words show it isn't only "mm-hmm" or "okay" (holdsFiller). */
+  private fillerGate = new FillerGate();
   private endingCall = false;
   /** Back-office bookkeeping for starting it ourselves when the voice model skips a hand-off (handoff.ts). */
   private backOfficeBusy = false;
@@ -662,6 +665,7 @@ export class VoiceSession extends DurableObject<Env> {
    */
   private resetSessionState(): void {
     this.lastOutputAt = 0;
+    this.fillerGate = new FillerGate();
     this.liveErrored = false;
     this.backOfficeBusy = false;
     this.delegations.clear();
@@ -1033,19 +1037,18 @@ export class VoiceSession extends DurableObject<Env> {
         // the model filling the silence before the line drops, so it never reaches the phone.
         // Before pickup the session is only warming up: nothing it says is heard. With the person on
         // the call, the caller can't hear them, so anything it says would be said over them (joinedMessage).
-        if (!this.answered || this.endingCall || this.personOn || Date.now() < this.keysPlayingUntil || this.menuHoldsCaller()) break;
+        if (!this.answered || this.endingCall || this.personOn || Date.now() < this.keysPlayingUntil || this.menuHoldsCaller()) {
+          this.fillerGate.reset();
+          break;
+        }
         const e = ev as { delta: string };
-        if (this.framesOut++ === 0) this.mark('first caller audio');
-        this.sendPhone({ event: 'media', media: { payload: e.delta } });
-        const now = Date.now();
-        // Audio deltas carry no timing, so how long they play comes from their length.
-        const ms = pcmuMs(e.delta);
-        const audible = pcmuAudible(e.delta);
-        const late = this.playout.sent(now, ms, audible, this.playbackEndsAt);
-        if (late) this.mark(`caller audio ran dry ${late.gaps} times (${late.gapMs}ms of speech lost): ${late.receivedMs}ms of audio arrived in ${late.wallMs}ms, longest wait between phone frames ${late.longestPhoneGapMs}ms`);
-        this.playbackEndsAt = Math.max(this.playbackEndsAt, now) + ms;
-        if (audible) this.speechEndsAt = this.playbackEndsAt;
-        this.lastOutputAt = now;
+        // The voice model is speaking, whether or not this reaches the line: barge-in reads this.
+        this.lastOutputAt = Date.now();
+        if (this.holdsFiller()) this.gated(this.fillerGate.audio(e.delta, pcmuAudible(e.delta)));
+        else {
+          this.gated(this.fillerGate.flush());
+          this.play(e.delta);
+        }
         break;
       }
       case 'session.input_transcript.delta': {
@@ -1076,7 +1079,11 @@ export class VoiceSession extends DurableObject<Env> {
           const delta = (ev as { delta: string }).delta;
           // Kept off a menu's line, a key the caller announces ("pressing 3") still needs pressing.
           const offLine = this.menuHoldsCaller();
-          if (!offLine) this.appendTranscript('caller', delta);
+          if (!offLine && this.holdsFiller()) this.appendTranscript('caller', this.fillerGate.hear(delta));
+          else if (!offLine) {
+            this.gated(this.fillerGate.flush());
+            this.appendTranscript('caller', delta);
+          }
           if (delta) this.menuRecovery.observeCaller(delta, Date.now());
           if (!offLine) this.trackHold(this.hold.caller(delta));
           this.scheduleHandoffCheck();
@@ -1590,6 +1597,42 @@ export class VoiceSession extends DurableObject<Env> {
     this.mark(`no hand-off after ${miss.reason === 'promise' ? 'a spoken promise' : miss.reason === 'voicemail_left' ? 'a voicemail message' : miss.reason === 'greeting_waiting' ? 'a voicemail greeting with no beep' : miss.reason === 'signed_off' ? 'their goodbye' : 'a phone menu'}; starting the back office`);
     this.sendLive({ type: 'response.item.create', item: { type: 'message', role: 'user', content: [{ type: 'input_text', text: forcedHandoffMessage(miss, this.transcript, this.menuRecovery.history()) }] } });
     this.sendLive({ type: 'response.create' });
+  }
+
+  /** A chunk of the caller's audio, onto the line. */
+  private play(payload: string): void {
+    if (this.framesOut++ === 0) this.mark('first caller audio');
+    this.sendPhone({ event: 'media', media: { payload } });
+    const now = Date.now();
+    // Audio deltas carry no timing, so how long they play comes from their length.
+    const ms = pcmuMs(payload);
+    const audible = pcmuAudible(payload);
+    const late = this.playout.sent(now, ms, audible, this.playbackEndsAt);
+    if (late) this.mark(`caller audio ran dry ${late.gaps} times (${late.gapMs}ms of speech lost): ${late.receivedMs}ms of audio arrived in ${late.wallMs}ms, longest wait between phone frames ${late.longestPhoneGapMs}ms`);
+    this.playbackEndsAt = Math.max(this.playbackEndsAt, now) + ms;
+    if (audible) this.speechEndsAt = this.playbackEndsAt;
+  }
+
+  /** What the filler gate let through, onto the line and into the transcript. */
+  private gated(out: GateOut): void {
+    for (const payload of out.play) this.play(payload);
+    if (out.words) this.appendTranscript('caller', out.words);
+    // Its words stay out of the logs, as the transcript's do.
+    if (out.dropped) this.mark(`kept ${out.dropped.trim().split(/\s+/).length} filler word(s) off an automated line`);
+  }
+
+  /**
+   * Whether the caller's filler is kept off the line (filler-gate.ts). On an automated line: the
+   * carrier heard an automated greeting (until it hears a person), or a menu has offered keys since
+   * a person last spoke. A person reached through a menu stays behind the gate, which only holds back
+   * sounds and "okay". And over any greeting before the caller's first word, a person's or a
+   * recording's: Kate's "mm-hmm" went over GE's a second before the carrier knew it was automated
+   * (call_67h6k5zknkes4ha6).
+   */
+  private holdsFiller(): boolean {
+    const phase = this.machineState?.phase ?? 'unknown';
+    if (phase === 'machine' || phase === 'voicemail' || phase === 'uncertain' || phase === 'screening') return true;
+    return (phase === 'unknown' && !this.lastSpokeAt.caller) || this.menuRecovery.heardMenu();
   }
 
   /**
