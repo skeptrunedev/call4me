@@ -242,4 +242,5 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'capital-one-dispute-charge': ['personal-finance'],
   'pnc-dispute-charge': ['personal-finance'],
   'wells-fargo-dispute-charge': ['personal-finance'],
+  'how-far-in-advance-to-order-catering': ['dining', 'retail-shopping'],
 };

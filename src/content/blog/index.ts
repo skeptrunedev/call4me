@@ -231,6 +231,7 @@ import capitalOneDisputeCharge from './capital-one-dispute-charge.md';
 import pncDisputeCharge from './pnc-dispute-charge.md';
 import wellsFargoDisputeCharge from './wells-fargo-dispute-charge.md';
 import netflixCustomerServiceNumber from './netflix-customer-service-number.md';
+import howFarInAdvanceToOrderCatering from './how-far-in-advance-to-order-catering.md';
 import gptLive11Upgrade from './gpt-live-1-1-upgrade.md';
 
 /**
@@ -473,4 +474,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'pnc-dispute-charge', markdown: pncDisputeCharge },
   { slug: 'wells-fargo-dispute-charge', markdown: wellsFargoDisputeCharge },
   { slug: 'netflix-customer-service-number', markdown: netflixCustomerServiceNumber },
+  { slug: 'how-far-in-advance-to-order-catering', markdown: howFarInAdvanceToOrderCatering },
 ];

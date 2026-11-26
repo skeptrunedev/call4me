@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "13b156097232b21b64c578c149bb7f1be5b7269cd444808a71f9b93144994a4b"
+  "sourceHash": "c93c3316d66a4ce17a1afc90dcaf1579a3d9a592df225030ff55f5fcfa2d60de"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -1466,7 +1466,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "costco-customer-service": [
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.669985
+      "similarity": 0.669986
     },
     {
       "slug": "pottery-barn-customer-service",
@@ -2432,7 +2432,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "muse-code-mcp-phone-calls",
-      "similarity": 0.700502
+      "similarity": 0.700503
     },
     {
       "slug": "cascaded-voice-stack-vs-gpt-live",
@@ -2543,6 +2543,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.663956
     }
   ],
+  "how-far-in-advance-to-order-catering": [
+    {
+      "slug": "needoh-in-stock",
+      "similarity": 0.65023
+    },
+    {
+      "slug": "book-dinner-reservation-by-phone",
+      "similarity": 0.602574
+    }
+  ],
   "how-long-to-reach-a-human": [],
   "how-to-cancel-siriusxm": [
     {
@@ -2623,7 +2633,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "san-francisco-oral-surgeon-consultation",
-      "similarity": 0.623342
+      "similarity": 0.623343
     },
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
@@ -2645,7 +2655,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-lower-spectrum-bill",
-      "similarity": 0.789518
+      "similarity": 0.789517
     },
     {
       "slug": "how-to-lower-verizon-bill",
@@ -2693,7 +2703,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-lower-att-bill",
-      "similarity": 0.789518
+      "similarity": 0.789517
     },
     {
       "slug": "how-to-lower-directv-bill",
@@ -2995,7 +3005,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "m-hansik-durham-private-dining",
-      "similarity": 0.693238
+      "similarity": 0.693239
     },
     {
       "slug": "customer-story-rick-dinner-reservation",
@@ -3086,7 +3096,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "lai-wah-heen-private-dining",
-      "similarity": 0.693238
+      "similarity": 0.693239
     },
     {
       "slug": "palmeri-brentwood-private-dining",
@@ -3226,7 +3236,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.748737
+      "similarity": 0.748738
     },
     {
       "slug": "mastra-mcp-phone-calls",
@@ -3438,7 +3448,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.766655
+      "similarity": 0.766654
     },
     {
       "slug": "openclaw-phone-calls",
@@ -3464,6 +3474,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "needoh-in-stock": [
+    {
+      "slug": "how-far-in-advance-to-order-catering",
+      "similarity": 0.65023
+    },
     {
       "slug": "need-dress-shoes-today",
       "similarity": 0.618547
@@ -4240,7 +4254,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-find-a-new-primary-care-doctor",
-      "similarity": 0.623342
+      "similarity": 0.623343
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -4587,7 +4601,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "ticketmaster-customer-service-number": [
     {
       "slug": "vivid-seats-customer-service-number",
-      "similarity": 0.697516
+      "similarity": 0.697515
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5037,7 +5051,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ticketmaster-customer-service-number",
-      "similarity": 0.697516
+      "similarity": 0.697515
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5095,7 +5109,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "costco-customer-service",
-      "similarity": 0.669985
+      "similarity": 0.669986
     },
     {
       "slug": "suitsupply-customer-service",
