@@ -145,6 +145,7 @@ import iphoneDuoInStock from './iphone-duo-in-stock.md';
 import winterTirePrices from './winter-tire-prices.md';
 import frontierAirlinesRefund from './frontier-airlines-refund.md';
 import outTheDoorPrice from './out-the-door-price.md';
+import extendARentalCar from './extend-a-rental-car.md';
 import spectrumRetention from './spectrum-retention-department.md';
 import allstateCustomerServiceNumber from './allstate-customer-service-number.md';
 import cancelAudible from './cancel-audible.md';
@@ -497,4 +498,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'winter-tire-prices', markdown: winterTirePrices },
   { slug: 'frontier-airlines-refund', markdown: frontierAirlinesRefund },
   { slug: 'out-the-door-price', markdown: outTheDoorPrice },
+  { slug: 'extend-a-rental-car', markdown: extendARentalCar },
 ];

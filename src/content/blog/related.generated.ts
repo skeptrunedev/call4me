@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "f8622382967d726bc853b75a3ab528ce248915b6201652b9908c3c1332d95724"
+  "sourceHash": "fbe2c1f62c30710843030f6abbad16e5d2593448818fe1dc0f723228e50e48de"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -33,7 +33,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "geico-customer-service",
-      "similarity": 0.679611
+      "similarity": 0.67961
     },
     {
       "slug": "unitedhealthcare-phone-number",
@@ -204,7 +204,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "follow-up-appointment-telehealth",
-      "similarity": 0.670663
+      "similarity": 0.670662
     },
     {
       "slug": "customer-story-dental-appointments",
@@ -700,7 +700,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "salon-per-se-bellaire",
-      "similarity": 0.688542
+      "similarity": 0.688543
     },
     {
       "slug": "fresh-blades-barbershop-divisadero",
@@ -1965,6 +1965,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "enterprise-customer-service-number": [
     {
+      "slug": "extend-a-rental-car",
+      "similarity": 0.76308
+    },
+    {
       "slug": "hertz-customer-service-number",
       "similarity": 0.757655
     },
@@ -2069,6 +2073,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "capital-one-customer-service",
       "similarity": 0.610328
+    }
+  ],
+  "extend-a-rental-car": [
+    {
+      "slug": "enterprise-customer-service-number",
+      "similarity": 0.76308
+    },
+    {
+      "slug": "hertz-customer-service-number",
+      "similarity": 0.705183
     }
   ],
   "eye-exam-cost-without-insurance": [
@@ -2214,7 +2228,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ai-personal-assistant-appointment-booking",
-      "similarity": 0.670663
+      "similarity": 0.670662
     },
     {
       "slug": "customer-story-dental-appointments",
@@ -2284,7 +2298,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "aaa-insurance-customer-service",
-      "similarity": 0.679611
+      "similarity": 0.67961
     },
     {
       "slug": "allstate-customer-service-number",
@@ -2647,6 +2661,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "enterprise-customer-service-number",
       "similarity": 0.757655
+    },
+    {
+      "slug": "extend-a-rental-car",
+      "similarity": 0.705183
     }
   ],
   "hijinx-hotel-irvine": [
@@ -3209,7 +3227,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "m-hansik-durham-private-dining",
-      "similarity": 0.693238
+      "similarity": 0.693239
     },
     {
       "slug": "customer-story-rick-dinner-reservation",
@@ -3330,7 +3348,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "lai-wah-heen-private-dining",
-      "similarity": 0.693238
+      "similarity": 0.693239
     },
     {
       "slug": "palmeri-brentwood-private-dining",
@@ -3578,7 +3596,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "windstream-customer-service",
-      "similarity": 0.614165
+      "similarity": 0.614166
     },
     {
       "slug": "xfinity-customer-service-number",
@@ -4588,7 +4606,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "salon-per-se-bellaire": [
     {
       "slug": "book-haircut-appointment",
-      "similarity": 0.688542
+      "similarity": 0.688543
     },
     {
       "slug": "fresh-blades-barbershop-divisadero",
@@ -4879,7 +4897,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ps5-in-stock-near-me",
-      "similarity": 0.629199
+      "similarity": 0.6292
     },
     {
       "slug": "pokemon-30th-anniversary-cards-in-stock",
@@ -5745,7 +5763,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "monkeybrains-customer-service-number",
-      "similarity": 0.614165
+      "similarity": 0.614166
     },
     {
       "slug": "verizon-customer-service",

@@ -254,4 +254,5 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'winter-tire-prices': ['car-maintenance'],
   'frontier-airlines-refund': ['airlines'],
   'out-the-door-price': ['retail-shopping'],
+  'extend-a-rental-car': ['car-rental'],
 };
