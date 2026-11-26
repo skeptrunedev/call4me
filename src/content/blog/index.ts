@@ -141,6 +141,7 @@ import askAStoreToHoldAnItem from './ask-a-store-to-hold-an-item.md';
 import pokemon30thAnniversaryCardsInStock from './pokemon-30th-anniversary-cards-in-stock.md';
 import ps5InStockNearMe from './ps5-in-stock-near-me.md';
 import iphoneDuoInStock from './iphone-duo-in-stock.md';
+import winterTirePrices from './winter-tire-prices.md';
 import spectrumRetention from './spectrum-retention-department.md';
 import allstateCustomerServiceNumber from './allstate-customer-service-number.md';
 import cancelAudible from './cancel-audible.md';
@@ -489,4 +490,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'how-far-in-advance-to-order-catering', markdown: howFarInAdvanceToOrderCatering },
   { slug: 'call-a-store-to-check-stock', markdown: callAStoreToCheckStock },
   { slug: 'iphone-duo-in-stock', markdown: iphoneDuoInStock },
+  { slug: 'winter-tire-prices', markdown: winterTirePrices },
 ];

@@ -123,92 +123,92 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2292
+    "tokens": 2325
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2136
+    "tokens": 2120
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2194
+    "tokens": 2207
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2226
+    "tokens": 2250
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2299
+    "tokens": 2242
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2122
+    "tokens": 2156
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2113
+    "tokens": 2109
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2205
+    "tokens": 2223
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2278
+    "tokens": 2260
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2207
+    "tokens": 2219
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 2128
+    "tokens": 2119
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 2028
+    "tokens": 2066
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 1992
+    "tokens": 1952
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 2029
+    "tokens": 2048
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1798
+    "tokens": 1813
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 1785
+    "tokens": 1781
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 1964
+    "tokens": 1972
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 1868
+    "tokens": 1858
   },
   "/blog?page=19": {
     "html": "/__pages/bcb642deee219a0c.html",
@@ -218,17 +218,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog?page=20": {
     "html": "/__pages/cdbb74b6d785b988.html",
     "markdown": "/__pages/cdbb74b6d785b988.md",
-    "tokens": 2080
+    "tokens": 2067
   },
   "/blog?page=21": {
     "html": "/__pages/a483033cd4a02de8.html",
     "markdown": "/__pages/a483033cd4a02de8.md",
-    "tokens": 488
+    "tokens": 624
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 22635
+    "tokens": 22763
   },
   "/blog/fix-an-order-or-delivery-by-phone": {
     "html": "/__pages/f61aa29aa55e54a9.html",
@@ -273,7 +273,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/iphone-duo-in-stock": {
     "html": "/__pages/05985595b7754249.html",
     "markdown": "/__pages/05985595b7754249.md",
-    "tokens": 7806
+    "tokens": 7815
+  },
+  "/blog/winter-tire-prices": {
+    "html": "/__pages/89e3ef237de9ec58.html",
+    "markdown": "/__pages/89e3ef237de9ec58.md",
+    "tokens": 7204
   },
   "/blog/gpt-live-1-1-upgrade": {
     "html": "/__pages/aa53374796bdd8ea.html",
@@ -568,7 +573,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/americas-tire-fremont": {
     "html": "/__pages/a244f81352eb61fc.html",
     "markdown": "/__pages/a244f81352eb61fc.md",
-    "tokens": 2502
+    "tokens": 2563
   },
   "/blog/posada-real-los-condestables": {
     "html": "/__pages/cb8eb43c3b5c9aab.html",
@@ -688,7 +693,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/town-fair-tire-manchester-ct": {
     "html": "/__pages/d25e218c7665add4.html",
     "markdown": "/__pages/d25e218c7665add4.md",
-    "tokens": 8192
+    "tokens": 8253
   },
   "/blog/sassafraz-private-dining": {
     "html": "/__pages/2e78db2198e5e261.html",
@@ -1088,12 +1093,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/wheel-alignment-cost": {
     "html": "/__pages/5fff2e02afdd1065.html",
     "markdown": "/__pages/5fff2e02afdd1065.md",
-    "tokens": 3296
+    "tokens": 3349
   },
   "/blog/walmart-oil-change-prices": {
     "html": "/__pages/99fff13b3c5bdd6a.html",
     "markdown": "/__pages/99fff13b3c5bdd6a.md",
-    "tokens": 2688
+    "tokens": 2747
   },
   "/blog/how-to-cancel-siriusxm": {
     "html": "/__pages/89927a745702515f.html",

@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "64186f763ca2f53e24b3d13122ed7aee476a0742881a7b757bab761874c0a2ac"
+  "sourceHash": "1ef987779adc826520725a5ccf179f774fbffd8114a57a5c4b25b1ed628d24ac"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -415,6 +415,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "town-fair-tire-manchester-ct",
       "similarity": 0.701119
+    },
+    {
+      "slug": "winter-tire-prices",
+      "similarity": 0.692997
     },
     {
       "slug": "wheel-alignment-cost",
@@ -4932,6 +4936,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "town-fair-tire-manchester-ct": [
     {
+      "slug": "winter-tire-prices",
+      "similarity": 0.835853
+    },
+    {
       "slug": "americas-tire-fremont",
       "similarity": 0.701119
     },
@@ -5456,6 +5464,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.749558
     },
     {
+      "slug": "winter-tire-prices",
+      "similarity": 0.683087
+    },
+    {
       "slug": "americas-tire-fremont",
       "similarity": 0.670845
     },
@@ -5576,6 +5588,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.749558
     },
     {
+      "slug": "winter-tire-prices",
+      "similarity": 0.715131
+    },
+    {
       "slug": "town-fair-tire-manchester-ct",
       "similarity": 0.698859
     },
@@ -5624,6 +5640,24 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "verizon-customer-service",
       "similarity": 0.605582
+    }
+  ],
+  "winter-tire-prices": [
+    {
+      "slug": "town-fair-tire-manchester-ct",
+      "similarity": 0.835853
+    },
+    {
+      "slug": "wheel-alignment-cost",
+      "similarity": 0.715131
+    },
+    {
+      "slug": "americas-tire-fremont",
+      "similarity": 0.692997
+    },
+    {
+      "slug": "walmart-oil-change-prices",
+      "similarity": 0.683087
     }
   ],
   "wyoming-registered-agent-consent-form": [],
