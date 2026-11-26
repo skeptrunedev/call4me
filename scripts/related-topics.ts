@@ -253,4 +253,5 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'iphone-duo-in-stock': ['retail-shopping'],
   'winter-tire-prices': ['car-maintenance'],
   'frontier-airlines-refund': ['airlines'],
+  'out-the-door-price': ['retail-shopping'],
 };
