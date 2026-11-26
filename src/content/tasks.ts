@@ -68,7 +68,7 @@ const joinWhenAnswered = 'ask your assistant to connect you "as soon as a person
 export const TASKS: Task[] = [
   {
     key: 'callBusinesses',
-    updated: '2026-11-05',
+    updated: '2026-11-25',
     title: 'An app that makes phone calls for you',
     answer: (perMinute) => [
       `yes, there are apps that make phone calls for you, and call4me is one. ask ChatGPT, Claude or Codex to call a restaurant, a doctor's office, a repair shop or a customer service line, and call4me dials it, gets through the phone menu and the hold, talks to whoever answers, and brings back what they said with a transcript. if they want you on the line, it rings your phone. ${costs(perMinute)}`,
@@ -104,6 +104,8 @@ export const TASKS: Task[] = [
       { slug: 'reschedule-dentist-appointment', label: 'Rescheduling a dentist appointment', fact: 'a call4me user\'s assistant asked to move a Thursday 3:30 appointment to "Friday after three or anytime Monday" and got Monday, October 5 at noon with the same dentist, in a call under two minutes.' },
       { slug: 'dog-teeth-cleaning-cost', label: 'Dog teeth cleaning quotes from three vets', fact: 'an assistant asked three Houston area clinics the same questions, and the quotes ran from $250 to $755 before extras, with bloodwork and X rays included at one clinic and not at the others.' },
       { slug: 'customer-story-flight-credit', label: 'A $100 JSX voucher by phone', fact: 'Grok Bot and call4me called JSX Reservations about a delayed flight and got Jem a $100 courtesy travel voucher, valid for one year. Jem on X: "literally zero chance i was going to do that myself"' },
+      { slug: 'call-a-store-to-check-stock', label: 'Checking if a store has something in stock', fact: 'from October 17 to November 25, 2026, 293 calls from 45 call4me users asked a store whether it had something in stock. the answers worth acting on came from a person who walked to the shelf or looked the item up in the store\'s own system, not from a website badge or an automated line.' },
+      { slug: 'ask-a-store-to-hold-an-item', label: 'Asking a store to hold an item', fact: '11 call4me users\' assistants asked 13 stores to set something aside. seven said yes, usually until closing, and asked for nothing more than a name. a Walmart Auto Care Center, a Shoppers Drug Mart and an EB Games said no, all about scarce stock.' },
     ],
     ask: 'Ask me which business to call, what I need from them, and what you may agree to for me.',
   },

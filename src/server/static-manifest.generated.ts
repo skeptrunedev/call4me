@@ -33,7 +33,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/app-that-calls-businesses-for-you": {
     "html": "/__pages/1d754aa507f67b2f.html",
     "markdown": "/__pages/1d754aa507f67b2f.md",
-    "tokens": 2959
+    "tokens": 3139
   },
   "/hold-for-me": {
     "html": "/__pages/ba822c49c148d1be.html",
