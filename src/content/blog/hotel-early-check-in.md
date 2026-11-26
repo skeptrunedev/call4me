@@ -2,7 +2,7 @@
 title: "How to get early check-in at a hotel, and a late checkout: what 9 hotels said by phone"
 seoTitle: "How to get early check-in or late checkout"
 subtitle: "8 call4me users had their AI phone assistants call 9 hotels about early check-in or late checkout. The Lloyd in Stamford said yes to 2 pm in a 48-second call, and Virgin Hotels New York City gave a free 1 pm checkout. Most of the others said the only guarantee is the standard time, then noted the request and offered to keep the bags. Here's what each hotel said, two recordings, and how to ask before holiday travel."
-description: "Call on the day and ask for an hour. 9 hotels by phone, Nov 2026: one gave a 2 pm check-in, one a free 1 pm late checkout, most only 3 or 4 pm."
+description: "Call on the day and ask for an hour. 9 hotels in Oct and Nov 2026: one gave a 2 pm check-in, one a free 1 pm late checkout, most only 3 or 4 pm."
 date: 2026-11-25
 tags: early check-in, late checkout, hotels, holiday travel, virgin hotels, ai phone assistant
 authors: nick
