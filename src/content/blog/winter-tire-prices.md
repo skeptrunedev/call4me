@@ -1,17 +1,21 @@
 ---
-title: "Winter tire prices: what 5 Connecticut shops quoted for the same 4 snow tires"
-seoTitle: "Winter tire prices: 5 CT shops, same snow tires"
+title: "Blizzak WS90 price: what 5 Connecticut shops quoted for a set of 4 winter tires"
+seoTitle: "Blizzak WS90 price: what 5 CT tire shops quoted"
 subtitle: "A call4me user had their AI phone assistant price one set of four Bridgestone Blizzak WS90 snow tires at shops around Manchester, Connecticut, in two rounds in October 2026. Installed, the quotes ran from about $655 to $940.86. Here's what each shop quoted, what \"out the door\" covered, the rebate, the price match that never got tested, and two recordings."
 description: "Four Blizzak WS90 snow tires, installed, ran about $655 to $940.86 at 5 shops near Manchester, CT in Oct 2026. Every quote, the rebate and a price match try."
 date: 2026-11-25
-tags: winter tires, snow tires, tire prices, bridgestone blizzak ws90, pep boys, town fair tire, price match, car maintenance
+tags: blizzak ws90, winter tires, snow tires, tire prices, bridgestone blizzak ws90, pep boys, town fair tire, price match, car maintenance
 authors: nick
-imageAlt: "Winter tire prices, the same four snow tires quoted from about $655 to $940.86 at 5 Connecticut shops"
+imageAlt: "Blizzak WS90 price, the same four winter tires quoted from about $655 to $940.86 at 5 Connecticut shops"
 ---
 
-**The short answer:** in October 2026, four Bridgestone Blizzak WS90 snow tires in 205/55R16, installed, were quoted at **anywhere from about $655 to $940.86** by five shops around Manchester, Connecticut. The highest quote was about $286 more than the lowest, for the same four tires on the same car. That's from one call4me user, whose AI phone assistant called tire shops for one set of tires for a 2024 Toyota Corolla LE in two rounds: October 13 and 14, which we covered in [our Town Fair Tire post](/blog/town-fair-tire-manchester-ct), and October 21, which is new here.
+**The short answer:** the Blizzak WS90 price for a set of four snow tires in 205/55R16, installed, ran **anywhere from about $655 to $940.86** at five shops around Manchester, Connecticut, in October 2026. The highest quote was about $286 more than the lowest, for the same four tires on the same car. That's from one call4me user, whose AI phone assistant called tire shops for one set of tires for a 2024 Toyota Corolla LE in two rounds: October 13 and 14, which we covered in [our Town Fair Tire post](/blog/town-fair-tire-manchester-ct), and October 21, which is new here.
 
-If you're searching "winter tires near me" and planning to call around, the calls show why it's worth it: name the exact tire and size, ask for the price out the door, and check what each shop says that covers. Here's every quote side by side:
+If you're searching "winter tires near me" and planning to call around, the calls show why it's worth it: name the exact tire and size, ask for the price out the door, and check what each shop says that covers.
+
+## Blizzak WS90 prices at 5 shops, side by side
+
+Every quote below is for the same four Bridgestone Blizzak WS90 winter tires in 205/55R16, installed on the same car.
 
 | Shop | Called | Quote for four Blizzak WS90, 205/55R16 | What the shop said it covers | In stock? | The $80 October Bridgestone rebate |
 |---|---|---|---|---|---|

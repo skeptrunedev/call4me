@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "2add18f3c18409c549c62b0f007403f26acc4ae67e5bf1145bf8fae42758e394"
+  "sourceHash": "2e39336f6a00a57c238f2f47bd3e7bf2a90a99d24cc3d8f99b9d554c965cc026"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -417,12 +417,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.701119
     },
     {
-      "slug": "winter-tire-prices",
-      "similarity": 0.692997
-    },
-    {
       "slug": "wheel-alignment-cost",
       "similarity": 0.682315
+    },
+    {
+      "slug": "winter-tire-prices",
+      "similarity": 0.674833
     },
     {
       "slug": "walmart-oil-change-prices",
@@ -721,6 +721,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.686512
     },
     {
+      "slug": "hotel-early-check-in",
+      "similarity": 0.655601
+    },
+    {
       "slug": "inn-at-jim-thorpe-reservations",
       "similarity": 0.647167
     },
@@ -731,10 +735,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "global-blue-customer-service-number",
       "similarity": 0.644094
-    },
-    {
-      "slug": "hotel-early-check-in",
-      "similarity": 0.624449
     },
     {
       "slug": "the-base-glamping-yugawara",
@@ -1639,6 +1639,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "americas-tire-fremont",
       "similarity": 0.613308
+    },
+    {
+      "slug": "winter-tire-prices",
+      "similarity": 0.606616
     }
   ],
   "cursor-phone-calls": [
@@ -2678,19 +2682,23 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "hotel-early-check-in": [
     {
       "slug": "booking-com-customer-service-number",
-      "similarity": 0.624449
+      "similarity": 0.655601
+    },
+    {
+      "slug": "virgin-hotels-new-york-parking",
+      "similarity": 0.626805
     },
     {
       "slug": "springhill-suites-phoenix-gilbert",
-      "similarity": 0.606411
+      "similarity": 0.621094
     },
     {
       "slug": "moxy-st-petersburg-downtown",
-      "similarity": 0.604496
+      "similarity": 0.615692
     },
     {
-      "slug": "paradox-hotel-vancouver",
-      "similarity": 0.601469
+      "slug": "the-base-glamping-yugawara",
+      "similarity": 0.611765
     }
   ],
   "how-far-in-advance-to-order-catering": [
@@ -3257,6 +3265,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.668979
     },
     {
+      "slug": "winter-tire-prices",
+      "similarity": 0.622412
+    },
+    {
       "slug": "americas-tire-fremont",
       "similarity": 0.622079
     },
@@ -3579,16 +3591,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.62983
     },
     {
+      "slug": "hotel-early-check-in",
+      "similarity": 0.615692
+    },
+    {
       "slug": "the-base-glamping-yugawara",
       "similarity": 0.614935
     },
     {
       "slug": "inn-at-jim-thorpe-reservations",
       "similarity": 0.610285
-    },
-    {
-      "slug": "hotel-early-check-in",
-      "similarity": 0.604496
     },
     {
       "slug": "virgin-hotels-new-york-parking",
@@ -3947,10 +3959,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "posada-real-los-condestables",
       "similarity": 0.625713
-    },
-    {
-      "slug": "hotel-early-check-in",
-      "similarity": 0.601469
     },
     {
       "slug": "inn-at-jim-thorpe-reservations",
@@ -4763,7 +4771,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "hotel-early-check-in",
-      "similarity": 0.606411
+      "similarity": 0.621094
     }
   ],
   "straight-talk-customer-service-number": [
@@ -4936,6 +4944,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "booking-com-customer-service-number",
       "similarity": 0.613732
+    },
+    {
+      "slug": "hotel-early-check-in",
+      "similarity": 0.611765
     }
   ],
   "ticketmaster-customer-service-number": [
@@ -4967,7 +4979,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "town-fair-tire-manchester-ct": [
     {
       "slug": "winter-tire-prices",
-      "similarity": 0.835853
+      "similarity": 0.86961
     },
     {
       "slug": "americas-tire-fremont",
@@ -5399,6 +5411,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "virgin-hotels-new-york-parking": [
     {
+      "slug": "hotel-early-check-in",
+      "similarity": 0.626805
+    },
+    {
       "slug": "moxy-st-petersburg-downtown",
       "similarity": 0.603811
     }
@@ -5495,7 +5511,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "winter-tire-prices",
-      "similarity": 0.683087
+      "similarity": 0.692717
     },
     {
       "slug": "americas-tire-fremont",
@@ -5614,12 +5630,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "wheel-alignment-cost": [
     {
-      "slug": "walmart-oil-change-prices",
-      "similarity": 0.749558
+      "slug": "winter-tire-prices",
+      "similarity": 0.767308
     },
     {
-      "slug": "winter-tire-prices",
-      "similarity": 0.715131
+      "slug": "walmart-oil-change-prices",
+      "similarity": 0.749558
     },
     {
       "slug": "town-fair-tire-manchester-ct",
@@ -5675,19 +5691,27 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "winter-tire-prices": [
     {
       "slug": "town-fair-tire-manchester-ct",
-      "similarity": 0.835853
+      "similarity": 0.86961
     },
     {
       "slug": "wheel-alignment-cost",
-      "similarity": 0.715131
-    },
-    {
-      "slug": "americas-tire-fremont",
-      "similarity": 0.692997
+      "similarity": 0.767308
     },
     {
       "slug": "walmart-oil-change-prices",
-      "similarity": 0.683087
+      "similarity": 0.692717
+    },
+    {
+      "slug": "americas-tire-fremont",
+      "similarity": 0.674833
+    },
+    {
+      "slug": "les-schwab-oil-change",
+      "similarity": 0.622412
+    },
+    {
+      "slug": "costco-tire-appointment-cancel-refund",
+      "similarity": 0.606616
     }
   ],
   "wyoming-registered-agent-consent-form": [],

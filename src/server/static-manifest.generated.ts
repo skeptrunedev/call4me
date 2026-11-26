@@ -123,7 +123,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2375
+    "tokens": 2376
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
@@ -238,7 +238,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/hotel-early-check-in": {
     "html": "/__pages/bb81d33975503f1e.html",
     "markdown": "/__pages/bb81d33975503f1e.md",
-    "tokens": 7590
+    "tokens": 7608
   },
   "/blog/needoh-in-stock": {
     "html": "/__pages/8df7edccfa7ab0c1.html",
@@ -283,7 +283,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/winter-tire-prices": {
     "html": "/__pages/89e3ef237de9ec58.html",
     "markdown": "/__pages/89e3ef237de9ec58.md",
-    "tokens": 7204
+    "tokens": 7247
   },
   "/blog/gpt-live-1-1-upgrade": {
     "html": "/__pages/aa53374796bdd8ea.html",
@@ -578,7 +578,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/americas-tire-fremont": {
     "html": "/__pages/a244f81352eb61fc.html",
     "markdown": "/__pages/a244f81352eb61fc.md",
-    "tokens": 2563
+    "tokens": 2564
   },
   "/blog/posada-real-los-condestables": {
     "html": "/__pages/cb8eb43c3b5c9aab.html",
@@ -663,7 +663,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/virgin-hotels-new-york-parking": {
     "html": "/__pages/fff4dd4a906f9d0d.html",
     "markdown": "/__pages/fff4dd4a906f9d0d.md",
-    "tokens": 4853
+    "tokens": 5046
   },
   "/blog/moxy-st-petersburg-downtown": {
     "html": "/__pages/6a400c20fc16bbf9.html",
@@ -698,7 +698,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/town-fair-tire-manchester-ct": {
     "html": "/__pages/d25e218c7665add4.html",
     "markdown": "/__pages/d25e218c7665add4.md",
-    "tokens": 8253
+    "tokens": 8254
   },
   "/blog/sassafraz-private-dining": {
     "html": "/__pages/2e78db2198e5e261.html",
@@ -1098,12 +1098,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/wheel-alignment-cost": {
     "html": "/__pages/5fff2e02afdd1065.html",
     "markdown": "/__pages/5fff2e02afdd1065.md",
-    "tokens": 3349
+    "tokens": 3350
   },
   "/blog/walmart-oil-change-prices": {
     "html": "/__pages/99fff13b3c5bdd6a.html",
     "markdown": "/__pages/99fff13b3c5bdd6a.md",
-    "tokens": 2747
+    "tokens": 2748
   },
   "/blog/how-to-cancel-siriusxm": {
     "html": "/__pages/89927a745702515f.html",
@@ -1223,7 +1223,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/les-schwab-oil-change": {
     "html": "/__pages/ba48431d0e7bdb1b.html",
     "markdown": "/__pages/ba48431d0e7bdb1b.md",
-    "tokens": 4429
+    "tokens": 4483
   },
   "/blog/t3-code-phone-calls": {
     "html": "/__pages/c4487b0143fe433f.html",
@@ -1428,7 +1428,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/costco-tire-appointment-cancel-refund": {
     "html": "/__pages/ca5f5983d7127c65.html",
     "markdown": "/__pages/ca5f5983d7127c65.md",
-    "tokens": 4679
+    "tokens": 4860
   },
   "/blog/reschedule-dentist-appointment": {
     "html": "/__pages/1b1129e38f43b43f.html",
