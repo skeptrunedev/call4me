@@ -135,6 +135,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'fix-an-order-or-delivery-by-phone': ['shipping', 'retail-shopping'],
   'check-store-stock-in-japan': ['retail-shopping'],
   'ask-a-store-to-hold-an-item': ['retail-shopping'],
+  'call-a-store-to-check-stock': ['retail-shopping'],
   'ohio-workers-compensation-insurance': ['insurance', 'legal-business-paperwork'],
   'openai-realtime-voices-phone-calls': ['voice-technology', 'agent-software'],
   'paypal-customer-service-number': ['personal-finance'],

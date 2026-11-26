@@ -236,6 +236,7 @@ import netflixCustomerServiceNumber from './netflix-customer-service-number.md';
 import howFarInAdvanceToOrderCatering from './how-far-in-advance-to-order-catering.md';
 import gptLive11Upgrade from './gpt-live-1-1-upgrade.md';
 import fixAnOrderOrDeliveryByPhone from './fix-an-order-or-delivery-by-phone.md';
+import callAStoreToCheckStock from './call-a-store-to-check-stock.md';
 
 /**
  * Every post, in any order; the blog sorts by date. To publish, add a markdown file here
@@ -481,4 +482,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'wells-fargo-dispute-charge', markdown: wellsFargoDisputeCharge },
   { slug: 'netflix-customer-service-number', markdown: netflixCustomerServiceNumber },
   { slug: 'how-far-in-advance-to-order-catering', markdown: howFarInAdvanceToOrderCatering },
+  { slug: 'call-a-store-to-check-stock', markdown: callAStoreToCheckStock },
 ];
