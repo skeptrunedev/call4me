@@ -45,6 +45,9 @@ const noAnswer = (question: string) =>
   `No answer is available from the person you work for about "${question.slice(0, 300)}". Stop waiting for it and do not keep saying you are checking or waiting to hear back. When the other person is waiting for your answer, say you don't have that detail and ask whether they can proceed or look it up using facts already supplied. Carry on with anything else you can accomplish. Never guess facts or accept anything outside your permission. If nothing can proceed, ask what is needed for a follow up, then say goodbye and delegate end_call. Do not promise a callback has been arranged. Stay silent during a phone menu, hold, transfer, or while the other person is speaking. A later answer will still be delivered.`;
 /** The other side usually speaks first ("Hi, thanks for calling..."). If nobody has, and they've been quiet this long, nudge. */
 const SILENT_PICKUP_MS = 5_000;
+/** From this long after pickup, sound nobody has transcribed holds that nudge only until a pause this long (nudgeWhenSilent). */
+const LATE_HELLO_MS = 8_000;
+const LATE_HELLO_QUIET_MS = 1_500;
 /** Longest an incoming call waits to be answered while its voice session opens (prewarmLive). */
 const PREWARM_WAIT_MS = 2_500;
 const TRANSCRIPT_FLUSH_MS = 2_000;
@@ -1459,6 +1462,13 @@ export class VoiceSession extends DurableObject<Env> {
    * their newHi, hello?"), and the caller, told to wait, sat silent through two "Hello?"s and "No,
    * it's not working" until they hung up. Their side making sound nobody has transcribed yet may be
    * them talking, so the hello waits until they have been quiet as long.
+   *
+   * Background noise is sound nobody transcribes too, and it can hold that wait forever: on
+   * call_sc3310ad9o2t4t5a (2026-11-27) a restaurant in Italy picked up with "Pronto", which was never
+   * transcribed, then waited through 15s of kitchen clatter whose single knocks never left five
+   * quiet seconds (4.96s at most), said "Non si sente nulla" (we can't hear anything) and hung up.
+   * Words reach the transcript within a few seconds of being said, so from LATE_HELLO_MS on, sound
+   * still untranscribed holds the hello only until a pause in it, as talking would leave.
    */
   private nudgeWhenSilent(): void {
     // Answering with a session opened before pickup, the greeting must wait for the phone stream:
@@ -1476,7 +1486,8 @@ export class VoiceSession extends DurableObject<Env> {
       // which outlives a lost phone stream (detachLive clears speechEndsAt, and the next voice
       // session arms this again).
       if (this.speechEndsAt || this.lastSpokeAt.caller) return;
-      const quietAt = this.themAudibleAt + SILENT_PICKUP_MS;
+      const lateAt = Math.max(this.answeredAt + LATE_HELLO_MS, this.themAudibleAt + LATE_HELLO_QUIET_MS);
+      const quietAt = Math.min(this.themAudibleAt + SILENT_PICKUP_MS, lateAt);
       if (Date.now() < quietAt) return void setTimeout(nudge, quietAt - Date.now());
       this.mark('nobody has spoken since pickup; saying hello');
       // Commentary, GPT-Live's channel for something to say aloud, as OpenAI's session guide has an

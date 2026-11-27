@@ -353,6 +353,31 @@ test('a sound from their side that is never transcribed only holds the hello unt
   assert.equal(hellos().length, 1);
 });
 
+test("background noise nobody transcribes holds the hello only until a pause once the call is 8s old: a kitchen's clatter never left five quiet seconds", async (t) => {
+  // call_sc3310ad9o2t4t5a, 2026-11-27: a restaurant picked up with "Pronto", never transcribed, and
+  // waited through 15s of single clatters, the longest quiet 4.96s, until "Non si sente nulla" and
+  // a hang-up. The hello never went in. These are that recording's clatters, 20ms each.
+  const { play, hellos } = await outboundPickup(t);
+  const clatter = [1_400, 1_900, 3_900, 4_900, 5_200, 7_000, 12_000];
+  const line = (ms: number) => ({ them: ms < 800 || clatter.some((at) => ms >= at && ms < at + 20) });
+  await play(8_480, line);
+  assert.deepEqual(hellos(), [], 'not before the call is 8s old, nor within 1.5s of a sound');
+  await play(8_520, line);
+  assert.equal(hellos().length, 1);
+  await play(20_000, line);
+  assert.equal(hellos().length, 1);
+});
+
+test('late in a silent pickup, sound as steady as talking still holds the hello until it pauses', async (t) => {
+  const { play, hellos } = await outboundPickup(t);
+  // Untranscribed from +4s to +12s, with the short gaps between words.
+  const talking = (ms: number) => ({ them: ms >= 4_000 && ms < 12_000 && ms % 600 < 450 });
+  await play(13_300, talking);
+  assert.deepEqual(hellos(), [], 'its last word ends at +11.86s');
+  await play(13_400, talking);
+  assert.equal(hellos().length, 1);
+});
+
 test("the caller's speech counts from its first audible frame, and still counts for a voice session opened after the phone stream was lost", async (t) => {
   const { h, play, hellos, words } = await outboundPickup(t);
   // Its audio starts just before the hello is due, ahead of any transcript of it.
