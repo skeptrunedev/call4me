@@ -3,7 +3,7 @@ import { CfWorkerJsonSchemaValidator } from '@modelcontextprotocol/server/valida
 import type Stripe from 'stripe';
 import { z } from 'zod';
 import { accounts, dollars, type Account } from '../services/accounts';
-import { CallError } from '../services/calls';
+import { CallError, LIMITS } from '../services/calls';
 import { answerQuestion, balanceView, usageView, categoriesView, connectPerson, followCall, followedView, hangUp, listCalls, profileView, requirementsView, saveProfile, callView, type CallView } from '../services/call-ops';
 import { callPrice, placeCall, pricePerMinute } from '../services/dialer';
 import { DESTINATION_PRICE_CENTS, zdrPrice } from '../lib/rates';
@@ -97,6 +97,8 @@ The caller can only say what you give it, so everything is collected BEFORE dial
 4. call4me_place_call with the category and details. If it answers "Not calling yet", ask the user exactly what it lists and try again. Show its calling_number so the user knows which call4me number may ring them; if this is their first call or a different number than before, ask them to save it as a contact before the call can ring them, so call screening lets it through. It is the call4me number, not number (the business's number).
 5. Poll call4me_get_call with wait_seconds until finished. If it shows an open question, the business is waiting on the line: answer right away with call4me_answer_question.
 6. Tell the user the outcome in a line or two.
+
+Calls run in parallel. To ask several businesses the same thing (quotes from ten suppliers, which restaurant has a table tonight), place every call first: call4me_place_call once per business, one right after another, without waiting for any to finish. Then follow them all with call4me_get_call, together if you can make tool calls in parallel, else in turn with wait_seconds: 5 so an open question on any of them gets answered quickly. Once every call has finished, give the user one comparison of their answers. Each call holds credits for its max_minutes until it ends, so give each a max_minutes that fits the task: at the ${LIMITS.defaultMinutes}-minute default, the first calls can hold the whole balance and the rest are refused.
 
 To put the user on a call themselves: pass connect_when to call4me_place_call (e.g. "as soon as a person picks up", so the user does not have to listen to a long hold; hold time is still billed, at half the call rate), or call call4me_connect_me mid-call. Give the user a heads up before placing a call that may ring them, and before call4me_connect_me. Tell them why and use the actual call's calling_number from call4me_get_call; for a new call, use the selected owned number when known and confirm it from the place_call result. If the first number has not been assigned yet, explain that upfront and show it as soon as place_call returns. Their phone rings from that number (it should be saved as a contact, or call screening may answer in their place) and they are on the call as soon as they answer; the caller goes quiet while they talk, and takes over again when they press * or hang up. To have them listen in without taking over, pass listen_in: true to call4me_place_call (they hear the call from the moment the business answers) or mode: "listen" to call4me_connect_me: nobody on the call hears them, the caller keeps working, and they press 1 anytime to join. To end a call early, use call4me_hang_up.
 
@@ -214,7 +216,7 @@ export function createCall4meServer(deps: McpDeps): McpServer {
       guard(async () => {
         const row = await placeCall(env, deps.origin, account, args, surface);
         const v = callView(row, []);
-        return ok(`calling ${v.business} at ${v.number} (${v.id}), ${dollars(callPrice(env, row))}/min from pickup${row.zdr ? ' with zero data retention' : ''}, including phone menus; hold time is half price.${v.own_number ? ` It shows the user's own number ${v.own_number}, so callbacks go straight to their phone.` : ''} Your call4me number is ${v.calling_number}; show it to the user and ask them to save it as a contact if they haven't, so call screening doesn't answer in their place if they need to join. Poll call4me_get_call with wait_seconds: 30 until finished, and answer any open question immediately.`, v);
+        return ok(`calling ${v.business} at ${v.number} (${v.id}), ${dollars(callPrice(env, row))}/min from pickup${row.zdr ? ' with zero data retention' : ''}, including phone menus; hold time is half price.${v.own_number ? ` It shows the user's own number ${v.own_number}, so callbacks go straight to their phone.` : ''} Your call4me number is ${v.calling_number}; show it to the user and ask them to save it as a contact if they haven't, so call screening doesn't answer in their place if they need to join. Poll call4me_get_call with wait_seconds: 30 until finished, and answer any open question immediately. Calling several businesses? Place the rest now and follow them together.`, v);
       })()) as never,
   );
 

@@ -145,3 +145,14 @@ test('only accounts approved for sales calls are told they may pitch businesses'
   assert.match(approved, /approved for business-to-business sales and outreach calls/);
   assert.match(approved, /never consumers or personal phones/);
 });
+
+test('every server tells agents calls run in parallel: place them all, then follow them together', async () => {
+  // Tassos's agent called ten suppliers one after another (Nov 27): the steps read as one call at a
+  // time, though nothing limits how many an account runs at once beyond the credits each holds.
+  for (const surface of ['agents', 'chatgpt', 'claude'] as const) {
+    const { instructions } = (await rpc(surface, 'initialize', { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 't', version: '1' } })) as { instructions: string };
+    assert.match(instructions, /Calls run in parallel\./, surface);
+    assert.match(instructions, /place every call first: call4me_place_call once per business, one right after another, without waiting for any to finish/, surface);
+    assert.match(instructions, /holds credits for its max_minutes until it ends/, surface);
+  }
+});
