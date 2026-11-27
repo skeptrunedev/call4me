@@ -259,4 +259,5 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'how-much-is-a-cord-of-firewood': ['furniture-home-services'],
   'snow-removal-wayzata-orono': ['furniture-home-services'],
   'firewood-delivery-wayzata-orono': ['furniture-home-services'],
+  'snow-removal-truckee': ['furniture-home-services'],
 };

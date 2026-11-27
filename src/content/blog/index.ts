@@ -146,6 +146,7 @@ import winterTirePrices from './winter-tire-prices.md';
 import firewoodDeliveryTruckee from './firewood-delivery-truckee.md';
 import howMuchIsACordOfFirewood from './how-much-is-a-cord-of-firewood.md';
 import firewoodDeliveryWayzataOrono from './firewood-delivery-wayzata-orono.md';
+import snowRemovalTruckee from './snow-removal-truckee.md';
 import frontierAirlinesRefund from './frontier-airlines-refund.md';
 import outTheDoorPrice from './out-the-door-price.md';
 import extendARentalCar from './extend-a-rental-car.md';
@@ -507,4 +508,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'extend-a-rental-car', markdown: extendARentalCar },
   { slug: 'how-much-is-a-cord-of-firewood', markdown: howMuchIsACordOfFirewood },
   { slug: 'snow-removal-wayzata-orono', markdown: snowRemovalWayzataOrono },
+  { slug: 'snow-removal-truckee', markdown: snowRemovalTruckee },
 ];

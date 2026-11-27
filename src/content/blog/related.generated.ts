@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "528e163358252d454fc5d489ad40671e88a23eb52db4609cde0598a114ca5154"
+  "sourceHash": "a21bba102c5da13919ba0a38bb42090c0d755ed9dcb8632ea9634be3e2e00eaf"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -1572,7 +1572,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "costco-customer-service": [
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.669985
+      "similarity": 0.669986
     },
     {
       "slug": "pottery-barn-customer-service",
@@ -1988,7 +1988,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "zessan-otemachi-private-room",
-      "similarity": 0.695845
+      "similarity": 0.695846
     },
     {
       "slug": "pin-on-grand-reservations",
@@ -2106,7 +2106,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "fabletics-customer-service": [
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.719138
+      "similarity": 0.719139
     },
     {
       "slug": "directv-customer-service",
@@ -2205,6 +2205,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.804401
     },
     {
+      "slug": "snow-removal-truckee",
+      "similarity": 0.697464
+    },
+    {
       "slug": "snow-removal-wayzata-orono",
       "similarity": 0.633358
     },
@@ -2225,6 +2229,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "snow-removal-wayzata-orono",
       "similarity": 0.764589
+    },
+    {
+      "slug": "snow-removal-truckee",
+      "similarity": 0.674302
     }
   ],
   "fix-an-order-or-delivery-by-phone": [
@@ -2788,6 +2796,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.706164
     },
     {
+      "slug": "snow-removal-truckee",
+      "similarity": 0.645372
+    },
+    {
       "slug": "maggy-maid-sacramento",
       "similarity": 0.624897
     },
@@ -2913,7 +2925,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "spectrum-retention-department",
-      "similarity": 0.650372
+      "similarity": 0.650371
     }
   ],
   "how-to-lower-directv-bill": [
@@ -3216,6 +3228,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "skip-hire-abingdon",
       "similarity": 0.666616
+    },
+    {
+      "slug": "snow-removal-truckee",
+      "similarity": 0.604546
     }
   ],
   "justworks-customer-service": [
@@ -3449,6 +3465,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "how-much-is-a-cord-of-firewood",
       "similarity": 0.624897
+    },
+    {
+      "slug": "snow-removal-truckee",
+      "similarity": 0.605204
     }
   ],
   "mandarin-phone-call-scheduling": [
@@ -3678,7 +3698,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "windstream-customer-service",
-      "similarity": 0.614166
+      "similarity": 0.614165
     },
     {
       "slug": "xfinity-customer-service-number",
@@ -4721,6 +4741,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "maggy-maid-sacramento",
       "similarity": 0.656155
+    },
+    {
+      "slug": "snow-removal-truckee",
+      "similarity": 0.609215
     }
   ],
   "san-francisco-oral-surgeon-consultation": [
@@ -4858,7 +4882,41 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.601037
     }
   ],
+  "snow-removal-truckee": [
+    {
+      "slug": "snow-removal-wayzata-orono",
+      "similarity": 0.841697
+    },
+    {
+      "slug": "firewood-delivery-truckee",
+      "similarity": 0.697464
+    },
+    {
+      "slug": "firewood-delivery-wayzata-orono",
+      "similarity": 0.674302
+    },
+    {
+      "slug": "how-much-is-a-cord-of-firewood",
+      "similarity": 0.645372
+    },
+    {
+      "slug": "samsung-oven-door-glass-repair-sacramento",
+      "similarity": 0.609215
+    },
+    {
+      "slug": "maggy-maid-sacramento",
+      "similarity": 0.605204
+    },
+    {
+      "slug": "junk-removal-cost",
+      "similarity": 0.604546
+    }
+  ],
   "snow-removal-wayzata-orono": [
+    {
+      "slug": "snow-removal-truckee",
+      "similarity": 0.841697
+    },
     {
       "slug": "firewood-delivery-wayzata-orono",
       "similarity": 0.764589
@@ -4931,7 +4989,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-lower-att-bill",
-      "similarity": 0.650372
+      "similarity": 0.650371
     },
     {
       "slug": "how-to-lower-xfinity-bill",
@@ -4975,7 +5033,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "t-mobile-customer-service-number",
-      "similarity": 0.683662
+      "similarity": 0.683663
     },
     {
       "slug": "verizon-customer-service",
@@ -5027,7 +5085,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "suitsupply-customer-service": [
     {
       "slug": "fabletics-customer-service",
-      "similarity": 0.719138
+      "similarity": 0.719139
     },
     {
       "slug": "wayfair-customer-service",
@@ -5061,7 +5119,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "t-mobile-customer-service-number": [
     {
       "slug": "straight-talk-customer-service-number",
-      "similarity": 0.683662
+      "similarity": 0.683663
     },
     {
       "slug": "att-customer-service-number",
@@ -5147,7 +5205,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "ticketmaster-customer-service-number": [
     {
       "slug": "vivid-seats-customer-service-number",
-      "similarity": 0.697516
+      "similarity": 0.697515
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5621,7 +5679,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ticketmaster-customer-service-number",
-      "similarity": 0.697516
+      "similarity": 0.697515
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5679,7 +5737,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "costco-customer-service",
-      "similarity": 0.669985
+      "similarity": 0.669986
     },
     {
       "slug": "suitsupply-customer-service",
@@ -5875,7 +5933,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "monkeybrains-customer-service-number",
-      "similarity": 0.614166
+      "similarity": 0.614165
     },
     {
       "slug": "verizon-customer-service",
@@ -5976,7 +6034,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "equal-parts-sf-reservations",
-      "similarity": 0.695845
+      "similarity": 0.695846
     },
     {
       "slug": "posada-real-los-condestables",
