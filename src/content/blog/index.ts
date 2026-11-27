@@ -148,6 +148,7 @@ import howMuchIsACordOfFirewood from './how-much-is-a-cord-of-firewood.md';
 import firewoodDeliveryWayzataOrono from './firewood-delivery-wayzata-orono.md';
 import snowRemovalTruckee from './snow-removal-truckee.md';
 import snowRemovalWellesleyMa from './snow-removal-wellesley-ma.md';
+import firewoodDeliveryWellesleyMa from './firewood-delivery-wellesley-ma.md';
 import frontierAirlinesRefund from './frontier-airlines-refund.md';
 import outTheDoorPrice from './out-the-door-price.md';
 import extendARentalCar from './extend-a-rental-car.md';
@@ -511,4 +512,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'snow-removal-wayzata-orono', markdown: snowRemovalWayzataOrono },
   { slug: 'snow-removal-truckee', markdown: snowRemovalTruckee },
   { slug: 'snow-removal-wellesley-ma', markdown: snowRemovalWellesleyMa },
+  { slug: 'firewood-delivery-wellesley-ma', markdown: firewoodDeliveryWellesleyMa },
 ];

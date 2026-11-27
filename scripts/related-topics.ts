@@ -261,4 +261,5 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'firewood-delivery-wayzata-orono': ['furniture-home-services'],
   'snow-removal-truckee': ['furniture-home-services'],
   'snow-removal-wellesley-ma': ['furniture-home-services'],
+  'firewood-delivery-wellesley-ma': ['furniture-home-services'],
 };

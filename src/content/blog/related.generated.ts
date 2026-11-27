@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "b2741bedb559730a2415117ad94947f37b0f024bfca674b8299657a3c93bd594"
+  "sourceHash": "2e2bfc832c9898ca520ea0a38e6cbc6b25cadc420d8d582548df102b208e9a52"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -204,7 +204,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "follow-up-appointment-telehealth",
-      "similarity": 0.670663
+      "similarity": 0.670662
     },
     {
       "slug": "customer-story-dental-appointments",
@@ -2197,6 +2197,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "firewood-delivery-truckee": [
     {
+      "slug": "firewood-delivery-wellesley-ma",
+      "similarity": 0.819699
+    },
+    {
       "slug": "firewood-delivery-wayzata-orono",
       "similarity": 0.808808
     },
@@ -2231,6 +2235,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.791944
     },
     {
+      "slug": "firewood-delivery-wellesley-ma",
+      "similarity": 0.788433
+    },
+    {
       "slug": "snow-removal-wayzata-orono",
       "similarity": 0.764589
     },
@@ -2241,6 +2249,32 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "snow-removal-wellesley-ma",
       "similarity": 0.666319
+    }
+  ],
+  "firewood-delivery-wellesley-ma": [
+    {
+      "slug": "firewood-delivery-truckee",
+      "similarity": 0.819699
+    },
+    {
+      "slug": "firewood-delivery-wayzata-orono",
+      "similarity": 0.788433
+    },
+    {
+      "slug": "how-much-is-a-cord-of-firewood",
+      "similarity": 0.775744
+    },
+    {
+      "slug": "snow-removal-wellesley-ma",
+      "similarity": 0.719852
+    },
+    {
+      "slug": "snow-removal-truckee",
+      "similarity": 0.63129
+    },
+    {
+      "slug": "snow-removal-wayzata-orono",
+      "similarity": 0.630046
     }
   ],
   "fix-an-order-or-delivery-by-phone": [
@@ -2276,7 +2310,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ai-personal-assistant-appointment-booking",
-      "similarity": 0.670663
+      "similarity": 0.670662
     },
     {
       "slug": "customer-story-dental-appointments",
@@ -2380,7 +2414,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.819612
+      "similarity": 0.819611
     },
     {
       "slug": "ai-agent-that-makes-phone-calls",
@@ -2422,7 +2456,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-connectors-mcp-phone-calls",
-      "similarity": 0.788063
+      "similarity": 0.788062
     },
     {
       "slug": "n8n-mcp-phone-calls",
@@ -2594,7 +2628,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-bot-vs-meta-muse",
-      "similarity": 0.768515
+      "similarity": 0.768514
     },
     {
       "slug": "ai-agent-that-makes-phone-calls",
@@ -2636,7 +2670,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-bot-templates",
-      "similarity": 0.768515
+      "similarity": 0.768514
     },
     {
       "slug": "phone-calling-mcp-comparison",
@@ -2678,13 +2712,13 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "github-copilot-phone-calls",
-      "similarity": 0.788063
+      "similarity": 0.788062
     }
   ],
   "gym-day-pass": [
     {
       "slug": "gyms-with-sauna-near-me",
-      "similarity": 0.810295
+      "similarity": 0.810296
     },
     {
       "slug": "bonner-springs-ymca-swim-lessons",
@@ -2702,7 +2736,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "gyms-with-sauna-near-me": [
     {
       "slug": "gym-day-pass",
-      "similarity": 0.810295
+      "similarity": 0.810296
     }
   ],
   "hertz-customer-service-number": [
@@ -2800,6 +2834,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.791944
     },
     {
+      "slug": "firewood-delivery-wellesley-ma",
+      "similarity": 0.775744
+    },
+    {
       "slug": "junk-removal-cost",
       "similarity": 0.706164
     },
@@ -2818,10 +2856,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "snow-removal-wayzata-orono",
       "similarity": 0.613788
-    },
-    {
-      "slug": "skip-hire-abingdon",
-      "similarity": 0.608149
     }
   ],
   "how-to-cancel-siriusxm": [
@@ -3099,7 +3133,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "moxy-st-petersburg-downtown",
-      "similarity": 0.610284
+      "similarity": 0.610285
     },
     {
       "slug": "posada-real-los-condestables",
@@ -3510,7 +3544,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "mastra-mcp-phone-calls": [
     {
       "slug": "opencode-phone-calls",
-      "similarity": 0.890708
+      "similarity": 0.890709
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
@@ -3598,7 +3632,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.787284
+      "similarity": 0.787283
     },
     {
       "slug": "ai-apps-that-make-calls-for-you",
@@ -3650,7 +3684,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "meta-muse-first-task",
-      "similarity": 0.710195
+      "similarity": 0.710196
     },
     {
       "slug": "grok-bot-vs-meta-muse",
@@ -3758,7 +3792,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "inn-at-jim-thorpe-reservations",
-      "similarity": 0.610284
+      "similarity": 0.610285
     },
     {
       "slug": "virgin-hotels-new-york-parking",
@@ -4022,7 +4056,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "gemini-phone-calls",
-      "similarity": 0.819612
+      "similarity": 0.819611
     },
     {
       "slug": "ai-apps-that-make-calls-for-you",
@@ -4040,7 +4074,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.890708
+      "similarity": 0.890709
     },
     {
       "slug": "devin-phone-calls",
@@ -4920,16 +4954,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.645372
     },
     {
+      "slug": "firewood-delivery-wellesley-ma",
+      "similarity": 0.63129
+    },
+    {
       "slug": "samsung-oven-door-glass-repair-sacramento",
       "similarity": 0.609215
     },
     {
       "slug": "maggy-maid-sacramento",
       "similarity": 0.605204
-    },
-    {
-      "slug": "junk-removal-cost",
-      "similarity": 0.604546
     }
   ],
   "snow-removal-wayzata-orono": [
@@ -4950,6 +4984,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.633358
     },
     {
+      "slug": "firewood-delivery-wellesley-ma",
+      "similarity": 0.630046
+    },
+    {
       "slug": "how-much-is-a-cord-of-firewood",
       "similarity": 0.613788
     },
@@ -4966,6 +5004,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "snow-removal-wayzata-orono",
       "similarity": 0.832301
+    },
+    {
+      "slug": "firewood-delivery-wellesley-ma",
+      "similarity": 0.719852
     },
     {
       "slug": "firewood-delivery-wayzata-orono",
@@ -5155,7 +5197,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5622,7 +5664,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.783161
+      "similarity": 0.78316
     },
     {
       "slug": "openclaw-phone-calls",
@@ -5791,7 +5833,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",

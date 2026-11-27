@@ -123,127 +123,132 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2572
+    "tokens": 2582
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2297
+    "tokens": 2342
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2183
+    "tokens": 2136
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2180
+    "tokens": 2194
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2203
+    "tokens": 2226
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2300
+    "tokens": 2299
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2117
+    "tokens": 2122
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2124
+    "tokens": 2113
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2210
+    "tokens": 2205
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2287
+    "tokens": 2278
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 2238
+    "tokens": 2207
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 2102
+    "tokens": 2128
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 1971
+    "tokens": 2028
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 2032
+    "tokens": 1992
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1986
+    "tokens": 2029
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 1793
+    "tokens": 1798
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 1814
+    "tokens": 1785
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 1985
+    "tokens": 1964
   },
   "/blog?page=19": {
     "html": "/__pages/bcb642deee219a0c.html",
     "markdown": "/__pages/bcb642deee219a0c.md",
-    "tokens": 1864
+    "tokens": 1868
   },
   "/blog?page=20": {
     "html": "/__pages/cdbb74b6d785b988.html",
     "markdown": "/__pages/cdbb74b6d785b988.md",
-    "tokens": 2071
+    "tokens": 2060
   },
   "/blog?page=21": {
     "html": "/__pages/a483033cd4a02de8.html",
     "markdown": "/__pages/a483033cd4a02de8.md",
-    "tokens": 2071
+    "tokens": 2080
+  },
+  "/blog?page=22": {
+    "html": "/__pages/2f13e0b1f5c7c0de.html",
+    "markdown": "/__pages/2f13e0b1f5c7c0de.md",
+    "tokens": 488
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 24152
+    "tokens": 24285
   },
   "/blog/firewood-delivery-truckee": {
     "html": "/__pages/2891b06489407d01.html",
     "markdown": "/__pages/2891b06489407d01.md",
-    "tokens": 8274
+    "tokens": 8276
   },
   "/blog/firewood-delivery-wayzata-orono": {
     "html": "/__pages/97728f213dfdb0fb.html",
     "markdown": "/__pages/97728f213dfdb0fb.md",
-    "tokens": 9723
+    "tokens": 9730
   },
   "/blog/how-much-is-a-cord-of-firewood": {
     "html": "/__pages/72e87cbbeaeb047b.html",
     "markdown": "/__pages/72e87cbbeaeb047b.md",
-    "tokens": 9458
+    "tokens": 9512
   },
   "/blog/snow-removal-wayzata-orono": {
     "html": "/__pages/03933c2a02107268.html",
@@ -258,12 +263,17 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/snow-removal-wellesley-ma": {
     "html": "/__pages/b7c9c86f7e74569d.html",
     "markdown": "/__pages/b7c9c86f7e74569d.md",
-    "tokens": 7965
+    "tokens": 7975
+  },
+  "/blog/firewood-delivery-wellesley-ma": {
+    "html": "/__pages/e9a7fba8890c512f.html",
+    "markdown": "/__pages/e9a7fba8890c512f.md",
+    "tokens": 8598
   },
   "/blog/fix-an-order-or-delivery-by-phone": {
     "html": "/__pages/f61aa29aa55e54a9.html",
     "markdown": "/__pages/f61aa29aa55e54a9.md",
-    "tokens": 9804
+    "tokens": 9802
   },
   "/blog/late-checkout-early-check-in": {
     "html": "/__pages/3fa2de3079418250.html",
