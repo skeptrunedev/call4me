@@ -1,3 +1,4 @@
+import { NAME_LABELS } from '../services/intake';
 import { VOICE_ACCENTS, type Voice } from './voices';
 
 /**
@@ -163,7 +164,7 @@ ${b.goal}
 
 What you can share if it comes up (share only what's needed, when it's needed):
 ${b.facts.trim() || '(nothing beyond the task itself)'}
-${spellingRule(`${b.goal}\n${b.facts}`)}
+${spellingRule(`${b.goal}\n${b.facts}`)}${nameSpellingRule(b)}
 What you can agree to without checking:
 ${b.flexibility.trim() || '(only exactly what the task says)'}
 
@@ -276,6 +277,57 @@ function spellingRule(text: string): string {
   const emails = [...new Set(text.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g) ?? [])];
   if (!emails.length) return '';
   return `\nWhen you spell an email address, read exactly these letters in this order. Never spell one from memory or from how it sounds:\n${emails.map((e) => `- ${e}: ${spokenEmail(e)}`).join('\n')}\nWhen they read an address back, check it letter by letter against these. If a letter is missing, extra or different, don't agree: say which part is off and spell that part again. Never say it's right without checking.\n`;
+}
+
+/** A name word: a capital letter first, then letters, accents, apostrophes and hyphens ("O'Brien", "Mary-Jane"). */
+const NAME_WORD = /^\p{Lu}[\p{L}\p{M}'’-]*$/u;
+
+/**
+ * The names in `text` worth spelling: runs of capitalized words, so "my boss Priya" gives "Priya"
+ * and "Alex Rivera's mom" gives "Alex Rivera". `everyWord` takes a name field's value as written,
+ * lowercase included, and splits a list of them ("Ana Diaz, Luis Diaz").
+ */
+function namesOf(text: string, everyWord = false): string[] {
+  if (everyWord) return text.split(/\s*(?:[,;&]|\band\b)\s*/).map((n) => n.trim()).filter((n) => /^[\p{L}\p{M}'’ .-]+$/u.test(n) && /\p{L}/u.test(n));
+  const names: string[] = [];
+  let run: string[] = [];
+  for (const word of [...text.split(/\s+/), '']) {
+    const bare = word.replace(/['’]s$/, '');
+    if (NAME_WORD.test(bare)) run.push(bare);
+    if (!NAME_WORD.test(bare) || bare !== word) {
+      if (run.length) names.push(run.join(' '));
+      run = [];
+    }
+  }
+  return names;
+}
+
+/** A name the way you spell it to someone writing it down: "Arnaud Y Auger" is "A-R-N-A-U-D, then Y, then A-U-G-E-R". */
+function spokenName(name: string): string {
+  const spell = (word: string) =>
+    word
+      .split(/(['’-])/)
+      .filter(Boolean)
+      .map((p) => ({ "'": 'apostrophe', '’': 'apostrophe', '-': 'dash' })[p] ?? p.replace(/\./g, '').toUpperCase().split('').join('-'))
+      .join(', ');
+  return name.split(/\s+/).filter(Boolean).map(spell).join(', then ');
+}
+
+/**
+ * The voice model spells a name from the sound of it, as it does an address: asked for the
+ * patient's first name, Kaiser's scheduler heard "Arnaud" spelled "A R N O W", twice
+ * (call_a990p1gvwk20uolv), and replayed under that call's instructions it spelled it wrong in 6 of
+ * 12 runs. So the names a business may ask for come pre-spelled: who the call is for, its owner,
+ * and every name field among the facts.
+ */
+function nameSpellingRule(b: CallBrief): string {
+  const fields = b.facts.split('\n').flatMap((line) => {
+    const at = line.indexOf(': ');
+    return at > 0 && NAME_LABELS.has(line.slice(0, at)) ? namesOf(line.slice(at + 2), true) : [];
+  });
+  const names = [...new Set([...namesOf(b.onBehalfOf), ...namesOf(b.owner), ...fields])];
+  if (!names.length) return '';
+  return `\nWhen you spell a name, read exactly these letters in this order. Never spell one from memory or from how it sounds:\n${names.map((n) => `- ${n}: ${spokenName(n)}`).join('\n')}\nWhen they read a name back, check it letter by letter against these. If a letter is missing, extra or different, don't agree: say which part is off and spell that part again. Never say it's right without checking.\n`;
 }
 
 /**

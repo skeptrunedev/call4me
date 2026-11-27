@@ -292,6 +292,9 @@ export const CATEGORIES: Category[] = [
   },
 ];
 
+/** The labels name fields go into a call's facts under (calls.ts writes each as "label: value"): every field filled from the saved full name. */
+export const NAME_LABELS: ReadonlySet<string> = new Set(CATEGORIES.flatMap((c) => c.fields.filter((f) => f.profile === 'full_name').map((f) => f.label)));
+
 export const CATEGORY_SLUGS = CATEGORIES.map((c) => c.slug) as [string, ...string[]];
 export const categoryBySlug = (slug: string) => CATEGORIES.find((c) => c.slug === slug);
 
