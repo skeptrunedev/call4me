@@ -378,6 +378,48 @@ test('late in a silent pickup, sound as steady as talking still holds the hello 
   assert.equal(hellos().length, 1);
 });
 
+/**
+ * call_sx6gn72ta6o6toog, 2026-11-27: someone called in, never said a word, and played a music loop
+ * at us until the call hit its time limit 12 minutes in. `at` plays that line, our caller's hello
+ * and then their music, up to `ms` after pickup and fires the session's alarm there; `hangups` is
+ * why the session hung up.
+ */
+async function musicOnTheLine(t: TestContext, answering: boolean) {
+  const { h, play, words } = await outboundPickup(t);
+  h.session.setup.answering = answering;
+  const hangups: string[] = [];
+  h.session.hangup = async (why: string) => { hangups.push(why); };
+  const music = (ms: number) => ({ them: ms % 1_000 < 700, caller: ms >= 200 && ms < 900 });
+  const at = async (ms: number) => {
+    await play(ms, music);
+    await h.session.alarm();
+  };
+  return { at, hangups, words };
+}
+
+test('an incoming call whose caller never says a word is hung up 90s in, though their line plays music all along', async (t) => {
+  const { at, hangups } = await musicOnTheLine(t, true);
+  await at(60_000);
+  await at(89_980);
+  assert.deepEqual(hangups, [], 'their music is sound, so the dead-air check never fires');
+  await at(90_000);
+  assert.deepEqual(hangups, ['nobody on the incoming call said a word']);
+});
+
+test("an outbound call's music is the business's queue, waited through however long no words come", async (t) => {
+  const { at, hangups } = await musicOnTheLine(t, false);
+  for (const ms of [60_000, 90_000, 180_000]) await at(ms);
+  assert.deepEqual(hangups, []);
+});
+
+test('an incoming caller who has said anything is waited on through their music', async (t) => {
+  const { at, hangups, words } = await musicOnTheLine(t, true);
+  await at(3_000);
+  await words('them', "Hi, it's Dana from the clinic.");
+  for (const ms of [90_000, 180_000]) await at(ms);
+  assert.deepEqual(hangups, []);
+});
+
 test("the caller's speech counts from its first audible frame, and still counts for a voice session opened after the phone stream was lost", async (t) => {
   const { h, play, hellos, words } = await outboundPickup(t);
   // Its audio starts just before the hello is due, ahead of any transcript of it.

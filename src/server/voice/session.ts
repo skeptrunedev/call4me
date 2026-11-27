@@ -57,6 +57,12 @@ const SILENCE_LIMIT_MS = 30_000;
 /** How long after pickup a line that has never made a sound (no words, no audio) is given up on. */
 const DEAD_AIR_MS = 60_000;
 /**
+ * How long after we pick up an incoming call its caller may go without a word, sound or no sound.
+ * Music on an outbound call is the business's queue, worth waiting through; nobody calls in to put
+ * us on hold without saying so first, and that "please hold" is words.
+ */
+const WORDLESS_CALLER_MS = 90_000;
+/**
  * How long a hold may stay silent and still be waited on past the time limit. Someone who goes to
  * look, or presses a hold button with no music, is back within minutes; a line silent for longer
  * is dead. Shorter than a hold extension, so a line silent through a whole one never gets another.
@@ -2195,6 +2201,13 @@ export class VoiceSession extends DurableObject<Env> {
     // sound. Hold music and recordings are audible, so a queue is never taken for dead air.
     if (this.answeredAt && !this.heardThem && !this.hold.holding() && !this.personHolds() && now - Math.max(this.answeredAt, this.themAudibleAt) >= DEAD_AIR_MS) {
       await this.hangup('nobody came on the line');
+      return;
+    }
+    // Someone called in and never said a word. Their line made sound, so the check above never
+    // fired, and sound alone starts no hold: call_sx6gn72ta6o6toog's caller played a six-minute
+    // music loop at us until the call hit its time limit 12 minutes in (2026-11-27).
+    if (s.answering && this.answeredAt && !this.heardThem && !this.hold.holding() && !this.personHolds() && now - this.answeredAt >= WORDLESS_CALLER_MS) {
+      await this.hangup('nobody on the incoming call said a word');
       return;
     }
     this.maybeRollLive(now);
