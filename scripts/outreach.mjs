@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Track creator and press outreach in the outreach table.
+ * Track creator, press and B2B prospect outreach in the outreach table.
  *
  *   npm run outreach -- import <file.json>            add people (skips names already there)
  *   npm run outreach -- list [status] [x|email|other] [--json] who is where, by the channel to use
@@ -76,7 +76,7 @@ if (command === 'import') {
   const now = Date.now();
   let added = 0;
   for (const p of people) {
-    if (!p.name || !['creator', 'press'].includes(p.kind)) fail(`bad row: ${JSON.stringify(p)}`);
+    if (!p.name || !['creator', 'press', 'prospect'].includes(p.kind)) fail(`bad row: ${JSON.stringify(p)}`);
     if (existing.has(`${p.kind}:${p.name}`)) continue;
     const handle = p.x_handle?.replace(/^@/, '') || null;
     const status = channelOf({ ...p, x_handle: handle }) ? 'new' : 'no_contact';
