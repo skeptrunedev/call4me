@@ -148,6 +148,7 @@ import howMuchIsACordOfFirewood from './how-much-is-a-cord-of-firewood.md';
 import frontierAirlinesRefund from './frontier-airlines-refund.md';
 import outTheDoorPrice from './out-the-door-price.md';
 import extendARentalCar from './extend-a-rental-car.md';
+import snowRemovalWayzataOrono from './snow-removal-wayzata-orono.md';
 import spectrumRetention from './spectrum-retention-department.md';
 import allstateCustomerServiceNumber from './allstate-customer-service-number.md';
 import cancelAudible from './cancel-audible.md';
@@ -503,4 +504,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'out-the-door-price', markdown: outTheDoorPrice },
   { slug: 'extend-a-rental-car', markdown: extendARentalCar },
   { slug: 'how-much-is-a-cord-of-firewood', markdown: howMuchIsACordOfFirewood },
+  { slug: 'snow-removal-wayzata-orono', markdown: snowRemovalWayzataOrono },
 ];

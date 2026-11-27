@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f6f6f2"/>
+  <text x="80" y="150" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="40">call4me field test · nov 27, 2026</text>
+  <text x="80" y="250" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="68">Wayzata &amp; Orono snow plowing</text>
+  <text x="80" y="330" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="44">72 companies found, 43 ranked, top 10 here</text>
+  <g fill="#ffb000">
+    <rect x="80" y="400" width="10" height="100"/><rect x="100" y="408" width="10" height="92"/><rect x="120" y="416" width="10" height="84"/>
+    <rect x="140" y="424" width="10" height="76"/><rect x="160" y="432" width="10" height="68"/><rect x="180" y="440" width="10" height="60"/>
+    <rect x="200" y="448" width="10" height="52"/><rect x="220" y="456" width="10" height="44"/><rect x="240" y="464" width="10" height="36"/>
+    <rect x="260" y="472" width="10" height="28"/>
+  </g>
+  <text x="300" y="465" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-size="40">ranked from public facts, then we called</text>
+</svg>

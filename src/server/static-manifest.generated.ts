@@ -123,27 +123,27 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2533
+    "tokens": 2553
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2193
+    "tokens": 2217
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2243
+    "tokens": 2235
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2162
+    "tokens": 2172
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2221
+    "tokens": 2204
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
@@ -153,97 +153,102 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2068
+    "tokens": 2065
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2151
+    "tokens": 2178
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2233
+    "tokens": 2183
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2306
+    "tokens": 2314
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 2169
+    "tokens": 2188
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 2190
+    "tokens": 2176
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 1801
+    "tokens": 1849
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 2132
+    "tokens": 2117
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1891
+    "tokens": 1905
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 1786
+    "tokens": 1783
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 1845
+    "tokens": 1847
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 1956
+    "tokens": 1962
   },
   "/blog?page=19": {
     "html": "/__pages/bcb642deee219a0c.html",
     "markdown": "/__pages/bcb642deee219a0c.md",
-    "tokens": 1947
+    "tokens": 1907
   },
   "/blog?page=20": {
     "html": "/__pages/cdbb74b6d785b988.html",
     "markdown": "/__pages/cdbb74b6d785b988.md",
-    "tokens": 2112
+    "tokens": 2110
   },
   "/blog?page=21": {
     "html": "/__pages/a483033cd4a02de8.html",
     "markdown": "/__pages/a483033cd4a02de8.md",
-    "tokens": 1461
+    "tokens": 1617
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 23636
+    "tokens": 23766
   },
   "/blog/firewood-delivery-truckee": {
     "html": "/__pages/2891b06489407d01.html",
     "markdown": "/__pages/2891b06489407d01.md",
-    "tokens": 8059
+    "tokens": 8242
   },
   "/blog/how-much-is-a-cord-of-firewood": {
     "html": "/__pages/72e87cbbeaeb047b.html",
     "markdown": "/__pages/72e87cbbeaeb047b.md",
-    "tokens": 9433
+    "tokens": 9435
+  },
+  "/blog/snow-removal-wayzata-orono": {
+    "html": "/__pages/03933c2a02107268.html",
+    "markdown": "/__pages/03933c2a02107268.md",
+    "tokens": 9046
   },
   "/blog/fix-an-order-or-delivery-by-phone": {
     "html": "/__pages/f61aa29aa55e54a9.html",
     "markdown": "/__pages/f61aa29aa55e54a9.md",
-    "tokens": 9806
+    "tokens": 9805
   },
   "/blog/late-checkout-early-check-in": {
     "html": "/__pages/3fa2de3079418250.html",

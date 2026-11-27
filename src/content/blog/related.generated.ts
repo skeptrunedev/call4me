@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "02d308ed88719ff275f92176cdf60e0e2adc3b2d72aa6778cfaf890cd37f3f5f"
+  "sourceHash": "77e2c5d4809688d1632a2426a7f03937259eae258aa90b4b81a5122607c3062a"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -2201,6 +2201,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.804401
     },
     {
+      "slug": "snow-removal-wayzata-orono",
+      "similarity": 0.633358
+    },
+    {
       "slug": "skip-hire-abingdon",
       "similarity": 0.631946
     }
@@ -2766,6 +2770,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.624897
     },
     {
+      "slug": "snow-removal-wayzata-orono",
+      "similarity": 0.613788
+    },
+    {
       "slug": "skip-hire-abingdon",
       "similarity": 0.608149
     }
@@ -2883,7 +2891,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "spectrum-retention-department",
-      "similarity": 0.650371
+      "similarity": 0.650372
     }
   ],
   "how-to-lower-directv-bill": [
@@ -3311,7 +3319,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "springhill-suites-phoenix-gilbert",
-      "similarity": 0.629854
+      "similarity": 0.629855
     },
     {
       "slug": "moxy-st-petersburg-downtown",
@@ -3414,7 +3422,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "skip-hire-abingdon",
-      "similarity": 0.629408
+      "similarity": 0.629409
     },
     {
       "slug": "how-much-is-a-cord-of-firewood",
@@ -4801,11 +4809,29 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "maggy-maid-sacramento",
-      "similarity": 0.629408
+      "similarity": 0.629409
     },
     {
       "slug": "how-much-is-a-cord-of-firewood",
       "similarity": 0.608149
+    },
+    {
+      "slug": "snow-removal-wayzata-orono",
+      "similarity": 0.601037
+    }
+  ],
+  "snow-removal-wayzata-orono": [
+    {
+      "slug": "firewood-delivery-truckee",
+      "similarity": 0.633358
+    },
+    {
+      "slug": "how-much-is-a-cord-of-firewood",
+      "similarity": 0.613788
+    },
+    {
+      "slug": "skip-hire-abingdon",
+      "similarity": 0.601037
     }
   ],
   "social-security-phone-number": [
@@ -4863,7 +4889,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-lower-att-bill",
-      "similarity": 0.650371
+      "similarity": 0.650372
     },
     {
       "slug": "how-to-lower-xfinity-bill",
@@ -4893,7 +4919,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "late-checkout-early-check-in",
-      "similarity": 0.629854
+      "similarity": 0.629855
     }
   ],
   "straight-talk-customer-service-number": [
@@ -4907,7 +4933,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "t-mobile-customer-service-number",
-      "similarity": 0.683663
+      "similarity": 0.683662
     },
     {
       "slug": "verizon-customer-service",
@@ -4979,7 +5005,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.665719
+      "similarity": 0.665718
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -4993,7 +5019,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "t-mobile-customer-service-number": [
     {
       "slug": "straight-talk-customer-service-number",
-      "similarity": 0.683663
+      "similarity": 0.683662
     },
     {
       "slug": "att-customer-service-number",
@@ -5079,7 +5105,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "ticketmaster-customer-service-number": [
     {
       "slug": "vivid-seats-customer-service-number",
-      "similarity": 0.697515
+      "similarity": 0.697516
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5553,7 +5579,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ticketmaster-customer-service-number",
-      "similarity": 0.697515
+      "similarity": 0.697516
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5615,7 +5641,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.665719
+      "similarity": 0.665718
     },
     {
       "slug": "best-buy-customer-service-number",
