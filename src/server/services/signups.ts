@@ -35,7 +35,7 @@ export function signupEmail(s: Signup, origin: string): { subject: string; text:
       `${full} ${how}.`,
       `when: ${new Date(s.created_at).toISOString().replace('T', ' ').slice(0, 16)} UTC`,
       `account: ${s.id}`,
-      `give credits: npm run grant -- ${s.email} 25 "feedback credits"`,
+      `give credits: npm run grant -- ${s.email} 10 "feedback credits"`,
       origin,
     ].join('\n'),
   };

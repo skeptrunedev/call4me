@@ -49,7 +49,7 @@ export const STEPS: Step[] = [
       subject: 'welcome to Call for Me',
       body: `hey, I'm Nick, the creator of call4me. thank you so much for signing up! to make your first call: in chatgpt, add the call4me plugin at https://chatgpt.com/plugins/plugin_asdk_app_6abdec89d46c81919cda058ca9f62cb8 and sign in with this email. in claude, codex or another agent, paste the prompt from {host}/#install-prompt. you can add credits anytime at {addCredits}.
 
-If you reply with feedback, I'm happy to give you $25 in credits. Anything helps, including how you found it and why you signed up.
+If you reply with feedback, I'm happy to give you $10 in credits. Anything helps, including how you found it and why you signed up.
 
 Here's my cell # for imessage or whatsapp - 7379832612 .
 
