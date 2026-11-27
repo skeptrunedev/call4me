@@ -9,7 +9,7 @@ authors: nick
 imageAlt: "Wayzata and Orono snow plowing companies: 72 found, 43 ranked from public facts, top 10 shown"
 ---
 
-**The short answer:** the best snow removal companies in Wayzata and Orono for winter 2026-27 are **Freshwater Landscaping** (Wayzata), **West Metro Lawn & Snow** (Maple Grove) and **Scott Services Lawn Care & Landscaping** (Wayzata), out of 43 snow plowing businesses we ranked from public reviews, prices and terms. Freshwater is the only one we confirmed is taking new residential driveways this winter. Its owner called us back and said "we have availability for driveways," seasonal only, at about $200 to $250 a month.
+**The short answer:** the best snow removal companies in Wayzata and Orono for winter 2026-27 are **Freshwater Landscaping** (Wayzata), **Scott Services Lawn Care & Landscaping** (Wayzata) and **West Metro Lawn & Snow** (Maple Grove), out of 43 snow plowing businesses we ranked from public reviews, prices and terms. Freshwater is the only one we confirmed is taking new residential driveways this winter. Its owner called us back and said "we have availability for driveways," seasonal only, at about $200 to $250 a month.
 
 We found every business here ourselves, from search results, map listings, BBB, Yelp, Nextdoor, Facebook and review sites, not from one directory: 72 in all. We also checked them against a list we had built for neighboring Plymouth, which turned up two companies the Wayzata and Orono searches had missed. Forty-four passed our checks, and one more dropped out at scoring, so 43 are ranked. Then, on Black Friday, November 27, 2026, at midday (12:50 PM Central), we called the three highest-ranked companies whose price or room for new customers wasn't online. One person answered, by calling us back. Our caller didn't book, sign up or pay for anything.
 
@@ -20,8 +20,8 @@ Ratings, prices and terms below are what each source showed on November 27, 2026
 | Rank | Company | Based in | Rating | Price or terms online | Score |
 |---|---|---|---|---|---|
 | **1** | [Freshwater Landscaping](https://www.freshwaterlandscaping.com/locations/snow/orono.html) | Wayzata | 5.0 from 72 reviews | "Most Orono driveways come in at $200 to $250 a month, November through April." On our call: "we have availability for driveways" | 5.57 |
-| **2** | [West Metro Lawn & Snow](https://westmetrolawnandsnow.com/services/snow/orono) | Maple Grove | 5.0 from 457 reviews | Its whole [2026-27 contract](https://westmetrolawnandsnow.com/confirm/snow-contract) is online: seasonal, unlimited visits, 2-inch trigger, 16-hour guarantee, $60 add-ons. No base price | 5.34 |
-| **3** | [Scott Services Lawn Care & Landscaping](https://scottservicesmn.com/) | Wayzata | 5.0 from 49 reviews | "Also available: snow removal. Just ask when you call." No price | 5.08 |
+| **2** | [Scott Services Lawn Care & Landscaping](https://scottservicesmn.com/) | Wayzata | 5.0 from 49 reviews | "Also available: snow removal. Just ask when you call." No price | 5.08 |
+| **3** | [West Metro Lawn & Snow](https://westmetrolawnandsnow.com/services/snow/orono) | Maple Grove | 5.0 from 457 reviews | Its whole [2026-27 contract](https://westmetrolawnandsnow.com/confirm/snow-contract) is online: seasonal, unlimited visits, 2-inch trigger, 16-hour guarantee, $60 add-ons. No base price | 5.04 |
 | **4** | [David's Lawn Service](https://davidslawn.com/) | Corcoran | 4.9 from 54 reviews | "From one-time payments to monthly subscriptions." No price | 4.86 |
 | **5** | [Lifecycle Outdoor Services](https://lifecycleoutdoorservices.com/services/snow-removal-wayzata-mn) | Shorewood | 5.0 from 21 reviews | Trigger, clearing areas and storm timing agreed per property. No price | 4.82 |
 | **6** | [Matt's Lawn Service](https://mattslawnservice.com/services/snow-removal/) | Minnetonka | 4.9 from 27 reviews | "A full season unlimited rate or a per time schedule." No price | 4.79 |
@@ -64,13 +64,13 @@ For a longer driveway or a corner lot: "we measure out the driveway and then fro
 
 Freshwater has an [A- from the BBB](https://www.bbb.org/us/mn/wayzata/profile/lawn-care/freshwater-landscaping-llc-0704-1000079653), whose file on it opened in March 2026, with no complaints. Its number on its own site is (612) 999-8067.
 
-## West Metro and Scott Services: no one on the line
+## Scott Services and West Metro: no one on the line
+
+**Scott Services Lawn Care & Landscaping** is an owner-run lawn crew in Wayzata whose site says, "Also available: snow removal. Just ask when you call," and names Wayzata and Orono among the towns it serves. We got its voicemail and left a message. Its number on its site is 612-280-9488.
 
 **West Metro Lawn & Snow** has a 5.0 from 457 reviews, the most of anyone in the top 10. The number listed for it with the [BBB](https://www.bbb.org/us/mn/rogers/profile/lawn-care/west-metro-lawn-care-and-snow-removal-llc-0704-96371946) plays one recording: "If you are looking for an estimate or need to get in touch with the office, please visit our website and fill out our contact form." There's no voicemail, and its own site lists no phone number. So for West Metro, the form is the way in.
 
 It does publish more terms than anyone else on this list. Its [2026-27 snow contract](https://westmetrolawnandsnow.com/confirm/snow-contract) runs from November 1, 2026 to April 30, 2027, with a 2-inch trigger, "no per-visit charge within the contract and no cap on the number of service visits," and "We guarantee driveway service within 16 hours of snowfall cessation" ("Typically, routes are completed within 6-8 hours"). Extras are $60 each: clearing the end of the drive after the city plow, a callback for a parked car, a visit outside the contract dates, and salting when the contractor decides it's needed. Card payments carry a 3% fee, either side can cancel with 7 days' notice for a prorated refund, and "all services automatically renew annually unless canceled."
-
-**Scott Services Lawn Care & Landscaping** is an owner-run lawn crew in Wayzata whose site says, "Also available: snow removal. Just ask when you call," and names Wayzata and Orono among the towns it serves. We got its voicemail and left a message. Its number on its site is 612-280-9488.
 
 ## The rest of the top 10
 
@@ -160,7 +160,7 @@ None of these is ranked. If you book through an app, the crew comes from the app
 One scoring method for every company, from public facts only:
 
 - **Start from the rating, adjusted for how many reviews back it up.** We blend each company's star rating with a neutral 4.3, counted as if it were 10 extra reviews. West Metro's 5.0 from 457 reviews stays at 4.99. Lifecycle's 5.0 from 21 counts as 4.77. A 5.0 from 3 reviews would count as about 4.46, less than a 4.8 from 200. A company with no rating we could find starts at 4.0.
-- **+0.30** for publishing an actual dollar price. A pricing model like "seasonal flat rate" or "competitive rates" doesn't count. Freshwater and Chronos get it for their driveway prices, West Metro for its $60 add-on fees.
+- **+0.30** for publishing an actual dollar price for the plowing itself. A pricing model like "seasonal flat rate" or "competitive rates" doesn't count, and neither does a fee for something else, like an add-on or a cancellation. Freshwater and Chronos get it for their driveway prices. West Metro doesn't: its $60 add-on fees are online, but its seasonal price isn't.
 - **+0.15** for being based in Wayzata, Orono or Long Lake.
 - **+0.15** for saying it's taking new customers, online or on our call. We read each company's own words to decide; having no "routes full" notice doesn't count.
 - **+0.05** for dated activity in 2026 (a review, a post, a new BBB file).

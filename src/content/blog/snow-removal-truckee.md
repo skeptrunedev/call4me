@@ -1,15 +1,15 @@
 ---
-title: "Best snow removal in Truckee, CA for winter 2026-27: 33 companies ranked"
+title: "Best snow removal in Truckee, CA for winter 2026-27: 32 companies ranked"
 seoTitle: "Best snow removal in Truckee, CA (winter 2026-27)"
-subtitle: "We found 61 businesses offering snow removal in Truckee, California, from neighborhood plow routes to roof crews to websites that only pass your request along. 33 clear residential driveways in town. Here they are, ranked from public ratings, prices and terms, with what a one-time plow costs, how Truckee's seasonal routes work, and what happened when we called the top contenders on Black Friday."
-description: "The best snow removal companies in Truckee, CA for winter 2026-27: 33 driveway plowers ranked from ratings, prices and terms, plus who answered our calls."
+subtitle: "We found 61 businesses offering snow removal in Truckee, California, from neighborhood plow routes to roof crews to websites that only pass your request along. 32 clear residential driveways in town. Here they are, ranked from public ratings, prices and terms, with what a one-time plow costs, how Truckee's seasonal routes work, and what happened when we called the top contenders on Black Friday."
+description: "The best snow removal companies in Truckee, CA for winter 2026-27: 32 driveway plowers ranked from ratings, prices and terms, plus who answered our calls."
 date: 2026-11-27
 tags: snow removal truckee, snow removal, snow plowing near me, snow removal near me, truckee, lake tahoe, seasonal snow contract, roof snow removal, home services
 authors: nick
-imageAlt: "Snow removal in Truckee, CA: 61 businesses found, 33 driveway plowers ranked for winter 2026-27"
+imageAlt: "Snow removal in Truckee, CA: 61 businesses found, 32 driveway plowers ranked for winter 2026-27"
 ---
 
-**The short answer:** the top-ranked snow removal companies in Truckee, California for winter 2026-27 are **Stars Snow Services** (Northstar) and **Estabrook** (Tahoe Donner and Donner Crest), in a near tie, then **West End Snow Clearing**, **Acme Snow Removal** (Prosser Lakeview, Prosser Heights and Gray's Crossing) and **Meadow Way Snow Removal**. That's our own ranking of the 33 companies we found that clear residential driveways in Truckee, scored on public ratings, published prices and terms. Of those five, only Estabrook's website says it's taking customers for the 2026-27 season, and only Stars publishes a price. We called the three top contenders whose prices or 2026-27 status weren't online. All three went to voicemail, and one called back 11 minutes later.
+**The short answer:** the top-ranked snow removal companies in Truckee, California for winter 2026-27 are **Stars Snow Services** (Northstar) and **Estabrook** (Tahoe Donner and Donner Crest), in a near tie, then **West End Snow Clearing**, **Acme Snow Removal** (Prosser Lakeview, Prosser Heights and Gray's Crossing) and **Meadow Way Snow Removal**. That's our own ranking of the 32 companies we found that clear residential driveways in Truckee, scored on public ratings, published prices and terms. Of those five, only Estabrook's website says it's taking customers for the 2026-27 season, and only Stars publishes a price. We called the three top contenders whose prices or 2026-27 status weren't online. All three went to voicemail, and one called back 11 minutes later.
 
 Snow removal in Truckee is a route business. Most plowers sell a seasonal contract for specific neighborhoods, start once 3 to 4 inches have fallen, and clear each driveway once per 24 hours, often overnight. So the best company for you is the best-rated one whose route covers your street. Find your neighborhood in the tables below, and book soon: the season has started. Elements Mountain Company's [clearing log](https://elementsmtn.co/truckee-winter-weather-conditions/) shows a full driveway shift starting at 3:00 AM on November 20, after 12 inches in Tahoe Donner.
 
@@ -26,9 +26,9 @@ We (call4me) found every business ourselves, from Yelp, the BBB, the Truckee Cha
 | **5** | Meadow Way Snow Removal, Truckee | Not published (website down) | 4.7 from 3; BBB A | None | Unknown | Feb 2023 |
 | **6** | Lightening The Load, Truckee | "Truckee and the Surrounding Area" (Yelp) | 5.0 from 3 | None | Not stated | Feb 2026 |
 | **7 (tie)** | [Waters Snow Removal](http://www.waterssnowremoval.com/), Truckee | Northwoods east to Downtown Truckee | 1.0 from 1 | One-time plow from $100 | Site is titled "2026-2027" | Mar 2014 |
-| **7 (tie)** | [SPE Snow Removal](https://tahoetruckeeglenshiresnowremoval.com/), Truckee | Glenshire, Devonshire, The Meadows, Juniper Hills, Buckhorn Ridge, Cambridge Estates | No reviews found | $100 a plow if you cancel before Jan 1 (no base price) | Not stated | None |
 | **7 (tie)** | [Olympic Heights Snow Removal](https://olympicheightssnowremoval.com/), Truckee | Olympic Heights | No reviews found | One-time service minimum $150 | Not stated (books online) | None |
 | **7 (tie)** | [North Lake Construction](https://northlakeconstructionco.com/services/snow-removal/), Truckee | Truckee homes: driveway berms, decks, walkways, roofs | No reviews found | $150 minimum per service; hourly rates posted | Not stated | None |
+| **10** | [A-1 Snow Removal](https://a1snowremoval.com/), Truckee | "The greater Prosser area" | 4.3 from 4 | None | Not stated | Feb 2023 |
 
 What stands out:
 
@@ -88,53 +88,54 @@ The BBB gives Meadow Way an A rating, and it has 4.7 stars from 3 Yelp reviews, 
 
 Yelp lists Lightening The Load under snow removal, "Serving Truckee and the Surrounding Area," with 5.0 stars from 3 reviews that describe last-minute storm jobs, not seasonal routes. It has no website. The same name also appears on MapQuest as a professional organizing business.
 
-### 7 to 10, tied: Waters, SPE, Olympic Heights and North Lake Construction
+### 7 to 9, tied: Waters, Olympic Heights and North Lake Construction
 
-These four score exactly the same. None has reviews to speak of (Waters has one, from 2014), and each publishes a dollar price and is based in Truckee. They're listed in our scorer's order, but treat them as equal and choose by neighborhood and by what you need cleared.
+These three score exactly the same. None has reviews to speak of (Waters has one, from 2014), and each publishes a dollar price and is based in Truckee. They're listed in our scorer's order, but treat them as equal and choose by neighborhood and by what you need cleared.
 
 **Waters Snow Removal, Truckee: one-time plows from $100.** [Waters' site](http://www.waterssnowremoval.com/) is titled "Waters Snow Removal 2026-2027." Its [payment page](http://www.waterssnowremoval.com/payment) lists "One-Time Plow from $100.00" and "Commercial Driveway from $1,000.00," and its [quote form](http://www.waterssnowremoval.com/quote) promises "a phone response within 24 Hours." Mind the [service area](http://www.waterssnowremoval.com/service): "We plow from Northwoods east to Downtown Truckee," and "We do not plow Donner Lake, Tahoe Donner, Sierra Meadow or Glenshire." It serves "mostly commercial businesses and some residential driveways." Phone, from its [contact page](http://www.waterssnowremoval.com/contact): (530) 587-3425. Its only Yelp review is from March 2014: "We paid over $600 for a contract … 4 out of 5 snow storms we had to snow blow it ourselves."
-
-**SPE Snow Removal, Truckee: Glenshire routes.** [SPE](https://tahoetruckeeglenshiresnowremoval.com/) plows Glenshire, Devonshire, The Meadows, Juniper Hills, Buckhorn Ridge and Cambridge Estates and says it has done so "For over 30 years." The contract season "runs November 1st through May 1st," and "We begin our plowing route once snow accumulates to 4 inches on Glenshire Drive." Seasonal contracts include free snow pole installation. If you cancel, "SPE will charge $100 per plow for services rendered up until January 1st," and "After January 1st, no refunds will be issued." Phone, from its site: (530) 414-1154. One thing to check when you sign: the real estate team's [list](https://pilarzolezzi.com/snow-removal-companies/) pairs SPE with a different phone number and with an email address that [Taylors Snow Removal](https://taylorssnowremoval.com/) uses for its Glenshire Snow Proz service (#28 below). Make sure the contract is with the company you meant.
 
 **Olympic Heights Snow Removal, Truckee: one neighborhood.** [Olympic Heights Snow Removal](https://olympicheightssnowremoval.com/) is "Providing driveway clearing services for Olympic Heights," with a "Book Online" button. Its [FAQ](https://olympicheightssnowremoval.com/faq) says "The minimum cost of one time service is $150" and that it starts once 4 inches is in the driveway. Its [terms](https://olympicheightssnowremoval.com/terms-of-service) say "driveways will be cleared once per every 24 hour period," and a canceled contract is billed "at $200.00 per plow," capped at the contract amount. No phone number is listed on the site.
 
 **North Lake Construction, Truckee: hand crews by the hour.** [North Lake Construction](https://northlakeconstructionco.com/services/snow-removal/), a family-owned Truckee company, is the one in the top 10 that does the work the plow companies skip: decks, walkways, roofs, front porches, patios, bear boxes and the driveway berm. It posts its rates: "Minimum 150$ Per Service," "Shovel 75$ Per Hour Per Man," "Snow Blower 125$ Per Hour Per Man," "Roof/Ice Dam 125$ Per Hour Per Man," "Salt Treatment 25$ Per Service" and "Travel Time 65$ Per Hour." It also offers "Seasonal Contracts at a Fixed Rate" with no number posted, and the linked contract file is named for the 2024-25 season. Phone, from its site: (530) 606-0045.
 
+### 10. A-1 Snow Removal, Truckee: the Prosser area
+
+[A-1](https://a1snowremoval.com/) clears driveways "in the greater Prosser area of Truckee" and says its owners have lived and worked there "for over 50 years." Its [services page](https://a1snowremoval.com/services) offers "seasonal contracts with unlimited driveway clearings," from November 1 through April 30, and says it uses light equipment instead of heavy loaders. It has 4.3 stars from 4 Yelp reviews, the newest from February 2023, and posts no price or 2026-27 status. Phone, from its site: (530) 582-9281.
+
 ## Every other Truckee snow removal company that qualified
 
-These 23 also clear residential driveways in Truckee, in rank order. Most are missing a rating, a price or a 2026-27 status online.
+These 22 also clear residential driveways in Truckee, in rank order. Most are missing a rating, a price or a 2026-27 status online.
 
-11. Pena's Landscape Maintenance, Truckee area (on-call)
-12. A-1 Snow Removal, Truckee (east of Hwy 89 North: Prosser Dam Road, parts of Gray's Crossing, Pannonia Ranchos; "seasonal contracts with unlimited driveway clearings," November 1 to April 30, per [its site](https://a1snowremoval.com/services); 4.3 from 4 Yelp reviews; phone on [its homepage](https://a1snowremoval.com/): (530) 582-9281)
-13. True North Snow Removal, Truckee (Prosser Lakeview Estates and Prosser Woods; "Now accepting contracts for the 2026/2027 season. Limited contract openings," per [its site](https://www.truenorthsnowremoval.com/), which lists no phone)
-14. Schneider General Engineering & Snow Removal, Olympic Valley (Olympic Valley and Hwy 89 between Truckee and Tahoe City)
-15. Grimes Excavating and Snow Removal, Tahoe City
-16. Snow Pros, LLC, Truckee (mostly commercial, plus roofs)
-17. Mountain Experts LLC, Truckee
-18. First Traxs LLC, Truckee (Armstrong Tract and Glenshire)
-19. Junior's Snow Removal & Excavation, Tahoe City
-20. Lake Tahoe Property Services, North Lake Tahoe
-21. Sierra Tahoe Snow Removal and Sealing, North Lake Tahoe (Martis Camp, Lahontan, Schaffer's Mill, Northstar)
-22. DeMar Snow Removal, Reno, NV
-23. Freed's Snow Removal, Truckee (Donner Lake area)
-24. Tahoe Truckee Snow Removal, Truckee area
-25. Abel's Landscape & Maintenance, Incline Village, NV
-26. Catch My Drift Snow Removal, South Lake Tahoe
-27. Ohanas Cleaning, Truckee
-28. Taylors Snow Removal (also Clear Path Snow Services and Glenshire Snow Proz), Truckee (Sierra Meadows and Glenshire; a "New Pricing Structure for the 2026-2027 Snow Season" on [its site](https://taylorssnowremoval.com/driveway-clearing/))
-29. Grateful Gardens Landscaping, Truckee (driveways in Sierra Meadows, hand crews elsewhere)
-30. Royal Snow Removal of Glenshire, Truckee (will-call only this winter: [its site](https://royalsnowremoval.com/) says "season contracts are no longer availabe" (sic), with a [$200 will-call minimum](https://royalsnowremoval.com/contact-2/); 2.8 from 5 Yelp reviews)
-31. Reliable Services, Kings Beach
-32. Let It Snow, Inc., Truckee
-33. Elements Mountain Company, Truckee (Tahoe Donner and other routes)
+11. True North Snow Removal, Truckee (Prosser Lakeview Estates and Prosser Woods; "Now accepting contracts for the 2026/2027 season. Limited contract openings," per [its site](https://www.truenorthsnowremoval.com/), which lists no phone)
+12. Schneider General Engineering & Snow Removal, Olympic Valley (Olympic Valley and Hwy 89 between Truckee and Tahoe City)
+13. Grimes Excavating and Snow Removal, Tahoe City
+14. SPE Snow Removal, Truckee (Glenshire, Devonshire, The Meadows, Juniper Hills, Buckhorn Ridge and Cambridge Estates, "For over 30 years," per [its site](https://tahoetruckeeglenshiresnowremoval.com/); season November 1 to May 1, starting at 4 inches on Glenshire Drive; cancel before January 1 and it charges "$100 per plow for services rendered," after that "no refunds"; phone on its site: (530) 414-1154. A real estate team's [list](https://pilarzolezzi.com/snow-removal-companies/) pairs SPE with a different number and with an email address that Taylors Snow Removal uses for its Glenshire Snow Proz service, so check who the contract is with)
+15. Snow Pros, LLC, Truckee (mostly commercial, plus roofs)
+16. Mountain Experts LLC, Truckee
+17. First Traxs LLC, Truckee (Armstrong Tract and Glenshire)
+18. Junior's Snow Removal & Excavation, Tahoe City
+19. Lake Tahoe Property Services, North Lake Tahoe
+20. Sierra Tahoe Snow Removal and Sealing, North Lake Tahoe (Martis Camp, Lahontan, Schaffer's Mill, Northstar)
+21. DeMar Snow Removal, Reno, NV
+22. Freed's Snow Removal, Truckee (Donner Lake area)
+23. Tahoe Truckee Snow Removal, Truckee area
+24. Abel's Landscape & Maintenance, Incline Village, NV
+25. Catch My Drift Snow Removal, South Lake Tahoe
+26. Ohanas Cleaning, Truckee
+27. Taylors Snow Removal (also Clear Path Snow Services and Glenshire Snow Proz), Truckee (Sierra Meadows and Glenshire; a "New Pricing Structure for the 2026-2027 Snow Season" on [its site](https://taylorssnowremoval.com/driveway-clearing/))
+28. Grateful Gardens Landscaping, Truckee (driveways in Sierra Meadows, hand crews elsewhere)
+29. Royal Snow Removal of Glenshire, Truckee (will-call only this winter: [its site](https://royalsnowremoval.com/) says "season contracts are no longer availabe" (sic), with a [$200 will-call minimum](https://royalsnowremoval.com/contact-2/); 2.8 from 5 Yelp reviews)
+30. Reliable Services, Kings Beach
+31. Let It Snow, Inc., Truckee
+32. Elements Mountain Company, Truckee (Tahoe Donner and other routes)
 
 Elements is the name most Tahoe Donner owners know, so its place at the bottom needs a word. Its [snow removal page](https://elementsmtn.co/truckees-premiere-provider-of-snow-paint-asphalt-defensible-space-services/snow-removal/) claims "48 Years of Keeping Truckee Moving," and its homepage says "Get on our plow routes today!" But it has 3.2 stars from 104 Yelp reviews, and the reviews include complaints about missed plows. One from February 18, 2026, shown on its MapQuest listing, says: "They either don't come at all or come in the middle of the day." Our method takes points off for missed-plow complaints like that, which outweighs the small bonus for saying it's signing people up.
 
-## Why 28 of the 61 didn't make the list
+## Why 29 of the 61 didn't make the list
 
 | Reason | Count | Businesses |
 |---|---|---|
-| Don't serve Truckee, or don't name it | 7 | Triple P Masonry ("We service Olympic Valley and Alpine Meadows only"), Cascade Snow Removal (Donner Summit), Donner Summit Snow Removal (Serene Lakes), Tahoe Workz (Incline Village), Guy's Excavating (Tahoe Vista), Capstone Snow (Incline Village), Tahoe Blue Cleaning (Incline Village) |
+| Don't serve Truckee, or don't name it | 8 | Pena's Landscape Maintenance (South Lake Tahoe; its site names no Truckee service, it only shows up in Yelp's Truckee results), Triple P Masonry ("We service Olympic Valley and Alpine Meadows only"), Cascade Snow Removal (Donner Summit), Donner Summit Snow Removal (Serene Lakes), Tahoe Workz (Incline Village), Guy's Excavating (Tahoe Vista), Capstone Snow (Incline Village), Tahoe Blue Cleaning (Incline Village) |
 | Couldn't confirm they're operating or plow homes | 7 | Snow Patrol (only review from 2017, site down), Larson Snow (site down), PPSC (website expired), R-1 Snow Removal, Heavy Equip Construction & Snow Removal, Pete's Snow Removal, G. Bros Yardwork & Snow Removal |
 | Roofs, decks or walkways only, no driveways | 6 | Dependable Snow Removal, Rake Landscaping and Snow Removal, JZ Snow Removal, Second Home Care, Mills Roofing, East Fork Roofing |
 | Referral or lead-gen websites | 4 | snowremovalreno.com ("S&L Snow Removal"), truckeesnowmasters.us, winsomlandscaping.com, fastsnowremoval.pages.dev and its copies |
@@ -185,7 +186,7 @@ If you're new to a Truckee house, or used to calling a plow guy after each storm
 One scoring method for every business in all six of our winter lists, from public facts only.
 
 1. **A rating adjusted for how many reviews it has.** We blend each business's star rating with a 4.3, as if it had 10 more reviews at 4.3, so a 5.0 from 3 reviews counts for less than a 4.8 from 200. Here, Stars' 5.0 from 4 reviews counts as 4.50 and Estabrook's 4.8 from 22 as about 4.64. A business with no rating anywhere starts at 4.0.
-2. **+0.30 for an actual dollar price** the business publishes on its own site or listing. A pricing model ("competitive rates", "seasonal flat rate") or a price someone quoted in a review doesn't count.
+2. **+0.30 for an actual dollar price** the business publishes on its own site or listing for the plowing itself. A pricing model ("competitive rates", "seasonal flat rate"), a price someone quoted in a review, or a fee for something else doesn't count. SPE's $100-per-plow cancellation charge is that kind of fee, so SPE doesn't get it.
 3. **+0.15 for being based in Truckee.**
 4. **+0.15 if it says it's taking new customers**, or told us so on the phone on November 27, and **−0.60 if it says it's full or not taking new customers.** We read each business's own words to decide. Royal's "season contracts are no longer availabe" counted as not taking customers; no notice either way counts as neither.
 5. **+0.05 for activity dated 2026.**

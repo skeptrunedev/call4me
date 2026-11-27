@@ -27,8 +27,8 @@ Prices, ratings and stock are as of November 27, 2026, from each seller's own si
 | **4** | [Beech Hill Firewood](https://www.beechhillfirewood.com/pricing) (Newton), (617) 964-5511 | Kiln-dried **$825** cord, $450 half; air-dried $650 cord, $400 half; Wellesley delivery free. Phone: "Eight twenty five, no delivery charge" | No cubic feet on its pricing page | Phone: no seasoned wood, "Just kiln dried" |
 | **5** | [MetroWest Firewood & Land Services](https://metrowestfirewood.com/firewood) (Framingham), 508-875-1052 | Kiln-dried **$725** cord, $420 half; seasoned **$530** cord, $310 half; Wellesley delivery **$30** | "185cf loosely loaded (not stacked)", "Approximately a full cord" | Kiln-dried "Limited Availability"; seasoned "Limited Supply" |
 | **6** | [Wagon Wheel](https://www.wagonwheelinc.com/mulch-shop/) (Lexington), (781) 862-2112 | Seasoned **$600** cord, $350 half; kiln-dried half-cord crated pallet $400; stacking $100; Wellesley firewood delivery **$55** | No cubic feet stated | Orderable online |
-| **7** | [Weston Nurseries, By The Yard](https://shop.westonnurseries.com/pages/bulk-delivery-prices.html) (Hopkinton) | Wood price not online (its online store was down); delivery to Wellesley **$75** | "One cord is 128 cubic feet (approximately 8'x4'x4')" | Half and full cords delivered; quarter cords pickup only |
-| **8** | [Gary's Tree and Landscape Service](https://www.garystreelandscape.com/firewood) (Sharon), (781) 784-4279 | Seasoned $285 half, $185 quarter; kiln-dried $265 quarter; delivery to Wellesley **$75 to $95** | No cubic feet stated | Full cords "SOLD OUT ... FOR 2026 SEASON"; smaller sizes "still available" |
+| **7** | [Gary's Tree and Landscape Service](https://www.garystreelandscape.com/firewood) (Sharon), (781) 784-4279 | Seasoned $285 half, $185 quarter; kiln-dried $265 quarter; delivery to Wellesley **$75 to $95** | No cubic feet stated | Full cords "SOLD OUT ... FOR 2026 SEASON"; smaller sizes "still available" |
+| **8** | [Weston Nurseries, By The Yard](https://shop.westonnurseries.com/pages/bulk-delivery-prices.html) (Hopkinton) | Wood price not online (its online store was down); delivery to Wellesley **$75** | "One cord is 128 cubic feet (approximately 8'x4'x4')" | Half and full cords delivered; quarter cords pickup only |
 | **9** | [Wilson Farm](https://shop.wilsonfarm.com/collections/firewood-mulch) (Lexington) | Kiln-dried $249.99 a bin, air-dried $149.99 a bin; 2-bin minimum; Wellesley delivery $75 (from search engines' copy of its shop) | A bin is 1/6 of a cord; no cubic feet | Its shop wouldn't load for us on Nov 27 |
 | **10** | [Mahoney's Garden Center](https://shop.mahoneysgarden.com/product/kiln-dried-wood/) (Winchester), 781-678-4143 | Kiln-dried, $70 to $525 across its sizes; Wellesley firewood fee not stated | "Half Cord (64 cubic feet)" | "IN STOCK" at five stores; dumped, not stacked |
 
@@ -58,13 +58,13 @@ The highest rating on this list: **5.0 from 543 Google reviews**, as shown on th
 
 **4.5 from 15 Tripadvisor reviews**, per Tripadvisor search results on November 27. That rating is for the farm stand and nursery as a whole, not the firewood. Its [online shop](https://www.wagonwheelinc.com/mulch-shop/) sells a seasoned half cord at $350 and a full cord at $600, with "Stacking fee is $100," plus a kiln-dried half cord in a crated pallet at $400, delivered "to your driveway." Wellesley is in its delivery Zone 2, and "Firewood delivery orders use each delivery zone's lower rate," which is $55. No cubic feet are given for any size.
 
-### 7. Weston Nurseries (By The Yard), Hopkinton
-
-**4.5 from 125 Google reviews** for its Hopkinton garden center, per [topsoil.com](https://topsoil.com/massachusetts/hopkinton/weston-nurseries-hopkinton-garden-center/). Its [bulk delivery page](https://shop.westonnurseries.com/pages/bulk-delivery-prices.html) says "Firewood deliveries from Hopkinton are available for 1/2 cords and full cords," puts Wellesley in the "$75 per delivery" tier, and is one of the few pages here that gives the legal measure: "One cord is 128 cubic feet (approximately 8'x4'x4')." The wood price itself wasn't online on November 27, because the online store said it was "temporarily unavailable." Call the Hopkinton yard for a price.
-
-### 8. Gary's Tree and Landscape Service, Sharon
+### 7. Gary's Tree and Landscape Service, Sharon
 
 **4.3 from 12 Yelp reviews**, per Yelp search results. Its [firewood page](https://www.garystreelandscape.com/firewood) says full cords are gone for the season: "1 Cord $500 -- SOLD OUT OF FULL CORDS FOR 2026 SEASON (smaller quantities still available)." A seasoned half cord is $285 and a quarter $185, mostly oak, "cut, split and stacked one year in advance." Kiln-dried is "New this Fall" in eighth and quarter cords. Delivery: "Firewood to Wellesley & Newton $75 -$95." It also cuts 8 to 15 inch pieces for small stoves.
+
+### 8. Weston Nurseries (By The Yard), Hopkinton
+
+**4.5 from 125 Google reviews** for its Hopkinton garden center, per [topsoil.com](https://topsoil.com/massachusetts/hopkinton/weston-nurseries-hopkinton-garden-center/). Its [bulk delivery page](https://shop.westonnurseries.com/pages/bulk-delivery-prices.html) says "Firewood deliveries from Hopkinton are available for 1/2 cords and full cords," puts Wellesley in the "$75 per delivery" tier, and is one of the few pages here that gives the legal measure: "One cord is 128 cubic feet (approximately 8'x4'x4')." The wood price itself wasn't online on November 27, because the online store said it was "temporarily unavailable." Call the Hopkinton yard for a price.
 
 ### 9. Wilson Farm, Lexington
 
@@ -97,7 +97,7 @@ We didn't start from one directory. We searched sellers' own sites, Yelp, Google
 
 To rank the 16, every seller starts from its star rating, adjusted for how many reviews it has: we blend the rating with 10 imaginary reviews at 4.3, so a 5.0 from 3 reviews counts for less than a 4.8 from 200 (about 4.46 against 4.78). A seller with no rating we could find, or no review count to weigh one by, starts at 4.0. Then small adjustments:
 
-- **+0.30** for publishing an actual dollar price on its own site or listing. A pricing model, "call for price," a price quoted in a review, or a price we only heard on the phone doesn't count.
+- **+0.30** for publishing an actual dollar price for the wood on its own site or listing. A pricing model, "call for price," a price quoted in a review, a price we only heard on the phone, or a delivery fee alone doesn't count. Weston Nurseries posts its $75 Wellesley delivery fee but not its wood price, so it doesn't get this.
 - **+0.15** for being based in Wellesley (none are).
 - **+0.15** for saying it has wood in stock or is taking new customers, on its own pages or to our caller on November 27.
 - **minus 0.60** for saying it's sold out, full or not taking new customers.

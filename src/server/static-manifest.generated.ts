@@ -253,12 +253,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/snow-removal-wayzata-orono": {
     "html": "/__pages/03933c2a02107268.html",
     "markdown": "/__pages/03933c2a02107268.md",
-    "tokens": 9018
+    "tokens": 9055
   },
   "/blog/snow-removal-truckee": {
     "html": "/__pages/a0b8ef1fbf7b1e9f.html",
     "markdown": "/__pages/a0b8ef1fbf7b1e9f.md",
-    "tokens": 9646
+    "tokens": 9640
   },
   "/blog/snow-removal-wellesley-ma": {
     "html": "/__pages/b7c9c86f7e74569d.html",
@@ -268,7 +268,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/firewood-delivery-wellesley-ma": {
     "html": "/__pages/e9a7fba8890c512f.html",
     "markdown": "/__pages/e9a7fba8890c512f.md",
-    "tokens": 8601
+    "tokens": 8635
   },
   "/blog/face-cord-vs-full-cord": {
     "html": "/__pages/fb6a376f25a28039.html",
