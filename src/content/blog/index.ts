@@ -144,6 +144,7 @@ import ps5InStockNearMe from './ps5-in-stock-near-me.md';
 import iphoneDuoInStock from './iphone-duo-in-stock.md';
 import winterTirePrices from './winter-tire-prices.md';
 import firewoodDeliveryTruckee from './firewood-delivery-truckee.md';
+import howMuchIsACordOfFirewood from './how-much-is-a-cord-of-firewood.md';
 import frontierAirlinesRefund from './frontier-airlines-refund.md';
 import outTheDoorPrice from './out-the-door-price.md';
 import extendARentalCar from './extend-a-rental-car.md';
@@ -501,4 +502,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'frontier-airlines-refund', markdown: frontierAirlinesRefund },
   { slug: 'out-the-door-price', markdown: outTheDoorPrice },
   { slug: 'extend-a-rental-car', markdown: extendARentalCar },
+  { slug: 'how-much-is-a-cord-of-firewood', markdown: howMuchIsACordOfFirewood },
 ];

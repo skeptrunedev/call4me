@@ -256,4 +256,5 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'frontier-airlines-refund': ['airlines'],
   'out-the-door-price': ['retail-shopping'],
   'extend-a-rental-car': ['car-rental'],
+  'how-much-is-a-cord-of-firewood': ['furniture-home-services'],
 };

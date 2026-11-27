@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "42693e1c8d98777d9b18b2761947e3a484def54eb47f69e099bddfc8b1bf7cac"
+  "sourceHash": "02d308ed88719ff275f92176cdf60e0e2adc3b2d72aa6778cfaf890cd37f3f5f"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -2197,6 +2197,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "firewood-delivery-truckee": [
     {
+      "slug": "how-much-is-a-cord-of-firewood",
+      "similarity": 0.804401
+    },
+    {
       "slug": "skip-hire-abingdon",
       "similarity": 0.631946
     }
@@ -2384,7 +2388,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.733996
+      "similarity": 0.733995
     },
     {
       "slug": "n8n-mcp-phone-calls",
@@ -2642,7 +2646,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "gym-day-pass": [
     {
       "slug": "gyms-with-sauna-near-me",
-      "similarity": 0.810295
+      "similarity": 0.810296
     },
     {
       "slug": "bonner-springs-ymca-swim-lessons",
@@ -2660,7 +2664,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "gyms-with-sauna-near-me": [
     {
       "slug": "gym-day-pass",
-      "similarity": 0.810295
+      "similarity": 0.810296
     }
   ],
   "hertz-customer-service-number": [
@@ -2748,6 +2752,24 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "how-long-to-reach-a-human": [],
+  "how-much-is-a-cord-of-firewood": [
+    {
+      "slug": "firewood-delivery-truckee",
+      "similarity": 0.804401
+    },
+    {
+      "slug": "junk-removal-cost",
+      "similarity": 0.706164
+    },
+    {
+      "slug": "maggy-maid-sacramento",
+      "similarity": 0.624897
+    },
+    {
+      "slug": "skip-hire-abingdon",
+      "similarity": 0.608149
+    }
+  ],
   "how-to-cancel-siriusxm": [
     {
       "slug": "cancel-audible",
@@ -2827,7 +2849,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "san-francisco-oral-surgeon-consultation",
-      "similarity": 0.623342
+      "similarity": 0.623343
     },
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
@@ -2849,7 +2871,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-lower-spectrum-bill",
-      "similarity": 0.789518
+      "similarity": 0.789517
     },
     {
       "slug": "how-to-lower-verizon-bill",
@@ -2897,7 +2919,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-lower-att-bill",
-      "similarity": 0.789518
+      "similarity": 0.789517
     },
     {
       "slug": "how-to-lower-directv-bill",
@@ -3023,7 +3045,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "moxy-st-petersburg-downtown",
-      "similarity": 0.610285
+      "similarity": 0.610284
     },
     {
       "slug": "posada-real-los-condestables",
@@ -3156,6 +3178,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "maggy-maid-sacramento",
       "similarity": 0.723777
+    },
+    {
+      "slug": "how-much-is-a-cord-of-firewood",
+      "similarity": 0.706164
     },
     {
       "slug": "skip-hire-abingdon",
@@ -3389,6 +3415,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "skip-hire-abingdon",
       "similarity": 0.629408
+    },
+    {
+      "slug": "how-much-is-a-cord-of-firewood",
+      "similarity": 0.624897
     }
   ],
   "mandarin-phone-call-scheduling": [
@@ -3646,7 +3676,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "inn-at-jim-thorpe-reservations",
-      "similarity": 0.610285
+      "similarity": 0.610284
     },
     {
       "slug": "virgin-hotels-new-york-parking",
@@ -4122,7 +4152,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "t3-code-phone-calls",
-      "similarity": 0.81059
+      "similarity": 0.810589
     },
     {
       "slug": "schedule-phone-calls-claude-code-codex",
@@ -4666,7 +4696,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-find-a-new-primary-care-doctor",
-      "similarity": 0.623342
+      "similarity": 0.623343
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -4772,6 +4802,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "maggy-maid-sacramento",
       "similarity": 0.629408
+    },
+    {
+      "slug": "how-much-is-a-cord-of-firewood",
+      "similarity": 0.608149
     }
   ],
   "social-security-phone-number": [
@@ -4907,7 +4941,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ps5-in-stock-near-me",
-      "similarity": 0.629199
+      "similarity": 0.6292
     },
     {
       "slug": "pokemon-30th-anniversary-cards-in-stock",
@@ -4945,7 +4979,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5001,7 +5035,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.81059
+      "similarity": 0.810589
     },
     {
       "slug": "mastra-mcp-phone-calls",
@@ -5045,7 +5079,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "ticketmaster-customer-service-number": [
     {
       "slug": "vivid-seats-customer-service-number",
-      "similarity": 0.697516
+      "similarity": 0.697515
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5519,7 +5553,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ticketmaster-customer-service-number",
-      "similarity": 0.697516
+      "similarity": 0.697515
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5581,7 +5615,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",
