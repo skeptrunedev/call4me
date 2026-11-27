@@ -153,6 +153,7 @@ import frontierAirlinesRefund from './frontier-airlines-refund.md';
 import outTheDoorPrice from './out-the-door-price.md';
 import extendARentalCar from './extend-a-rental-car.md';
 import snowRemovalWayzataOrono from './snow-removal-wayzata-orono.md';
+import faceCordVsFullCord from './face-cord-vs-full-cord.md';
 import spectrumRetention from './spectrum-retention-department.md';
 import allstateCustomerServiceNumber from './allstate-customer-service-number.md';
 import cancelAudible from './cancel-audible.md';
@@ -513,4 +514,5 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'snow-removal-truckee', markdown: snowRemovalTruckee },
   { slug: 'snow-removal-wellesley-ma', markdown: snowRemovalWellesleyMa },
   { slug: 'firewood-delivery-wellesley-ma', markdown: firewoodDeliveryWellesleyMa },
+  { slug: 'face-cord-vs-full-cord', markdown: faceCordVsFullCord },
 ];

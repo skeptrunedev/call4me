@@ -262,4 +262,5 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'snow-removal-truckee': ['furniture-home-services'],
   'snow-removal-wellesley-ma': ['furniture-home-services'],
   'firewood-delivery-wellesley-ma': ['furniture-home-services'],
+  'face-cord-vs-full-cord': ['furniture-home-services'],
 };

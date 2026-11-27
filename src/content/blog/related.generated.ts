@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "2e2bfc832c9898ca520ea0a38e6cbc6b25cadc420d8d582548df102b208e9a52"
+  "sourceHash": "2232a7e3265c82a50a6f677a14b5b067ccfc3a71ed028cbadb8062d1925d7a88"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -204,7 +204,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "follow-up-appointment-telehealth",
-      "similarity": 0.670662
+      "similarity": 0.670663
     },
     {
       "slug": "customer-story-dental-appointments",
@@ -700,7 +700,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "salon-per-se-bellaire",
-      "similarity": 0.688543
+      "similarity": 0.688542
     },
     {
       "slug": "fresh-blades-barbershop-divisadero",
@@ -2106,7 +2106,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "fabletics-customer-service": [
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.719138
+      "similarity": 0.719139
     },
     {
       "slug": "directv-customer-service",
@@ -2135,6 +2135,40 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "cancel-factor",
       "similarity": 0.643839
+    }
+  ],
+  "face-cord-vs-full-cord": [
+    {
+      "slug": "how-much-is-a-cord-of-firewood",
+      "similarity": 0.851925
+    },
+    {
+      "slug": "firewood-delivery-wellesley-ma",
+      "similarity": 0.786357
+    },
+    {
+      "slug": "firewood-delivery-wayzata-orono",
+      "similarity": 0.749184
+    },
+    {
+      "slug": "firewood-delivery-truckee",
+      "similarity": 0.744408
+    },
+    {
+      "slug": "snow-removal-truckee",
+      "similarity": 0.647948
+    },
+    {
+      "slug": "snow-removal-wellesley-ma",
+      "similarity": 0.641645
+    },
+    {
+      "slug": "snow-removal-wayzata-orono",
+      "similarity": 0.610783
+    },
+    {
+      "slug": "junk-removal-cost",
+      "similarity": 0.609535
     }
   ],
   "farmacia-luma-viejo-san-juan": [
@@ -2209,6 +2243,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.804401
     },
     {
+      "slug": "face-cord-vs-full-cord",
+      "similarity": 0.744408
+    },
+    {
       "slug": "snow-removal-truckee",
       "similarity": 0.697464
     },
@@ -2243,6 +2281,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.764589
     },
     {
+      "slug": "face-cord-vs-full-cord",
+      "similarity": 0.749184
+    },
+    {
       "slug": "snow-removal-truckee",
       "similarity": 0.674302
     },
@@ -2261,6 +2303,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.788433
     },
     {
+      "slug": "face-cord-vs-full-cord",
+      "similarity": 0.786357
+    },
+    {
       "slug": "how-much-is-a-cord-of-firewood",
       "similarity": 0.775744
     },
@@ -2270,7 +2316,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "snow-removal-truckee",
-      "similarity": 0.63129
+      "similarity": 0.631289
     },
     {
       "slug": "snow-removal-wayzata-orono",
@@ -2310,7 +2356,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ai-personal-assistant-appointment-booking",
-      "similarity": 0.670662
+      "similarity": 0.670663
     },
     {
       "slug": "customer-story-dental-appointments",
@@ -2456,7 +2502,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-connectors-mcp-phone-calls",
-      "similarity": 0.788062
+      "similarity": 0.788063
     },
     {
       "slug": "n8n-mcp-phone-calls",
@@ -2548,7 +2594,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "grok-bot-reusable-skills": [
     {
       "slug": "grok-bot-template-troubleshooting",
-      "similarity": 0.862985
+      "similarity": 0.862984
     },
     {
       "slug": "grok-bot-templates",
@@ -2582,7 +2628,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "grok-bot-template-troubleshooting": [
     {
       "slug": "grok-bot-reusable-skills",
-      "similarity": 0.862985
+      "similarity": 0.862984
     },
     {
       "slug": "grok-bot-templates",
@@ -2598,7 +2644,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.768923
+      "similarity": 0.768924
     },
     {
       "slug": "codex-phone-calls",
@@ -2628,7 +2674,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-bot-vs-meta-muse",
-      "similarity": 0.768514
+      "similarity": 0.768515
     },
     {
       "slug": "ai-agent-that-makes-phone-calls",
@@ -2670,7 +2716,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "grok-bot-templates",
-      "similarity": 0.768514
+      "similarity": 0.768515
     },
     {
       "slug": "phone-calling-mcp-comparison",
@@ -2712,13 +2758,13 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "github-copilot-phone-calls",
-      "similarity": 0.788062
+      "similarity": 0.788063
     }
   ],
   "gym-day-pass": [
     {
       "slug": "gyms-with-sauna-near-me",
-      "similarity": 0.810296
+      "similarity": 0.810295
     },
     {
       "slug": "bonner-springs-ymca-swim-lessons",
@@ -2736,7 +2782,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "gyms-with-sauna-near-me": [
     {
       "slug": "gym-day-pass",
-      "similarity": 0.810296
+      "similarity": 0.810295
     }
   ],
   "hertz-customer-service-number": [
@@ -2826,6 +2872,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "how-long-to-reach-a-human": [],
   "how-much-is-a-cord-of-firewood": [
     {
+      "slug": "face-cord-vs-full-cord",
+      "similarity": 0.851925
+    },
+    {
       "slug": "firewood-delivery-truckee",
       "similarity": 0.804401
     },
@@ -2852,10 +2902,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "maggy-maid-sacramento",
       "similarity": 0.624897
-    },
-    {
-      "slug": "snow-removal-wayzata-orono",
-      "similarity": 0.613788
     }
   ],
   "how-to-cancel-siriusxm": [
@@ -2937,7 +2983,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "san-francisco-oral-surgeon-consultation",
-      "similarity": 0.623342
+      "similarity": 0.623343
     },
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
@@ -3276,6 +3322,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.666616
     },
     {
+      "slug": "face-cord-vs-full-cord",
+      "similarity": 0.609535
+    },
+    {
       "slug": "snow-removal-truckee",
       "similarity": 0.604546
     },
@@ -3510,7 +3560,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "skip-hire-abingdon",
-      "similarity": 0.629408
+      "similarity": 0.629409
     },
     {
       "slug": "how-much-is-a-cord-of-firewood",
@@ -4758,7 +4808,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "salon-per-se-bellaire": [
     {
       "slug": "book-haircut-appointment",
-      "similarity": 0.688543
+      "similarity": 0.688542
     },
     {
       "slug": "fresh-blades-barbershop-divisadero",
@@ -4816,7 +4866,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-find-a-new-primary-care-doctor",
-      "similarity": 0.623342
+      "similarity": 0.623343
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -4921,7 +4971,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "maggy-maid-sacramento",
-      "similarity": 0.629408
+      "similarity": 0.629409
     },
     {
       "slug": "how-much-is-a-cord-of-firewood",
@@ -4950,20 +5000,20 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.674302
     },
     {
+      "slug": "face-cord-vs-full-cord",
+      "similarity": 0.647948
+    },
+    {
       "slug": "how-much-is-a-cord-of-firewood",
       "similarity": 0.645372
     },
     {
       "slug": "firewood-delivery-wellesley-ma",
-      "similarity": 0.63129
+      "similarity": 0.631289
     },
     {
       "slug": "samsung-oven-door-glass-repair-sacramento",
       "similarity": 0.609215
-    },
-    {
-      "slug": "maggy-maid-sacramento",
-      "similarity": 0.605204
     }
   ],
   "snow-removal-wayzata-orono": [
@@ -4992,6 +5042,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.613788
     },
     {
+      "slug": "face-cord-vs-full-cord",
+      "similarity": 0.610783
+    },
+    {
       "slug": "skip-hire-abingdon",
       "similarity": 0.601037
     }
@@ -5012,6 +5066,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "firewood-delivery-wayzata-orono",
       "similarity": 0.666319
+    },
+    {
+      "slug": "face-cord-vs-full-cord",
+      "similarity": 0.641645
     },
     {
       "slug": "how-much-is-a-cord-of-firewood",
@@ -5177,7 +5235,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "suitsupply-customer-service": [
     {
       "slug": "fabletics-customer-service",
-      "similarity": 0.719138
+      "similarity": 0.719139
     },
     {
       "slug": "wayfair-customer-service",
@@ -5664,7 +5722,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.78316
+      "similarity": 0.783161
     },
     {
       "slug": "openclaw-phone-calls",

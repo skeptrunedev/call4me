@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f6f6f2"/>
+  <text x="80" y="150" font-family="Arial, Helvetica, sans-serif" fill="#866000" font-size="40">call4me field guide · nov 27, 2026</text>
+  <text x="80" y="250" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-weight="700" font-size="76">Face cord vs full cord</text>
+  <text x="80" y="330" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="44">128 cu ft vs one 4 x 8 ft row of wood</text>
+  <g fill="#ffb000">
+    <rect x="80" y="400" width="34" height="100"/><rect x="120" y="400" width="34" height="100"/><rect x="160" y="400" width="34" height="100"/>
+    <rect x="250" y="400" width="34" height="100"/>
+  </g>
+  <text x="80" y="540" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="24">full cord</text>
+  <text x="236" y="540" font-family="Arial, Helvetica, sans-serif" fill="#64645f" font-size="24">face cord</text>
+  <text x="340" y="465" font-family="Arial, Helvetica, sans-serif" fill="#151515" font-size="40">3 face cords = 1 cord at 16-inch pieces</text>
+</svg>
