@@ -143,6 +143,7 @@ import pokemon30thAnniversaryCardsInStock from './pokemon-30th-anniversary-cards
 import ps5InStockNearMe from './ps5-in-stock-near-me.md';
 import iphoneDuoInStock from './iphone-duo-in-stock.md';
 import winterTirePrices from './winter-tire-prices.md';
+import firewoodDeliveryTruckee from './firewood-delivery-truckee.md';
 import frontierAirlinesRefund from './frontier-airlines-refund.md';
 import outTheDoorPrice from './out-the-door-price.md';
 import extendARentalCar from './extend-a-rental-car.md';
@@ -496,6 +497,7 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'call-a-store-to-check-stock', markdown: callAStoreToCheckStock },
   { slug: 'iphone-duo-in-stock', markdown: iphoneDuoInStock },
   { slug: 'winter-tire-prices', markdown: winterTirePrices },
+  { slug: 'firewood-delivery-truckee', markdown: firewoodDeliveryTruckee },
   { slug: 'frontier-airlines-refund', markdown: frontierAirlinesRefund },
   { slug: 'out-the-door-price', markdown: outTheDoorPrice },
   { slug: 'extend-a-rental-car', markdown: extendARentalCar },

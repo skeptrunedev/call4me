@@ -252,6 +252,7 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'how-far-in-advance-to-order-catering': ['dining', 'retail-shopping'],
   'iphone-duo-in-stock': ['retail-shopping'],
   'winter-tire-prices': ['car-maintenance'],
+  'firewood-delivery-truckee': ['furniture-home-services'],
   'frontier-airlines-refund': ['airlines'],
   'out-the-door-price': ['retail-shopping'],
   'extend-a-rental-car': ['car-rental'],
