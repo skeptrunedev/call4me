@@ -145,6 +145,7 @@ import iphoneDuoInStock from './iphone-duo-in-stock.md';
 import winterTirePrices from './winter-tire-prices.md';
 import firewoodDeliveryTruckee from './firewood-delivery-truckee.md';
 import howMuchIsACordOfFirewood from './how-much-is-a-cord-of-firewood.md';
+import firewoodDeliveryWayzataOrono from './firewood-delivery-wayzata-orono.md';
 import frontierAirlinesRefund from './frontier-airlines-refund.md';
 import outTheDoorPrice from './out-the-door-price.md';
 import extendARentalCar from './extend-a-rental-car.md';
@@ -500,6 +501,7 @@ export const POST_SOURCES: PostSource[] = [
   { slug: 'iphone-duo-in-stock', markdown: iphoneDuoInStock },
   { slug: 'winter-tire-prices', markdown: winterTirePrices },
   { slug: 'firewood-delivery-truckee', markdown: firewoodDeliveryTruckee },
+  { slug: 'firewood-delivery-wayzata-orono', markdown: firewoodDeliveryWayzataOrono },
   { slug: 'frontier-airlines-refund', markdown: frontierAirlinesRefund },
   { slug: 'out-the-door-price', markdown: outTheDoorPrice },
   { slug: 'extend-a-rental-car', markdown: extendARentalCar },

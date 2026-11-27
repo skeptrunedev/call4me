@@ -258,4 +258,5 @@ export const RELATED_TOPICS: Record<string, string[]> = {
   'extend-a-rental-car': ['car-rental'],
   'how-much-is-a-cord-of-firewood': ['furniture-home-services'],
   'snow-removal-wayzata-orono': ['furniture-home-services'],
+  'firewood-delivery-wayzata-orono': ['furniture-home-services'],
 };

@@ -123,127 +123,132 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog": {
     "html": "/__pages/8caafe4386f95803.html",
     "markdown": "/__pages/8caafe4386f95803.md",
-    "tokens": 2553
+    "tokens": 2578
   },
   "/blog?page=2": {
     "html": "/__pages/0f0b1f7a021f2fa1.html",
     "markdown": "/__pages/0f0b1f7a021f2fa1.md",
-    "tokens": 2217
+    "tokens": 2249
   },
   "/blog?page=3": {
     "html": "/__pages/5d684d96eff29b6f.html",
     "markdown": "/__pages/5d684d96eff29b6f.md",
-    "tokens": 2235
+    "tokens": 2205
   },
   "/blog?page=4": {
     "html": "/__pages/c811387f89d4ec8d.html",
     "markdown": "/__pages/c811387f89d4ec8d.md",
-    "tokens": 2172
+    "tokens": 2159
   },
   "/blog?page=5": {
     "html": "/__pages/6250350dd420f994.html",
     "markdown": "/__pages/6250350dd420f994.md",
-    "tokens": 2204
+    "tokens": 2219
   },
   "/blog?page=6": {
     "html": "/__pages/8686aa3e95f6ad2e.html",
     "markdown": "/__pages/8686aa3e95f6ad2e.md",
-    "tokens": 2274
+    "tokens": 2303
   },
   "/blog?page=7": {
     "html": "/__pages/cee589bf74b1aae3.html",
     "markdown": "/__pages/cee589bf74b1aae3.md",
-    "tokens": 2065
+    "tokens": 2041
   },
   "/blog?page=8": {
     "html": "/__pages/4b966dd372686e87.html",
     "markdown": "/__pages/4b966dd372686e87.md",
-    "tokens": 2178
+    "tokens": 2170
   },
   "/blog?page=9": {
     "html": "/__pages/f52d36eef4f69053.html",
     "markdown": "/__pages/f52d36eef4f69053.md",
-    "tokens": 2183
+    "tokens": 2153
   },
   "/blog?page=10": {
     "html": "/__pages/5f1205fb34b8d1b0.html",
     "markdown": "/__pages/5f1205fb34b8d1b0.md",
-    "tokens": 2314
+    "tokens": 2334
   },
   "/blog?page=11": {
     "html": "/__pages/87f5326c1f6fb37d.html",
     "markdown": "/__pages/87f5326c1f6fb37d.md",
-    "tokens": 2188
+    "tokens": 2230
   },
   "/blog?page=12": {
     "html": "/__pages/bc2a4f64b3070cee.html",
     "markdown": "/__pages/bc2a4f64b3070cee.md",
-    "tokens": 2176
+    "tokens": 2133
   },
   "/blog?page=13": {
     "html": "/__pages/bb152f4013a0c3c7.html",
     "markdown": "/__pages/bb152f4013a0c3c7.md",
-    "tokens": 1849
+    "tokens": 1883
   },
   "/blog?page=14": {
     "html": "/__pages/4ab1c8245737bad9.html",
     "markdown": "/__pages/4ab1c8245737bad9.md",
-    "tokens": 2117
+    "tokens": 2106
   },
   "/blog?page=15": {
     "html": "/__pages/812ea472621cede4.html",
     "markdown": "/__pages/812ea472621cede4.md",
-    "tokens": 1905
+    "tokens": 1929
   },
   "/blog?page=16": {
     "html": "/__pages/4041688d0fbb916d.html",
     "markdown": "/__pages/4041688d0fbb916d.md",
-    "tokens": 1783
+    "tokens": 1791
   },
   "/blog?page=17": {
     "html": "/__pages/bb19693a4c4cba66.html",
     "markdown": "/__pages/bb19693a4c4cba66.md",
-    "tokens": 1847
+    "tokens": 1833
   },
   "/blog?page=18": {
     "html": "/__pages/ccf83eb6730467b6.html",
     "markdown": "/__pages/ccf83eb6730467b6.md",
-    "tokens": 1962
+    "tokens": 1965
   },
   "/blog?page=19": {
     "html": "/__pages/bcb642deee219a0c.html",
     "markdown": "/__pages/bcb642deee219a0c.md",
-    "tokens": 1907
+    "tokens": 1901
   },
   "/blog?page=20": {
     "html": "/__pages/cdbb74b6d785b988.html",
     "markdown": "/__pages/cdbb74b6d785b988.md",
-    "tokens": 2110
+    "tokens": 2064
   },
   "/blog?page=21": {
     "html": "/__pages/a483033cd4a02de8.html",
     "markdown": "/__pages/a483033cd4a02de8.md",
-    "tokens": 1617
+    "tokens": 1791
   },
   "/blog/archive": {
     "html": "/__pages/555fc3431f69699a.html",
     "markdown": "/__pages/555fc3431f69699a.md",
-    "tokens": 23766
+    "tokens": 23893
   },
   "/blog/firewood-delivery-truckee": {
     "html": "/__pages/2891b06489407d01.html",
     "markdown": "/__pages/2891b06489407d01.md",
-    "tokens": 8242
+    "tokens": 8269
+  },
+  "/blog/firewood-delivery-wayzata-orono": {
+    "html": "/__pages/97728f213dfdb0fb.html",
+    "markdown": "/__pages/97728f213dfdb0fb.md",
+    "tokens": 9723
   },
   "/blog/how-much-is-a-cord-of-firewood": {
     "html": "/__pages/72e87cbbeaeb047b.html",
     "markdown": "/__pages/72e87cbbeaeb047b.md",
-    "tokens": 9435
+    "tokens": 9458
   },
   "/blog/snow-removal-wayzata-orono": {
     "html": "/__pages/03933c2a02107268.html",
     "markdown": "/__pages/03933c2a02107268.md",
-    "tokens": 9046
+    "tokens": 9075
   },
   "/blog/fix-an-order-or-delivery-by-phone": {
     "html": "/__pages/f61aa29aa55e54a9.html",
@@ -318,7 +323,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/gpt-live-1-1-upgrade": {
     "html": "/__pages/aa53374796bdd8ea.html",
     "markdown": "/__pages/aa53374796bdd8ea.md",
-    "tokens": 2824
+    "tokens": 2807
   },
   "/blog/mediacom-customer-service-number": {
     "html": "/__pages/5f37898813236fe9.html",
@@ -828,7 +833,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/opencode-phone-calls": {
     "html": "/__pages/f643b874d5d5cfd4.html",
     "markdown": "/__pages/f643b874d5d5cfd4.md",
-    "tokens": 6605
+    "tokens": 6607
   },
   "/blog/openai-agents-sdk-phone-calls": {
     "html": "/__pages/207258c629ec45f8.html",
@@ -843,7 +848,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/claude-agent-sdk-phone-calls": {
     "html": "/__pages/f3175b6690b5fb79.html",
     "markdown": "/__pages/f3175b6690b5fb79.md",
-    "tokens": 7343
+    "tokens": 7319
   },
   "/blog/cline-phone-calls": {
     "html": "/__pages/00ca1c130b2e95bb.html",
@@ -878,7 +883,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/langchain-mcp-phone-calls": {
     "html": "/__pages/3a28e046b9bdfb2d.html",
     "markdown": "/__pages/3a28e046b9bdfb2d.md",
-    "tokens": 4027
+    "tokens": 4001
   },
   "/blog/github-copilot-phone-calls": {
     "html": "/__pages/1537745cd96caf99.html",
@@ -888,12 +893,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/chatgpt-phone-calls": {
     "html": "/__pages/82112ee792a1287d.html",
     "markdown": "/__pages/82112ee792a1287d.md",
-    "tokens": 5017
+    "tokens": 5019
   },
   "/blog/claude-phone-calls": {
     "html": "/__pages/2bca3a76156714dc.html",
     "markdown": "/__pages/2bca3a76156714dc.md",
-    "tokens": 4275
+    "tokens": 4237
   },
   "/blog/cursor-phone-calls": {
     "html": "/__pages/78808eaa7cd9eba5.html",
@@ -903,22 +908,22 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/gemini-phone-calls": {
     "html": "/__pages/eca716a029901025.html",
     "markdown": "/__pages/eca716a029901025.md",
-    "tokens": 4384
+    "tokens": 4373
   },
   "/blog/perplexity-phone-calls": {
     "html": "/__pages/3044b20822582107.html",
     "markdown": "/__pages/3044b20822582107.md",
-    "tokens": 4377
+    "tokens": 4337
   },
   "/blog/n8n-mcp-phone-calls": {
     "html": "/__pages/1852857ce33fa137.html",
     "markdown": "/__pages/1852857ce33fa137.md",
-    "tokens": 5197
+    "tokens": 5212
   },
   "/blog/openclaw-phone-calls": {
     "html": "/__pages/8048334d63e47f95.html",
     "markdown": "/__pages/8048334d63e47f95.md",
-    "tokens": 5656
+    "tokens": 5664
   },
   "/blog/goose-mcp-phone-calls": {
     "html": "/__pages/f249d712c020846d.html",
@@ -963,7 +968,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/ai-apps-that-make-calls-for-you": {
     "html": "/__pages/427c0a40de2bba10.html",
     "markdown": "/__pages/427c0a40de2bba10.md",
-    "tokens": 6941
+    "tokens": 6930
   },
   "/blog/hijinx-hotel-irvine": {
     "html": "/__pages/acb492544467c9de.html",
@@ -1093,7 +1098,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/vercel-ai-sdk-phone-calls": {
     "html": "/__pages/ff098db0a2035f3b.html",
     "markdown": "/__pages/ff098db0a2035f3b.md",
-    "tokens": 3011
+    "tokens": 2994
   },
   "/blog/vapi-alternatives": {
     "html": "/__pages/55c22a477aa2029e.html",
@@ -1103,12 +1108,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/bland-ai-alternatives": {
     "html": "/__pages/ae7d8f0f01361a52.html",
     "markdown": "/__pages/ae7d8f0f01361a52.md",
-    "tokens": 3284
+    "tokens": 3255
   },
   "/blog/ai-agent-that-makes-phone-calls": {
     "html": "/__pages/c6d4cf77fa9ecc89.html",
     "markdown": "/__pages/c6d4cf77fa9ecc89.md",
-    "tokens": 3177
+    "tokens": 3193
   },
   "/blog/gym-day-pass": {
     "html": "/__pages/58e8dd209383d03e.html",
@@ -1223,7 +1228,7 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/grok-bot-vs-meta-muse": {
     "html": "/__pages/92e78061587d9843.html",
     "markdown": "/__pages/92e78061587d9843.md",
-    "tokens": 2802
+    "tokens": 2801
   },
   "/blog/meta-muse-supplier-quotes": {
     "html": "/__pages/c4ae492a3b9565cc.html",
@@ -1278,27 +1283,27 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/instinct-ai-phone-calls": {
     "html": "/__pages/7d8b01a75a9d6b95.html",
     "markdown": "/__pages/7d8b01a75a9d6b95.md",
-    "tokens": 4034
+    "tokens": 4033
   },
   "/blog/claude-code-phone-calls": {
     "html": "/__pages/b4a4a35039232bdd.html",
     "markdown": "/__pages/b4a4a35039232bdd.md",
-    "tokens": 5844
+    "tokens": 5776
   },
   "/blog/codex-phone-calls": {
     "html": "/__pages/3348257799ac3891.html",
     "markdown": "/__pages/3348257799ac3891.md",
-    "tokens": 5543
+    "tokens": 5554
   },
   "/blog/agent-web-research-phone-calls-sf-private-dining": {
     "html": "/__pages/5d9174de815b6805.html",
     "markdown": "/__pages/5d9174de815b6805.md",
-    "tokens": 8275
+    "tokens": 8242
   },
   "/blog/phone-calling-mcp-comparison": {
     "html": "/__pages/59a59e92f1223e3d.html",
     "markdown": "/__pages/59a59e92f1223e3d.md",
-    "tokens": 10461
+    "tokens": 10534
   },
   "/blog/cascaded-voice-stack-vs-gpt-live": {
     "html": "/__pages/aeae359d4c5c3e33.html",
@@ -1363,12 +1368,12 @@ export const STATIC_PAGES: Record<string, { html: string; markdown: string; toke
   "/blog/grok-connectors-mcp-phone-calls": {
     "html": "/__pages/dd53a82fc808756f.html",
     "markdown": "/__pages/dd53a82fc808756f.md",
-    "tokens": 6149
+    "tokens": 6109
   },
   "/blog/meta-muse-ai-agent-phone-calls": {
     "html": "/__pages/6b5da232c9e22e22.html",
     "markdown": "/__pages/6b5da232c9e22e22.md",
-    "tokens": 4630
+    "tokens": 4637
   },
   "/blog/etihad-customer-service": {
     "html": "/__pages/a609f08f0c294628.html",

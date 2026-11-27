@@ -6,7 +6,7 @@ export const RELATED_METADATA = {
   "prompt": "task: sentence similarity | query: ",
   "recipe": "concise-title-specific-tags-shared-editorial-subject-v1",
   "minimumSimilarity": 0.6,
-  "sourceHash": "77e2c5d4809688d1632a2426a7f03937259eae258aa90b4b81a5122607c3062a"
+  "sourceHash": "528e163358252d454fc5d489ad40671e88a23eb52db4609cde0598a114ca5154"
 };
 
 export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[]> = {
@@ -81,110 +81,110 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "agent-web-research-phone-calls-sf-private-dining": [
     {
+      "slug": "codex-phone-calls",
+      "similarity": 0.75867
+    },
+    {
       "slug": "ai-personal-assistant-appointment-booking",
-      "similarity": 0.753244
+      "similarity": 0.758419
+    },
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.757662
     },
     {
       "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.744045
+      "similarity": 0.756975
+    },
+    {
+      "slug": "phone-calling-mcp-comparison",
+      "similarity": 0.753494
+    },
+    {
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.747789
     },
     {
       "slug": "claude-code-phone-calls",
-      "similarity": 0.737828
+      "similarity": 0.74144
     },
     {
       "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.730794
-    },
-    {
-      "slug": "bland-ai-alternatives",
-      "similarity": 0.72462
-    },
-    {
-      "slug": "ai-phone-tree-navigation",
-      "similarity": 0.723114
-    },
-    {
-      "slug": "instinct-ai-phone-calls",
-      "similarity": 0.716794
-    },
-    {
-      "slug": "vercel-ai-sdk-phone-calls",
-      "similarity": 0.711787
+      "similarity": 0.73857
     }
   ],
   "ai-agent-that-makes-phone-calls": [
     {
       "slug": "ai-apps-that-make-calls-for-you",
-      "similarity": 0.904639
+      "similarity": 0.922739
     },
     {
       "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.826373
+      "similarity": 0.826603
+    },
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.818339
+    },
+    {
+      "slug": "gemini-phone-calls",
+      "similarity": 0.815224
+    },
+    {
+      "slug": "codex-phone-calls",
+      "similarity": 0.813352
+    },
+    {
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.801363
+    },
+    {
+      "slug": "grok-connectors-mcp-phone-calls",
+      "similarity": 0.791563
     },
     {
       "slug": "vercel-ai-sdk-phone-calls",
       "similarity": 0.790596
-    },
-    {
-      "slug": "openai-agents-sdk-phone-calls",
-      "similarity": 0.786085
-    },
-    {
-      "slug": "claude-code-phone-calls",
-      "similarity": 0.783654
-    },
-    {
-      "slug": "openai-realtime-voices-phone-calls",
-      "similarity": 0.781195
-    },
-    {
-      "slug": "gpt-live-1-1-upgrade",
-      "similarity": 0.776798
-    },
-    {
-      "slug": "langchain-mcp-phone-calls",
-      "similarity": 0.774072
     }
   ],
   "ai-apps-that-make-calls-for-you": [
     {
       "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.904639
-    },
-    {
-      "slug": "openai-realtime-voices-phone-calls",
-      "similarity": 0.799054
+      "similarity": 0.922739
     },
     {
       "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.791752
-    },
-    {
-      "slug": "vercel-ai-sdk-phone-calls",
-      "similarity": 0.767662
-    },
-    {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.738301
-    },
-    {
-      "slug": "gpt-live-1-1-upgrade",
-      "similarity": 0.736994
+      "similarity": 0.837433
     },
     {
       "slug": "gemini-phone-calls",
-      "similarity": 0.729582
+      "similarity": 0.822402
     },
     {
-      "slug": "instinct-ai-phone-calls",
-      "similarity": 0.724019
+      "slug": "vercel-ai-sdk-phone-calls",
+      "similarity": 0.82209
+    },
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.819154
+    },
+    {
+      "slug": "grok-connectors-mcp-phone-calls",
+      "similarity": 0.795872
+    },
+    {
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.791427
+    },
+    {
+      "slug": "openai-realtime-voices-phone-calls",
+      "similarity": 0.788318
     }
   ],
   "ai-personal-assistant-appointment-booking": [
     {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
-      "similarity": 0.753244
+      "similarity": 0.758419
     },
     {
       "slug": "mandarin-phone-call-scheduling",
@@ -226,7 +226,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.793458
+      "similarity": 0.78126
     },
     {
       "slug": "t3-code-phone-calls",
@@ -237,16 +237,16 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.766372
     },
     {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.751731
-    },
-    {
       "slug": "cascaded-voice-stack-vs-gpt-live",
       "similarity": 0.748452
     },
     {
-      "slug": "codex-phone-calls",
-      "similarity": 0.73502
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.746658
+    },
+    {
+      "slug": "agent-web-research-phone-calls-sf-private-dining",
+      "similarity": 0.734594
     }
   ],
   "airbnb-customer-service-number": [
@@ -373,12 +373,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.67782
     },
     {
-      "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.663661
-    },
-    {
       "slug": "ai-phone-tree-navigation",
       "similarity": 0.658418
+    },
+    {
+      "slug": "claude-agent-sdk-phone-calls",
+      "similarity": 0.657425
     },
     {
       "slug": "twilio-mcp-phone-calls",
@@ -386,11 +386,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.636823
+      "similarity": 0.646786
     },
     {
-      "slug": "afternic-domain-broker-phone-number",
-      "similarity": 0.629391
+      "slug": "phone-calling-mcp-comparison",
+      "similarity": 0.633402
     }
   ],
   "american-airlines-flight-credit": [
@@ -595,8 +595,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.757497
     },
     {
+      "slug": "phone-calling-mcp-comparison",
+      "similarity": 0.732031
+    },
+    {
       "slug": "agent-web-research-phone-calls-sf-private-dining",
-      "similarity": 0.72462
+      "similarity": 0.730746
     },
     {
       "slug": "cascaded-voice-stack-vs-gpt-live",
@@ -607,16 +611,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.698357
     },
     {
+      "slug": "codex-phone-calls",
+      "similarity": 0.69111
+    },
+    {
       "slug": "ai-phone-tree-navigation",
       "similarity": 0.685028
-    },
-    {
-      "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.67287
-    },
-    {
-      "slug": "schedule-phone-calls-claude-code-codex",
-      "similarity": 0.661489
     }
   ],
   "blue-shield-of-california-dental-phone-number": [
@@ -685,12 +685,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.680103
     },
     {
-      "slug": "lai-wah-heen-private-dining",
-      "similarity": 0.67184
+      "slug": "agent-web-research-phone-calls-sf-private-dining",
+      "similarity": 0.673568
     },
     {
-      "slug": "agent-web-research-phone-calls-sf-private-dining",
-      "similarity": 0.671669
+      "slug": "lai-wah-heen-private-dining",
+      "similarity": 0.67184
     }
   ],
   "book-haircut-appointment": [
@@ -1119,7 +1119,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "cascaded-voice-stack-vs-gpt-live": [
     {
       "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.751356
+      "similarity": 0.799347
     },
     {
       "slug": "ai-phone-tree-navigation",
@@ -1128,6 +1128,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "instinct-ai-phone-calls",
       "similarity": 0.746159
+    },
+    {
+      "slug": "grok-bot-vs-meta-muse",
+      "similarity": 0.732213
     },
     {
       "slug": "openai-realtime-voices-phone-calls",
@@ -1144,10 +1148,6 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "bland-ai-alternatives",
       "similarity": 0.720377
-    },
-    {
-      "slug": "vapi-alternatives",
-      "similarity": 0.706994
     }
   ],
   "cash-app-customer-service-number": [
@@ -1246,36 +1246,36 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "chatgpt-phone-calls": [
     {
-      "slug": "openai-realtime-voices-phone-calls",
-      "similarity": 0.728081
-    },
-    {
       "slug": "ai-apps-that-make-calls-for-you",
-      "similarity": 0.714212
+      "similarity": 0.783116
     },
     {
       "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.710844
-    },
-    {
-      "slug": "gpt-live-1-1-upgrade",
-      "similarity": 0.70065
-    },
-    {
-      "slug": "github-copilot-phone-calls",
-      "similarity": 0.684144
+      "similarity": 0.769238
     },
     {
       "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.677126
+      "similarity": 0.744545
     },
     {
-      "slug": "claude-phone-calls",
-      "similarity": 0.676714
+      "slug": "gpt-live-1-1-upgrade",
+      "similarity": 0.74387
+    },
+    {
+      "slug": "grok-connectors-mcp-phone-calls",
+      "similarity": 0.741344
+    },
+    {
+      "slug": "openai-realtime-voices-phone-calls",
+      "similarity": 0.736372
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.669572
+      "similarity": 0.728727
+    },
+    {
+      "slug": "github-copilot-phone-calls",
+      "similarity": 0.71919
     }
   ],
   "check-store-stock-in-japan": [
@@ -1349,35 +1349,35 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "claude-agent-sdk-phone-calls": [
     {
       "slug": "opencode-phone-calls",
-      "similarity": 0.857218
-    },
-    {
-      "slug": "openai-agents-sdk-phone-calls",
-      "similarity": 0.848387
+      "similarity": 0.90795
     },
     {
       "slug": "devin-phone-calls",
-      "similarity": 0.837184
+      "similarity": 0.879273
     },
     {
       "slug": "cline-phone-calls",
-      "similarity": 0.835012
+      "similarity": 0.877561
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.828316
+      "similarity": 0.868322
     },
     {
-      "slug": "langchain-mcp-phone-calls",
-      "similarity": 0.819794
+      "slug": "openai-agents-sdk-phone-calls",
+      "similarity": 0.866799
     },
     {
-      "slug": "t3-code-phone-calls",
-      "similarity": 0.814715
+      "slug": "phone-calling-mcp-comparison",
+      "similarity": 0.842386
     },
     {
-      "slug": "twilio-mcp-phone-calls",
-      "similarity": 0.800805
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.841986
+    },
+    {
+      "slug": "goose-mcp-phone-calls",
+      "similarity": 0.830047
     }
   ],
   "claude-code-phone-calls": [
@@ -1386,62 +1386,62 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.818532
     },
     {
-      "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.783654
+      "slug": "codex-phone-calls",
+      "similarity": 0.790044
     },
     {
-      "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.779561
+      "slug": "ai-agent-that-makes-phone-calls",
+      "similarity": 0.783654
     },
     {
       "slug": "t3-code-phone-calls",
       "similarity": 0.779131
     },
     {
+      "slug": "claude-agent-sdk-phone-calls",
+      "similarity": 0.778219
+    },
+    {
       "slug": "twilio-mcp-phone-calls",
       "similarity": 0.777673
     },
     {
-      "slug": "codex-phone-calls",
-      "similarity": 0.774417
+      "slug": "phone-calling-mcp-comparison",
+      "similarity": 0.770295
     },
     {
-      "slug": "ai-phone-tree-navigation",
-      "similarity": 0.766372
-    },
-    {
-      "slug": "claude-phone-calls",
-      "similarity": 0.765727
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.768428
     }
   ],
   "claude-phone-calls": [
     {
-      "slug": "perplexity-phone-calls",
-      "similarity": 0.783965
-    },
-    {
       "slug": "claude-code-phone-calls",
       "similarity": 0.765727
-    },
-    {
-      "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.753519
     },
     {
       "slug": "instinct-ai-phone-calls",
       "similarity": 0.751609
     },
     {
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.749177
+    },
+    {
+      "slug": "claude-agent-sdk-phone-calls",
+      "similarity": 0.736008
+    },
+    {
       "slug": "schedule-phone-calls-claude-code-codex",
       "similarity": 0.727201
     },
     {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.717715
-    },
-    {
       "slug": "twilio-mcp-phone-calls",
       "similarity": 0.711255
+    },
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.709522
     },
     {
       "slug": "amazon-seller-distributor-calls",
@@ -1451,70 +1451,70 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "cline-phone-calls": [
     {
       "slug": "devin-phone-calls",
-      "similarity": 0.858843
+      "similarity": 0.878344
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.835012
+      "similarity": 0.877561
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.834681
+      "similarity": 0.864253
     },
     {
       "slug": "opencode-phone-calls",
-      "similarity": 0.824225
+      "similarity": 0.85993
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.821083
+      "similarity": 0.851282
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.788838
-    },
-    {
-      "slug": "t3-code-phone-calls",
-      "similarity": 0.786575
+      "similarity": 0.817117
     },
     {
       "slug": "gemini-phone-calls",
-      "similarity": 0.778475
+      "similarity": 0.809846
+    },
+    {
+      "slug": "github-copilot-phone-calls",
+      "similarity": 0.804433
     }
   ],
   "co2-tank-exchange-san-juan": [],
   "codex-phone-calls": [
     {
       "slug": "cline-phone-calls",
-      "similarity": 0.834681
-    },
-    {
-      "slug": "t3-code-phone-calls",
-      "similarity": 0.812924
-    },
-    {
-      "slug": "twilio-mcp-phone-calls",
-      "similarity": 0.799497
+      "similarity": 0.864253
     },
     {
       "slug": "opencode-phone-calls",
-      "similarity": 0.798706
+      "similarity": 0.839514
     },
     {
       "slug": "cursor-phone-calls",
-      "similarity": 0.795698
+      "similarity": 0.839416
+    },
+    {
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.830084
+    },
+    {
+      "slug": "claude-agent-sdk-phone-calls",
+      "similarity": 0.826295
     },
     {
       "slug": "github-copilot-phone-calls",
-      "similarity": 0.789225
+      "similarity": 0.82355
     },
     {
-      "slug": "schedule-phone-calls-claude-code-codex",
-      "similarity": 0.788237
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.820014
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.778345
+      "similarity": 0.816134
     }
   ],
   "coinbase-customer-service-number": [
@@ -1648,35 +1648,35 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "cursor-phone-calls": [
     {
       "slug": "github-copilot-phone-calls",
-      "similarity": 0.857355
+      "similarity": 0.885436
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.795698
+      "similarity": 0.839416
     },
     {
       "slug": "grok-connectors-mcp-phone-calls",
-      "similarity": 0.775424
+      "similarity": 0.817834
+    },
+    {
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.800256
     },
     {
       "slug": "cline-phone-calls",
-      "similarity": 0.7442
-    },
-    {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.733742
+      "similarity": 0.788949
     },
     {
       "slug": "meta-muse-ai-agent-phone-calls",
-      "similarity": 0.725656
+      "similarity": 0.777663
     },
     {
-      "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.72298
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.773826
     },
     {
-      "slug": "muse-code-mcp-phone-calls",
-      "similarity": 0.721639
+      "slug": "gemini-phone-calls",
+      "similarity": 0.771776
     }
   ],
   "customer-story-dental-appointments": [
@@ -1821,36 +1821,36 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "devin-phone-calls": [
     {
-      "slug": "cline-phone-calls",
-      "similarity": 0.858843
-    },
-    {
       "slug": "opencode-phone-calls",
-      "similarity": 0.854886
+      "similarity": 0.885781
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.837184
+      "similarity": 0.879273
+    },
+    {
+      "slug": "cline-phone-calls",
+      "similarity": 0.878344
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.835367
-    },
-    {
-      "slug": "t3-code-phone-calls",
-      "similarity": 0.799122
+      "similarity": 0.856442
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.796702
+      "similarity": 0.825884
     },
     {
       "slug": "goose-mcp-phone-calls",
-      "similarity": 0.759228
+      "similarity": 0.804627
     },
     {
-      "slug": "langchain-mcp-phone-calls",
-      "similarity": 0.756145
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.799882
+    },
+    {
+      "slug": "openai-agents-sdk-phone-calls",
+      "similarity": 0.795482
     }
   ],
   "directv-customer-service": [
@@ -2040,7 +2040,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "meta-muse-first-task",
-      "similarity": 0.620497
+      "similarity": 0.609714
     },
     {
       "slug": "claude-phone-calls",
@@ -2106,7 +2106,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "fabletics-customer-service": [
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.719139
+      "similarity": 0.719138
     },
     {
       "slug": "directv-customer-service",
@@ -2197,6 +2197,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "firewood-delivery-truckee": [
     {
+      "slug": "firewood-delivery-wayzata-orono",
+      "similarity": 0.808808
+    },
+    {
       "slug": "how-much-is-a-cord-of-firewood",
       "similarity": 0.804401
     },
@@ -2207,6 +2211,20 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "skip-hire-abingdon",
       "similarity": 0.631946
+    }
+  ],
+  "firewood-delivery-wayzata-orono": [
+    {
+      "slug": "firewood-delivery-truckee",
+      "similarity": 0.808808
+    },
+    {
+      "slug": "how-much-is-a-cord-of-firewood",
+      "similarity": 0.791944
+    },
+    {
+      "slug": "snow-removal-wayzata-orono",
+      "similarity": 0.764589
     }
   ],
   "fix-an-order-or-delivery-by-phone": [
@@ -2337,70 +2355,70 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "gemini-phone-calls": [
     {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.780778
-    },
-    {
-      "slug": "cline-phone-calls",
-      "similarity": 0.778475
-    },
-    {
       "slug": "perplexity-phone-calls",
-      "similarity": 0.760057
+      "similarity": 0.838939
     },
     {
-      "slug": "devin-phone-calls",
-      "similarity": 0.753093
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.822402
     },
     {
-      "slug": "github-copilot-phone-calls",
-      "similarity": 0.753029
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.819612
+    },
+    {
+      "slug": "ai-agent-that-makes-phone-calls",
+      "similarity": 0.815224
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.744364
+      "similarity": 0.811793
     },
     {
-      "slug": "twilio-mcp-phone-calls",
-      "similarity": 0.738946
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.811156
     },
     {
-      "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.734386
+      "slug": "cline-phone-calls",
+      "similarity": 0.809846
+    },
+    {
+      "slug": "github-copilot-phone-calls",
+      "similarity": 0.791847
     }
   ],
   "github-copilot-phone-calls": [
     {
       "slug": "cursor-phone-calls",
-      "similarity": 0.857355
+      "similarity": 0.885436
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.789225
+      "similarity": 0.82355
     },
     {
       "slug": "cline-phone-calls",
-      "similarity": 0.776472
-    },
-    {
-      "slug": "grok-connectors-mcp-phone-calls",
-      "similarity": 0.761198
+      "similarity": 0.804433
     },
     {
       "slug": "gemini-phone-calls",
-      "similarity": 0.753029
+      "similarity": 0.791847
     },
     {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.733995
+      "slug": "grok-connectors-mcp-phone-calls",
+      "similarity": 0.788063
     },
     {
       "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.712676
+      "similarity": 0.778392
+    },
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.773678
     },
     {
       "slug": "devin-phone-calls",
-      "similarity": 0.711912
+      "similarity": 0.750926
     }
   ],
   "global-blue-customer-service-number": [
@@ -2412,35 +2430,35 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "goose-mcp-phone-calls": [
     {
       "slug": "opencode-phone-calls",
-      "similarity": 0.826785
+      "similarity": 0.861972
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.800485
+      "similarity": 0.833314
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.775337
-    },
-    {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.766224
+      "similarity": 0.830047
     },
     {
       "slug": "langchain-mcp-phone-calls",
-      "similarity": 0.760153
+      "similarity": 0.804863
     },
     {
       "slug": "devin-phone-calls",
-      "similarity": 0.759228
+      "similarity": 0.804627
     },
     {
-      "slug": "t3-code-phone-calls",
-      "similarity": 0.751085
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.801428
     },
     {
       "slug": "cline-phone-calls",
-      "similarity": 0.74496
+      "similarity": 0.789096
+    },
+    {
+      "slug": "openai-agents-sdk-phone-calls",
+      "similarity": 0.785604
     }
   ],
   "gpt-live-1-1-upgrade": [
@@ -2453,204 +2471,204 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.77248
     },
     {
-      "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.754824
-    },
-    {
       "slug": "ai-apps-that-make-calls-for-you",
-      "similarity": 0.736994
+      "similarity": 0.765556
     },
     {
-      "slug": "cascaded-voice-stack-vs-gpt-live",
-      "similarity": 0.728201
+      "slug": "grok-connectors-mcp-phone-calls",
+      "similarity": 0.764971
     },
     {
-      "slug": "vercel-ai-sdk-phone-calls",
-      "similarity": 0.723576
-    },
-    {
-      "slug": "openai-agents-sdk-phone-calls",
-      "similarity": 0.711665
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.757739
     },
     {
       "slug": "chatgpt-phone-calls",
-      "similarity": 0.70065
+      "similarity": 0.74387
+    },
+    {
+      "slug": "gemini-phone-calls",
+      "similarity": 0.742632
+    },
+    {
+      "slug": "github-copilot-phone-calls",
+      "similarity": 0.736817
     }
   ],
   "grok-bot-reusable-skills": [
     {
       "slug": "grok-bot-template-troubleshooting",
-      "similarity": 0.829653
+      "similarity": 0.862985
     },
     {
       "slug": "grok-bot-templates",
-      "similarity": 0.770714
+      "similarity": 0.815766
     },
     {
       "slug": "grok-bot-vs-meta-muse",
-      "similarity": 0.762954
+      "similarity": 0.807927
     },
     {
       "slug": "grok-connectors-mcp-phone-calls",
-      "similarity": 0.689908
+      "similarity": 0.769761
     },
     {
       "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.669602
+      "similarity": 0.744535
+    },
+    {
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.712334
     },
     {
       "slug": "vercel-ai-sdk-phone-calls",
-      "similarity": 0.640109
+      "similarity": 0.710704
     },
     {
-      "slug": "claude-code-phone-calls",
-      "similarity": 0.633575
-    },
-    {
-      "slug": "openai-agents-sdk-phone-calls",
-      "similarity": 0.63284
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.692678
     }
   ],
   "grok-bot-template-troubleshooting": [
     {
-      "slug": "grok-bot-templates",
-      "similarity": 0.831523
+      "slug": "grok-bot-reusable-skills",
+      "similarity": 0.862985
     },
     {
-      "slug": "grok-bot-reusable-skills",
-      "similarity": 0.829653
+      "slug": "grok-bot-templates",
+      "similarity": 0.836962
     },
     {
       "slug": "grok-connectors-mcp-phone-calls",
-      "similarity": 0.745983
+      "similarity": 0.79864
     },
     {
       "slug": "grok-bot-vs-meta-muse",
-      "similarity": 0.740644
+      "similarity": 0.781698
     },
     {
       "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.722064
-    },
-    {
-      "slug": "claude-code-phone-calls",
-      "similarity": 0.702486
+      "similarity": 0.768923
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.675031
+      "similarity": 0.742578
     },
     {
-      "slug": "schedule-phone-calls-claude-code-codex",
-      "similarity": 0.665552
+      "slug": "gemini-phone-calls",
+      "similarity": 0.726806
+    },
+    {
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.723294
     }
   ],
   "grok-bot-templates": [
     {
       "slug": "grok-bot-template-troubleshooting",
-      "similarity": 0.831523
+      "similarity": 0.836962
     },
     {
       "slug": "grok-bot-reusable-skills",
-      "similarity": 0.770714
+      "similarity": 0.815766
     },
     {
       "slug": "grok-connectors-mcp-phone-calls",
-      "similarity": 0.743764
+      "similarity": 0.799642
     },
     {
       "slug": "grok-bot-vs-meta-muse",
-      "similarity": 0.719737
+      "similarity": 0.768515
     },
     {
       "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.706101
+      "similarity": 0.764858
     },
     {
       "slug": "ai-apps-that-make-calls-for-you",
-      "similarity": 0.669241
+      "similarity": 0.749419
     },
     {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.667889
+      "slug": "vercel-ai-sdk-phone-calls",
+      "similarity": 0.737602
     },
     {
-      "slug": "schedule-phone-calls-claude-code-codex",
-      "similarity": 0.666251
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.735541
     }
   ],
   "grok-bot-vs-meta-muse": [
     {
       "slug": "grok-bot-reusable-skills",
-      "similarity": 0.762954
-    },
-    {
-      "slug": "grok-bot-template-troubleshooting",
-      "similarity": 0.740644
-    },
-    {
-      "slug": "meta-muse-first-task",
-      "similarity": 0.733066
+      "similarity": 0.807927
     },
     {
       "slug": "grok-connectors-mcp-phone-calls",
-      "similarity": 0.720194
+      "similarity": 0.785824
     },
     {
-      "slug": "grok-bot-templates",
-      "similarity": 0.719737
+      "slug": "grok-bot-template-troubleshooting",
+      "similarity": 0.781698
     },
     {
       "slug": "meta-muse-ai-agent-phone-calls",
-      "similarity": 0.71639
+      "similarity": 0.776877
     },
     {
-      "slug": "muse-code-mcp-phone-calls",
-      "similarity": 0.700502
+      "slug": "meta-muse-first-task",
+      "similarity": 0.776267
     },
     {
-      "slug": "cascaded-voice-stack-vs-gpt-live",
-      "similarity": 0.697325
+      "slug": "grok-bot-templates",
+      "similarity": 0.768515
+    },
+    {
+      "slug": "phone-calling-mcp-comparison",
+      "similarity": 0.750613
+    },
+    {
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.74548
     }
   ],
   "grok-connectors-mcp-phone-calls": [
     {
       "slug": "cursor-phone-calls",
-      "similarity": 0.775424
+      "similarity": 0.817834
     },
     {
-      "slug": "github-copilot-phone-calls",
-      "similarity": 0.761198
-    },
-    {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.758574
-    },
-    {
-      "slug": "grok-bot-template-troubleshooting",
-      "similarity": 0.745983
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.806713
     },
     {
       "slug": "grok-bot-templates",
-      "similarity": 0.743764
+      "similarity": 0.799642
     },
     {
-      "slug": "goose-mcp-phone-calls",
-      "similarity": 0.731781
+      "slug": "grok-bot-template-troubleshooting",
+      "similarity": 0.79864
     },
     {
-      "slug": "opencode-phone-calls",
-      "similarity": 0.723793
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.795872
     },
     {
-      "slug": "grok-bot-vs-meta-muse",
-      "similarity": 0.720194
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.791925
+    },
+    {
+      "slug": "ai-agent-that-makes-phone-calls",
+      "similarity": 0.791563
+    },
+    {
+      "slug": "github-copilot-phone-calls",
+      "similarity": 0.788063
     }
   ],
   "gym-day-pass": [
     {
       "slug": "gyms-with-sauna-near-me",
-      "similarity": 0.810296
+      "similarity": 0.810295
     },
     {
       "slug": "bonner-springs-ymca-swim-lessons",
@@ -2668,7 +2686,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "gyms-with-sauna-near-me": [
     {
       "slug": "gym-day-pass",
-      "similarity": 0.810296
+      "similarity": 0.810295
     }
   ],
   "hertz-customer-service-number": [
@@ -2760,6 +2778,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     {
       "slug": "firewood-delivery-truckee",
       "similarity": 0.804401
+    },
+    {
+      "slug": "firewood-delivery-wayzata-orono",
+      "similarity": 0.791944
     },
     {
       "slug": "junk-removal-cost",
@@ -2857,7 +2879,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "san-francisco-oral-surgeon-consultation",
-      "similarity": 0.623343
+      "similarity": 0.623342
     },
     {
       "slug": "sabates-eye-centers-pediatric-eye-exam",
@@ -2879,7 +2901,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-lower-spectrum-bill",
-      "similarity": 0.789517
+      "similarity": 0.789518
     },
     {
       "slug": "how-to-lower-verizon-bill",
@@ -2927,7 +2949,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-lower-att-bill",
-      "similarity": 0.789517
+      "similarity": 0.789518
     },
     {
       "slug": "how-to-lower-directv-bill",
@@ -3084,36 +3106,36 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "instinct-ai-phone-calls": [
     {
-      "slug": "claude-phone-calls",
-      "similarity": 0.751609
+      "slug": "phone-calling-mcp-comparison",
+      "similarity": 0.802262
+    },
+    {
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.759221
     },
     {
       "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.750946
+      "similarity": 0.753425
+    },
+    {
+      "slug": "claude-phone-calls",
+      "similarity": 0.751609
     },
     {
       "slug": "cascaded-voice-stack-vs-gpt-live",
       "similarity": 0.746159
     },
     {
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.745343
+    },
+    {
       "slug": "ai-agent-that-makes-phone-calls",
       "similarity": 0.741307
     },
     {
-      "slug": "ai-apps-that-make-calls-for-you",
-      "similarity": 0.724019
-    },
-    {
-      "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.720779
-    },
-    {
-      "slug": "agent-web-research-phone-calls-sf-private-dining",
-      "similarity": 0.716794
-    },
-    {
-      "slug": "twilio-mcp-phone-calls",
-      "similarity": 0.706903
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.73548
     }
   ],
   "iphone-duo-in-stock": [
@@ -3280,32 +3302,32 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.896205
     },
     {
-      "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.819794
-    },
-    {
-      "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.814147
-    },
-    {
       "slug": "opencode-phone-calls",
-      "similarity": 0.794574
+      "similarity": 0.837796
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.793708
+      "similarity": 0.833169
     },
     {
-      "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.774072
+      "slug": "claude-agent-sdk-phone-calls",
+      "similarity": 0.826584
+    },
+    {
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.815659
     },
     {
       "slug": "goose-mcp-phone-calls",
-      "similarity": 0.760153
+      "similarity": 0.804863
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.758142
+      "similarity": 0.796883
+    },
+    {
+      "slug": "devin-phone-calls",
+      "similarity": 0.793673
     }
   ],
   "late-checkout-early-check-in": [
@@ -3422,7 +3444,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "skip-hire-abingdon",
-      "similarity": 0.629409
+      "similarity": 0.629408
     },
     {
       "slug": "how-much-is-a-cord-of-firewood",
@@ -3452,35 +3474,35 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "mastra-mcp-phone-calls": [
     {
       "slug": "opencode-phone-calls",
-      "similarity": 0.868195
-    },
-    {
-      "slug": "devin-phone-calls",
-      "similarity": 0.835367
+      "similarity": 0.890708
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.828316
+      "similarity": 0.868322
+    },
+    {
+      "slug": "devin-phone-calls",
+      "similarity": 0.856442
     },
     {
       "slug": "cline-phone-calls",
-      "similarity": 0.821083
-    },
-    {
-      "slug": "t3-code-phone-calls",
-      "similarity": 0.805819
-    },
-    {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.800857
+      "similarity": 0.851282
     },
     {
       "slug": "goose-mcp-phone-calls",
-      "similarity": 0.800485
+      "similarity": 0.833314
     },
     {
       "slug": "langchain-mcp-phone-calls",
-      "similarity": 0.793708
+      "similarity": 0.833169
+    },
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.831369
+    },
+    {
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.831327
     }
   ],
   "mediacom-customer-service-number": [
@@ -3520,87 +3542,103 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "meta-muse-ai-agent-phone-calls": [
     {
       "slug": "muse-code-mcp-phone-calls",
-      "similarity": 0.930857
+      "similarity": 0.892479
     },
     {
       "slug": "meta-muse-first-task",
-      "similarity": 0.82718
-    },
-    {
-      "slug": "perplexity-phone-calls",
-      "similarity": 0.763476
-    },
-    {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.748737
-    },
-    {
-      "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.744791
+      "similarity": 0.853325
     },
     {
       "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.735801
+      "similarity": 0.837949
     },
     {
-      "slug": "cursor-phone-calls",
-      "similarity": 0.725656
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.837404
+    },
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.790487
+    },
+    {
+      "slug": "mastra-mcp-phone-calls",
+      "similarity": 0.787284
+    },
+    {
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.785673
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.720028
+      "similarity": 0.780307
     }
   ],
   "meta-muse-first-task": [
     {
       "slug": "meta-muse-ai-agent-phone-calls",
-      "similarity": 0.82718
+      "similarity": 0.853325
     },
     {
       "slug": "muse-code-mcp-phone-calls",
-      "similarity": 0.803269
+      "similarity": 0.784099
     },
     {
       "slug": "grok-bot-vs-meta-muse",
-      "similarity": 0.733066
-    },
-    {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.694612
+      "similarity": 0.776267
     },
     {
       "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.694132
-    },
-    {
-      "slug": "langchain-mcp-phone-calls",
-      "similarity": 0.682163
+      "similarity": 0.771244
     },
     {
       "slug": "ai-apps-that-make-calls-for-you",
-      "similarity": 0.669194
+      "similarity": 0.753636
     },
     {
-      "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.662479
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.740792
+    },
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.73613
+    },
+    {
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.724797
     }
   ],
   "meta-muse-supplier-quotes": [
     {
       "slug": "meta-muse-ai-agent-phone-calls",
-      "similarity": 0.668127
+      "similarity": 0.738906
     },
     {
       "slug": "meta-muse-first-task",
-      "similarity": 0.647238
+      "similarity": 0.710195
     },
     {
       "slug": "grok-bot-vs-meta-muse",
-      "similarity": 0.636163
+      "similarity": 0.695437
+    },
+    {
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.639971
     },
     {
       "slug": "muse-code-mcp-phone-calls",
-      "similarity": 0.630604
+      "similarity": 0.630084
+    },
+    {
+      "slug": "agent-web-research-phone-calls-sf-private-dining",
+      "similarity": 0.625349
+    },
+    {
+      "slug": "grok-bot-reusable-skills",
+      "similarity": 0.625221
+    },
+    {
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.621493
     }
   ],
   "metlife-pet-insurance-phone-number": [
@@ -3640,7 +3678,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "windstream-customer-service",
-      "similarity": 0.614165
+      "similarity": 0.614166
     },
     {
       "slug": "xfinity-customer-service-number",
@@ -3694,11 +3732,11 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "muse-code-mcp-phone-calls": [
     {
       "slug": "meta-muse-ai-agent-phone-calls",
-      "similarity": 0.930857
+      "similarity": 0.892479
     },
     {
       "slug": "meta-muse-first-task",
-      "similarity": 0.803269
+      "similarity": 0.784099
     },
     {
       "slug": "t3-code-phone-calls",
@@ -3709,54 +3747,54 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.761573
     },
     {
-      "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.760176
-    },
-    {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.753054
+      "similarity": 0.744351
     },
     {
-      "slug": "codex-phone-calls",
-      "similarity": 0.744628
+      "slug": "phone-calling-mcp-comparison",
+      "similarity": 0.738068
+    },
+    {
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.734186
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.736316
+      "similarity": 0.732185
     }
   ],
   "n8n-mcp-phone-calls": [
     {
-      "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.826373
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.84256
     },
     {
-      "slug": "langchain-mcp-phone-calls",
-      "similarity": 0.814147
+      "slug": "meta-muse-ai-agent-phone-calls",
+      "similarity": 0.837949
     },
     {
       "slug": "ai-apps-that-make-calls-for-you",
-      "similarity": 0.791752
+      "similarity": 0.837433
     },
     {
-      "slug": "openai-agents-sdk-phone-calls",
-      "similarity": 0.78764
+      "slug": "mastra-mcp-phone-calls",
+      "similarity": 0.831327
     },
     {
-      "slug": "vercel-ai-sdk-phone-calls",
-      "similarity": 0.770115
+      "slug": "perplexity-phone-calls",
+      "similarity": 0.829528
     },
     {
-      "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.766654
+      "slug": "ai-agent-that-makes-phone-calls",
+      "similarity": 0.826603
     },
     {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.761226
+      "slug": "opencode-phone-calls",
+      "similarity": 0.825874
     },
     {
-      "slug": "openai-realtime-voices-phone-calls",
-      "similarity": 0.758319
+      "slug": "codex-phone-calls",
+      "similarity": 0.820014
     }
   ],
   "need-dress-shoes-today": [
@@ -3863,12 +3901,20 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.896205
     },
     {
-      "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.848387
+      "slug": "opencode-phone-calls",
+      "similarity": 0.876121
     },
     {
-      "slug": "opencode-phone-calls",
-      "similarity": 0.819213
+      "slug": "claude-agent-sdk-phone-calls",
+      "similarity": 0.866799
+    },
+    {
+      "slug": "mastra-mcp-phone-calls",
+      "similarity": 0.823646
+    },
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.817291
     },
     {
       "slug": "vercel-ai-sdk-phone-calls",
@@ -3876,29 +3922,21 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.78764
+      "similarity": 0.796318
     },
     {
-      "slug": "ai-agent-that-makes-phone-calls",
-      "similarity": 0.786085
-    },
-    {
-      "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.773704
-    },
-    {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.767494
+      "slug": "devin-phone-calls",
+      "similarity": 0.795482
     }
   ],
   "openai-realtime-voices-phone-calls": [
     {
-      "slug": "ai-apps-that-make-calls-for-you",
-      "similarity": 0.799054
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.817079
     },
     {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.782592
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.788318
     },
     {
       "slug": "ai-agent-that-makes-phone-calls",
@@ -3910,87 +3948,87 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.758319
+      "similarity": 0.754903
+    },
+    {
+      "slug": "opencode-phone-calls",
+      "similarity": 0.740755
     },
     {
       "slug": "openai-agents-sdk-phone-calls",
       "similarity": 0.738877
     },
     {
-      "slug": "cascaded-voice-stack-vs-gpt-live",
-      "similarity": 0.731161
-    },
-    {
       "slug": "chatgpt-phone-calls",
-      "similarity": 0.728081
+      "similarity": 0.736372
     }
   ],
   "openclaw-phone-calls": [
     {
       "slug": "opencode-phone-calls",
-      "similarity": 0.845741
+      "similarity": 0.876872
     },
     {
-      "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.800857
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.84256
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.798169
+      "similarity": 0.841986
+    },
+    {
+      "slug": "mastra-mcp-phone-calls",
+      "similarity": 0.831369
     },
     {
       "slug": "devin-phone-calls",
-      "similarity": 0.796702
-    },
-    {
-      "slug": "t3-code-phone-calls",
-      "similarity": 0.795453
-    },
-    {
-      "slug": "cline-phone-calls",
-      "similarity": 0.788838
-    },
-    {
-      "slug": "openai-realtime-voices-phone-calls",
-      "similarity": 0.782592
+      "similarity": 0.825884
     },
     {
       "slug": "gemini-phone-calls",
-      "similarity": 0.780778
+      "similarity": 0.819612
+    },
+    {
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.819154
+    },
+    {
+      "slug": "ai-agent-that-makes-phone-calls",
+      "similarity": 0.818339
     }
   ],
   "opencode-phone-calls": [
     {
-      "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.868195
-    },
-    {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.857218
+      "similarity": 0.90795
     },
     {
-      "slug": "t3-code-phone-calls",
-      "similarity": 0.857173
+      "slug": "mastra-mcp-phone-calls",
+      "similarity": 0.890708
     },
     {
       "slug": "devin-phone-calls",
-      "similarity": 0.854886
+      "similarity": 0.885781
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.845741
-    },
-    {
-      "slug": "goose-mcp-phone-calls",
-      "similarity": 0.826785
-    },
-    {
-      "slug": "cline-phone-calls",
-      "similarity": 0.824225
+      "similarity": 0.876872
     },
     {
       "slug": "openai-agents-sdk-phone-calls",
-      "similarity": 0.819213
+      "similarity": 0.876121
+    },
+    {
+      "slug": "goose-mcp-phone-calls",
+      "similarity": 0.861972
+    },
+    {
+      "slug": "cline-phone-calls",
+      "similarity": 0.85993
+    },
+    {
+      "slug": "codex-phone-calls",
+      "similarity": 0.839514
     }
   ],
   "out-the-door-price": [
@@ -4120,71 +4158,71 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "peloton-customer-service-number": [],
   "perplexity-phone-calls": [
     {
-      "slug": "claude-phone-calls",
-      "similarity": 0.783965
+      "slug": "gemini-phone-calls",
+      "similarity": 0.838939
     },
     {
       "slug": "meta-muse-ai-agent-phone-calls",
-      "similarity": 0.763476
-    },
-    {
-      "slug": "gemini-phone-calls",
-      "similarity": 0.760057
-    },
-    {
-      "slug": "openclaw-phone-calls",
-      "similarity": 0.744511
+      "similarity": 0.837404
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.743452
+      "similarity": 0.830084
     },
     {
-      "slug": "muse-code-mcp-phone-calls",
-      "similarity": 0.732076
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.829528
+    },
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.814457
     },
     {
       "slug": "opencode-phone-calls",
-      "similarity": 0.73195
+      "similarity": 0.806613
     },
     {
-      "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.726356
+      "slug": "ai-agent-that-makes-phone-calls",
+      "similarity": 0.801363
+    },
+    {
+      "slug": "claude-agent-sdk-phone-calls",
+      "similarity": 0.796082
     }
   ],
   "phoenician-golf-club-tee-times": [],
   "phone-calling-mcp-comparison": [
     {
       "slug": "twilio-mcp-phone-calls",
-      "similarity": 0.891371
-    },
-    {
-      "slug": "t3-code-phone-calls",
-      "similarity": 0.810589
-    },
-    {
-      "slug": "schedule-phone-calls-claude-code-codex",
-      "similarity": 0.803164
-    },
-    {
-      "slug": "ai-phone-tree-navigation",
-      "similarity": 0.793458
+      "similarity": 0.844578
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.780303
+      "similarity": 0.842386
     },
     {
       "slug": "opencode-phone-calls",
-      "similarity": 0.77964
+      "similarity": 0.826962
     },
     {
       "slug": "codex-phone-calls",
-      "similarity": 0.773927
+      "similarity": 0.810913
     },
     {
-      "slug": "muse-code-mcp-phone-calls",
-      "similarity": 0.760176
+      "slug": "instinct-ai-phone-calls",
+      "similarity": 0.802262
+    },
+    {
+      "slug": "cascaded-voice-stack-vs-gpt-live",
+      "similarity": 0.799347
+    },
+    {
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.793593
+    },
+    {
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.786231
     }
   ],
   "piedmont-natural-gas-customer-service": [
@@ -4704,7 +4742,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "how-to-find-a-new-primary-care-doctor",
-      "similarity": 0.623343
+      "similarity": 0.623342
     },
     {
       "slug": "reschedule-dentist-appointment",
@@ -4759,24 +4797,24 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.818532
     },
     {
-      "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.803164
-    },
-    {
-      "slug": "codex-phone-calls",
-      "similarity": 0.788237
-    },
-    {
       "slug": "t3-code-phone-calls",
       "similarity": 0.787753
     },
     {
-      "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.743041
+      "slug": "phone-calling-mcp-comparison",
+      "similarity": 0.77698
+    },
+    {
+      "slug": "codex-phone-calls",
+      "similarity": 0.75905
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.737514
+      "similarity": 0.729689
+    },
+    {
+      "slug": "claude-agent-sdk-phone-calls",
+      "similarity": 0.729273
     }
   ],
   "serviceontario-phone-number": [
@@ -4809,7 +4847,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "maggy-maid-sacramento",
-      "similarity": 0.629409
+      "similarity": 0.629408
     },
     {
       "slug": "how-much-is-a-cord-of-firewood",
@@ -4821,6 +4859,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     }
   ],
   "snow-removal-wayzata-orono": [
+    {
+      "slug": "firewood-delivery-wayzata-orono",
+      "similarity": 0.764589
+    },
     {
       "slug": "firewood-delivery-truckee",
       "similarity": 0.633358
@@ -4967,7 +5009,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "ps5-in-stock-near-me",
-      "similarity": 0.6292
+      "similarity": 0.629199
     },
     {
       "slug": "pokemon-30th-anniversary-cards-in-stock",
@@ -4985,7 +5027,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "suitsupply-customer-service": [
     {
       "slug": "fabletics-customer-service",
-      "similarity": 0.719139
+      "similarity": 0.719138
     },
     {
       "slug": "wayfair-customer-service",
@@ -5005,7 +5047,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "walmart-customer-service-number",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5044,36 +5086,36 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "t3-code-phone-calls": [
     {
-      "slug": "opencode-phone-calls",
-      "similarity": 0.857173
-    },
-    {
       "slug": "twilio-mcp-phone-calls",
       "similarity": 0.839716
     },
     {
+      "slug": "opencode-phone-calls",
+      "similarity": 0.825143
+    },
+    {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.814715
-    },
-    {
-      "slug": "codex-phone-calls",
-      "similarity": 0.812924
-    },
-    {
-      "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.810589
+      "similarity": 0.801632
     },
     {
       "slug": "mastra-mcp-phone-calls",
-      "similarity": 0.805819
+      "similarity": 0.789626
     },
     {
-      "slug": "devin-phone-calls",
-      "similarity": 0.799122
+      "slug": "schedule-phone-calls-claude-code-codex",
+      "similarity": 0.787753
+    },
+    {
+      "slug": "phone-calling-mcp-comparison",
+      "similarity": 0.784875
+    },
+    {
+      "slug": "claude-code-phone-calls",
+      "similarity": 0.779131
     },
     {
       "slug": "openclaw-phone-calls",
-      "similarity": 0.795453
+      "similarity": 0.775684
     }
   ],
   "the-base-glamping-yugawara": [
@@ -5153,7 +5195,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   "twilio-mcp-phone-calls": [
     {
       "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.891371
+      "similarity": 0.844578
     },
     {
       "slug": "t3-code-phone-calls",
@@ -5169,19 +5211,19 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.800805
-    },
-    {
-      "slug": "codex-phone-calls",
-      "similarity": 0.799497
-    },
-    {
-      "slug": "opencode-phone-calls",
-      "similarity": 0.782588
+      "similarity": 0.782479
     },
     {
       "slug": "claude-code-phone-calls",
       "similarity": 0.777673
+    },
+    {
+      "slug": "muse-code-mcp-phone-calls",
+      "similarity": 0.761573
+    },
+    {
+      "slug": "codex-phone-calls",
+      "similarity": 0.759414
     }
   ],
   "uber-customer-service-number": [
@@ -5393,12 +5435,12 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.706994
     },
     {
-      "slug": "phone-calling-mcp-comparison",
-      "similarity": 0.706896
-    },
-    {
       "slug": "twilio-mcp-phone-calls",
       "similarity": 0.702293
+    },
+    {
+      "slug": "phone-calling-mcp-comparison",
+      "similarity": 0.698816
     },
     {
       "slug": "schedule-phone-calls-claude-code-codex",
@@ -5455,6 +5497,10 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
   ],
   "vercel-ai-sdk-phone-calls": [
     {
+      "slug": "ai-apps-that-make-calls-for-you",
+      "similarity": 0.82209
+    },
+    {
       "slug": "openai-agents-sdk-phone-calls",
       "similarity": 0.808847
     },
@@ -5463,28 +5509,24 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
       "similarity": 0.790596
     },
     {
-      "slug": "n8n-mcp-phone-calls",
-      "similarity": 0.770115
-    },
-    {
-      "slug": "ai-apps-that-make-calls-for-you",
-      "similarity": 0.767662
-    },
-    {
       "slug": "claude-agent-sdk-phone-calls",
-      "similarity": 0.744316
+      "similarity": 0.786433
     },
     {
-      "slug": "langchain-mcp-phone-calls",
-      "similarity": 0.738969
+      "slug": "n8n-mcp-phone-calls",
+      "similarity": 0.78316
     },
     {
-      "slug": "gpt-live-1-1-upgrade",
-      "similarity": 0.723576
+      "slug": "openclaw-phone-calls",
+      "similarity": 0.770212
     },
     {
-      "slug": "agent-web-research-phone-calls-sf-private-dining",
-      "similarity": 0.711787
+      "slug": "codex-phone-calls",
+      "similarity": 0.759635
+    },
+    {
+      "slug": "meta-muse-ai-agent-phone-calls",
+      "similarity": 0.750419
     }
   ],
   "verizon-customer-service": [
@@ -5641,7 +5683,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "suitsupply-customer-service",
-      "similarity": 0.665718
+      "similarity": 0.665719
     },
     {
       "slug": "best-buy-customer-service-number",
@@ -5833,7 +5875,7 @@ export const RELATED_INDEX: Record<string, { slug: string; similarity: number }[
     },
     {
       "slug": "monkeybrains-customer-service-number",
-      "similarity": 0.614165
+      "similarity": 0.614166
     },
     {
       "slug": "verizon-customer-service",
