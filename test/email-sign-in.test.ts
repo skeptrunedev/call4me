@@ -201,8 +201,9 @@ test('a next page after a slash and a backslash is another site to a browser, an
 
 test('a throwaway inbox opens no account: no email goes out, from the page or the API, and the page says why', async (t) => {
   const s = site(t);
-  // The domains one person scripted 25 accounts on for the free $5 each (Nov 27), and a subdomain of one.
-  for (const email of ['qe0gk7kaz2mv@euploading.com', 'ixerkhsp@guerrillamailblock.com', 'a@mail.guerrillamailblock.com']) {
+  // The domains one person scripted 25 accounts on for the free $5 each (Nov 27), a subdomain of one, and the
+  // catch-all domain he moved to next, which the public list lacks.
+  for (const email of ['qe0gk7kaz2mv@euploading.com', 'ixerkhsp@guerrillamailblock.com', 'a@mail.guerrillamailblock.com', 'xmeq0ypf528k@siteradar.site']) {
     const res = await s.browser().post('/login/email', { email, next: '/account' });
     assert.equal(res.status, 400, email);
     assert.match(await res.text(), /call4me can&#39;t open an account for a throwaway inbox\. use your own email, or sign in with google or x\./);

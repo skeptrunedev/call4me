@@ -8,9 +8,16 @@ import { THROWAWAY_DOMAINS } from './throwaway-domains.generated';
  */
 let domains: Set<string> | undefined;
 
+/**
+ * Domains the public list lacks that free-credit farmers made up addresses on, refused the same
+ * way. Kept here because npm run throwaway-domains replaces the generated list. siteradar.site:
+ * a catch-all domain the same person moved to once throwaway inboxes were refused (Nov 27).
+ */
+const ALSO_REFUSED = ['siteradar.site'];
+
 /** Whether an address is at a throwaway inbox service, or at a subdomain of one. */
 export function throwawayEmail(email: string): boolean {
-  domains ??= new Set(THROWAWAY_DOMAINS.split('\n'));
+  domains ??= new Set([...THROWAWAY_DOMAINS.split('\n'), ...ALSO_REFUSED]);
   const labels = email.slice(email.lastIndexOf('@') + 1).trim().toLowerCase().replace(/\.$/, '').split('.');
   for (let i = 0; i < labels.length - 1; i++) if (domains.has(labels.slice(i).join('.'))) return true;
   return false;
