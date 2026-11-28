@@ -112,12 +112,12 @@ const all = renderAll(POST_SOURCES);
 const engagement = new Map(all.map(p => [p.slug, { likes: 0, comments: 0 }]));
 const pages = paginatePosts(all).totalPages;
 for (let number = 1; number <= pages; number++) {
-  await page(blogIndexPath({ page: number }), <BlogIndex {...common} {...paginatePosts(all, String(number))} searchCatalog={all} engagement={engagement} tab="latest" q="" subscribers={0} agentPrompt={prompts.blogPrompt(origin, null)} />);
+  await page(blogIndexPath({ page: number }), <BlogIndex {...common} {...paginatePosts(all, String(number))} searchCatalog={all} engagement={engagement} tab="latest" q="" agentPrompt={prompts.blogPrompt(origin, null)} />);
 }
 await page('/blog/archive', <BlogArchive {...common} groups={archive(all)} engagement={engagement} agentPrompt={prompts.blogPrompt(origin, null)} />);
 for (const [i, post] of all.entries()) {
   if (post.paid) continue; // Access-controlled articles always use the authenticated server.
-  await page(`/blog/${post.slug}`, <BlogPost {...common} supporter={false} post={post} older={all[i + 1] ?? null} newer={all[i - 1] ?? null} related={related(post, all)} engagement={{ likes: 0, comments: 0 }} liked={false} comments={[]} subscribers={0} unlocked agentPrompt={prompts.postPrompt(origin, null, post.slug, post.title)} />);
+  await page(`/blog/${post.slug}`, <BlogPost {...common} supporter={false} post={post} older={all[i + 1] ?? null} newer={all[i - 1] ?? null} related={related(post, all)} engagement={{ likes: 0, comments: 0 }} liked={false} comments={[]} unlocked agentPrompt={prompts.postPrompt(origin, null, post.slug, post.title)} />);
 }
 await mkdir(join(destination, 'blog'), { recursive: true });
 await writeFile(join(destination, 'blog/feed.xml'), atomFeed(origin, all));

@@ -189,8 +189,9 @@ Reddit landing records its attribution before issuing the visit cookie.
 ## Blog
 
 `/blog` is markdown files in `src/content/blog` (one per post, listed in `index.ts`, headline image at
-`public/static/blog/<slug>.svg`), with an Atom feed, likes, comments, an email newsletter (sent from
-`/admin/blog`, for the `ADMIN_EMAILS` accounts), and paid posts for monthly supporters.
+`public/static/blog/<slug>.svg`), with Atom and RSS feeds, likes, comments, and paid posts for monthly
+supporters. There is no email sign-up form (bots used it to mail strangers); posts are mailed from
+`/admin/blog`, for the `ADMIN_EMAILS` accounts, only to readers who subscribed before it was removed.
 
 Related articles use local CPU embeddings, ranked within editorial subjects from
 `scripts/related-topics.ts`. After adding an article or changing its SEO title, tags or subject,

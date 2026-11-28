@@ -136,7 +136,7 @@ test('crawlers and AI fetchers get the shared public page with no first touch co
 
 test('dynamic query variants cannot be mistaken for their base static page', async () => {
   const h = harness();
-  for (const path of ['/blog?q=phone', '/blog?q=', '/blog?tab=top', '/blog?tab=invalid', '/blog?subscribed=sent', '/blog?live', '/?live=1', '/blog?page=1', '/blog?page=0', '/blog?page=02', '/blog?page=-2', '/blog?page=2.5', '/blog?page=999999', '/examples?page=2']) {
+  for (const path of ['/blog?q=phone', '/blog?q=', '/blog?tab=top', '/blog?tab=invalid', '/blog?live', '/?live=1', '/blog?page=1', '/blog?page=0', '/blog?page=02', '/blog?page=-2', '/blog?page=2.5', '/blog?page=999999', '/examples?page=2']) {
     assert.equal(await h.respond(path), null, path);
   }
   assert.equal(h.requests.length, 0);
@@ -181,7 +181,7 @@ test('writes, accounts, payment completion, subscription tokens, and unpublished
       assert.equal(await h.respond(path, { method }), null, `${method} ${path}`);
     }
   }
-  for (const path of ['/account', '/account/calls/call_secret', '/welcome?session_id=secret', '/login', '/oauth/consent', '/admin', '/blog/support', '/blog/subscribe/confirm?token=secret', '/blog/unsubscribe?token=secret', '/blog/not-published', '/api/auth/get-session']) {
+  for (const path of ['/account', '/account/calls/call_secret', '/welcome?session_id=secret', '/login', '/oauth/consent', '/admin', '/blog/support', '/blog/unsubscribe?token=secret', '/blog/not-published', '/api/auth/get-session']) {
     assert.equal(await h.respond(path), null, path);
     assert.equal(Object.hasOwn(STATIC_PAGES, new URL(path, origin).pathname), false, path);
   }

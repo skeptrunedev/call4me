@@ -13,15 +13,20 @@ import { BlogArchive, BlogIndex, BlogPost, SubscribeConfirm, SubscribeResult, ty
 
 /**
  * The blog: index with tabs and search, archive, posts with likes and comments, the
- * newsletter (subscribe, confirm, unsubscribe), the supporter tier for paid posts, and an
- * Atom and RSS feeds. Posts are markdown files in src/content/blog. Ported from skillbay.
+ * unsubscribe link in newsletter emails, the supporter tier for paid posts, and Atom and RSS
+ * feeds. Posts are markdown files in src/content/blog. Ported from skillbay.
+ *
+ * There is no email sign-up. A public form that mails a confirmation link to any address
+ * let bots aim our mail at strangers: 1,373 unverified sign-ups against 2 confirmed by
+ * 2026-11-27, and every bad address bounced against the me@call4.me sender. Readers follow
+ * by RSS; the people already subscribed still get posts from the admin page.
  */
 export const blog = new Hono<AppEnv>();
 
 let cache: Post[] | null = null;
 export const posts = (): Post[] => (cache ??= renderAll(POST_SOURCES));
 
-const svc = (c: AppContext, db: D1Database | D1DatabaseSession = c.env.DB) => blogService(db, messengerFor(c.env), c.env.APP_NAME, origin(c));
+const svc = (c: AppContext, db: D1Database | D1DatabaseSession = c.env.DB) => blogService(db, messengerFor(c.env), origin(c));
 
 /**
  * Pages read likes, comments, and counts from the nearest D1 replica; the primary is in one
@@ -74,7 +79,7 @@ blog.get('/', async (c) => {
   const q = (c.req.query('q') ?? '').trim().slice(0, 100);
   const crawler = !c.get('account') && isCrawler(c);
   const s = crawler ? null : svc(c, replica(c));
-  const [engagement, subscribers] = crawler ? [emptyEngagement(all), 0] as const : await Promise.all([s!.engagement(all.map((p) => p.slug)), s!.subscriberCount()]);
+  const engagement = crawler ? emptyEngagement(all) : await s!.engagement(all.map((p) => p.slug));
   let list = q ? searchPosts(all, q) : all;
   const score = (p: Post) => {
     const e = engagement.get(p.slug)!;
@@ -87,7 +92,7 @@ blog.get('/', async (c) => {
     return c.redirect(blogIndexPath({ page: pagination.page, tab, q }), 302);
   }
   const agentPrompt = blogPrompt(origin(c), crawler ? null : await viewerKey(c));
-  return c.html(<BlogIndex signedIn={Boolean(c.get('account'))} {...pagination} searchCatalog={all} engagement={engagement} tab={tab} q={q} subscribers={subscribers} subscribed={c.req.query('subscribed')} agentPrompt={agentPrompt} />);
+  return c.html(<BlogIndex signedIn={Boolean(c.get('account'))} {...pagination} searchCatalog={all} engagement={engagement} tab={tab} q={q} agentPrompt={agentPrompt} />);
 });
 
 blog.get('/archive', async (c) => {
@@ -101,33 +106,8 @@ blog.get('/rss.xml', (c) => c.body(rssFeed(origin(c), posts()), 200, { 'content-
 
 // ---- newsletter
 
-blog.post('/subscribe', async (c) => {
-  const form = await c.req.formData();
-  const email = field(form, 'email', 200);
-  // Back to the page the box was on: the index or a post (a plain path, no query).
-  const next = field(form, 'next', 200);
-  const back = /^\/blog(\/[a-z0-9-]+)?$/.test(next) ? next : '/blog';
-  try {
-    await svc(c).subscribe(email, clientIp(c));
-    return c.redirect(`${back}?subscribed=sent#subscribe`, 303);
-  } catch (err) {
-    if (err instanceof BlogError) return c.redirect(`${back}?subscribed=${encodeURIComponent(err.message)}#subscribe`, 303);
-    throw err;
-  }
-});
-
-// Confirm and unsubscribe links from emails: GET only shows a button, because mail scanners
-// open every link in an email; the change itself is a POST (like the drip's /unsubscribe).
-blog.get('/subscribe/confirm', async (c) => {
-  const row = await svc(c).byToken(c.req.query('token') ?? '');
-  return c.html(<SubscribeConfirm signedIn={Boolean(c.get('account'))} action="/blog/subscribe/confirm" token={row.token} title="confirm your subscription" text={`get new call4me posts at ${row.email}? one email per post, and every one has an unsubscribe link.`} button="subscribe" />);
-});
-
-blog.post('/subscribe/confirm', async (c) => {
-  const row = await svc(c).confirm(field(await c.req.formData(), 'token', 100));
-  return c.html(<SubscribeResult signedIn={Boolean(c.get('account'))} title="subscribed" text={`${row.email} will get new posts by email. every email has an unsubscribe link.`} />);
-});
-
+// The unsubscribe link from post emails: GET only shows a button, because mail scanners open
+// every link in an email; the change itself is a POST (like the drip's /unsubscribe).
 blog.get('/unsubscribe', async (c) => {
   const row = await svc(c).byToken(c.req.query('token') ?? '');
   return c.html(<SubscribeConfirm signedIn={Boolean(c.get('account'))} action="/blog/unsubscribe" token={row.token} title="unsubscribe" text={`stop sending call4me blog posts to ${row.email}?`} button="unsubscribe" />);
@@ -135,7 +115,7 @@ blog.get('/unsubscribe', async (c) => {
 
 blog.post('/unsubscribe', async (c) => {
   await svc(c).unsubscribe(field(await c.req.formData(), 'token', 100));
-  return c.html(<SubscribeResult signedIn={Boolean(c.get('account'))} title="unsubscribed" text="no more emails from the blog. you can subscribe again any time." />);
+  return c.html(<SubscribeResult signedIn={Boolean(c.get('account'))} title="unsubscribed" text="no more emails from the blog." />);
 });
 
 // ---- supporters (paid posts)
@@ -182,9 +162,9 @@ async function render(c: AppContext, slug: string, extra: { commentValues?: Reco
   const { post, i, all } = find(slug);
   const crawler = !c.get('account') && isCrawler(c);
   const s = crawler ? null : svc(c, replica(c));
-  const [engagement, liked, comments, subscribers, who, key] = crawler
-    ? [emptyEngagement([post]), false, [] as CommentRow[], 0, { signedIn: false, supporter: false, unlocked: false }, null] as const
-    : await Promise.all([s!.engagement([slug]), s!.liked(slug, reader(c)), s!.comments(slug), s!.subscriberCount(), standing(c), viewerKey(c)]);
+  const [engagement, liked, comments, who, key] = crawler
+    ? [emptyEngagement([post]), false, [] as CommentRow[], { signedIn: false, supporter: false, unlocked: false }, null] as const
+    : await Promise.all([s!.engagement([slug]), s!.liked(slug, reader(c)), s!.comments(slug), standing(c), viewerKey(c)]);
   return c.html(
     <BlogPost
       signedIn={who.signedIn}
@@ -196,9 +176,7 @@ async function render(c: AppContext, slug: string, extra: { commentValues?: Reco
       engagement={engagement.get(slug)!}
       liked={liked}
       comments={comments}
-      subscribers={subscribers}
       unlocked={!post.paid || who.unlocked}
-      subscribed={c.req.query('subscribed')}
       agentPrompt={postPrompt(origin(c), key, post.slug, post.title)}
       {...extra}
     />,

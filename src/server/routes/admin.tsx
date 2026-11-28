@@ -17,7 +17,7 @@ admin.use('*', async (c, next) => {
   await next();
 });
 
-const blogOf = (c: AppContext) => blogService(c.env.DB, messengerFor(c.env), c.env.APP_NAME, origin(c));
+const blogOf = (c: AppContext) => blogService(c.env.DB, messengerFor(c.env), origin(c));
 
 admin.get('/blog', async (c) => {
   const b = blogOf(c);

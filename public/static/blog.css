@@ -22,7 +22,7 @@
   line-height: 1.5;
 }
 
-.page-blog .subscribe {
+.page-blog .follow {
   margin: 40px 0;
   padding: 32px;
   border: 0;
@@ -30,55 +30,16 @@
   background: #f6f6f2;
 }
 
-.page-blog .subscribe > b {
+.page-blog .follow > b {
   font-size: 22px;
   line-height: 1.25;
   letter-spacing: -0.035em;
 }
 
-.page-blog .subscribe > .small {
+.page-blog .follow > .small {
   max-width: 720px;
   margin-top: 16px;
   line-height: 1.6;
-}
-
-.page-blog .subscribe.compact {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px 24px;
-  margin: 32px 0 0;
-  padding: 24px 28px;
-}
-
-.page-blog .subscribe-form {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 20px 0 0;
-}
-
-.page-blog .compact .subscribe-form {
-  margin: 0 0 0 auto;
-}
-
-.page-blog .subscribe-form input[type=email] {
-  flex: 1 1 200px;
-  width: 280px;
-  max-width: 100%;
-  min-width: 0;
-}
-
-.page-blog .subscribe-form button {
-  flex: 0 0 auto;
-  background: #ffb000;
-  color: #151515;
-  border-color: #ffb000;
-}
-
-.page-blog .subscribe-form .err {
-  flex-basis: 100%;
 }
 
 .page-blog .featured-row {
@@ -570,16 +531,6 @@
   .page-blog .featured-row .card-title {
     font-size: 23px;
   }
-
-  .page-blog .subscribe.compact {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .page-blog .compact .subscribe-form {
-    width: 100%;
-    margin: 0;
-  }
 }
 
 @media (max-width: 700px) {
@@ -633,7 +584,7 @@
     width: 100%;
   }
 
-  .page-blog :is(.subscribe, .subscribe.compact, .author-box) {
+  .page-blog :is(.follow, .author-box) {
     padding: 24px;
   }
 
@@ -657,9 +608,5 @@
 @media (max-width: 400px) {
   .page-blog .card {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .page-blog .subscribe-form button {
-    width: 100%;
   }
 }

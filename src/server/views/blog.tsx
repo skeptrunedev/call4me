@@ -13,7 +13,7 @@ import { CopyBlock, Layout } from './layout';
 
 /**
  * The blog, laid out the way a newsletter site is (featured posts with headline images,
- * a card list with authors and engagement counts, tabs, search, a subscribe box,
+ * a card list with authors and engagement counts, tabs, search, a follow box,
  * recommendations, an archive; on a post: hero image, dek, bylines with avatars, share
  * links, like button, comments, related posts) but drawn like the rest of call4me.
  * Ported from skillbay's views/blog.tsx.
@@ -59,28 +59,14 @@ export const BlogComments: FC<{ comments: CommentRow[] }> = ({ comments }) => <>
   ))}
 </>;
 
-/** `anchor` marks the box that shows the result of a sign-up (the redirect lands on #subscribe). */
-const SubscribeBox: FC<{ signedIn: boolean; count: number; next: string; compact?: boolean; anchor?: boolean; email?: string; error?: string; sent?: boolean }> = ({ signedIn, count, next, compact, anchor, email, error, sent }) => (
-  <div class={`box subscribe${compact ? ' compact' : ''}`} id={anchor ? 'subscribe' : undefined}>
-    <b>get new posts by email</b>
-    <span class="muted" data-site-subscribers aria-busy={useStaticRender() ? 'true' : undefined}>
-      {useStaticRender() ? ' / loading reader count' : count > 0 && <> / {count} {count === 1 ? 'reader' : 'readers'} subscribed</>}
-    </span>
-    {sent ? (
-      <p class="ok">check your inbox: click the link we sent to confirm.</p>
-    ) : (
-      <form class="inline-form subscribe-form" method="post" action="/blog/subscribe">
-        <input type="hidden" name="next" value={next} />
-        <input type="email" name="email" placeholder="you@example.com" aria-label="email" value={email ?? ''} maxlength={200} required /> <button type="submit">subscribe</button>
-        {error && <span class="err"> {error}</span>}
-      </form>
-    )}
-    {!compact && (
-      <div class="small muted">
-        no tracking, no spam; one email per post, unsubscribe in one click. or use the <a href="/blog/rss.xml">RSS feed</a>. posts marked <span class="badge">paid</span> need a{' '}
-        <a href={supportPath(signedIn, next)}>supporter subscription</a> (monthly, cancel any time).
-      </div>
-    )}
+/** How to follow the blog: the RSS feed (there is no email sign-up; see routes/blog.tsx) and the supporter tier for paid posts. */
+const FollowBox: FC<{ signedIn: boolean; next: string }> = ({ signedIn, next }) => (
+  <div class="box follow">
+    <b>follow new posts</b>
+    <div class="small muted">
+      add the <a href="/blog/rss.xml">RSS feed</a> to your reader. posts marked <span class="badge">paid</span> need a{' '}
+      <a href={supportPath(signedIn, next)}>supporter subscription</a> (monthly, cancel any time).
+    </div>
   </div>
 );
 
@@ -112,10 +98,8 @@ export const BlogIndex: FC<{
   engagement: Map<string, Engagement>;
   tab: Tab;
   q: string;
-  subscribers: number;
-  subscribed?: 'sent' | string;
   agentPrompt: string;
-}> = ({ signedIn, posts, searchCatalog = posts, page, totalPages, total, engagement, tab, q, subscribers, subscribed, agentPrompt }) => {
+}> = ({ signedIn, posts, searchCatalog = posts, page, totalPages, total, engagement, tab, q, agentPrompt }) => {
   const featured = !q && tab === 'latest' && page === 1 ? posts.slice(0, 3) : [];
   const rest = posts.slice(featured.length);
   const path = blogIndexPath({ page, tab, q });
@@ -142,7 +126,6 @@ export const BlogIndex: FC<{
         <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
         <p class="muted">notes on AI agents that make phone calls for you.</p>
         <p class="small"><a href="/superintelligence-calling-index">Superintelligence Calling Index</a>: compare personal superintelligence phone calling tools, hear the evidence and download the dataset.</p>
-        <SubscribeBox signedIn={signedIn} count={subscribers} next="/blog" compact anchor sent={subscribed === 'sent'} error={subscribed && subscribed !== 'sent' ? subscribed : undefined} />
       </div>
 
       {featured.length > 0 && (
@@ -175,7 +158,7 @@ export const BlogIndex: FC<{
           {total} {total === 1 ? 'post' : 'posts'} matching "{q}". <a href="/blog">clear</a>
         </p>
       )}
-      {rest.length === 0 && featured.length === 0 && <p class="muted">{q ? 'no posts match that.' : 'no posts yet. subscribe above and the first one lands in your inbox.'}</p>}
+      {rest.length === 0 && featured.length === 0 && <p class="muted">{q ? 'no posts match that.' : 'no posts yet.'}</p>}
       {rest.map((p) => (
         <Card p={p} e={engagement.get(p.slug)} />
       ))}
@@ -202,7 +185,7 @@ export const BlogIndex: FC<{
           </li>
         ))}
       </ul>
-      <SubscribeBox signedIn={signedIn} count={subscribers} next="/blog" />
+      <FollowBox signedIn={signedIn} next="/blog" />
     </Layout>
   );
 };
@@ -216,7 +199,7 @@ export const BlogArchive: FC<{ signedIn: boolean; groups: { month: string; posts
     <CopyBlock id="agent-prompt" text={agentPrompt} rows={10} hidden />
     {groups.length === 0 && (
       <p class="muted">
-        no posts yet. <a href="/blog">subscribe</a> to get the first one.
+        no posts yet. follow the <a href="/blog/rss.xml">RSS feed</a> to get the first one.
       </p>
     )}
     {groups.map((g) => (
@@ -297,13 +280,11 @@ export const BlogPost: FC<{
   engagement: Engagement;
   liked: boolean;
   comments: CommentRow[];
-  subscribers: number;
   unlocked: boolean;
   commentValues?: Record<string, string | undefined>;
   commentError?: string;
-  subscribed?: 'sent' | string;
   agentPrompt: string;
-}> = ({ signedIn, supporter, post, older, newer, related, engagement, liked, comments, subscribers, unlocked, commentValues = {}, commentError, subscribed, agentPrompt }) => {
+}> = ({ signedIn, supporter, post, older, newer, related, engagement, liked, comments, unlocked, commentValues = {}, commentError, agentPrompt }) => {
   const staticPage = Boolean(useStaticRender());
   const v = (k: string) => commentValues[k] ?? '';
   const [introduction, sections] = splitIntroduction(post.html);
@@ -483,7 +464,7 @@ export const BlogPost: FC<{
         ))}
       </div>
 
-      <SubscribeBox signedIn={signedIn} count={subscribers} next={here} anchor sent={subscribed === 'sent'} error={subscribed && subscribed !== 'sent' ? subscribed : undefined} />
+      <FollowBox signedIn={signedIn} next={here} />
       {(supporter || staticPage) && (
         <p class="small muted" data-site-supporter hidden={!supporter}>
           you support call4me, thank you. <a href="/blog/support/manage">manage the subscription</a>.
@@ -542,7 +523,7 @@ export const BlogPost: FC<{
   );
 };
 
-/** The button behind a confirm or unsubscribe link (the change is a POST; see routes/blog.tsx). */
+/** The button behind an unsubscribe link (the change is a POST; see routes/blog.tsx). */
 export const SubscribeConfirm: FC<{ signedIn: boolean; action: string; token: string; title: string; text: string; button: string }> = ({ signedIn, action, token, title, text, button }) => (
   <Layout title={title} signedIn={signedIn}>
     <h1>{title}</h1>

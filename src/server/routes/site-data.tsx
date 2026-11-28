@@ -30,12 +30,11 @@ siteData.get('/', async (c) => {
       ]);
       return c.json({ signedIn: Boolean(account), callCount: usage.calls, minutes: usage.minutes, availableCountries: countries?.total ?? 0 });
     }
-    const service = blogService(db, messengerFor(c.env), c.env.APP_NAME, origin(c));
+    const service = blogService(db, messengerFor(c.env), origin(c));
     const reader = getCookie(c, 'cb_reader');
-    const [usage, engagement, subscribers, comments, liked, supporter] = await Promise.all([
+    const [usage, engagement, comments, liked, supporter] = await Promise.all([
       usageTotals(db, c.req.url, c.executionCtx),
       service.engagement(all.map((p) => p.slug)),
-      service.subscriberCount(),
       slug ? service.comments(slug) : [],
       slug && reader && /^[0-9a-f]{32}$/.test(reader) ? service.liked(slug, reader) : false,
       slug && account ? supporters(c.env.DB, stripeFor(c), c.env).isSupporter(account.id) : false,
@@ -44,7 +43,6 @@ siteData.get('/', async (c) => {
       signedIn: Boolean(account),
       callCount: usage.calls,
       minutes: usage.minutes,
-      subscribers,
       engagement: Object.fromEntries(engagement),
       ...(slug ? { post: { slug, liked, supporter, commentsHtml: String(<BlogComments comments={comments} />) } } : {}),
     });

@@ -125,7 +125,7 @@ const WEBMCP_SCRIPT = `
   var PAGES = { home: '/', examples: '/examples', mcp: '/mcp', blog: '/blog', rules: '/rules', privacy: '/privacy', terms: '/terms', account: '/account' };
   var pageArg = { type: 'object', properties: { page: { type: 'string', enum: Object.keys(PAGES), description: 'home, examples (real calls), mcp (install), blog, rules, privacy, terms, or account (signed in)' } }, required: ['page'] };
   var tools = [
-    { name: 'call4me_read_page', description: 'Read a call4me page as markdown: home (what call4me does and pricing), examples (real call excerpts and transcripts), mcp (how to install), blog (posts and the newsletter), rules, privacy, terms, or account (balance and calls; needs the person signed in).',
+    { name: 'call4me_read_page', description: 'Read a call4me page as markdown: home (what call4me does and pricing), examples (real call excerpts and transcripts), mcp (how to install), blog (posts), rules, privacy, terms, or account (balance and calls; needs the person signed in).',
       inputSchema: pageArg,
       execute: function (a) { return fetch(PAGES[a.page] || '/', { headers: { accept: 'text/markdown' } }).then(function (r) { return r.text(); }); } },
     { name: 'call4me_get_install_prompt', description: 'The prompt that installs the call4me MCP server in Claude Code, Codex, Claude Desktop, claude.ai, ChatGPT, Muse, or Grok Bot and signs the person in (signing in with Google or X the first time is the sign-up); the agent then gets tools to place phone calls.',

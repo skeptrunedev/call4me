@@ -3,9 +3,9 @@ import { newId, now } from '../lib/ids';
 import type { Messenger } from '../lib/messaging';
 
 /**
- * Everything around a post that lives in the database: likes, comments, the newsletter
- * (subscribers with double opt-in), and which posts were mailed. Posts themselves are
- * files (lib/blog.ts). Ported from skillbay's services/blog.ts.
+ * Everything around a post that lives in the database: likes, comments, the newsletter's
+ * existing subscribers (no new sign-ups; see routes/blog.tsx), and which posts were mailed.
+ * Posts themselves are files (lib/blog.ts). Ported from skillbay's services/blog.ts.
  */
 
 /** A request the blog turns down, shown to the reader with its status. */
@@ -47,8 +47,6 @@ export interface SubscriberRow {
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_COMMENTS_PER_IP_PER_HOUR = 10;
-const MAX_SUBSCRIBES_PER_IP_PER_HOUR = 5;
-const token = () => [...crypto.getRandomValues(new Uint8Array(24))].map((b) => b.toString(16).padStart(2, '0')).join('');
 const invalid = (msg: string) => new BlogError(msg, 400);
 const notFound = (what: string) => new BlogError(`no such ${what}`, 404);
 
@@ -63,8 +61,8 @@ export function validateComment(raw: { name: string; email: string; body: string
   return { name, email, body };
 }
 
-export function blog(db: D1Database | D1DatabaseSession, messenger: Messenger, appName: string, origin: string) {
-  async function assertRate(table: 'blog_comments' | 'subscribers', ip: string | null, max: number, what: string) {
+export function blog(db: D1Database | D1DatabaseSession, messenger: Messenger, origin: string) {
+  async function assertRate(table: 'blog_comments', ip: string | null, max: number, what: string) {
     if (!ip) return;
     const recent = await db.prepare(`SELECT COUNT(*) AS n FROM ${table} WHERE ip = ? AND created_at > ?`).bind(ip, now() - 3600 * 1000).first<{ n: number }>();
     if ((recent?.n ?? 0) >= max) throw new BlogError(`too many ${what} from this address; try again in an hour`, 429);
@@ -123,38 +121,11 @@ export function blog(db: D1Database | D1DatabaseSession, messenger: Messenger, a
 
     subscriberCount: () => db.prepare(`SELECT COUNT(*) AS n FROM subscribers WHERE status = 'active'`).first<{ n: number }>().then((r) => r?.n ?? 0),
 
-    /** Start a subscription: create (or revive) the row and email the confirmation link. */
-    async subscribe(rawEmail: string, ip: string | null): Promise<SubscriberRow> {
-      const email = rawEmail.trim().toLowerCase();
-      if (!EMAIL.test(email) || email.length > 200) throw invalid('email: not a valid address');
-      const existing = await db.prepare(`SELECT * FROM subscribers WHERE email = ?`).bind(email).first<SubscriberRow>();
-      if (existing?.status === 'active') return existing;
-      await assertRate('subscribers', ip, MAX_SUBSCRIBES_PER_IP_PER_HOUR, 'sign-ups');
-      let row = existing;
-      if (!row) {
-        const id = newId();
-        await db.prepare(`INSERT INTO subscribers (id, email, status, token, ip, created_at) VALUES (?, ?, 'unverified', ?, ?, ?)`).bind(id, email, token(), ip, now()).run();
-        row = (await db.prepare(`SELECT * FROM subscribers WHERE id = ?`).bind(id).first<SubscriberRow>())!;
-      }
-      await messenger.sendEmail(
-        email,
-        `confirm your ${appName} subscription`,
-        [`click to get new ${appName} posts by email:`, '', `${origin}/blog/subscribe/confirm?token=${row.token}`, '', 'if you did not ask for this, ignore it and nothing happens.', '', `- ${appName}`].join('\n'),
-      );
-      return row;
-    },
-
-    /** The subscription behind a confirm or unsubscribe link. */
+    /** The subscription behind an unsubscribe link. */
     async byToken(tok: string): Promise<SubscriberRow> {
       const row = tok ? await db.prepare(`SELECT * FROM subscribers WHERE token = ?`).bind(tok).first<SubscriberRow>() : null;
       if (!row) throw notFound('subscription');
       return row;
-    },
-
-    async confirm(tok: string): Promise<SubscriberRow> {
-      const row = await this.byToken(tok);
-      await db.prepare(`UPDATE subscribers SET status = 'active', confirmed_at = COALESCE(confirmed_at, ?), unsubscribed_at = NULL WHERE id = ?`).bind(now(), row.id).run();
-      return { ...row, status: 'active' };
     },
 
     async unsubscribe(tok: string): Promise<void> {

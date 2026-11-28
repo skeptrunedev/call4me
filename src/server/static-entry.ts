@@ -27,7 +27,7 @@ export async function staticResponse(request: Request, env: Env): Promise<Respon
   }
   if (url.pathname === '/mcp' && ((env.CANONICAL_HOST && url.hostname !== env.CANONICAL_HOST && url.hostname !== 'localhost') || url.protocol !== 'https:' && url.hostname !== 'localhost' || hasCredentials(request.headers) || request.headers.has('mcp-protocol-version') || (request.headers.get('accept') ?? '').includes('text/event-stream'))) return null;
   // Search, ranking, validation messages and explicit live views retain existing server behavior.
-  if (['q', 'subscribed', 'live'].some(key => url.searchParams.has(key))) return null;
+  if (['q', 'live'].some(key => url.searchParams.has(key))) return null;
   if (url.searchParams.has('tab') && url.searchParams.get('tab') !== 'latest') return null;
   let key = url.pathname;
   if (url.searchParams.has('page')) {

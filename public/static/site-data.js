@@ -38,9 +38,6 @@
       element.textContent = data.availableCountries > 0 ? ' (numbers available in ' + data.availableCountries + ' countries)' : '';
     });
     if (!blog) return;
-    each('[data-site-subscribers]', function (element) {
-      element.textContent = data.subscribers > 0 ? ' / ' + data.subscribers + (data.subscribers === 1 ? ' reader subscribed' : ' readers subscribed') : '';
-    });
     each('[data-site-engagement]', function (element) {
       var counts = data.engagement[element.getAttribute('data-site-engagement')];
       if (!counts) throw new Error('Missing post counts');
@@ -71,7 +68,6 @@
     each('[data-site-call-count]', function (element) { element.textContent = 'call count unavailable'; });
     each('[data-site-countries]', function (element) { element.textContent = ' (country availability could not be loaded)'; });
     each('[data-site-engagement]', function (element) { element.textContent = 'counts unavailable'; });
-    each('[data-site-subscribers]', function (element) { element.textContent = ' / reader count unavailable'; });
     each('[data-site-like]', function (element) { element.textContent = 'like (count unavailable)'; });
     each('[data-site-comments]', function (element) {
       element.textContent = 'Comments could not be loaded. ';
