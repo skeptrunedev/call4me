@@ -87,6 +87,8 @@ export function authOptions(deps: AuthDeps) {
         const email = String((ctx.body as { email?: unknown } | undefined)?.email ?? '');
         if (!throwawayEmail(email)) return;
         if ((await ctx.context.internalAdapter.findUserByEmail(email)) || (await deps.accountExists(email))) return;
+        // The domain alone, so a real person the list catches by mistake shows up in the logs.
+        console.log('throwaway sign-up refused', email.slice(email.lastIndexOf('@') + 1).toLowerCase());
         throw new APIError('BAD_REQUEST', { code: 'THROWAWAY_EMAIL', message: THROWAWAY_EMAIL_MESSAGE });
       }),
     },
