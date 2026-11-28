@@ -42,6 +42,7 @@ function buildAuth(env: Env, baseURL: string): Auth {
         const { subject, text } = signInEmail(url, code);
         await messengerFor(env).sendEmail(email, subject, text);
       },
+      accountExists: async (email) => (await accounts(env.DB).byEmail(email)) !== null,
     }),
   );
   return auth;

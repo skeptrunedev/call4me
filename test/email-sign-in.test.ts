@@ -198,3 +198,30 @@ test('a next page after a slash and a backslash is another site to a browser, an
   assert.equal(safeNext('//evil.example'), '/');
   assert.equal(safeNext('/account?x=\\y'), '/account?x=\\y');
 });
+
+test('a throwaway inbox opens no account: no email goes out, from the page or the API, and the page says why', async (t) => {
+  const s = site(t);
+  // The domains one person scripted 25 accounts on for the free $5 each (Nov 27), and a subdomain of one.
+  for (const email of ['qe0gk7kaz2mv@euploading.com', 'ixerkhsp@guerrillamailblock.com', 'a@mail.guerrillamailblock.com']) {
+    const res = await s.browser().post('/login/email', { email, next: '/account' });
+    assert.equal(res.status, 400, email);
+    assert.match(await res.text(), /call4me can&#39;t open an account for a throwaway inbox\. use your own email, or sign in with google or x\./);
+  }
+  const api = await s.browser().send('/api/auth/sign-in/magic-link', { method: 'POST', headers: { 'content-type': 'application/json', origin: SITE }, body: JSON.stringify({ email: 'y0tmdxubxkpp@EUPLOADING.com' }) });
+  assert.equal(api.status, 400);
+  assert.equal(((await api.json()) as { code?: string }).code, 'THROWAWAY_EMAIL');
+  assert.deepEqual(s.mail, [], 'nothing mailed');
+});
+
+test('an account that already has a throwaway address still signs in, and relays to a real inbox are not throwaways', async (t) => {
+  const s = site(t);
+  // Checkout opens an account before sign-in; that person paid and must be able to get in.
+  await s.env.DB.prepare(`INSERT INTO accounts (id, email, created_at) VALUES ('acct_paid', 'paid@euploading.com', 0)`).run();
+  assert.equal((await s.browser().post('/login/email', { email: 'Paid@euploading.com', next: '/' })).status, 200);
+  // Apple Pay hands Stripe an iCloud Hide My Email relay; DuckDuckGo and Firefox relay addresses forward too.
+  for (const email of ['x7k2@privaterelay.appleid.com', 'someone@duck.com', 'abc123@mozmail.com']) assert.equal((await s.browser().post('/login/email', { email, next: '/' })).status, 200, email);
+  assert.deepEqual(
+    s.mail.map((m) => m.to),
+    ['Paid@euploading.com', 'x7k2@privaterelay.appleid.com', 'someone@duck.com', 'abc123@mozmail.com'],
+  );
+});

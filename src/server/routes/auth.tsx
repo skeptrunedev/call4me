@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { createAuth, withAuthCookies } from '../lib/auth';
 import { field, origin, safeNext, sameOrigin, type AppContext, type AppEnv } from '../lib/context';
 import { signInPrompt } from '../lib/prompts';
+import { THROWAWAY_EMAIL_MESSAGE } from '../lib/throwaway-email';
 import { ConsentPage, EmailLinkPage, LoginPage } from '../views/account';
 
 /** Sign-in with Google or X (better-auth), password sign-in for provisioned accounts, and the consent step of the MCP OAuth provider. */
@@ -64,10 +65,21 @@ authRoutes.post('/login/email', async (c) => {
     }),
   );
   if (res.ok) return c.html(<LoginPage next={next} email={email} sent providers={providers(c)} />);
-  const error = res.status === 429 ? 'too many sign-in emails asked for. wait a minute and try again.' : res.status === 400 ? 'that email address does not look right.' : 'could not send the sign-in email. try again.';
-  if (res.status >= 500) console.error('sign-in link failed', res.status, await res.text().catch(() => ''));
+  const body = await res.text().catch(() => '');
+  const throwaway = res.status === 400 && errorCode(body) === 'THROWAWAY_EMAIL';
+  const error = res.status === 429 ? 'too many sign-in emails asked for. wait a minute and try again.' : throwaway ? THROWAWAY_EMAIL_MESSAGE : res.status === 400 ? 'that email address does not look right.' : 'could not send the sign-in email. try again.';
+  if (res.status >= 500) console.error('sign-in link failed', res.status, body);
   return c.html(<LoginPage next={next} email={email} error={error} providers={providers(c)} />, res.status === 429 ? 429 : 400);
 });
+
+/** The code a better-auth error body carries (THROWAWAY_EMAIL, INVALID_OTP...), if it is one. */
+function errorCode(body: string): string | undefined {
+  try {
+    return (JSON.parse(body) as { code?: string }).code;
+  } catch {
+    return undefined;
+  }
+}
 
 /** What the code sign-in endpoint's error codes mean to the person typing the code. */
 const CODE_ERRORS: Record<string, string> = {

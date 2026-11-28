@@ -1,7 +1,9 @@
 import { COOKIE_PREFIX } from './session-credentials';
 import type { BetterAuthOptions } from 'better-auth';
+import { APIError, createAuthMiddleware } from 'better-auth/api';
 import { bearer, emailOTP, jwt, magicLink } from 'better-auth/plugins';
 import { mcp } from '@better-auth/mcp';
+import { THROWAWAY_EMAIL_MESSAGE, throwawayEmail } from './throwaway-email';
 
 /**
  * better-auth configuration shared by the worker (per-request instance) and the
@@ -21,6 +23,8 @@ export interface AuthDeps {
   twitter: { clientId: string; clientSecret: string };
   /** Mails a sign-in link and, in the same email, a sign-in code (the email sign-in below). */
   sendSignInLink: (email: string, url: string) => Promise<void>;
+  /** Whether a call4me account has this email, signed in or not (Checkout opens one before sign-in). */
+  accountExists: (email: string) => Promise<boolean>;
 }
 
 /** Prefix of better-auth's cookies (`callbay.session_token`); kept from before the rename so sessions survive. */
@@ -75,6 +79,17 @@ export function authOptions(deps: AuthDeps) {
     },
     rateLimit: { enabled: true, storage: 'database' },
     disabledPaths: UNUSED_CODE_PATHS,
+    hooks: {
+      // The emailed sign-in opens an account for a new address, so a throwaway inbox gets no email:
+      // no account, no signup notice, no welcome email. Anyone who already has an account signs in.
+      before: createAuthMiddleware(async (ctx) => {
+        if (ctx.path !== '/sign-in/magic-link') return;
+        const email = String((ctx.body as { email?: unknown } | undefined)?.email ?? '');
+        if (!throwawayEmail(email)) return;
+        if ((await ctx.context.internalAdapter.findUserByEmail(email)) || (await deps.accountExists(email))) return;
+        throw new APIError('BAD_REQUEST', { code: 'THROWAWAY_EMAIL', message: THROWAWAY_EMAIL_MESSAGE });
+      }),
+    },
     advanced: {
       cookiePrefix: COOKIE_PREFIX,
       // Cloudflare sets this to the visitor's address and overwrites any copy the client sends. Without

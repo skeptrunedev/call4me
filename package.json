@@ -21,6 +21,7 @@
     "bonus": "node scripts/topup-bonus.mjs",
     "fernand": "node scripts/fernand-sync.mjs",
     "number": "tsx scripts/number.ts",
+    "throwaway-domains": "tsx scripts/throwaway-domains.ts",
     "discount": "tsx scripts/discount.ts",
     "checkout-link": "tsx scripts/checkout-link.ts",
     "staging:connect-test": "tsx scripts/staging-connect-test.ts",

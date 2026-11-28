@@ -16,5 +16,6 @@ export const auth = betterAuth(
     google: { clientId: 'x', clientSecret: 'x' },
     twitter: { clientId: 'x', clientSecret: 'x' },
     sendSignInLink: async () => {},
+    accountExists: async () => false,
   }),
 );
