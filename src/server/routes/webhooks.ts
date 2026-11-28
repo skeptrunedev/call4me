@@ -216,10 +216,12 @@ webhooks.post('/telnyx', async (c) => {
   // the business (a supervisor leg carries their voice but not their keypad).
   if (state?.personLeg) {
     const session = sessionFor(c.env, callId);
-    if (type === 'call.answered') await session.fetch('https://session/person-answered', { method: 'POST' });
-    else if (type === 'call.hangup') await session.fetch('https://session/person-left', { method: 'POST', body: JSON.stringify({ cause: p.hangup_cause ?? null, sip: p.sip_hangup_cause ?? null }) });
-    else if (type === 'call.dtmf.received' && p.digit === '*' && p.call_control_id) await telnyx(c.env).hangup(p.call_control_id);
-    else if (type === 'call.dtmf.received' && p.digit) await session.fetch('https://session/person-key', { method: 'POST', body: JSON.stringify({ digit: p.digit }) });
+    // Each names its leg, so the session can tell the leg they're on from any other.
+    const leg = p.call_control_id;
+    if (type === 'call.answered') await session.fetch('https://session/person-answered', { method: 'POST', body: JSON.stringify({ leg }) });
+    else if (type === 'call.hangup') await session.fetch('https://session/person-left', { method: 'POST', body: JSON.stringify({ cause: p.hangup_cause ?? null, sip: p.sip_hangup_cause ?? null, leg }) });
+    else if (type === 'call.dtmf.received' && p.digit === '*' && leg) await telnyx(c.env).hangup(leg);
+    else if (type === 'call.dtmf.received' && p.digit) await session.fetch('https://session/person-key', { method: 'POST', body: JSON.stringify({ digit: p.digit, leg }) });
     return c.text('ok');
   }
 

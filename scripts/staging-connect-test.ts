@@ -1,7 +1,7 @@
 /**
  * End-to-end test of joining a live call (call4me_connect_me), on staging, with nobody's phone.
  *
- *   npm run staging:connect-test [-- --listen] [--wait <seconds>] [--person <+phone>]
+ *   npm run staging:connect-test [-- --listen] [--twice [--drop-one <seconds>] | --burst <n>] [--wait <seconds>] [--person <+phone>]
  *
  * The test places a call from staging's business account to its own number, waits for the two
  * assistants to talk, joins staging's person number the way call4me_connect_me does, then hangs up
@@ -10,14 +10,33 @@
  * and our caller kept talking once they joined
  * (with --listen, when the person heard the business and our caller, and the business did not hear them).
  *
+ * --twice asks to join twice at the same moment, as on call_aga5g9avx2q0l0lm (Nov 27): the back
+ * office rang the owner while her own agent called call4me_connect_me, and she heard our caller
+ * talk over her. Whether our caller stayed quiet is judged by when the person's phone was really on
+ * the call (its leg's answer and hang-up), not by the session's own notes. --drop-one hangs up one
+ * of the person's legs that many seconds after the join, as her phone ended one of its two calls
+ * 13s after she joined, and leaves the other on the call. Two requests only overlap when both reach
+ * the session within the half second Telnyx takes to place a leg, about half the runs; --burst asks
+ * n times, 100ms apart, so some of them always land while the first ring is being placed.
+ *
  * --person joins a real phone instead of staging's person number, to check a customer's own line:
  * it rings from staging-test@call4.me's number, and the test passes when the business heard
  * anything from that phone after the join. Whether they heard the business, ask them.
  */
-import { at, business, call, callsSinceStart, lines, numberOf, PERSON, printSides, sleep, untilAnswered, untilTalking, verdict, type Row } from './staging-api';
+import { existsSync } from 'node:fs';
+import { loadEnvFile } from 'node:process';
+import { at, business, call, callsSinceStart, db, lines, numberOf, PERSON, printSides, sleep, untilAnswered, untilTalking, verdict, type Row } from './staging-api';
 
 const args = process.argv.slice(2);
 const listen = args.includes('--listen');
+const burstIndex = args.indexOf('--burst');
+const asks = burstIndex >= 0 ? Number(args[burstIndex + 1]) : args.includes('--twice') ? 2 : 1;
+if (!(Number.isInteger(asks) && asks >= 1 && asks <= 10)) throw new Error('--burst takes a count from 1 to 10');
+const twice = asks > 1;
+const dropIndex = args.indexOf('--drop-one');
+const dropAfter = dropIndex >= 0 ? Number(args[dropIndex + 1]) : null;
+if (dropAfter !== null && (!twice || !(dropAfter > 0))) throw new Error('--drop-one takes seconds, and goes with --twice');
+if (dropAfter !== null && !process.env.TELNYX_API_KEY && existsSync('.dev.vars')) loadEnvFile('.dev.vars');
 const waitIndex = args.indexOf('--wait');
 const joinedSeconds = waitIndex >= 0 ? Number(args[waitIndex + 1]) : 40;
 const personIndex = args.indexOf('--person');
@@ -47,9 +66,25 @@ if (!(await untilTalking(callId))) {
 }
 
 const joinAt = Date.now();
-const connected = await call('POST', `/calls/${callId}/connect`, { phone: personPhone, mode: listen ? 'listen' : 'join' });
-console.log(`${listen ? 'listening' : 'joining'} ${personPhone} (person) at ${at(joinAt)}: ${connected.message}`);
-await sleep(joinedSeconds * 1000);
+const connect = () => call('POST', `/calls/${callId}/connect`, { phone: personPhone, mode: listen ? 'listen' : 'join' });
+const spaced = burstIndex >= 0 ? 100 : 0;
+const connects = await Promise.allSettled(Array.from({ length: asks }, (_, i) => sleep(i * spaced).then(connect)));
+for (const c of connects) console.log(`${listen ? 'listening' : 'joining'} ${personPhone} (person) at ${at(joinAt)}: ${c.status === 'fulfilled' ? c.value.message : c.reason}`);
+if (dropAfter !== null) {
+  await sleep(dropAfter * 1000);
+  // The person's legs as their own number answered them; hanging up one ends that leg of the call.
+  const legs = await db
+    .prepare(`SELECT id, telnyx_call_control_id FROM calls WHERE account_id = ? AND direction = 'inbound' AND created_at >= ? AND status = 'in_progress' ORDER BY created_at`)
+    .bind(person!.id, joinAt - 5_000)
+    .all<{ id: string; telnyx_call_control_id: string }>();
+  const leg = legs.results[0];
+  if (legs.results.length < 2 || !leg) console.log(`DROP  ${legs.results.length} person leg(s) on the call, not two: nothing dropped`);
+  else {
+    const res = await fetch(`https://api.telnyx.com/v2/calls/${encodeURIComponent(leg.telnyx_call_control_id)}/actions/hangup`, { method: 'POST', headers: { authorization: `Bearer ${process.env.TELNYX_API_KEY}`, 'content-type': 'application/json' }, body: '{}' });
+    console.log(`DROP  hung up the person's leg ${leg.id} at ${at(Date.now())} (${res.status}); the other stays on`);
+  }
+  await sleep(Math.max(0, joinedSeconds - dropAfter) * 1000);
+} else await sleep(joinedSeconds * 1000);
 await call('POST', `/calls/${callId}/hang-up`).catch((err) => console.log(`hang up: ${err.message}`));
 console.log(`hung up at ${at(Date.now())}; reading transcripts`);
 await sleep(8_000);
@@ -57,10 +92,11 @@ await sleep(8_000);
 const rows = await callsSinceStart([business.id, person?.id ?? business.id]);
 const outbound = rows.find((r) => r.id === callId);
 const businessSide = rows.find((r) => r.direction === 'inbound' && r.account_id === business.id);
-const personSide = person ? rows.find((r) => r.direction === 'inbound' && r.account_id === person.id) : undefined;
+const personSides = person ? rows.filter((r) => r.direction === 'inbound' && r.account_id === person.id) : [];
+const personSide = personSides[0];
 
 const sides: [string, Row | undefined][] = [['our caller', outbound], ['business (answering assistant)', businessSide]];
-if (person) sides.push(['person (answering assistant)', personSide]);
+if (person) personSides.forEach((r, i) => sides.push([`person (answering assistant)${personSides.length > 1 ? ` leg ${i + 1}` : ''}`, r]));
 printSides(sides);
 
 // What each assistant heard after the join is its "them" lines from then on. The business heard
@@ -87,12 +123,19 @@ const joinedAt = lines(outbound).find((l) => l.role === 'note' && /joined the ca
 const leftAt = lines(outbound).find((l) => l.role === 'note' && l.at > joinedAt && /left the call/.test(l.text))?.at ?? Infinity;
 const callerKeptTalking = lines(outbound).some((l) => l.role === 'caller' && l.at > joinedAt);
 const callerQuietWhileOn = !lines(outbound).some((l) => l.role === 'caller' && l.at > joinedAt && l.at < leftAt);
+// When the person's phone was really on the call: each of its legs from answer to hang-up.
+const onSpans = personSides.filter((r) => r.answered_at).map((r) => [r.answered_at!, r.ended_at ?? Infinity] as const);
+const talkedOver = lines(outbound).filter((l) => l.role === 'caller' && onSpans.some(([a, b]) => l.at > a + 2_000 && l.at < b));
+const rings = lines(outbound).filter((l) => l.role === 'note' && /^ringing /.test(l.text)).length;
+console.log(`\nthe person's phone was rung ${rings} time(s); ${onSpans.length} leg(s) answered: ${onSpans.map(([a, b]) => `${at(a)}-${b === Infinity ? 'end' : at(b)}`).join(', ') || 'none'}`);
+for (const l of talkedOver) console.log(`  our caller spoke while the person was on, at ${at(l.at)}: ${l.text.slice(0, 120)}`);
 const passed = verdict([
   [`the person's phone ${listen ? 'started listening' : 'joined'}`, joined],
   ...(realPhone ? [] : [['the person heard the business', personHeard] as const]),
   ...(listen && !realPhone ? [['the person heard our caller', personHeardCaller] as const] : []),
   [listen ? 'the business did not hear the person' : 'the business heard the person', listen ? !businessHeardPerson : businessHeardPerson],
   listen ? ['our caller kept talking while they listened', callerKeptTalking] : ['our caller stayed quiet while they were on', callerQuietWhileOn],
+  ...(listen || realPhone ? [] : [["our caller stayed quiet while the person's phone was really on the call", talkedOver.length === 0] as const]),
 ]);
 if (realPhone) console.log('ASK   whether they heard the business (staging\'s assistant) after picking up');
 process.exit(passed ? 0 : 1);

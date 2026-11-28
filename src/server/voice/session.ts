@@ -365,6 +365,13 @@ export class VoiceSession extends DurableObject<Env> {
   private pendingMachineGuidance: MachineGuidance | null = null;
   /** The person's own phone leg while it rings or is on the call; the caller stays silent while they talk. */
   private personLeg: string | null = null;
+  /**
+   * A ring to the person is being placed (Telnyx takes about half a second to return its leg). A
+   * second request in that time rang a second leg: on call_aga5g9avx2q0l0lm (Nov 27) the back office
+   * and the owner's agent both rang her in the same moment, one leg hung up, and the session took
+   * her off the call while she was still on the other, so the caller talked over her.
+   */
+  private dialingPerson = false;
   private personOn = false;
   /** Whether the business has us waiting; hold time is half price and extends the time limit. */
   private hold = new HoldMeter();
@@ -457,17 +464,21 @@ export class VoiceSession extends DurableObject<Env> {
         const { phone, mode } = (await req.json()) as { phone?: string; mode?: PersonMode };
         return Response.json({ message: await this.connectPerson(phone, mode) });
       }
-      case '/person-answered':
-        await this.personAnswered();
+      // Events from the person's phone name the leg they came from (webhooks.ts): one from a leg
+      // that isn't theirs now, an earlier ring's or a stray, says nothing about whether they're on.
+      case '/person-answered': {
+        const { leg } = (await req.json().catch(() => ({}))) as { leg?: string };
+        if (this.theirLeg(leg)) await this.personAnswered();
         return new Response('ok');
+      }
       case '/person-key': {
-        const { digit } = (await req.json()) as { digit: string };
-        await this.personKey(digit);
+        const { digit, leg } = (await req.json()) as { digit: string; leg?: string };
+        if (this.theirLeg(leg)) await this.personKey(digit);
         return new Response('ok');
       }
       case '/person-left': {
-        const { sip } = (await req.json().catch(() => ({}))) as { sip?: string | null };
-        this.personLeft(sip);
+        const { sip, leg } = (await req.json().catch(() => ({}))) as { sip?: string | null; leg?: string };
+        if (this.theirLeg(leg)) this.personLeft(sip);
         return new Response('ok');
       }
       case '/hang-up':
@@ -1676,6 +1687,15 @@ export class VoiceSession extends DurableObject<Env> {
     this.sendLive({ type: 'response.create' });
   }
 
+  /**
+   * Whether an event from the person's phone came from the leg they're on (or being rung on). An
+   * event that names no leg is taken as theirs: the site and this worker deploy separately, and a
+   * site still on the version before legs were named sends none.
+   */
+  private theirLeg(leg?: string): boolean {
+    return !leg || leg === this.personLeg;
+  }
+
   /** Whether the caller holds back for the person: ringing them to join, or they're on the call. Listening doesn't count. */
   private personHolds(): boolean {
     return callerHoldsFor({ ringing: !!this.personLeg, on: this.personOn, mode: this.personMode });
@@ -1692,16 +1712,21 @@ export class VoiceSession extends DurableObject<Env> {
       if (this.personOn) return `${s.person.name} is already on the call`;
       return this.personMode === 'listen' ? listeningMessage(s.person.name) : `already ringing ${s.person.name}`;
     }
+    if (this.dialingPerson) return `already ringing ${s.person.name}`;
     const phone = phoneOverride || s.person.phone;
     if (!phone) return `no phone number for ${s.person.name}; save one with call4me_save_profile or pass phone`;
     // Their leg can last as long as the call can: holds extend its limit up to Telnyx's ceiling.
     const remaining = Math.max(60, LIMITS.maxMinutes * 60 - Math.round((Date.now() - (this.answeredAt || Date.now())) / 1000));
+    // Claimed before the request goes out, so nothing can ring a second leg while it's in flight.
+    this.dialingPerson = true;
     try {
       this.personLeg = await telnyx(this.env).dialPerson({ to: phone, from: s.person.from, webhookUrl: s.person.webhookUrl, callId: s.callId, superviseControlId: s.controlId, timeLimitSecs: remaining });
     } catch (err) {
       console.warn('connect person failed', s.callId, String(err));
       this.note(`couldn't ring ${s.person.name}`);
       return `couldn't ring ${s.person.name}: ${String(err).slice(0, 200)}`;
+    } finally {
+      this.dialingPerson = false;
     }
     this.personRung = true;
     this.personMode = mode;
